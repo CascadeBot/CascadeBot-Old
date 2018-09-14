@@ -12,9 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Config {
-    File config;
+    private File config;
 
-    List<String> required = new ArrayList<String>();
+    private List<String> required = new ArrayList<>();
+
+    public static Values VALUES;
 
     public Config(String file) throws IOException {
         config = new File(file);
@@ -26,8 +28,8 @@ public class Config {
         initConfig();
     }
 
-    public void initConfig() throws IOException {
-        required.addAll(Arrays.asList("bot.token", "bot.id"));
+    private void initConfig() throws IOException {
+        required.addAll(Arrays.asList("bot.token", "bot.id")); //Add config path requirements here
         Yaml yaml = new Yaml();
 
         String configStr = FileUtils.readFileToString(this.config, Charset.defaultCharset());
@@ -44,18 +46,39 @@ public class Config {
         }
 
         if(notMeet.isEmpty()) {
-            //TODO logger stuffs
-            System.out.println("Required config elements not meet");
+            CascadeBot.getInstance().getLogger().error("Required config elements not meet");
+            System.exit(23);
+            return;
         }
+
+        VALUES = new Values();
+        Object botInfo = config.get("bot");
+        if(botInfo instanceof Map) {
+            Map<String, Object> botMap = (Map<String, Object>) botInfo;
+            VALUES.botToken = (String) botMap.get("token");
+            VALUES.id = (Long) botMap.get("id");
+        }
+
+        VALUES.prettyJson = (boolean) config.getOrDefault("prettyJson", false);
     }
 
     private boolean checkReqMeat(Map<String, Object> map, String[] path) {
         if(!map.containsKey(path[0])) {
             return false;
         } else {
-            Map<String, Object> down = (Map<String, Object>) map.get(path[0]);
-            String[] newPath = Arrays.copyOfRange(path, 1, path.length - 1);
-            return checkReqMeat(down, newPath);
+            Object newMap = map.get(path[0]);
+            if(newMap instanceof Map) {
+                Map<String, Object> down = (Map<String, Object>) newMap;
+                String[] newPath = Arrays.copyOfRange(path, 1, path.length);
+                return checkReqMeat(down, newPath);
+            } else return false;
         }
+    }
+
+    public class Values {
+        String botToken;
+        long id;
+
+        boolean prettyJson;
     }
 }
