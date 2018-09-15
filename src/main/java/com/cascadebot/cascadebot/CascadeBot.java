@@ -47,6 +47,8 @@ public class CascadeBot {
             return;
         }
 
+        jda.addEventListener(new Events());
+
         instance = this;
     }
 
