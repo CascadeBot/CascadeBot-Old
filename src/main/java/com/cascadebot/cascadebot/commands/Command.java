@@ -5,11 +5,16 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 public interface Command {
-    public void onCommand(Member sender, GuildData data, TextChannel channel, String[] args);
+    public void onCommand(Member sender, CommandContext context);
 
     public String defaultCommand();
+
+    public CommandType getType();
 
     default boolean forceDefault() {
         return false;
     }
+
+
+
 }

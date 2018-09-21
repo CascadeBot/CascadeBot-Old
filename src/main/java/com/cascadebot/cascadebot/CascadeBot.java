@@ -1,5 +1,6 @@
 package com.cascadebot.cascadebot;
 
+import com.cascadebot.cascadebot.commands.CommandManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.core.AccountType;
@@ -22,6 +23,7 @@ public class CascadeBot {
 
     private Config config;
     private JDA jda;
+    private CommandManager commandManager;
 
     private static CascadeBot instance;
 
@@ -49,6 +51,8 @@ public class CascadeBot {
         }
 
         jda.addEventListener(new Events());
+
+        commandManager = new CommandManager();
 
         instance = this;
     }
