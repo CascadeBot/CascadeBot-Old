@@ -40,13 +40,13 @@ public class Config {
 
         for (String req : required) {
             String[] path = req.split("\\.");
-            if(!checkReqMeat(config, path)) {
+            if(!meetsRequirements(config, path)) {
                 notMeet.add(req);
             }
         }
 
         if(notMeet.isEmpty()) {
-            CascadeBot.getInstance().getLogger().error("Required config elements not meet");
+            CascadeBot.instance().getLogger().error("Required config elements not meet");
             System.exit(23);
             return;
         }
@@ -62,7 +62,7 @@ public class Config {
         VALUES.prettyJson = (boolean) config.getOrDefault("prettyJson", false);
     }
 
-    private boolean checkReqMeat(Map<String, Object> map, String[] path) {
+    private boolean meetsRequirements(Map<String, Object> map, String[] path) {
         if(!map.containsKey(path[0])) {
             return false;
         } else {
@@ -70,7 +70,7 @@ public class Config {
             if(newMap instanceof Map) {
                 Map<String, Object> down = (Map<String, Object>) newMap;
                 String[] newPath = Arrays.copyOfRange(path, 1, path.length);
-                return checkReqMeat(down, newPath);
+                return meetsRequirements(down, newPath);
             } else return false;
         }
     }
