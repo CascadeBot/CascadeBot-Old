@@ -46,7 +46,7 @@ public class CascadeBot {
         try {
             jda = new JDABuilder(AccountType.BOT).setToken(Config.VALUES.botToken).build();
         } catch (LoginException e) {
-            LOGGER.error("Error building jda", e);
+            LOGGER.error("Error building JDA", e);
             System.exit(23);
             return;
         }
