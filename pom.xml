@@ -94,14 +94,14 @@
             <version>2.6.2</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
-        <!--<dependency>
+        <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>2.5.2</version>
             <type>pom</type>
-        </dependency>-->
+        </dependency>
         <dependency>
-            <groupId>com.github.weeryan17</groupId>
+            <groupId>com.github.CascadeBot</groupId>
             <artifactId>JShellScriptEngine</artifactId>
             <version>74758f8a8e</version>
         </dependency>
