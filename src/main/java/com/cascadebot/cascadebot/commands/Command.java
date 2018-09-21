@@ -15,6 +15,21 @@ public interface Command {
         return false;
     }
 
+    default CommandLevel getCommandLevel() {
+        return CommandLevel.USER;
+    }
 
+    public enum CommandLevel {
+        USER (-1),
+        DEVELOPER (1203034432),
+        ADMIN (10293949),
+        OWNER (1000000);
+
+        long l;
+
+        CommandLevel(long l) {
+            this.l = l;
+        }
+    }
 
 }

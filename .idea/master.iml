@@ -61,5 +61,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.sun.mail:javax.mail:1.6.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.activation:activation:1.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.ben-manes.caffeine:caffeine:2.6.2" level="project" />
+    <orderEntry type="library" name="Maven: com.github.weeryan17:JShellScriptEngine:74758f8a8e" level="project" />
   </component>
 </module>

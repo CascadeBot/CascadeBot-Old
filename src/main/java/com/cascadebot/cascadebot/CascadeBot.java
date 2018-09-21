@@ -10,6 +10,8 @@ import net.dv8tion.jda.core.JDABuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.script.ScriptEngineFactory;
+import javax.script.ScriptEngineManager;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 
@@ -54,6 +56,10 @@ public class CascadeBot {
         jda.addEventListener(new Events());
 
         commandManager = new CommandManager();
+
+        for(ScriptEngineFactory factory : new ScriptEngineManager().getEngineFactories()) {
+            System.out.println(factory.getEngineName());
+        }
 
         instance = this;
     }
