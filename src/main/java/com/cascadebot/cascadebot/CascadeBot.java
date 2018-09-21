@@ -1,6 +1,7 @@
 package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commands.CommandManager;
+import com.cascadebot.cascadebot.events.Events;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.core.AccountType;

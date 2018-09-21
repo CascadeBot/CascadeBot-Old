@@ -76,9 +76,9 @@ public class Config {
     }
 
     public class Values {
-        String botToken;
-        long id;
+        public String botToken;
+        public long id;
 
-        boolean prettyJson;
+        public boolean prettyJson;
     }
 }
