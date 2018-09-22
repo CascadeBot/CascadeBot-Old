@@ -18,6 +18,11 @@ public class HelpCommand implements Command {
     }
 
     @Override
+    public boolean forceDefault() {
+        return true;
+    }
+
+    @Override
     public CommandType getType() {
         return CommandType.CORE;
     }
