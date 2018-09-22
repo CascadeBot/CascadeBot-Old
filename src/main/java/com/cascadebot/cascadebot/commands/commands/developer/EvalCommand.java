@@ -1,4 +1,4 @@
-package com.cascadebot.cascadebot.commands.commands.core.developer;
+package com.cascadebot.cascadebot.commands.commands.developer;
 
 import com.cascadebot.cascadebot.commands.Command;
 import com.cascadebot.cascadebot.commands.CommandContext;
@@ -19,12 +19,12 @@ public class EvalCommand implements Command {
 
     @Override
     public String defaultCommand() {
-        return null;
+        return "eval";
     }
 
     @Override
     public CommandType getType() {
-        return null;
+        return CommandType.DEVELOPER;
     }
 
     @Override
