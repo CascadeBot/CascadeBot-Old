@@ -4,13 +4,14 @@ import com.cascadebot.cascadebot.commands.Command;
 import com.cascadebot.cascadebot.commands.CommandManager;
 import com.cascadebot.cascadebot.commands.CommandType;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 public class GuildData {
 
     private long guildID;
-    private Set<Command> enabledCommands = new HashSet<>(CommandManager.instance().getCommands());
+    private Set<Command> enabledCommands = Collections.synchronizedSet(new HashSet<>(CommandManager.instance().getCommands()));
 
     public GuildData(long guildID) {
         this.guildID = guildID;
@@ -36,4 +37,7 @@ public class GuildData {
         enabledCommands.removeAll(CommandManager.instance().getCommandsByType(commandType));
     }
 
+    public long getGuildID() {
+        return guildID;
+    }
 }
