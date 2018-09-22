@@ -28,6 +28,11 @@ public class EvalCommand implements Command {
     }
 
     @Override
+    public CommandLevel getCommandLevel() {
+        return CommandLevel.DEVELOPER;
+    }
+
+    @Override
     public boolean forceDefault() {
         return true;
     }
