@@ -3,6 +3,7 @@ package com.cascadebot.cascadebot.commands;
 import net.dv8tion.jda.core.entities.Member;
 
 public interface Command {
+
     public void onCommand(Member sender, CommandContext context);
 
     public String defaultCommand();

@@ -1,7 +1,6 @@
 package com.cascadebot.cascadebot.commands;
 
 import com.cascadebot.cascadebot.objects.GuildData;
-import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 public class CommandContext {
