@@ -49,7 +49,7 @@ public class CommandManager {
         return commands.stream().filter(command -> command.getType() == type).collect(Collectors.toList());
     }
 
-    public static CommandManager getInstance() {
+    public static CommandManager instance() {
         return instance;
     }
 

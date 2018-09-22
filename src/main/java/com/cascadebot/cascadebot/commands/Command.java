@@ -1,8 +1,6 @@
 package com.cascadebot.cascadebot.commands;
 
-import com.cascadebot.cascadebot.objects.GuildData;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.TextChannel;
 
 public interface Command {
     public void onCommand(Member sender, CommandContext context);
@@ -21,14 +19,14 @@ public interface Command {
 
     public enum CommandLevel {
         USER (-1),
-        DEVELOPER (1203034432),
-        ADMIN (10293949),
-        OWNER (1000000);
+        STAFF (488433225711222804L), //TODO: Move these to config?
+        DEVELOPER (488424540800548887L),
+        OWNER (488430613049769996L);
 
-        long l;
+        long roleID;
 
-        CommandLevel(long l) {
-            this.l = l;
+        CommandLevel(long roleID) {
+            this.roleID = roleID;
         }
     }
 
