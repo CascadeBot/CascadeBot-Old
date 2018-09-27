@@ -27,6 +27,8 @@
     <groupId>CascadeBot</groupId>
     <artifactId>CascadeBot</artifactId>
     <version>1.0-SNAPSHOT</version>
+
+
     <repositories>
         <repository>
             <id>jcenter</id>
@@ -38,6 +40,8 @@
             <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
+
     <dependencies>
         <dependency>
             <groupId>net.dv8tion</groupId>
@@ -74,12 +78,21 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.23</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+
+        <!-- Apache Commons -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
+
+
         <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
