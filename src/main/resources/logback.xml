@@ -1,0 +1,34 @@
+<configuration>
+
+    <variable scope="context" name="logPattern" value="[%d{yyyy.MM.dd HH:mm}] [%t] [%level] %msg%n"/>
+
+    <appender name="LOG" class="ch.qos.logback.core.FileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <file>latest.log</file>
+        <encoder>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+    </appender>
+    <appender name="DEBUG-LOG" class="ch.qos.logback.core.FileAppender">
+        <file>debug-latest.log</file>
+        <encoder>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <encoder>
+            <pattern>${logPattern}</pattern>
+        </encoder>
+    </appender>
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="LOG"/>
+        <appender-ref ref="DEBUG-LOG" />
+    </root>
+</configuration>
