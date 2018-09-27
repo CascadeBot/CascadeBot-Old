@@ -8,7 +8,7 @@ public class CommandContext {
     private final TextChannel channel;
     private final  GuildData data;
 
-    public CommandContext(TextChannel channel, GuildData data/* whatever */) {
+    public CommandContext(TextChannel channel, GuildData data, String[] args) {
         this.channel = channel;
         this.data = data;
     }
