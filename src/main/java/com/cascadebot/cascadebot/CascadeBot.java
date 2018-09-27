@@ -57,9 +57,9 @@ public class CascadeBot {
 
         commandManager = new CommandManager();
 
-        for(ScriptEngineFactory factory : new ScriptEngineManager().getEngineFactories()) {
-            System.out.println(factory.getEngineName());
-        }
+        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
+        Thread.currentThread()
+                .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
 
         instance = this;
     }
