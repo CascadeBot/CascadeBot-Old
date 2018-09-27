@@ -1,15 +1,13 @@
 package com.cascadebot.cascadebot;
 
+import com.cascadebot.cascadebot.commands.Command;
 import org.apache.commons.io.FileUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Config {
 
@@ -54,13 +52,25 @@ public class Config {
 
         VALUES = new Values();
         Object botInfo = config.get("bot");
-        if(botInfo instanceof Map) {
+        if (botInfo instanceof Map) {
             Map<String, Object> botMap = (Map<String, Object>) botInfo;
             VALUES.botToken = (String) botMap.get("token");
             VALUES.id = (Long) botMap.get("id");
         }
 
         VALUES.prettyJson = (boolean) config.getOrDefault("prettyJson", false);
+
+        VALUES.commandLevels = new HashMap<>();
+        Object commandLevels = config.get("commandLevel");
+        if (commandLevels instanceof Map) {
+            Map<String, Object> levelMap = (Map<String, Object>) commandLevels;
+            for (String s : levelMap.keySet()) {
+                if (Command.CommandLevel.contains(s)) {
+                    VALUES.commandLevels.put(Command.CommandLevel.valueOf(s), (Long) levelMap.get(s));
+                }
+            }
+        }
+
     }
 
     private boolean meetsRequirements(Map<String, Object> map, String[] path) {
@@ -81,5 +91,8 @@ public class Config {
         public long id;
 
         public boolean prettyJson;
+
+        public Map<Command.CommandLevel, Long> commandLevels;
+
     }
 }
