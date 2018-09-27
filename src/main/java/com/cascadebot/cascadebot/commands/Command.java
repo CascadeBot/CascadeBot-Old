@@ -25,17 +25,6 @@ public interface Command {
         DEVELOPER,
         OWNER;
 
-        public static boolean contains(String test) {
-
-            for (CommandLevel c : CommandLevel.values()) {
-                if (c.name().equals(test)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
         public long getId() {
             return Config.VALUES.commandLevels.getOrDefault(this, -1L);
         }

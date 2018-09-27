@@ -2,6 +2,7 @@ package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commands.Command;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.EnumUtils;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -65,7 +66,7 @@ public class Config {
         if (commandLevels instanceof Map) {
             Map<String, Object> levelMap = (Map<String, Object>) commandLevels;
             for (String s : levelMap.keySet()) {
-                if (Command.CommandLevel.contains(s)) {
+                if (EnumUtils.isValidEnum(Command.CommandLevel.class, s)) {
                     VALUES.commandLevels.put(Command.CommandLevel.valueOf(s), (Long) levelMap.get(s));
                 }
             }
