@@ -38,7 +38,9 @@ public class CommandManager {
 
     public Command getCommand(String s, User user) {
         for (Command cmd : getCommands()) {
-            // TODO: Command checking logic
+            if (cmd.defaultCommand().equalsIgnoreCase(s)) {
+                return cmd; //TODO: Lots more checking than *this*
+            }
         }
         return null;
     }
