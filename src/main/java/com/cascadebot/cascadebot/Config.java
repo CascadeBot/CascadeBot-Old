@@ -46,7 +46,7 @@ public class Config {
 
         if(notMeet.isEmpty()) {
             CascadeBot.instance().getLogger().error("Required config elements not meet");
-            System.exit(23);
+            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             return;
         }
 

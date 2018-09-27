@@ -1,5 +1,6 @@
 package com.cascadebot.cascadebot.commands;
 
+import com.cascadebot.cascadebot.ExitCodes;
 import com.cascadebot.cascadebot.utils.ReflectionUtils;
 import net.dv8tion.jda.core.entities.User;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class CommandManager {
             logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
         } catch (ClassNotFoundException | IOException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             logger.error("Could not load commands!", e);
-            System.exit(23);
+            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
     }
 

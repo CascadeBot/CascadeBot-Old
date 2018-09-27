@@ -36,7 +36,7 @@ public class CascadeBot {
             config = new Config("config.yml");
         } catch (IOException e) {
             LOGGER.error("Error reading config file", e);
-            System.exit(23);
+            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             return;
         }
 
@@ -49,7 +49,7 @@ public class CascadeBot {
             jda = new JDABuilder(AccountType.BOT).setToken(Config.VALUES.botToken).build();
         } catch (LoginException e) {
             LOGGER.error("Error building JDA", e);
-            System.exit(23);
+            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             return;
         }
 
