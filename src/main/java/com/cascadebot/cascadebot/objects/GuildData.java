@@ -3,18 +3,21 @@ package com.cascadebot.cascadebot.objects;
 import com.cascadebot.cascadebot.commands.Command;
 import com.cascadebot.cascadebot.commands.CommandManager;
 import com.cascadebot.cascadebot.commands.CommandType;
+import org.eclipse.jetty.util.ConcurrentHashSet;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GuildData {
 
     private long guildID;
-    private Set<Command> enabledCommands = Collections.synchronizedSet(new HashSet<>(CommandManager.instance().getCommands()));
+    private Set<Command> enabledCommands = ConcurrentHashMap.newKeySet();
 
     public GuildData(long guildID) {
         this.guildID = guildID;
+        enabledCommands.addAll(CommandManager.instance().getCommands());
     }
 
     public void enableCommand(Command command) {
