@@ -19,6 +19,10 @@ public interface Command {
         return CommandLevel.USER;
     }
 
+    default String[] getGlobalAliases() {
+        return new String[0];
+    }
+
     public enum CommandLevel {
         USER,
         STAFF,

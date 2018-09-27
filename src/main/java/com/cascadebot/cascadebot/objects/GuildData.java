@@ -3,41 +3,72 @@ package com.cascadebot.cascadebot.objects;
 import com.cascadebot.cascadebot.commands.Command;
 import com.cascadebot.cascadebot.commands.CommandManager;
 import com.cascadebot.cascadebot.commands.CommandType;
-import org.eclipse.jetty.util.ConcurrentHashSet;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GuildData {
 
     private long guildID;
-    private Set<Command> enabledCommands = ConcurrentHashMap.newKeySet();
+    private ConcurrentHashMap<Class<? extends Command>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
 
     public GuildData(long guildID) {
         this.guildID = guildID;
-        enabledCommands.addAll(CommandManager.instance().getCommands());
     }
 
     public void enableCommand(Command command) {
         if (!command.getType().isAvailableModule()) return;
-        enabledCommands.add(command);
+        if (commandInfo.contains(command.getClass())) {
+            commandInfo.get(command.getClass()).setDisabled(false);
+        }
     }
 
     public void enableCommandByType(CommandType commandType) {
-        if (!commandType.isAvailableModule()) return;
-        enabledCommands.addAll(CommandManager.instance().getCommandsByType(commandType));
+        for (Command command : CommandManager.instance().getCommandsByType(commandType)) {
+            enableCommand(command);
+        }
     }
 
     public void disableCommand(Command command) {
         if (!command.getType().isAvailableModule()) return;
-        enabledCommands.remove(command);
+        if (commandInfo.contains(command.getClass())) {
+            commandInfo.get(command.getClass()).setDisabled(false);
+        }
     }
 
     public void disableCommandByType(CommandType commandType) {
         if (!commandType.isAvailableModule()) return;
-        enabledCommands.removeAll(CommandManager.instance().getCommandsByType(commandType));
+        for (Command command : CommandManager.instance().getCommandsByType(commandType)) {
+            disableCommand(command);
+        }
+    }
+
+    public boolean isCommandEnabled(Command command) {
+        if (commandInfo.contains(command.getClass())) {
+            return !commandInfo.get(command.getClass()).isDisabled();
+        }
+        return false;
+    }
+
+    public boolean isTypeEnabled(CommandType type) {
+        boolean enabled = true;
+        for (Command command : CommandManager.instance().getCommandsByType(type)) {
+            enabled &= !commandInfo.get(command.getClass()).isDisabled();
+        }
+        return enabled;
+    }
+
+    public String getCommandName(Command command) {
+        if (commandInfo.contains(command.getClass())) {
+            return commandInfo.get(command.getClass()).getCommand();
+        }
+        return command.defaultCommand();
+    }
+
+    public String[] getCommandArgs(Command command) {
+        if (commandInfo.contains(command.getClass())) {
+            return commandInfo.get(command.getClass()).getAliases();
+        }
+        return command.getGlobalAliases();
     }
 
     public long getGuildID() {

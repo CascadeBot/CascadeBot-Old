@@ -1,8 +1,10 @@
 package com.cascadebot.cascadebot.commands;
 
 import com.cascadebot.cascadebot.ExitCodes;
+import com.cascadebot.cascadebot.objects.GuildData;
 import com.cascadebot.cascadebot.utils.ReflectionUtils;
 import net.dv8tion.jda.core.entities.User;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,10 +38,12 @@ public class CommandManager {
         }
     }
 
-    public Command getCommand(String s, User user) {
+    public Command getCommand(String command, User user, GuildData data) {
         for (Command cmd : getCommands()) {
-            if (cmd.defaultCommand().equalsIgnoreCase(s)) {
-                return cmd; //TODO: Lots more checking than *this*
+            if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
+                return cmd;
+            } else if (ArrayUtils.contains(data.getCommandArgs(cmd), command)) {
+                return cmd;
             }
         }
         return null;

@@ -20,14 +20,15 @@ public class CommandListener extends ListenerAdapter {
         if (event.getAuthor().isBot()) return;
         String message = multiSpace.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         String prefix = Config.VALUES.defaultPrefix; //TODO: Add guild data prefix here
+        GuildData guildData = new GuildData(event.getGuild().getIdLong());
         if (message.startsWith(prefix)) {
             String command = message.substring(prefix.length()); // Remove prefix from command
             command = command.split(" ")[0]; // Get first string before a space
             String[] args = ArrayUtils.remove(command.split(" "), 0); // Remove the command portion of the string
 
-            CommandContext context = new CommandContext(event.getChannel(), new GuildData(event.getGuild().getIdLong()), args);
+            CommandContext context = new CommandContext(event.getChannel(), guildData, args);
 
-            Command c = CascadeBot.instance().getCommandManager().getCommand(command, event.getAuthor());
+            Command c = CascadeBot.instance().getCommandManager().getCommand(command, event.getAuthor(), guildData);
             c.onCommand(event.getMember(), context);
         }
 
