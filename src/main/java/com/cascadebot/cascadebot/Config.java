@@ -61,12 +61,14 @@ public class Config {
 
         VALUES.prettyJson = (boolean) config.getOrDefault("prettyJson", false);
 
+        VALUES.defaultPrefix = (String) config.getOrDefault("prefix", ";");
+
         VALUES.commandLevels = new HashMap<>();
         Object commandLevels = config.get("commandLevel");
         if (commandLevels instanceof Map) {
             Map<String, Object> levelMap = (Map<String, Object>) commandLevels;
             for (String s : levelMap.keySet()) {
-                if (EnumUtils.isValidEnum(Command.CommandLevel.class, s)) {
+                if (EnumUtils.isValidEnum(Command.CommandLevel.class, s.toUpperCase())) {
                     VALUES.commandLevels.put(Command.CommandLevel.valueOf(s), (Long) levelMap.get(s));
                 }
             }
@@ -92,6 +94,8 @@ public class Config {
         public long id;
 
         public boolean prettyJson;
+
+        public String defaultPrefix; // String to accommodate multiple char prefixes
 
         public Map<Command.CommandLevel, Long> commandLevels;
 
