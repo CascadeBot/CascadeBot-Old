@@ -3,6 +3,7 @@ package com.cascadebot.cascadebot.commands;
 import com.cascadebot.cascadebot.ExitCodes;
 import com.cascadebot.cascadebot.utils.ReflectionUtils;
 import net.dv8tion.jda.core.entities.User;
+import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public class CommandManager {
         try {
             for (Class<?> c : ReflectionUtils.getClasses("com.cascadebot.cascadebot.commands.commands")) {
                 if (Command.class.isAssignableFrom(c))
-                    commands.add((Command) c.getDeclaredConstructor().newInstance());
+                    commands.add((Command) ConstructorUtils.invokeConstructor(c));
             }
             logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
         } catch (ClassNotFoundException | IOException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
