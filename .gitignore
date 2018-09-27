@@ -1,5 +1,4 @@
 .idea/
-*.yml
 
 ### Java ###
 # Compiled class file
@@ -20,3 +19,4 @@
 hs_err_pid*
 
 target/
+*.yml
