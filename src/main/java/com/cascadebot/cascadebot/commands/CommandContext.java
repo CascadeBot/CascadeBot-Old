@@ -33,7 +33,7 @@ public class CommandContext {
     }
 
     public String getMessageFromArgs(int start) {
-        return getMessageFromArgs(start, args.length - 1);
+        return getMessageFromArgs(start, args.length);
     }
 
     public String getMessageFromArgs(int start, int end) {
