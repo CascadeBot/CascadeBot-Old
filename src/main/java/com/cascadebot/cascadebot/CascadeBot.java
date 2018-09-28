@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
+import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,8 @@ public class CascadeBot {
 
     private static CascadeBot instance;
 
+    private OkHttpClient httpClient;
+
     /**
      *  Runs once all shards are loaded
      */
@@ -45,6 +48,8 @@ public class CascadeBot {
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             return;
         }
+
+        httpClient = new OkHttpClient.Builder().build();
 
         if(Config.VALUES.prettyJson) {
             builder.setPrettyPrinting();
@@ -91,5 +96,19 @@ public class CascadeBot {
         return commandManager;
     }
 
+    public OkHttpClient getHttpClient() {
+        return httpClient;
+    }
+
+    public static Gson getGSON() {
+        return GSON;
+    }
+
+    /**
+     *  Runs once all shards are loaded
+     */
+    public void run() {
+        LOGGER.info("All shards successfully logged in!");
+    }
 
 }
