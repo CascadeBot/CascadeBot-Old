@@ -104,11 +104,4 @@ public class CascadeBot {
         return GSON;
     }
 
-    /**
-     *  Runs once all shards are loaded
-     */
-    public void run() {
-        LOGGER.info("All shards successfully logged in!");
-    }
-
 }
