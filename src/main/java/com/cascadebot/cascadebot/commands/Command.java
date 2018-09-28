@@ -1,11 +1,11 @@
 package com.cascadebot.cascadebot.commands;
 
 import com.cascadebot.cascadebot.Config;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.User;
 
 public interface Command {
 
-    public void onCommand(Member sender, CommandContext context);
+    public void onCommand(User sender, CommandContext context);
 
     public String defaultCommand();
 
