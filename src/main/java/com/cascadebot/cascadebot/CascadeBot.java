@@ -29,6 +29,7 @@ public class CascadeBot {
     private static CascadeBot instance;
 
     public void init() {
+        instance = this;
         GsonBuilder builder = new GsonBuilder();
         try {
             config = new Config("config.yml");
@@ -65,7 +66,6 @@ public class CascadeBot {
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
 
-        instance = this;
     }
 
     public static CascadeBot instance() {
