@@ -29,7 +29,9 @@ public class CommandListener extends ListenerAdapter {
             CommandContext context = new CommandContext(event.getChannel(), guildData, args);
 
             Command c = CascadeBot.instance().getCommandManager().getCommand(command, event.getAuthor(), guildData);
-            c.onCommand(event.getMember(), context);
+            if(c != null) {
+                c.onCommand(event.getMember(), context);
+            }
         }
 
     }
