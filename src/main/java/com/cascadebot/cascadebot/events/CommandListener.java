@@ -9,9 +9,15 @@ import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 public class CommandListener extends ListenerAdapter {
+
+    private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
+    private static final ExecutorService COMMAND_POOL = Executors.newFixedThreadPool(5, r ->
+            new Thread(COMMAND_THREADS, r, "Command Pool-" + COMMAND_THREADS.activeCount()));
 
     private final Pattern multiSpace = Pattern.compile(" {2,}");
 
@@ -26,14 +32,24 @@ public class CommandListener extends ListenerAdapter {
             String commandString = command.split(" ")[0]; // Get first string before a space
             String[] args = ArrayUtils.remove(command.split(" "), 0); // Remove the command portion of the string
 
-            CommandContext context = new CommandContext(event.getChannel(), guildData, args);
+            CommandContext context = new CommandContext();
+            context.setChannel(event.getChannel());
+            context.setArgs(args);
+            context.setGuildData(guildData);
+            context.setMember(event.getMember());
 
-            Command c = CascadeBot.instance().getCommandManager().getCommand(commandString, event.getAuthor(), guildData);
-            if(c != null) {
-                c.onCommand(event.getMember(), context);
+            Command cmd = CascadeBot.instance().getCommandManager().getCommand(commandString, event.getAuthor(), guildData);
+            if (cmd != null) {
+                dispatchCommand(cmd, context);
             }
         }
-
     }
+
+    private void dispatchCommand(final Command command, final CommandContext context) {
+        COMMAND_POOL.submit(() -> {
+            command.onCommand(context.getMember().getUser(), context);
+        });
+    }
+
 
 }
