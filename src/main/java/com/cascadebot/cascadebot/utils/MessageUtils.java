@@ -1,0 +1,41 @@
+package com.cascadebot.cascadebot.utils;
+
+import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.Config;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import java.io.IOException;
+
+public class MessageUtils {
+
+    public static String paste(String paste) {
+        Request request = new Request.Builder()
+                .url(Config.VALUES.hasteServer)
+                .post(RequestBody.create(MediaType.parse("application/text"), paste))
+                .build();
+
+        try {
+            Response response = CascadeBot.instance().getHttpClient().newCall(request).execute();
+            JsonParser parser = new JsonParser();
+            if(response.body() != null) {
+                JsonObject object = parser.parse(response.body().string()).getAsJsonObject();
+                return object.get("key").getAsString();
+            } else {
+                //TODO handle this better
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getStackTrace(Throwable throwable) {
+        return "";
+    }
+
+}
