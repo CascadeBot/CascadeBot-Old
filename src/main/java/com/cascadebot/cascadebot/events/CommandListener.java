@@ -47,7 +47,7 @@ public class CommandListener extends ListenerAdapter {
 
     private void dispatchCommand(final Command command, final CommandContext context) {
         COMMAND_POOL.submit(() -> {
-            command.onCommand(context.getMember().getUser(), context);
+            command.onCommand(context.getMember(), context);
         });
     }
 

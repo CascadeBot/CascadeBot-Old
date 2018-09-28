@@ -28,6 +28,13 @@ public class CascadeBot {
 
     private static CascadeBot instance;
 
+    /**
+     *  Runs once all shards are loaded
+     */
+    public void run() {
+        LOGGER.info("All shards successfully logged in!");
+    }
+
     public void init() {
         instance = this;
         GsonBuilder builder = new GsonBuilder();
@@ -84,12 +91,5 @@ public class CascadeBot {
         return commandManager;
     }
 
-
-    /**
-     *  Runs once all shards are loaded
-     */
-    public void run() {
-        LOGGER.info("All shards successfully logged in!");
-    }
 
 }
