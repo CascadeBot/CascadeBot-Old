@@ -3,11 +3,12 @@ package com.cascadebot.cascadebot.commands.commands.developer;
 import com.cascadebot.cascadebot.commands.Command;
 import com.cascadebot.cascadebot.commands.CommandContext;
 import com.cascadebot.cascadebot.commands.CommandType;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Member;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -25,7 +26,7 @@ public class EvalCommand implements Command {
     private static final List<String> IMPORTS = Arrays.asList("com.cascadebot.cascadebot.utils");
 
     @Override
-    public void onCommand(User sender, CommandContext context) {
+    public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
             //TODO add utils for error messages
             context.getChannel().sendMessage("Needs more args").queue();
