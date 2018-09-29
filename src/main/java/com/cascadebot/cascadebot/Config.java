@@ -74,6 +74,8 @@ public class Config {
             }
         }
 
+        VALUES.hasteServer = (String) config.getOrDefault("hasteServer", "https://hastebin.com/");
+
     }
 
     private boolean meetsRequirements(Map<String, Object> map, String[] path) {
@@ -98,6 +100,8 @@ public class Config {
         public String defaultPrefix; // String to accommodate multiple char prefixes
 
         public Map<Command.CommandLevel, Long> commandLevels;
+
+        public String hasteServer;
 
     }
 }
