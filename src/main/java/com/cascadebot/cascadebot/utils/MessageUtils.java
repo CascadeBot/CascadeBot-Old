@@ -10,6 +10,8 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class MessageUtils {
 
@@ -25,17 +27,20 @@ public class MessageUtils {
             if(response.body() != null) {
                 JsonObject object = parser.parse(response.body().string()).getAsJsonObject();
                 return object.get("key").getAsString();
-            } else {
-                //TODO handle this better
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); //TODO log this separately so things don't infinite loop.
         }
         return "";
     }
 
     public static String getStackTrace(Throwable throwable) {
-        return "";
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        throwable.printStackTrace(pw);
+        String trace = sw.toString();
+        pw.close();
+        return trace;
     }
 
 }
