@@ -36,11 +36,10 @@ public class MessageUtils {
 
     public static String getStackTrace(Throwable throwable) {
         StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        throwable.printStackTrace(pw);
-        String trace = sw.toString();
-        pw.close();
-        return trace;
+        try (PrintWriter writer = new PrintWriter(sw)) {
+            throwable.printStackTrace(writer);
+            return sw.toString();
+        }
     }
 
 }
