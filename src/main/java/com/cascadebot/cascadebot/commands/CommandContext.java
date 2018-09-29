@@ -3,6 +3,7 @@ package com.cascadebot.cascadebot.commands;
 import com.cascadebot.cascadebot.objects.GuildData;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,8 +37,7 @@ public class CommandContext {
     }
 
     public String getMessageFromArgs(int start, int end) {
-        List<String> messageParts = Arrays.asList(Arrays.copyOfRange(args, start, end));
-        return messageParts.stream().collect(Collectors.joining(" "));
+        return Arrays.stream(ArrayUtils.subarray(args, start, end)).collect(Collectors.joining(" "));
     }
 
     public void setChannel(TextChannel channel) {
