@@ -1,6 +1,6 @@
 <configuration>
 
-    <variable scope="context" name="logPattern" value="[%d{yyyy.MM.dd HH:mm}] [%t] [%level] %msg%n"/>
+    <variable scope="context" name="logPattern" value="[%d{yyyy.MM.dd HH:mm}] [%t] [%highlight(%level)] %msg%n"/>
 
     <appender name="LOG" class="ch.qos.logback.core.FileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
