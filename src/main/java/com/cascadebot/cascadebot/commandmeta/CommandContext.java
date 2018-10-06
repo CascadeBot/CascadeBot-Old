@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot.commandmeta;
 
 import com.cascadebot.cascadebot.Constants;
+import com.cascadebot.cascadebot.messaging.MessageContext;
 import com.cascadebot.cascadebot.objects.GuildData;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -15,33 +16,24 @@ import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
-public class CommandContext {
+public class CommandContext extends MessageContext {
 
-    private final TextChannel channel;
-    private final Message message;
-    private final Guild guild;
+
     private final GuildData data;
 
     private final String[] args;
-    private final Member invoker;
     private final String trigger;
     private final boolean isMention;
 
     public CommandContext(TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
-        this.channel = channel;
-        this.message = message;
-        this.guild = guild;
+        super(channel, message, guild, invoker);
         this.data = data;
         this.args = args;
-        this.invoker = invoker;
         this.trigger = trigger;
         this.isMention = isMention;
     }
 
-    public TextChannel getChannel() {
-        return channel;
-    }
 
     public GuildData getData() {
         return data;
@@ -77,14 +69,6 @@ public class CommandContext {
 
     public Double getArgAsDouble(int index) {
         return Double.parseDouble(StringUtils.replace(this.args[index], ",", "."));
-    }
-
-    public Member getMember() {
-        return invoker;
-    }
-
-    public User getUser() {
-        return invoker.getUser();
     }
 
     public String getTrigger() {
