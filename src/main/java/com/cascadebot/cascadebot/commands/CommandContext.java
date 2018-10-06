@@ -14,7 +14,7 @@ public class CommandContext {
     private GuildData data;
     private String[] args;
     private Member member;
-    private String originalCommand;
+    private String trigger;
 
     public CommandContext() {
     }
@@ -84,12 +84,12 @@ public class CommandContext {
         return member.getUser();
     }
 
-    public void setOriginalCommand(String originalCommand) {
-        this.originalCommand = originalCommand;
+    public void setTrigger(String trigger) {
+        this.trigger = trigger;
     }
 
-    public String getOriginalCommand() {
-        return originalCommand;
+    public String getTrigger() {
+        return trigger;
     }
 
 }

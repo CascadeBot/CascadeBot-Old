@@ -39,7 +39,7 @@ public class CommandListener extends ListenerAdapter {
 
             ICommand cmd = CascadeBot.instance().getCommandManager().getCommand(commandString, event.getAuthor(), guildData);
             if (cmd != null) {
-                context.setOriginalCommand(commandString);
+                context.setTrigger(commandString);
                 dispatchCommand(cmd, context);
             }
         }
@@ -48,7 +48,7 @@ public class CommandListener extends ListenerAdapter {
     private void dispatchCommand(final ICommand command, final CommandContext context) {
         COMMAND_POOL.submit(() -> {
             CascadeBot.LOGGER.info("ICommand {} executed by {} with args: {}",
-                    command.defaultCommand() + (command.defaultCommand().equalsIgnoreCase(context.getOriginalCommand()) ? "" : context.getOriginalCommand()),
+                    command.defaultCommand() + (command.defaultCommand().equalsIgnoreCase(context.getTrigger()) ? "" : context.getTrigger()),
                     context.getUser().getName() + "#" + context.getUser().getDiscriminator(), // TODO: Util this
                     Arrays.toString(context.getArgs()));
             command.onCommand(context.getMember(), context);
