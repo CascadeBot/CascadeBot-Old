@@ -114,6 +114,14 @@
             <artifactId>JShellScriptEngine</artifactId>
             <version>74758f8a8e</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.1.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>
