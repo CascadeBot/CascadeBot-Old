@@ -27,21 +27,46 @@ public class CommandListener extends ListenerAdapter {
         String prefix = Config.VALUES.defaultPrefix; //TODO: Add guild data prefix here
         GuildData guildData = new GuildData(event.getGuild().getIdLong());
         if (message.startsWith(prefix)) {
-            String command = message.substring(prefix.length()); // Remove prefix from command
-            String commandString = command.split(" ")[0]; // Get first string before a space
-            String[] args = ArrayUtils.remove(command.split(" "), 0); // Remove the command portion of the string
+            String commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
+            String trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
+            String[] args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
 
-            CommandContext context = new CommandContext();
-            context.setChannel(event.getChannel());
-            context.setArgs(args);
-            context.setGuildData(guildData);
-            context.setMember(event.getMember());
-
-            ICommand cmd = CascadeBot.instance().getCommandManager().getCommand(commandString, event.getAuthor(), guildData);
+            ICommand cmd = CascadeBot.instance().getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
             if (cmd != null) {
-                context.setTrigger(commandString);
+                CommandContext context = new CommandContext(
+                        event.getChannel(),
+                        event.getMessage(),
+                        event.getGuild(),
+                        guildData,
+                        args,
+                        event.getMember(),
+                        trigger,
+                        false
+                );
                 dispatchCommand(cmd, context);
             }
+        } else if (guildData.isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
+
+            String commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
+            String trigger = commandWithArgs.split(" ")[0];
+            String[] args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
+
+            ICommand cmd = CascadeBot.instance().getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
+            if (cmd != null) {
+                CommandContext context = new CommandContext(
+                        event.getChannel(),
+                        event.getMessage(),
+                        event.getGuild(),
+                        guildData,
+                        args,
+                        event.getMember(),
+                        trigger,
+                        true
+                );
+                dispatchCommand(cmd, context);
+            }
+        } else {
+
         }
     }
 

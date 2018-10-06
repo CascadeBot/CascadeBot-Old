@@ -11,6 +11,9 @@ public class GuildData {
     private long guildID;
     private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
 
+    private boolean mentionPrefix = true; // Whether the bot will respond to a mention as a prefix
+
+
     public GuildData(long guildID) {
         this.guildID = guildID;
     }
@@ -74,4 +77,13 @@ public class GuildData {
     public long getGuildID() {
         return guildID;
     }
+
+    public boolean isMentionPrefix() {
+        return mentionPrefix;
+    }
+
+    public void setMentionPrefix(boolean mentionPrefix) {
+        this.mentionPrefix = mentionPrefix;
+    }
+
 }
