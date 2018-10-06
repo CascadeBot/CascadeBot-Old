@@ -1,8 +1,8 @@
 package com.cascadebot.cascadebot.objects;
 
-import com.cascadebot.cascadebot.commands.ICommand;
-import com.cascadebot.cascadebot.commands.CommandManager;
-import com.cascadebot.cascadebot.commands.CommandType;
+import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.commandmeta.CommandManager;
+import com.cascadebot.cascadebot.commandmeta.CommandType;
 
 import java.util.concurrent.ConcurrentHashMap;
 

@@ -1,4 +1,4 @@
-package com.cascadebot.cascadebot.commands;
+package com.cascadebot.cascadebot.commandmeta;
 
 import com.cascadebot.cascadebot.ExitCodes;
 import com.cascadebot.cascadebot.objects.GuildData;
@@ -27,7 +27,7 @@ public class CommandManager {
 
         long start = System.currentTimeMillis();
         try {
-            for (Class<?> c : ReflectionUtils.getClasses("com.cascadebot.cascadebot.commands.commands")) {
+            for (Class<?> c : ReflectionUtils.getClasses("com.cascadebot.cascadebot.commands")) {
                 if (ICommand.class.isAssignableFrom(c))
                     commands.add((ICommand) ConstructorUtils.invokeConstructor(c));
             }

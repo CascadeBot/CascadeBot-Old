@@ -1,8 +1,8 @@
-package com.cascadebot.cascadebot.commands.commands.core;
+package com.cascadebot.cascadebot.commands.core;
 
-import com.cascadebot.cascadebot.commands.ICommand;
-import com.cascadebot.cascadebot.commands.CommandContext;
-import com.cascadebot.cascadebot.commands.CommandType;
+import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.commandmeta.CommandContext;
+import com.cascadebot.cascadebot.commandmeta.CommandType;
 import net.dv8tion.jda.core.entities.Member;
 
 public class UserInfoCommand implements ICommand {

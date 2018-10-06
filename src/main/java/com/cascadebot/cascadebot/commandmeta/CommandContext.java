@@ -1,4 +1,4 @@
-package com.cascadebot.cascadebot.commands;
+package com.cascadebot.cascadebot.commandmeta;
 
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.objects.GuildData;

@@ -1,7 +1,7 @@
 package com.cascadebot.cascadebot;
 
-import com.cascadebot.cascadebot.commands.CommandManager;
-import com.cascadebot.cascadebot.commands.commands.developer.EvalCommand;
+import com.cascadebot.cascadebot.commandmeta.CommandManager;
+import com.cascadebot.cascadebot.commands.developer.EvalCommand;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
 import com.google.gson.Gson;

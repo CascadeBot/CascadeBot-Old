@@ -1,6 +1,6 @@
 package com.cascadebot.cascadebot.objects;
 
-import com.cascadebot.cascadebot.commands.ICommand;
+import com.cascadebot.cascadebot.commandmeta.ICommand;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class GuildCommandInfo {

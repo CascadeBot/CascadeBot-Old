@@ -1,6 +1,6 @@
 package com.cascadebot.cascadebot;
 
-import com.cascadebot.cascadebot.commands.ICommandRestricted;
+import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.yaml.snakeyaml.Yaml;

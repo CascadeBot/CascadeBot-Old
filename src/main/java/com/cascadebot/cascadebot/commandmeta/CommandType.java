@@ -1,4 +1,4 @@
-package com.cascadebot.cascadebot.commands;
+package com.cascadebot.cascadebot.commandmeta;
 
 public enum CommandType {
 

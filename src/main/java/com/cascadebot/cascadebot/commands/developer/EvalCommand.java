@@ -1,8 +1,8 @@
-package com.cascadebot.cascadebot.commands.commands.developer;
+package com.cascadebot.cascadebot.commands.developer;
 
-import com.cascadebot.cascadebot.commands.CommandContext;
-import com.cascadebot.cascadebot.commands.CommandType;
-import com.cascadebot.cascadebot.commands.ICommandRestricted;
+import com.cascadebot.cascadebot.commandmeta.CommandContext;
+import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.utils.MessageUtils;
 import net.dv8tion.jda.core.entities.Member;
 

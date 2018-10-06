@@ -1,6 +1,5 @@
-package com.cascadebot.cascadebot.commands;
+package com.cascadebot.cascadebot.commandmeta;
 
-import com.cascadebot.cascadebot.Config;
 import net.dv8tion.jda.core.entities.Member;
 
 public interface ICommand {
