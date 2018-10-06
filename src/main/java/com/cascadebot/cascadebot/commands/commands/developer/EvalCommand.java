@@ -1,8 +1,8 @@
 package com.cascadebot.cascadebot.commands.commands.developer;
 
-import com.cascadebot.cascadebot.commands.Command;
 import com.cascadebot.cascadebot.commands.CommandContext;
 import com.cascadebot.cascadebot.commands.CommandType;
+import com.cascadebot.cascadebot.commands.ICommandRestricted;
 import com.cascadebot.cascadebot.utils.MessageUtils;
 import net.dv8tion.jda.core.entities.Member;
 
@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-public class EvalCommand implements Command {
+public class EvalCommand implements ICommandRestricted {
 
     private ScriptEngineManager manager = new ScriptEngineManager();
 

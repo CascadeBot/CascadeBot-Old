@@ -1,6 +1,6 @@
 package com.cascadebot.cascadebot;
 
-import com.cascadebot.cascadebot.commands.Command;
+import com.cascadebot.cascadebot.commands.ICommandRestricted;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.yaml.snakeyaml.Yaml;
@@ -68,8 +68,8 @@ public class Config {
         if (commandLevels instanceof Map) {
             Map<String, Object> levelMap = (Map<String, Object>) commandLevels;
             for (String s : levelMap.keySet()) {
-                if (EnumUtils.isValidEnum(Command.CommandLevel.class, s.toUpperCase())) {
-                    VALUES.commandLevels.put(Command.CommandLevel.valueOf(s), (Long) levelMap.get(s));
+                if (EnumUtils.isValidEnum(ICommandRestricted.CommandLevel.class, s.toUpperCase())) {
+                    VALUES.commandLevels.put(ICommandRestricted.CommandLevel.valueOf(s), (Long) levelMap.get(s));
                 }
             }
         }
@@ -99,7 +99,7 @@ public class Config {
 
         public String defaultPrefix; // String to accommodate multiple char prefixes
 
-        public Map<Command.CommandLevel, Long> commandLevels;
+        public Map<ICommandRestricted.CommandLevel, Long> commandLevels;
 
         public String hasteServer;
 

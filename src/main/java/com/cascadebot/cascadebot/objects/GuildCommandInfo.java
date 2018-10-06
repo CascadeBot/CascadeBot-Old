@@ -1,6 +1,6 @@
 package com.cascadebot.cascadebot.objects;
 
-import com.cascadebot.cascadebot.commands.Command;
+import com.cascadebot.cascadebot.commands.ICommand;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class GuildCommandInfo {
@@ -10,7 +10,7 @@ public class GuildCommandInfo {
     private String command;
     private String[] aliases;
 
-    public GuildCommandInfo(Command command) {
+    public GuildCommandInfo(ICommand command) {
         this.command = command.defaultCommand();
         this.forceDefault = command.forceDefault();
         this.aliases = command.getGlobalAliases();
