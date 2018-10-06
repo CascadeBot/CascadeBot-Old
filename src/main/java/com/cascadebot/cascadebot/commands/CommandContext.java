@@ -4,6 +4,7 @@ import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.objects.GuildData;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -13,6 +14,7 @@ public class CommandContext {
     private GuildData data;
     private String[] args;
     private Member member;
+    private String originalCommand;
 
     public CommandContext() {
     }
@@ -76,6 +78,18 @@ public class CommandContext {
 
     public Member getMember() {
         return member;
+    }
+
+    public User getUser() {
+        return member.getUser();
+    }
+
+    public void setOriginalCommand(String originalCommand) {
+        this.originalCommand = originalCommand;
+    }
+
+    public String getOriginalCommand() {
+        return originalCommand;
     }
 
 }
