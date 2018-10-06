@@ -77,7 +77,7 @@ public class CommandListener extends ListenerAdapter {
 
     private void dispatchCommand(final ICommand command, final CommandContext context) {
         COMMAND_POOL.submit(() -> {
-            CascadeBot.LOGGER.info("ICommand {} executed by {} with args: {}",
+            CascadeBot.LOGGER.info("Command {} executed by {} with args: {}",
                     command.defaultCommand() + (command.defaultCommand().equalsIgnoreCase(context.getTrigger()) ? "" : context.getTrigger()),
                     context.getUser().getName() + "#" + context.getUser().getDiscriminator(), // TODO: Util this
                     Arrays.toString(context.getArgs()));
