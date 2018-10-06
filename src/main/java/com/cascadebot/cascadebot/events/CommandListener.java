@@ -20,7 +20,6 @@ public class CommandListener extends ListenerAdapter {
     private static final ExecutorService COMMAND_POOL = Executors.newFixedThreadPool(5, r ->
             new Thread(COMMAND_THREADS, r, "Command Pool-" + COMMAND_THREADS.activeCount()));
 
-
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
@@ -54,6 +53,10 @@ public class CommandListener extends ListenerAdapter {
                     Arrays.toString(context.getArgs()));
             command.onCommand(context.getMember(), context);
         });
+    }
+
+    public static void shutdownCommandPool() {
+        COMMAND_POOL.shutdown();
     }
 
 

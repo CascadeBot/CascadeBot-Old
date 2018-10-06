@@ -19,9 +19,9 @@ public class EvalCommand implements ICommandRestricted {
 
     private ScriptEngineManager manager = new ScriptEngineManager();
 
-    private static final ThreadGroup EVAL_POOL = new ThreadGroup("EvalCommand Thread Pool");
-    private static final ExecutorService POOL = Executors.newCachedThreadPool(r -> new Thread(EVAL_POOL, r,
-            EVAL_POOL.getName() + EVAL_POOL.activeCount()));
+    private static final ThreadGroup EVAL_THREADS = new ThreadGroup("EvalCommand Thread Pool");
+    private static final ExecutorService EVAL_POOL = Executors.newCachedThreadPool(r -> new Thread(EVAL_THREADS, r,
+            EVAL_THREADS.getName() + EVAL_THREADS.activeCount()));
 
     private static final List<String> IMPORTS = Arrays.asList("com.cascadebot.cascadebot.utils");
 
@@ -34,7 +34,7 @@ public class EvalCommand implements ICommandRestricted {
         }
         String engine = context.getArg(0);
 
-        POOL.submit(() -> {
+        EVAL_POOL.submit(() -> {
             try {
                 ScriptEngine scriptEngine = manager.getEngineByName(engine);
                 if (scriptEngine == null) {
@@ -78,6 +78,10 @@ public class EvalCommand implements ICommandRestricted {
     @Override
     public boolean forceDefault() {
         return true;
+    }
+
+    public static void shutdownEvalPool() {
+        EVAL_POOL.shutdown();
     }
 
 }

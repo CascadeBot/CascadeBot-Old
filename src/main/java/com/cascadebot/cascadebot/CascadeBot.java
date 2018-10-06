@@ -1,6 +1,7 @@
 package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commands.CommandManager;
+import com.cascadebot.cascadebot.commands.commands.developer.EvalCommand;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
 import com.google.gson.Gson;
@@ -77,7 +78,14 @@ public class CascadeBot {
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
 
+    }
+
+    public void shutdown() {
+        EvalCommand.shutdownEvalPool();
+        CommandListener.shutdownCommandPool();
+        shardManager.shutdown();
     }
 
     public static CascadeBot instance() {
