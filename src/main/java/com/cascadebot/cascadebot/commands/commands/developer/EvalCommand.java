@@ -9,7 +9,6 @@ import net.dv8tion.jda.core.entities.Member;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -33,7 +32,7 @@ public class EvalCommand implements Command {
             context.getChannel().sendMessage("Needs more args").queue();
             return;
         }
-        String engine = context.getArgs()[0];
+        String engine = context.getArg(0);
 
         POOL.submit(() -> {
             try {
@@ -43,7 +42,7 @@ public class EvalCommand implements Command {
                     scriptEngine = manager.getEngineByName("jshell");
                 }
 
-                String code = context.getMessageFromArgs(1);
+                String code = context.getMessage(1);
                 scriptEngine.put("sender", sender);
                 scriptEngine.put("context", context);
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining("\n"));
