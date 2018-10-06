@@ -68,9 +68,6 @@ public class Config {
 
         VALUES.defaultPrefix = (String) config.getOrDefault("prefix", ";");
 
-        VALUES.officalServer = (Long) config.getOrDefault("officialServer", -1L);
-        if (VALUES.officalServer == -1) CascadeBot.LOGGER.warn("The bot does not have an official server set! If you do not set user permissions manually, noone will be able to run admin commands!");
-
         VALUES.commandLevels = new HashMap<>();
         Object commandLevels = config.get("commandLevel");
         if (commandLevels instanceof Map) {
