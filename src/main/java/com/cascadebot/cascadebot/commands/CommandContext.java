@@ -2,7 +2,9 @@ package com.cascadebot.cascadebot.commands;
 
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.objects.GuildData;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.ArrayUtils;
@@ -10,13 +12,26 @@ import org.apache.commons.lang3.StringUtils;
 
 public class CommandContext {
 
-    private TextChannel channel;
-    private GuildData data;
-    private String[] args;
-    private Member member;
-    private String trigger;
+    private final TextChannel channel;
+    private final Message message;
+    private final Guild guild;
+    private final GuildData data;
 
-    public CommandContext() {
+    private final String[] args;
+    private final Member invoker;
+    private final String trigger;
+    private final boolean isMention;
+
+    public CommandContext(TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
+                          String trigger, boolean isMention) {
+        this.channel = channel;
+        this.message = message;
+        this.guild = guild;
+        this.data = data;
+        this.args = args;
+        this.invoker = invoker;
+        this.trigger = trigger;
+        this.isMention = isMention;
     }
 
     public TextChannel getChannel() {
@@ -59,33 +74,12 @@ public class CommandContext {
         return Double.parseDouble(StringUtils.replace(this.args[index], ",", "."));
     }
 
-
-    public void setChannel(TextChannel channel) {
-        this.channel = channel;
-    }
-
-    public void setGuildData(GuildData data) {
-        this.data = data;
-    }
-
-    public void setArgs(String[] args) {
-        this.args = args;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
-
     public Member getMember() {
-        return member;
+        return invoker;
     }
 
     public User getUser() {
-        return member.getUser();
-    }
-
-    public void setTrigger(String trigger) {
-        this.trigger = trigger;
+        return invoker.getUser();
     }
 
     public String getTrigger() {
