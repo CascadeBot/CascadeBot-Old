@@ -1,14 +1,11 @@
 package com.cascadebot.cascadebot.commands;
 
+import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.objects.GuildData;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 
 public class CommandContext {
 
@@ -32,13 +29,34 @@ public class CommandContext {
         return args;
     }
 
-    public String getMessageFromArgs(int start) {
-        return getMessageFromArgs(start, args.length);
+    public String getMessage(int start) {
+        return getMessage(start, args.length);
     }
 
-    public String getMessageFromArgs(int start, int end) {
-        return Arrays.stream(ArrayUtils.subarray(args, start, end)).collect(Collectors.joining(" "));
+    public String getMessage(int start, int end) {
+        return String.join(" ", ArrayUtils.subarray(args, start, end));
     }
+
+    public boolean isArgInteger(int index) {
+        return Constants.INTEGER_REGEX.matcher(this.args[index]).matches();
+    }
+
+    public boolean isArgDecimal(int index) {
+        return Constants.DECIMAL_REGEX.matcher(this.args[index]).matches();
+    }
+
+    public String getArg(int index) {
+        return this.args[index];
+    }
+
+    public int getArgAsInteger(int index) {
+        return Integer.parseInt(this.args[index]);
+    }
+
+    public Double getArgAsDouble(int index) {
+        return Double.parseDouble(StringUtils.replace(this.args[index], ",", "."));
+    }
+
 
     public void setChannel(TextChannel channel) {
         this.channel = channel;
