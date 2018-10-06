@@ -3,7 +3,7 @@ package com.cascadebot.cascadebot.commands;
 import com.cascadebot.cascadebot.Config;
 import net.dv8tion.jda.core.entities.Member;
 
-public interface Command {
+public interface ICommand {
 
     public void onCommand(Member sender, CommandContext context);
 
@@ -15,24 +15,8 @@ public interface Command {
         return false;
     }
 
-    default CommandLevel getCommandLevel() {
-        return CommandLevel.USER;
-    }
-
     default String[] getGlobalAliases() {
         return new String[0];
-    }
-
-    public enum CommandLevel {
-        USER,
-        STAFF,
-        DEVELOPER,
-        OWNER;
-
-        public long getId() {
-            return Config.VALUES.commandLevels.getOrDefault(this, -1L);
-        }
-
     }
 
 }
