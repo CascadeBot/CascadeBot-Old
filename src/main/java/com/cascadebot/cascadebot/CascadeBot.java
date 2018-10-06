@@ -21,7 +21,7 @@ public class CascadeBot {
     }
 
     private static Gson GSON;
-    private static Logger LOGGER = LoggerFactory.getLogger(CascadeBot.class);
+    public static Logger LOGGER = LoggerFactory.getLogger(CascadeBot.class);
 
     private Config config;
     private ShardManager shardManager;
