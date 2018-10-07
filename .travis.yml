@@ -1,16 +1,18 @@
 language: java
 
-dist: trusty
-sudo: true
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:linuxuprising/java'
+    packages:
+      - oracle-java10-installer
+      - oracle-java10-set-default
 
-# Get latest install-jdk.sh script
-before_install:
-  - wget https://github.com/sormuras/bach/raw/master/install-jdk.sh
+env:
+  global:
+    - JAVA_HOME=/usr/lib/jvm/java-10-oracle
 
-install: sudo sh install-jdk.sh -F 10 -C
-
-script:
-  - mvn test -B
+install: mvn test -B
 
 cache:
   directories:
