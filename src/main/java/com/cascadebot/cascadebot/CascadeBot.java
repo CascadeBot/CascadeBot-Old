@@ -22,10 +22,6 @@ import java.io.IOException;
 
 public class CascadeBot {
 
-    public static void main(String[] args) {
-        new CascadeBot().init();
-    }
-
     private static Gson GSON;
     public static Logger LOGGER = LoggerFactory.getLogger(CascadeBot.class);
 
@@ -37,6 +33,10 @@ public class CascadeBot {
 
     private OkHttpClient httpClient;
 
+    public static void main(String[] args) {
+        (instance = new CascadeBot()).init();
+    }
+    
     /**
      *  Runs once all shards are loaded
      */
