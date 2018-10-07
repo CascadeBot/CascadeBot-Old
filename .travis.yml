@@ -12,7 +12,7 @@ env:
   global:
     - JAVA_HOME=/usr/lib/jvm/java-10-oracle
 
-install: mvn test -B
+install: mvn clean install test -U
 
 cache:
   directories:
