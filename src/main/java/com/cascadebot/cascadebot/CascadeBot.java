@@ -22,15 +22,13 @@ import java.io.IOException;
 
 public class CascadeBot {
 
-    private static Gson GSON;
-    public static Logger LOGGER = LoggerFactory.getLogger(CascadeBot.class);
+    public static Logger logger = LoggerFactory.getLogger(CascadeBot.class);
+    private static Gson gson;
+    private static CascadeBot instance;
 
     private Config config;
     private ShardManager shardManager;
     private CommandManager commandManager;
-
-    private static CascadeBot instance;
-
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
@@ -41,7 +39,7 @@ public class CascadeBot {
      *  Runs once all shards are loaded
      */
     public void run() {
-        LOGGER.info("All shards successfully logged in!");
+        logger.info("All shards successfully logged in!");
     }
 
     public void init() {
@@ -50,7 +48,7 @@ public class CascadeBot {
         try {
             config = new Config("config.yml");
         } catch (IOException e) {
-            LOGGER.error("Error reading config file", e);
+            logger.error("Error reading config file", e);
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             return;
         }
@@ -73,7 +71,7 @@ public class CascadeBot {
                     .setBulkDeleteSplittingEnabled(false)
                     .build();
         } catch (LoginException e) {
-            LOGGER.error("Error building JDA", e);
+            logger.error("Error building JDA", e);
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             return;
         }
@@ -98,7 +96,7 @@ public class CascadeBot {
     }
 
     public Logger getLogger() {
-        return LOGGER;
+        return logger;
     }
 
     public ShardManager getShardManager() {
@@ -114,7 +112,7 @@ public class CascadeBot {
     }
 
     public static Gson getGSON() {
-        return GSON;
+        return gson;
     }
 
 }
