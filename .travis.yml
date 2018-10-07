@@ -1,0 +1,19 @@
+language: java
+
+addons:
+  apt:
+    sources:
+      - sourceline: 'ppa:linuxuprising/java'
+    packages:
+      - oracle-java10-installer
+      - oracle-java10-set-default
+
+env:
+  global:
+    - JAVA_HOME=/usr/lib/jvm/java-10-oracle
+
+install: mvn clean install test -U
+
+cache:
+  directories:
+  - $HOME/.m2
