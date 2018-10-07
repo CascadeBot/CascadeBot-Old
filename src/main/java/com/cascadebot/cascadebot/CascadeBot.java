@@ -59,7 +59,7 @@ public class CascadeBot {
             builder.setPrettyPrinting();
         }
 
-        GSON = builder.create();
+        gson = builder.create();
         try {
             shardManager = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
@@ -78,9 +78,9 @@ public class CascadeBot {
 
         commandManager = new CommandManager();
 
-        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
+        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
-                .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
+                .setUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
 
     }
