@@ -16,7 +16,7 @@ public class AutoDeleteMessageTask implements Task {
         this.delay = delay;
         if(message.getChannel().getType().isGuild()) {
             TextChannel channel = message.getTextChannel();
-            if(channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE)) {
+            if(!channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE)) {
                 throw new PermissionException("Don't have permission to delete this message");
             }
         } else {
@@ -28,7 +28,7 @@ public class AutoDeleteMessageTask implements Task {
 
     @Override
     public void execute() {
-
+        message.delete().queue();
     }
 
     @Override

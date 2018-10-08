@@ -5,11 +5,15 @@
 
 package com.cascadebot.cascadebot.messaging;
 
+import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.tasks.AutoDeleteMessageTask;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+
+import java.util.concurrent.TimeUnit;
 
 public class MessageContext {
 
@@ -45,8 +49,9 @@ public class MessageContext {
         return member.getUser();
     }
 
-
-
-
-
+    public void sendAutoDeleteMessage(String message) {
+        channel.sendMessage(message).queue(deleteMessage -> {
+            new AutoDeleteMessageTask(deleteMessage, TimeUnit.SECONDS.toMillis(5)).run();
+        });
+    }
 }
