@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-public class MessageUtils {
+public class ErrorUtils {
 
     public static String paste(String paste) {
         Request request = new Request.Builder()

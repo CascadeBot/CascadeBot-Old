@@ -8,7 +8,7 @@ package com.cascadebot.cascadebot.commands.developer;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
-import com.cascadebot.cascadebot.utils.MessageUtils;
+import com.cascadebot.cascadebot.utils.ErrorUtils;
 import net.dv8tion.jda.core.entities.Member;
 
 import javax.script.ScriptEngine;
@@ -57,10 +57,10 @@ public class EvalCommand implements ICommandRestricted {
                 if (results.length() < 2048) {
                     context.getChannel().sendMessage(results).queue();
                 } else {
-                    context.getChannel().sendMessage(MessageUtils.paste(results)).queue();
+                    context.getChannel().sendMessage(ErrorUtils.paste(results)).queue();
                 }
             } catch (ScriptException e) {
-                context.getChannel().sendMessage("Error running script: " + MessageUtils.paste(MessageUtils.getStackTrace(e))).queue(); //Maybe we should give the error message as well so you don't have to click on link?
+                context.getChannel().sendMessage("Error running script: " + ErrorUtils.paste(ErrorUtils.getStackTrace(e))).queue(); //Maybe we should give the error message as well so you don't have to click on link?
             }
         });
     }
