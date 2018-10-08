@@ -1,5 +1,7 @@
 package com.cascadebot.cascadebot.tasks;
 
+import com.cascadebot.cascadebot.CascadeBot;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -13,7 +15,7 @@ public interface Task {
 
     default void run() {
         if(repeat() < 0) {
-            delayService.scheduleWithFixedDelay(this::execute, delay(), delay(), TimeUnit.MILLISECONDS);
+            delayService.schedule(this::execute, delay(), TimeUnit.MILLISECONDS);
         } else {
             delayService.scheduleAtFixedRate(this::execute, delay(), repeat(), TimeUnit.MILLISECONDS);
         }
