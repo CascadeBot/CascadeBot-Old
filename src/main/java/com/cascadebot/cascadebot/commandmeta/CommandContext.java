@@ -25,6 +25,8 @@ public class CommandContext extends MessageContext {
     private final String trigger;
     private final boolean isMention;
 
+    private final MessageContext messageContext;
+
     public CommandContext(TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
         super(channel, message, guild, invoker);
@@ -32,6 +34,8 @@ public class CommandContext extends MessageContext {
         this.args = args;
         this.trigger = trigger;
         this.isMention = isMention;
+
+        this.messageContext = new MessageContext(channel, message, guild, invoker);
     }
 
 
@@ -73,6 +77,10 @@ public class CommandContext extends MessageContext {
 
     public String getTrigger() {
         return trigger;
+    }
+
+    public MessageContext getMessageContext() {
+        return messageContext;
     }
 
 }
