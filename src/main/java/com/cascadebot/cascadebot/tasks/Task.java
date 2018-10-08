@@ -13,6 +13,10 @@ public interface Task {
     ScheduledExecutorService delayService = Executors.newScheduledThreadPool(10, r -> new Thread(taskThreadGroup, r,
             taskThreadGroup.getName() + taskThreadGroup.activeCount()));
 
+    /**
+     * This is the thing you run to start the task.
+     * DO NOT OVERRIDE THIS IN YOUR TASK!
+     */
     default void run() {
         if(repeat() < 0) {
             delayService.schedule(this::execute, delay(), TimeUnit.MILLISECONDS);
@@ -21,6 +25,9 @@ public interface Task {
         }
     }
 
+    /**
+     * This is where your tasks code actually runs!
+     */
     void execute();
 
     default long delay() {
