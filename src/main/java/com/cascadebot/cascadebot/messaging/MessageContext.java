@@ -5,11 +5,11 @@
 
 package com.cascadebot.cascadebot.messaging;
 
-import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.tasks.AutoDeleteMessageTask;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 
@@ -50,8 +50,18 @@ public class MessageContext {
     }
 
     public void sendAutoDeleteMessage(String message) {
-        channel.sendMessage(message).queue(deleteMessage -> {
-            new AutoDeleteMessageTask(deleteMessage, TimeUnit.SECONDS.toMillis(5)).run();
-        });
+        sendAutoDeleteMessage(message, TimeUnit.SECONDS.toMillis(5));
+    }
+
+    public void sendAutoDeleteMessage(String message, long delay) {
+        channel.sendMessage(message).queue(deleteMessage -> new AutoDeleteMessageTask(deleteMessage, delay).run());
+    }
+
+    public void sendAutoDeleteEmbedMessage(MessageEmbed embed) {
+        sendAutoDeleteEmbedMessage(embed, TimeUnit.SECONDS.toMillis(5));
+    }
+
+    public void sendAutoDeleteEmbedMessage(MessageEmbed embed, long delay) {
+        channel.sendMessage(embed).queue(deleteMessage -> new AutoDeleteMessageTask(deleteMessage, delay).run());
     }
 }
