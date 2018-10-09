@@ -3,21 +3,19 @@ package com.cascadebot.cascadebot.tasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 
-// Slightly modified version of FredBoat's "FredBoatAgent"
 public abstract class Task implements Runnable {
 
     private static final String IDLE_NAME = "idle agent worker thread";
     private static final String RUNNING_NAME = "%s agent worker thread";
-
-    private static final Map<Class<? extends Task>, Long> LAST_RUN_TIME = new ConcurrentHashMap<>();
 
     private static final ThreadGroup TASK_THREADS = new ThreadGroup("Task Thread Poll");
     private static final ScheduledExecutorService AGENTS = Executors.newScheduledThreadPool(2, runnable -> {
@@ -25,6 +23,9 @@ public abstract class Task implements Runnable {
         thread.setPriority(4);
         return thread;
     });
+    private static final Map<String, ScheduledFuture<?>> tasks = new HashMap<>();
+
+
     public static ScheduledExecutorService getScheduler() {
         return AGENTS;
     }
@@ -61,11 +62,32 @@ public abstract class Task implements Runnable {
         this.delayInMillis = unit.toMillis(delay);
     }
 
+    public static boolean cancelTask(String taskName) {
+        Iterator<Map.Entry<String, ScheduledFuture<?>>> i = tasks.entrySet().iterator();
+        while (i.hasNext()) {
+            Map.Entry<String, ScheduledFuture<?>> next = i.next();
+            if (next.getKey() == null) continue;
+            if (next.getKey().equals(taskName)) {
+                next.getValue().cancel(false);
+                i.remove();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void shutdown() {
+        AGENTS.shutdown();
+    }
+
+    public static Map<String, ScheduledFuture<?>> getTasks() {
+        return tasks;
+    }
+
     @Override
     public final void run() {
-        LAST_RUN_TIME.put(this.getClass(), System.currentTimeMillis());
         try {
-            Thread.currentThread().setName(name);
+            Thread.currentThread().setName(String.format(RUNNING_NAME, name));
             execute();
         } catch (Throwable t) {
             log.warn("Whoa! Unhandled throwable!", t);
@@ -79,23 +101,20 @@ public abstract class Task implements Runnable {
      */
     protected abstract void execute();
 
-    public static void start(Task agent) {
-        LAST_RUN_TIME.put(agent.getClass(), 0L);
-        AGENTS.scheduleAtFixedRate(agent, agent.delayInMillis, agent.timeToSleepInMillis, TimeUnit.MILLISECONDS);
+    public boolean cancel() {
+        return Task.cancelTask(this.name);
     }
 
-    //start the agent without a delay
-    public static void startNow(Task agent) {
-        LAST_RUN_TIME.put(agent.getClass(), 0L);
-        AGENTS.scheduleAtFixedRate(agent, 0L, agent.timeToSleepInMillis, TimeUnit.MILLISECONDS);
+    public boolean start() {
+        if (tasks.containsKey(this.name)) return false;
+        tasks.put(this.name, AGENTS.scheduleAtFixedRate(this, delayInMillis, timeToSleepInMillis, TimeUnit.MILLISECONDS));
+        return true;
     }
 
-    public static Map<Class<? extends Task>, Long> getLastRunTimes() {
-        return Collections.unmodifiableMap(LAST_RUN_TIME);
-    }
-
-    public static void shutdown() {
-        AGENTS.shutdown();
+    public boolean startNow() {
+        if (tasks.containsKey(this.name)) return false;
+        tasks.put(this.name, AGENTS.scheduleAtFixedRate(this, 0L, timeToSleepInMillis, TimeUnit.MILLISECONDS));
+        return true;
     }
 
 
