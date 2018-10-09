@@ -53,26 +53,59 @@ public class MessageContext {
         return member.getUser();
     }
 
+    /**
+     * Sends a message that auto deletes it's self after 5 seconds.
+     *
+     * @param message The string message to send.
+     */
     public void sendAutoDeleteMessage(String message) {
         sendAutoDeleteMessage(message, TimeUnit.SECONDS.toMillis(5));
     }
 
+    /**
+     * Sends a message that auto deletes it's self after the specified delay (in mills).
+     *
+     * @param message The string message to send.
+     * @param delay   The amount of time to wait before it deletes it's self.
+     */
     public void sendAutoDeleteMessage(String message, long delay) {
         sendAutoDeleteMessage(new MessageBuilder().setContent(message).build(), delay);
     }
 
+    /**
+     * Sends a message that auto deletes it's self after 5 seconds.
+     *
+     * @param embed The {@link MessageEmbed} object to send
+     */
     public void sendAutoDeleteEmbedMessage(MessageEmbed embed) {
         sendAutoDeleteEmbedMessage(embed, TimeUnit.SECONDS.toMillis(5));
     }
 
+    /**
+     * Sends a message that auto deletes it's self after the specified delay (in mills).
+     *
+     * @param embed The {@link MessageEmbed} object to send
+     * @param delay The amount of time to wait before it deletes it's self.
+     */
     public void sendAutoDeleteEmbedMessage(MessageEmbed embed, long delay) {
         sendAutoDeleteMessage(new MessageBuilder().setEmbed(embed).build(), delay);
     }
 
+    /**
+     * Sends a message that auto deletes it's self after 5 seconds.
+     *
+     * @param message The {@link Message} object to send.
+     */
     public void sendAutoDeleteMessage(Message message) {
         sendAutoDeleteMessage(message, TimeUnit.SECONDS.toMillis(5));
     }
 
+    /**
+     * Sends a message that auto deletes it's self after the specified delay (in mills).
+     *
+     * @param message The {@link Message} object to send.
+     * @param delay   The amount of time to wait before it deletes it's self.
+     */
     public void sendAutoDeleteMessage(Message message, long delay) {
         channel.sendMessage(message).queue(messageToDelete -> {
             if (canDeleteMessage(getSelfMember(), messageToDelete)) {
@@ -81,6 +114,13 @@ public class MessageContext {
         });
     }
 
+    /**
+     * Checks if a specific {@link Member} can delete the specified {@link Message}
+     *
+     * @param member  The {@link Member} used to check.
+     * @param message The {@link Message} to check.
+     * @return true if the {@link Member} can delete the {@link Message}, else false.
+     */
     public boolean canDeleteMessage(Member member, Message message) {
         if(message.getChannel().getType().isGuild()) {
             TextChannel channel = message.getTextChannel();
@@ -90,6 +130,12 @@ public class MessageContext {
         }
     }
 
+    /**
+     * Checks if a specific {@link Member} can delete messages in this {@link this#channel}.
+     *
+     * @param member The {@link Member} used to check.
+     * @return true if the {@link Member} can delete message is this {@link this#channel}.
+     */
     public boolean canDeleteMessages(Member member) {
         return canDeleteMessages(member, this.channel);
     }
@@ -128,30 +174,68 @@ public class MessageContext {
         return this.member.hasPermission(this.channel, permissions);
     }
 
+    /**
+     * Gets the bot {@link Member}.
+     *
+     * @return The bot {@link Member} for this guild
+     */
     public Member getSelfMember() {
         return guild.getMember(CascadeBot.instance().getSelfUser());
     }
 
+    /**
+     * Sends a dm to the user in this context.
+     *
+     * @param message The message to send.
+     */
     public void sendDm(String message) {
         sendDm(message, false);
     }
 
+    /**
+     * Sends a dm to the user in this context.
+     *
+     * @param message      The message to send.
+     * @param allowChannel Weather or not we should send to a channel if dms are closed off.
+     */
     public void sendDm(String message, boolean allowChannel) {
         sendDmMessage(new MessageBuilder().setContent(message).build(), allowChannel);
     }
 
+    /**
+     * Sends an {@link MessageEmbed} to the user in this context.
+     *
+     * @param embed The {@link MessageEmbed} object to send.
+     */
     public void sendEmbedDm(MessageEmbed embed) {
         sendEmbedDm(embed, false);
     }
 
+    /**
+     * Sends an {@link MessageEmbed} to the user in this context.
+     *
+     * @param embed        The {@link MessageEmbed} object to send.
+     * @param allowChannel Weather or not we should send to a channel if dms are closed off.
+     */
     public void sendEmbedDm(MessageEmbed embed, boolean allowChannel) {
         sendDmMessage(new MessageBuilder().setEmbed(embed).build(), allowChannel);
     }
 
+    /**
+     * Sends a {@link Message} object to the user in this context.
+     *
+     * @param message The {@link Message} object to send.
+     */
     public void sendDmMesage(Message message) {
         sendDmMessage(message, false);
     }
 
+    /**
+     * Sends an {@link MessageEmbed} to the user in this context.
+     *
+     * @param message      The {@link Message} object to send.
+     * @param allowChannel Weather or not we should send to a channel if dms are closed off.
+     */
     public void sendDmMessage(Message message, boolean allowChannel) {
         member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
             if (allowChannel) {
