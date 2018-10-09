@@ -13,10 +13,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.entities.SelfUser;
+import net.dv8tion.jda.core.entities.User;
 import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 
@@ -93,6 +97,31 @@ public class CascadeBot {
 
     public static CascadeBot instance() {
         return instance;
+    }
+
+    /**
+     * This  will return the first connected JDA shard.
+     * This means that a lot of methods like sending embeds works even with shard 0 offline.
+     *
+     * @return The first possible JDA shard which is connected.
+     */
+    @Nonnull
+    public JDA getClient() {
+        for (JDA jda : shardManager.getShardCache()) {
+            if (jda.getStatus() == JDA.Status.LOADING_SUBSYSTEMS || jda.getStatus() == JDA.Status.CONNECTED)
+                return jda;
+        }
+        throw new IllegalStateException("getClient was called when no shards were connected!");
+    }
+
+    /**
+     * Get the SelfUser of the bot, this will be returned from the first connected shard.
+     *
+     * @return The bot SelfUser from the first connected shard.
+     */
+    @Nonnull
+    public SelfUser getSelfUser() {
+        return getClient().getSelfUser();
     }
 
     public Logger getLogger() {
