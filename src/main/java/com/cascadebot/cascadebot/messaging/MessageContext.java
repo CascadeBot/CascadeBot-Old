@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
@@ -57,11 +58,7 @@ public class MessageContext {
     }
 
     public void sendAutoDeleteMessage(String message, long delay) {
-        channel.sendMessage(message).queue(messageToDelete -> {
-            if (canDeleteMessage(getSelfMember(), messageToDelete)) {
-                messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
-            }
-        });
+        sendAutoDeleteMessage(new MessageBuilder().setContent(message).build(), delay);
     }
 
     public void sendAutoDeleteEmbedMessage(MessageEmbed embed) {
@@ -69,7 +66,15 @@ public class MessageContext {
     }
 
     public void sendAutoDeleteEmbedMessage(MessageEmbed embed, long delay) {
-        channel.sendMessage(embed).queue(messageToDelete -> {
+        sendAutoDeleteMessage(new MessageBuilder().setEmbed(embed).build(), delay);
+    }
+
+    public void sendAutoDeleteMessage(Message message) {
+        sendAutoDeleteMessage(message, TimeUnit.SECONDS.toMillis(5));
+    }
+
+    public void sendAutoDeleteMessage(Message message, long delay) {
+        channel.sendMessage(message).queue(messageToDelete -> {
             if (canDeleteMessage(getSelfMember(), messageToDelete)) {
                 messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
             }
@@ -132,11 +137,7 @@ public class MessageContext {
     }
 
     public void sendDm(String message, boolean allowChannel) {
-        member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
-            if (allowChannel) {
-                sendAutoDeleteMessage(message);
-            }
-        });
+        sendDmMessage(new MessageBuilder().setContent(message).build(), allowChannel);
     }
 
     public void sendEmbedDm(MessageEmbed embed) {
@@ -144,9 +145,17 @@ public class MessageContext {
     }
 
     public void sendEmbedDm(MessageEmbed embed, boolean allowChannel) {
-        member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue(), exception -> {
+        sendDmMessage(new MessageBuilder().setEmbed(embed).build(), allowChannel);
+    }
+
+    public void sendDmMesage(Message message) {
+        sendDmMessage(message, false);
+    }
+
+    public void sendDmMessage(Message message, boolean allowChannel) {
+        member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
             if (allowChannel) {
-                sendAutoDeleteEmbedMessage(embed);
+                sendAutoDeleteMessage(message);
             }
         });
     }
