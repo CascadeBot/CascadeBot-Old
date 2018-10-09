@@ -58,7 +58,7 @@ public class MessageContext {
 
     public void sendAutoDeleteMessage(String message, long delay) {
         channel.sendMessage(message).queue(messageToDelete -> {
-            if (canDeleteMessage(CascadeBot.instance().getSelfUser(), messageToDelete)) {
+            if (canDeleteMessage(getSelfMember(), messageToDelete)) {
                 messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
             }
         });
@@ -70,19 +70,27 @@ public class MessageContext {
 
     public void sendAutoDeleteEmbedMessage(MessageEmbed embed, long delay) {
         channel.sendMessage(embed).queue(messageToDelete -> {
-            if (canDeleteMessage(CascadeBot.instance().getSelfUser(), messageToDelete)) {
+            if (canDeleteMessage(getSelfMember(), messageToDelete)) {
                 messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
             }
         });
     }
 
-    public boolean canDeleteMessage(User user, Message message) {
+    public boolean canDeleteMessage(Member member, Message message) {
         if(message.getChannel().getType().isGuild()) {
             TextChannel channel = message.getTextChannel();
-            return channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE);
+            return member.hasPermission(channel, Permission.MESSAGE_MANAGE);
         } else {
-            return user.getIdLong() == message.getAuthor().getIdLong();
+            return member.getUser().getIdLong() == message.getAuthor().getIdLong();
         }
+    }
+
+    public boolean canDeleteMessages(Member member) {
+        return canDeleteMessages(member, this.channel);
+    }
+
+    public boolean canDeleteMessages(Member member, TextChannel channel) {
+        return member.hasPermission(channel, Permission.MESSAGE_MANAGE);
     }
 
     /**
@@ -90,23 +98,22 @@ public class MessageContext {
      * Usually this is the channel a command was sent in and the member who send the command
      *
      * @param permissions Non-null and non empty permissions to check
-     * @throws IllegalArgumentException if permissions are empty or null
      * @return true if the member has all of the specified permissions in the channel
+     * @throws IllegalArgumentException if permissions are empty or null
      */
     public boolean hasPermission(Permission... permissions) {
         Checks.notEmpty(permissions, "Permissions");
         return this.member.hasPermission(this.channel, permissions);
     }
 
-
     /**
      * Checks the permissions for the specified member in the channel provided for this context
      *
-     * @param member the non-null member to check permissions for. The member needs to be in the same guild as the guild in the context
+     * @param member      the non-null member to check permissions for. The member needs to be in the same guild as the guild in the context
      * @param permissions permissions Non-null and non empty permissions to check
+     * @return true if the member has all of the specified permissions in the channel
      * @throws IllegalArgumentException if member is null or not in the same guild
      * @throws IllegalArgumentException if permissions are empty or null
-     * @return true if the member has all of the specified permissions in the channel
      */
     public boolean hasPermission(Member member, Permission... permissions) {
         Checks.notNull(member, "Member");
@@ -121,12 +128,12 @@ public class MessageContext {
     }
 
     public void sendDm(String message) {
-       sendDm(message, false);
+        sendDm(message, false);
     }
 
     public void sendDm(String message, boolean allowChannel) {
         member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
-            if(allowChannel) {
+            if (allowChannel) {
                 sendAutoDeleteMessage(message);
             }
         });
@@ -138,9 +145,10 @@ public class MessageContext {
 
     public void sendEmbedDm(MessageEmbed embed, boolean allowChannel) {
         member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue(), exception -> {
-            if(allowChannel) {
+            if (allowChannel) {
                 sendAutoDeleteEmbedMessage(embed);
             }
         });
     }
+
 }
