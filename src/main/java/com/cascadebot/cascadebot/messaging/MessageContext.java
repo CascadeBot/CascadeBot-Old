@@ -7,12 +7,14 @@ package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.utils.Checks;
 
 import java.util.concurrent.TimeUnit;
 
@@ -81,6 +83,41 @@ public class MessageContext {
         } else {
             return user.getIdLong() == message.getAuthor().getIdLong();
         }
+    }
+
+    /**
+     * Checks the permission for the member and channel provided for the context
+     * Usually this is the channel a command was sent in and the member who send the command
+     *
+     * @param permissions Non-null and non empty permissions to check
+     * @throws IllegalArgumentException if permissions are empty or null
+     * @return true if the member has all of the specified permissions in the channel
+     */
+    public boolean hasPermission(Permission... permissions) {
+        Checks.notEmpty(permissions, "Permissions");
+        return this.member.hasPermission(this.channel, permissions);
+    }
+
+
+    /**
+     * Checks the permissions for the specified member in the channel provided for this context
+     *
+     * @param member the non-null member to check permissions for. The member needs to be in the same guild as the guild in the context
+     * @param permissions permissions Non-null and non empty permissions to check
+     * @throws IllegalArgumentException if member is null or not in the same guild
+     * @throws IllegalArgumentException if permissions are empty or null
+     * @return true if the member has all of the specified permissions in the channel
+     */
+    public boolean hasPermission(Member member, Permission... permissions) {
+        Checks.notNull(member, "Member");
+        Checks.check(member.getGuild().getIdLong() == guild.getIdLong(),
+                "Member needs to be in the same guild as this context! Guild ID: " + guild.getId());
+        Checks.notEmpty(permissions, "Permissions");
+        return this.member.hasPermission(this.channel, permissions);
+    }
+
+    public Member getSelfMember() {
+        return guild.getMember(CascadeBot.instance().getSelfUser());
     }
 
     public void sendDm(String message) {
