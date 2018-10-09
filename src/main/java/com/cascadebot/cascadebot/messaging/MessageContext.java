@@ -5,8 +5,8 @@
 
 package com.cascadebot.cascadebot.messaging;
 
-import com.cascadebot.cascadebot.tasks.AutoDeleteMessageTask;
-import net.dv8tion.jda.core.MessageBuilder;
+import com.cascadebot.cascadebot.CascadeBot;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -55,7 +55,11 @@ public class MessageContext {
     }
 
     public void sendAutoDeleteMessage(String message, long delay) {
-        channel.sendMessage(message).queue(deleteMessage -> new AutoDeleteMessageTask(deleteMessage, delay).run());
+        channel.sendMessage(message).queue(messageToDelete -> {
+            if (canDeleteMessage(CascadeBot.instance().getSelfUser(), messageToDelete)) {
+                messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
+            }
+        });
     }
 
     public void sendAutoDeleteEmbedMessage(MessageEmbed embed) {
@@ -63,7 +67,20 @@ public class MessageContext {
     }
 
     public void sendAutoDeleteEmbedMessage(MessageEmbed embed, long delay) {
-        channel.sendMessage(embed).queue(deleteMessage -> new AutoDeleteMessageTask(deleteMessage, delay).run());
+        channel.sendMessage(embed).queue(messageToDelete -> {
+            if (canDeleteMessage(CascadeBot.instance().getSelfUser(), messageToDelete)) {
+                messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
+            }
+        });
+    }
+
+    public boolean canDeleteMessage(User user, Message message) {
+        if(message.getChannel().getType().isGuild()) {
+            TextChannel channel = message.getTextChannel();
+            return channel.getGuild().getSelfMember().hasPermission(channel, Permission.MESSAGE_MANAGE);
+        } else {
+            return user.getIdLong() == message.getAuthor().getIdLong();
+        }
     }
 
     public void sendDm(String message) {
