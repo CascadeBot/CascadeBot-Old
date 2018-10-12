@@ -8,16 +8,18 @@ package com.cascadebot.cascadebot.commands.developer;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
+import com.cascadebot.cascadebot.utils.ThreadPoolExecutorLogged;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class EvalCommand implements ICommandRestricted {
@@ -25,10 +27,27 @@ public class EvalCommand implements ICommandRestricted {
     private ScriptEngineManager manager = new ScriptEngineManager();
 
     private static final ThreadGroup EVAL_THREADS = new ThreadGroup("EvalCommand Thread Pool");
-    private static final ExecutorService EVAL_POOL = Executors.newCachedThreadPool(r -> new Thread(EVAL_THREADS, r,
+    private static final ExecutorService EVAL_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r -> new Thread(EVAL_THREADS, r,
             EVAL_THREADS.getName() + EVAL_THREADS.activeCount()));
 
-    private static final List<String> IMPORTS = Arrays.asList("com.cascadebot.cascadebot.utils");
+    private static final List<String> IMPORTS = Arrays.asList(
+            "com.cascadebot.cascadebot.utils",
+            "net.dv8tion.jda.core",
+            "net.dv8tion.jda.core.managers",
+            "net.dv8tion.jda.core.entities.impl",
+            "net.dv8tion.jda.core.entities",
+            "net.dv8tion.jda.core.utils",
+            "java.util.streams",
+            "java.util",
+            "java.lang",
+            "java.text",
+            "java.lang",
+            "java.math",
+            "java.time",
+            "java.io",
+            "java.nio",
+            "java.nio.files",
+            "java.util.stream");
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
