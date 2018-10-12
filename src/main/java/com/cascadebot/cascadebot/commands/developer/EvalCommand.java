@@ -8,15 +8,13 @@ package com.cascadebot.cascadebot.commands.developer;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
-import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.cascadebot.utils.ThreadPoolExecutorLogged;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import java.awt.*;
+import javax.script.ScriptException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
