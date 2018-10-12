@@ -81,7 +81,14 @@ public class CommandListener extends ListenerAdapter {
                     command.defaultCommand() + (command.defaultCommand().equalsIgnoreCase(context.getTrigger()) ? "" : context.getTrigger()),
                     context.getUser().getName() + "#" + context.getUser().getDiscriminator(), // TODO: Util this
                     Arrays.toString(context.getArgs()));
-            command.onCommand(context.getMember(), context);
+            try {
+                command.onCommand(context.getMember(), context);
+            } catch (Exception e) {
+                CascadeBot.logger.error(String.format(
+                        "Error in command %s Guild ID: %s User: %s",
+                        command.defaultCommand(), context.getGuild().getId(), context.getMember().getEffectiveName()
+                ), e);
+            }
         });
     }
 

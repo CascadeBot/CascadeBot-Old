@@ -16,6 +16,7 @@ import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.util.function.Consumer;
 
 public class CascadeBot {
 
@@ -85,6 +87,11 @@ public class CascadeBot {
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
+
+        RestAction.DEFAULT_FAILURE= throwable -> {
+            logger.error("Uncaught exception in rest action", throwable);
+        };
+
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
 
     }
