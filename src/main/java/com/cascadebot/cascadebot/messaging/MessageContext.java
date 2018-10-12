@@ -88,7 +88,11 @@ public class MessageContext {
      */
     public void sendAutoDeleteMessage(String message, long delay) {
         Checks.notBlank(message, "message");
-        sendAutoDeleteMessage(new MessageBuilder().setContent(message).build(), delay);
+        channel.sendMessage(message).queue(messageToDelete -> {
+            if (canDeleteMessage(getSelfMember(), messageToDelete)) {
+                messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
+            }
+        });
     }
 
     /**
@@ -96,8 +100,8 @@ public class MessageContext {
      *
      * @param embed The {@link MessageEmbed} object to send
      */
-    public void sendAutoDeleteEmbedMessage(MessageEmbed embed) {
-        sendAutoDeleteEmbedMessage(embed, TimeUnit.SECONDS.toMillis(5));
+    public void sendAutoDeleteMessage(MessageEmbed embed) {
+        sendAutoDeleteMessage(embed, TimeUnit.SECONDS.toMillis(5));
     }
 
     /**
@@ -106,9 +110,13 @@ public class MessageContext {
      * @param embed The non-null {@link MessageEmbed} object to send.
      * @param delay The amount of time to wait before it deletes it's self.
      */
-    public void sendAutoDeleteEmbedMessage(MessageEmbed embed, long delay) {
+    public void sendAutoDeleteMessage(MessageEmbed embed, long delay) {
         Checks.notNull(embed, "embed");
-        sendAutoDeleteMessage(new MessageBuilder().setEmbed(embed).build(), delay);
+        channel.sendMessage(message).queue(messageToDelete -> {
+            if (canDeleteMessage(getSelfMember(), messageToDelete)) {
+                messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
+            }
+        });
     }
 
     /**
@@ -228,7 +236,11 @@ public class MessageContext {
      */
     public void replyDM(String message, boolean allowChannel) {
         Checks.notBlank(message, "message");
-        replyDM(new MessageBuilder().setContent(message).build(), allowChannel);
+        member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
+            if (allowChannel) {
+                sendAutoDeleteMessage(message);
+            }
+        });
     }
 
     /**
@@ -251,7 +263,11 @@ public class MessageContext {
      */
     public void replyDM(MessageEmbed embed, boolean allowChannel) {
         Checks.notNull(embed, "embed");
-        replyDM(new MessageBuilder().setEmbed(embed).build(), allowChannel);
+        member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue(), exception -> {
+            if (allowChannel) {
+                sendAutoDeleteMessage(embed);
+            }
+        });
     }
 
     /**
