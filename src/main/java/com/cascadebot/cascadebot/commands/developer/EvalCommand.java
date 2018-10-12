@@ -43,8 +43,8 @@ public class EvalCommand implements ICommandRestricted {
             try {
                 ScriptEngine scriptEngine = manager.getEngineByName(engine);
                 if (scriptEngine == null) {
-                    context.getChannel().sendMessage("\u2139 Using script engine `jshell`").queue();
-                    scriptEngine = manager.getEngineByName("jshell");
+                    context.getChannel().sendMessage("Using script engine `groovy`").queue();
+                    scriptEngine = manager.getEngineByName("groovy");
                 }
 
                 String code = context.getMessage(1);
