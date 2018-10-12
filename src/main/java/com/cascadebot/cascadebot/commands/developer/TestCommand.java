@@ -19,7 +19,7 @@ public class TestCommand implements ICommandRestricted {
                 if (++i == 5) {
                     cancel();
                 }
-                context.sendDm("hi");
+                context.replyDM("hi");
             }
         }.start();
     }
