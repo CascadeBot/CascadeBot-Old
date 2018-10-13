@@ -3,6 +3,7 @@ package com.cascadebot.cascadebot.utils;
 import com.cascadebot.cascadebot.CascadeBot;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 
@@ -12,8 +13,9 @@ import java.util.regex.Pattern;
 
 public class DiscordUtils {
 
-    private static final Pattern idPattern = Pattern.compile("[0-9]{18}");
-    private static final Pattern mentionPattern = Pattern.compile("<@([0-9]{18})>");
+    private static final Pattern idPattern = Pattern.compile("[0-9]{17,}");
+    private static final Pattern userMentionPattern = Pattern.compile("<@!?([0-9]{17,})>");
+    private static final Pattern roleMentionPattern = Pattern.compile("<@&([0-9]{17,})>");
 
     /**
      * Attempts to find a member using a string input.
@@ -29,7 +31,7 @@ public class DiscordUtils {
         if (idPattern.matcher(search).matches()) {
             id = search;
         }
-        Matcher matcher = mentionPattern.matcher(search);
+        Matcher matcher = userMentionPattern.matcher(search);
         if (matcher.matches()) {
             id = matcher.group(1);
         }
@@ -66,5 +68,35 @@ public class DiscordUtils {
     public static String getTag(User user) {
         Checks.notNull(user, "user");
         return user.getName() + "#" + user.getDiscriminator();
+    }
+
+    public static Role getRole(String search, Guild guild) {
+        Checks.notNull(search, "role");
+        String id = null;
+        if (idPattern.matcher(search).matches()) {
+            id = search;
+        }
+        Matcher matcher = roleMentionPattern.matcher(search);
+        if (matcher.matches()) {
+            id = matcher.group(1);
+        }
+
+        if (id != null) {
+            Role role = guild.getRoleById(id);
+            if(role != null) {
+                return role; //I'm returning here in case for some reasons the role name looks like a id.
+            }
+        }
+
+        List<Role> roles = guild.getRolesByName(search, true);
+        if (roles.size() == 0) {
+            return null;
+        } else if (roles.size() == 1) {
+            return roles.get(0);
+        } else {
+            //TODO maybe add an option to get roles from a group with buttons?
+            return null;
+        }
+        //TODO Combine these methods so intellij stops complaining about duplicate code.
     }
 }
