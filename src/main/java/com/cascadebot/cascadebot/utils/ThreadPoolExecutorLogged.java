@@ -18,7 +18,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class ThreadPoolExecutorLogged extends java.util.concurrent.ThreadPoolExecutor {
+public class ThreadPoolExecutorLogged extends ThreadPoolExecutor {
 
     public ThreadPoolExecutorLogged(int corePoolSize, int maximumPoolSize, long keepAliveTime,
                                     TimeUnit unit, BlockingQueue<Runnable> workQueue, ThreadFactory factory) {
@@ -40,7 +40,7 @@ public class ThreadPoolExecutorLogged extends java.util.concurrent.ThreadPoolExe
             }
         }
         if (t != null) {
-            CascadeBot.logger.error("Unhandled expection!", t);
+            CascadeBot.logger.error("Unhandled exception in thread: " + Thread.currentThread().getName() + "!", t);
         }
     }
 
