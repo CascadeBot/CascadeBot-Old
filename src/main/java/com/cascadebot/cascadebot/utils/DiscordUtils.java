@@ -27,7 +27,8 @@ public class DiscordUtils {
      * @throws IllegalArgumentException if search is null.
      */
     public static Member getMember(String search, Guild guild) {
-        Checks.notNull(search, "user");
+        Checks.notBlank(search, "user");
+        Checks.notNull(guild, "guild");
         String id = null;
         if (idPattern.matcher(search).matches()) {
             id = search;
@@ -80,7 +81,8 @@ public class DiscordUtils {
      * @throws IllegalArgumentException if search is null
      */
     public static Role getRole(String search, Guild guild) {
-        Checks.notNull(search, "role");
+        Checks.notBlank(search, "role");
+        Checks.notNull(guild, "guild");
         String id = null;
         if (idPattern.matcher(search).matches()) {
             id = search;
