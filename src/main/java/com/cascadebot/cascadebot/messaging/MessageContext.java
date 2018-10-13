@@ -28,9 +28,6 @@ public class MessageContext {
     private final Guild guild;
     private final Member member;
 
-    private static final Pattern idPattern = Pattern.compile("[0-9]{18}");
-    private static final Pattern mentionPattern = Pattern.compile("<@([0-9]{18})>");
-
     public MessageContext(TextChannel channel, Message message, Guild guild, Member member) {
         this.channel = channel;
         this.message = message;
@@ -303,65 +300,4 @@ public class MessageContext {
         });
     }
 
-    /**
-     * Gets the username#discrim for the {@link User} in this context.
-     *
-     * @return The username#discrim for the user in this context.
-     */
-    public String getTag() {
-        return getTag(getUser());
-    }
-
-    /**
-     * Gets the username#discrim for the specified {@link User}.
-     *
-     * @param user The {@link User} to get tag from.
-     * @return The username#discrim for the specified {@link User}.
-     * @throws IllegalArgumentException if the {@link User} is null.
-     */
-    public String getTag(User user) {
-        Checks.notNull(user, "user");
-        return user.getName() + "#" + user.getDiscriminator();
-    }
-
-    /**
-     * Attempts to find a member using a string input.
-     * The string can be their id, a mention, or a name.
-     *
-     * @param search The string to find the {@link Member} with.
-     * @return The {@link Member} found or null if no member was found with that name.
-     * @throws IllegalArgumentException if name is null.
-     */
-    public Member getMember(String search) {
-        Checks.notNull(search, "user");
-        String id = null;
-        if (idPattern.matcher(search).matches()) {
-            id = search;
-        }
-        Matcher matcher = mentionPattern.matcher(search);
-        if (matcher.matches()) {
-            id = matcher.group(1);
-        }
-
-        if (id != null) {
-            User user = getUserById(id);
-            if (user != null) {
-                return guild.getMember(user);
-            }
-        }
-
-        List<Member> members = guild.getMembersByEffectiveName(search, true);
-        if (members.size() == 0) {
-            return null;
-        } else if (members.size() == 1) {
-            return members.get(0);
-        } else {
-            //TODO maybe add an option to get users from a group with buttons?
-            return null;
-        }
-    }
-
-    public User getUserById(String id) {
-        return CascadeBot.instance().getClient().getUserById(id);
-    }
 }
