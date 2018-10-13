@@ -29,7 +29,7 @@ public class MessageContext {
     private final Member member;
 
     private static final Pattern idPattern = Pattern.compile("[0-9]{18}");
-    private static final Pattern mentionPattern = Pattern.compile("<@[0-9]{18}>");
+    private static final Pattern mentionPattern = Pattern.compile("<@([0-9]{18})>");
 
     public MessageContext(TextChannel channel, Message message, Guild guild, Member member) {
         this.channel = channel;
