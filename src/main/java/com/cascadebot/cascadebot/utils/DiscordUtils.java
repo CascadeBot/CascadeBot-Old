@@ -22,8 +22,9 @@ public class DiscordUtils {
      * The string can be their id, a mention, or a name.
      *
      * @param search The string to find the {@link Member} with.
-     * @return The {@link Member} found or null if no member was found with that name.
-     * @throws IllegalArgumentException if name is null.
+     * @param guild  The {@link Guild} to fnd the {@link Member} in.
+     * @return The {@link Member} found or null if no member was found with the search.
+     * @throws IllegalArgumentException if search is null.
      */
     public static Member getMember(String search, Guild guild) {
         Checks.notNull(search, "user");
@@ -70,6 +71,14 @@ public class DiscordUtils {
         return user.getName() + "#" + user.getDiscriminator();
     }
 
+    /**
+     *
+     *
+     * @param search The string to find the {@link Role} with.
+     * @param guild  The {@link Guild} to fnd the {@link Role} in.
+     * @return The {@link Role} found or null if no role was found with the search.
+     * @throws IllegalArgumentException if search is null
+     */
     public static Role getRole(String search, Guild guild) {
         Checks.notNull(search, "role");
         String id = null;
@@ -83,7 +92,7 @@ public class DiscordUtils {
 
         if (id != null) {
             Role role = guild.getRoleById(id);
-            if(role != null) {
+            if (role != null) {
                 return role; //I'm returning here in case for some reasons the role name looks like a id.
             }
         }
