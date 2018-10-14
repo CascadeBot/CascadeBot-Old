@@ -11,14 +11,13 @@ import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.objects.GuildData;
-import com.cascadebot.cascadebot.utils.ThreadPoolExecutorLogged;
+import com.cascadebot.cascadebot.utils.objects.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class CommandListener extends ListenerAdapter {
 

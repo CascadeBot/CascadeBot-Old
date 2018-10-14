@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot.utils;
 import com.cascadebot.cascadebot.CascadeBot;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
@@ -78,8 +79,6 @@ public class DiscordUtils {
     }
 
     /**
-     *
-     *
      * @param search The string to find the {@link Role} with.
      * @param guild  The {@link Guild} to fnd the {@link Role} in.
      * @return The {@link Role} found or null if no role was found with the search.
@@ -115,4 +114,9 @@ public class DiscordUtils {
         }
         //TODO Combine these methods so intellij stops complaining about duplicate code.
     }
+
+    public static MessageChannel getTextChannelById(Long channelId) {
+        return CascadeBot.instance().getClient().getTextChannelById(channelId);
+    }
+
 }
