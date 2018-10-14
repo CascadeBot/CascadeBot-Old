@@ -307,19 +307,31 @@ public class MessageContext {
         });
     }
 
+    //TODO ask binary how to get guild data so i can add the button groups to said data.
+
     public void sendButtonedMessage(String message, ButtonGroup group) {
         Checks.notBlank(message, "message");
-        channel.sendMessage(message).queue(sentMessage -> addButtons(sentMessage, group));
+        channel.sendMessage(message).queue(sentMessage -> {
+            addButtons(sentMessage, group);
+            group.setMessage(sentMessage.getIdLong());
+        });
+
     }
 
     public void sendButtonedMessage(MessageEmbed embed, ButtonGroup group) {
         Checks.notNull(embed, "embed");
-        channel.sendMessage(embed).queue(sentMessage -> addButtons(sentMessage, group));
+        channel.sendMessage(embed).queue(sentMessage -> {
+            addButtons(sentMessage, group);
+            group.setMessage(sentMessage.getIdLong());
+        });
     }
 
     public void sendButtonedMessage(Message message, ButtonGroup group) {
         Checks.notNull(message, "message");
-        channel.sendMessage(message).queue(sentMessage -> addButtons(sentMessage, group));
+        channel.sendMessage(message).queue(sentMessage -> {
+            addButtons(sentMessage, group);
+            group.setMessage(sentMessage.getIdLong());
+        });
     }
 
     private void addButtons(Message message, ButtonGroup group) {

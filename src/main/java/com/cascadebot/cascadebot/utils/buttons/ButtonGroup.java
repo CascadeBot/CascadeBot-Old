@@ -18,6 +18,8 @@ public class ButtonGroup {
     private long ownerId;
     private long guildId;
 
+    private long messageId;
+
     public ButtonGroup(long ownerId, long guildId) {
         buttons = new ArrayList<>();
         this.ownerId = ownerId;
@@ -30,6 +32,14 @@ public class ButtonGroup {
 
     public Member getOwnner() {
         return DiscordUtils.getMember(String.valueOf(ownerId), CascadeBot.instance().getClient().getGuildById(guildId)); //TODO util method for getting guild from id
+    }
+
+    public void setMessage(long id) {
+        messageId = id;
+    }
+
+    public long getMessageId() {
+        return messageId;
     }
 
     public List<Button> getButtons() {
