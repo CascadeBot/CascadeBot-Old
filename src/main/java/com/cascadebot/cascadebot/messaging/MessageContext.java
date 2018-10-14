@@ -6,6 +6,8 @@
 package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.utils.buttons.Button;
+import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
@@ -65,6 +67,11 @@ public class MessageContext {
     public void reply(String message) {
         Checks.notBlank(message, "message");
         channel.sendMessage(message).queue();
+    }
+
+    public void reply(MessageEmbed embed) {
+        Checks.notNull(embed, "embed");
+        channel.sendMessage(embed).queue();
     }
 
     public void reply(Message message) {
@@ -298,6 +305,27 @@ public class MessageContext {
                 sendAutoDeleteMessage(message);
             }
         });
+    }
+
+    public void sendButtonedMessage(String message, ButtonGroup group) {
+        Checks.notBlank(message, "message");
+        channel.sendMessage(message).queue(sentMessage -> addButtons(sentMessage, group));
+    }
+
+    public void sendButtonedMessage(MessageEmbed embed, ButtonGroup group) {
+        Checks.notNull(embed, "embed");
+        channel.sendMessage(embed).queue(sentMessage -> addButtons(sentMessage, group));
+    }
+
+    public void sendButtonedMessage(Message message, ButtonGroup group) {
+        Checks.notNull(message, "message");
+        channel.sendMessage(message).queue(sentMessage -> addButtons(sentMessage, group));
+    }
+
+    private void addButtons(Message message, ButtonGroup group) {
+        for(Button button : group.getButtons()) {
+            button.addReaction(message);
+        }
     }
 
 }

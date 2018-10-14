@@ -10,5 +10,5 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 
 public interface ButtonRunnable {
-    void run(Member runner, Channel channel, ButtonGroup group, Message message);
+    void run(Member runner, Channel channel, Message message);
 }
