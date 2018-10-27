@@ -15,6 +15,7 @@ import net.dv8tion.jda.core.entities.Member;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -47,6 +48,8 @@ public class EvalCommand implements ICommandRestricted {
             "java.nio.files",
             "java.util.stream");
 
+    private static final List<String> ENGINES = Arrays.asList("groovy", "java", "jshell");
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
@@ -54,17 +57,22 @@ public class EvalCommand implements ICommandRestricted {
             context.getChannel().sendMessage("Needs more args").queue();
             return;
         }
-        String engine = context.getArg(0);
+
+
+        ScriptEngine scriptEngine;
+        String code;
+
+        if (ENGINES.contains(context.getArg(0).toLowerCase())) {
+            scriptEngine = manager.getEngineByName(context.getArg(0).toLowerCase());
+            code = context.getMessage(1);
+        } else {
+            scriptEngine = manager.getEngineByName(ENGINES.get(0));
+            code = context.getMessage(0);
+        }
+
 
         EVAL_POOL.submit(() -> {
             try {
-                ScriptEngine scriptEngine = manager.getEngineByName(engine);
-                if (scriptEngine == null) {
-                    context.getChannel().sendMessage("Using script engine `groovy`").queue();
-                    scriptEngine = manager.getEngineByName("groovy");
-                }
-
-                String code = context.getMessage(1);
                 scriptEngine.put("sender", sender);
                 scriptEngine.put("context", context);
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining("\n"));
@@ -72,9 +80,9 @@ public class EvalCommand implements ICommandRestricted {
 
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
                 if (results.length() < 2048) {
-                    context.getChannel().sendMessage(results).queue();
+                    context.reply(results);
                 } else {
-                    context.getChannel().sendMessage(ErrorUtils.paste(results)).queue();
+                    context.reply(ErrorUtils.paste(results));
                 }
             } catch (ScriptException e) {
                 context.getChannel().sendMessage("Error running script: " + ErrorUtils.paste(ErrorUtils.getStackTrace(e))).queue(); //Maybe we should give the error message as well so you don't have to click on link?
