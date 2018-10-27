@@ -5,9 +5,7 @@
 
 package com.cascadebot.cascadebot.database;
 
-import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,17 +28,19 @@ public class DatabaseManager {
     /**
      * Builds a standard mongodb connection string
      *
-     * @param username
-     * @param password
-     * @param hosts
-     * @param database
-     * @return
+     * @param username The optional username to use for this connection string.
+     * @param password The optional password to use for this connection. For this to be included in the connection string, a username must be provided.
+     * @param hosts    A non-empty list of hosts with ports appended in the format {@code host:port}. The default is {@code 27017}.
+     * @param database The optional database to connect to.
+     * @param options  The optional string of options to append to this connection string.
+     * @return The built connection string.
+     * @throws IllegalArgumentException If hosts is empty.
      */
     public static String buildStandardConnectionString(String username, String password, List<String> hosts, String database, String options) {
         Checks.notEmpty(hosts, "hosts");
         StringBuilder builder = new StringBuilder()
                 .append("mongodb://");
-        if (!StringUtils.isAllBlank(username, password)) { // If username and password are both blank, we just move onto the hosts
+        if (!StringUtils.isBlank(username)) { // If username is blank, we just move onto the hosts
             if (StringUtils.isBlank(password)) {
                 builder.append(username).append("@");
             } else {
@@ -56,11 +56,22 @@ public class DatabaseManager {
         return builder.toString();
     }
 
+    /**
+     * Builds a SRV mongodb connection string.
+     *
+     * @param username The optional username to use for this connection string.
+     * @param password The optional password to use for this connection. For this to be included in the connection string, a username must be provided.
+     * @param host     A non-blank host with a port appended in the format {@code host:port}. The default is {@code 27017}.
+     * @param database The optional database to connect to.
+     * @param options  The optional string of options to append to this connection string.
+     * @return The built connection string.
+     * @throws IllegalArgumentException If host is blank.
+     */
     public static String buildSRVConnectionString(String username, String password, String host, String database, String options) {
         Checks.notBlank(host, "host");
         StringBuilder builder = new StringBuilder()
                 .append("mongodb+srv://");
-        if (!StringUtils.isAllBlank(username, password)) { // If username and password are both blank, we just move onto the hosts
+        if (!StringUtils.isBlank(username)) { // If username is blank, we just move onto the hosts
             if (StringUtils.isBlank(password)) {
                 builder.append(username).append("@");
             } else {

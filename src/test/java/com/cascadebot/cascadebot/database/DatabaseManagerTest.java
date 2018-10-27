@@ -33,7 +33,7 @@ public class DatabaseManagerTest {
         assertEquals(DatabaseManager.buildSRVConnectionString("admin", "hello", "localhost", "", ""), "mongodb+srv://admin:hello@localhost/"); // Username and password test
         assertEquals(DatabaseManager.buildSRVConnectionString("", "", "localhost", "test", ""), "mongodb+srv://localhost/test"); // Database test
         assertEquals(DatabaseManager.buildSRVConnectionString("", "", "localhost", "", "test=2"), "mongodb+srv://localhost/?test=2"); // Options test
-        assertThrows(IllegalArgumentException.class, () -> DatabaseManager.buildStandardConnectionString("", "", new ArrayList<>(), "", "")); // Not allowed to pass empty list of hosts
+        assertThrows(IllegalArgumentException.class, () -> DatabaseManager.buildSRVConnectionString("", "", "", "", "")); // Not allowed to pass blank host
     }
 
 
