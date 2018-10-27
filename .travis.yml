@@ -1,18 +1,9 @@
+dist: trusty
 language: java
+sudo: required
+jdk: oraclejdk11
 
-addons:
-  apt:
-    sources:
-      - sourceline: 'ppa:linuxuprising/java'
-    packages:
-      - oracle-java10-installer
-      - oracle-java10-set-default
-
-env:
-  global:
-    - JAVA_HOME=/usr/lib/jvm/java-10-oracle
-
-install: mvn clean install test -U
+install: mvn clean install test -U -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
 
 cache:
   directories:
