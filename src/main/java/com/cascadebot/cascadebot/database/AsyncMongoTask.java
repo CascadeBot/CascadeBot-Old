@@ -5,10 +5,10 @@
 
 package com.cascadebot.cascadebot.database;
 
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.async.client.MongoDatabase;
 
 @FunctionalInterface
-public interface MongoTask {
+public interface AsyncMongoTask {
 
     public void run(MongoDatabase database);
 
