@@ -56,4 +56,21 @@ public class DatabaseManager {
         return builder.toString();
     }
 
+    public static String buildSRVConnectionString(String username, String password, String host, String database, String options) {
+        Checks.notBlank(host, "host");
+        StringBuilder builder = new StringBuilder()
+                .append("mongodb+srv://");
+        if (!StringUtils.isAllBlank(username, password)) { // If username and password are both blank, we just move onto the hosts
+            if (StringUtils.isBlank(password)) {
+                builder.append(username).append("@");
+            } else {
+                builder.append(username).append(":").append(URLEncoder.encode(password, StandardCharsets.UTF_8)).append("@"); // Make sure the password is encoded to not use : @ %
+            }
+        }
+        builder.append(host);
+        builder.append("/").append(StringUtils.isBlank(database) ? "" : database);
+        builder.append(StringUtils.isBlank(options) ? "" : "?" + options);
+        return builder.toString();
+    }
+
 }
