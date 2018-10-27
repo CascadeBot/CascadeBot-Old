@@ -79,8 +79,8 @@ public class Config {
             }
         }
 
-        VALUES.hasteServer = (String) config.getOrDefault("hasteServer", "https://hastebin.com/");
-
+        VALUES.hasteServer = (String) config.getOrDefault("hasteServer", "https://hastebin.com/documents");
+        VALUES.hasteLink = (String) config.getOrDefault("hasteLink", "https://hastebin.com/");
     }
 
     private boolean meetsRequirements(Map<String, Object> map, String[] path) {
@@ -109,6 +109,8 @@ public class Config {
         public Map<ICommandRestricted.CommandLevel, Long> commandLevels;
 
         public String hasteServer;
+        public String hasteLink;
+
 
     }
 }

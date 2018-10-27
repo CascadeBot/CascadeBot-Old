@@ -31,7 +31,7 @@ public class ErrorUtils {
             JsonParser parser = new JsonParser();
             if(response.body() != null) {
                 JsonObject object = parser.parse(response.body().string()).getAsJsonObject();
-                return object.get("key").getAsString();
+                return Config.VALUES.hasteLink + object.get("key").getAsString();
             }
         } catch (IOException e) {
             e.printStackTrace(); //TODO log this separately so things don't infinite loop.
