@@ -11,6 +11,7 @@ import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import net.dv8tion.jda.core.entities.ChannelType;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
@@ -32,6 +33,18 @@ public class ButtonEventListener extends ListenerAdapter {
                     e.getReaction().removeReaction(e.getMember().getUser()).queue(); //Idk if we want to allow other reactions on the message
                     //TODO perms checking
                 }
+            }
+        }
+    }
+
+    @Override
+    public void onMessageDelete(MessageDeleteEvent e) {
+        if(e.getChannel().getType().equals(ChannelType.TEXT)) {
+            TextChannel channel = (TextChannel) e.getChannel();
+            GuildData data = GuildData.getGuildData(channel.getGuild().getIdLong());
+            ButtonsCache cache = data.getButtonsCache();
+            if (cache.containsKey(channel.getIdLong())) {
+                cache.get(channel.getIdLong()).remove(e.getMessageIdLong());
             }
         }
     }
