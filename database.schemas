@@ -1,7 +1,7 @@
 -- Guild Data --
 {
     "_id": <guild id, long>
-    "config_id": <config id, int>
+    "config_id": <config id, string>
     "created_at": <first creation, date>
     "updated_at": <updated every time modified, date>
     "config": {
