@@ -92,11 +92,13 @@ public class CascadeBot {
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
 
+
+    public void stop() {
+        shutdown();
+        System.exit(0);
     }
 
     public void shutdown() {
-        EvalCommand.shutdownEvalPool();
-        CommandListener.shutdownCommandPool();
         shardManager.shutdown();
     }
 
