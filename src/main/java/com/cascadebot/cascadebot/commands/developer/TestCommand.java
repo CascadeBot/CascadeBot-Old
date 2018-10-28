@@ -15,6 +15,7 @@ import com.cascadebot.cascadebot.utils.buttons.ButtonRunnable;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.TextChannel;
 
 public class TestCommand implements ICommandRestricted {
     @Override
@@ -25,6 +26,9 @@ public class TestCommand implements ICommandRestricted {
         }));
         group.addButton(new Button.UnicodeButton("\uD83D\uDC4D", (runner, channel, message) -> {
             channel.sendMessage("\uD83D\uDC4D").queue();
+        }));
+        group.addButton(new Button.EmoteButton(context.getGuild().getEmoteById(502576800086622208L), (runner, channel, message) -> {
+            channel.sendMessage("<:cascade:502576800086622208>").queue();
         }));
         context.sendButtonedMessage("test", group);
     }
