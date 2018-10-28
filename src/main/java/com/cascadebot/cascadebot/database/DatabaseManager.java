@@ -6,38 +6,64 @@
 package com.cascadebot.cascadebot.database;
 
 import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class DatabaseManager {
 
     private final MongoClient SYNC_CLIENT;
     private final com.mongodb.async.client.MongoClient ASYNC_CLIENT;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManager.class);
+    private String database;
 
-    public DatabaseManager(String database, String url) {
-        SYNC_CLIENT = null;
-        ASYNC_CLIENT = null;
+    public DatabaseManager(String username, String password, String database, String options, String[] hosts) {
+        this(ConnectionStringType.STANDARD, username, password, database, options, hosts);
     }
 
+    public DatabaseManager(ConnectionStringType connectionStringType, String username, String password, String database, String options, String[] hosts) {
+        this.database = database;
+
+        String connectionString = "";
+        if (StringUtils.isAnyBlank(hosts)) hosts = new String[]{"localhost"};
+        switch (connectionStringType) {
+            case SRV:
+                connectionString = buildSRVConnectionString(username, password, hosts[0], database, options);
+                break;
+            case STANDARD:
+                connectionString = buildStandardConnectionString(username, password, hosts, database, options);
+                break;
+        }
+        SYNC_CLIENT = MongoClients.create(connectionString);
+        ASYNC_CLIENT = com.mongodb.async.client.MongoClients.create(connectionString);
+    }
+
+    public DatabaseManager(String connectionString) {
+        SYNC_CLIENT = MongoClients.create(connectionString);
+        ASYNC_CLIENT = com.mongodb.async.client.MongoClients.create(connectionString);
+    }
 
     /**
      * Builds a standard mongodb connection string
      *
      * @param username The optional username to use for this connection string.
      * @param password The optional password to use for this connection. For this to be included in the connection string, a username must be provided.
-     * @param hosts    A non-empty list of hosts with ports appended in the format {@code host:port}. The default is {@code 27017}.
+     * @param hosts    A non-empty list of hosts with ports appended in the format {@code host:port}. None of the provided strings can be blank. The default is {@code 27017}.
      * @param database The optional database to connect to.
      * @param options  The optional string of options to append to this connection string.
      * @return The built connection string.
      * @throws IllegalArgumentException If hosts is empty.
      */
-    public static String buildStandardConnectionString(String username, String password, List<String> hosts, String database, String options) {
+    public static String buildStandardConnectionString(String username, String password, String[] hosts, String database, String options) {
         Checks.notEmpty(hosts, "hosts");
+        Checks.check(!StringUtils.isAnyBlank(hosts), "No hosts can be blank!");
         StringBuilder builder = new StringBuilder()
                 .append("mongodb://");
         if (!StringUtils.isBlank(username)) { // If username is blank, we just move onto the hosts
@@ -83,5 +109,38 @@ public class DatabaseManager {
         builder.append(StringUtils.isBlank(options) ? "" : "?" + options);
         return builder.toString();
     }
+
+    public MongoClient getSyncClient() {
+        return SYNC_CLIENT;
+    }
+
+    public com.mongodb.async.client.MongoClient getAsyncClient() {
+        return ASYNC_CLIENT;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public void runTask(MongoTask task) {
+        task.run(SYNC_CLIENT.getDatabase(database));
+    }
+
+    public void runAsyncTask(AsyncMongoTask task) {
+        task.run(ASYNC_CLIENT.getDatabase(database));
+    }
+
+    public void insertDocument(String collection, Document document) {
+        runAsyncTask(db -> {
+            db.getCollection(collection).insertOne(document, new DebugLogCallback<>("Inserted document", document));
+        });
+    }
+
+
+    public enum ConnectionStringType {SRV, STANDARD}
 
 }
