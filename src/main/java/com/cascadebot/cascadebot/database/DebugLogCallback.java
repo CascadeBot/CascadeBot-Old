@@ -9,7 +9,7 @@ import com.mongodb.async.SingleResultCallback;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 
-public  class DebugLogCallback<T> implements SingleResultCallback<T> {
+public class DebugLogCallback<T> implements SingleResultCallback<T> {
 
     private final Level LEVEL = Level.DEBUG;
     private final Object OBJECT_TO_LOG;
@@ -27,7 +27,9 @@ public  class DebugLogCallback<T> implements SingleResultCallback<T> {
 
     @Override
     public void onResult(T result, Throwable t) {
-        if (OBJECT_TO_LOG != null) {
+        if (t != null) {
+            LoggerFactory.getLogger("mongocallback").error("Error in a Mongo callback", t);
+        } else if (OBJECT_TO_LOG != null) {
             LoggerFactory.getLogger("mongocallback").debug(MESSAGE + ": " + OBJECT_TO_LOG.toString().replace("\n", ""));
         }
     }
