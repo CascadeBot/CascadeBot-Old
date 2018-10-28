@@ -29,6 +29,8 @@ public class ButtonEventListener extends ListenerAdapter {
                     ButtonGroup group = cache.get(channel.getIdLong()).get(e.getMessageIdLong());
                     CascadeBot.instance().getLogger().info(e.getReaction().getReactionEmote().getName());
                     e.getChannel().getMessageById(e.getMessageId()).queue(message -> group.hanndleButton(e.getMember(), channel, message, e.getReactionEmote()));
+                    e.getReaction().removeReaction(e.getMember().getUser()).queue(); //Idk if we want to allow other reactions on the message
+                    //TODO perms checking
                 }
             }
         }
