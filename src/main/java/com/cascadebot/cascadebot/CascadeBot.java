@@ -59,7 +59,7 @@ public class CascadeBot {
 
         httpClient = new OkHttpClient.Builder().build();
 
-        if(Config.VALUES.prettyJson) {
+        if (Config.VALUES.prettyJson) {
             builder.setPrettyPrinting();
         }
 
@@ -86,12 +86,12 @@ public class CascadeBot {
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
 
-        RestAction.DEFAULT_FAILURE= throwable -> {
+        RestAction.DEFAULT_FAILURE = throwable -> {
             logger.error("Uncaught exception in rest action", throwable);
         };
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
-
+    }
 
     public void stop() {
         shutdown();
