@@ -35,7 +35,7 @@ public class GuildData {
     public void enableCommand(ICommand command) {
         if (!command.getType().isAvailableModule()) return;
         if (commandInfo.contains(command.getClass())) {
-            commandInfo.get(command.getClass()).setDisabled(false);
+            commandInfo.get(command.getClass()).setEnabled(true);
         }
     }
 
@@ -48,7 +48,7 @@ public class GuildData {
     public void disableCommand(ICommand command) {
         if (!command.getType().isAvailableModule()) return;
         if (commandInfo.contains(command.getClass())) {
-            commandInfo.get(command.getClass()).setDisabled(false);
+            commandInfo.get(command.getClass()).setEnabled(false);
         }
     }
 
@@ -61,7 +61,7 @@ public class GuildData {
 
     public boolean isCommandEnabled(ICommand command) {
         if (commandInfo.contains(command.getClass())) {
-            return !commandInfo.get(command.getClass()).isDisabled();
+            return commandInfo.get(command.getClass()).isEnabled();
         }
         return false;
     }
@@ -69,7 +69,7 @@ public class GuildData {
     public boolean isTypeEnabled(CommandType type) {
         boolean enabled = true;
         for (ICommand command : CommandManager.instance().getCommandsByType(type)) {
-            enabled &= !commandInfo.get(command.getClass()).isDisabled();
+            enabled &= commandInfo.get(command.getClass()).isEnabled();
         }
         return enabled;
     }

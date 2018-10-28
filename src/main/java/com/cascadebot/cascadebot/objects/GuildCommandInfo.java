@@ -10,22 +10,25 @@ import org.apache.commons.lang3.ArrayUtils;
 
 public class GuildCommandInfo {
 
-    private boolean disabled;
+    private boolean enabled;
     private boolean forceDefault;
     private String command;
+    private String defaultCommand;
     private String[] aliases;
 
     public GuildCommandInfo(ICommand command) {
         this.command = command.defaultCommand();
+        this.defaultCommand = command.defaultCommand();
         this.forceDefault = command.forceDefault();
         this.aliases = command.getGlobalAliases();
-        this.disabled = false;
+        this.enabled = true;
     }
 
-    public GuildCommandInfo(String command, String[] aliases, boolean disabled, boolean forceDefault) {
+    public GuildCommandInfo(String command, String defaultCommand, String[] aliases, boolean enabled, boolean forceDefault) {
         this.command = command;
+        this.defaultCommand = defaultCommand;
         this.aliases = aliases;
-        this.disabled = disabled;
+        this.enabled = enabled;
         this.forceDefault = forceDefault;
     }
 
@@ -53,13 +56,17 @@ public class GuildCommandInfo {
         return this;
     }
 
-    public boolean isDisabled() {
-        return disabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
-    public GuildCommandInfo setDisabled(boolean disabled) {
-        this.disabled = disabled;
+    public GuildCommandInfo setEnabled(boolean enabled) {
+        this.enabled = enabled;
         return this;
+    }
+
+    public String getDefaultCommand() {
+        return defaultCommand;
     }
 
 }
