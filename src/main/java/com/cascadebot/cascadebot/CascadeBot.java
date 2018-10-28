@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commands.developer.EvalCommand;
+import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
 import com.google.gson.Gson;
@@ -68,6 +69,7 @@ public class CascadeBot {
             shardManager = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new Events())
+                    .addEventListeners(new ButtonEventListener())
                     .setToken(Config.VALUES.botToken)
                     //.setAudioSendFactory(new NativeAudioSendFactory())
                     .setShardsTotal(-1)

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ButtonsCache extends HashMap<Long, LinkedHashMap<Long, ButtonGroup>> { //Long 1 is channel id. land 2 is message id.
+public class ButtonsCache extends HashMap<Long, LinkedHashMap<Long, ButtonGroup>> { //Long 1 is channel id. long 2 is message id.
 
     private int maxSize;
 

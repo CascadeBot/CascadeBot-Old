@@ -36,7 +36,7 @@ public class DatabaseManager {
      * @return The built connection string.
      * @throws IllegalArgumentException If hosts is empty.
      */
-    public static String buildStandardConnectionString(String username, String password, List<String> hosts, String database, String options) {
+    public static String buildStandardConnectionString(String username, String password, String[] hosts, String database, String options) {
         Checks.notEmpty(hosts, "hosts");
         StringBuilder builder = new StringBuilder()
                 .append("mongodb://");

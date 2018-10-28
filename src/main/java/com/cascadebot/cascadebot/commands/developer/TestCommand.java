@@ -21,10 +21,10 @@ public class TestCommand implements ICommandRestricted {
     public void onCommand(Member sender, CommandContext context) {
         ButtonGroup group = new ButtonGroup(sender.getUser().getIdLong(), context.getGuild().getOwnerIdLong());
         group.addButton(new Button.UnicodeButton("\uD83D\uDC40", (runner, channel, message) -> {
-
+            channel.sendMessage("\uD83D\uDC40").queue();
         }));
         group.addButton(new Button.UnicodeButton("\uD83D\uDC4D", (runner, channel, message) -> {
-
+            channel.sendMessage("\uD83D\uDC4D").queue();
         }));
         context.sendButtonedMessage("test", group);
     }
