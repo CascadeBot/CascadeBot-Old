@@ -30,7 +30,7 @@ public class GuildCommandInfo {
     public GuildCommandInfo(String command, String defaultCommand, String[] aliases, boolean enabled, boolean forceDefault) {
         this.command = command;
         this.defaultCommand = defaultCommand;
-        this.aliases = new HashSet<>(Arrays.asList(aliases));;
+        this.aliases = new HashSet<>(Arrays.asList(aliases));
         this.enabled = enabled;
         this.forceDefault = forceDefault;
     }
@@ -40,7 +40,8 @@ public class GuildCommandInfo {
     }
 
     public GuildCommandInfo setCommand(String command) {
-        if (this.forceDefault) throw new UnsupportedOperationException("This command's main command cannot be changed!");
+        if (this.forceDefault)
+            throw new UnsupportedOperationException("This command's main command cannot be changed!");
         this.command = command;
         return this;
     }

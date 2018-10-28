@@ -13,8 +13,6 @@ import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -83,10 +81,11 @@ public class GuildData {
     }
 
     public Set<String> getCommandArgs(ICommand command) {
-        if (commandInfo.contains(command.getClass())) {
-            return commandInfo.get(command.getClass()).getAliases();
-        }
-        return new HashSet<>(Arrays.asList(command.getGlobalAliases()));
+        return getGuildCommandInfo(command).getAliases();
+    }
+
+    public GuildCommandInfo getGuildCommandInfo(ICommand command) {
+        return commandInfo.putIfAbsent(command.getClass(), new GuildCommandInfo(command));
     }
 
     public long getGuildID() {
