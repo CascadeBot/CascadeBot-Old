@@ -25,7 +25,7 @@ public class CommandManager {
     private static CommandManager instance = null;
 
     private final List<ICommand> commands = new CopyOnWriteArrayList<>();
-    private final Logger logger = LoggerFactory.getLogger("ICommand Manager");
+    private final Logger logger = LoggerFactory.getLogger("Command Manager");
 
     public CommandManager() {
         instance = this;
