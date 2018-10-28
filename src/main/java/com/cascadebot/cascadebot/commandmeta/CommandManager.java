@@ -47,7 +47,7 @@ public class CommandManager {
         for (ICommand cmd : getCommands()) {
             if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
                 return cmd;
-            } else if (ArrayUtils.contains(data.getCommandArgs(cmd), command)) {
+            } else if (data.getCommandArgs(cmd).contains(command)) {
                 return cmd;
             }
         }

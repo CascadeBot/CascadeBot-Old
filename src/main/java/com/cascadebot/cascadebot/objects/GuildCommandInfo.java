@@ -6,7 +6,10 @@
 package com.cascadebot.cascadebot.objects;
 
 import com.cascadebot.cascadebot.commandmeta.ICommand;
-import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class GuildCommandInfo {
 
@@ -14,20 +17,20 @@ public class GuildCommandInfo {
     private boolean forceDefault;
     private String command;
     private String defaultCommand;
-    private String[] aliases;
+    private Set<String> aliases;
 
     public GuildCommandInfo(ICommand command) {
         this.command = command.defaultCommand();
         this.defaultCommand = command.defaultCommand();
         this.forceDefault = command.forceDefault();
-        this.aliases = command.getGlobalAliases();
+        this.aliases = new HashSet<>(Arrays.asList(command.getGlobalAliases()));
         this.enabled = true;
     }
 
     public GuildCommandInfo(String command, String defaultCommand, String[] aliases, boolean enabled, boolean forceDefault) {
         this.command = command;
         this.defaultCommand = defaultCommand;
-        this.aliases = aliases;
+        this.aliases = new HashSet<>(Arrays.asList(aliases));;
         this.enabled = enabled;
         this.forceDefault = forceDefault;
     }
@@ -42,16 +45,19 @@ public class GuildCommandInfo {
         return this;
     }
 
-    public String[] getAliases() {
+    public Set<String> getAliases() {
         return aliases;
     }
 
-    public GuildCommandInfo addAlias(String alias) {
-        ArrayUtils.add(this.aliases, alias);
-        return this;
+    public boolean addAlias(String alias) {
+        return this.aliases.add(alias);
     }
 
-    public GuildCommandInfo setAliases(String[] aliases) {
+    public boolean removeAlias(String alias) {
+        return this.aliases.remove(alias);
+    }
+
+    public GuildCommandInfo setAliases(Set<String> aliases) {
         this.aliases = aliases;
         return this;
     }

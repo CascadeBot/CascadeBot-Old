@@ -13,7 +13,10 @@ import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GuildData {
@@ -47,9 +50,7 @@ public class GuildData {
 
     public void disableCommand(ICommand command) {
         if (!command.getType().isAvailableModule()) return;
-        if (commandInfo.contains(command.getClass())) {
-            commandInfo.get(command.getClass()).setEnabled(false);
-        }
+        commandInfo.putIfAbsent(command.getClass(), new GuildCommandInfo(command)).setEnabled(false);
     }
 
     public void disableCommandByType(CommandType commandType) {
@@ -63,7 +64,7 @@ public class GuildData {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).isEnabled();
         }
-        return false;
+        return true;
     }
 
     public boolean isTypeEnabled(CommandType type) {
@@ -81,11 +82,11 @@ public class GuildData {
         return command.defaultCommand();
     }
 
-    public String[] getCommandArgs(ICommand command) {
+    public Set<String> getCommandArgs(ICommand command) {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getAliases();
         }
-        return command.getGlobalAliases();
+        return new HashSet<>(Arrays.asList(command.getGlobalAliases()));
     }
 
     public long getGuildID() {
