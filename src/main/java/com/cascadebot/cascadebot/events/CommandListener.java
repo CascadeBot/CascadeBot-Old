@@ -30,7 +30,7 @@ public class CommandListener extends ListenerAdapter {
         if (event.getAuthor().isBot()) return;
         String message = Constants.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         String prefix = Config.VALUES.defaultPrefix; //TODO: Add guild data prefix here
-        GuildData guildData = new GuildData(event.getGuild().getIdLong());
+        GuildData guildData = GuildData.getGuildData(event.getGuild().getIdLong());
         if (message.startsWith(prefix)) {
             String commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
             String trigger = commandWithArgs.split(" ")[0]; // Get first string before a space

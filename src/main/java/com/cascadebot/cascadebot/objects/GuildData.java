@@ -13,9 +13,12 @@ import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GuildData {
+
+    private static Map<Long, GuildData> guildDataMap = new ConcurrentHashMap<>();
 
     private long guildID;
     private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
@@ -25,7 +28,7 @@ public class GuildData {
     private ButtonsCache buttonsCache = new ButtonsCache(5);
 
 
-    public GuildData(long guildID) {
+    private GuildData(long guildID) {
         this.guildID = guildID;
     }
 
@@ -97,10 +100,23 @@ public class GuildData {
         this.mentionPrefix = mentionPrefix;
     }
 
-    //Binary i hope you have a better way of handling this.
     public void addButtonGroup(TextChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
         buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
+    }
+
+    public ButtonsCache getButtonsCache() {
+        return buttonsCache;
+    }
+
+    public static GuildData getGuildData(Long id) {
+        if(guildDataMap.containsKey(id)) {
+            return guildDataMap.get(id);
+        } else {
+            GuildData data = new GuildData(id);
+            guildDataMap.put(id, data);
+            return data;
+        }
     }
 
 }

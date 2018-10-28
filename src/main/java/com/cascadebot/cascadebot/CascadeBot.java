@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commands.developer.EvalCommand;
+import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
 import com.google.gson.Gson;
@@ -59,7 +60,7 @@ public class CascadeBot {
 
         httpClient = new OkHttpClient.Builder().build();
 
-        if(Config.VALUES.prettyJson) {
+        if (Config.VALUES.prettyJson) {
             builder.setPrettyPrinting();
         }
 
@@ -68,6 +69,7 @@ public class CascadeBot {
             shardManager = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new Events())
+                    .addEventListeners(new ButtonEventListener())
                     .setToken(Config.VALUES.botToken)
                     //.setAudioSendFactory(new NativeAudioSendFactory())
                     .setShardsTotal(-1)
@@ -86,12 +88,12 @@ public class CascadeBot {
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
 
-        RestAction.DEFAULT_FAILURE= throwable -> {
+        RestAction.DEFAULT_FAILURE = throwable -> {
             logger.error("Uncaught exception in rest action", throwable);
         };
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
-
+    }
 
     public void stop() {
         shutdown();
