@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.events;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.objects.GuildData;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
@@ -16,6 +17,9 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 public class ButtonEventListener extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
+        if(e.getMember().equals(e.getGuild().getSelfMember())) {
+            return;
+        }
         if(e.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) e.getChannel();
             GuildData data = GuildData.getGuildData(channel.getGuild().getIdLong());
@@ -23,6 +27,7 @@ public class ButtonEventListener extends ListenerAdapter {
             if(cache.containsKey(channel.getIdLong())) {
                 if(cache.get(channel.getIdLong()).containsKey(e.getMessageIdLong())) {
                     ButtonGroup group = cache.get(channel.getIdLong()).get(e.getMessageIdLong());
+                    CascadeBot.instance().getLogger().info(e.getReaction().getReactionEmote().getName());
                     e.getChannel().getMessageById(e.getMessageId()).queue(message -> group.hanndleButton(e.getMember(), channel, message, e.getReactionEmote()));
                 }
             }

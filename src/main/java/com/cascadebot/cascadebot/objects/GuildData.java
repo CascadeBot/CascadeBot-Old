@@ -110,7 +110,13 @@ public class GuildData {
     }
 
     public static GuildData getGuildData(Long id) {
-        return guildDataMap.getOrDefault(id, new GuildData(id));
+        if(guildDataMap.containsKey(id)) {
+            return guildDataMap.get(id);
+        } else {
+            GuildData data = new GuildData(id);
+            guildDataMap.put(id, data);
+            return data;
+        }
     }
 
 }

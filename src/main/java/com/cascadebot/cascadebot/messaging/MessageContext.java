@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.objects.GuildData;
 import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -307,13 +308,12 @@ public class MessageContext {
         });
     }
 
-    //TODO ask binary how to get guild data so i can add the button groups to said data.
-
     public void sendButtonedMessage(String message, ButtonGroup group) {
         Checks.notBlank(message, "message");
         channel.sendMessage(message).queue(sentMessage -> {
             addButtons(sentMessage, group);
             group.setMessage(sentMessage.getIdLong());
+            GuildData.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
         });
 
     }
@@ -323,6 +323,7 @@ public class MessageContext {
         channel.sendMessage(embed).queue(sentMessage -> {
             addButtons(sentMessage, group);
             group.setMessage(sentMessage.getIdLong());
+            GuildData.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
         });
     }
 
@@ -331,6 +332,7 @@ public class MessageContext {
         channel.sendMessage(message).queue(sentMessage -> {
             addButtons(sentMessage, group);
             group.setMessage(sentMessage.getIdLong());
+            GuildData.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
         });
     }
 
