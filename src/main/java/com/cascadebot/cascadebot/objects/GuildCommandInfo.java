@@ -23,14 +23,14 @@ public class GuildCommandInfo {
         this.command = command.defaultCommand();
         this.defaultCommand = command.defaultCommand();
         this.forceDefault = command.forceDefault();
-        this.aliases = new HashSet<>(Arrays.asList(command.getGlobalAliases()));
+        this.aliases = command.getGlobalAliases();
         this.enabled = true;
     }
 
-    public GuildCommandInfo(String command, String defaultCommand, String[] aliases, boolean enabled, boolean forceDefault) {
+    public GuildCommandInfo(String command, String defaultCommand, Set<String> aliases, boolean enabled, boolean forceDefault) {
         this.command = command;
         this.defaultCommand = defaultCommand;
-        this.aliases = new HashSet<>(Arrays.asList(aliases));
+        this.aliases = aliases;
         this.enabled = enabled;
         this.forceDefault = forceDefault;
     }

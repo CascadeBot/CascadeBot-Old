@@ -7,6 +7,8 @@ package com.cascadebot.cascadebot.commandmeta;
 
 import net.dv8tion.jda.core.entities.Member;
 
+import java.util.Set;
+
 public interface ICommand {
 
     public void onCommand(Member sender, CommandContext context);
@@ -19,8 +21,8 @@ public interface ICommand {
         return false;
     }
 
-    default String[] getGlobalAliases() {
-        return new String[0];
+    default Set<String> getGlobalAliases() {
+        return Set.of();
     }
 
 }
