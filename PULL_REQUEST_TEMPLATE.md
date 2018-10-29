@@ -9,4 +9,4 @@
 What did you add and/or change for this.
 
 ## Feature
-If this is a new feature why should we add it to the bot
+If this is a new feature why should we add it to the bot.
