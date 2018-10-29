@@ -5,14 +5,20 @@
 
 package com.cascadebot.cascadebot.objects;
 
+import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.database.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
+import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+import javax.xml.crypto.Data;
+import java.util.Collection;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,21 +28,37 @@ public class GuildData {
     private static Map<Long, GuildData> guildDataMap = new ConcurrentHashMap<>();
 
     private long guildID;
+
+    public Date creationDate = new Date();
+
+    private String configVersion = Constants.CONFIG_VERSION;
     private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
 
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
 
     private ButtonsCache buttonsCache = new ButtonsCache(5);
 
-
     private GuildData(long guildID) {
         this.guildID = guildID;
+    }
+
+    private GuildData(long guildID, String configVersion, ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo,
+                      boolean mentionPrefix) {
+        this.guildID = guildID;
+        this.configVersion = configVersion;
+        this.commandInfo = commandInfo;
+        this.mentionPrefix = mentionPrefix;
+    }
+
+    public static GuildData getGuildData(Long id) {
+        return guildDataMap.computeIfAbsent(id, GuildData::new);
     }
 
     public void enableCommand(ICommand command) {
         if (!command.getType().isAvailableModule()) return;
         if (commandInfo.contains(command.getClass())) {
             commandInfo.get(command.getClass()).setEnabled(true);
+            updateCommand(command);
         }
     }
 
@@ -48,7 +70,8 @@ public class GuildData {
 
     public void disableCommand(ICommand command) {
         if (!command.getType().isAvailableModule()) return;
-        commandInfo.putIfAbsent(command.getClass(), new GuildCommandInfo(command)).setEnabled(false);
+        commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command)).setEnabled(false);
+        updateCommand(command);
     }
 
     public void disableCommandByType(CommandType commandType) {
@@ -56,6 +79,16 @@ public class GuildData {
         for (ICommand command : CommandManager.instance().getCommandsByType(commandType)) {
             disableCommand(command);
         }
+    }
+
+    private void updateCommand(ICommand command) {
+        GuildDataMapper.update(guildID, Updates.combine(
+                Updates.set(
+                        "config.commands." + command.defaultCommand(),
+                        GuildDataMapper.processCommandInfo(commandInfo.get(command.getClass()))
+                ),
+                Updates.currentDate("updated_at")
+        ));
     }
 
     public boolean isCommandEnabled(ICommand command) {
@@ -81,11 +114,31 @@ public class GuildData {
     }
 
     public Set<String> getCommandArgs(ICommand command) {
-        return getGuildCommandInfo(command).getAliases();
+        if (commandInfo.contains(command.getClass())) {
+            return getGuildCommandInfo(command).getAliases();
+        }
+        return command.getGlobalAliases();
     }
 
-    public GuildCommandInfo getGuildCommandInfo(ICommand command) {
-        return commandInfo.putIfAbsent(command.getClass(), new GuildCommandInfo(command));
+    public void setCommandName(ICommand command, String commandName) {
+        getGuildCommandInfo(command).setCommand(commandName);
+        updateCommand(command);
+    }
+
+    public boolean addAlias(ICommand command, String alias) {
+        boolean success = getGuildCommandInfo(command).addAlias(alias);
+        updateCommand(command);
+        return success;
+    }
+
+    public boolean removeAlias(ICommand command, String alias) {
+        boolean success = getGuildCommandInfo(command).removeAlias(alias);
+        updateCommand(command);
+        return success;
+    }
+
+    private GuildCommandInfo getGuildCommandInfo(ICommand command) {
+        return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command));
     }
 
     public long getGuildID() {
@@ -98,6 +151,10 @@ public class GuildData {
 
     public void setMentionPrefix(boolean mentionPrefix) {
         this.mentionPrefix = mentionPrefix;
+        GuildDataMapper.update(guildID, Updates.combine(
+                Updates.set("mention_prefix", mentionPrefix),
+                Updates.currentDate("updated_at")
+        ));
     }
 
     public void addButtonGroup(TextChannel channel, Message message, ButtonGroup group) {
@@ -109,8 +166,62 @@ public class GuildData {
         return buttonsCache;
     }
 
-    public static GuildData getGuildData(Long id) {
-        return guildDataMap.computeIfAbsent(id, GuildData::new);
+    public Collection<GuildCommandInfo> getGuildCommandInfos() {
+        return commandInfo.values();
+    }
+
+    public String getConfigVersion() {
+        return configVersion;
+    }
+
+    public static final class GuildDataBuilder {
+
+        private long guildId;
+        private String configVersion;
+        private Date creationDate;
+        private boolean mentionPrefix;
+        private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo;
+
+        public GuildDataBuilder(long guildId) {
+            this.guildId = guildId;
+        }
+
+        public GuildDataBuilder setConfigVersion(String configVersion) {
+            this.configVersion = configVersion;
+            return this;
+        }
+
+        public GuildDataBuilder setCreationDate(Date creationDate) {
+            this.creationDate = creationDate;
+            return this;
+        }
+
+        public GuildDataBuilder setMentionPrefix(boolean mentionPrefix) {
+            this.mentionPrefix = mentionPrefix;
+            return this;
+        }
+
+        public GuildDataBuilder addCommand(ICommand command, GuildCommandInfo guildCommandInfo) {
+            if (commandInfo == null) commandInfo = new ConcurrentHashMap<>();
+            commandInfo.put(command.getClass(), guildCommandInfo);
+            return this;
+        }
+
+        public GuildDataBuilder removeCommand(ICommand command) {
+            if (commandInfo == null) return this;
+            commandInfo.remove(command.getClass());
+            return this;
+        }
+
+        public GuildData build() {
+            return new GuildData(
+                    guildId,
+                    configVersion,
+                    commandInfo,
+                    mentionPrefix
+            );
+        }
+
     }
 
 }
