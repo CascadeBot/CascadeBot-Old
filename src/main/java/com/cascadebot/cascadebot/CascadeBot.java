@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commands.developer.EvalCommand;
+import com.cascadebot.cascadebot.database.DatabaseManager;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
@@ -34,6 +35,7 @@ public class CascadeBot {
     private Config config;
     private ShardManager shardManager;
     private CommandManager commandManager;
+    private DatabaseManager databaseManager;
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
@@ -83,6 +85,7 @@ public class CascadeBot {
         }
 
         commandManager = new CommandManager();
+        databaseManager = null; // TODO: Parse from config
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
@@ -143,6 +146,10 @@ public class CascadeBot {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
     }
 
     public OkHttpClient getHttpClient() {
