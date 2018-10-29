@@ -45,7 +45,7 @@ public class EvalCommand implements ICommandRestricted {
             "java.nio",
             "java.nio.file");
 
-    private static final List<String> ENGINES = Arrays.asList("groovy", "java", "jshell");
+    private static final List<String> ENGINES = Arrays.asList("java", "groovy", "jshell");
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
