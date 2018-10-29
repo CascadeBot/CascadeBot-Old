@@ -62,6 +62,10 @@ public class CommandManager {
         return commands.stream().filter(command -> command.getType() == type).collect(Collectors.toList());
     }
 
+    public ICommand getCommandByDefault(String defaultCommand) {
+        return commands.stream().filter(command -> command.defaultCommand().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
+    }
+
     public static CommandManager instance() {
         return instance;
     }
