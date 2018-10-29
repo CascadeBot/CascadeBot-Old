@@ -17,6 +17,10 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 public class TestCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -31,6 +35,14 @@ public class TestCommand implements ICommandRestricted {
             channel.sendMessage("<:cascade:502576800086622208>").queue();
         }));
         context.sendButtonedMessage("test", group);
+
+        ScriptEngine engine = new ScriptEngineManager().getEngineByName("java");
+        engine.put("test", context);
+        try {
+            context.reply(engine.eval("test").toString());
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

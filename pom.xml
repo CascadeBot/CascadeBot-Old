@@ -160,7 +160,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>JShellScriptEngine</artifactId>
-            <version>74758f8a8e</version>
+            <version>a4018be</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -10,6 +10,8 @@ import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.cascadebot.utils.objects.ThreadPoolExecutorLogged;
+import com.github.dmac100.jshellscriptengine.JShellScriptEngine;
+import com.github.dmac100.jshellscriptengine.JShellScriptEngineFactory;
 import net.dv8tion.jda.core.entities.Member;
 
 import javax.script.ScriptEngine;
@@ -73,6 +75,7 @@ public class EvalCommand implements ICommandRestricted {
 
         EVAL_POOL.submit(() -> {
             try {
+                scriptEngine.put("test", "test");
                 scriptEngine.put("sender", sender);
                 scriptEngine.put("context", context);
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining("\n"));
