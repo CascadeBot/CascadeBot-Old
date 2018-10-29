@@ -35,14 +35,6 @@ public class TestCommand implements ICommandRestricted {
             channel.sendMessage("<:cascade:502576800086622208>").queue();
         }));
         context.sendButtonedMessage("test", group);
-
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("java");
-        engine.put("test", context);
-        try {
-            context.reply(engine.eval("test").toString());
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

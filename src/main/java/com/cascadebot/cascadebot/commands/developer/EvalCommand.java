@@ -10,14 +10,11 @@ import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.cascadebot.utils.objects.ThreadPoolExecutorLogged;
-import com.github.dmac100.jshellscriptengine.JShellScriptEngine;
-import com.github.dmac100.jshellscriptengine.JShellScriptEngineFactory;
 import net.dv8tion.jda.core.entities.Member;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -38,17 +35,15 @@ public class EvalCommand implements ICommandRestricted {
             "net.dv8tion.jda.core.entities.impl",
             "net.dv8tion.jda.core.entities",
             "net.dv8tion.jda.core.utils",
-            "java.util.streams",
+            "java.util.stream",
             "java.util",
             "java.lang",
             "java.text",
-            "java.lang",
             "java.math",
             "java.time",
             "java.io",
             "java.nio",
-            "java.nio.files",
-            "java.util.stream");
+            "java.nio.file");
 
     private static final List<String> ENGINES = Arrays.asList("groovy", "java", "jshell");
 
@@ -75,13 +70,11 @@ public class EvalCommand implements ICommandRestricted {
 
         EVAL_POOL.submit(() -> {
             try {
-                scriptEngine.put("test", "test");
                 scriptEngine.put("sender", sender);
                 scriptEngine.put("context", context);
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining("\n"));
                 String codeToRun = imports + "\n" + code;
-
-                String results = String.valueOf(scriptEngine.eval(codeToRun));
+                String results = String.valueOf(scriptEngine.eval(code));
                 if (results.length() < 2048) {
                     context.reply(results);
                 } else {
