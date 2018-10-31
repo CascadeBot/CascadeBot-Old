@@ -12,6 +12,7 @@ import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.database.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
+import com.cascadebot.cascadebot.utils.pagination.PageCache;
 import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -37,6 +38,8 @@ public class GuildData {
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
 
     private ButtonsCache buttonsCache = new ButtonsCache(5);
+
+    private PageCache pageCache = new PageCache();
 
     private GuildData(long guildID) {
         this.guildID = guildID;
@@ -172,6 +175,10 @@ public class GuildData {
 
     public String getConfigVersion() {
         return configVersion;
+    }
+
+    public PageCache getPageCache() {
+        return pageCache;
     }
 
     public static final class GuildDataBuilder {

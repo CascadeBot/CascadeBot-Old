@@ -7,8 +7,11 @@ package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.objects.GuildData;
+import com.cascadebot.cascadebot.objects.pagination.Page;
 import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import com.cascadebot.cascadebot.utils.buttons.ButtonRunnable;
+import com.cascadebot.cascadebot.utils.pagination.PageCache;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
@@ -340,6 +343,45 @@ public class MessageContext {
         for(Button button : group.getButtons()) {
             button.addReaction(message);
         }
+    }
+
+    public void sendPagedMessage(List<Page> pages) {
+        ButtonGroup group = new ButtonGroup(member.getUser().getIdLong(), guild.getIdLong());
+        group.addButton(new Button.UnicodeButton("⏮", (runner, channel, message) -> {
+            PageCache.Pages pageGroup = GuildData.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
+            pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());
+            pageGroup.setCurrentPage(1);
+        }));
+        group.addButton(new Button.UnicodeButton("◀", (runner, channel, message) -> {
+            PageCache.Pages pageGroup = GuildData.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
+            int newPage = pageGroup.getCurrentPage() - 1;
+            if(newPage < 1) {
+                return;
+            }
+            pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
+            pageGroup.setCurrentPage(newPage);
+        }));
+        group.addButton(new Button.UnicodeButton("▶", (runner, channel, message) -> {
+            PageCache.Pages pageGroup = GuildData.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
+            int newPage = pageGroup.getCurrentPage() + 1;
+            if(newPage > pageGroup.getPages()) {
+                return;
+            }
+            pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
+            pageGroup.setCurrentPage(newPage);
+        }));
+        group.addButton(new Button.UnicodeButton("⏭", (runner, channel, message) -> {
+            PageCache.Pages pageGroup = GuildData.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
+            pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
+            pageGroup.setCurrentPage(pageGroup.getPages());
+        }));
+        channel.sendMessage("\uD83D\uDE04").queue(sentMessage -> {
+            pages.get(0).pageShow(sentMessage, 1, pages.size());
+            addButtons(sentMessage, group);
+            group.setMessage(sentMessage.getIdLong());
+            GuildData.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
+            GuildData.getGuildData(guild.getIdLong()).getPageCache().put(pages, sentMessage.getIdLong());
+        });
     }
 
 }
