@@ -35,7 +35,7 @@ public class PageObjects {
                 embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
                 message.editMessage(embed.build()).override(true).queue();
             } else {
-                message.editMessage(new MessageBuilder().setEmbed(embed.build()).setContent("\u200B").append("Page ").append(String.valueOf(page)).append("/").append(String.valueOf(total)).build()).override(true).queue();
+                message.editMessage(new MessageBuilder().setEmbed(embed.build()).append("Page ").append(String.valueOf(page)).append("/").append(String.valueOf(total)).build()).override(true).queue();
             }
         }
     }
