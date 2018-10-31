@@ -33,9 +33,9 @@ public class PageObjects {
         public void pageShow(Message message, int page, int total) {
             if(numbersInEmbed) {
                 embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
-                message.editMessage(new MessageBuilder().setEmbed(embed.build()).setContent("\u200B").build()).queue();
+                message.editMessage(embed.build()).override(true).queue();
             } else {
-                message.editMessage(new MessageBuilder().setEmbed(embed.build()).setContent("\u200B").append("Page ").append(String.valueOf(page)).append("/").append(String.valueOf(total)).build()).queue();
+                message.editMessage(new MessageBuilder().setEmbed(embed.build()).setContent("\u200B").append("Page ").append(String.valueOf(page)).append("/").append(String.valueOf(total)).build()).override(true).queue();
             }
         }
     }
@@ -50,7 +50,7 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            message.editMessage(new MessageBuilder().setEmbed(new EmbedBuilder().setDescription("\u200B").build()).setContent(content + "\n\nPage " + page + "/" + total).build()).queue();
+            message.editMessage(content + "\n\nPage " + page + "/" + total).override(true).queue();
         }
     }
 
@@ -87,7 +87,7 @@ public class PageObjects {
             }
             String table = FormatUtils.makeAsciiTable(header, body, footer);
             if(!numbersInTable) table += "\n\nPage " + page + "/" + total;
-            message.editMessage(new MessageBuilder().setEmbed(new EmbedBuilder().setDescription("\u200B").build()).append(table).build()).queue();
+            message.editMessage(table).override(true).queue();
         }
     }
 }
