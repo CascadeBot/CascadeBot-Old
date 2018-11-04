@@ -88,11 +88,8 @@ public class CascadeBot {
         }
 
         commandManager = new CommandManager();
-        databaseManager = new DatabaseManager("mongodb://locahost"); // TODO: Parse from config
-        for (Document listDatabase : databaseManager.getSyncClient().listDatabases().maxTime(5, TimeUnit.SECONDS)) {
+        databaseManager = null;
 
-        }
-        logger.error("test?");
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
