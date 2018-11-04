@@ -5,9 +5,6 @@
 
 package com.cascadebot.cascadebot.database;
 
-import com.mongodb.ConnectionString;
-import com.mongodb.MongoClientSettings;
-import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import net.dv8tion.jda.core.utils.Checks;
@@ -44,17 +41,12 @@ public class DatabaseManager {
                 connectionString = buildStandardConnectionString(username, password, hosts, database, options);
                 break;
         }
-
-        MongoClientSettings.Builder builder = MongoClientSettings.builder();
-        builder.credential(MongoCredential.createCredential())
-
-        SYNC_CLIENT = MongoClients.create();
+        SYNC_CLIENT = MongoClients.create(connectionString);
         ASYNC_CLIENT = com.mongodb.async.client.MongoClients.create(connectionString);
     }
 
     public DatabaseManager(String connectionString) {
-        SYNC_CLIENT =
-                MongoClients.create(MongoClientSettings.builder().applyToClusterSettings(builder -> builder.))..build());
+        SYNC_CLIENT = MongoClients.create(connectionString);
         ASYNC_CLIENT = com.mongodb.async.client.MongoClients.create(connectionString);
     }
 
