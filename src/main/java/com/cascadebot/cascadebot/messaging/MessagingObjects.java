@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.cascadebot.Constants;
+import com.cascadebot.shared.SharedConstants;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 
@@ -33,7 +34,7 @@ public class MessagingObjects {
 
     public static EmbedBuilder getColoredEmbedBuilder() {
         return getClearThreadLocalEmbedBuilder()
-                .setColor(Constants.CASCADE_COLOR);
+                .setColor(SharedConstants.CASCADE_COLOR);
     }
 
 

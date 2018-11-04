@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.shared.ExitCodes;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.yaml.snakeyaml.Yaml;

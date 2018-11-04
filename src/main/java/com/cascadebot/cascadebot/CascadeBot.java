@@ -11,6 +11,7 @@ import com.cascadebot.cascadebot.database.DatabaseManager;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
+import com.cascadebot.shared.ExitCodes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
