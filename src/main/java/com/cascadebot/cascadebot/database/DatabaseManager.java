@@ -28,20 +28,28 @@ public class DatabaseManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManager.class);
     private String database;
 
-    public DatabaseManager(String username, char[] password, String database, String options, String[] hosts, boolean ssl) {
+    public DatabaseManager(String username, char[] password, String database, String[] hosts, boolean ssl) {
         MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder();
 
         if (!StringUtils.isBlank(username) && password.length != 0) {
             settingsBuilder.credential(MongoCredential.createCredential(
-                    username, database, password
+                    username, database, password.clone()
             ));
+            Arrays.fill(password, '\r'); // Fill array with invalid char for security
         }
 
         settingsBuilder.applyToClusterSettings(clusterBuilder -> clusterBuilder.hosts(
-                Arrays.stream(hosts).map(ServerAddress::new).collect(Collectors.toList())
+                Arrays.stream(hosts).map(host -> {
+                    if (host.contains(":")) {
+                        return new ServerAddress(host.split(":")[0], Integer.valueOf(host.split(":")[1]));
+                    } else {
+                        return new ServerAddress(host);
+                    }
+                }).collect(Collectors.toList())
         ));
         settingsBuilder.streamFactoryFactory(NettyStreamFactory::new);
         settingsBuilder.applyToSslSettings(sslBuilder -> sslBuilder.enabled(ssl));
+        settingsBuilder.retryWrites(true);
 
         SYNC_CLIENT = MongoClients.create(settingsBuilder.build());
         ASYNC_CLIENT = com.mongodb.async.client.MongoClients.create(settingsBuilder.build());

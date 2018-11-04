@@ -16,6 +16,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -36,7 +37,13 @@ public class Config {
     private String hasteServer;
     private String hasteLink;
 
-    private DatabaseManager.ConnectionStringType connectionStringType;
+    private String username;
+    private char[] password;
+    private String database;
+    private String[] hosts;
+    private boolean ssl;
+
+    private String connectionString;
 
 
 
@@ -95,11 +102,45 @@ public class Config {
                 }
             }
         } else {
-
+            // TODO: What to do here?
         }
 
         this.hasteServer = warnOnDefault(config,"haste_server", "https://hastebin.com/documents");
         this.hasteLink = warnOnDefault(config,"haste_link", "https://hastebin.com/");
+
+        Object database = config.get("database");
+        if (database instanceof Map) {
+            Map databaseMap = (Map) database;
+            if (databaseMap.containsKey("connection_string")) {
+                this.connectionString = (String) databaseMap.get("connection_string");
+            } else {
+                this.username = (String) databaseMap.get("username");
+                var passwordTemp = (String) databaseMap.get("password");
+                if (passwordTemp != null) {
+                    this.password = passwordTemp.toCharArray();
+                }
+                this.database = (String) databaseMap.get("database");
+                if (databaseMap.get("hosts") instanceof Map) {
+                    this.hosts = ((Map<String, Object>) databaseMap.get("hosts"))
+                            .entrySet()
+                            .stream()
+                            .map(Map.Entry::getKey)
+                            .toArray(String[]::new);
+                } else {
+                    this.hosts = new String[]{(String) databaseMap.get("hosts")};
+                }
+                if (this.hosts.length == 0 || Arrays.stream(this.hosts).allMatch(String::isBlank)) {
+                    LOG.error("There are no valid hosts specified, exiting!");
+                    System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+                }
+                this.ssl = warnOnDefault(databaseMap, "ssl", false);
+            }
+        } else {
+            LOG.error("No database info provided, exiting!");
+            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+        }
+
+
     }
 
     @SuppressWarnings("unchecked")
@@ -139,6 +180,30 @@ public class Config {
 
     public String getHasteLink() {
         return hasteLink;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public char[] getPassword() {
+        return password;
+    }
+
+    public String getDatabase() {
+        return database;
+    }
+
+    public String[] getHosts() {
+        return hosts;
+    }
+
+    public boolean isSsl() {
+        return ssl;
+    }
+
+    public String getConnectionString() {
+        return connectionString;
     }
 
 }
