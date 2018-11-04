@@ -22,7 +22,7 @@ public class ErrorUtils {
 
     public static String paste(String paste) {
         Request request = new Request.Builder()
-                .url(Config.VALUES.hasteServer)
+                .url(Config.INS.getHasteServer())
                 .post(RequestBody.create(MediaType.parse("application/text"), paste))
                 .build();
 
@@ -31,7 +31,7 @@ public class ErrorUtils {
             JsonParser parser = new JsonParser();
             if(response.body() != null) {
                 JsonObject object = parser.parse(response.body().string()).getAsJsonObject();
-                return Config.VALUES.hasteLink + object.get("key").getAsString();
+                return Config.INS.getHasteLink() + object.get("key").getAsString();
             }
         } catch (IOException e) {
             e.printStackTrace(); //TODO log this separately so things don't infinite loop.

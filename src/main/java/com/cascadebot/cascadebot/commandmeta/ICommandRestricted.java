@@ -19,7 +19,7 @@ public interface ICommandRestricted extends ICommand {
         OWNER;
 
         public long getId() {
-            return Config.VALUES.commandLevels.getOrDefault(this, -1L);
+            return Config.INS.getCommandLevels().getOrDefault(this, -1L);
         }
 
     }

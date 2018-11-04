@@ -29,7 +29,7 @@ public class CommandListener extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
         String message = Constants.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
-        String prefix = Config.VALUES.defaultPrefix; //TODO: Add guild data prefix here
+        String prefix = Config.INS.getDefaultPrefix(); //TODO: Add guild data prefix here
         GuildData guildData = GuildData.getGuildData(event.getGuild().getIdLong());
         if (message.startsWith(prefix)) {
             String commandWithArgs = message.substring(prefix.length()); // Remove prefix from command

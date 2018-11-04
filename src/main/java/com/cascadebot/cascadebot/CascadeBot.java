@@ -20,12 +20,14 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 public class CascadeBot {
 
@@ -54,7 +56,7 @@ public class CascadeBot {
         instance = this;
         GsonBuilder builder = new GsonBuilder();
         try {
-            config = new Config("config.yml");
+            Config.init("config.yml");
         } catch (IOException e) {
             logger.error("Error reading config file", e);
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
@@ -63,7 +65,7 @@ public class CascadeBot {
 
         httpClient = new OkHttpClient.Builder().build();
 
-        if (Config.VALUES.prettyJson) {
+        if (Config.INS.isPrettyJson()) {
             builder.setPrettyPrinting();
         }
 
@@ -73,7 +75,7 @@ public class CascadeBot {
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new Events())
                     .addEventListeners(new ButtonEventListener())
-                    .setToken(Config.VALUES.botToken)
+                    .setToken(Config.INS.getBotToken())
                     //.setAudioSendFactory(new NativeAudioSendFactory())
                     .setShardsTotal(-1)
                     //.setGameProvider(shardId -> Game)
@@ -86,7 +88,11 @@ public class CascadeBot {
         }
 
         commandManager = new CommandManager();
-        databaseManager = null; // TODO: Parse from config
+        databaseManager = new DatabaseManager("mongodb://locahost"); // TODO: Parse from config
+        for (Document listDatabase : databaseManager.getSyncClient().listDatabases().maxTime(5, TimeUnit.SECONDS)) {
+
+        }
+        logger.error("test?");
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
