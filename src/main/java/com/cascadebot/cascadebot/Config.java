@@ -93,7 +93,7 @@ public class Config {
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
 
-        this.botID = config.getLong("bot.bot_id", -1);
+        this.botID = config.getLong("bot.id", -1);
         if (this.botID == -1) {
             LOG.error("No bot ID provided in config! Please provide the bot ID to start the bot.");
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
