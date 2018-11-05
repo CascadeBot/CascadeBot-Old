@@ -82,8 +82,8 @@ public class Config {
         try {
             config.load(this.config);
         } catch (InvalidConfigurationException e) {
-            System.exit(1); //TODO proper exit code
-            e.printStackTrace();
+            LOG.error("Invalid yaml configuration", e);
+            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             return;
         }
 
@@ -117,57 +117,43 @@ public class Config {
             // weeryan17's thoughts: do nothing but log that it's invalid
         }
 
-        this.hasteServer = warnOnDefault(config,"haste_server", "https://hastebin.com/documents");
-        this.hasteLink = warnOnDefault(config,"haste_link", "https://hastebin.com/");
+        this.hasteServer = warnOnDefault(config, "haste_server", "https://hastebin.com/documents");
+        this.hasteLink = warnOnDefault(config, "haste_link", "https://hastebin.com/");
 
-        Object database = config.get("database");
-        if (database instanceof Map) {
-            Map databaseMap = (Map) database;
-            if (databaseMap.containsKey("connection_string")) {
-                this.connectionString = (String) databaseMap.get("connection_string");
-            } else {
-                this.username = (String) databaseMap.get("username");
-                var passwordTemp = (String) databaseMap.get("password");
-                if (passwordTemp != null) {
-                    this.password = passwordTemp.toCharArray();
-                }
-                this.database = (String) databaseMap.get("database");
-                if (databaseMap.get("hosts") instanceof Map) {
-                    this.hosts = ((Map<String, Object>) databaseMap.get("hosts"))
-                            .entrySet()
-                            .stream()
-                            .map(Map.Entry::getKey)
-                            .toArray(String[]::new);
-                } else {
-                    this.hosts = new String[]{(String) databaseMap.get("hosts")};
-                }
-                if (this.hosts.length == 0 || Arrays.stream(this.hosts).allMatch(String::isBlank)) {
-                    LOG.error("There are no valid hosts specified, exiting!");
-                    System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
-                }
-                this.ssl = warnOnDefault(config, "database.ssl", false);
-            }
-        } else {
+        if (!config.contains("database")) {
             LOG.error("No database info provided, exiting!");
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            return;
+        }
+        if (config.contains("database.connection_string")) {
+            this.connectionString = config.getString("database.connection_string");
+        } else {
+            this.username = config.getString("database.username");
+            var passwordTemp = config.getString("database.password");
+            if (passwordTemp != null) {
+                this.password = passwordTemp.toCharArray();
+            }
+            this.database = config.getString("database.database");
+            this.hosts = config.getStringList("database.hosts").toArray(new String[0]);
+            if (this.hosts.length == 0 || Arrays.stream(this.hosts).allMatch(String::isBlank)) {
+                LOG.error("There are no valid hosts specified, exiting!");
+                System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            }
+            this.ssl = warnOnDefault(config, "database.ssl", false);
         }
 
         sharNum = warnOnDefault(config, "shards", -1);
 
-        if(config.contains("nodes")) {
-            if(config.get("nodes") instanceof List<?>) {
-                List<Map<String, Object>> rawNodes = (List<Map<String, Object>>) config.get("nodes");
-                for(Map<String, Object> rawNode : rawNodes) {
-                    String address = (String) rawNode.get("address");
-                    String password = (String) rawNode.get("password");
-                    try {
-                        musicNodes.add(new MusicHandler.MusicNode(new URI(address), password));
-                    } catch (URISyntaxException e) {
-                        //TODO log
-                    }
+        if (config.contains("nodes")) {
+            List<Map<?, ?>> rawNodes = config.getMapList("nodes");
+            for (Map<?, ?> rawNode : rawNodes) {
+                String address = (String) rawNode.get("address");
+                String password = (String) rawNode.get("password");
+                try {
+                    musicNodes.add(new MusicHandler.MusicNode(new URI(address), password));
+                } catch (URISyntaxException e) {
+                    LOG.warn("Invalid url for node provided", e);
                 }
-            } else {
-
             }
         }
 
