@@ -11,6 +11,9 @@ import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.shared.ExitCodes;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.EnumUtils;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -72,28 +75,31 @@ public class Config {
 
     @SuppressWarnings("unchecked")
     private void initConfig() throws IOException {
-        Yaml yaml = new Yaml();
+        FileConfiguration config = new YamlConfiguration(); //TODO create own file config based off of spigots
 
-        String configStr = FileUtils.readFileToString(this.config, Charset.defaultCharset());
-        if (configStr.contains("\t")) {
-            configStr = configStr.replace("\t", "  ");
-            LOG.warn("{} contains a tab! Please look into replacing it with normal spaces!", this.config.getName());
+        //TODO switch over to nice methods for yaml
+
+        try {
+            config.load(this.config);
+        } catch (InvalidConfigurationException e) {
+            System.exit(1); //TODO proper exit code
+            e.printStackTrace();
+            return;
         }
 
-        Map<String, Object> config = yaml.load(configStr);
-
-        this.botToken = (String) config.getOrDefault("token", "");
+        this.botToken = config.getString("bot.token", "");
         if (this.botToken.isEmpty()) {
             LOG.error("No bot token provided in config! Please provide a token to start the bot.");
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
-        this.botID = (Long) config.getOrDefault("bot_id", -1);
+
+        this.botID = config.getLong("bot.bot_id", -1);
         if (this.botID == -1) {
             LOG.error("No bot ID provided in config! Please provide the bot ID to start the bot.");
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
 
-        this.prettyJson = (boolean) config.getOrDefault("prettyJson", false);
+        this.prettyJson = config.getBoolean("prettyJson", false);
 
         this.defaultPrefix = warnOnDefault(config, "default_prefix", ";");
 
@@ -139,7 +145,7 @@ public class Config {
                     LOG.error("There are no valid hosts specified, exiting!");
                     System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
                 }
-                this.ssl = warnOnDefault(databaseMap, "ssl", false);
+                this.ssl = warnOnDefault(config, "database.ssl", false);
             }
         } else {
             LOG.error("No database info provided, exiting!");
@@ -148,7 +154,7 @@ public class Config {
 
         sharNum = warnOnDefault(config, "shards", -1);
 
-        if(config.containsKey("nodes")) {
+        if(config.contains("nodes")) {
             if(config.get("nodes") instanceof List<?>) {
                 List<Map<String, Object>> rawNodes = (List<Map<String, Object>>) config.get("nodes");
                 for(Map<String, Object> rawNode : rawNodes) {
@@ -168,10 +174,10 @@ public class Config {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T warnOnDefault(Map<String, Object> config, String key, T defaultValue) {
-        T object = (T) config.get(key);
+    private <T> T warnOnDefault(FileConfiguration config, String path, T defaultValue) {
+        T object = (T) config.get(path);
         if (object == null) {
-            LOG.warn("Value for key: {} was not provided! Using default value: \"{}\"", key, String.valueOf(defaultValue));
+            LOG.warn("Value for key: {} was not provided! Using default value: \"{}\"", path, String.valueOf(defaultValue));
             return defaultValue;
         } else {
             return object;
