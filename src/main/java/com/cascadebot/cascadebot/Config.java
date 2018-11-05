@@ -6,24 +6,19 @@
 package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
-import com.cascadebot.cascadebot.database.DatabaseManager;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.shared.ExitCodes;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.util.*;
 
 public class Config {
@@ -134,7 +129,7 @@ public class Config {
                 this.password = passwordTemp.toCharArray();
             }
             this.database = config.getString("database.database");
-            this.hosts = config.getStringList("database.hosts").toArray(new String[0]);
+            this.hosts = config.getStringList("database.hosts").toArray(String[]::new);
             if (this.hosts.length == 0 || Arrays.stream(this.hosts).allMatch(String::isBlank)) {
                 LOG.error("There are no valid hosts specified, exiting!");
                 System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
