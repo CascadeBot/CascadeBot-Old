@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.database.DatabaseManager;
+import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.shared.ExitCodes;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.EnumUtils;
@@ -17,6 +18,8 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -45,7 +48,9 @@ public class Config {
 
     private String connectionString;
 
+    private int sharNum;
 
+    private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
 
     private Config(String file) throws IOException {
         config = new File(file);
@@ -103,6 +108,7 @@ public class Config {
             }
         } else {
             // TODO: What to do here?
+            // weeryan17's thoughts: do nothing but log that it's invalid
         }
 
         this.hasteServer = warnOnDefault(config,"haste_server", "https://hastebin.com/documents");
@@ -140,6 +146,24 @@ public class Config {
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
 
+        sharNum = warnOnDefault(config, "shards", -1);
+
+        if(config.containsKey("nodes")) {
+            if(config.get("nodes") instanceof List<?>) {
+                List<Map<String, Object>> rawNodes = (List<Map<String, Object>>) config.get("nodes");
+                for(Map<String, Object> rawNode : rawNodes) {
+                    String address = (String) rawNode.get("address");
+                    String password = (String) rawNode.get("password");
+                    try {
+                        musicNodes.add(new MusicHandler.MusicNode(new URI(address), password));
+                    } catch (URISyntaxException e) {
+                        //TODO log
+                    }
+                }
+            } else {
+
+            }
+        }
 
     }
 
@@ -206,4 +230,11 @@ public class Config {
         return connectionString;
     }
 
+    public int getSharNum() {
+        return sharNum;
+    }
+
+    public List<MusicHandler.MusicNode> getMusicNodes() {
+        return musicNodes;
+    }
 }
