@@ -7,21 +7,28 @@ package com.cascadebot.cascadebot.music;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.Config;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import lavalink.client.io.jda.JdaLavalink;
 
 import java.net.URI;
 
 public class MusicHandler {
 
-    CascadeBot instance;
+    private static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+
+    private CascadeBot instance;
     public MusicHandler(CascadeBot instance) {
         this.instance = instance;
     }
 
-    private JdaLavalink lavalink;
-    private boolean lavalinkEnabled;
+    private static JdaLavalink lavalink;
+    private static boolean lavalinkEnabled;
 
-    public void buildMusic() {
+    public JdaLavalink buildMusic() {
+        AudioSourceManagers.registerRemoteSources(playerManager);
         lavalink = new JdaLavalink(
                 Config.INS.getBotID().toString(),
                 Config.INS.getSharNum(),
@@ -35,6 +42,15 @@ public class MusicHandler {
         } else {
             lavalinkEnabled = false;
         }
+        return lavalink;
+    }
+
+    public CascadePlayer getPlayer(Long guildId) {
+        return CascadePlayer.getCascadePlayer(guildId);
+    }
+
+    public static AudioPlayer createLavaLinkPlayer() {
+        return playerManager.createPlayer();
     }
 
     public static class MusicNode {
@@ -49,5 +65,13 @@ public class MusicHandler {
             this.uri = uri;
             this.password = password;
         }
+    }
+
+    static JdaLavalink getLavaLink() {
+        return lavalink;
+    }
+
+    public static boolean isLavalinkEnabled() {
+        return lavalinkEnabled;
     }
 }

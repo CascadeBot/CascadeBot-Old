@@ -11,9 +11,11 @@ import com.cascadebot.cascadebot.database.DatabaseManager;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
+import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.shared.ExitCodes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lavalink.client.io.jda.JdaLavalink;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDA;
@@ -69,12 +71,15 @@ public class CascadeBot {
             builder.setPrettyPrinting();
         }
 
+        JdaLavalink lavalink = new MusicHandler(this).buildMusic();
+
         gson = builder.create();
         try {
             shardManager = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new Events())
                     .addEventListeners(new ButtonEventListener())
+                    .addEventListeners(lavalink)
                     .setToken(Config.INS.getBotToken())
                     //.setAudioSendFactory(new NativeAudioSendFactory())
                     .setShardsTotal(-1)
