@@ -11,6 +11,7 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.io.jda.JdaLavalink;
 
 import java.net.URI;
@@ -47,6 +48,11 @@ public class MusicHandler {
 
     public CascadePlayer getPlayer(Long guildId) {
         return CascadePlayer.getCascadePlayer(guildId);
+    }
+
+    public AudioTrack getTrack(String search) {
+
+        return null;
     }
 
     public static AudioPlayer createLavaLinkPlayer() {
