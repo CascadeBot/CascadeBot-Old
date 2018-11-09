@@ -10,13 +10,51 @@
 # commented with its usage.                                #
 #                                                          #
 # Fields marked with "# REQUIRED" need to be entered for   #
-# the bot to start.                                        #
+# the bot to start. Default values are filled out in the   #
+# relevant fields                                          #
+#                                                          #
+# If you have any questions ask the Cascade Bot Dev team!  #
 ############################################################
 
-
+# REQUIRED
+# The token and client ID for the bot, kinda self explanatory...
 bot:
-  id:
-  token:
+  id: -1
+  token: ''
+
+# REQUIRED
+# All should be prettyyy self explanatory...
+# If you have a connection string, only use that field.
+# If not, comment out the connection string and fill out the other fields
+database:
+  # connection_string: 'connection string here'
+  username: ''
+  password: ''
+  database: ''
+  hosts:
+    - ''
+  ssl: false
+
+# The number of shard to have. Leave at -1 if you don't know what you're doing!
+shard_num: -1
+
+# Whether GSON should produce minified JSON or not.
+# Recommended not to enable this unless you are debugging.
+pretty_json: false
+
+# The default prefix that the bot should use.
+default_prefix: ';'
+
+# TODO security level
+
+# The haste server to use for "hasting" messages.
+# Server is the place to submit requests, link is the prefix before the returned code.
+haste:
+  server: 'https://hastebin.com/documents'
+  link: 'https://hastebin.com/'
+
+
+
 
 
 
