@@ -5,23 +5,12 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
-import com.cascadebot.cascadebot.Config;
+import com.cascadebot.cascadebot.SecurityLevel;
 
 public interface ICommandRestricted extends ICommand {
 
-    default CommandLevel getCommandLevel() {
-        return CommandLevel.STAFF;
-    }
-
-    enum CommandLevel {
-        STAFF,
-        DEVELOPER,
-        OWNER;
-
-        public long getId() {
-            return Config.INS.getCommandLevels().getOrDefault(this, -1L);
-        }
-
+    default SecurityLevel getCommandLevel() {
+        return SecurityLevel.STAFF;
     }
 
 }

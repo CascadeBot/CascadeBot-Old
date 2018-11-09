@@ -5,7 +5,6 @@
 
 package com.cascadebot.cascadebot;
 
-import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.shared.ExitCodes;
 import com.google.common.collect.HashMultimap;
@@ -32,7 +31,7 @@ public class Config {
 
     private String botToken;
     private Long botID;
-    private HashMultimap<ICommandRestricted.CommandLevel, Long> commandLevels;
+    private HashMultimap<SecurityLevel, Long> securityLevels;
 
     private boolean prettyJson;
     private String defaultPrefix;
@@ -99,13 +98,13 @@ public class Config {
 
         this.defaultPrefix = warnOnDefault(config, "default_prefix", ";");
 
-        this.commandLevels = HashMultimap.create();
-        Object commandLevels = config.get("command_level");
+        this.securityLevels = HashMultimap.create();
+        Object commandLevels = config.get("security_level");
         if (commandLevels instanceof Map) {
             Map<String, Object> levelMap = (Map<String, Object>) commandLevels;
             for (String s : levelMap.keySet()) {
-                if (EnumUtils.isValidEnum(ICommandRestricted.CommandLevel.class, s.toUpperCase())) {
-                    this.commandLevels.put(ICommandRestricted.CommandLevel.valueOf(s), (Long) levelMap.get(s));
+                if (EnumUtils.isValidEnum(SecurityLevel.class, s.toUpperCase())) {
+                    this.securityLevels.put(SecurityLevel.valueOf(s), (Long) levelMap.get(s));
                 }
             }
         } else {
@@ -183,8 +182,8 @@ public class Config {
         return defaultPrefix;
     }
 
-    public HashMap<ICommandRestricted.CommandLevel, Long> getCommandLevels() {
-        return commandLevels;
+    public HashMultimap<SecurityLevel, Long> getSecurityLevels() {
+        return securityLevels;
     }
 
     public String getHasteServer() {
