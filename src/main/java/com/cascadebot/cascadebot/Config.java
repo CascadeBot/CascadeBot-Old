@@ -94,6 +94,12 @@ public class Config {
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
 
+        if (!config.contains("database")) {
+            LOG.error("No database info provided, exiting!");
+            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            return;
+        }
+
         if (config.contains("database.connection_string")) {
             this.connectionString = config.getString("database.connection_string");
         } else {
@@ -110,7 +116,7 @@ public class Config {
             }
             this.ssl = warnOnDefault(config, "database.ssl", false);
         }
-        
+
         this.prettyJson = config.getBoolean("pretty_json", false);
 
         this.defaultPrefix = warnOnDefault(config, "default_prefix", ";");
@@ -131,13 +137,6 @@ public class Config {
 
         this.hasteServer = warnOnDefault(config, "haste.server", "https://hastebin.com/documents");
         this.hasteLink = warnOnDefault(config, "haste.link", "https://hastebin.com/");
-
-        if (!config.contains("database")) {
-            LOG.error("No database info provided, exiting!");
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
-            return;
-        }
-
 
         shardNum = warnOnDefault(config, "shards", -1);
 
