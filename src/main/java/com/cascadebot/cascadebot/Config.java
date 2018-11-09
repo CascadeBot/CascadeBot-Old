@@ -94,6 +94,23 @@ public class Config {
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
 
+        if (config.contains("database.connection_string")) {
+            this.connectionString = config.getString("database.connection_string");
+        } else {
+            this.username = config.getString("database.username");
+            var passwordTemp = config.getString("database.password");
+            if (passwordTemp != null) {
+                this.password = passwordTemp.toCharArray();
+            }
+            this.database = config.getString("database.database");
+            this.hosts = config.getStringList("database.hosts");
+            if (this.hosts.size() == 0 || this.hosts.stream().allMatch(String::isBlank)) {
+                LOG.error("There are no valid hosts specified, exiting!");
+                System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            }
+            this.ssl = warnOnDefault(config, "database.ssl", false);
+        }
+        
         this.prettyJson = config.getBoolean("pretty_json", false);
 
         this.defaultPrefix = warnOnDefault(config, "default_prefix", ";");
@@ -112,8 +129,8 @@ public class Config {
             // weeryan17's thoughts: do nothing but log that it's invalid
         }
 
-        this.hasteServer = warnOnDefault(config, "haste_server", "https://hastebin.com/documents");
-        this.hasteLink = warnOnDefault(config, "haste_link", "https://hastebin.com/");
+        this.hasteServer = warnOnDefault(config, "haste.server", "https://hastebin.com/documents");
+        this.hasteLink = warnOnDefault(config, "haste.link", "https://hastebin.com/");
 
         if (!config.contains("database")) {
             LOG.error("No database info provided, exiting!");
@@ -121,22 +138,6 @@ public class Config {
             return;
         }
 
-        if (config.contains("database.connection_string")) {
-            this.connectionString = config.getString("database.connection_string");
-        } else {
-            this.username = config.getString("database.username");
-            var passwordTemp = config.getString("database.password");
-            if (passwordTemp != null) {
-                this.password = passwordTemp.toCharArray();
-            }
-            this.database = config.getString("database.database");
-            this.hosts = config.getStringList("database.hosts");
-            if (this.hosts.size() == 0 || this.hosts.stream().allMatch(String::isBlank)) {
-                LOG.error("There are no valid hosts specified, exiting!");
-                System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
-            }
-            this.ssl = warnOnDefault(config, "database.ssl", false);
-        }
 
         shardNum = warnOnDefault(config, "shards", -1);
 
