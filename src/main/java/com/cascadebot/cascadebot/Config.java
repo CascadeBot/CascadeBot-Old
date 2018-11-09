@@ -82,15 +82,15 @@ public class Config {
             return;
         }
 
-        this.botToken = config.getString("bot.token", "");
-        if (this.botToken.isEmpty()) {
-            LOG.error("No bot token provided in config! Please provide a token to start the bot.");
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
-        }
-
         this.botID = config.getLong("bot.id", -1);
         if (this.botID == -1) {
             LOG.error("No bot ID provided in config! Please provide the bot ID to start the bot.");
+            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+        }
+
+        this.botToken = config.getString("bot.token", "");
+        if (this.botToken.isEmpty()) {
+            LOG.error("No bot token provided in config! Please provide a token to start the bot.");
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
 
@@ -100,7 +100,7 @@ public class Config {
             return;
         }
 
-        if (config.contains("database.connection_string")) {
+        if (config.contains("database.connection_string") && !config.getString("database.connection_string").isBlank()) {
             this.connectionString = config.getString("database.connection_string");
         } else {
             this.username = config.getString("database.username");
@@ -116,6 +116,8 @@ public class Config {
             }
             this.ssl = warnOnDefault(config, "database.ssl", false);
         }
+
+        shardNum = warnOnDefault(config, "shard_num", -1);
 
         this.prettyJson = config.getBoolean("pretty_json", false);
 
@@ -137,8 +139,6 @@ public class Config {
 
         this.hasteServer = warnOnDefault(config, "haste.server", "https://hastebin.com/documents");
         this.hasteLink = warnOnDefault(config, "haste.link", "https://hastebin.com/");
-
-        shardNum = warnOnDefault(config, "shards", -1);
 
         if (config.contains("nodes")) {
             List<Map<?, ?>> rawNodes = config.getMapList("nodes");
