@@ -94,7 +94,7 @@ public class Config {
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
 
-        this.prettyJson = config.getBoolean("prettyJson", false);
+        this.prettyJson = config.getBoolean("pretty_json", false);
 
         this.defaultPrefix = warnOnDefault(config, "default_prefix", ";");
 
