@@ -32,7 +32,7 @@ public class MusicHandler {
         AudioSourceManagers.registerRemoteSources(playerManager);
         lavalink = new JdaLavalink(
                 Config.INS.getBotID().toString(),
-                Config.INS.getSharNum(),
+                Config.INS.getShardNum(),
                 shardId -> instance.getShardManager().getShardById(shardId));
 
         if(Config.INS.getMusicNodes().size() > 0) {

@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.shared.ExitCodes;
+import com.google.common.collect.HashMultimap;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,7 +32,7 @@ public class Config {
 
     private String botToken;
     private Long botID;
-    private HashMap<ICommandRestricted.CommandLevel, Long> commandLevels;
+    private HashMultimap<ICommandRestricted.CommandLevel, Long> commandLevels;
 
     private boolean prettyJson;
     private String defaultPrefix;
@@ -41,12 +42,12 @@ public class Config {
     private String username;
     private char[] password;
     private String database;
-    private String[] hosts;
+    private List<String> hosts;
     private boolean ssl;
 
     private String connectionString;
 
-    private int sharNum;
+    private int shardNum;
 
     private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
 
@@ -98,7 +99,7 @@ public class Config {
 
         this.defaultPrefix = warnOnDefault(config, "default_prefix", ";");
 
-        this.commandLevels = new HashMap<>();
+        this.commandLevels = HashMultimap.create();
         Object commandLevels = config.get("command_level");
         if (commandLevels instanceof Map) {
             Map<String, Object> levelMap = (Map<String, Object>) commandLevels;
@@ -120,6 +121,7 @@ public class Config {
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             return;
         }
+
         if (config.contains("database.connection_string")) {
             this.connectionString = config.getString("database.connection_string");
         } else {
@@ -129,15 +131,15 @@ public class Config {
                 this.password = passwordTemp.toCharArray();
             }
             this.database = config.getString("database.database");
-            this.hosts = config.getStringList("database.hosts").toArray(String[]::new);
-            if (this.hosts.length == 0 || Arrays.stream(this.hosts).allMatch(String::isBlank)) {
+            this.hosts = config.getStringList("database.hosts");
+            if (this.hosts.size() == 0 || this.hosts.stream().allMatch(String::isBlank)) {
                 LOG.error("There are no valid hosts specified, exiting!");
                 System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             }
             this.ssl = warnOnDefault(config, "database.ssl", false);
         }
 
-        sharNum = warnOnDefault(config, "shards", -1);
+        shardNum = warnOnDefault(config, "shards", -1);
 
         if (config.contains("nodes")) {
             List<Map<?, ?>> rawNodes = config.getMapList("nodes");
@@ -205,7 +207,7 @@ public class Config {
         return database;
     }
 
-    public String[] getHosts() {
+    public List<String> getHosts() {
         return hosts;
     }
 
@@ -217,8 +219,8 @@ public class Config {
         return connectionString;
     }
 
-    public int getSharNum() {
-        return sharNum;
+    public int getShardNum() {
+        return shardNum;
     }
 
     public List<MusicHandler.MusicNode> getMusicNodes() {
