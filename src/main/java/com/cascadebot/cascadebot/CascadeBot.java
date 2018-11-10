@@ -37,7 +37,6 @@ public class CascadeBot {
     private static Gson gson;
     private static CascadeBot instance;
 
-    private Config config;
     private ShardManager shardManager;
     private CommandManager commandManager;
     private DatabaseManager databaseManager;
