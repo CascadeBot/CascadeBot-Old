@@ -8,7 +8,9 @@ package com.cascadebot.cascadebot;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.shared.ExitCodes;
 import com.google.common.collect.HashMultimap;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.EnumUtils;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -124,12 +126,19 @@ public class Config {
         this.defaultPrefix = warnOnDefault(config, "default_prefix", ";");
 
         this.securityLevels = HashMultimap.create();
-        Object commandLevels = config.get("security_level");
-        if (commandLevels instanceof Map) {
-            Map<String, Object> levelMap = (Map<String, Object>) commandLevels;
-            for (String s : levelMap.keySet()) {
-                if (EnumUtils.isValidEnum(SecurityLevel.class, s.toUpperCase())) {
-                    this.securityLevels.put(SecurityLevel.valueOf(s), (Long) levelMap.get(s));
+        ConfigurationSection configSecurityLevels = config.getConfigurationSection("security_levels");
+        if (configSecurityLevels != null) {
+            for (String level : configSecurityLevels.getKeys(false)) {
+                if (EnumUtils.isValidEnum(SecurityLevel.class, level.toUpperCase())) {
+                    SecurityLevel securityLevel = SecurityLevel.valueOf(level.toUpperCase());
+                    Object value = configSecurityLevels.get(level);
+                    if (value instanceof List) {
+                        for (Integer id : (List<Integer>) value) {
+                            this.securityLevels.put(securityLevel, id.longValue());
+                        }
+                    } else if (value instanceof Integer) {
+                        this.securityLevels.put(securityLevel, ((Integer) value).longValue());
+                    }
                 }
             }
         } else {

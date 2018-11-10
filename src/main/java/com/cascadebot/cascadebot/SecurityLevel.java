@@ -16,8 +16,12 @@ public enum SecurityLevel {
     DEVELOPER,
     OWNER;
 
-    public Set<Long> getId() {
+    public Set<Long> getIds() {
         return Config.INS.getSecurityLevels().get(this);
+    }
+
+    public boolean isAuthorised(SecurityLevel level) {
+        return level.ordinal() <= this.ordinal();
     }
 
 }
