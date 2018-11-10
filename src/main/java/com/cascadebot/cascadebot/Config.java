@@ -155,8 +155,8 @@ public class Config {
                 }
             }
         } else {
-            // TODO: What to do here?
-            // weeryan17's thoughts: do nothing but log that it's invalid
+            LOG.error("Please define security levels in your config! Without these, you won't be able to run privileged commands!");
+            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
         }
 
         this.hasteServer = warnOnDefault(config, "haste.server", "https://hastebin.com/documents");
