@@ -5,7 +5,9 @@
 
 package com.cascadebot.cascadebot;
 
+import ch.qos.logback.classic.Level;
 import com.cascadebot.cascadebot.music.MusicHandler;
+import com.cascadebot.cascadebot.utils.LogbackUtils;
 import com.cascadebot.shared.ExitCodes;
 import com.google.common.collect.HashMultimap;
 import com.google.gson.Gson;
@@ -32,6 +34,8 @@ public class Config {
     public static Config INS;
 
     private File config;
+
+    private boolean debug;
 
     private String botToken;
     private Long botID;
@@ -84,6 +88,13 @@ public class Config {
             LOG.error("Invalid yaml configuration", e);
             System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
             return;
+        }
+
+        this.debug = config.getBoolean("debug", false);
+        if (this.debug) {
+            LOG.info("Debug mode enabled!");
+            LogbackUtils.setAppenderLevel("STDOUT", Level.DEBUG);
+            LogbackUtils.setLoggerLevel("org.mongodb.driver.cluster", Level.DEBUG);
         }
 
         this.botID = config.getLong("bot.id", -1);

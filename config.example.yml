@@ -16,6 +16,9 @@
 # If you have any questions ask the Cascade Bot Dev team!  #
 ############################################################
 
+# Whether to output DEBUG messages to STDOUT
+debug: false
+
 # REQUIRED
 # The token and client ID for the bot, kinda self explanatory...
 bot:
@@ -55,7 +58,6 @@ security_levels:
   owner:
   developer:
   staff:
-
 
 # The haste server to use for "hasting" messages.
 # Server is the place to submit requests, link is the prefix before the returned code.
