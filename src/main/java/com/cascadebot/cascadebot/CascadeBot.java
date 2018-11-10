@@ -92,7 +92,18 @@ public class CascadeBot {
         }
 
         commandManager = new CommandManager();
-        databaseManager = null;
+
+        if (Config.INS.getConnectionString() != null) {
+            databaseManager = new DatabaseManager(Config.INS.getConnectionString());
+        } else {
+            databaseManager = new DatabaseManager(
+                    Config.INS.getUsername(),
+                    Config.INS.getPassword(),
+                    Config.INS.getDatabase(),
+                    Config.INS.getHosts(),
+                    Config.INS.isSsl()
+            );
+        }
 
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));

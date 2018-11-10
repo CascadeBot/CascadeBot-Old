@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class DatabaseManager {
@@ -28,7 +29,7 @@ public class DatabaseManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseManager.class);
     private String database;
 
-    public DatabaseManager(String username, char[] password, String database, String[] hosts, boolean ssl) {
+    public DatabaseManager(String username, char[] password, String database, List<String> hosts, boolean ssl) {
         MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder();
 
         if (!StringUtils.isBlank(username) && password.length != 0) {
@@ -39,7 +40,7 @@ public class DatabaseManager {
         }
 
         settingsBuilder.applyToClusterSettings(clusterBuilder -> clusterBuilder.hosts(
-                Arrays.stream(hosts).map(host -> {
+                hosts.stream().map(host -> {
                     if (host.contains(":")) {
                         return new ServerAddress(host.split(":")[0], Integer.valueOf(host.split(":")[1]));
                     } else {
