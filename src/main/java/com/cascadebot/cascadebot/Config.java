@@ -8,6 +8,8 @@ package com.cascadebot.cascadebot;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.shared.ExitCodes;
 import com.google.common.collect.HashMultimap;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -72,9 +74,9 @@ public class Config {
 
     @SuppressWarnings("unchecked")
     private void initConfig() throws IOException {
-        FileConfiguration config = new YamlConfiguration(); //TODO create own file config based off of spigots
+        LOG.info("Starting to load configuration!");
 
-        //TODO switch over to nice methods for yaml
+        FileConfiguration config = new YamlConfiguration();
 
         try {
             config.load(this.config);
@@ -162,6 +164,9 @@ public class Config {
             }
         }
 
+        LOG.info("Finished loading configuration!");
+        LOG.debug("Configuration: {}", new GsonBuilder().create().toJson(this)); // Need to create new GSON as global GSON hasn't been build yet
+
     }
 
     @SuppressWarnings("unchecked")
@@ -234,4 +239,5 @@ public class Config {
     public List<MusicHandler.MusicNode> getMusicNodes() {
         return musicNodes;
     }
+
 }
