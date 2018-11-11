@@ -23,7 +23,7 @@ public class ShutdownHandler {
     private static void shutdown() {
         EvalCommand.shutdownEvalPool();
         CommandListener.shutdownCommandPool();
-        Task.shutdown();
+        Task.shutdownTaskPool();
         CascadeBot.instance().getShardManager().shutdown();
     }
 

@@ -81,7 +81,7 @@ public abstract class Task implements Runnable {
         return false;
     }
 
-    public static void shutdown() {
+    public static void shutdownTaskPool() {
         AGENTS.shutdown();
     }
 
