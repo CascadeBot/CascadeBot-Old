@@ -22,7 +22,7 @@ public final class Version implements Comparable<Version> {
     }
 
     public static Version of(int major, int minor, int patch) {
-        return new Version(major, minor, patch);
+        return new Version(Math.abs(major), Math.abs(minor), Math.abs(patch));
     }
 
     @Override
@@ -36,7 +36,7 @@ public final class Version implements Comparable<Version> {
             Version that = (Version) obj;
             return (this.major == that.major) &&
                     (this.minor == that.minor) &&
-                    (this.patch == that.minor);
+                    (this.patch == that.patch);
         } else {
             return false;
         }
