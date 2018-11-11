@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot.music;
 
 import com.cascadebot.cascadebot.CascadeBot;
-import com.cascadebot.cascadebot.Config;
+import com.cascadebot.cascadebot.data.Config;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;

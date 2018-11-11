@@ -3,12 +3,12 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.database;
+package com.cascadebot.cascadebot.data.database;
 
-import com.mongodb.async.client.MongoDatabase;
+import com.mongodb.client.MongoDatabase;
 
 @FunctionalInterface
-public interface AsyncMongoTask {
+public interface IMongoTask {
 
     public void run(MongoDatabase database);
 

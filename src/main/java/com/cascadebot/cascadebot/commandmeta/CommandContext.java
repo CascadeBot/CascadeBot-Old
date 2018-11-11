@@ -7,12 +7,11 @@ package com.cascadebot.cascadebot.commandmeta;
 
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.messaging.MessageContext;
-import com.cascadebot.cascadebot.objects.GuildData;
+import com.cascadebot.cascadebot.data.objects.GuildData;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 

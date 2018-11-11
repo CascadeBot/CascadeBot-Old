@@ -5,6 +5,8 @@
 
 package com.cascadebot.cascadebot;
 
+import com.cascadebot.cascadebot.data.Config;
+
 import java.util.Set;
 
 /**

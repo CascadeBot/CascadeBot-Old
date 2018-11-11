@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot.utils;
 
 import com.cascadebot.cascadebot.CascadeBot;
-import com.cascadebot.cascadebot.Config;
+import com.cascadebot.cascadebot.data.Config;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import okhttp3.MediaType;

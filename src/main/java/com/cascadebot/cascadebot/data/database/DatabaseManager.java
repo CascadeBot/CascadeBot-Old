@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.database;
+package com.cascadebot.cascadebot.data.database;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -82,11 +82,11 @@ public class DatabaseManager {
         this.database = database;
     }
 
-    public void runTask(MongoTask task) {
+    public void runTask(IMongoTask task) {
         task.run(SYNC_CLIENT.getDatabase(database));
     }
 
-    public void runAsyncTask(AsyncMongoTask task) {
+    public void runAsyncTask(IAsyncMongoTask task) {
         task.run(ASYNC_CLIENT.getDatabase(database));
     }
 

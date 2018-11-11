@@ -3,23 +3,23 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.database.mapping;
+package com.cascadebot.cascadebot.data.mapping;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
-import com.cascadebot.cascadebot.database.DebugLogCallback;
-import com.cascadebot.cascadebot.objects.GuildCommandInfo;
-import com.cascadebot.cascadebot.objects.GuildData;
+import com.cascadebot.cascadebot.data.Version;
+import com.cascadebot.cascadebot.data.database.DebugLogCallback;
+import com.cascadebot.cascadebot.data.objects.GuildCommandInfo;
+import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.utils.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -63,7 +63,16 @@ public final class GuildDataMapper {
 
     public static GuildData documentToGuildData(Document document) {
         GuildData.GuildDataBuilder guildDataBuilder = new GuildData.GuildDataBuilder(document.getLong("_id"));
-        guildDataBuilder.setConfigVersion(document.getString("config_version"));
+        String[] configVersion = document.getString("config_version").split("\\.");
+        if (configVersion.length == 3) { // Dummy check, *should* always be three
+            guildDataBuilder.setConfigVersion(Version.of(
+                    Integer.valueOf(configVersion[0]),
+                    Integer.valueOf(configVersion[1]),
+                    Integer.valueOf(configVersion[2]))
+            );
+        } else {
+            guildDataBuilder.setConfigVersion(Constants.CONFIG_VERSION);
+        }
         guildDataBuilder.setCreationDate(document.getDate("created_at"));
 
         Document config = document.get("config", Document.class);

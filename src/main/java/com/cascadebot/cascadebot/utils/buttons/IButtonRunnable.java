@@ -11,6 +11,6 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 @FunctionalInterface
-public interface ButtonRunnable {
+public interface IButtonRunnable {
     void run(Member runner, TextChannel channel, Message message);
 }

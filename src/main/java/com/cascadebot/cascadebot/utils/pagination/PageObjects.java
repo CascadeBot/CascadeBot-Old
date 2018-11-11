@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.objects.pagination;
+package com.cascadebot.cascadebot.utils.pagination;
 
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import net.dv8tion.jda.core.EmbedBuilder;

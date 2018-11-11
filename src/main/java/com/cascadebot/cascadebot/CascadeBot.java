@@ -6,7 +6,8 @@
 package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
-import com.cascadebot.cascadebot.database.DatabaseManager;
+import com.cascadebot.cascadebot.data.Config;
+import com.cascadebot.cascadebot.data.database.DatabaseManager;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;

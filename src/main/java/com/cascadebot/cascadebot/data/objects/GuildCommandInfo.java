@@ -3,12 +3,10 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.objects;
+package com.cascadebot.cascadebot.data.objects;
 
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 public class GuildCommandInfo {

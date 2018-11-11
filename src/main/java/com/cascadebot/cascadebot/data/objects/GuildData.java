@@ -3,13 +3,14 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.objects;
+package com.cascadebot.cascadebot.data.objects;
 
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.database.mapping.GuildDataMapper;
+import com.cascadebot.cascadebot.data.Version;
+import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
@@ -17,7 +18,6 @@ import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-import javax.xml.crypto.Data;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
@@ -32,7 +32,7 @@ public class GuildData {
 
     public Date creationDate = new Date();
 
-    private String configVersion = Constants.CONFIG_VERSION;
+    private Version configVersion = Constants.CONFIG_VERSION;
     private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
 
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
@@ -45,7 +45,7 @@ public class GuildData {
         this.guildID = guildID;
     }
 
-    private GuildData(long guildID, String configVersion, ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo,
+    private GuildData(long guildID, Version configVersion, ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo,
                       boolean mentionPrefix) {
         this.guildID = guildID;
         this.configVersion = configVersion;
@@ -173,7 +173,7 @@ public class GuildData {
         return commandInfo.values();
     }
 
-    public String getConfigVersion() {
+    public Version getConfigVersion() {
         return configVersion;
     }
 
@@ -184,7 +184,7 @@ public class GuildData {
     public static final class GuildDataBuilder {
 
         private long guildId;
-        private String configVersion;
+        private Version configVersion;
         private Date creationDate;
         private boolean mentionPrefix;
         private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo;
@@ -193,7 +193,7 @@ public class GuildData {
             this.guildId = guildId;
         }
 
-        public GuildDataBuilder setConfigVersion(String configVersion) {
+        public GuildDataBuilder setConfigVersion(Version configVersion) {
             this.configVersion = configVersion;
             return this;
         }

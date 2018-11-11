@@ -10,8 +10,8 @@ import net.dv8tion.jda.core.entities.Message;
 
 public abstract class Button {
 
-    ButtonRunnable runnable;
-    private Button(ButtonRunnable runnable) {
+    IButtonRunnable runnable;
+    private Button(IButtonRunnable runnable) {
         this.runnable = runnable;
     }
 
@@ -21,7 +21,7 @@ public abstract class Button {
 
         Emote emote;
 
-        public EmoteButton(Emote emote, ButtonRunnable runnable) {
+        public EmoteButton(Emote emote, IButtonRunnable runnable) {
             super(runnable);
             this.emote = emote;
         }
@@ -36,7 +36,7 @@ public abstract class Button {
 
         String unicode;
 
-        public UnicodeButton(String unicode, ButtonRunnable runnable) {
+        public UnicodeButton(String unicode, IButtonRunnable runnable) {
             super(runnable);
             this.unicode = unicode;
         }

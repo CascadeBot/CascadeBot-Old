@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.objects.pagination;
+package com.cascadebot.cascadebot.utils.pagination;
 
 import net.dv8tion.jda.core.entities.Message;
 

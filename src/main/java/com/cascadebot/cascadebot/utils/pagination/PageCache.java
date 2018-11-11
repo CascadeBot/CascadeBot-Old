@@ -5,8 +5,6 @@
 
 package com.cascadebot.cascadebot.utils.pagination;
 
-import com.cascadebot.cascadebot.objects.pagination.Page;
-
 import java.util.HashMap;
 import java.util.List;
 

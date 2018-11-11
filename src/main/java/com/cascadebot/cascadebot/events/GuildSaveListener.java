@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.events;
 
-import com.cascadebot.cascadebot.objects.GuildData;
+import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.RemovalListener;
 

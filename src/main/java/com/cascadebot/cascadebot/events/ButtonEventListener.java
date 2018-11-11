@@ -5,8 +5,7 @@
 
 package com.cascadebot.cascadebot.events;
 
-import com.cascadebot.cascadebot.CascadeBot;
-import com.cascadebot.cascadebot.objects.GuildData;
+import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import net.dv8tion.jda.core.entities.ChannelType;

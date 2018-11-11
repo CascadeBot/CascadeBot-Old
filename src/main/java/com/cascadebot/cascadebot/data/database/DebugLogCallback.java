@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.database;
+package com.cascadebot.cascadebot.data.database;
 
 import com.mongodb.async.SingleResultCallback;
 import org.slf4j.LoggerFactory;
