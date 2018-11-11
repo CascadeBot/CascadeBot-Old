@@ -6,7 +6,6 @@
 package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
-import com.cascadebot.cascadebot.commands.developer.EvalCommand;
 import com.cascadebot.cascadebot.database.DatabaseManager;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
@@ -22,14 +21,12 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 public class CascadeBot {
 
@@ -114,16 +111,6 @@ public class CascadeBot {
             logger.error("Uncaught exception in rest action", throwable);
         };
 
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
-    }
-
-    public void stop() {
-        shutdown();
-        System.exit(0);
-    }
-
-    public void shutdown() {
-        shardManager.shutdown();
     }
 
     public static CascadeBot instance() {
