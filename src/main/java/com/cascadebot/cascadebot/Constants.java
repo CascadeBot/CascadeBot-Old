@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot;
 
-import com.cascadebot.cascadebot.data.Version;
+import com.cascadebot.shared.Version;
 
 import java.util.regex.Pattern;
 

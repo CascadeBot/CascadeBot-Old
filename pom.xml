@@ -66,8 +66,18 @@
         </plugins>
         <resources>
             <resource>
-                <directory>src/main/java/resources</directory>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/version.txt</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
                 <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/version.txt</exclude>
+                </excludes>
             </resource>
         </resources>
     </build>
@@ -121,7 +131,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
-            <version>1.4</version>
+            <version>1.6</version>
         </dependency>
 
         <!-- Utilities -->
