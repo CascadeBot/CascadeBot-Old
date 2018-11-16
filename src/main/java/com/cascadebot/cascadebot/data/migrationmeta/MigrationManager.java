@@ -39,8 +39,6 @@ public class MigrationManager {
         }
     }
 
-    public void
-
     public static MigrationManager instance() {
         return instance;
     }
