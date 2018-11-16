@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.database.DatabaseManager;
+import com.cascadebot.cascadebot.data.migrationmeta.MigrationManager;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
@@ -37,6 +38,7 @@ public class CascadeBot {
 
     private ShardManager shardManager;
     private CommandManager commandManager;
+    private MigrationManager migrationManager;
     private DatabaseManager databaseManager;
     private OkHttpClient httpClient;
 
@@ -90,6 +92,7 @@ public class CascadeBot {
         }
 
         commandManager = new CommandManager();
+        migrationManager = new MigrationManager();
 
         if (Config.INS.getConnectionString() != null) {
             databaseManager = new DatabaseManager(Config.INS.getConnectionString());
@@ -153,6 +156,10 @@ public class CascadeBot {
 
     public CommandManager getCommandManager() {
         return commandManager;
+    }
+
+    public MigrationManager getMigrationManager() {
+        return migrationManager;
     }
 
     public DatabaseManager getDatabaseManager() {

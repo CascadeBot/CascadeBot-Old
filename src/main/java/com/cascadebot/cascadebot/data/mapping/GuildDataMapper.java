@@ -20,6 +20,7 @@ import org.bson.conversions.Bson;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -63,7 +64,7 @@ public final class GuildDataMapper {
 
     public static GuildData documentToGuildData(Document document) {
         GuildData.GuildDataBuilder guildDataBuilder = new GuildData.GuildDataBuilder(document.getLong("_id"));
-        String[] configVersion = document.getString("config_version").split("\\.");
+        String[] configVersion = Objects.requireNonNull(document.getString("config_version")).split("\\.");
         if (configVersion.length == 3) { // Dummy check, *should* always be three
             guildDataBuilder.setConfigVersion(Version.of(
                     Integer.valueOf(configVersion[0]),
