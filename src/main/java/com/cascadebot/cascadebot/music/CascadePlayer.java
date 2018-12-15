@@ -42,14 +42,6 @@ public class CascadePlayer {
         return tracks;
     }
 
-    public String getProgressBar() {
-        float percentage = (100f / player.getPlayingTrack().getDuration() * player.getTrackPosition());
-        return "[" + StringUtils.repeat("▬", (int) Math.round((double) percentage / 10)) +
-                "](https://github.com/CascadeBot)" +
-                StringUtils.repeat("▬", 10 - (int) Math.round((double) percentage / 10)) +
-                " " + Math.round(percentage * 100.0) / 100.0 + "%";
-    }
-
     public double getPlaylistLength() {
         double start = player.getPlayingTrack().getDuration();
         for(AudioTrack track : tracks) {
