@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
+import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.utils.ReflectionUtils;
 import com.cascadebot.shared.ExitCodes;
@@ -38,7 +39,7 @@ public class CommandManager {
             logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
         } catch (ClassNotFoundException | IOException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             logger.error("Could not load commands!", e);
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            ShutdownHandler.exitWithError();
         }
     }
 

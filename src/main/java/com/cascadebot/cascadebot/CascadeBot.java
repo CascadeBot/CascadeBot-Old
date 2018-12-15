@@ -60,7 +60,7 @@ public class CascadeBot {
             Config.init("config.yml");
         } catch (IOException e) {
             logger.error("Error reading config file", e);
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            ShutdownHandler.exitWithError();
             return;
         }
 
@@ -87,7 +87,7 @@ public class CascadeBot {
                     .build();
         } catch (LoginException e) {
             logger.error("Error building JDA", e);
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            ShutdownHandler.exitWithError();
             return;
         }
 

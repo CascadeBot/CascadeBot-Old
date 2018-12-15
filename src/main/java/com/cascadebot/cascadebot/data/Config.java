@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot.data;
 
 import ch.qos.logback.classic.Level;
 import com.cascadebot.cascadebot.SecurityLevel;
+import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
 import com.cascadebot.shared.ExitCodes;
@@ -85,7 +86,7 @@ public class Config {
             config.load(this.config);
         } catch (InvalidConfigurationException e) {
             LOG.error("Invalid yaml configuration", e);
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            ShutdownHandler.exitWithError();
             return;
         }
 
@@ -99,18 +100,18 @@ public class Config {
         this.botID = config.getLong("bot.id", -1);
         if (this.botID == -1) {
             LOG.error("No bot ID provided in config! Please provide the bot ID to start the bot.");
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            ShutdownHandler.exitWithError();
         }
 
         this.botToken = config.getString("bot.token", "");
         if (this.botToken.isEmpty()) {
             LOG.error("No bot token provided in config! Please provide a token to start the bot.");
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            ShutdownHandler.exitWithError();
         }
 
         if (!config.contains("database")) {
             LOG.error("No database info provided, exiting!");
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            ShutdownHandler.exitWithError();
             return;
         }
 
@@ -126,7 +127,7 @@ public class Config {
             this.hosts = config.getStringList("database.hosts");
             if (this.hosts.size() == 0 || this.hosts.stream().allMatch(String::isBlank)) {
                 LOG.error("There are no valid hosts specified, exiting!");
-                System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+                ShutdownHandler.exitWithError();
             }
             this.ssl = warnOnDefault(config, "database.ssl", false);
         }
@@ -155,7 +156,7 @@ public class Config {
             }
         } else {
             LOG.error("Please define security levels in your config! Without these, you won't be able to run privileged commands!");
-            System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+            ShutdownHandler.exitWithError();
         }
 
         this.hasteServer = warnOnDefault(config, "haste.server", "https://hastebin.com/documents");

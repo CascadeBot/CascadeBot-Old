@@ -20,17 +20,19 @@ public class ShutdownHandler {
         System.exit(ExitCodes.STOP);
     }
 
+    public static void restart() {
+        System.exit(ExitCodes.RESTART);
+    }
+
+    public static void exitWithError() {
+        ShutdownHandler.exitWithError();
+    }
+
     private static void shutdown() {
         EvalCommand.shutdownEvalPool();
         CommandListener.shutdownCommandPool();
         Task.shutdownTaskPool();
         CascadeBot.instance().getShardManager().shutdown();
     }
-
-    public static void restart() {
-        System.exit(ExitCodes.RESTART);
-    }
-
-
 
 }
