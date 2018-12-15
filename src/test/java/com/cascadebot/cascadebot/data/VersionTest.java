@@ -19,6 +19,18 @@ class VersionTest {
     }
 
     @Test
+    void parsePositiveTest() {
+        assertEquals(Version.parseVer("1.2.3"), Version.of(1, 2, 3));
+        assertEquals(Version.parseVer("22"), Version.of(22));
+    }
+
+    @Test
+    void parseNegativeTest() {
+        assertThrows(IllegalArgumentException.class, () -> Version.parseVer("Hi there!"));
+        assertThrows(IllegalArgumentException.class, () -> Version.parseVer("th15.c0ul4.b3.4.v3r5io2"));
+    }
+
+    @Test
     void equalsTest() {
         assertEquals(Version.of(1, 0, 0), Version.of(1, 0, 0));
         assertNotEquals(Version.of(1, 0, 0), Version.of(1, 0, 1));
