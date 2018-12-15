@@ -72,7 +72,7 @@ public class EvalCommand implements ICommandRestricted {
         EVAL_POOL.submit(() -> {
             try {
                 scriptEngine.put("sender", sender);
-                scriptEngine.put("context", context);
+                scriptEngine.put("ctx", context);
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining("\n"));
                 String codeToRun = imports + "\n" + code;
                 String results = String.valueOf(scriptEngine.eval(code));
