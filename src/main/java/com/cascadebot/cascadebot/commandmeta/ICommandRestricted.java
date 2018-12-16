@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
-import com.cascadebot.cascadebot.SecurityLevel;
+import com.cascadebot.cascadebot.permissions.SecurityLevel;
 
 public interface ICommandRestricted extends ICommand {
 

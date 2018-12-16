@@ -6,11 +6,10 @@
 package com.cascadebot.cascadebot.data;
 
 import ch.qos.logback.classic.Level;
-import com.cascadebot.cascadebot.SecurityLevel;
+import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
-import com.cascadebot.shared.ExitCodes;
 import com.google.common.collect.HashMultimap;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.EnumUtils;

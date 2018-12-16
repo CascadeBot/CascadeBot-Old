@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot;
+package com.cascadebot.cascadebot.permissions;
 
 import com.cascadebot.cascadebot.data.Config;
 

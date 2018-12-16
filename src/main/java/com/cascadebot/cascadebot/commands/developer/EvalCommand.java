@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.commands.developer;
 
-import com.cascadebot.cascadebot.SecurityLevel;
+import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
