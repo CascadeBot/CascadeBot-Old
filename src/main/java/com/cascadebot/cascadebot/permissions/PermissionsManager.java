@@ -18,14 +18,14 @@ import java.util.concurrent.TimeUnit;
 
 public class PermissionsManager {
 
-    private LoadingCache<Long, Set<Long>> roleIDCache = Caffeine.newBuilder()
+    private LoadingCache<Long, Set<Long>> officialGuildRoleIDCache = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .refreshAfterWrite(5, TimeUnit.MINUTES)
             .build(DiscordUtils::getAllOfficialRoleIds);
     private LoadingCache<Long, SecurityLevel> securityLevelCache = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .refreshAfterWrite(5, TimeUnit.MINUTES)
-            .build(id -> SecurityLevel.getLevelById(id, roleIDCache.get(id)));
+            .build(id -> SecurityLevel.getLevelById(id, officialGuildRoleIDCache.get(id)));
 
     public boolean isAuthorised(ICommand command, GuildData guildData, Member member) {
         if (command instanceof ICommandRestricted) {
@@ -33,6 +33,8 @@ public class PermissionsManager {
             SecurityLevel userLevel = securityLevelCache.get(member.getUser().getIdLong());
             if (levelToCheck == null || userLevel == null) return false;
             return userLevel.isAuthorised(levelToCheck);
+        } else {
+            // TODO: Checking command specific perms
         }
         return false;
     }

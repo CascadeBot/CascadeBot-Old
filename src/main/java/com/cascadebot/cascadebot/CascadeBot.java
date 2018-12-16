@@ -13,6 +13,7 @@ import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
 import com.cascadebot.cascadebot.music.MusicHandler;
+import com.cascadebot.cascadebot.permissions.PermissionsManager;
 import com.cascadebot.shared.ExitCodes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -40,6 +41,7 @@ public class CascadeBot {
     private CommandManager commandManager;
     private MigrationManager migrationManager;
     private DatabaseManager databaseManager;
+    private PermissionsManager permissionsManager;
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
@@ -93,6 +95,7 @@ public class CascadeBot {
 
         commandManager = new CommandManager();
         migrationManager = new MigrationManager();
+        permissionsManager = new PermissionsManager();
 
         if (Config.INS.getConnectionString() != null) {
             databaseManager = new DatabaseManager(Config.INS.getConnectionString());
@@ -164,6 +167,10 @@ public class CascadeBot {
 
     public DatabaseManager getDatabaseManager() {
         return databaseManager;
+    }
+
+    public PermissionsManager getPermissionsManager() {
+        return permissionsManager;
     }
 
     public OkHttpClient getHttpClient() {
