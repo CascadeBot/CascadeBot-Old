@@ -41,6 +41,9 @@ database:
 # The number of shard to have. Leave at -1 if you don't know what you're doing!
 shard_num: -1
 
+# The ID of the server to use for role checking and various other things
+official_server: 488394590458478602
+
 # Whether GSON should produce minified JSON or not.
 # Recommended not to enable this unless you are debugging.
 pretty_json: false
@@ -53,7 +56,7 @@ default_prefix: ';'
 # The available security levels are: staff, developer and owner
 # If a user has a security level, they will be able to access all security levels below it
 # i.e. USER has OWNER level, can operate at level STAFF and DEVELOPER also
-# IDs can be assigned in an array [id, id] or on their own if there is only 1
+# IDs can be assigned in an array [id, id] or on their own if there is only one
 security_levels:
   owner:
   developer:

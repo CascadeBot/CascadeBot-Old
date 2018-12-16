@@ -6,9 +6,9 @@
 package com.cascadebot.cascadebot.data;
 
 import ch.qos.logback.classic.Level;
-import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.music.MusicHandler;
+import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
 import com.google.common.collect.HashMultimap;
 import com.google.gson.GsonBuilder;
@@ -24,7 +24,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Config {
 
@@ -54,6 +56,8 @@ public class Config {
     private String connectionString;
 
     private int shardNum;
+
+    private long officialServerId;
 
     private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
 
@@ -132,6 +136,13 @@ public class Config {
         }
 
         shardNum = warnOnDefault(config, "shard_num", -1);
+
+        if (config.contains("official_server")) {
+            officialServerId = config.getLong("official_server");
+        } else {
+            LOG.warn("There is no official server specified! Role checking will not work!");
+            officialServerId = -1L;
+        }
 
         this.prettyJson = config.getBoolean("pretty_json", false);
 
@@ -248,6 +259,10 @@ public class Config {
 
     public List<MusicHandler.MusicNode> getMusicNodes() {
         return musicNodes;
+    }
+
+    public long getOfficialServerId() {
+        return officialServerId;
     }
 
 }
