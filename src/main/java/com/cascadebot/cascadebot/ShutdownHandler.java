@@ -25,7 +25,7 @@ public class ShutdownHandler {
     }
 
     public static void exitWithError() {
-        ShutdownHandler.exitWithError();
+        System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
     }
 
     private static void shutdown() {
