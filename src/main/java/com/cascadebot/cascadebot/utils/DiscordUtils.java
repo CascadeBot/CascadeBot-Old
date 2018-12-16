@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot.utils;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.data.Config;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -13,9 +14,12 @@ import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class DiscordUtils {
 
@@ -45,7 +49,7 @@ public class DiscordUtils {
         }
 
         if (id != null) {
-            User user = getUserById(id);
+            User user = getUserById(Long.parseLong(id));
             if (user != null) {
                 return guild.getMember(user);
             }
@@ -62,8 +66,16 @@ public class DiscordUtils {
         }
     }
 
-    private static User getUserById(String id) {
-        return CascadeBot.instance().getClient().getUserById(id);
+    private static User getUserById(Long userId) {
+        return CascadeBot.instance().getShardManager().getUserById(userId);
+    }
+
+    private static Guild getGuildById(Long guildId) {
+        return CascadeBot.instance().getShardManager().getGuildById(guildId);
+    }
+
+    public static MessageChannel getTextChannelById(Long channelId) {
+        return CascadeBot.instance().getShardManager().getTextChannelById(channelId);
     }
 
     /**
@@ -115,8 +127,24 @@ public class DiscordUtils {
         //TODO Combine these methods so intellij stops complaining about duplicate code.
     }
 
-    public static MessageChannel getTextChannelById(Long channelId) {
-        return CascadeBot.instance().getClient().getTextChannelById(channelId);
+    public static Set<Role> getAllRoles(Member member) {
+        return Set.copyOf(member.getRoles());
+    }
+
+    public static Set<Long> getAllRoleIds(Member member) {
+        return getAllRoles(member).stream().map(Role::getIdLong).collect(Collectors.toSet());
+    }
+
+    public static Set<Long> getAllOfficialRoleIds(long userID) {
+        if (Config.INS.getOfficialServerId() != -1 && getOfficialGuild() != null) {
+            return getAllRoleIds(getOfficialGuild().getMemberById(userID));
+        } else {
+            return Set.of();
+        }
+    }
+
+    public static Guild getOfficialGuild() {
+        return getGuildById(Config.INS.getOfficialServerId());
     }
 
 }
