@@ -5,7 +5,9 @@
 
 package com.cascadebot.cascadebot.utils;
 
-public class StringUtils {
+import org.apache.commons.lang3.StringUtils;
+
+public class StringsUtil {
 
     /**
      * Creates a progress bar using unicode bars and discord URL formatting with a length of 10.
@@ -53,9 +55,8 @@ public class StringUtils {
      */
     public static String getProgressBar(float percentage, int length, boolean percentAfter) {
         int bars = (int) ((percentage / 100) * length);
-        return "[" + org.apache.commons.lang3.StringUtils.repeat("▬", bars) +
-                "](https://github.com/CascadeBot)" +
-                org.apache.commons.lang3.StringUtils.repeat("▬", length - bars) +
+        return "[" + StringUtils.repeat("▬", bars) + "](https://github.com/CascadeBot)" + // Bars representing the percentage, i.e. a length of 100 bars with 50% gives 50 bars wrapped in the URL
+                StringUtils.repeat("▬", length - bars) + // The bars represen
                 " " + (percentAfter ? ( Math.round(percentage) + "%") : "");
     }
 }
