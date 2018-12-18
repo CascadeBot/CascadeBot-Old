@@ -81,6 +81,11 @@ public class MessageContext {
         channel.sendMessage(message).queue();
     }
 
+    // Base method, there will be stuff like replyError and what not
+    private void messageTypeReply(String message, MessageType type, boolean embed) {
+
+    }
+
     /**
      * Sends a message that auto deletes it's self after 5 seconds.
      *

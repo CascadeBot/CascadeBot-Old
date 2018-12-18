@@ -14,6 +14,8 @@ import com.cascadebot.cascadebot.data.objects.GuildCommandInfo;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.utils.CollectionUtils;
 import com.cascadebot.shared.Version;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.apache.commons.lang3.tuple.Pair;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -21,6 +23,8 @@ import org.bson.conversions.Bson;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -28,10 +32,28 @@ public final class GuildDataMapper {
 
     public static final String COLLECTION = "guilds";
 
+    private static LoadingCache<Long, GuildData> guilds = Caffeine.newBuilder()
+            .expireAfterAccess(10, TimeUnit.MINUTES)
+            /*.refreshAfterWrite(5, TimeUnit.MINUTES) hmm? */
+            /*.removalListener((key, value, cause) -> {}) I need to think about this */
+            .build(id -> {
+                AtomicReference<Document> documentReference = new AtomicReference<>();
+                CascadeBot.instance().getDatabaseManager().runTask(database -> {
+                    documentReference.set(database.getCollection(COLLECTION).find(eq("_id", id)).first());
+                });
+                if (documentReference.get() == null) return null;
+                return documentToGuildData(documentReference.get());
+            });
+
+
     public static void update(long id, Bson update) {
         CascadeBot.instance().getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION).updateOne(eq("_id", id), update, new DebugLogCallback<>("Updated Guild ID " + id + ":", update));
         });
+    }
+
+    public static GuildData getGuildData(long id) {
+        return guilds.get(id);
     }
 
     public static Document processGuildData(GuildData data) {
