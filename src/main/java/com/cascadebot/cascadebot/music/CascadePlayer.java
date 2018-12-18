@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.music;
 
+import com.cascadebot.cascadebot.utils.StringsUtil;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
@@ -55,7 +56,7 @@ public class CascadePlayer {
      * @return The progress bar for the current track
      */
     public String getTrackProgressBar() {
-        return com.cascadebot.cascadebot.utils.StringUtils.getProgressBar((100f / player.getPlayingTrack().getDuration() * player.getTrackPosition()));
+        return StringsUtil.getProgressBar((100f / player.getPlayingTrack().getDuration() * player.getTrackPosition()));
     }
 
     //TODO implement player methods
