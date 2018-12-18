@@ -29,9 +29,9 @@ public class PermissionsManager {
 
     public boolean isAuthorised(ICommand command, GuildData guildData, Member member) {
         if (command instanceof ICommandRestricted) {
-            SecurityLevel levelToCheck = ((ICommandRestricted) command).getCommandLevel();
             SecurityLevel userLevel = securityLevelCache.get(member.getUser().getIdLong());
-            if (levelToCheck == null || userLevel == null) return false;
+            if (userLevel == null) return false;
+            SecurityLevel levelToCheck = ((ICommandRestricted) command).getCommandLevel();
             return userLevel.isAuthorised(levelToCheck);
         } else {
             // TODO: Checking command specific perms
