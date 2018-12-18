@@ -8,7 +8,6 @@ package com.cascadebot.cascadebot.music;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -48,6 +47,15 @@ public class CascadePlayer {
             start += track.getDuration();
         }
         return start;
+    }
+
+    /**
+     * Gets the progress bar for the current track
+     *
+     * @return The progress bar for the current track
+     */
+    public String getTrackProgressBar() {
+        return com.cascadebot.cascadebot.utils.StringUtils.getProgressBar((100f / player.getPlayingTrack().getDuration() * player.getTrackPosition()));
     }
 
     //TODO implement player methods
