@@ -52,10 +52,10 @@ public class StringUtils {
      * @return
      */
     public static String getProgressBar(float percentage, int length, boolean percentAfter) {
-        int bars = NumberUtils.round((percentage / (double)100) * (double)length);
+        int bars = Math.round((percentage / 100) * length);
         return "[" + org.apache.commons.lang3.StringUtils.repeat("▬", bars) +
                 "](https://github.com/CascadeBot)" +
                 org.apache.commons.lang3.StringUtils.repeat("▬", length - bars) +
-                " " + (percentAfter ? ( NumberUtils.round(percentage) + "%") : "");
+                " " + (percentAfter ? ( Math.round(percentage) + "%") : "");
     }
 }

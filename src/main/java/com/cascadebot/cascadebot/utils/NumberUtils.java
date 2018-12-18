@@ -18,14 +18,4 @@ public class NumberUtils {
         return Math.round(number * Math.pow(10, dp)) / Math.pow(10, dp);
     }
 
-    /**
-     * Rounds number to zero decimal places i.e. a whole number
-     *
-     * @param number The number to be rounded
-     * @return The rounded number
-     */
-    public static int round(double number) {
-        return (int) round(number, 0);
-    }
-
 }
