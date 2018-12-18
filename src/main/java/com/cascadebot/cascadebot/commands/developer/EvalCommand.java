@@ -52,7 +52,7 @@ public class EvalCommand implements ICommandRestricted {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
             //TODO add utils for error messages
-            context.getChannel().sendMessage("Needs more args").queue();
+            context.sendWarning("Needs more args");
             return;
         }
 
@@ -75,7 +75,7 @@ public class EvalCommand implements ICommandRestricted {
                 scriptEngine.put("context", context);
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining("\n"));
                 String codeToRun = imports + "\n" + code;
-                String results = String.valueOf(scriptEngine.eval(code));
+                String results = String.valueOf(scriptEngine.eval(codeToRun));
                 if (results.length() < 2048) {
                     context.reply(results);
                 } else {
