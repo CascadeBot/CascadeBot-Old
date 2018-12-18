@@ -48,10 +48,10 @@ public class StringsUtil {
      * Creates a progress bar using unicode bars and discord URL formatting with a specified length, and optional percentage after.
      * Format: [▬▬▬▬▬▬](url)▬▬▬▬ 60%
      *
-     * @param percentage
-     * @param length
-     * @param percentAfter
-     * @return
+     * @param percentage The percentage to be represented by the progress bar
+     * @param length The length to make the progress bar
+     * @param percentAfter Weather or not to put the percent amount after
+     * @return The discord formatted progress bar
      */
     public static String getProgressBar(float percentage, int length, boolean percentAfter) {
         int bars = (int) ((percentage / 100) * length);
