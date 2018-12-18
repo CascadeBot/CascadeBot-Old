@@ -41,14 +41,29 @@ public final class GuildDataMapper {
                 CascadeBot.instance().getDatabaseManager().runTask(database -> {
                     documentReference.set(database.getCollection(COLLECTION).find(eq("_id", id)).first());
                 });
-                if (documentReference.get() == null) return null;
-                return documentToGuildData(documentReference.get());
+                if (documentReference.get() == null) {
+                    CascadeBot.logger.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
+                    GuildData data = new GuildData(id);
+                    GuildDataMapper.insert(id, processGuildData(data));
+                    return data;
+                }
+                // TODO: Migration here
+                GuildData data = documentToGuildData(documentReference.get());
+                CascadeBot.logger.debug("Loaded data from database for guild ID: " + id);
+                return data;
             });
 
 
     public static void update(long id, Bson update) {
         CascadeBot.instance().getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION).updateOne(eq("_id", id), update, new DebugLogCallback<>("Updated Guild ID " + id + ":", update));
+        });
+    }
+
+    public static void insert(long id, Document document) {
+        CascadeBot.instance().getDatabaseManager().runAsyncTask(database -> {
+            document.put("_id", id);
+            database.getCollection(COLLECTION).insertOne(document, new DebugLogCallback<>("Inserted Guild ID " + id + ":" + document));
         });
     }
 
@@ -60,7 +75,7 @@ public final class GuildDataMapper {
         Document guildDoc = new Document();
 
         guildDoc.put("_id", data.getGuildID());
-        guildDoc.put("config_version", data.getConfigVersion());
+        guildDoc.put("config_version", data.getConfigVersion().toString());
         guildDoc.put("updated_at", new Date());
 
         Document config = new Document();

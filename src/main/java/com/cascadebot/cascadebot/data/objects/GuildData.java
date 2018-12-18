@@ -41,7 +41,7 @@ public class GuildData {
 
     private PageCache pageCache = new PageCache();
 
-    private GuildData(long guildID) {
+    public GuildData(long guildID) {
         this.guildID = guildID;
     }
 
@@ -51,10 +51,6 @@ public class GuildData {
         this.configVersion = configVersion;
         this.commandInfo = commandInfo;
         this.mentionPrefix = mentionPrefix;
-    }
-
-    public static GuildData getGuildData(Long id) {
-        return guildDataMap.computeIfAbsent(id, GuildData::new);
     }
 
     public void enableCommand(ICommand command) {
@@ -187,7 +183,7 @@ public class GuildData {
         private Version configVersion;
         private Date creationDate;
         private boolean mentionPrefix;
-        private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo;
+        private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
 
         public GuildDataBuilder(long guildId) {
             this.guildId = guildId;
