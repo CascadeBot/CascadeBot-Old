@@ -20,24 +20,11 @@ import java.util.List;
 public class TestCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        List<Page> pageList = new ArrayList<>();
-        pageList.add(new PageObjects.EmbedPage(new EmbedBuilder().setTitle("Test").appendDescription("I'm testing pages woo!")));
-        pageList.add(new PageObjects.StringPage("This is a string page"));
+        /*
 
-        List<String> header = Arrays.asList("1", "2", "3", "4");
-        List<List<String>> body = new ArrayList<>();
-        List<String> row = new ArrayList<>();
-        for(int i = 1; i <= 60; i++) {
-            row.add(String.valueOf(i));
-            if(i % 4 == 0) {
-                body.add(row);
-                row = new ArrayList<>();
-            }
-        }
+            Here lies the infamous test command, please don't commit stuff to this!
 
-        pageList.add(new PageObjects.TablePage(header, body));
-
-        context.sendPagedMessage(pageList);
+         */
     }
 
     @Override
