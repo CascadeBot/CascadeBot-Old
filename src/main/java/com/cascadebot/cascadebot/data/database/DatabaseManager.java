@@ -59,8 +59,11 @@ public class DatabaseManager {
     public DatabaseManager(String connectionString) {
 
         MongoClientSettings.Builder builder = MongoClientSettings.builder();
-        builder.applyConnectionString(new ConnectionString(connectionString));
+        ConnectionString connString = new ConnectionString(connectionString);
+        builder.applyConnectionString(connString);
         builder.streamFactoryFactory(NettyStreamFactory::new);
+
+        setDatabase(connString.getDatabase());
 
         SYNC_CLIENT = MongoClients.create(builder.build());
         ASYNC_CLIENT = com.mongodb.async.client.MongoClients.create(builder.build());
