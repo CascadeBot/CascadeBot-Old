@@ -56,7 +56,7 @@ public class StringsUtil {
     public static String getProgressBar(float percentage, int length, boolean percentAfter) {
         int bars = (int) ((percentage / 100) * length);
         return "[" + StringUtils.repeat("▬", bars) + "](https://github.com/CascadeBot)" + // Bars representing the percentage, i.e. a length of 100 bars with 50% gives 50 bars wrapped in the URL
-                StringUtils.repeat("▬", length - bars) + // The bars represen
-                " " + (percentAfter ? ( Math.round(percentage) + "%") : "");
+                StringUtils.repeat("▬", length - bars) + // The bars representing the unfilled percentage, i.e. for a percentage of 30%, this will be the number of bars for 70%
+                " " + (percentAfter ? ( Math.round(percentage) + "%") : ""); // If we want we can add a label showing the percentage overall, since this uses physical bars there cannot be a decimal percentage
     }
 }
