@@ -11,6 +11,7 @@ import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -20,6 +21,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 
+import java.awt.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -378,6 +380,26 @@ public class MessageContext {
             GuildData.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
             GuildData.getGuildData(guild.getIdLong()).getPageCache().put(pages, sentMessage.getIdLong());
         });
+    }
+
+    public void sendError(String message) {
+        message = "❌\n" + message;
+        reply(message);
+    }
+
+    public void sendError(EmbedBuilder builder) { // I'm accepting the builder here so I can acutely change the color of it
+        builder.setColor(Color.RED);
+        reply(builder.build());
+    }
+
+    public void sendWarning(String message) {
+        message = "⚠\n" + message;
+        reply(message);
+    }
+
+    public void sendWarning(EmbedBuilder builder) { // I'm accepting the builder here so I can acutely change the color of it
+        builder.setColor(Color.YELLOW);
+        reply(builder.build());
     }
 
 }
