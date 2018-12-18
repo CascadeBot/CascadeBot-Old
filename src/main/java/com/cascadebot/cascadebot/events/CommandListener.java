@@ -6,11 +6,15 @@
 package com.cascadebot.cascadebot.events;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
+import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.permissions.PermissionsManager;
 import com.cascadebot.cascadebot.utils.objects.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -30,7 +34,7 @@ public class CommandListener extends ListenerAdapter {
         if (event.getAuthor().isBot()) return;
         String message = Constants.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         String prefix = Config.INS.getDefaultPrefix(); //TODO: Add guild data prefix here
-        GuildData guildData = GuildData.getGuildData(event.getGuild().getIdLong());
+        GuildData guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
         if (message.startsWith(prefix)) {
             String commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
             String trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
@@ -68,7 +72,13 @@ public class CommandListener extends ListenerAdapter {
                         trigger,
                         true
                 );
-                dispatchCommand(cmd, context);
+                if (CascadeBot.instance().getPermissionsManager().isAuthorised(cmd, guildData, event.getMember())) {
+                    dispatchCommand(cmd, context);
+                } else {
+                    if (!(cmd instanceof ICommandRestricted)) { // Silently fail on restricted commands, users shouldn't know what the commands are
+                        // Send error message about not being authorised
+                    }
+                }
             }
         } else {
 
