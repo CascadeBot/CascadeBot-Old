@@ -54,9 +54,8 @@ public class CommandContext {
         this.isMention = isMention;
     }
 
-    //================================================================================
-    // Raw data getters
-    //================================================================================
+
+    //region Raw data getters
 
     public GuildData getData() {
         return data;
@@ -94,9 +93,9 @@ public class CommandContext {
         return isMention;
     }
 
-    //================================================================================
-    // Helper methods for arguments
-    //================================================================================
+    //endregion
+
+    //region Helper methods for arguments
 
     public String getMessage(int start) {
         return getMessage(start, args.length);
@@ -126,11 +125,9 @@ public class CommandContext {
         return Double.parseDouble(StringUtils.replace(this.args[index], ",", "."));
     }
 
+    //endregion
 
-    //================================================================================
-    // Message methods
-    //================================================================================
-
+    //region Message Methods
 
     /**
      * Replies to the user in this context
@@ -458,6 +455,8 @@ public class CommandContext {
             GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().put(pages, sentMessage.getIdLong());
         });
     }
+
+    //endregion
 
 
 }
