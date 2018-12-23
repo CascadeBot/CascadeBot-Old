@@ -20,6 +20,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -75,6 +76,10 @@ public class CommandContext {
 
     public Member getMember() {
         return member;
+    }
+
+    public User getUser() {
+        return member.getUser();
     }
 
     public String[] getArgs() {
