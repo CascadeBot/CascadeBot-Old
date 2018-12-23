@@ -422,12 +422,12 @@ public class CommandContext {
 
     public void sendPagedMessage(List<Page> pages) {
         ButtonGroup group = new ButtonGroup(member.getUser().getIdLong(), guild.getIdLong());
-        group.addButton(new Button.UnicodeButton("⏮", (runner, channel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u23EE" /* ⏮ */, (runner, channel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());
             pageGroup.setCurrentPage(1);
         }));
-        group.addButton(new Button.UnicodeButton("◀", (runner, channel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u25C0" /* ◀ */, (runner, channel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() - 1;
             if (newPage < 1) {
@@ -436,7 +436,7 @@ public class CommandContext {
             pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
             pageGroup.setCurrentPage(newPage);
         }));
-        group.addButton(new Button.UnicodeButton("▶", (runner, channel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u25B6" /* ▶ */, (runner, channel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() + 1;
             if (newPage > pageGroup.getPages()) {
@@ -445,12 +445,12 @@ public class CommandContext {
             pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
             pageGroup.setCurrentPage(newPage);
         }));
-        group.addButton(new Button.UnicodeButton("⏭", (runner, channel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u23ED" /* ⏭ */, (runner, channel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
             pageGroup.setCurrentPage(pageGroup.getPages());
         }));
-        channel.sendMessage("\uD83D\uDE04").queue(sentMessage -> {
+        channel.sendMessage("\u00A0").queue(sentMessage -> {
             pages.get(0).pageShow(sentMessage, 1, pages.size());
             addButtons(sentMessage, group);
             group.setMessage(sentMessage.getIdLong());
