@@ -23,15 +23,15 @@ import java.util.List;
 public class UserInfoCommand implements ICommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Member info = sender;
+        Member memberForInfo = sender;
         if(context.getArgs().length > 0) {
-            info = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
+            memberForInfo = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
         }
-        if(info == null) {
+        if(memberForInfo == null) {
             context.reply("Invalid User!");
             return;
         }
-        User user = info.getUser();
+        User user = memberForInfo.getUser();
 
         List<Page> pageList = new ArrayList<>();
         EmbedBuilder builder = new EmbedBuilder();
