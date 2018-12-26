@@ -10,6 +10,7 @@ import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.messaging.MessageType;
+import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
@@ -26,7 +27,6 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class CommandContext {
 
@@ -156,16 +156,6 @@ public class CommandContext {
     }
 
     /**
-     * Sends a message that auto deletes it's self after 5 seconds.
-     *
-     * @param message The string message to send which cannot be blank.
-     * @throws IllegalArgumentException if message is blank.
-     */
-    public void sendAutoDeleteMessage(String message) {
-        sendAutoDeleteMessage(message, TimeUnit.SECONDS.toMillis(5));
-    }
-
-    /**
      * Sends a message that auto deletes it's self after the specified delay (in mills).
      *
      * @param message The string message to send which cannot be blank.
@@ -174,20 +164,7 @@ public class CommandContext {
      */
     public void sendAutoDeleteMessage(String message, long delay) {
         Checks.notBlank(message, "message");
-        channel.sendMessage(message).queue(messageToDelete -> {
-            if (canDeleteMessage(getSelfMember(), messageToDelete)) {
-                messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
-            }
-        });
-    }
-
-    /**
-     * Sends a message that auto deletes it's self after 5 seconds.
-     *
-     * @param embed The {@link MessageEmbed} object to send
-     */
-    public void sendAutoDeleteMessage(MessageEmbed embed) {
-        sendAutoDeleteMessage(embed, TimeUnit.SECONDS.toMillis(5));
+        Messaging.sendAutoDeleteMessage(this.channel, message, delay);
     }
 
     /**
@@ -198,22 +175,7 @@ public class CommandContext {
      */
     public void sendAutoDeleteMessage(MessageEmbed embed, long delay) {
         Checks.notNull(embed, "embed");
-        channel.sendMessage(message).queue(messageToDelete -> {
-            if (canDeleteMessage(getSelfMember(), messageToDelete)) {
-                messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
-            }
-        });
-    }
-
-    /**
-     * Sends a message that auto deletes it's self after 5 seconds.
-     *
-     * @param message The non-null {@link Message} object to send.
-     * @throws IllegalArgumentException if message is null.
-     */
-    public void sendAutoDeleteMessage(Message message) {
-        Checks.notNull(message, "message");
-        sendAutoDeleteMessage(message, TimeUnit.SECONDS.toMillis(5));
+        Messaging.sendAutoDeleteMessage(this.channel, embed, delay);
     }
 
     /**
@@ -225,44 +187,7 @@ public class CommandContext {
      */
     public void sendAutoDeleteMessage(Message message, long delay) {
         Checks.notNull(message, "message");
-        channel.sendMessage(message).queue(messageToDelete -> {
-            if (canDeleteMessage(getSelfMember(), messageToDelete)) {
-                messageToDelete.delete().queueAfter(delay, TimeUnit.MILLISECONDS);
-            }
-        });
-    }
-
-    /**
-     * Checks if a specific {@link Member} can delete the specified {@link Message}
-     *
-     * @param member  The non-null {@link Member} used to check.
-     * @param message The non-null {@link Message} to check.
-     * @return true if the {@link Member} can delete the {@link Message}, else false.
-     * @throws IllegalArgumentException if member or message are null.
-     */
-    public boolean canDeleteMessage(Member member, Message message) {
-        Checks.notNull(member, "member");
-        Checks.notNull(message, "message");
-        if (message.getChannel().getType().isGuild()) {
-            TextChannel channel = message.getTextChannel();
-            return member.hasPermission(channel, Permission.MESSAGE_MANAGE);
-        } else {
-            return member.getUser().getIdLong() == message.getAuthor().getIdLong();
-        }
-    }
-
-    /**
-     * Checks if a specific {@link Member} can delete messages in this {@link this#channel}.
-     *
-     * @param member The {@link Member} used to check.
-     * @return true if the {@link Member} can delete message is this {@link this#channel}.
-     */
-    public boolean canDeleteMessages(Member member) {
-        return canDeleteMessages(member, this.channel);
-    }
-
-    public boolean canDeleteMessages(Member member, TextChannel channel) {
-        return member.hasPermission(channel, Permission.MESSAGE_MANAGE);
+        Messaging.sendAutoDeleteMessage(this.channel, message, delay);
     }
 
     /**
@@ -378,7 +303,7 @@ public class CommandContext {
         Checks.notNull(message, "message");
         member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
             if (allowChannel) {
-                sendAutoDeleteMessage(message);
+                sendAutoDeleteMessage(message, 5000);
             }
         });
     }
