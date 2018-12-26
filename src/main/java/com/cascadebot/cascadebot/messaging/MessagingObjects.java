@@ -5,11 +5,10 @@
 
 package com.cascadebot.cascadebot.messaging;
 
-import com.cascadebot.shared.SharedConstants;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 
-public class MessagingObjects {
+public final class MessagingObjects {
 
     private static ThreadLocal<MessageBuilder> threadLocalMessageBuilder = ThreadLocal.withInitial(MessageBuilder::new);
     private static ThreadLocal<EmbedBuilder> threadLocalEmbedBuilder = ThreadLocal.withInitial(EmbedBuilder::new);
