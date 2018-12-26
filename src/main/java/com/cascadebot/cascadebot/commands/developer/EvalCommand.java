@@ -30,6 +30,8 @@ public class EvalCommand implements ICommandRestricted {
             EVAL_THREADS.getName() + EVAL_THREADS.activeCount()));
 
     private static final List<String> IMPORTS = Arrays.asList(
+            "com.cascadebot.cascadebot.data",
+            "com.cascadebot.cascadebot.messaging",
             "com.cascadebot.cascadebot.utils",
             "net.dv8tion.jda.core",
             "net.dv8tion.jda.core.managers",
@@ -46,7 +48,7 @@ public class EvalCommand implements ICommandRestricted {
             "java.nio",
             "java.nio.file");
 
-    private static final List<String> ENGINES = Arrays.asList("java", "groovy", "jshell");
+    private static final List<String> ENGINES = Arrays.asList("groovy", "java", "jshell");
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -55,6 +57,8 @@ public class EvalCommand implements ICommandRestricted {
             context.getChannel().sendMessage("Needs more args").queue();
             return;
         }
+
+        CommandLineOptions
 
 
         ScriptEngine scriptEngine;
@@ -71,11 +75,16 @@ public class EvalCommand implements ICommandRestricted {
 
         EVAL_POOL.submit(() -> {
             try {
+
                 scriptEngine.put("sender", sender);
                 scriptEngine.put("context", context);
+                scriptEngine.put("channel", context.getChannel());
+                scriptEngine.put("guild", context.getGuild());
+                scriptEngine.put("sender", context.getMember());
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining("\n"));
+
                 String codeToRun = imports + "\n" + code;
-                String results = String.valueOf(scriptEngine.eval(code));
+                String results = String.valueOf(scriptEngine.eval(codeToRun));
                 if (results.length() < 2048) {
                     context.reply(results);
                 } else {
