@@ -45,7 +45,7 @@ public class UserInfoCommand implements ICommand {
         List<String> header = Arrays.asList("Role Id", "Role Name");
 
         List<List<String>> body = new ArrayList<>();
-        for(Role role : info.getRoles()) {
+        for(Role role : memberForInfo.getRoles()) {
             List<String> row = new ArrayList<>();
             row.add(role.getId());
             row.add(role.getName());
