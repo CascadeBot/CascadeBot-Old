@@ -249,7 +249,7 @@ public class CommandContext {
         Checks.notBlank(message, "message");
         member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
             if (allowChannel) {
-                sendAutoDeleteMessage(message);
+                sendAutoDeleteMessage(message, 5000);
             }
         });
     }
@@ -276,7 +276,7 @@ public class CommandContext {
         Checks.notNull(embed, "embed");
         member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue(), exception -> {
             if (allowChannel) {
-                sendAutoDeleteMessage(embed);
+                sendAutoDeleteMessage(embed, 5000);
             }
         });
     }
