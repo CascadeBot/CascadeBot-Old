@@ -5,7 +5,6 @@
 
 package com.cascadebot.cascadebot.utils.buttons;
 
-import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;

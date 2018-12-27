@@ -5,9 +5,9 @@
 
 package com.cascadebot.cascadebot.commands.core;
 
-import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.ICommand;
 import net.dv8tion.jda.core.entities.Member;
 
 public class HelpCommand implements ICommand {

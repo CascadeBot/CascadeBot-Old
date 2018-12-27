@@ -14,7 +14,6 @@ import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.cascadebot.permissions.PermissionsManager;
-import com.cascadebot.shared.ExitCodes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lavalink.client.io.jda.JdaLavalink;

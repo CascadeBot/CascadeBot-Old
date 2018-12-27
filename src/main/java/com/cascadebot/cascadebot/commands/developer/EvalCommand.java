@@ -5,10 +5,10 @@
 
 package com.cascadebot.cascadebot.commands.developer;
 
-import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.cascadebot.utils.objects.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.entities.Member;
@@ -57,8 +57,6 @@ public class EvalCommand implements ICommandRestricted {
             context.getChannel().sendMessage("Needs more args").queue();
             return;
         }
-
-        CommandLineOptions
 
 
         ScriptEngine scriptEngine;

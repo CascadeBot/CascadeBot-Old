@@ -6,9 +6,9 @@
 package com.cascadebot.cascadebot.data.objects;
 
 import com.cascadebot.cascadebot.Constants;
-import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;

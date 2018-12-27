@@ -8,14 +8,7 @@ package com.cascadebot.cascadebot.commands.developer;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
-import com.cascadebot.cascadebot.utils.pagination.Page;
-import com.cascadebot.cascadebot.utils.pagination.PageObjects;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class TestCommand implements ICommandRestricted {
     @Override
