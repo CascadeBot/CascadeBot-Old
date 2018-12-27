@@ -80,6 +80,7 @@ public final class GuildDataMapper {
 
         Document config = new Document();
         config.put("mention_prefix", data.isMentionPrefix());
+        config.put("use_embed_for_messages", data.getUseEmbedForMessages());
 
         Document commands = new Document();
         for (GuildCommandInfo commandInfo : data.getGuildCommandInfos()) {
@@ -115,6 +116,7 @@ public final class GuildDataMapper {
 
         Document config = document.get("config", Document.class);
         guildDataBuilder.setMentionPrefix(config.getBoolean("mention_prefix"));
+        guildDataBuilder.setUseEmbedForMessages(config.getBoolean("use_embed_for_messages"));
 
         Document commands = config.get("commands", Document.class);
         for (String key : commands.keySet()) {

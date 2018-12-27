@@ -6,12 +6,13 @@
     "updated_at": <updated every time modified, date>
     "config": {
         "mention_prefix": <mention prefix, boolean>
+        "use_embed_for_messages": <use embed for messages?, boolean>
         "commands": {
             "default_command": {
                 "command": <command, string>
                 "enabled": <enabled, boolean>
                 "aliases": <aliases, array>
-        }
+            }
         }
     }
 }
