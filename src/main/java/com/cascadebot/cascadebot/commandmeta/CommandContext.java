@@ -150,9 +150,29 @@ public class CommandContext {
         channel.sendMessage(message).queue();
     }
 
-    // Base method, there will be stuff like replyError and what not
-    private void messageTypeReply(String message, MessageType type, boolean embed) {
+    public void replyInfo(String message) {
+        Checks.notBlank(message, "message");
+        Messaging.sendInfoMessage(channel, message, data.getUseEmbedForMessages());
+    }
 
+    public void replySuccess(String message) {
+        Checks.notBlank(message, "message");
+        Messaging.sendSuccessMessage(channel, message, data.getUseEmbedForMessages());
+    }
+
+    public void replyWarning(String message) {
+        Checks.notBlank(message, "message");
+        Messaging.sendWarningMessage(channel, message, data.getUseEmbedForMessages());
+    }
+
+    public void replyModeration(String message) {
+        Checks.notBlank(message, "message");
+        Messaging.sendModerationMessage(channel, message, data.getUseEmbedForMessages());
+    }
+
+    public void replyError(String message) {
+        Checks.notBlank(message, "message");
+        Messaging.sendErrorMessage(channel, message, data.getUseEmbedForMessages());
     }
 
     /**
