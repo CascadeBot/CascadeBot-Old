@@ -37,7 +37,7 @@ public class CommandManager {
                     commands.add((ICommand) ConstructorUtils.invokeConstructor(c));
             }
             logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
-        } catch (ClassNotFoundException | IOException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (Exception e) {
             logger.error("Could not load commands!", e);
             ShutdownHandler.exitWithError();
         }
