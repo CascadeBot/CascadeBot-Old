@@ -50,8 +50,8 @@ public final class MessagingObjects {
         return getMessageTypeEmbedBuilder(MessageType.WARNING);
     }
 
-    public static EmbedBuilder getErrorEmbedBuilder() {
-        return getMessageTypeEmbedBuilder(MessageType.ERROR);
+    public static EmbedBuilder getDangerEmbedBuilder() {
+        return getMessageTypeEmbedBuilder(MessageType.DANGER);
     }
 
     public static EmbedBuilder getModerationEmbedBuilder() {
@@ -78,8 +78,8 @@ public final class MessagingObjects {
         return getMessageTypeMessageBuilder(MessageType.WARNING);
     }
 
-    public static MessageBuilder getErrorMessageBuilder() {
-        return getMessageTypeMessageBuilder(MessageType.ERROR);
+    public static MessageBuilder getDangerMessageBuilder() {
+        return getMessageTypeMessageBuilder(MessageType.DANGER);
     }
 
     public static MessageBuilder getModerationMessageBuilder() {

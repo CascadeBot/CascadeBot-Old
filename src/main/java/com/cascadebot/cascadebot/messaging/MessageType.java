@@ -15,7 +15,7 @@ public enum MessageType {
     SUCCESS(Color.GREEN, "\u2705"), // ✅
     WARNING(Color.YELLOW, "\u26A0"), // ⚠
     MODERATION(Color.WHITE, "\uD83D\uDC6E"), // 👮
-    ERROR(Color.RED, "\u274C"), // ❌
+    DANGER(Color.RED, "\u274C"), // ❌
     NEUTRAL(SharedConstants.CASCADE_COLOR, "");
 
     private final Color color;

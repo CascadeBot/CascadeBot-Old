@@ -9,7 +9,6 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
-import com.cascadebot.cascadebot.messaging.MessageType;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -170,9 +169,9 @@ public class CommandContext {
         Messaging.sendModerationMessage(channel, message, data.getUseEmbedForMessages());
     }
 
-    public void replyError(String message) {
+    public void replyDanger(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendErrorMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendDangerMessage(channel, message, data.getUseEmbedForMessages());
     }
 
     /**
