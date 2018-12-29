@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot.commands.developer;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.cascadebot.utils.objects.ThreadPoolExecutorLogged;
@@ -48,13 +49,13 @@ public class EvalCommand implements ICommandRestricted {
             "java.nio",
             "java.nio.file");
 
-    private static final List<String> ENGINES = Arrays.asList("groovy", "java", "jshell");
+    private static final List<String> ENGINES = Arrays.asList("java", "groovy", "jshell");
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
             //TODO add utils for error messages
-            context.getChannel().sendMessage("Needs more args").queue();
+            Messaging.sendWarningMessage(context.getChannel(), "Not enough args", false);
             return;
         }
 
@@ -73,14 +74,14 @@ public class EvalCommand implements ICommandRestricted {
 
         EVAL_POOL.submit(() -> {
             try {
-
                 scriptEngine.put("sender", sender);
                 scriptEngine.put("context", context);
                 scriptEngine.put("channel", context.getChannel());
                 scriptEngine.put("guild", context.getGuild());
+
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining(" "));
 
-                String codeToRun = imports + "\n" + code;
+                String codeToRun = imports + " " + code;
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
                 if (results.length() < 2048) {
                     context.reply(results);
