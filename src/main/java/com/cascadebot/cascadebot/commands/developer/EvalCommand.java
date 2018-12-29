@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot.commands.developer;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.cascadebot.utils.objects.ThreadPoolExecutorLogged;
@@ -54,7 +55,7 @@ public class EvalCommand implements ICommandRestricted {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
             //TODO add utils for error messages
-            context.sendWarning("Needs more args");
+            Messaging.sendWarningMessage(context.getChannel(), "Not enough args", false);
             return;
         }
 
