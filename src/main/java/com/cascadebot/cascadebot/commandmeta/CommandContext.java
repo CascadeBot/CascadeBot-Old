@@ -154,9 +154,17 @@ public class CommandContext {
         Messaging.sendInfoMessage(channel, message, data.getUseEmbedForMessages());
     }
 
+    public void replyInfo(String message, Object... objects) {
+        replyInfo(String.format(message, objects));
+    }
+
     public void replySuccess(String message) {
         Checks.notBlank(message, "message");
         Messaging.sendSuccessMessage(channel, message, data.getUseEmbedForMessages());
+    }
+
+    public void replySuccess(String message, Object... objects) {
+        replySuccess(String.format(message, objects));
     }
 
     public void replyWarning(String message) {
@@ -164,14 +172,26 @@ public class CommandContext {
         Messaging.sendWarningMessage(channel, message, data.getUseEmbedForMessages());
     }
 
+    public void replyWarning(String message, Object... objects) {
+        replyWarning(String.format(message, objects));
+    }
+
     public void replyModeration(String message) {
         Checks.notBlank(message, "message");
         Messaging.sendModerationMessage(channel, message, data.getUseEmbedForMessages());
     }
 
+    public void replyModeration(String message, Object... objects) {
+        replyModeration(String.format(message, objects));
+    }
+
     public void replyDanger(String message) {
         Checks.notBlank(message, "message");
         Messaging.sendDangerMessage(channel, message, data.getUseEmbedForMessages());
+    }
+
+    public void replyDanger(String message, Object... objects) {
+        replyDanger(String.format(message, objects));
     }
 
     /**
