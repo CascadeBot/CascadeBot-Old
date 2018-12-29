@@ -49,7 +49,7 @@ public class EvalCommand implements ICommandRestricted {
             "java.nio",
             "java.nio.file");
 
-    private static final List<String> ENGINES = Arrays.asList("groovy", "java", "jshell");
+    private static final List<String> ENGINES = Arrays.asList("java", "groovy", "jshell");
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -74,14 +74,17 @@ public class EvalCommand implements ICommandRestricted {
 
         EVAL_POOL.submit(() -> {
             try {
-
                 scriptEngine.put("sender", sender);
                 scriptEngine.put("context", context);
                 scriptEngine.put("channel", context.getChannel());
                 scriptEngine.put("guild", context.getGuild());
+                scriptEngine.put("sender", context.getMember());
+                String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining("\n"));
+
+
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining(" "));
 
-                String codeToRun = imports + "\n" + code;
+                String codeToRun = imports + " " + code;
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
                 if (results.length() < 2048) {
                     context.reply(results);
