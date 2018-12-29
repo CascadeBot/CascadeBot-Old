@@ -7,7 +7,6 @@ package com.cascadebot.cascadebot.data.migrationmeta;
 
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.utils.ReflectionUtils;
-import com.cascadebot.shared.ExitCodes;
 import com.cascadebot.shared.Version;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.slf4j.Logger;

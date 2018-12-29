@@ -8,14 +8,11 @@ package com.cascadebot.cascadebot.commandmeta;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.utils.ReflectionUtils;
-import com.cascadebot.shared.ExitCodes;
 import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -37,7 +34,7 @@ public class CommandManager {
                     commands.add((ICommand) ConstructorUtils.invokeConstructor(c));
             }
             logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
-        } catch (ClassNotFoundException | IOException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (Exception e) {
             logger.error("Could not load commands!", e);
             ShutdownHandler.exitWithError();
         }

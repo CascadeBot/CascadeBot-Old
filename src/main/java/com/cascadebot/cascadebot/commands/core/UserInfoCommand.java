@@ -5,12 +5,12 @@
 
 package com.cascadebot.cascadebot.commands.core;
 
-import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
-import com.cascadebot.cascadebot.utils.DiscordUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
@@ -23,15 +23,15 @@ import java.util.List;
 public class UserInfoCommand implements ICommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Member info = sender;
+        Member memberForInfo = sender;
         if(context.getArgs().length > 0) {
-            info = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
+            memberForInfo = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
         }
-        if(info == null) {
+        if(memberForInfo == null) {
             context.reply("Invalid User!");
             return;
         }
-        User user = info.getUser();
+        User user = memberForInfo.getUser();
 
         List<Page> pageList = new ArrayList<>();
         EmbedBuilder builder = new EmbedBuilder();
@@ -45,7 +45,7 @@ public class UserInfoCommand implements ICommand {
         List<String> header = Arrays.asList("Role Id", "Role Name");
 
         List<List<String>> body = new ArrayList<>();
-        for(Role role : info.getRoles()) {
+        for(Role role : memberForInfo.getRoles()) {
             List<String> row = new ArrayList<>();
             row.add(role.getId());
             row.add(role.getName());

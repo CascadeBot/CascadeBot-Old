@@ -7,8 +7,6 @@ package com.cascadebot.cascadebot.utils;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-
 public class FormatUtils {
 
     public static String makeAsciiTable(java.util.List<String> headers, java.util.List<java.util.List<String>> table, String footer) {

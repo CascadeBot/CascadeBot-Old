@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.events;
 
+import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
@@ -22,7 +23,7 @@ public class ButtonEventListener extends ListenerAdapter {
         }
         if(e.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) e.getChannel();
-            GuildData data = GuildData.getGuildData(channel.getGuild().getIdLong());
+            GuildData data = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
             ButtonsCache cache = data.getButtonsCache();
             if(cache.containsKey(channel.getIdLong())) {
                 if(cache.get(channel.getIdLong()).containsKey(e.getMessageIdLong())) {
@@ -39,7 +40,7 @@ public class ButtonEventListener extends ListenerAdapter {
     public void onMessageDelete(MessageDeleteEvent e) {
         if(e.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) e.getChannel();
-            GuildData data = GuildData.getGuildData(channel.getGuild().getIdLong());
+            GuildData data = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
             ButtonsCache cache = data.getButtonsCache();
             if (cache.containsKey(channel.getIdLong())) {
                 cache.get(channel.getIdLong()).remove(e.getMessageIdLong());

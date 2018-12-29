@@ -7,14 +7,17 @@ package com.cascadebot.cascadebot.utils;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.Config;
+import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -145,6 +148,40 @@ public class DiscordUtils {
 
     public static Guild getOfficialGuild() {
         return getGuildById(Config.INS.getOfficialServerId());
+    }
+
+    /**
+     * Checks if a specific {@link Member} can delete the specified {@link Message}
+     *
+     * @param member  The non-null {@link Member} used to check.
+     * @param message The non-null {@link Message} to check.
+     * @return true if the {@link Member} can delete the {@link Message}, else false.
+     * @throws IllegalArgumentException if member or message are null.
+     */
+    public boolean canDeleteMessage(Member member, Message message) {
+        Checks.notNull(member, "member");
+        Checks.notNull(message, "message");
+        if (message.getChannel().getType().isGuild()) {
+            TextChannel channel = message.getTextChannel();
+            return member.hasPermission(channel, Permission.MESSAGE_MANAGE);
+        } else {
+            return member.getUser().getIdLong() == message.getAuthor().getIdLong();
+        }
+    }
+
+    /**
+     * Checks the permission for the member and channel provided for the context.
+     * Usually this is the channel a command was sent in and the member who send the command.
+     *
+     * @param permissions Non-null and non empty permissions to check.
+     * @return true if the member has all of the specified permissions in the channel.
+     * @throws IllegalArgumentException if permissions are empty or null.
+     * @throws IllegalArgumentException if member is null or not in the same guild.
+     */
+    public boolean hasPermission(Member member, Channel channel,  Permission... permissions) {
+        Checks.notEmpty(permissions, "Permissions");
+        Checks.check(member.getGuild().getIdLong() == channel.getGuild().getIdLong(), "Member and channel need to be in the same guild!");
+        return member.hasPermission(channel, permissions);
     }
 
 }

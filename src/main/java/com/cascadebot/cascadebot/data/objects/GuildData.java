@@ -6,9 +6,9 @@
 package com.cascadebot.cascadebot.data.objects;
 
 import com.cascadebot.cascadebot.Constants;
-import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
@@ -36,25 +36,23 @@ public class GuildData {
     private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
 
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
+    private boolean useEmbedForMessages = true;
 
     private ButtonsCache buttonsCache = new ButtonsCache(5);
 
     private PageCache pageCache = new PageCache();
 
-    private GuildData(long guildID) {
+    public GuildData(long guildID) {
         this.guildID = guildID;
     }
 
     private GuildData(long guildID, Version configVersion, ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo,
-                      boolean mentionPrefix) {
+                      boolean mentionPrefix, boolean useEmbedsForMessages) {
         this.guildID = guildID;
         this.configVersion = configVersion;
         this.commandInfo = commandInfo;
         this.mentionPrefix = mentionPrefix;
-    }
-
-    public static GuildData getGuildData(Long id) {
-        return guildDataMap.computeIfAbsent(id, GuildData::new);
+        this.useEmbedForMessages = useEmbedsForMessages;
     }
 
     public void enableCommand(ICommand command) {
@@ -155,7 +153,19 @@ public class GuildData {
     public void setMentionPrefix(boolean mentionPrefix) {
         this.mentionPrefix = mentionPrefix;
         GuildDataMapper.update(guildID, Updates.combine(
-                Updates.set("mention_prefix", mentionPrefix),
+                Updates.set("config.mention_prefix", mentionPrefix),
+                Updates.currentDate("updated_at")
+        ));
+    }
+
+    public boolean getUseEmbedForMessages() {
+        return useEmbedForMessages;
+    }
+
+    public void setUseEmbedForMessages(boolean useEmbedForMessages) {
+        this.useEmbedForMessages = useEmbedForMessages;
+        GuildDataMapper.update(guildID, Updates.combine(
+                Updates.set("config.use_embed_for_messages", useEmbedForMessages),
                 Updates.currentDate("updated_at")
         ));
     }
@@ -187,7 +197,8 @@ public class GuildData {
         private Version configVersion;
         private Date creationDate;
         private boolean mentionPrefix;
-        private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo;
+        private boolean usesEmbedForMessages;
+        private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
 
         public GuildDataBuilder(long guildId) {
             this.guildId = guildId;
@@ -208,6 +219,11 @@ public class GuildData {
             return this;
         }
 
+        public GuildDataBuilder setUseEmbedForMessages(boolean useEmbedForMessages) {
+            this.usesEmbedForMessages = useEmbedForMessages;
+            return this;
+        }
+
         public GuildDataBuilder addCommand(ICommand command, GuildCommandInfo guildCommandInfo) {
             if (commandInfo == null) commandInfo = new ConcurrentHashMap<>();
             commandInfo.put(command.getClass(), guildCommandInfo);
@@ -225,7 +241,8 @@ public class GuildData {
                     guildId,
                     configVersion,
                     commandInfo,
-                    mentionPrefix
+                    mentionPrefix,
+                    usesEmbedForMessages
             );
         }
 
