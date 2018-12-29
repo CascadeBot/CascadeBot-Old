@@ -56,12 +56,12 @@ public final class Messaging {
         return sendMessageTypeMessage(channel, MessageType.MODERATION, message, embed);
     }
 
-    public static RequestFuture<Message> sendErrorMessage(MessageChannel channel, String message) {
-        return sendErrorMessage(channel, message, true);
+    public static RequestFuture<Message> sendDangerMessage(MessageChannel channel, String message) {
+        return sendDangerMessage(channel, message, true);
     }
 
-    public static RequestFuture<Message> sendErrorMessage(MessageChannel channel, String message, boolean embed) {
-        return sendMessageTypeMessage(channel, MessageType.ERROR, message, embed);
+    public static RequestFuture<Message> sendDangerMessage(MessageChannel channel, String message, boolean embed) {
+        return sendMessageTypeMessage(channel, MessageType.DANGER, message, embed);
     }
 
     public static void sendAutoDeleteMessage(MessageChannel channel, String message, long delay) {

@@ -36,11 +36,11 @@ public class EvalCommand implements ICommandRestricted {
             "com.cascadebot.cascadebot.utils",
             "net.dv8tion.jda.core",
             "net.dv8tion.jda.core.managers",
-            "net.dv8tion.jda.core.entities.impl",
             "net.dv8tion.jda.core.entities",
+            "net.dv8tion.jda.core.entities.impl",
             "net.dv8tion.jda.core.utils",
-            "java.util.stream",
             "java.util",
+            "java.util.stream",
             "java.lang",
             "java.text",
             "java.math",
@@ -79,8 +79,7 @@ public class EvalCommand implements ICommandRestricted {
                 scriptEngine.put("context", context);
                 scriptEngine.put("channel", context.getChannel());
                 scriptEngine.put("guild", context.getGuild());
-                scriptEngine.put("sender", context.getMember());
-                String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining("\n"));
+                String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining(" "));
 
                 String codeToRun = imports + "\n" + code;
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
