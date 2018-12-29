@@ -88,7 +88,11 @@ public class EvalCommand implements ICommandRestricted {
                     context.reply(ErrorUtils.paste(results));
                 }
             } catch (ScriptException e) {
-                context.getChannel().sendMessage("Error running script: " + ErrorUtils.paste(ErrorUtils.getStackTrace(e))).queue(); //Maybe we should give the error message as well so you don't have to click on link?
+                context.replyDanger("Error running script: %s \n**%s** \n```swift\n%s```",
+                        ErrorUtils.paste(ErrorUtils.getStackTrace(e)),
+                        e.getClass().getName(),
+                        e.getMessage()
+                );
             }
         });
     }
