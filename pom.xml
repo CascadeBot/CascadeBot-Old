@@ -131,7 +131,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
         </dependency>
 
         <!-- Utilities -->
@@ -195,6 +195,11 @@
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
             <version>3.8.2</version>
+        </dependency>
+        <dependency>
+            <groupId>xyz.morphia.morphia</groupId>
+            <artifactId>core</artifactId>
+            <version>1.4.0</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>
