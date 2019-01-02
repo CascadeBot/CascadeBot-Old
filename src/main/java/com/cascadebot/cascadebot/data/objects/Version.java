@@ -61,7 +61,7 @@ public final class Version implements Comparable<Version> {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof com.cascadebot.shared.Version) {
+        if (obj instanceof Version) {
             Version that = (Version) obj;
             return (this.major == that.major) &&
                     (this.minor == that.minor) &&

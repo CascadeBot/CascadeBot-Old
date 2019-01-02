@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.data.migrationmeta;
 
-import com.cascadebot.shared.Version;
+import com.cascadebot.cascadebot.data.objects.Version;
 import org.bson.Document;
 
 public abstract class Migration {
