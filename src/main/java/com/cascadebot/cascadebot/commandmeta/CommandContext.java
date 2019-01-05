@@ -14,6 +14,7 @@ import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -158,6 +159,11 @@ public class CommandContext {
         replyInfo(String.format(message, objects));
     }
 
+    public void replyInfo(EmbedBuilder builder) {
+        Checks.notNull(builder, "build");
+        Messaging.sendInfoMessage(channel, builder, data.getUseEmbedForMessages());
+    }
+
     public void replySuccess(String message) {
         Checks.notBlank(message, "message");
         Messaging.sendSuccessMessage(channel, message, data.getUseEmbedForMessages());
@@ -165,6 +171,11 @@ public class CommandContext {
 
     public void replySuccess(String message, Object... objects) {
         replySuccess(String.format(message, objects));
+    }
+
+    public void replySuccess(EmbedBuilder builder) {
+        Checks.notNull(builder, "build");
+        Messaging.sendSuccessMessage(channel, builder, data.getUseEmbedForMessages());
     }
 
     public void replyWarning(String message) {
@@ -176,6 +187,11 @@ public class CommandContext {
         replyWarning(String.format(message, objects));
     }
 
+    public void replyWarning(EmbedBuilder builder) {
+        Checks.notNull(builder, "build");
+        Messaging.sendWarningMessage(channel, builder, data.getUseEmbedForMessages());
+    }
+
     public void replyModeration(String message) {
         Checks.notBlank(message, "message");
         Messaging.sendModerationMessage(channel, message, data.getUseEmbedForMessages());
@@ -185,6 +201,11 @@ public class CommandContext {
         replyModeration(String.format(message, objects));
     }
 
+    public void replyModeration(EmbedBuilder builder) {
+        Checks.notNull(builder, "build");
+        Messaging.sendModerationMessage(channel, builder, data.getUseEmbedForMessages());
+    }
+
     public void replyDanger(String message) {
         Checks.notBlank(message, "message");
         Messaging.sendDangerMessage(channel, message, data.getUseEmbedForMessages());
@@ -192,6 +213,11 @@ public class CommandContext {
 
     public void replyDanger(String message, Object... objects) {
         replyDanger(String.format(message, objects));
+    }
+
+    public void replyDanger(EmbedBuilder builder) {
+        Checks.notNull(builder, "build");
+        Messaging.sendDangerMessage(channel, builder, data.getUseEmbedForMessages());
     }
 
     /**
