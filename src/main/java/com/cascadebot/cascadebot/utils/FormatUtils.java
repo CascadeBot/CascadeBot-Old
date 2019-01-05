@@ -5,6 +5,8 @@
 
 package com.cascadebot.cascadebot.utils;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
 
@@ -85,19 +87,19 @@ public class FormatUtils {
     public static String formatEmbed(MessageEmbed embed) {
         StringBuilder sb = new StringBuilder();
         sb.append("__**").append(embed.getTitle()).append("**__\n");
-        sb.append(embed.getDescription()).append("\n\n");
+        sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
         List<MessageEmbed.Field> inline = new ArrayList<>();
         for (MessageEmbed.Field field : embed.getFields()) {
             if(field.isInline() && field.getName().length() <= 20 && field.getValue().length() <= 20) {
                 inline.add(field);
             } else {
-                sb.append(getFormattedInlineFields(inline)).append('\n');
+                sb.append(getFormattedInlineFields(inline)).append("\n\n");
                 inline.clear();
                 sb.append("**").append(field.getName()).append("**\n");
-                sb.append(field.getValue()).append("\n\n");
+                sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(field.getValue()))).append("\n\n");
             }
         }
-        sb.append(getFormattedInlineFields(inline)).append('\n');
+        sb.append(getFormattedInlineFields(inline)).append("\n\n");
         sb.append("_").append(embed.getFooter().getText()).append("_");
 
         return sb.toString();
@@ -105,8 +107,6 @@ public class FormatUtils {
 
     private static String getFormattedInlineFields(List<MessageEmbed.Field> fieldList) {
         StringBuilder sb = new StringBuilder();
-
-        sb.append("```");
 
         List<String> header = new ArrayList<>();
         List<String> body = new ArrayList<>();
@@ -116,17 +116,23 @@ public class FormatUtils {
             body.add(field.getValue());
         }
 
+        sb.append('`');
+
         for(String head : header) {
             sb.append(String.format("%-25s", head));
         }
 
-        sb.append('\n');
+        sb.append("\u200B`");
+
+        sb.append("\n");
+
+        sb.append('`');
 
         for(String bodyString : body) {
             sb.append(String.format("%-25s", bodyString));
         }
 
-        sb.append("```");
+        sb.append("\u200B`");
 
         return sb.toString();
     }
