@@ -89,12 +89,20 @@ public class FormatUtils {
         sb.append("__**").append(embed.getTitle()).append("**__\n");
         sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
         List<MessageEmbed.Field> inline = new ArrayList<>();
+        int i = 0;
         for (MessageEmbed.Field field : embed.getFields()) {
             if(field.isInline() && field.getName().length() <= 20 && field.getValue().length() <= 20) {
                 inline.add(field);
+                if(i == 2) {
+                    sb.append(getFormattedInlineFields(inline)).append("\n\n");
+                    inline.clear();
+                    i = 0;
+                }
+                i++;
             } else {
                 sb.append(getFormattedInlineFields(inline)).append("\n\n");
                 inline.clear();
+                i = 0;
                 sb.append("**").append(field.getName()).append("**\n");
                 sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(field.getValue()))).append("\n\n");
             }
