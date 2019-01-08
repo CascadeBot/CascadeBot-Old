@@ -5,7 +5,13 @@
 
 package com.cascadebot.cascadebot.utils;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class FormatUtils {
 
@@ -75,6 +81,67 @@ public class FormatUtils {
         sb.append(footer);
         sb.append(StringUtils.repeat(" ", total - footer.length()));
         sb.append("|\n");
+        return sb.toString();
+    }
+
+    public static String formatEmbed(MessageEmbed embed) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("__**").append(embed.getTitle()).append("**__\n");
+        sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
+        List<MessageEmbed.Field> inline = new ArrayList<>();
+        int i = 0;
+        for (MessageEmbed.Field field : embed.getFields()) {
+            if(field.isInline() && field.getName().length() <= 20 && field.getValue().length() <= 20) {
+                inline.add(field);
+                if(i == 2) {
+                    sb.append(getFormattedInlineFields(inline)).append("\n\n");
+                    inline.clear();
+                    i = 0;
+                }
+                i++;
+            } else {
+                sb.append(getFormattedInlineFields(inline)).append("\n\n");
+                inline.clear();
+                i = 0;
+                sb.append("**").append(field.getName()).append("**\n");
+                sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(field.getValue()))).append("\n\n");
+            }
+        }
+        sb.append(getFormattedInlineFields(inline)).append("\n\n");
+        sb.append("_").append(embed.getFooter().getText()).append("_");
+
+        return sb.toString();
+    }
+
+    private static String getFormattedInlineFields(List<MessageEmbed.Field> fieldList) {
+        StringBuilder sb = new StringBuilder();
+
+        List<String> header = new ArrayList<>();
+        List<String> body = new ArrayList<>();
+
+        for(MessageEmbed.Field field : fieldList) {
+            header.add(field.getName());
+            body.add(field.getValue());
+        }
+
+        sb.append('`');
+
+        for(String head : header) {
+            sb.append(String.format("%-25s", head));
+        }
+
+        sb.append("\u200B`");
+
+        sb.append("\n");
+
+        sb.append('`');
+
+        for(String bodyString : body) {
+            sb.append(String.format("%-25s", bodyString));
+        }
+
+        sb.append("\u200B`");
+
         return sb.toString();
     }
 }
