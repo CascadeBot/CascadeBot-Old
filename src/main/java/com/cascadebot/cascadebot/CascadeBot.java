@@ -20,6 +20,7 @@ import lavalink.client.io.jda.JdaLavalink;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
@@ -52,6 +53,11 @@ public class CascadeBot {
       */
     public void run() {
         logger.info("All shards successfully logged in!");
+    }
+
+    public static String getInvite() {
+        return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
+                CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
     }
 
     public void init() {

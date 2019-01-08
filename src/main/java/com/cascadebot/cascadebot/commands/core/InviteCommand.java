@@ -16,10 +16,7 @@ public class InviteCommand implements ICommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        public static String getInvite() {
-            // return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
-                    CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
-        }
+        CascadeBot.getInvite();
     }
 
     @Override
