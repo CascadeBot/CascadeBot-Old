@@ -11,7 +11,6 @@ Lots of talented developers have put work into CascadeBot, although the three ma
  - [weeryan17](https://github.com/weeryan17) (weeryan17#1258)
 
 #### Credits
-
 Although we haven't taken code directly from them, the projects listed in the `licences` folder have provided inspiration, and we thought we'd mention them:
 
  - FlareBot: https://github.com/FlareBot/FlareBot
