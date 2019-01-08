@@ -34,7 +34,7 @@ public class CascadeBot {
 
     public static Logger logger = LoggerFactory.getLogger(CascadeBot.class);
     private static Gson gson;
-    private static CascadeBot instance;
+    public static final CascadeBot INS = new CascadeBot();
 
     private ShardManager shardManager;
     private CommandManager commandManager;
@@ -44,9 +44,9 @@ public class CascadeBot {
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
-        (instance = new CascadeBot()).init();
+        INS.init();
     }
-    
+
     /**
      *  Runs once all shards are loaded
      */
@@ -55,7 +55,6 @@ public class CascadeBot {
     }
 
     public void init() {
-        instance = this;
         GsonBuilder builder = new GsonBuilder();
         try {
             Config.init("config.yml");
@@ -117,10 +116,6 @@ public class CascadeBot {
             logger.error("Uncaught exception in rest action", throwable);
         };
 
-    }
-
-    public static CascadeBot instance() {
-        return instance;
     }
 
     /**

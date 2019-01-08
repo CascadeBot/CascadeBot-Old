@@ -50,13 +50,13 @@ public final class GuildDataMapper {
 
 
     public static void update(long id, Bson update) {
-        CascadeBot.instance().getDatabaseManager().runAsyncTask(database -> {
+        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).updateOne(eq("guild_id", id), update, new DebugLogCallback<>("Updated Guild ID " + id + ":", update));
         });
     }
 
     public static void insert(long id, GuildData data) {
-        CascadeBot.instance().getDatabaseManager().runAsyncTask(database -> {
+        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).insertOne(data, new DebugLogCallback<>("Inserted Guild ID " + id));
         });
     }

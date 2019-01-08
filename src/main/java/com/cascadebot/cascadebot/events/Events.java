@@ -14,9 +14,9 @@ public class Events extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        ShardManager shardManager = CascadeBot.instance().getShardManager();
+        ShardManager shardManager = CascadeBot.INS.getShardManager();
         if (shardManager.getShards().size() == shardManager.getShardsTotal()) {
-            CascadeBot.instance().run();
+            CascadeBot.INS.run();
         }
     }
 

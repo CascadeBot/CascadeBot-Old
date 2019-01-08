@@ -16,17 +16,15 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.TreeSet;
 
 public class MigrationManager {
-
-    private static MigrationManager instance = null;
 
     private final TreeSet<Migration> migrations = new TreeSet<>(Comparator.comparing(Migration::getNewVersion));
     private final Logger logger = LoggerFactory.getLogger("Migration Manager");
 
     public MigrationManager() {
-        instance = this;
 
         long start = System.currentTimeMillis();
         try {
@@ -61,8 +59,5 @@ public class MigrationManager {
         return migrationsToRun;
     }
 
-    public static MigrationManager instance() {
-        return instance;
-    }
 
 }

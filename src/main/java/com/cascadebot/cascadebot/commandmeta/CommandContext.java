@@ -265,7 +265,7 @@ public class CommandContext {
      * @return The bot {@link Member} for this guild.
      */
     public Member getSelfMember() {
-        return guild.getMember(CascadeBot.instance().getSelfUser());
+        return guild.getMember(CascadeBot.INS.getSelfUser());
     }
 
     /**
