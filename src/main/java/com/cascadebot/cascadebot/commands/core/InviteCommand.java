@@ -14,7 +14,7 @@ public class InviteCommand implements ICommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-
+        context.reply("Invite Link Here!");
     }
 
     @Override

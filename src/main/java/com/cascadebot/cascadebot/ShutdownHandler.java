@@ -9,8 +9,12 @@ import com.cascadebot.cascadebot.commands.developer.EvalCommand;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.tasks.Task;
 import com.cascadebot.shared.ExitCodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShutdownHandler {
+
+    public static Logger logger = LoggerFactory.getLogger(CascadeBot.class);
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(ShutdownHandler::shutdown));
@@ -29,7 +33,7 @@ public class ShutdownHandler {
     }
 
     private static void shutdown() {
-        System.out.println("Shutting down!");
+        logger.info("Shutting down!");
         EvalCommand.shutdownEvalPool();
         CommandListener.shutdownCommandPool();
         Task.shutdownTaskPool();
