@@ -16,7 +16,6 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -32,20 +31,16 @@ public final class GuildDataMapper {
                 CascadeBot.logger.debug("Guild ID: " + key + " removed from cache and saved to db because: " + cause.toString());
             })
             .build(id -> {
-                AtomicReference<GuildData> documentReference = new AtomicReference<>();
-                CascadeBot.instance().getDatabaseManager().runTask(database -> {
-                    documentReference.set(database.getCollection(COLLECTION, GuildData.class).find(eq("guild_id", id)).first());
-                });
-                if (documentReference.get() == null) {
+                GuildData dbData = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("guild_id", id)).first();
+                if (dbData == null) {
                     CascadeBot.logger.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
                     GuildData data = new GuildData(id);
                     GuildDataMapper.insert(id, data);
                     return data;
                 }
-                // TODO: Migration here
-                GuildData data = documentReference.get();
+
                 CascadeBot.logger.debug("Loaded data from database for guild ID: " + id);
-                return data;
+                return dbData;
             });
 
 
