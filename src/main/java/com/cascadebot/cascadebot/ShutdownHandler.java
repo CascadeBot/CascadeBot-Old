@@ -14,8 +14,6 @@ import org.slf4j.LoggerFactory;
 
 public class ShutdownHandler {
 
-    public static Logger logger = CascadeBot.logger;
-
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(ShutdownHandler::shutdown));
     }
@@ -33,7 +31,7 @@ public class ShutdownHandler {
     }
 
     private static void shutdown() {
-        logger.info("Bot shutting down gracefully!");
+        CascadeBot.logger.info("Bot shutting down gracefully!");
         EvalCommand.shutdownEvalPool();
         CommandListener.shutdownCommandPool();
         Task.shutdownTaskPool();

@@ -55,10 +55,7 @@ public class CascadeBot {
         logger.info("All shards successfully logged in!");
     }
 
-    public static String getInvite() {
-        return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
-                CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
-    }
+
 
     public void init() {
         instance = this;
@@ -184,6 +181,11 @@ public class CascadeBot {
 
     public static Gson getGSON() {
         return gson;
+    }
+
+    public static String getInvite() {
+        return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
+                CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
     }
 
 }
