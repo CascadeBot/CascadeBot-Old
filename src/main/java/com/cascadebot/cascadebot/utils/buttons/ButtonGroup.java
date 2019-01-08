@@ -34,7 +34,7 @@ public class ButtonGroup {
     }
 
     public Member getOwnner() {
-        return DiscordUtils.getMember(String.valueOf(ownerId), CascadeBot.instance().getClient().getGuildById(guildId)); //TODO util method for getting guild from id
+        return DiscordUtils.getMember(String.valueOf(ownerId), CascadeBot.INS.getClient().getGuildById(guildId)); //TODO util method for getting guild from id
     }
 
     public void setMessage(long id) {

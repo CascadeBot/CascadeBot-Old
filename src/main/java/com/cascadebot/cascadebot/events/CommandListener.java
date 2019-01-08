@@ -38,7 +38,7 @@ public class CommandListener extends ListenerAdapter {
             String trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
             String[] args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
 
-            ICommand cmd = CascadeBot.instance().getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
+            ICommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
             if (cmd != null) {
                 CommandContext context = new CommandContext(
                         event.getChannel(),
@@ -58,7 +58,7 @@ public class CommandListener extends ListenerAdapter {
             String trigger = commandWithArgs.split(" ")[0];
             String[] args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
 
-            ICommand cmd = CascadeBot.instance().getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
+            ICommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
             if (cmd != null) {
                 CommandContext context = new CommandContext(
                         event.getChannel(),
@@ -70,7 +70,7 @@ public class CommandListener extends ListenerAdapter {
                         trigger,
                         true
                 );
-                if (CascadeBot.instance().getPermissionsManager().isAuthorised(cmd, guildData, event.getMember())) {
+                if (CascadeBot.INS.getPermissionsManager().isAuthorised(cmd, guildData, event.getMember())) {
                     dispatchCommand(cmd, context);
                 } else {
                     if (!(cmd instanceof ICommandRestricted)) { // Silently fail on restricted commands, users shouldn't know what the commands are

@@ -8,7 +8,6 @@ package com.cascadebot.cascadebot;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.database.DatabaseManager;
-import com.cascadebot.cascadebot.data.migrationmeta.MigrationManager;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
@@ -35,22 +34,21 @@ public class CascadeBot {
 
     public static Logger logger = LoggerFactory.getLogger(CascadeBot.class);
     private static Gson gson;
-    private static CascadeBot instance;
+    public static final CascadeBot INS = new CascadeBot();
 
     private ShardManager shardManager;
     private CommandManager commandManager;
-    private MigrationManager migrationManager;
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
-        (instance = new CascadeBot()).init();
+        INS.init();
     }
-    
-     /**
-      *  Runs once all shards are loaded
-      */
+  
+    /**
+     *  Runs once all shards are loaded
+     */
     public void run() {
         logger.info("All shards successfully logged in!");
     }
@@ -58,7 +56,6 @@ public class CascadeBot {
 
 
     public void init() {
-        instance = this;
         GsonBuilder builder = new GsonBuilder();
         try {
             Config.init("config.yml");
@@ -96,7 +93,6 @@ public class CascadeBot {
         }
 
         commandManager = new CommandManager();
-        migrationManager = new MigrationManager();
         permissionsManager = new PermissionsManager();
 
         if (Config.INS.getConnectionString() != null) {
@@ -120,10 +116,6 @@ public class CascadeBot {
             logger.error("Uncaught exception in rest action", throwable);
         };
 
-    }
-
-    public static CascadeBot instance() {
-        return instance;
     }
 
     /**
@@ -161,10 +153,6 @@ public class CascadeBot {
 
     public CommandManager getCommandManager() {
         return commandManager;
-    }
-
-    public MigrationManager getMigrationManager() {
-        return migrationManager;
     }
 
     public DatabaseManager getDatabaseManager() {
