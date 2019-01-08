@@ -12,7 +12,7 @@ Lots of talented developers have put work into CascadeBot, although the three ma
 
 #### Credits
 
-Although we haven't taken code directly from them, the projects listed in the `licences` have provided inspiration, and we thought we'd mention them:
+Although we haven't taken code directly from them, the projects listed in the `licences` folder have provided inspiration, and we thought we'd mention them:
 
  - FlareBot: https://github.com/FlareBot/FlareBot
  - FredBoat: https://github.com/Frederikam/FredBoat
