@@ -47,9 +47,9 @@ public class CascadeBot {
         (instance = new CascadeBot()).init();
     }
     
-    /**
+     /**
      *  Runs once all shards are loaded
-     */
+     **/
     public void run() {
         logger.info("All shards successfully logged in!");
     }

@@ -29,6 +29,7 @@ public class ShutdownHandler {
     }
 
     private static void shutdown() {
+        System.out.println("Shutting down!");
         EvalCommand.shutdownEvalPool();
         CommandListener.shutdownCommandPool();
         Task.shutdownTaskPool();
