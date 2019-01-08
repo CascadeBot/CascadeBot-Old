@@ -70,15 +70,15 @@ public class DiscordUtils {
     }
 
     private static User getUserById(Long userId) {
-        return CascadeBot.instance().getShardManager().getUserById(userId);
+        return CascadeBot.INS.getShardManager().getUserById(userId);
     }
 
     private static Guild getGuildById(Long guildId) {
-        return CascadeBot.instance().getShardManager().getGuildById(guildId);
+        return CascadeBot.INS.getShardManager().getGuildById(guildId);
     }
 
     public static MessageChannel getTextChannelById(Long channelId) {
-        return CascadeBot.instance().getShardManager().getTextChannelById(channelId);
+        return CascadeBot.INS.getShardManager().getTextChannelById(channelId);
     }
 
     /**

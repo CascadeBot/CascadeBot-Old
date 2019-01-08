@@ -13,46 +13,44 @@ import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
-import com.cascadebot.shared.Version;
 import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
+import org.bson.codecs.pojo.annotations.BsonDiscriminator;
+import org.bson.codecs.pojo.annotations.BsonIgnore;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@BsonDiscriminator
 public class GuildData {
 
     private static Map<Long, GuildData> guildDataMap = new ConcurrentHashMap<>();
 
+    @BsonProperty("guild_id")
     private long guildID;
 
-    public Date creationDate = new Date();
-
     private Version configVersion = Constants.CONFIG_VERSION;
+
+    @BsonProperty("commands")
     private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
 
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
     private boolean useEmbedForMessages = true;
 
+    @BsonIgnore
     private ButtonsCache buttonsCache = new ButtonsCache(5);
 
+    @BsonIgnore
     private PageCache pageCache = new PageCache();
+
+    protected GuildData() {} // for morphia
 
     public GuildData(long guildID) {
         this.guildID = guildID;
-    }
-
-    private GuildData(long guildID, Version configVersion, ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo,
-                      boolean mentionPrefix, boolean useEmbedsForMessages) {
-        this.guildID = guildID;
-        this.configVersion = configVersion;
-        this.commandInfo = commandInfo;
-        this.mentionPrefix = mentionPrefix;
-        this.useEmbedForMessages = useEmbedsForMessages;
     }
 
     public void enableCommand(ICommand command) {
@@ -87,8 +85,7 @@ public class GuildData {
                 Updates.set(
                         "config.commands." + command.defaultCommand(),
                         GuildDataMapper.processCommandInfo(commandInfo.get(command.getClass()))
-                ),
-                Updates.currentDate("updated_at")
+                )
         ));
     }
 
@@ -153,8 +150,7 @@ public class GuildData {
     public void setMentionPrefix(boolean mentionPrefix) {
         this.mentionPrefix = mentionPrefix;
         GuildDataMapper.update(guildID, Updates.combine(
-                Updates.set("config.mention_prefix", mentionPrefix),
-                Updates.currentDate("updated_at")
+                Updates.set("config.mention_prefix", mentionPrefix)
         ));
     }
 
@@ -165,8 +161,7 @@ public class GuildData {
     public void setUseEmbedForMessages(boolean useEmbedForMessages) {
         this.useEmbedForMessages = useEmbedForMessages;
         GuildDataMapper.update(guildID, Updates.combine(
-                Updates.set("config.use_embed_for_messages", useEmbedForMessages),
-                Updates.currentDate("updated_at")
+                Updates.set("useEmbedForMessages", useEmbedForMessages)
         ));
     }
 
@@ -189,63 +184,6 @@ public class GuildData {
 
     public PageCache getPageCache() {
         return pageCache;
-    }
-
-    public static final class GuildDataBuilder {
-
-        private long guildId;
-        private Version configVersion;
-        private Date creationDate;
-        private boolean mentionPrefix;
-        private boolean usesEmbedForMessages;
-        private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
-
-        public GuildDataBuilder(long guildId) {
-            this.guildId = guildId;
-        }
-
-        public GuildDataBuilder setConfigVersion(Version configVersion) {
-            this.configVersion = configVersion;
-            return this;
-        }
-
-        public GuildDataBuilder setCreationDate(Date creationDate) {
-            this.creationDate = creationDate;
-            return this;
-        }
-
-        public GuildDataBuilder setMentionPrefix(boolean mentionPrefix) {
-            this.mentionPrefix = mentionPrefix;
-            return this;
-        }
-
-        public GuildDataBuilder setUseEmbedForMessages(boolean useEmbedForMessages) {
-            this.usesEmbedForMessages = useEmbedForMessages;
-            return this;
-        }
-
-        public GuildDataBuilder addCommand(ICommand command, GuildCommandInfo guildCommandInfo) {
-            if (commandInfo == null) commandInfo = new ConcurrentHashMap<>();
-            commandInfo.put(command.getClass(), guildCommandInfo);
-            return this;
-        }
-
-        public GuildDataBuilder removeCommand(ICommand command) {
-            if (commandInfo == null) return this;
-            commandInfo.remove(command.getClass());
-            return this;
-        }
-
-        public GuildData build() {
-            return new GuildData(
-                    guildId,
-                    configVersion,
-                    commandInfo,
-                    mentionPrefix,
-                    usesEmbedForMessages
-            );
-        }
-
     }
 
 }

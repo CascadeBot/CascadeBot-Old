@@ -27,7 +27,7 @@ public class ErrorUtils {
                 .build();
 
         try {
-            Response response = CascadeBot.instance().getHttpClient().newCall(request).execute();
+            Response response = CascadeBot.INS.getHttpClient().newCall(request).execute();
             JsonParser parser = new JsonParser();
             if(response.body() != null) {
                 JsonObject object = parser.parse(response.body().string()).getAsJsonObject();
