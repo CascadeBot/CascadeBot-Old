@@ -16,7 +16,7 @@ public class InviteCommand implements ICommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        CascadeBot.getInvite();
+    //    CascadeBot.getInvite();
     }
 
     @Override
