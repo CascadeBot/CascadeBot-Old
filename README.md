@@ -8,7 +8,7 @@ Lots of talented developers have put work into CascadeBot, although the three ma
 
  - [BinaryOverload](https://github.com/binaryoverload): BinaryOverload#2382 
  - [mrjvs](https://github.com/mrjvs): mrjvs#2165 
- - [weeryan17](https://github.com/weeryan17) weeryan17#1258
+ - [weeryan17](https://github.com/weeryan17): weeryan17#1258
 
 #### Credits
 
