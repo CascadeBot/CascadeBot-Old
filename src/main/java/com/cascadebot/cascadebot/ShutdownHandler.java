@@ -9,6 +9,8 @@ import com.cascadebot.cascadebot.commands.developer.EvalCommand;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.tasks.Task;
 import com.cascadebot.shared.ExitCodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShutdownHandler {
 
@@ -29,6 +31,7 @@ public class ShutdownHandler {
     }
 
     private static void shutdown() {
+        CascadeBot.logger.info("Bot shutting down gracefully!");
         EvalCommand.shutdownEvalPool();
         CommandListener.shutdownCommandPool();
         Task.shutdownTaskPool();
