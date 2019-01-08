@@ -33,7 +33,7 @@ public class ShutdownHandler {
     }
 
     private static void shutdown() {
-        logger.info("Bot shutting down gracefully.");
+        logger.info("Bot shutting down gracefully!");
         EvalCommand.shutdownEvalPool();
         CommandListener.shutdownCommandPool();
         Task.shutdownTaskPool();
