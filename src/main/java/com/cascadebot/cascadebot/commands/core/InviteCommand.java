@@ -5,16 +5,21 @@
 
 package com.cascadebot.cascadebot.commands.core;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
 public class InviteCommand implements ICommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.reply("Invite Link Here!");
+        public static String getInvite() {
+            // return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
+                    CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
+        }
     }
 
     @Override
