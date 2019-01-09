@@ -34,8 +34,6 @@ public class ShutdownCommand implements ICommandRestricted {
         return CommandType.OWNER;
     }
 
-
-
     @Override
     public boolean forceDefault() {
         return true;
