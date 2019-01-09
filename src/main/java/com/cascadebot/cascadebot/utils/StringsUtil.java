@@ -63,6 +63,12 @@ public class StringsUtil {
                 " " + (percentAfter ? ( Math.round(percentage) + "%") : ""); // If we want we can add a label showing the percentage overall, since this uses physical bars there cannot be a decimal percentage
     }
 
+    /**
+     * Converts a string to lowercase then makes the first character uppercase
+     *
+     * @param string The string to convert to title case
+     * @return The title-cased string
+     */
     public static String toTitleCase(String string) {
         return StringUtils.capitalize(string.toLowerCase());
     }
