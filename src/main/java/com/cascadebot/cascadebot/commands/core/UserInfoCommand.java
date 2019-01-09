@@ -5,17 +5,24 @@
 
 package com.cascadebot.cascadebot.commands.core;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
+import com.cascadebot.cascadebot.utils.StringsUtil;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.RichPresence;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import org.apache.commons.lang3.StringUtils;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,15 +41,27 @@ public class UserInfoCommand implements ICommand {
         User user = memberForInfo.getUser();
 
         List<Page> pageList = new ArrayList<>();
-        EmbedBuilder builder = new EmbedBuilder();
-        builder.setTitle(DiscordUtils.getTag(user));
+        EmbedBuilder builder = MessagingObjects.getInfoEmbedBuilder();
+        builder.setTitle(user.getAsTag());
         builder.setThumbnail(user.getAvatarUrl());
-        builder.addField("Crated Data", "TODO", true);
-        builder.addField("Join data", "TODO", true);
+        builder.addField("User Created", user.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
+        builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
+        builder.addField("User ID", user.getId(), true);
+        builder.addField("Status", StringsUtil.toTitleCase(memberForInfo.getOnlineStatus().toString().replace("_", " ")), true);
 
+        Game game = memberForInfo.getGame();
+        if (game != null && !game.isRich()) {
+            String status = "";
+            if (game.isRich()) {
+                // TODO: This will require API I think
+            } else {
+                status = StringsUtil.toTitleCase(game.getType().toString()) + " " + game.getName();
+            }
+            builder.addField("Activity", status, true);
+        }
         pageList.add(new PageObjects.EmbedPage(builder));
 
-        List<String> header = Arrays.asList("Role Id", "Role Name");
+        List<String> header = Arrays.asList("Role ID", "Role Name");
 
         List<List<String>> body = new ArrayList<>();
         for(Role role : memberForInfo.getRoles()) {

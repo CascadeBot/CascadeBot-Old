@@ -62,4 +62,14 @@ public class StringsUtil {
                 StringUtils.repeat("▬", length - bars) + // The bars representing the unfilled percentage, i.e. for a percentage of 30%, this will be the number of bars for 70%
                 " " + (percentAfter ? ( Math.round(percentage) + "%") : ""); // If we want we can add a label showing the percentage overall, since this uses physical bars there cannot be a decimal percentage
     }
+
+    /**
+     * Converts a string to lowercase then makes the first character uppercase
+     *
+     * @param string The string to convert to title case
+     * @return The title-cased string
+     */
+    public static String toTitleCase(String string) {
+        return StringUtils.capitalize(string.toLowerCase());
+    }
 }

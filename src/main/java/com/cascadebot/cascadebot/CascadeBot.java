@@ -175,5 +175,4 @@ public class CascadeBot {
         return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
                 CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
     }
-
 }
