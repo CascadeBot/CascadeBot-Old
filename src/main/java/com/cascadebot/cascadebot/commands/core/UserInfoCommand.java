@@ -17,6 +17,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,8 +39,8 @@ public class UserInfoCommand implements ICommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(DiscordUtils.getTag(user));
         builder.setThumbnail(user.getAvatarUrl());
-        builder.addField("User Created", context.getUser().getCreationTime().getDayOfMonth() + "." + context.getUser().getCreationTime().getMonth() + "." + context.getUser().getCreationTime().getYear(), true);
-        builder.addField("Join Date", memberForInfo.getJoinDate().toString(), true);
+        builder.addField("User Created", context.getUser().getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), true);
+        builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), true);
         builder.addField("User ID", context.getUser().getId(), true);
         builder.addField("Name + Tag", context.getUser().getName() + "#" + context.getUser().getDiscriminator(), true);
         builder.addField("Status", context.getMember().getOnlineStatus().toString(), true);
