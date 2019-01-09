@@ -39,8 +39,8 @@ public class UserInfoCommand implements ICommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(DiscordUtils.getTag(user));
         builder.setThumbnail(user.getAvatarUrl());
-        builder.addField("User Created", context.getUser().getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), true);
-        builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME), true);
+        builder.addField("User Created", context.getUser().getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE), true);
+        builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.ISO_LOCAL_DATE), true);
         builder.addField("User ID", context.getUser().getId(), true);
         builder.addField("Name + Tag", context.getUser().getName() + "#" + context.getUser().getDiscriminator(), true);
         builder.addField("Status", context.getMember().getOnlineStatus().toString(), true);
