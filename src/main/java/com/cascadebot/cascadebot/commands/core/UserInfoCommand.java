@@ -9,13 +9,18 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
+import com.cascadebot.cascadebot.utils.StringsUtil;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.RichPresence;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -36,15 +41,24 @@ public class UserInfoCommand implements ICommand {
         User user = memberForInfo.getUser();
 
         List<Page> pageList = new ArrayList<>();
-        EmbedBuilder builder = new EmbedBuilder();
+        EmbedBuilder builder = MessagingObjects.getInfoEmbedBuilder();
         builder.setTitle(DiscordUtils.getTag(user));
-        builder.setThumbnail(context.getUser().getAvatarUrl());
-        builder.addField("User Created", context.getUser().getCreationTime().format(DateTimeFormatter.ISO_LOCAL_DATE), true);
-        builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.ISO_LOCAL_DATE), true);
-        builder.addField("User ID", context.getUser().getId(), true);
-        builder.addField("Name + Tag", context.getUser().getName() + "#" + context.getUser().getDiscriminator(), true);
-        builder.addField("Status", context.getMember().getOnlineStatus().toString(), true);
-        builder.addField("Currently Playing", context.getMember().getGame().getName(), true);
+        builder.setThumbnail(user.getAvatarUrl());
+        builder.addField("User Created", user.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
+        builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
+        builder.addField("User ID", user.getId(), true);
+        builder.addField("Status", StringsUtil.toTitleCase(memberForInfo.getOnlineStatus().toString().replace("_", " ")), true);
+
+        Game game = memberForInfo.getGame();
+        if (game != null && !game.isRich()) {
+            String status = "";
+            if (game.isRich()) {
+                // This will require API I think
+            } else {
+                status = StringsUtil.toTitleCase(game.getType().toString()) + " " + game.getName();
+            }
+            builder.addField("Activity", status, true);
+        }
         pageList.add(new PageObjects.EmbedPage(builder));
 
         List<String> header = Arrays.asList("Role ID", "Role Name");
