@@ -31,7 +31,7 @@ public class ShutdownCommand implements ICommandRestricted {
 
     @Override
     public CommandType getType() {
-        return CommandType.OWNER;
+        return CommandType.DEVELOPER;
     }
 
     @Override

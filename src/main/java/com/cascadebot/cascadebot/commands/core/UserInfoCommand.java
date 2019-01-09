@@ -42,7 +42,6 @@ public class UserInfoCommand implements ICommand {
         builder.addField("Join Data", "TODO", true);
         builder.addField("User ID", context.getUser().getId() + "", true);
         builder.addField("Name + Tag", context.getUser().getName() + context.getUser().getDiscriminator(), true);
-        builder.addField("Avatar Link", context.getUser().getAvatarUrl() + "", true);
         builder.addField("Status", context.getMember().getOnlineStatus() + "", true);
         builder.addField("Currently Playing", context.getMember().getGame() + "", true);
         pageList.add(new PageObjects.EmbedPage(builder));
