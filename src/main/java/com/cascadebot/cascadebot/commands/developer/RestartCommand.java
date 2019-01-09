@@ -13,18 +13,18 @@ import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import net.dv8tion.jda.core.entities.Member;
 
-public class ShutdownCommand implements ICommandRestricted {
+public class RestartCommand implements ICommandRestricted {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.reply("Bot is shutting down!");
-        CascadeBot.logger.info("Shutting down via command!");
-        ShutdownHandler.stop();
+        context.reply("Bot is restarting!");
+        CascadeBot.logger.info("Restarting via command!");
+        ShutdownHandler.restart();
     }
 
     @Override
     public String defaultCommand() {
-        return "shutdown";
+        return "restart";
     }
 
     @Override
