@@ -10,9 +10,11 @@ import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import net.dv8tion.jda.core.entities.Member;
 
 public class ShutdownCommand implements ICommandRestricted {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         CascadeBot.logger.info("Shutting down via command!");
@@ -21,13 +23,18 @@ public class ShutdownCommand implements ICommandRestricted {
 
     @Override
     public String defaultCommand() {
-        return ";shutdown";
+        return "shutdown";
     }
 
     @Override
+    public SecurityLevel getCommandLevel() { return SecurityLevel.OWNER; }
+
+    @Override
     public CommandType getType() {
-        return CommandType.DEVELOPER;
+        return CommandType.OWNER;
     }
+
+
 
     @Override
     public boolean forceDefault() {

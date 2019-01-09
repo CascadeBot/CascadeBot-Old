@@ -32,18 +32,17 @@ public class UserInfoCommand implements ICommand {
             context.reply("Invalid User!");
             return;
         }
-        if(context.getUser().isBot() == true) {
-            context.reply("User is a bot!");
-            return;
-        }
         User user = memberForInfo.getUser();
 
         List<Page> pageList = new ArrayList<>();
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(DiscordUtils.getTag(user));
         builder.setThumbnail(user.getAvatarUrl());
+        builder.addField("Crated Data", "TODO", true);
+        builder.addField("Join Data", "TODO", true);
         builder.addField("User ID", context.getUser().getId(), true);
         builder.addField("Name + Tag", context.getUser().getName() + context.getUser().getDiscriminator(), true);
+        builder.addField("Avatar Link", context.getUser().getAvatarUrl(), true);
         pageList.add(new PageObjects.EmbedPage(builder));
 
         List<String> header = Arrays.asList("Role ID", "Role Name");
