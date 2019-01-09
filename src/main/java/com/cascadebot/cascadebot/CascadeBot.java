@@ -29,12 +29,15 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class CascadeBot {
 
-    public static Logger logger = LoggerFactory.getLogger(CascadeBot.class);
-    private static Gson gson;
     public static final CascadeBot INS = new CascadeBot();
+
+    public static Logger logger = LoggerFactory.getLogger(CascadeBot.class);
+    private static String version;
+    private static Gson gson;
 
     private ShardManager shardManager;
     private CommandManager commandManager;
@@ -44,8 +47,24 @@ public class CascadeBot {
 
     public static void main(String[] args) {
         INS.init();
+        try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
+            version = scanner.next() + "_" + scanner.next();
+        }
     }
-  
+
+    public static String getVersion() {
+        return version;
+    }
+
+    public static Gson getGSON() {
+        return gson;
+    }
+
+    public static String getInvite() {
+        return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
+                CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
+    }
+
     /**
      *  Runs once all shards are loaded
      */
@@ -167,12 +186,4 @@ public class CascadeBot {
         return httpClient;
     }
 
-    public static Gson getGSON() {
-        return gson;
-    }
-
-    public static String getInvite() {
-        return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
-                CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
-    }
 }
