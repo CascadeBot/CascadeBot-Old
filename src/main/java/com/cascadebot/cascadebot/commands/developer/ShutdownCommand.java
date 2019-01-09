@@ -18,7 +18,7 @@ public class ShutdownCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         context.reply("Bot is shutting down!");
-        CascadeBot.logger.info("Shutting down via command!");
+        CascadeBot.logger.info("Shutting down via command! Issuer: " + context.getUser().getAsTag());
         ShutdownHandler.stop();
     }
 
