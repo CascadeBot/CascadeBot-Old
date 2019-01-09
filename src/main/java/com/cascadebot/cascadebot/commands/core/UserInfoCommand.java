@@ -38,10 +38,10 @@ public class UserInfoCommand implements ICommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(DiscordUtils.getTag(user));
         builder.setThumbnail(user.getAvatarUrl());
-        builder.addField("Crated Data", "TODO", true);
-        builder.addField("Join Data", "TODO", true);
+        builder.addField("User Created", context.getUser().getCreationTime().toString() + "", true);
+        builder.addField("Join Date", memberForInfo.getJoinDate().toString() + "", true);
         builder.addField("User ID", context.getUser().getId() + "", true);
-        builder.addField("Name + Tag", context.getUser().getName() + context.getUser().getDiscriminator(), true);
+        builder.addField("Name + Tag", context.getUser().getName() + "#" + context.getUser().getDiscriminator(), true);
         builder.addField("Status", context.getMember().getOnlineStatus() + "", true);
         builder.addField("Currently Playing", context.getMember().getGame() + "", true);
         pageList.add(new PageObjects.EmbedPage(builder));
