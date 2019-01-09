@@ -82,18 +82,6 @@ public class DiscordUtils {
     }
 
     /**
-     * Gets the username#discrim for the specified {@link User}.
-     *
-     * @param user The {@link User} to get tag from.
-     * @return The username#discrim for the specified {@link User}.
-     * @throws IllegalArgumentException if the {@link User} is null.
-     */
-    public static String getTag(User user) {
-        Checks.notNull(user, "user");
-        return user.getName() + "#" + user.getDiscriminator();
-    }
-
-    /**
      * @param search The string to find the {@link Role} with.
      * @param guild  The {@link Guild} to fnd the {@link Role} in.
      * @return The {@link Role} found or null if no role was found with the search.

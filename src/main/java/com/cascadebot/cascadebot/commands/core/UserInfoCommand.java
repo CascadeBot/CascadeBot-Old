@@ -42,7 +42,7 @@ public class UserInfoCommand implements ICommand {
 
         List<Page> pageList = new ArrayList<>();
         EmbedBuilder builder = MessagingObjects.getInfoEmbedBuilder();
-        builder.setTitle(DiscordUtils.getTag(user));
+        builder.setTitle(user.getAsTag());
         builder.setThumbnail(user.getAvatarUrl());
         builder.addField("User Created", user.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
         builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
