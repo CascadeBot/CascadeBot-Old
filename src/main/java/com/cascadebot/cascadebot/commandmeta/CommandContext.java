@@ -437,7 +437,7 @@ public class CommandContext {
             pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
             pageGroup.setCurrentPage(pageGroup.getPages());
         }));
-        channel.sendMessage("\u00A0").queue(sentMessage -> {
+        channel.sendMessage("Paged message loading...").queue(sentMessage -> {
             pages.get(0).pageShow(sentMessage, 1, pages.size());
             addButtons(sentMessage, group);
             group.setMessage(sentMessage.getIdLong());
