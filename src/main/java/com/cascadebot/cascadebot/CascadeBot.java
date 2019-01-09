@@ -45,7 +45,7 @@ public class CascadeBot {
     public static void main(String[] args) {
         INS.init();
     }
-
+  
     /**
      *  Runs once all shards are loaded
      */
