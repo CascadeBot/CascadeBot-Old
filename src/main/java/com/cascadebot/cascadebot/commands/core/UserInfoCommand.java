@@ -53,7 +53,7 @@ public class UserInfoCommand implements ICommand {
         if (game != null && !game.isRich()) {
             String status = "";
             if (game.isRich()) {
-                // This will require API I think
+                // TODO: This will require API I think
             } else {
                 status = StringsUtil.toTitleCase(game.getType().toString()) + " " + game.getName();
             }
