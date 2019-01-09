@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.commands.core;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
@@ -31,18 +32,21 @@ public class UserInfoCommand implements ICommand {
             context.reply("Invalid User!");
             return;
         }
+        if(context.getUser().isBot() == true) {
+            context.reply("User is a bot!");
+            return;
+        }
         User user = memberForInfo.getUser();
 
         List<Page> pageList = new ArrayList<>();
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(DiscordUtils.getTag(user));
         builder.setThumbnail(user.getAvatarUrl());
-        builder.addField("Crated Data", "TODO", true);
-        builder.addField("Join data", "TODO", true);
-
+        builder.addField("User ID", context.getUser().getId(), true);
+        builder.addField("Name + Tag", context.getUser().getName() + context.getUser().getDiscriminator(), true);
         pageList.add(new PageObjects.EmbedPage(builder));
 
-        List<String> header = Arrays.asList("Role Id", "Role Name");
+        List<String> header = Arrays.asList("Role ID", "Role Name");
 
         List<List<String>> body = new ArrayList<>();
         for(Role role : memberForInfo.getRoles()) {
