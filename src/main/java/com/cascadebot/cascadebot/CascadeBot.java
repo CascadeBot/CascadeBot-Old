@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.database.DatabaseManager;
+import com.cascadebot.cascadebot.data.objects.Version;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
@@ -36,7 +37,7 @@ public class CascadeBot {
     public static final CascadeBot INS = new CascadeBot();
 
     public static Logger logger = LoggerFactory.getLogger(CascadeBot.class);
-    private static String version;
+    private static Version version;
     private static Gson gson;
 
     private ShardManager shardManager;
@@ -48,11 +49,11 @@ public class CascadeBot {
     public static void main(String[] args) {
         INS.init();
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
-            version = scanner.next() + "_" + scanner.next();
+            version = Version.parseVer(scanner.next() + "_" + scanner.next());
         }
     }
 
-    public static String getVersion() {
+    public static Version getVersion() {
         return version;
     }
 
