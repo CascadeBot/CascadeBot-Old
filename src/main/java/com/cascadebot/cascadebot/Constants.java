@@ -14,7 +14,9 @@ public final class Constants {
     public static final Version CONFIG_VERSION = Version.of(1, 0, 0);
 
     public static final Pattern INTEGER_REGEX = Pattern.compile("-?[0-9]+");
+    public static final Pattern POSITIVE_INTEGER_REGEX = Pattern.compile("[0-9]+");
     public static final Pattern DECIMAL_REGEX = Pattern.compile("-?[0-9]*([.,])[0-9]+");
+    public static final Pattern POSITIVE_DECIMAL_REGEX = Pattern.compile("[0-9]*([.,])[0-9]+");
     public static final Pattern MULTISPACE_REGEX = Pattern.compile(" {2,}");
 
     // Changeable constants if needed
