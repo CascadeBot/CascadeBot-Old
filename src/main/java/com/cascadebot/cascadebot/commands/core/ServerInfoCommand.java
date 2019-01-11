@@ -17,7 +17,6 @@ import java.util.Set;
 public class ServerInfoCommand implements ICommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
-
         EmbedBuilder builder = MessagingObjects.getInfoEmbedBuilder();
         builder.setTitle(context.getGuild().getName());
         builder.setThumbnail(context.getGuild().getIconUrl());
@@ -29,7 +28,7 @@ public class ServerInfoCommand implements ICommand {
         builder.addField("Member Count", String.valueOf(context.getGuild().getMembers().size()), true);
         builder.setFooter("ID: " + context.getGuild().getId(), context.getGuild().getIconUrl());
 
-        context.replyInfo(builder);
+        context.reply(builder.build());
     }
 
     @Override
