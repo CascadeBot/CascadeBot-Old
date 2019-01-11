@@ -28,7 +28,7 @@ public class ServerInfoCommand implements ICommand {
         builder.addField("Member Count", String.valueOf(context.getGuild().getMembers().size()), true);
         builder.setFooter("ID: " + context.getGuild().getId(), context.getGuild().getIconUrl());
 
-        context.reply(builder.build());
+        context.replyInfo(builder);
     }
 
     @Override
