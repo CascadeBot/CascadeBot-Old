@@ -17,6 +17,7 @@ import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.*;
 
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +30,7 @@ public class ServerInfoCommand implements ICommand {
         EmbedBuilder builder = MessagingObjects.getInfoEmbedBuilder();
         builder.setTitle(context.getGuild().getName());
         builder.setThumbnail(context.getGuild().getIconUrl());
-        builder.addField("Creation Date", context.getGuild().getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
+        builder.addField("Creation Date", FormatUtils.formatDateTme(context.getGuild().getCreationTime()), true);
         builder.addField("Guild Name", context.getGuild().getName(), true);
         builder.addField("Owner", context.getGuild().getOwner().toString(), true);
         builder.addField("Region", context.getGuild().getRegion().toString(), true);
