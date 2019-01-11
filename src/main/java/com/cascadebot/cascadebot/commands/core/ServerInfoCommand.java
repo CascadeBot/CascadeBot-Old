@@ -5,23 +5,15 @@
 
 package com.cascadebot.cascadebot.commands.core;
 
-import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
-import com.cascadebot.cascadebot.utils.DiscordUtils;
-import com.cascadebot.cascadebot.utils.FormatUtils;
-import com.cascadebot.cascadebot.utils.pagination.Page;
-import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Member;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class ServerInfoCommand implements ICommand {
     @Override
