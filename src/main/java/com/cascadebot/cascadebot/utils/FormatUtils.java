@@ -10,6 +10,8 @@ import com.google.common.base.Splitter;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,4 +146,9 @@ public class FormatUtils {
 
         return sb.toString();
     }
+
+    public static String formatDateTme(OffsetDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
+    }
+
 }
