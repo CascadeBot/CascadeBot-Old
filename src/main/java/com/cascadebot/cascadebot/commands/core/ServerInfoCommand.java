@@ -14,7 +14,6 @@ import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.*;
-import org.bukkit.Server;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -25,7 +24,6 @@ public class ServerInfoCommand implements ICommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
 
-        List<Page> pageList = new ArrayList<>();
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(context.getGuild().getName());
         builder.setThumbnail(context.getGuild().getIconUrl());
@@ -35,9 +33,6 @@ public class ServerInfoCommand implements ICommand {
         builder.addField("Region", context.getGuild().getRegion().toString(), true);
         builder.addField("Guild ID", context.getGuild().getId(), true);
         builder.addField("Member Count", context.getGuild().getMembers().size() + "\n", true);
-        pageList.add(new PageObjects.EmbedPage(builder));
-
-        context.sendPagedMessage(pageList);
     }
 
     @Override
@@ -47,6 +42,6 @@ public class ServerInfoCommand implements ICommand {
 
     @Override
     public CommandType getType() {
-        return null;
+        return CommandType.CORE;
     }
 }

@@ -83,6 +83,6 @@ public class UserInfoCommand implements ICommand {
 
     @Override
     public CommandType getType() {
-        return null;
+        return CommandType.CORE;
     }
 }
