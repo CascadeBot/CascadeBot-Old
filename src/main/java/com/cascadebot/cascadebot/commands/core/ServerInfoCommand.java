@@ -26,7 +26,7 @@ public class ServerInfoCommand implements ICommand {
         builder.addField("Guild Name", context.getGuild().getName(), true);
         builder.addField("Owner", context.getGuild().getOwner().getUser().getAsTag(), true);
         builder.addField("Region", context.getGuild().getRegion().toString(), true);
-        builder.addField("Member Count", context.getGuild().getMembers().size() + "\n", true);
+        builder.addField("Member Count", String.valueOf(context.getGuild().getMembers().size()), true);
         builder.setFooter("ID: " + context.getGuild().getId(), context.getGuild().getIconUrl());
 
         context.replyInfo(builder);
