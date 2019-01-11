@@ -10,6 +10,8 @@ import com.google.common.base.Splitter;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,10 +90,13 @@ public class FormatUtils {
         StringBuilder sb = new StringBuilder();
         sb.append("__**").append(embed.getTitle()).append("**__\n");
         sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
-        List<MessageEmbed.Field> inline = new ArrayList<>();
+        List<MessageEmbed.Field> inline = null;
         int i = 0;
         for (MessageEmbed.Field field : embed.getFields()) {
             if(field.isInline() && field.getName().length() <= 20 && field.getValue().length() <= 20) {
+                if(inline == null) {
+                    inline = new ArrayList<>();
+                }
                 inline.add(field);
                 if(i == 2) {
                     sb.append(getFormattedInlineFields(inline)).append("\n\n");
@@ -100,8 +105,10 @@ public class FormatUtils {
                 }
                 i++;
             } else {
-                sb.append(getFormattedInlineFields(inline)).append("\n\n");
-                inline.clear();
+                if(inline != null) {
+                    sb.append(getFormattedInlineFields(inline)).append("\n\n");
+                    inline.clear();
+                }
                 i = 0;
                 sb.append("**").append(field.getName()).append("**\n");
                 sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(field.getValue()))).append("\n\n");
@@ -144,4 +151,9 @@ public class FormatUtils {
 
         return sb.toString();
     }
+
+    public static String formatDateTime(OffsetDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
+    }
+
 }
