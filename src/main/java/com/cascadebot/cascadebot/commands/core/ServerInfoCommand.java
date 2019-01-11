@@ -9,15 +9,20 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.utils.FormatUtils;
+import com.cascadebot.cascadebot.utils.pagination.Page;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ServerInfoCommand implements ICommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        List<Page> pageList = new ArrayList<>();
 
         EmbedBuilder builder = MessagingObjects.getInfoEmbedBuilder();
         builder.setTitle(context.getGuild().getName());
@@ -28,6 +33,8 @@ public class ServerInfoCommand implements ICommand {
         builder.addField("Region", context.getGuild().getRegion().toString(), true);
         builder.addField("Guild ID", context.getGuild().getId(), true);
         builder.addField("Member Count", context.getGuild().getMembers().size() + "\n", true);
+
+        context.sendPagedMessage(pageList);
     }
 
     @Override
