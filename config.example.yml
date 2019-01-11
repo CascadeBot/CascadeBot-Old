@@ -67,3 +67,5 @@ security_levels:
 haste:
   server: 'https://hastebin.com/documents'
   link: 'https://hastebin.com/'
+
+  
