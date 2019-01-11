@@ -147,7 +147,7 @@ public class FormatUtils {
         return sb.toString();
     }
 
-    public static String formatDateTme(OffsetDateTime dateTime) {
+    public static String formatDateTime(OffsetDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
 
