@@ -9,7 +9,9 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
+import com.cascadebot.cascadebot.utils.FormatUtils;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -24,7 +26,7 @@ public class ServerInfoCommand implements ICommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
 
-        EmbedBuilder builder = new EmbedBuilder();
+        EmbedBuilder builder = MessagingObjects.getInfoEmbedBuilder();
         builder.setTitle(context.getGuild().getName());
         builder.setThumbnail(context.getGuild().getIconUrl());
         builder.addField("Creation Date", context.getGuild().getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
