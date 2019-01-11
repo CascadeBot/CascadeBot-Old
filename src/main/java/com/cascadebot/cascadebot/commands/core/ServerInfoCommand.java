@@ -8,17 +8,12 @@ package com.cascadebot.cascadebot.commands.core;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
-import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Guild.*;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
-
 import java.util.Set;
-
-import static io.netty.util.internal.SystemPropertyUtil.contains;
 
 public class ServerInfoCommand implements ICommand {
     @Override
