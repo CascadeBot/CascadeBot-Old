@@ -14,12 +14,17 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Guild.*;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+
 import java.util.Set;
+
+import static io.netty.util.internal.SystemPropertyUtil.contains;
 
 public class ServerInfoCommand implements ICommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Guild guildForInfo = context.getGuild();
+        Message userMessage = context.getMessage();
 
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(guildForInfo.getName());
