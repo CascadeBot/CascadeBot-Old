@@ -5,10 +5,13 @@
 
 package com.cascadebot.cascadebot.commands.core;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.cascadebot.utils.FormatUtils;
+import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -20,6 +23,14 @@ public class ServerInfoCommand implements ICommand {
     public void onCommand(Member sender, CommandContext context) {
         Guild guildForInfo = context.getGuild();
         Message userMessage = context.getMessage();
+
+        if(context.getArgs().length > 0) {
+            guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getMessage(0));
+        }
+        if(guildForInfo == null) {
+            context.reply("We couldn't find that guild!");
+            return;
+        }
 
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(guildForInfo.getName());
