@@ -24,7 +24,7 @@ public class ServerInfoCommand implements ICommand {
         Guild guildForInfo = context.getGuild();
 
         if(context.getArgs().length > 0) {
-            guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getMessage(0));
+            guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
         }
         if(guildForInfo == null) {
             context.replyDanger("We couldn't find that guild!");
