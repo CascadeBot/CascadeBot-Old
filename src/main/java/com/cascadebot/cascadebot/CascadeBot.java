@@ -75,7 +75,9 @@ public class CascadeBot {
 
 
 
-    public void init() {
+    private void init() {
+        new Thread(new ConsoleReader()).start();
+
         GsonBuilder builder = new GsonBuilder();
         try {
             Config.init("config.yml");
