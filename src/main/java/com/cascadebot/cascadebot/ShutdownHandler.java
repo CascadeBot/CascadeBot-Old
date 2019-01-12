@@ -22,10 +22,12 @@ public class ShutdownHandler {
 
     public static void stop() {
         System.exit(ExitCodes.STOP);
+        System.out.println("CASCADEOP STOP");
     }
 
     public static void restart() {
         System.exit(ExitCodes.RESTART);
+        System.out.println("CASCADEOP RESTART");
     }
 
     public static void exitWithError() {
