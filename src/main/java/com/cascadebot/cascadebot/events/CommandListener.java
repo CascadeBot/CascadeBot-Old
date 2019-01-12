@@ -13,6 +13,7 @@ import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.shared.Regex;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
@@ -30,7 +31,7 @@ public class CommandListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
-        String message = Constants.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
+        String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         String prefix = Config.INS.getDefaultPrefix(); //TODO: Add guild data prefix here
         GuildData guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
         if (message.startsWith(prefix)) {

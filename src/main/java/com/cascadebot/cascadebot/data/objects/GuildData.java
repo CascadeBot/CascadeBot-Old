@@ -13,6 +13,7 @@ import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
+import com.cascadebot.shared.Version;
 import com.mongodb.client.model.Updates;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
