@@ -22,13 +22,12 @@ public class ServerInfoCommand implements ICommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Guild guildForInfo = context.getGuild();
-        Message userMessage = context.getMessage();
 
         if(context.getArgs().length > 0) {
             guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getMessage(0));
         }
         if(guildForInfo == null) {
-            context.reply("We couldn't find that guild!");
+            context.replyDanger("We couldn't find that guild!");
             return;
         }
 
