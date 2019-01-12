@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -8,12 +8,12 @@ package com.cascadebot.cascadebot;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.database.DatabaseManager;
-import com.cascadebot.cascadebot.data.objects.Version;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.cascadebot.permissions.PermissionsManager;
+import com.cascadebot.shared.Version;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lavalink.client.io.jda.JdaLavalink;
