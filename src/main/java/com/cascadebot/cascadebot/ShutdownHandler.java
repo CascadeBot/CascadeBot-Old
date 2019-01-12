@@ -23,11 +23,13 @@ public class ShutdownHandler {
     public static void stop() {
         System.exit(ExitCodes.STOP);
         System.out.println("CASCADEOP STOP");
+        System.out.flush();
     }
 
     public static void restart() {
         System.exit(ExitCodes.RESTART);
         System.out.println("CASCADEOP RESTART");
+        System.out.flush();
     }
 
     public static void exitWithError() {
