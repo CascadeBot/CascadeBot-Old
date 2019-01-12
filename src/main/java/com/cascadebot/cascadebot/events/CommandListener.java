@@ -13,7 +13,7 @@ import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
-import com.cascadebot.cascadebot.utils.objects.ThreadPoolExecutorLogged;
+import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
@@ -25,7 +25,7 @@ public class CommandListener extends ListenerAdapter {
 
     private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newFixedThreadPool(5, r ->
-            new Thread(COMMAND_THREADS, r, "Command Pool-" + COMMAND_THREADS.activeCount()));
+            new Thread(COMMAND_THREADS, r, "Command Pool-" + COMMAND_THREADS.activeCount()), CascadeBot.logger);
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
