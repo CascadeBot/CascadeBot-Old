@@ -5,18 +5,28 @@
 
 package com.cascadebot.cascadebot;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class ConsoleReader implements Runnable {
     @Override
     public void run() {
-        Scanner scanner = new Scanner(System.in);
+        CascadeBot.logger.info("Console reading up and running!");
         boolean stop = false;
         while (!stop) {
-            String command = scanner.next(); //We can expand this in the future if need be.
-            if(command.equalsIgnoreCase("stop")) {
-                ShutdownHandler.stopWrapper();
-                stop = true;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            String line;
+            try {
+                while ((line = reader.readLine()) != null) {
+                    if (line.equalsIgnoreCase("stop")) {
+                        ShutdownHandler.stopWrapper();
+                        stop = true;
+                    }
+                }
+            } catch (IOException ignored) {
+
             }
         }
     }
