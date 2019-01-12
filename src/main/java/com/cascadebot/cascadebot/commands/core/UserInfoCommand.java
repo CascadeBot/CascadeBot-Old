@@ -10,7 +10,6 @@ import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
-import com.cascadebot.cascadebot.utils.StringsUtil;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -18,6 +17,7 @@ import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class UserInfoCommand implements ICommand {
         builder.addField("User Created", user.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
         builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
         builder.addField("User ID", user.getId(), true);
-        builder.addField("Status", StringsUtil.toTitleCase(memberForInfo.getOnlineStatus().toString().replace("_", " ")), true);
+        builder.addField("Status", StringUtils.capitalize(memberForInfo.getOnlineStatus().toString().replace("_", " ").toLowerCase()), true);
 
         Game game = memberForInfo.getGame();
         if (game != null && !game.isRich()) {
@@ -52,7 +52,7 @@ public class UserInfoCommand implements ICommand {
             if (game.isRich()) {
                 // TODO: This will require API I think
             } else {
-                status = StringsUtil.toTitleCase(game.getType().toString()) + " " + game.getName();
+                status = StringUtils.capitalize(game.getType().toString().toLowerCase()) + " " + game.getName();
             }
             builder.addField("Activity", status, true);
         }
