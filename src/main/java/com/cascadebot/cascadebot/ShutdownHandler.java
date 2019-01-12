@@ -16,6 +16,10 @@ public class ShutdownHandler {
         Runtime.getRuntime().addShutdownHook(new Thread(ShutdownHandler::shutdown));
     }
 
+    public static void stopWrapper() {
+        System.exit(ExitCodes.STOP_WRAPPER);
+    }
+
     public static void stop() {
         System.exit(ExitCodes.STOP);
     }
