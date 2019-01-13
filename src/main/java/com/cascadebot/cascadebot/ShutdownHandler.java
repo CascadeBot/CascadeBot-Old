@@ -9,6 +9,7 @@ import com.cascadebot.cascadebot.commands.developer.EvalCommand;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.tasks.Task;
 import com.cascadebot.shared.ExitCodes;
+import com.cascadebot.shared.SharedConstants;
 
 public class ShutdownHandler {
 
@@ -20,16 +21,20 @@ public class ShutdownHandler {
         System.exit(ExitCodes.STOP_WRAPPER);
     }
 
+    public static void stopByWrapper() {
+        System.exit(ExitCodes.STOPPED_BY_WRAPPER);
+    }
+
     public static void stop() {
-        System.exit(ExitCodes.STOP);
-        System.out.println("CASCADEOP STOP");
+        System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " STOP");
         System.out.flush();
+        System.exit(ExitCodes.STOP);
     }
 
     public static void restart() {
-        System.exit(ExitCodes.RESTART);
-        System.out.println("CASCADEOP RESTART");
+        System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " RESTART");
         System.out.flush();
+        System.exit(ExitCodes.RESTART);
     }
 
     public static void exitWithError() {

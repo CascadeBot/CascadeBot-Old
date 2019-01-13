@@ -30,6 +30,9 @@ public class ConsoleReader implements Runnable {
                         if (args[0].equalsIgnoreCase("stop_wrapper")) {
                             ShutdownHandler.stopWrapper();
                             break;
+                        } else if (args[0].equalsIgnoreCase("stop")) {
+                            ShutdownHandler.stopByWrapper();
+                            break;
                         } else {
                             // etc etc etc
                         }
