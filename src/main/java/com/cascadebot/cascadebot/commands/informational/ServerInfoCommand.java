@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.commands.core;
+package com.cascadebot.cascadebot.commands.informational;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -52,7 +52,7 @@ public class ServerInfoCommand implements ICommand {
 
     @Override
     public CommandType getType() {
-        return CommandType.CORE;
+        return CommandType.INFORMATIONAL;
     }
 
     @Override

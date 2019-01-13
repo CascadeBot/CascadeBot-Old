@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.commands.core;
+package com.cascadebot.cascadebot.commands.informational;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
@@ -80,6 +80,6 @@ public class UserInfoCommand implements ICommand {
 
     @Override
     public CommandType getType() {
-        return CommandType.CORE;
+        return CommandType.INFORMATIONAL;
     }
 }
