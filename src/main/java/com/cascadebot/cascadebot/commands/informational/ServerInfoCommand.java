@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.commands.core;
+package com.cascadebot.cascadebot.commands.informational;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -34,7 +34,6 @@ public class ServerInfoCommand implements ICommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(guildForInfo.getName());
         builder.setThumbnail(guildForInfo.getIconUrl());
-        builder.setDescription("Guild Information");
         builder.addField("Creation Date", FormatUtils.formatDateTime(guildForInfo.getCreationTime()), true);
         builder.addField("Guild Name", guildForInfo.getName(), true);
         builder.addField("Owner", guildForInfo.getOwner().getUser().getAsTag(), true);
@@ -52,7 +51,7 @@ public class ServerInfoCommand implements ICommand {
 
     @Override
     public CommandType getType() {
-        return CommandType.CORE;
+        return CommandType.INFORMATIONAL;
     }
 
     @Override

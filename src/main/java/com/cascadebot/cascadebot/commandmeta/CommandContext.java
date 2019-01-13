@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -14,6 +14,7 @@ import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
+import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
@@ -106,11 +107,11 @@ public class CommandContext {
     }
 
     public boolean isArgInteger(int index) {
-        return Constants.INTEGER_REGEX.matcher(this.args[index]).matches();
+        return Regex.INTEGER_REGEX.matcher(this.args[index]).matches();
     }
 
     public boolean isArgDecimal(int index) {
-        return Constants.DECIMAL_REGEX.matcher(this.args[index]).matches();
+        return Regex.DECIMAL_REGEX.matcher(this.args[index]).matches();
     }
 
     public String getArg(int index) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot.commandmeta;
 public enum CommandType {
 
     CORE,
+    INFORMATIONAL,
     DEVELOPER(false);
 
     private boolean availableModule;

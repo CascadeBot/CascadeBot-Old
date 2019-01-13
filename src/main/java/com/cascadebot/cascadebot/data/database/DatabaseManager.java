@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -34,7 +34,8 @@ public class DatabaseManager {
     private final CodecRegistry CODEC_REGISTRY = CodecRegistries.fromRegistries(
             MongoClientSettings.getDefaultCodecRegistry(),
             CodecRegistries.fromProviders(PojoCodecProvider.builder().register(
-                    "com.cascadebot.cascadebot.data.objects"
+                    "com.cascadebot.cascadebot.data.objects",
+                    "com.cascadebot.shared"
             ).build())
     );
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -9,6 +9,7 @@ import com.cascadebot.cascadebot.commands.developer.EvalCommand;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.tasks.Task;
 import com.cascadebot.shared.ExitCodes;
+import com.cascadebot.shared.SharedConstants;
 
 public class ShutdownHandler {
 
@@ -16,11 +17,23 @@ public class ShutdownHandler {
         Runtime.getRuntime().addShutdownHook(new Thread(ShutdownHandler::shutdown));
     }
 
+    public static void stopWrapper() {
+        System.exit(ExitCodes.STOP_WRAPPER);
+    }
+
+    public static void stopByWrapper() {
+        System.exit(ExitCodes.STOPPED_BY_WRAPPER);
+    }
+
     public static void stop() {
+        System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " STOP");
+        System.out.flush();
         System.exit(ExitCodes.STOP);
     }
 
     public static void restart() {
+        System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " RESTART");
+        System.out.flush();
         System.exit(ExitCodes.RESTART);
     }
 

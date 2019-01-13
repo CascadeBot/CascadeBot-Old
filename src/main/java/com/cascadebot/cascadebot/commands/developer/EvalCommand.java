@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -14,6 +14,7 @@ import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.entities.Member;
+import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -50,8 +51,6 @@ public class EvalCommand implements ICommandRestricted {
             "java.nio",
             "java.nio.file");
 
-    private static final List<String> ENGINES = Arrays.asList("java", "groovy", "jshell");
-
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
@@ -60,17 +59,11 @@ public class EvalCommand implements ICommandRestricted {
             return;
         }
 
-
         ScriptEngine scriptEngine;
         String code;
 
-        if (ENGINES.contains(context.getArg(0).toLowerCase())) {
-            scriptEngine = manager.getEngineByName(context.getArg(0).toLowerCase());
-            code = context.getMessage(1);
-        } else {
-            scriptEngine = manager.getEngineByName(ENGINES.get(0));
-            code = context.getMessage(0);
-        }
+        scriptEngine = new GroovyScriptEngineImpl();
+        code = context.getMessage(0);
 
 
         EVAL_POOL.submit(() -> {
