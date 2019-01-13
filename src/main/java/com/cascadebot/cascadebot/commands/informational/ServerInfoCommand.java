@@ -34,7 +34,6 @@ public class ServerInfoCommand implements ICommand {
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle(guildForInfo.getName());
         builder.setThumbnail(guildForInfo.getIconUrl());
-        builder.setDescription("Guild Information");
         builder.addField("Creation Date", FormatUtils.formatDateTime(guildForInfo.getCreationTime()), true);
         builder.addField("Guild Name", guildForInfo.getName(), true);
         builder.addField("Owner", guildForInfo.getOwner().getUser().getAsTag(), true);
