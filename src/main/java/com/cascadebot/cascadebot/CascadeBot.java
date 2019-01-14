@@ -16,6 +16,7 @@ import com.cascadebot.cascadebot.permissions.PermissionsManager;
 import com.cascadebot.shared.Version;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.offbytwo.jenkins.JenkinsServer;
 import lavalink.client.io.jda.JdaLavalink;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
@@ -30,6 +31,8 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Scanner;
 
 public class CascadeBot {
@@ -45,6 +48,7 @@ public class CascadeBot {
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
     private OkHttpClient httpClient;
+    private JenkinsServer jenkinsServer;
 
     public static void main(String[] args) {
         INS.init();
@@ -127,6 +131,16 @@ public class CascadeBot {
                     Config.INS.getHosts(),
                     Config.INS.isSsl()
             );
+        }
+
+        if (Config.INS.getJenkinsUrl() != null) {
+            try {
+                jenkinsServer = new JenkinsServer(new URI(Config.INS.getJenkinsUrl()),
+                        Config.INS.getJenkinsUsername(),
+                        Config.INS.getJenkinsPassword());
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
 
 
