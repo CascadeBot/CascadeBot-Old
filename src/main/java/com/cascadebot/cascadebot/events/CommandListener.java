@@ -6,7 +6,6 @@
 package com.cascadebot.cascadebot.events;
 
 import com.cascadebot.cascadebot.CascadeBot;
-import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
