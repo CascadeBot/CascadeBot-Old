@@ -9,6 +9,7 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.database.DebugLogCallback;
 import com.cascadebot.cascadebot.data.objects.GuildCommandInfo;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.events.GuildSaveListener;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.github.benmanes.caffeine.cache.RemovalCause;
@@ -26,10 +27,7 @@ public final class GuildDataMapper {
     private static LoadingCache<Long, GuildData> guilds = Caffeine.newBuilder()
             .refreshAfterWrite(5, TimeUnit.MINUTES)
             .expireAfterAccess(10, TimeUnit.MINUTES)
-            .removalListener((Long key, GuildData value, RemovalCause cause) -> {
-                GuildDataMapper.insert(key, value);
-                CascadeBot.logger.debug("Guild ID: " + key + " removed from cache and saved to db because: " + cause.toString());
-            })
+            .removalListener(new GuildSaveListener())
             .build(id -> {
                 GuildData dbData = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("guild_id", id)).first();
                 if (dbData == null) {
