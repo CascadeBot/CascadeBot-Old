@@ -55,10 +55,6 @@ public class Config {
 
     private String connectionString;
 
-    private String jenkinsUrl;
-    private String jenkinsUsername;
-    private String jenkinsPassword;
-
     private int shardNum;
 
     private long officialServerId;
@@ -137,14 +133,6 @@ public class Config {
                 ShutdownHandler.exitWithError();
             }
             this.ssl = warnOnDefault(config, "database.ssl", false);
-        }
-
-        if (config.contains("jenkins.username") && config.contains("jenkins.password")) {
-            this.jenkinsUrl = warnOnDefault(config, "jenkins.url", "https://jenkins.weeryan17.com/");
-            this.jenkinsUsername = config.getString("jenkins.username");
-            this.jenkinsPassword = config.getString("jenkins.password");
-        } else {
-            LOG.warn("No username and password defined for jenkins! Jenkins functionality will be disabled!");
         }
 
         shardNum = warnOnDefault(config, "shard_num", -1);
@@ -263,18 +251,6 @@ public class Config {
 
     public String getConnectionString() {
         return connectionString;
-    }
-
-    public String getJenkinsUrl() {
-        return jenkinsUrl;
-    }
-
-    public String getJenkinsUsername() {
-        return jenkinsUsername;
-    }
-
-    public String getJenkinsPassword() {
-        return jenkinsPassword;
     }
 
     public int getShardNum() {
