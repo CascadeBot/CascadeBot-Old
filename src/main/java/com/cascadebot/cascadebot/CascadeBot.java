@@ -47,10 +47,10 @@ public class CascadeBot {
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
-        INS.init();
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
-            version = Version.parseVer(scanner.next() + "_" + scanner.next());
+            version = Version.parseVer(scanner.next());
         }
+        INS.init();
     }
 
     public static Version getVersion() {
@@ -71,6 +71,7 @@ public class CascadeBot {
      */
     public void run() {
         logger.info("All shards successfully logged in!");
+        logger.info("Cascade Bot version {} successfully booted up!", version);
     }
 
 
