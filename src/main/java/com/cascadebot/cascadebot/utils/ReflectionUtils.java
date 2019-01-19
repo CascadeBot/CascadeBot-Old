@@ -25,7 +25,7 @@ public class ReflectionUtils {
      * @throws IOException If something goes badly.
      */
     public static List<Class<?>> getClasses(String packageName) throws ClassNotFoundException, IOException {
-        List<ClassPath.ClassInfo> classInfos = ClassPath.from(CascadeBot.class.getClassLoader()).getTopLevelClassesRecursive("com.cascadebot.cascadebot.commands").asList();
+        List<ClassPath.ClassInfo> classInfos = ClassPath.from(CascadeBot.class.getClassLoader()).getTopLevelClassesRecursive(packageName).asList();
         return classInfos.stream().map(ClassPath.ClassInfo::load).collect(Collectors.toList());
     }
 
