@@ -22,3 +22,5 @@ target/
 *.yml
 config.yml
 !config.example.yml
+
+src/main/java/com/cascadebot/cascadebot/commands/developer/TestCommand.java
