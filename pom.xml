@@ -109,6 +109,24 @@
 
 
     <dependencies>
+        <dependency>
+            <groupId>de.bild.backend</groupId>
+            <artifactId>polymorphia</artifactId>
+            <version>2.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mongodb</groupId>
+                    <artifactId>mongo-java-driver</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
+        </dependency>
+
+
         <!-- JDA and Audio -->
         <dependency>
             <groupId>net.dv8tion</groupId>
@@ -135,7 +153,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
-            <version>1.8.6</version>
+            <version>1.8.7</version>
         </dependency>
 
         <!-- Utilities -->
@@ -193,12 +211,12 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-async</artifactId>
-            <version>3.8.2</version>
+            <version>3.9.1</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver-sync</artifactId>
-            <version>3.8.2</version>
+            <version>3.9.1</version>
         </dependency>
         <dependency>
             <groupId>io.netty</groupId>

@@ -13,11 +13,12 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.connection.netty.NettyStreamFactory;
+import de.bild.codec.PojoCodecProvider;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.codecs.pojo.Conventions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
