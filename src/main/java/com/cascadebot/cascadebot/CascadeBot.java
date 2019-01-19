@@ -94,6 +94,18 @@ public class CascadeBot {
             builder.setPrettyPrinting();
         }
 
+        if (Config.INS.getConnectionString() != null) {
+            databaseManager = new DatabaseManager(Config.INS.getConnectionString());
+        } else {
+            databaseManager = new DatabaseManager(
+                    Config.INS.getUsername(),
+                    Config.INS.getPassword(),
+                    Config.INS.getDatabase(),
+                    Config.INS.getHosts(),
+                    Config.INS.isSsl()
+            );
+        }
+
         JdaLavalink lavalink = new MusicHandler(this).buildMusic();
 
         gson = builder.create();
@@ -117,19 +129,6 @@ public class CascadeBot {
 
         commandManager = new CommandManager();
         permissionsManager = new PermissionsManager();
-
-        if (Config.INS.getConnectionString() != null) {
-            databaseManager = new DatabaseManager(Config.INS.getConnectionString());
-        } else {
-            databaseManager = new DatabaseManager(
-                    Config.INS.getUsername(),
-                    Config.INS.getPassword(),
-                    Config.INS.getDatabase(),
-                    Config.INS.getHosts(),
-                    Config.INS.isSsl()
-            );
-        }
-
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
