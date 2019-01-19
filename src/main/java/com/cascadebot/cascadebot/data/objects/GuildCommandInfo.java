@@ -17,6 +17,8 @@ public class GuildCommandInfo {
     private String defaultCommand;
     private Set<String> aliases;
 
+    private GuildCommandInfo() {} // For mongodb object serialisation
+
     public GuildCommandInfo(ICommand command) {
         this.command = command.defaultCommand();
         this.defaultCommand = command.defaultCommand();

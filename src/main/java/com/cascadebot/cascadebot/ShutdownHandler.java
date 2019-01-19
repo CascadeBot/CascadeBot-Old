@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.commands.developer.EvalCommand;
+import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.tasks.Task;
 import com.cascadebot.shared.ExitCodes;
@@ -43,6 +44,9 @@ public class ShutdownHandler {
 
     private static void shutdown() {
         CascadeBot.logger.info("Bot shutting down gracefully!");
+        long startTime = System.currentTimeMillis(); // Ensures all data is saved before exiting
+        GuildDataMapper.getGuilds().asMap().forEach(GuildDataMapper::replaceSync);
+        CascadeBot.logger.info("Took " + (System.currentTimeMillis() - startTime) + "ms to save!");
         EvalCommand.shutdownEvalPool();
         CommandListener.shutdownCommandPool();
         Task.shutdownTaskPool();
