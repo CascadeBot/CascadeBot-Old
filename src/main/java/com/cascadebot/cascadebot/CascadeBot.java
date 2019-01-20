@@ -21,6 +21,7 @@ import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
@@ -118,8 +119,15 @@ public class CascadeBot {
                     .setToken(Config.INS.getBotToken())
                     //.setAudioSendFactory(new NativeAudioSendFactory())
                     .setShardsTotal(-1)
-                    //.setGameProvider(shardId -> Game)
+                    .setGameProvider(shardId -> {
+                        if (version.getBuild().equalsIgnoreCase("dev")) {
+                            return Game.streaming(" the devs mistakes", "https://twitch.tv/someone");
+                        } else {
+                            return Game.playing("CascadeBot Version " + version);
+                        }
+                    })
                     .setBulkDeleteSplittingEnabled(false)
+                    .setEnableShutdownHook(false)
                     .build();
         } catch (LoginException e) {
             logger.error("Error building JDA", e);
