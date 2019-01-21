@@ -13,7 +13,6 @@ import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.tasks.Task;
 import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
-import com.cascadebot.cascadebot.utils.buttons.IButtonRunnable;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import net.dv8tion.jda.core.Permission;
@@ -60,6 +59,7 @@ public class ConfirmUtils {
 
         Task.getScheduler().schedule(() -> {
             confirmedMap.remove(actionKey, action);
+            sentMessage.delete().queue();
         }, expiry, TimeUnit.MILLISECONDS);
 
         return true;
