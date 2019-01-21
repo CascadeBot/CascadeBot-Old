@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.utils.pagination;
 
+import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
@@ -31,11 +32,18 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            if(numbersInEmbed) {
-                embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
-                message.editMessage(embed.build()).override(true).queue();
+            if(GuildDataMapper.getGuildData(message.getTextChannel().getGuild().getIdLong()).getUseEmbedForMessages()) {
+                if (numbersInEmbed) {
+                    embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
+                    message.editMessage(embed.build()).override(true).queue();
+                } else {
+                    message.editMessage(new MessageBuilder().setEmbed(embed.build()).append("Page ").append(String.valueOf(page)).append("/").append(String.valueOf(total)).build()).override(true).queue();
+
+                }
             } else {
-                message.editMessage(new MessageBuilder().setEmbed(embed.build()).append("Page ").append(String.valueOf(page)).append("/").append(String.valueOf(total)).build()).override(true).queue();
+                embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
+                String content = FormatUtils.formatEmbed(embed.build());
+                message.editMessage(content).override(true).queue();
             }
         }
     }
