@@ -64,4 +64,13 @@ public class ButtonGroup {
             }
         }
     }
+
+    public void addButtonsToMessage(Message message) {
+        if (buttons == null) return;
+        for (Button button : buttons) {
+            button.addReaction(message);
+        }
+    }
+
+
 }

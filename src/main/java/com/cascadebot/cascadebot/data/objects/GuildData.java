@@ -16,6 +16,7 @@ import com.cascadebot.shared.Version;
 import de.bild.codec.annotations.Id;
 import de.bild.codec.annotations.Transient;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
@@ -150,7 +151,7 @@ public class GuildData {
         this.useEmbedForMessages = useEmbedForMessages;
     }
 
-    public void addButtonGroup(TextChannel channel, Message message, ButtonGroup group) {
+    public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
         buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
     }

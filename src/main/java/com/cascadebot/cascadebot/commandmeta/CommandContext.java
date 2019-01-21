@@ -375,76 +375,19 @@ public class CommandContext {
     }
 
     public void sendButtonedMessage(String message, ButtonGroup group) {
-        Checks.notBlank(message, "message");
-        channel.sendMessage(message).queue(sentMessage -> {
-            addButtons(sentMessage, group);
-            group.setMessage(sentMessage.getIdLong());
-            GuildDataMapper.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
-        });
-
+        Messaging.sendButtonedMessage(channel, message, group);
     }
 
     public void sendButtonedMessage(MessageEmbed embed, ButtonGroup group) {
-        Checks.notNull(embed, "embed");
-        channel.sendMessage(embed).queue(sentMessage -> {
-            addButtons(sentMessage, group);
-            group.setMessage(sentMessage.getIdLong());
-            GuildDataMapper.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
-        });
+        Messaging.sendButtonedMessage(channel, embed, group);
     }
 
     public void sendButtonedMessage(Message message, ButtonGroup group) {
-        Checks.notNull(message, "message");
-        channel.sendMessage(message).queue(sentMessage -> {
-            addButtons(sentMessage, group);
-            group.setMessage(sentMessage.getIdLong());
-            GuildDataMapper.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
-        });
-    }
-
-    private void addButtons(Message message, ButtonGroup group) {
-        for (Button button : group.getButtons()) {
-            button.addReaction(message);
-        }
+        Messaging.sendButtonedMessage(channel, message, group);
     }
 
     public void sendPagedMessage(List<Page> pages) {
-        ButtonGroup group = new ButtonGroup(member.getUser().getIdLong(), guild.getIdLong());
-        group.addButton(new Button.UnicodeButton("\u23EE" /* ⏮ */, (runner, channel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
-            pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());
-            pageGroup.setCurrentPage(1);
-        }));
-        group.addButton(new Button.UnicodeButton("\u25C0" /* ◀ */, (runner, channel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
-            int newPage = pageGroup.getCurrentPage() - 1;
-            if (newPage < 1) {
-                return;
-            }
-            pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
-            pageGroup.setCurrentPage(newPage);
-        }));
-        group.addButton(new Button.UnicodeButton("\u25B6" /* ▶ */, (runner, channel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
-            int newPage = pageGroup.getCurrentPage() + 1;
-            if (newPage > pageGroup.getPages()) {
-                return;
-            }
-            pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
-            pageGroup.setCurrentPage(newPage);
-        }));
-        group.addButton(new Button.UnicodeButton("\u23ED" /* ⏭ */, (runner, channel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
-            pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
-            pageGroup.setCurrentPage(pageGroup.getPages());
-        }));
-        channel.sendMessage("Paged message loading...").queue(sentMessage -> {
-            pages.get(0).pageShow(sentMessage, 1, pages.size());
-            addButtons(sentMessage, group);
-            group.setMessage(sentMessage.getIdLong());
-            GuildDataMapper.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
-            GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().put(pages, sentMessage.getIdLong());
-        });
+        Messaging.sendPagedMessage(channel, member, pages);
     }
 
     //endregion
