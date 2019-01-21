@@ -89,7 +89,9 @@ public class FormatUtils {
     public static String formatEmbed(MessageEmbed embed) {
         StringBuilder sb = new StringBuilder();
         sb.append("__**").append(embed.getTitle()).append("**__\n");
-        sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
+        if(embed.getDescription() != null) {
+            sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
+        }
         List<MessageEmbed.Field> inline = null;
         int i = 0;
         for (MessageEmbed.Field field : embed.getFields()) {
