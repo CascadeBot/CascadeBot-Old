@@ -15,6 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 
 public abstract class Task implements Runnable {
@@ -23,11 +24,12 @@ public abstract class Task implements Runnable {
     private static final String RUNNING_NAME = "%s agent worker thread";
 
     private static final ThreadGroup TASK_THREADS = new ThreadGroup("Task Thread Poll");
-    private static final ScheduledExecutorService AGENTS = Executors.newScheduledThreadPool(2, runnable -> {
+    private static final ScheduledExecutorService AGENTS = Executors.newScheduledThreadPool(5, runnable -> {
         Thread thread = new Thread(TASK_THREADS, runnable, IDLE_NAME);
         thread.setPriority(4);
         return thread;
     });
+
     private static final Map<String, ScheduledFuture<?>> tasks = new HashMap<>();
 
 
