@@ -33,8 +33,8 @@ public class ButtonGroup {
         buttons.add(button);
     }
 
-    public Member getOwnner() {
-        return DiscordUtils.getMember(String.valueOf(ownerId), CascadeBot.INS.getClient().getGuildById(guildId)); //TODO util method for getting guild from id
+    public Member getOwner() {
+        return DiscordUtils.getMember(String.valueOf(ownerId), CascadeBot.INS.getShardManager().getGuildById(guildId)); //TODO util method for getting guild from id
     }
 
     public void setMessage(long id) {
