@@ -40,31 +40,9 @@ public abstract class Task implements Runnable {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final String name;
-    private final long timeToSleepInMillis;
-    private final long delayInMillis;
 
-    public Task(String name, long timeToSleepInMillis) {
+    public Task(String name) {
         this.name = name;
-        this.timeToSleepInMillis = timeToSleepInMillis;
-        this.delayInMillis = 0L;
-    }
-
-    public Task(String name, long timeToSleep, TimeUnit unit) {
-        this.name = name;
-        this.timeToSleepInMillis = unit.toMillis(timeToSleep);
-        this.delayInMillis = 0L;
-    }
-
-    public Task(String name, long timeToSleepInMillis, long delayInMillis) {
-        this.name = name;
-        this.timeToSleepInMillis = timeToSleepInMillis;
-        this.delayInMillis = delayInMillis;
-    }
-
-    public Task(String name, long timeToSleep, long delay, TimeUnit unit) {
-        this.name = name;
-        this.timeToSleepInMillis = unit.toMillis(timeToSleep);
-        this.delayInMillis = unit.toMillis(delay);
     }
 
     public static boolean cancelTask(String taskName) {
@@ -110,16 +88,22 @@ public abstract class Task implements Runnable {
         return Task.cancelTask(this.name);
     }
 
-    public boolean start() {
+    public boolean start(long delay, long timeToSleep) {
         if (tasks.containsKey(this.name)) return false;
-        tasks.put(this.name, AGENTS.scheduleAtFixedRate(this, delayInMillis, timeToSleepInMillis, TimeUnit.MILLISECONDS));
+        if (timeToSleep <= 0L) {
+            tasks.put(this.name, AGENTS.schedule(this, delay, TimeUnit.MILLISECONDS));
+            return true;
+        }
+        tasks.put(this.name, AGENTS.scheduleAtFixedRate(this, delay, timeToSleep, TimeUnit.MILLISECONDS));
         return true;
     }
 
-    public boolean startNow() {
-        if (tasks.containsKey(this.name)) return false;
-        tasks.put(this.name, AGENTS.scheduleAtFixedRate(this, 0L, timeToSleepInMillis, TimeUnit.MILLISECONDS));
-        return true;
+    public boolean startNow(long timeToSleep) {
+        return start(0L, timeToSleep);
+    }
+
+    public boolean delay(long delay) {
+        return start(delay, 0L);
     }
 
 
