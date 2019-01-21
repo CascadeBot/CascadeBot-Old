@@ -49,7 +49,7 @@ public class ButtonGroup {
         return buttons;
     }
 
-    public void hanndleButton(Member clicker, TextChannel channel, Message buttonMessage, MessageReaction.ReactionEmote emote) {
+    public void handleButton(Member clicker, TextChannel channel, Message buttonMessage, MessageReaction.ReactionEmote emote) {
         for (Button button : buttons) {
             if(button instanceof Button.EmoteButton && emote.isEmote()) {
                 if(((Button.EmoteButton) button).emote.equals(emote.getEmote())) {
