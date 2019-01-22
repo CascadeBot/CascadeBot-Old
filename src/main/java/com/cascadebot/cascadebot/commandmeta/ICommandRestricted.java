@@ -5,12 +5,17 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
+import com.cascadebot.cascadebot.permissions.Permission;
 import com.cascadebot.cascadebot.permissions.SecurityLevel;
 
 public interface ICommandRestricted extends ICommand {
 
     default SecurityLevel getCommandLevel() {
         return SecurityLevel.STAFF;
+    }
+
+    default Permission getPermission() {
+        return null; // Since these cannot be run by normal guilds, this cannot have a permission
     }
 
 }

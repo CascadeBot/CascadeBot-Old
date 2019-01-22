@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
+import com.cascadebot.cascadebot.permissions.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
 import java.util.Set;
@@ -16,6 +17,8 @@ public interface ICommand {
     public String defaultCommand();
 
     public CommandType getType();
+
+    public Permission getPermission();
 
     default boolean forceDefault() {
         return false;
