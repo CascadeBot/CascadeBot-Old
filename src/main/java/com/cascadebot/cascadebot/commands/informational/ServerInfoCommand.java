@@ -9,6 +9,7 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.permissions.Permission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import net.dv8tion.jda.bot.sharding.ShardManager;
@@ -19,6 +20,7 @@ import net.dv8tion.jda.core.entities.Message;
 import java.util.Set;
 
 public class ServerInfoCommand implements ICommand {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Guild guildForInfo = context.getGuild();
@@ -52,6 +54,11 @@ public class ServerInfoCommand implements ICommand {
     @Override
     public CommandType getType() {
         return CommandType.INFORMATIONAL;
+    }
+
+    @Override
+    public Permission getPermission() {
+        return Permission.SERVER_INFO_COMMAND;
     }
 
     @Override
