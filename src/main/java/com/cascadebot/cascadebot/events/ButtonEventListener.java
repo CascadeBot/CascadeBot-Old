@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -28,7 +28,7 @@ public class ButtonEventListener extends ListenerAdapter {
             if(cache.containsKey(channel.getIdLong())) {
                 if(cache.get(channel.getIdLong()).containsKey(e.getMessageIdLong())) {
                     ButtonGroup group = cache.get(channel.getIdLong()).get(e.getMessageIdLong());
-                    e.getChannel().getMessageById(e.getMessageId()).queue(message -> group.hanndleButton(e.getMember(), channel, message, e.getReactionEmote()));
+                    e.getChannel().getMessageById(e.getMessageId()).queue(message -> group.handleButton(e.getMember(), channel, message, e.getReactionEmote()));
                     e.getReaction().removeReaction(e.getMember().getUser()).queue(); //Idk if we want to allow other reactions on the message
                     //TODO perms checking
                 }

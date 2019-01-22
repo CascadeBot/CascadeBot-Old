@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -33,8 +33,8 @@ public class ButtonGroup {
         buttons.add(button);
     }
 
-    public Member getOwnner() {
-        return DiscordUtils.getMember(String.valueOf(ownerId), CascadeBot.INS.getClient().getGuildById(guildId)); //TODO util method for getting guild from id
+    public Member getOwner() {
+        return DiscordUtils.getMember(String.valueOf(ownerId), CascadeBot.INS.getShardManager().getGuildById(guildId)); //TODO util method for getting guild from id
     }
 
     public void setMessage(long id) {
@@ -49,7 +49,7 @@ public class ButtonGroup {
         return buttons;
     }
 
-    public void hanndleButton(Member clicker, TextChannel channel, Message buttonMessage, MessageReaction.ReactionEmote emote) {
+    public void handleButton(Member clicker, TextChannel channel, Message buttonMessage, MessageReaction.ReactionEmote emote) {
         for (Button button : buttons) {
             if(button instanceof Button.EmoteButton && emote.isEmote()) {
                 if(((Button.EmoteButton) button).emote.equals(emote.getEmote())) {
@@ -64,4 +64,13 @@ public class ButtonGroup {
             }
         }
     }
+
+    public void addButtonsToMessage(Message message) {
+        if (buttons == null) return;
+        for (Button button : buttons) {
+            button.addReaction(message);
+        }
+    }
+
+
 }

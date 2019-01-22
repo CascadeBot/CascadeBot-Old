@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -8,12 +8,12 @@ package com.cascadebot.cascadebot;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.database.DatabaseManager;
-import com.cascadebot.cascadebot.data.objects.Version;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.Events;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.cascadebot.permissions.PermissionsManager;
+import com.cascadebot.shared.Version;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lavalink.client.io.jda.JdaLavalink;
@@ -21,6 +21,7 @@ import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
@@ -47,10 +48,10 @@ public class CascadeBot {
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
-        INS.init();
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
-            version = Version.parseVer(scanner.next() + "_" + scanner.next());
+            version = Version.parseVer(scanner.next());
         }
+        INS.init();
     }
 
     public static Version getVersion() {
@@ -71,11 +72,14 @@ public class CascadeBot {
      */
     public void run() {
         logger.info("All shards successfully logged in!");
+        logger.info("Cascade Bot version {} successfully booted up!", version);
     }
 
 
 
-    public void init() {
+    private void init() {
+        new Thread(new ConsoleReader()).start();
+
         GsonBuilder builder = new GsonBuilder();
         try {
             Config.init("config.yml");
@@ -91,30 +95,6 @@ public class CascadeBot {
             builder.setPrettyPrinting();
         }
 
-        JdaLavalink lavalink = new MusicHandler(this).buildMusic();
-
-        gson = builder.create();
-        try {
-            shardManager = new DefaultShardManagerBuilder()
-                    .addEventListeners(new CommandListener())
-                    .addEventListeners(new Events())
-                    .addEventListeners(new ButtonEventListener())
-                    .addEventListeners(lavalink)
-                    .setToken(Config.INS.getBotToken())
-                    //.setAudioSendFactory(new NativeAudioSendFactory())
-                    .setShardsTotal(-1)
-                    //.setGameProvider(shardId -> Game)
-                    .setBulkDeleteSplittingEnabled(false)
-                    .build();
-        } catch (LoginException e) {
-            logger.error("Error building JDA", e);
-            ShutdownHandler.exitWithError();
-            return;
-        }
-
-        commandManager = new CommandManager();
-        permissionsManager = new PermissionsManager();
-
         if (Config.INS.getConnectionString() != null) {
             databaseManager = new DatabaseManager(Config.INS.getConnectionString());
         } else {
@@ -127,6 +107,36 @@ public class CascadeBot {
             );
         }
 
+        JdaLavalink lavalink = new MusicHandler(this).buildMusic();
+
+        gson = builder.create();
+        try {
+            shardManager = new DefaultShardManagerBuilder()
+                    .addEventListeners(new CommandListener())
+                    .addEventListeners(new Events())
+                    .addEventListeners(new ButtonEventListener())
+                    .addEventListeners(lavalink)
+                    .setToken(Config.INS.getBotToken())
+                    //.setAudioSendFactory(new NativeAudioSendFactory())
+                    .setShardsTotal(-1)
+                    .setGameProvider(shardId -> {
+                        if (version.getBuild().equalsIgnoreCase("dev")) {
+                            return Game.streaming(" the devs mistakes", "https://twitch.tv/someone");
+                        } else {
+                            return Game.playing("CascadeBot Version " + version);
+                        }
+                    })
+                    .setBulkDeleteSplittingEnabled(false)
+                    .setEnableShutdownHook(false)
+                    .build();
+        } catch (LoginException e) {
+            logger.error("Error building JDA", e);
+            ShutdownHandler.exitWithError();
+            return;
+        }
+
+        commandManager = new CommandManager();
+        permissionsManager = new PermissionsManager();
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()

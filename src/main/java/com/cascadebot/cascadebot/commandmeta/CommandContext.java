@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -14,6 +14,7 @@ import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
+import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
@@ -106,11 +107,11 @@ public class CommandContext {
     }
 
     public boolean isArgInteger(int index) {
-        return Constants.INTEGER_REGEX.matcher(this.args[index]).matches();
+        return Regex.INTEGER_REGEX.matcher(this.args[index]).matches();
     }
 
     public boolean isArgDecimal(int index) {
-        return Constants.DECIMAL_REGEX.matcher(this.args[index]).matches();
+        return Regex.DECIMAL_REGEX.matcher(this.args[index]).matches();
     }
 
     public String getArg(int index) {
@@ -374,76 +375,19 @@ public class CommandContext {
     }
 
     public void sendButtonedMessage(String message, ButtonGroup group) {
-        Checks.notBlank(message, "message");
-        channel.sendMessage(message).queue(sentMessage -> {
-            addButtons(sentMessage, group);
-            group.setMessage(sentMessage.getIdLong());
-            GuildDataMapper.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
-        });
-
+        Messaging.sendButtonedMessage(channel, message, group);
     }
 
     public void sendButtonedMessage(MessageEmbed embed, ButtonGroup group) {
-        Checks.notNull(embed, "embed");
-        channel.sendMessage(embed).queue(sentMessage -> {
-            addButtons(sentMessage, group);
-            group.setMessage(sentMessage.getIdLong());
-            GuildDataMapper.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
-        });
+        Messaging.sendButtonedMessage(channel, embed, group);
     }
 
     public void sendButtonedMessage(Message message, ButtonGroup group) {
-        Checks.notNull(message, "message");
-        channel.sendMessage(message).queue(sentMessage -> {
-            addButtons(sentMessage, group);
-            group.setMessage(sentMessage.getIdLong());
-            GuildDataMapper.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
-        });
-    }
-
-    private void addButtons(Message message, ButtonGroup group) {
-        for (Button button : group.getButtons()) {
-            button.addReaction(message);
-        }
+        Messaging.sendButtonedMessage(channel, message, group);
     }
 
     public void sendPagedMessage(List<Page> pages) {
-        ButtonGroup group = new ButtonGroup(member.getUser().getIdLong(), guild.getIdLong());
-        group.addButton(new Button.UnicodeButton("\u23EE" /* ⏮ */, (runner, channel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
-            pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());
-            pageGroup.setCurrentPage(1);
-        }));
-        group.addButton(new Button.UnicodeButton("\u25C0" /* ◀ */, (runner, channel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
-            int newPage = pageGroup.getCurrentPage() - 1;
-            if (newPage < 1) {
-                return;
-            }
-            pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
-            pageGroup.setCurrentPage(newPage);
-        }));
-        group.addButton(new Button.UnicodeButton("\u25B6" /* ▶ */, (runner, channel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
-            int newPage = pageGroup.getCurrentPage() + 1;
-            if (newPage > pageGroup.getPages()) {
-                return;
-            }
-            pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
-            pageGroup.setCurrentPage(newPage);
-        }));
-        group.addButton(new Button.UnicodeButton("\u23ED" /* ⏭ */, (runner, channel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().get(message.getIdLong());
-            pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
-            pageGroup.setCurrentPage(pageGroup.getPages());
-        }));
-        channel.sendMessage("Paged message loading...").queue(sentMessage -> {
-            pages.get(0).pageShow(sentMessage, 1, pages.size());
-            addButtons(sentMessage, group);
-            group.setMessage(sentMessage.getIdLong());
-            GuildDataMapper.getGuildData(guild.getIdLong()).addButtonGroup(channel, sentMessage, group);
-            GuildDataMapper.getGuildData(guild.getIdLong()).getPageCache().put(pages, sentMessage.getIdLong());
-        });
+        Messaging.sendPagedMessage(channel, member, pages);
     }
 
     //endregion

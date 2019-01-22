@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 CascadeBot. All rights reserved.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
  */
 
@@ -16,6 +16,8 @@ public class GuildCommandInfo {
     private String command;
     private String defaultCommand;
     private Set<String> aliases;
+
+    private GuildCommandInfo() {} // For mongodb object serialisation
 
     public GuildCommandInfo(ICommand command) {
         this.command = command.defaultCommand();

@@ -1,5 +1,6 @@
 package com.cascadebot.cascadebot;
 
+import com.cascadebot.shared.Regex;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -9,40 +10,40 @@ public class ConstantsTest {
 
     @Test
     public void testIntegerRegex() {
-        assertTrue(Constants.INTEGER_REGEX.matcher("23").matches());
-        assertTrue(Constants.INTEGER_REGEX.matcher("2462337846346348467").matches());
-        assertTrue(Constants.INTEGER_REGEX.matcher("-1").matches());
-        assertFalse(Constants.INTEGER_REGEX.matcher("-1.0").matches());
-        assertFalse(Constants.INTEGER_REGEX.matcher("2.3").matches());
-        assertFalse(Constants.INTEGER_REGEX.matcher("Hello world").matches());
+        assertTrue(Regex.INTEGER_REGEX.matcher("23").matches());
+        assertTrue(Regex.INTEGER_REGEX.matcher("2462337846346348467").matches());
+        assertTrue(Regex.INTEGER_REGEX.matcher("-1").matches());
+        assertFalse(Regex.INTEGER_REGEX.matcher("-1.0").matches());
+        assertFalse(Regex.INTEGER_REGEX.matcher("2.3").matches());
+        assertFalse(Regex.INTEGER_REGEX.matcher("Hello world").matches());
     }
 
     @Test
     public void testPositiveIntegerRegex() {
-        assertTrue(Constants.POSITIVE_INTEGER_REGEX.matcher("23").matches());
-        assertTrue(Constants.POSITIVE_INTEGER_REGEX.matcher("2462337846346348467").matches());
-        assertFalse(Constants.POSITIVE_INTEGER_REGEX.matcher("-1").matches());
-        assertFalse(Constants.POSITIVE_INTEGER_REGEX.matcher("-1.0").matches());
-        assertFalse(Constants.POSITIVE_INTEGER_REGEX.matcher("2.3").matches());
-        assertFalse(Constants.POSITIVE_INTEGER_REGEX.matcher("Hello world").matches());
+        assertTrue(Regex.POSITIVE_INTEGER_REGEX.matcher("23").matches());
+        assertTrue(Regex.POSITIVE_INTEGER_REGEX.matcher("2462337846346348467").matches());
+        assertFalse(Regex.POSITIVE_INTEGER_REGEX.matcher("-1").matches());
+        assertFalse(Regex.POSITIVE_INTEGER_REGEX.matcher("-1.0").matches());
+        assertFalse(Regex.POSITIVE_INTEGER_REGEX.matcher("2.3").matches());
+        assertFalse(Regex.POSITIVE_INTEGER_REGEX.matcher("Hello world").matches());
     }
 
     @Test
     public void testDecimalRegex() {
-        assertFalse(Constants.DECIMAL_REGEX.matcher("23").matches());
-        assertFalse(Constants.DECIMAL_REGEX.matcher("2462337846346348467").matches());
-        assertTrue(Constants.DECIMAL_REGEX.matcher("2.3").matches());
-        assertTrue(Constants.DECIMAL_REGEX.matcher("-2.587").matches());
-        assertFalse(Constants.DECIMAL_REGEX.matcher("Hello world").matches());
+        assertFalse(Regex.DECIMAL_REGEX.matcher("23").matches());
+        assertFalse(Regex.DECIMAL_REGEX.matcher("2462337846346348467").matches());
+        assertTrue(Regex.DECIMAL_REGEX.matcher("2.3").matches());
+        assertTrue(Regex.DECIMAL_REGEX.matcher("-2.587").matches());
+        assertFalse(Regex.DECIMAL_REGEX.matcher("Hello world").matches());
     }
 
     @Test
     public void testPositiveDecimalRegex() {
-        assertFalse(Constants.POSITIVE_DECIMAL_REGEX.matcher("23").matches());
-        assertFalse(Constants.POSITIVE_DECIMAL_REGEX.matcher("2462337846346348467").matches());
-        assertTrue(Constants.POSITIVE_DECIMAL_REGEX.matcher("2.3").matches());
-        assertFalse(Constants.POSITIVE_DECIMAL_REGEX.matcher("-2.587").matches());
-        assertFalse(Constants.POSITIVE_DECIMAL_REGEX.matcher("Hello world").matches());
+        assertFalse(Regex.POSITIVE_DECIMAL_REGEX.matcher("23").matches());
+        assertFalse(Regex.POSITIVE_DECIMAL_REGEX.matcher("2462337846346348467").matches());
+        assertTrue(Regex.POSITIVE_DECIMAL_REGEX.matcher("2.3").matches());
+        assertFalse(Regex.POSITIVE_DECIMAL_REGEX.matcher("-2.587").matches());
+        assertFalse(Regex.POSITIVE_DECIMAL_REGEX.matcher("Hello world").matches());
     }
 
 
