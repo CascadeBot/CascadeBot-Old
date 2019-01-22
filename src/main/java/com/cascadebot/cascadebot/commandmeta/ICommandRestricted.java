@@ -14,6 +14,7 @@ public interface ICommandRestricted extends ICommand {
         return SecurityLevel.STAFF;
     }
 
+    @Override
     default Permission getPermission() {
         return null; // Since these cannot be run by normal guilds, this cannot have a permission
     }
