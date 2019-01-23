@@ -156,11 +156,11 @@ public class Config {
                     SecurityLevel securityLevel = SecurityLevel.valueOf(level.toUpperCase());
                     Object value = configSecurityLevels.get(level);
                     if (value instanceof List) {
-                        for (Integer id : (List<Integer>) value) {
-                            this.securityLevels.put(securityLevel, id.longValue());
+                        for (Long id : (List<Long>) value) {
+                            this.securityLevels.put(securityLevel, id);
                         }
-                    } else if (value instanceof Integer) {
-                        this.securityLevels.put(securityLevel, ((Integer) value).longValue());
+                    } else if (value instanceof Long) {
+                        this.securityLevels.put(securityLevel, (Long) value);
                     }
                 }
             }
