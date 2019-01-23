@@ -35,8 +35,9 @@ public class PermissionsManager {
             return userLevel.isAuthorised(levelToCheck);
         } else {
             // TODO: Checking command specific perms
+            return true;
         }
-        return false;
+        // return false;
     }
 
 

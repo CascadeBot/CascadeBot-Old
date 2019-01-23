@@ -33,53 +33,39 @@ public class CommandListener extends ListenerAdapter {
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         String prefix = Config.INS.getDefaultPrefix(); //TODO: Add guild data prefix here
         GuildData guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
+        String commandWithArgs;
+        String trigger;
+        String[] args;
         if (message.startsWith(prefix)) {
-            String commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-            String trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
-            String[] args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
-
-            ICommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
-            if (cmd != null) {
-                CommandContext context = new CommandContext(
-                        event.getChannel(),
-                        event.getMessage(),
-                        event.getGuild(),
-                        guildData,
-                        args,
-                        event.getMember(),
-                        trigger,
-                        false
-                );
-                dispatchCommand(cmd, context);
-            }
+            commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
+            trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
+            args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
         } else if (guildData.isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
-
-            String commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
-            String trigger = commandWithArgs.split(" ")[0];
-            String[] args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
-
-            ICommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
-            if (cmd != null) {
-                CommandContext context = new CommandContext(
-                        event.getChannel(),
-                        event.getMessage(),
-                        event.getGuild(),
-                        guildData,
-                        args,
-                        event.getMember(),
-                        trigger,
-                        true
-                );
-                if (CascadeBot.INS.getPermissionsManager().isAuthorised(cmd, guildData, event.getMember())) {
-                    dispatchCommand(cmd, context);
-                } else {
-                    if (!(cmd instanceof ICommandRestricted)) { // Silently fail on restricted commands, users shouldn't know what the commands are
-                        // Send error message about not being authorised
-                    }
+            commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
+            trigger = commandWithArgs.split(" ")[0];
+            args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
+        } else {
+            return;
+        }
+        ICommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
+        if (cmd != null) {
+            CommandContext context = new CommandContext(
+                    event.getChannel(),
+                    event.getMessage(),
+                    event.getGuild(),
+                    guildData,
+                    args,
+                    event.getMember(),
+                    trigger,
+                    false
+            );
+            if (CascadeBot.INS.getPermissionsManager().isAuthorised(cmd, guildData, event.getMember())) {
+                dispatchCommand(cmd, context);
+            } else {
+                if (!(cmd instanceof ICommandRestricted)) { // Silently fail on restricted commands, users shouldn't know what the commands are
+                    // Send error message about not being authorised
                 }
             }
-        } else {
-
         }
     }
 
