@@ -8,9 +8,7 @@ package com.cascadebot.cascadebot.utils;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.google.common.reflect.ClassPath;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
