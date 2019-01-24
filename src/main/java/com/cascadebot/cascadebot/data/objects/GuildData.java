@@ -8,7 +8,7 @@ package com.cascadebot.cascadebot.data.objects;
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
@@ -17,7 +17,6 @@ import de.bild.codec.annotations.Id;
 import de.bild.codec.annotations.Transient;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
 
@@ -38,7 +37,7 @@ public class GuildData {
 
     private Version configVersion = Constants.CONFIG_VERSION;
 
-    private ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Class<? extends ICommandExecutable>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
 
     private boolean useEmbedForMessages = true;
 
@@ -54,7 +53,7 @@ public class GuildData {
         this.guildID = guildID;
     }
 
-    public void enableCommand(ICommand command) {
+    public void enableCommand(ICommandExecutable command) {
         if (!command.getType().isAvailableModule()) return;
         if (commandInfo.contains(command.getClass())) {
             commandInfo.get(command.getClass()).setEnabled(true);
@@ -62,24 +61,24 @@ public class GuildData {
     }
 
     public void enableCommandByType(CommandType commandType) {
-        for (ICommand command : CommandManager.instance().getCommandsByType(commandType)) {
+        for (ICommandExecutable command : CommandManager.instance().getCommandsByType(commandType)) {
             enableCommand(command);
         }
     }
 
-    public void disableCommand(ICommand command) {
+    public void disableCommand(ICommandExecutable command) {
         if (!command.getType().isAvailableModule()) return;
         commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command)).setEnabled(false);
     }
 
     public void disableCommandByType(CommandType commandType) {
         if (!commandType.isAvailableModule()) return;
-        for (ICommand command : CommandManager.instance().getCommandsByType(commandType)) {
+        for (ICommandExecutable command : CommandManager.instance().getCommandsByType(commandType)) {
             disableCommand(command);
         }
     }
 
-    public boolean isCommandEnabled(ICommand command) {
+    public boolean isCommandEnabled(ICommandExecutable command) {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).isEnabled();
         }
@@ -88,46 +87,46 @@ public class GuildData {
 
     public boolean isTypeEnabled(CommandType type) {
         boolean enabled = true;
-        for (ICommand command : CommandManager.instance().getCommandsByType(type)) {
+        for (ICommandExecutable command : CommandManager.instance().getCommandsByType(type)) {
             enabled &= commandInfo.get(command.getClass()).isEnabled();
         }
         return enabled;
     }
 
-    public String getCommandName(ICommand command) {
+    public String getCommandName(ICommandExecutable command) {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getCommand();
         }
         return command.defaultCommand();
     }
 
-    public Set<String> getCommandArgs(ICommand command) {
+    public Set<String> getCommandArgs(ICommandExecutable command) {
         if (commandInfo.contains(command.getClass())) {
             return getGuildCommandInfo(command).getAliases();
         }
         return command.getGlobalAliases();
     }
 
-    public void setCommandName(ICommand command, String commandName) {
+    public void setCommandName(ICommandExecutable command, String commandName) {
         getGuildCommandInfo(command).setCommand(commandName);
     }
 
-    public boolean addAlias(ICommand command, String alias) {
+    public boolean addAlias(ICommandExecutable command, String alias) {
         boolean success = getGuildCommandInfo(command).addAlias(alias);
         return success;
     }
 
-    public boolean removeAlias(ICommand command, String alias) {
+    public boolean removeAlias(ICommandExecutable command, String alias) {
         boolean success = getGuildCommandInfo(command).removeAlias(alias);
         return success;
     }
 
     @BsonIgnore
-    private GuildCommandInfo getGuildCommandInfo(ICommand command) {
+    private GuildCommandInfo getGuildCommandInfo(ICommandExecutable command) {
         return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command));
     }
 
-    public ConcurrentHashMap<Class<? extends ICommand>, GuildCommandInfo> getCommandInfo() {
+    public ConcurrentHashMap<Class<? extends ICommandExecutable>, GuildCommandInfo> getCommandInfo() {
         return commandInfo;
     }
 

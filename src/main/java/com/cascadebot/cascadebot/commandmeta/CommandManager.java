@@ -21,7 +21,7 @@ public class CommandManager {
 
     private static CommandManager instance = null;
 
-    private final List<ICommand> commands = new CopyOnWriteArrayList<>();
+    private final List<IMainCommand> commands = new CopyOnWriteArrayList<>();
     private final Logger logger = LoggerFactory.getLogger("Command Manager");
 
     public CommandManager() {
@@ -30,8 +30,8 @@ public class CommandManager {
         long start = System.currentTimeMillis();
         try {
             for (Class<?> c : ReflectionUtils.getClasses("com.cascadebot.cascadebot.commands")) {
-                if (ICommand.class.isAssignableFrom(c))
-                    commands.add((ICommand) ConstructorUtils.invokeConstructor(c));
+                if (ICommandExecutable.class.isAssignableFrom(c))
+                    commands.add((IMainCommand) ConstructorUtils.invokeConstructor(c));
             }
             logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
         } catch (Exception e) {
@@ -40,8 +40,8 @@ public class CommandManager {
         }
     }
 
-    public ICommand getCommand(String command, User user, GuildData data) {
-        for (ICommand cmd : getCommands()) {
+    public IMainCommand getCommand(String command, User user, GuildData data) {
+        for (IMainCommand cmd : getCommands()) {
             if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
                 return cmd;
             } else if (data.getCommandArgs(cmd).contains(command)) {
@@ -51,16 +51,16 @@ public class CommandManager {
         return null;
     }
 
-    public List<ICommand> getCommands() {
+    public List<IMainCommand> getCommands() {
         return commands;
     }
 
-    public List<ICommand> getCommandsByType(CommandType type) {
+    public List<IMainCommand> getCommandsByType(CommandType type) {
         return commands.stream().filter(command -> command.getType() == type).collect(Collectors.toList());
     }
 
-    public ICommand getCommandByDefault(String defaultCommand) {
-        return commands.stream().filter(command -> command.defaultCommand().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
+    public ICommandExecutable getCommandByDefault(String defaultCommand) {
+        return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
     }
 
     public static CommandManager instance() {

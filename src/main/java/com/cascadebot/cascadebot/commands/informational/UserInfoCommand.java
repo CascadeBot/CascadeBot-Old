@@ -7,7 +7,7 @@ package com.cascadebot.cascadebot.commands.informational;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.Permission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserInfoCommand implements ICommand {
+public class UserInfoCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Member memberForInfo = sender;
