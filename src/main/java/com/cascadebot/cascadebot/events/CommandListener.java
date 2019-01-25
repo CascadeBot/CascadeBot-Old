@@ -78,7 +78,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private boolean processSubCommands(IMainCommand cmd, String[] args, CommandContext parentCommandContext) {
-        for (SubCommand subCommand : cmd.getSubCommands()) {
+        for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(
                         parentCommandContext.getChannel(),
