@@ -7,11 +7,11 @@ package com.cascadebot.cascadebot.commands.core;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import com.cascadebot.cascadebot.commandmeta.IMainCommand;
 import com.cascadebot.cascadebot.permissions.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
-public class InviteCommand implements ICommandExecutable {
+public class InviteCommand implements IMainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -19,7 +19,7 @@ public class InviteCommand implements ICommandExecutable {
     }
 
     @Override
-    public String defaultCommand() {
+    public String command() {
         return "invite";
     }
 
