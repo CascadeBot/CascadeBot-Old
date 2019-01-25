@@ -99,8 +99,10 @@ public class CommandListener extends ListenerAdapter {
 
     private void dispatchCommand(final ICommandExecutable command, final CommandContext context) {
         COMMAND_POOL.submit(() -> {
-            CascadeBot.logger.info("Command {} executed by {} with args: {}",
-                    command.command() + (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : context.getTrigger()),
+            CascadeBot.logger.info("{}Command {}{} executed by {} with args: {}",
+                    (command instanceof IMainCommand ? "" : "Sub"),
+                    command.command(),
+                    (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"),
                     context.getUser().getAsTag(),
                     Arrays.toString(context.getArgs()));
             try {
