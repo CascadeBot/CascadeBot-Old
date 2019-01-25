@@ -30,7 +30,7 @@ public class CommandManager {
         long start = System.currentTimeMillis();
         try {
             for (Class<?> c : ReflectionUtils.getClasses("com.cascadebot.cascadebot.commands")) {
-                if (ICommandExecutable.class.isAssignableFrom(c))
+                if (IMainCommand.class.isAssignableFrom(c))
                     commands.add((IMainCommand) ConstructorUtils.invokeConstructor(c));
             }
             logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
