@@ -29,7 +29,7 @@ public class DumpCommand implements ICommandRestricted {
     }
 
     @Override
-    public String defaultCommand() {
+    public String command() {
         return "dump";
     }
 

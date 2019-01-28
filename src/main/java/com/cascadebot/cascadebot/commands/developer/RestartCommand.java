@@ -23,7 +23,7 @@ public class RestartCommand implements ICommandRestricted {
     }
 
     @Override
-    public String defaultCommand() {
+    public String command() {
         return "restart";
     }
 

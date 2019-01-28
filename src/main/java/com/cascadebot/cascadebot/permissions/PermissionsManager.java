@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.permissions;
 
-import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
@@ -27,7 +27,7 @@ public class PermissionsManager {
             .refreshAfterWrite(5, TimeUnit.MINUTES)
             .build(id -> SecurityLevel.getLevelById(id, officialGuildRoleIDCache.get(id)));
 
-    public boolean isAuthorised(ICommand command, GuildData guildData, Member member) {
+    public boolean isAuthorised(ICommandExecutable command, GuildData guildData, Member member) {
         if (command instanceof ICommandRestricted) {
             SecurityLevel userLevel = securityLevelCache.get(member.getUser().getIdLong());
             if (userLevel == null) return false;
