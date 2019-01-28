@@ -10,6 +10,7 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.messaging.Messaging;
+import com.cascadebot.cascadebot.permissions.PermissionNode;
 import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
@@ -19,7 +20,6 @@ import org.codehaus.groovy.jsr223.GroovyScriptEngineImpl;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
@@ -32,7 +32,7 @@ public class EvalCommand implements ICommandRestricted {
     private static final ExecutorService EVAL_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r -> new Thread(EVAL_THREADS, r,
             EVAL_THREADS.getName() + EVAL_THREADS.activeCount()), CascadeBot.logger);
 
-    private static final List<String> IMPORTS = Arrays.asList(
+    private static final List<String> IMPORTS = List.of(
             "com.cascadebot.cascadebot",
             "com.cascadebot.cascadebot.data",
             "com.cascadebot.cascadebot.messaging",
@@ -52,6 +52,11 @@ public class EvalCommand implements ICommandRestricted {
             "java.nio",
             "java.nio.file");
 
+    private static final List<String> BLACKLIST = List.of(
+            "ShutdownHandler.*",
+            "System.exit"
+    );
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
@@ -66,6 +71,12 @@ public class EvalCommand implements ICommandRestricted {
         scriptEngine = new GroovyScriptEngineImpl();
         code = context.getMessage(0);
 
+        for (String blacklistedItem : BLACKLIST) {
+            if (new PermissionNode(blacklistedItem).test(code)) {
+                context.replyDanger("You cannot run this code as it contains blacklisted items!");
+                return;
+            }
+        }
 
         EVAL_POOL.submit(() -> {
             try {
