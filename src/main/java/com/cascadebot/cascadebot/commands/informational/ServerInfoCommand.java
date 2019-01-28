@@ -10,13 +10,11 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommand;
 import com.cascadebot.cascadebot.permissions.Permission;
-import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.cascadebot.utils.FormatUtils;
-import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
+
 import java.util.Set;
 
 public class ServerInfoCommand implements ICommand {
