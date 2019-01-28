@@ -6,10 +6,12 @@
 package com.cascadebot.cascadebot.data;
 
 import ch.qos.logback.classic.Level;
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
+import com.cascadebot.shared.Auth;
 import com.google.common.collect.HashMultimap;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.EnumUtils;
@@ -24,6 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +41,8 @@ public class Config {
     private File config;
 
     private boolean debug;
+
+    private Auth auth;
 
     private String botToken;
     private Long botID;
@@ -185,6 +191,14 @@ public class Config {
             }
         }
 
+        String secret = warnOnDefault(config, "web.auth", "");
+
+        try {
+            auth = new Auth(secret);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            CascadeBot.logger.warn("Auth failed to initiate. this might cause errors if working with he wrapper or website if the bot is working with those.", e);
+        }
+
         LOG.info("Finished loading configuration!");
         LOG.debug("Configuration: {}", new GsonBuilder().create().toJson(this)); // Need to create new GSON as global GSON hasn't been build yet
 
@@ -265,4 +279,7 @@ public class Config {
         return officialServerId;
     }
 
+    public Auth getAuth() {
+        return auth;
+    }
 }

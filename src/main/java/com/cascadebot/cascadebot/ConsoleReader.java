@@ -5,6 +5,9 @@
 
 package com.cascadebot.cascadebot;
 
+import com.cascadebot.cascadebot.data.Config;
+import com.cascadebot.cascadebot.permissions.SecurityLevel;
+import com.cascadebot.shared.Auth;
 import com.cascadebot.shared.Regex;
 import com.cascadebot.shared.SharedConstants;
 
@@ -33,8 +36,22 @@ public class ConsoleReader implements Runnable {
                         } else if (args[0].equalsIgnoreCase("stop")) {
                             ShutdownHandler.stopByWrapper();
                             break;
+                        } else if (args[0].equalsIgnoreCase("user")) {
+                            if(args.length > 2) {
+                                Long id = Long.parseLong(args[1]);
+                                if(Config.INS.getAuth().verifyEncrypt(args[1], args[2])) {
+                                    if(SecurityLevel.OWNER.getIds().contains(id)) {
+                                        System.out.println(SharedConstants.WRAPPER_OP_PREFIX + "authorized " + args[1]);
+                                        continue;
+                                    }
+                                }
+                                System.out.println(SharedConstants.WRAPPER_OP_PREFIX + "not_authorized " + args[1]);
+                            } else {
+                                // This should never be called and if it is something is very wrong
+                                CascadeBot.logger.error("Received authorization request from bot with no user id and/or hmac");
+                            }
                         } else {
-                            // etc etc etc
+
                         }
                     } else {
                         // TODO: Log to web console
