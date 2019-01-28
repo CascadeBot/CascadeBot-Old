@@ -105,7 +105,7 @@ public class EvalCommand implements ICommandRestricted {
     }
 
     @Override
-    public String defaultCommand() {
+    public String command() {
         return "eval";
     }
 

@@ -8,7 +8,7 @@ package com.cascadebot.cascadebot.commandmeta;
 import com.cascadebot.cascadebot.permissions.Permission;
 import com.cascadebot.cascadebot.permissions.SecurityLevel;
 
-public interface ICommandRestricted extends ICommand {
+public interface ICommandRestricted extends IMainCommand {
 
     default SecurityLevel getCommandLevel() {
         return SecurityLevel.STAFF;

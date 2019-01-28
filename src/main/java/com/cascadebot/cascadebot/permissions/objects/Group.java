@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
 package com.cascadebot.cascadebot.permissions.objects;
 
 import com.cascadebot.cascadebot.permissions.Permission;
