@@ -54,7 +54,7 @@ public class ShutdownCommand implements ICommandRestricted {
     }
 
     @Override
-    public String defaultCommand() {
+    public String command() {
         return "shutdown";
     }
 

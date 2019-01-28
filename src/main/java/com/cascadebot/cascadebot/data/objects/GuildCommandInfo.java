@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.data.objects;
 
-import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.commandmeta.IMainCommand;
 
 import java.util.Set;
 
@@ -19,9 +19,9 @@ public class GuildCommandInfo {
 
     private GuildCommandInfo() {} // For mongodb object serialisation
 
-    public GuildCommandInfo(ICommand command) {
-        this.command = command.defaultCommand();
-        this.defaultCommand = command.defaultCommand();
+    public GuildCommandInfo(IMainCommand command) {
+        this.command = command.command();
+        this.defaultCommand = command.command();
         this.forceDefault = command.forceDefault();
         this.aliases = command.getGlobalAliases();
         this.enabled = true;
