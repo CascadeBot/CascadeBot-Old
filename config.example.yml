@@ -62,6 +62,19 @@ security_levels:
   developer:
   staff:
 
+
+# Global emotes the bot can use to display various information
+global_emotes:
+  online:
+  offline:
+  dnd:
+  idle:
+  server_owner:
+  nitro:
+  muted:
+  deafened:
+
+
 # The haste server to use for "hasting" messages.
 # Server is the place to submit requests, link is the prefix before the returned code.
 haste:

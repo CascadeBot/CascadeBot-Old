@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot.commandmeta;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -13,7 +14,13 @@ import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -379,6 +386,23 @@ public class CommandContext {
 
     public void sendPagedMessage(List<Page> pages) {
         Messaging.sendPagedMessage(channel, member, pages);
+    }
+
+    //endregion
+
+    //region Helper Methods
+
+    public Emote getGlobalEmote(String key) {
+        Long emoteId = Config.INS.getGlobalEmotes().get(key);
+        if (emoteId != null) {
+            return CascadeBot.INS.getShardManager().getEmoteById(emoteId);
+        }
+        return null;
+    }
+
+    public String globalEmote(String key) {
+        Emote emote = getGlobalEmote(key);
+        return emote == null ? "" : emote.getAsMention();
     }
 
     //endregion
