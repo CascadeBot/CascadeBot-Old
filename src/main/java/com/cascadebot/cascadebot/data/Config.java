@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,8 @@ public class Config {
     private String botToken;
     private Long botID;
     private HashMultimap<SecurityLevel, Long> securityLevels;
+
+    private Map<String, Long> globalEmotes;
 
     private boolean prettyJson;
     private String defaultPrefix;
@@ -169,6 +172,17 @@ public class Config {
             ShutdownHandler.exitWithError();
         }
 
+        this.globalEmotes = new HashMap<>();
+        ConfigurationSection configGlobalEmotes = config.getConfigurationSection("global_emotes");
+        if (configSecurityLevels != null) {
+            for (String emoteKey : configGlobalEmotes.getKeys(false)) {
+                Long emoteId = configGlobalEmotes.getLong(emoteKey);
+                if (emoteId > 0) {
+                    this.globalEmotes.put(emoteKey, emoteId);
+                }
+            }
+        }
+
         this.hasteServer = warnOnDefault(config, "haste.server", "https://hastebin.com/documents");
         this.hasteLink = warnOnDefault(config, "haste.link", "https://hastebin.com/");
 
@@ -219,6 +233,10 @@ public class Config {
 
     public HashMultimap<SecurityLevel, Long> getSecurityLevels() {
         return securityLevels;
+    }
+
+    public Map<String, Long> getGlobalEmotes() {
+        return globalEmotes;
     }
 
     public String getHasteServer() {
