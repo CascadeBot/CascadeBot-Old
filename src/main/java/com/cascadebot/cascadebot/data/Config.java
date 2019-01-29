@@ -180,7 +180,7 @@ public class Config {
 
         this.globalEmotes = new HashMap<>();
         ConfigurationSection configGlobalEmotes = config.getConfigurationSection("global_emotes");
-        if (configSecurityLevels != null) {
+        if (configGlobalEmotes != null) {
             for (String emoteKey : configGlobalEmotes.getKeys(false)) {
                 Long emoteId = configGlobalEmotes.getLong(emoteKey);
                 if (emoteId > 0) {
