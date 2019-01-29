@@ -39,12 +39,15 @@ public class ConsoleReader implements Runnable {
                             if(args.length > 2) {
                                 Long id = Long.parseLong(args[1]);
                                 if(Config.INS.getAuth().verifyEncrypt(args[1], args[2])) {
-                                    if(SecurityLevel.OWNER.getIds().contains(id)) {
-                                        System.out.println(SharedConstants.WRAPPER_OP_PREFIX + "authorized " + args[1]);
-                                        continue;
+                                    SecurityLevel userLevel = SecurityLevel.getLevelById(id, SecurityLevel.OWNER.getIds());
+                                    if(userLevel != null) {
+                                        if(SecurityLevel.OWNER.isAuthorised(userLevel)) {
+                                            System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " authorized " + args[1]);
+                                            continue;
+                                        }
                                     }
                                 }
-                                System.out.println(SharedConstants.WRAPPER_OP_PREFIX + "not_authorized " + args[1]);
+                                System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " not_authorized " + args[1]);
                             } else {
                                 // This should never be called and if it is something is very wrong
                                 CascadeBot.logger.error("Received authorization request from bot with no user id and/or hmac");
