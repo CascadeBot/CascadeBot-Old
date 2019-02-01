@@ -58,7 +58,7 @@ public class RoleCommand implements ICommand {
 
     @Override
     public String defaultCommand() {
-        return "serverinfo";
+        return "roles";
     }
 
     @Override
