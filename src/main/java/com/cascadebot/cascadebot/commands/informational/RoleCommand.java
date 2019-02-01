@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
+package com.cascadebot.cascadebot.commands.informational;
+
+import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.commandmeta.CommandContext;
+import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.commands.developer.EvalCommand;
+import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import com.cascadebot.cascadebot.events.CommandListener;
+import com.cascadebot.cascadebot.tasks.Task;
+import com.cascadebot.cascadebot.utils.DiscordUtils;
+import com.cascadebot.cascadebot.utils.FormatUtils;
+import com.cascadebot.cascadebot.utils.pagination.PageObjects;
+import com.cascadebot.shared.ExitCodes;
+import com.cascadebot.shared.SharedConstants;
+import net.dv8tion.jda.bot.sharding.ShardManager;
+import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.Role;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
+public class RoleCommand implements ICommand {
+    @Override
+    public void onCommand(Member sender, CommandContext context) {
+        Guild guildForRole = context.getGuild();
+
+        if(context.getArgs().length > 0) {
+            guildForRole = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
+        }
+        if(guildForRole == null) {
+            context.replyDanger("We couldn't find that guild!");
+            return;
+        }
+
+        EmbedBuilder builder = new EmbedBuilder();
+        List<String> header = Arrays.asList("Role ID", "Role Name");
+
+        List<List<String>> body = new ArrayList<>();
+        for(Role role : guildForRole.getRoles()) {
+            List<String> row = new ArrayList<>();
+            row.add(role.getId());
+            row.add(role.getName());
+            body.add(row);
+        }
+        context.replyInfo(builder);
+    }
+
+    @Override
+    public String defaultCommand() {
+        return "serverinfo";
+    }
+
+    @Override
+    public CommandType getType() {
+        return CommandType.INFORMATIONAL;
+    }
+
+    @Override
+    public Set<String> getGlobalAliases() {
+        return Set.of("roleinfo");
+    }
+}
