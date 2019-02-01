@@ -7,8 +7,9 @@ package com.cascadebot.cascadebot.commands.informational;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.commandmeta.IMainCommand;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.permissions.Permission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserInfoCommand implements ICommand {
+public class UserInfoCommand implements IMainCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Member memberForInfo = sender;
@@ -74,7 +75,7 @@ public class UserInfoCommand implements ICommand {
     }
 
     @Override
-    public String defaultCommand() {
+    public String command() {
         return "userinfo";
     }
 
@@ -82,4 +83,10 @@ public class UserInfoCommand implements ICommand {
     public CommandType getType() {
         return CommandType.INFORMATIONAL;
     }
+
+    @Override
+    public Permission getPermission() {
+        return Permission.USER_INFO_COMMAND;
+    }
+
 }

@@ -18,7 +18,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.Conventions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

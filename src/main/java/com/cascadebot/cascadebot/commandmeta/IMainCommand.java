@@ -5,17 +5,15 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
-import net.dv8tion.jda.core.entities.Member;
+import com.cascadebot.cascadebot.permissions.Permission;
 
 import java.util.Set;
 
-public interface ICommand {
-
-    public void onCommand(Member sender, CommandContext context);
-
-    public String defaultCommand();
+public interface IMainCommand extends ICommandExecutable {
 
     public CommandType getType();
+
+    public Permission getPermission();
 
     default boolean forceDefault() {
         return false;
@@ -24,5 +22,7 @@ public interface ICommand {
     default Set<String> getGlobalAliases() {
         return Set.of();
     }
+
+    default Set<ICommandExecutable> getSubCommands() { return Set.of(); }
 
 }
