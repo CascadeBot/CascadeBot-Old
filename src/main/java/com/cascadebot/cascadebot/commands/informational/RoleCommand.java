@@ -33,7 +33,6 @@ import java.util.Set;
 public class RoleCommand implements ICommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Guild guildForRole = context.getGuild();
 
         EmbedBuilder builder = new EmbedBuilder();
         List<String> header = Arrays.asList("Role ID", "Role Name");
