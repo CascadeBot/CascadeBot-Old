@@ -26,7 +26,6 @@ public class RolesCommand implements IMainCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
 
-        EmbedBuilder builder = new EmbedBuilder();
         List<String> header = Arrays.asList("Role ID", "Role Name");
 
         List<List<String>> body = new ArrayList<>();
