@@ -8,21 +8,12 @@ package com.cascadebot.cascadebot.commands.informational;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.ICommand;
-import com.cascadebot.cascadebot.commands.developer.EvalCommand;
-import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
-import com.cascadebot.cascadebot.events.CommandListener;
-import com.cascadebot.cascadebot.tasks.Task;
-import com.cascadebot.cascadebot.utils.DiscordUtils;
+import com.cascadebot.cascadebot.commandmeta.IMainCommand;
+import com.cascadebot.cascadebot.permissions.Permission;
 import com.cascadebot.cascadebot.utils.FormatUtils;
-import com.cascadebot.cascadebot.utils.pagination.PageObjects;
-import com.cascadebot.shared.ExitCodes;
-import com.cascadebot.shared.SharedConstants;
-import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.Role;
 
 import java.util.ArrayList;
@@ -30,7 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class RoleCommand implements ICommand {
+public class RolesCommand implements IMainCommand {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Guild guildForRole = context.getGuild();
@@ -53,17 +45,23 @@ public class RoleCommand implements ICommand {
             row.add(role.getName());
             body.add(row);
         }
-        context.replyInfo(builder);
+
+        context.reply(FormatUtils.makeAsciiTable(header, body, null));
     }
 
     @Override
-    public String defaultCommand() {
+    public String command() {
         return "roles";
     }
 
     @Override
     public CommandType getType() {
         return CommandType.INFORMATIONAL;
+    }
+
+    @Override
+    public Permission getPermission() {
+        return Permission.ROLES_COMMAND;
     }
 
     @Override
