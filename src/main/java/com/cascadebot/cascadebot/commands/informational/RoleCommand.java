@@ -38,7 +38,7 @@ public class RoleCommand implements ICommand {
         List<String> header = Arrays.asList("Role ID", "Role Name");
 
         List<List<String>> body = new ArrayList<>();
-        for(Role role : guildForRole.getRoles()) {
+        for(Role role : context.getGuild().getRoles()) {
             List<String> row = new ArrayList<>();
             row.add(role.getId());
             row.add(role.getName());
