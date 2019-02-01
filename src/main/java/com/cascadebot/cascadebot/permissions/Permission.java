@@ -19,7 +19,8 @@ public enum Permission {
     INFO_CATEGORY("category.info", true, CommandType.INFORMATIONAL),
 
     SERVER_INFO_COMMAND("serverinfo", true),
-    USER_INFO_COMMAND("userinfo", true)
+    USER_INFO_COMMAND("userinfo", true),
+    ROLES_COMMAND("roles", false)
 
 
     ;
