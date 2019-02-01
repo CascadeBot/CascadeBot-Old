@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +42,8 @@ public class Config {
     private String botToken;
     private Long botID;
     private HashMultimap<SecurityLevel, Long> securityLevels;
+
+    private Map<String, Long> globalEmotes;
 
     private boolean prettyJson;
     private String defaultPrefix;
@@ -156,17 +159,28 @@ public class Config {
                     SecurityLevel securityLevel = SecurityLevel.valueOf(level.toUpperCase());
                     Object value = configSecurityLevels.get(level);
                     if (value instanceof List) {
-                        for (Integer id : (List<Integer>) value) {
-                            this.securityLevels.put(securityLevel, id.longValue());
+                        for (Long id : (List<Long>) value) {
+                            this.securityLevels.put(securityLevel, id);
                         }
-                    } else if (value instanceof Integer) {
-                        this.securityLevels.put(securityLevel, ((Integer) value).longValue());
+                    } else if (value instanceof Long) {
+                        this.securityLevels.put(securityLevel, (Long) value);
                     }
                 }
             }
         } else {
             LOG.error("Please define security levels in your config! Without these, you won't be able to run privileged commands!");
             ShutdownHandler.exitWithError();
+        }
+
+        this.globalEmotes = new HashMap<>();
+        ConfigurationSection configGlobalEmotes = config.getConfigurationSection("global_emotes");
+        if (configSecurityLevels != null) {
+            for (String emoteKey : configGlobalEmotes.getKeys(false)) {
+                Long emoteId = configGlobalEmotes.getLong(emoteKey);
+                if (emoteId > 0) {
+                    this.globalEmotes.put(emoteKey, emoteId);
+                }
+            }
         }
 
         this.hasteServer = warnOnDefault(config, "haste.server", "https://hastebin.com/documents");
@@ -219,6 +233,10 @@ public class Config {
 
     public HashMultimap<SecurityLevel, Long> getSecurityLevels() {
         return securityLevels;
+    }
+
+    public Map<String, Long> getGlobalEmotes() {
+        return globalEmotes;
     }
 
     public String getHasteServer() {
