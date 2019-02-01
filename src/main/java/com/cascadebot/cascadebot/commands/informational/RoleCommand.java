@@ -35,14 +35,6 @@ public class RoleCommand implements ICommand {
     public void onCommand(Member sender, CommandContext context) {
         Guild guildForRole = context.getGuild();
 
-        if(context.getArgs().length > 0) {
-            guildForRole = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
-        }
-        if(guildForRole == null) {
-            context.replyDanger("We couldn't find that guild!");
-            return;
-        }
-
         EmbedBuilder builder = new EmbedBuilder();
         List<String> header = Arrays.asList("Role ID", "Role Name");
 
