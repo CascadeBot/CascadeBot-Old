@@ -11,7 +11,6 @@ import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.permissions.PermissionNode;
-import com.cascadebot.cascadebot.permissions.CascadeSecurityLevel;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.shared.SecurityLevel;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;

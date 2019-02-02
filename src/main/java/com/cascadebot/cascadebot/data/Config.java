@@ -9,7 +9,7 @@ import ch.qos.logback.classic.Level;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.music.MusicHandler;
-import com.cascadebot.cascadebot.permissions.CascadeSecurityLevel;
+import com.cascadebot.cascadebot.permissions.Security;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
 import com.cascadebot.shared.Auth;
 import com.cascadebot.shared.SecurityLevel;
@@ -48,7 +48,7 @@ public class Config {
 
     private String botToken;
     private Long botID;
-    private HashMultimap<CascadeSecurityLevel, Long> securityLevels;
+    private HashMultimap<SecurityLevel, Long> securityLevels;
 
     private Map<String, Long> globalEmotes;
 
@@ -163,7 +163,7 @@ public class Config {
         if (configSecurityLevels != null) {
             for (String level : configSecurityLevels.getKeys(false)) {
                 if (EnumUtils.isValidEnum(SecurityLevel.class, level.toUpperCase())) {
-                    CascadeSecurityLevel securityLevel = CascadeSecurityLevel.getSecurityLevel(SecurityLevel.valueOf(level.toUpperCase()));
+                    SecurityLevel securityLevel = SecurityLevel.valueOf(level.toUpperCase());
                     Object value = configSecurityLevels.get(level);
                     if (value instanceof List) {
                         for (Long id : (List<Long>) value) {
@@ -246,7 +246,7 @@ public class Config {
         return defaultPrefix;
     }
 
-    public HashMultimap<CascadeSecurityLevel, Long> getSecurityLevels() {
+    public HashMultimap<SecurityLevel, Long> getSecurityLevels() {
         return securityLevels;
     }
 

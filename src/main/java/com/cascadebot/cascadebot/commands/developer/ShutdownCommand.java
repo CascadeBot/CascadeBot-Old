@@ -11,7 +11,6 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.messaging.MessageType;
-import com.cascadebot.cascadebot.permissions.CascadeSecurityLevel;
 import com.cascadebot.cascadebot.utils.ConfirmUtils;
 import com.cascadebot.shared.SecurityLevel;
 import net.dv8tion.jda.core.EmbedBuilder;
