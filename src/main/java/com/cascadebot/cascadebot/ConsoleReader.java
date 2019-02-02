@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.data.Config;
-import com.cascadebot.cascadebot.permissions.CascadeSecurityLevel;
+import com.cascadebot.cascadebot.permissions.Security;
 import com.cascadebot.shared.Regex;
 import com.cascadebot.shared.SecurityLevel;
 import com.cascadebot.shared.SharedConstants;
@@ -43,10 +43,10 @@ public class ConsoleReader implements Runnable {
                                 Long id = Long.parseLong(args[1]);
                                 if(Config.INS.getAuth().verifyEncrypt(args[1], args[2])) {
                                     Set<Long> ids = new HashSet<>();
-                                    for(Map.Entry<CascadeSecurityLevel, Long> pair : Config.INS.getSecurityLevels().entries()) {
+                                    for(var pair : Config.INS.getSecurityLevels().entries()) {
                                         ids.add(pair.getValue());
                                     }
-                                    SecurityLevel userLevel = CascadeSecurityLevel.getLevelById(id, ids).getLevel();
+                                    SecurityLevel userLevel = Security.getLevelById(id, ids);
                                     if(userLevel != null) {
                                         CascadeBot.logger.info(userLevel.name());
                                         if(userLevel.isAuthorised(SecurityLevel.STAFF)) {

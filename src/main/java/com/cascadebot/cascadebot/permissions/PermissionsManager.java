@@ -23,14 +23,14 @@ public class PermissionsManager {
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .refreshAfterWrite(5, TimeUnit.MINUTES)
             .build(DiscordUtils::getAllOfficialRoleIds);
-    private LoadingCache<Long, CascadeSecurityLevel> securityLevelCache = Caffeine.newBuilder()
+    private LoadingCache<Long, SecurityLevel> securityLevelCache = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .refreshAfterWrite(5, TimeUnit.MINUTES)
-            .build(id -> CascadeSecurityLevel.getLevelById(id, officialGuildRoleIDCache.get(id)));
+            .build(id -> Security.getSecurityLevelById(id, officialGuildRoleIDCache.get(id)));
 
     public boolean isAuthorised(ICommandExecutable command, GuildData guildData, Member member) {
         if (command instanceof ICommandRestricted) {
-            CascadeSecurityLevel userLevel = securityLevelCache.get(member.getUser().getIdLong());
+            SecurityLevel userLevel = securityLevelCache.get(member.getUser().getIdLong());
             if (userLevel == null) return false;
             SecurityLevel levelToCheck = ((ICommandRestricted) command).getCommandLevel();
             return userLevel.isAuthorised(levelToCheck);
