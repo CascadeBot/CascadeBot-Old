@@ -6,14 +6,17 @@
 package com.cascadebot.cascadebot;
 
 import com.cascadebot.cascadebot.data.Config;
-import com.cascadebot.cascadebot.permissions.SecurityLevel;
-import com.cascadebot.shared.Auth;
+import com.cascadebot.cascadebot.permissions.CascadeSecurityLevel;
 import com.cascadebot.shared.Regex;
+import com.cascadebot.shared.SecurityLevel;
 import com.cascadebot.shared.SharedConstants;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ConsoleReader implements Runnable {
 
@@ -39,10 +42,15 @@ public class ConsoleReader implements Runnable {
                             if(args.length > 2) {
                                 Long id = Long.parseLong(args[1]);
                                 if(Config.INS.getAuth().verifyEncrypt(args[1], args[2])) {
-                                    SecurityLevel userLevel = SecurityLevel.getLevelById(id, SecurityLevel.OWNER.getIds());
+                                    Set<Long> ids = new HashSet<>();
+                                    for(Map.Entry<CascadeSecurityLevel, Long> pair : Config.INS.getSecurityLevels().entries()) {
+                                        ids.add(pair.getValue());
+                                    }
+                                    SecurityLevel userLevel = CascadeSecurityLevel.getLevelById(id, ids).getLevel();
                                     if(userLevel != null) {
-                                        if(SecurityLevel.OWNER.isAuthorised(userLevel)) {
-                                            System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " authorized " + args[1]);
+                                        CascadeBot.logger.info(userLevel.name());
+                                        if(userLevel.isAuthorised(SecurityLevel.STAFF)) {
+                                            System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " authorized " + args[1] + " " + userLevel.name());
                                             continue;
                                         }
                                     }
