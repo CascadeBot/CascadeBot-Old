@@ -75,13 +75,7 @@ public class CommandListener extends ListenerAdapter {
                     return;
                 }
             }
-            if (CascadeBot.INS.getPermissionsManager().isAuthorised(cmd, guildData, event.getMember())) {
-                dispatchCommand(cmd, context);
-            } else {
-                if (!(cmd instanceof ICommandRestricted)) { // Silently fail on restricted commands, users shouldn't know what the commands are
-                    // Send error message about not being authorised
-                }
-            }
+            dispatchCommand(cmd, context);
         }
     }
 
@@ -98,16 +92,21 @@ public class CommandListener extends ListenerAdapter {
                         parentCommandContext.getTrigger() + " " + args[0],
                         parentCommandContext.isMention()
                 );
-                if (CascadeBot.INS.getPermissionsManager().isAuthorised(cmd, parentCommandContext.getData(), parentCommandContext.getMember())) {
-                    dispatchCommand(subCommand, subCommandContext);
-                    return true;
-                }
+                return dispatchCommand(subCommand, subCommandContext);
             }
         }
         return false;
     }
 
-    private void dispatchCommand(final ICommandExecutable command, final CommandContext context) {
+    private boolean dispatchCommand(final ICommandExecutable command, final CommandContext context) {
+        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
+            if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
+                if (context.getData().willDisplayPermissionErrors()) {
+                    context.replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
+                }
+            }
+            return false;
+        }
         COMMAND_POOL.submit(() -> {
             CascadeBot.logger.info("{}Command {}{} executed by {} with args: {}",
                     (command instanceof IMainCommand ? "" : "Sub"),
@@ -124,6 +123,7 @@ public class CommandListener extends ListenerAdapter {
                 ), e);
             }
         });
+        return true;
     }
 
     public static void shutdownCommandPool() {
