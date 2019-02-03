@@ -10,11 +10,14 @@ import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.IMainCommand;
 import com.cascadebot.cascadebot.commandmeta.IMainCommand;
+import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
+import com.cascadebot.shared.SharedConstants;
 import com.cascadebot.shared.Version;
 import de.bild.codec.annotations.Id;
+import de.bild.codec.annotations.PreSave;
 import de.bild.codec.annotations.Transient;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -24,6 +27,7 @@ import org.bson.codecs.pojo.annotations.BsonIgnore;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @BsonDiscriminator
@@ -32,23 +36,37 @@ public class GuildData {
     @Id
     private long guildID;
 
+    //region Meta information
+    private UUID stateLock = UUID.randomUUID(); // This is for checking state between the wrapper, bot and panel
     private Date creationDate = new Date();
-
-    private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
-
     private Version configVersion = Constants.CONFIG_VERSION;
+    //endregion
 
     private ConcurrentHashMap<Class<? extends IMainCommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
+    private String commandPrefix = Config.INS.getDefaultPrefix();
 
+    //region Boolean flags
+    private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
     private boolean useEmbedForMessages = true;
+    private boolean displayPermissionErrors = true; // Whether commands will silently fail on no permissions
+    //endregion
 
+    //region Transient fields
     @Transient
     private ButtonsCache buttonsCache = new ButtonsCache(5);
 
     @Transient
     private PageCache pageCache = new PageCache();
+    //endregion
 
-    private GuildData() {} // This is for mongodb object serialisation
+    private GuildData() {
+    } // This is for mongodb object serialisation
+
+    @PreSave
+    private void preSave() {
+        this.stateLock = UUID.randomUUID();
+    }
+
 
     public GuildData(long guildID) {
         this.guildID = guildID;
@@ -176,4 +194,11 @@ public class GuildData {
         return creationDate;
     }
 
+    public String getCommandPrefix() {
+        return commandPrefix;
+    }
+
+    public void setCommandPrefix(String commandPrefix) {
+        this.commandPrefix = commandPrefix;
+    }
 }
