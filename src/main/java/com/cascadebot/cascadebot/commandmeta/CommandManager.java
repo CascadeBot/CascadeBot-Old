@@ -13,16 +13,16 @@ import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class CommandManager {
 
     private static CommandManager instance = null;
 
-    private final Vector<IMainCommand> commands = new Vector<>();
+    private final List<IMainCommand> commands = Collections.synchronizedList(new ArrayList<>());
     private final Logger logger = LoggerFactory.getLogger("Command Manager");
 
     public CommandManager() {
@@ -42,11 +42,13 @@ public class CommandManager {
     }
 
     public IMainCommand getCommand(String command, User user, GuildData data) {
-        for (IMainCommand cmd : getCommands()) {
-            if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
-                return cmd;
-            } else if (data.getCommandArgs(cmd).contains(command)) {
-                return cmd;
+        synchronized (commands) {
+            for (IMainCommand cmd : commands) {
+                if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
+                    return cmd;
+                } else if (data.getCommandArgs(cmd).contains(command)) {
+                    return cmd;
+                }
             }
         }
         return null;
@@ -57,11 +59,15 @@ public class CommandManager {
     }
 
     public List<IMainCommand> getCommandsByType(CommandType type) {
-        return commands.stream().filter(command -> command.getType() == type).collect(Collectors.toList());
+        synchronized (commands) {
+            return commands.stream().filter(command -> command.getType() == type).collect(Collectors.toList());
+        }
     }
 
     public ICommandExecutable getCommandByDefault(String defaultCommand) {
-        return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
+        synchronized (commands) {
+            return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
+        }
     }
 
     public static CommandManager instance() {

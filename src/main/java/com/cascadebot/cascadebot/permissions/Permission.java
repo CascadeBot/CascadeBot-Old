@@ -12,55 +12,48 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Map;
 
-public enum Permission {
+public class Permission {
 
-    ALL_PERMISSIONS("*"),
-
-    INFO_CATEGORY("category.info", true, CommandType.INFORMATIONAL),
-
-    SERVER_INFO_COMMAND("serverinfo", true),
-    USER_INFO_COMMAND("userinfo", true),
-    ROLES_COMMAND("roles", false)
+    private final String label;
+    private final String permission;
+    private final boolean defaultPerm;
+    private final EnumSet<net.dv8tion.jda.core.Permission> discordPerm;
+    private final CommandType commandType;
 
 
-    ;
-
-    public static final Permission[] VALUES = Permission.values();
-
-    private String permission;
-    private boolean defaultPerm;
-    private EnumSet<net.dv8tion.jda.core.Permission> discordPerm = EnumSet.noneOf(net.dv8tion.jda.core.Permission.class);
-    private CommandType commandType;
-
-    private static final Map<CommandType, Permission> COMMAND_TYPE_MAP = CollectionUtils.getReverseMapping(
-                    Permission.class,
-                    Permission::getCommandType);
-    private static final Map<String, Permission> PERMISSION_MAP = CollectionUtils.getReverseMapping(
-            Permission.class,
-            p -> p.getPermissionNode().toLowerCase());
-
-    Permission(String permission, boolean defaultPerm) {
-        this.permission = "cascade." + permission;
-        this.defaultPerm = defaultPerm;
-    }
-
-    Permission(String permission, boolean defaultPerm, CommandType commandType) {
+    private Permission(String label, String permission, boolean defaultPerm, CommandType commandType, net.dv8tion.jda.core.Permission... discordPerm) {
+        this.label = label;
         this.permission = "cascade." + permission;
         this.defaultPerm = defaultPerm;
         this.commandType = commandType;
-    }
-
-    Permission(String permission, boolean defaultPerm, net.dv8tion.jda.core.Permission... discordPerm) {
-        this.permission = "cascade." + permission;
-        this.defaultPerm = defaultPerm;
         this.discordPerm = EnumSet.noneOf(net.dv8tion.jda.core.Permission.class);
         this.discordPerm.addAll(Arrays.asList(discordPerm));
     }
 
-    Permission(String permission) {
-        this.permission = permission;
-        this.defaultPerm = false;
+    public static Permission of(String permission) {
+        return new Permission(null, permission, false, null);
     }
+
+    public static Permission of(String label, String permission) {
+        return new Permission(label, permission, false, null);
+    }
+
+    public static Permission of(String label, String permission, boolean defaultPerm) {
+        return new Permission(label, permission, defaultPerm, null);
+    }
+
+    public static Permission of(String label, String permission, CommandType commandType) {
+        return new Permission(label, permission, false, commandType);
+    }
+
+    public static Permission of(String label, String permission, boolean defaultPerm, CommandType commandType) {
+        return new Permission(label, permission, defaultPerm, commandType);
+    }
+
+    public static Permission of(String label, String permission, boolean defaultPerm, net.dv8tion.jda.core.Permission... discordPerm) {
+        return new Permission(label, permission, defaultPerm, null, discordPerm);
+    }
+
 
     public String getPermissionNode() {
         return permission;
@@ -74,7 +67,7 @@ public enum Permission {
         return commandType;
     }
 
-    public static Permission getPermission(CommandType commandType) {
+    /*public static Permission getPermission(CommandType commandType) {
         return COMMAND_TYPE_MAP.get(commandType);
     }
 
@@ -96,7 +89,7 @@ public enum Permission {
 
     public EnumSet<net.dv8tion.jda.core.Permission> getDiscordPerm() {
         return discordPerm;
-    }
+    }*/ // TODO: Move this to permissions manager
 
     @Override
     public String toString() {

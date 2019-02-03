@@ -86,7 +86,7 @@ public class UserInfoCommand implements IMainCommand {
 
     @Override
     public Permission getPermission() {
-        return Permission.USER_INFO_COMMAND;
+        return Permission.of("User info command", "userinfo", true);
     }
 
 }

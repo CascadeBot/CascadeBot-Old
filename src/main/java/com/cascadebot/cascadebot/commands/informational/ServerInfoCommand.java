@@ -56,7 +56,7 @@ public class ServerInfoCommand implements IMainCommand {
 
     @Override
     public Permission getPermission() {
-        return Permission.SERVER_INFO_COMMAND;
+        return Permission.of("Server info command", "serverinfo", true);
     }
 
     @Override

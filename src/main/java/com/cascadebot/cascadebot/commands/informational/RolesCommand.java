@@ -51,7 +51,7 @@ public class RolesCommand implements IMainCommand {
 
     @Override
     public Permission getPermission() {
-        return Permission.ROLES_COMMAND;
+        return Permission.of("Roles command", "roles", false);
     }
 
     @Override
