@@ -83,4 +83,4 @@ haste:
 
 web:
   # The secret to use when authenticating with the site/wrapper
-  auth:
+  secret_key:
