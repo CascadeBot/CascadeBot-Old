@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class CommandManager {
 
     private static CommandManager instance = null;
 
-    private final List<IMainCommand> commands = new CopyOnWriteArrayList<>();
+    private final Vector<IMainCommand> commands = new Vector<>();
     private final Logger logger = LoggerFactory.getLogger("Command Manager");
 
     public CommandManager() {
