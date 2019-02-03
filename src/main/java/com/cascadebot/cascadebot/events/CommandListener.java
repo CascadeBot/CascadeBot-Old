@@ -10,7 +10,6 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.commandmeta.IMainCommand;
-import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.shared.Regex;
@@ -31,13 +30,17 @@ public class CommandListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
+
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
-        String prefix = Config.INS.getDefaultPrefix(); //TODO: Add guild data prefix here
         GuildData guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
+
+        String prefix = guildData.getCommandPrefix();
+        boolean isMention = false;
+
         String commandWithArgs;
         String trigger;
         String[] args;
-        boolean isMention = false;
+
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
             trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
@@ -50,6 +53,11 @@ public class CommandListener extends ListenerAdapter {
         } else {
             return;
         }
+
+        processCommands(event, guildData, trigger, args, isMention);
+    }
+
+    private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
         IMainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
         if (cmd != null) {
             CommandContext context = new CommandContext(
@@ -90,8 +98,10 @@ public class CommandListener extends ListenerAdapter {
                         parentCommandContext.getTrigger() + " " + args[0],
                         parentCommandContext.isMention()
                 );
-                dispatchCommand(subCommand, subCommandContext);
-                return true;
+                if (CascadeBot.INS.getPermissionsManager().isAuthorised(cmd, parentCommandContext.getData(), parentCommandContext.getMember())) {
+                    dispatchCommand(subCommand, subCommandContext);
+                    return true;
+                }
             }
         }
         return false;
