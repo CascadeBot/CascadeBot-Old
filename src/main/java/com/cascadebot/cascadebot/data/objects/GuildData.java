@@ -63,7 +63,7 @@ public class GuildData {
     } // This is for mongodb object serialisation
 
     @PreSave
-    private void preSave() {
+    public void preSave() {
         this.stateLock = UUID.randomUUID();
     }
 
