@@ -37,7 +37,7 @@ public enum Permission {
                     Permission::getCommandType);
     private static final Map<String, Permission> PERMISSION_MAP = CollectionUtils.getReverseMapping(
             Permission.class,
-            p -> p.getPermission().toLowerCase());
+            p -> p.getPermissionNode().toLowerCase());
 
     Permission(String permission, boolean defaultPerm) {
         this.permission = "cascade." + permission;
@@ -62,7 +62,7 @@ public enum Permission {
         this.defaultPerm = false;
     }
 
-    public String getPermission() {
+    public String getPermissionNode() {
         return permission;
     }
 
@@ -87,7 +87,7 @@ public enum Permission {
             PermissionNode node = new PermissionNode(permission);
             for (Permission perm : Permission.VALUES) {
                 if (perm != Permission.ALL_PERMISSIONS) {
-                    if (node.test(perm.getPermission())) return true;
+                    if (node.test(perm.getPermissionNode())) return true;
                 }
             }
         }
@@ -100,7 +100,7 @@ public enum Permission {
 
     @Override
     public String toString() {
-        return getPermission();
+        return getPermissionNode();
     }
 
 }
