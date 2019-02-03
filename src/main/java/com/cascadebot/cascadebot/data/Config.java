@@ -206,11 +206,11 @@ public class Config {
             }
         }
 
-        String secret = warnOnDefault(config, "web.auth", "");
+        String secret = warnOnDefault(config, "web.secret_key", "");
 
         try {
             auth = new Auth(secret);
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalArgumentException e) {
             CascadeBot.logger.warn("Auth failed to initiate. this might cause errors if working with he wrapper or website if the bot is working with those.", e);
         }
 
