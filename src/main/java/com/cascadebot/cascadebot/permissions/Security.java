@@ -6,24 +6,24 @@
 package com.cascadebot.cascadebot.permissions;
 
 import com.cascadebot.cascadebot.data.Config;
+import com.cascadebot.shared.SecurityLevel;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
  * Security levels defined by Role IDs or User IDs, A level can be defined by an unlimited amount of roles
  * and users. Security levels are declared in ascending order.
  */
-public enum SecurityLevel {
-    STAFF,
-    DEVELOPER,
-    OWNER;
+public class Security {
 
-    public Set<Long> getIds() {
-        return Config.INS.getSecurityLevels().get(this);
+    public static Set<Long> getIds(SecurityLevel level) {
+        return Config.INS.getSecurityLevels().get(level);
     }
 
-    public boolean isAuthorised(SecurityLevel level) {
-        return level.ordinal() <= this.ordinal();
+    public static boolean isAuthorised(SecurityLevel level, SecurityLevel comparingLevel) {
+        return comparingLevel.isAuthorised(level);
     }
 
     /**
@@ -36,8 +36,8 @@ public enum SecurityLevel {
     public static SecurityLevel getLevelById(long userId, Set<Long> roleIds) {
         for (int i = SecurityLevel.values().length - 1; i >= 0; i--) {
             SecurityLevel level = SecurityLevel.values()[i];
-            if (level.getIds().contains(userId)) return level;
-            if (roleIds.stream().anyMatch(id -> level.getIds().contains(id))) return level;
+            if (Security.getIds(level).contains(userId)) return level;
+            if (roleIds.stream().anyMatch(id -> Security.getIds(level).contains(id))) return level;
         }
         return null;
     }

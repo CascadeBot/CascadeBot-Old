@@ -10,7 +10,7 @@ import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
-import com.cascadebot.cascadebot.permissions.SecurityLevel;
+import com.cascadebot.shared.SecurityLevel;
 import net.dv8tion.jda.core.entities.Member;
 
 public class RestartCommand implements ICommandRestricted {
@@ -23,7 +23,7 @@ public class RestartCommand implements ICommandRestricted {
     }
 
     @Override
-    public String defaultCommand() {
+    public String command() {
         return "restart";
     }
 

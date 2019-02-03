@@ -11,8 +11,8 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.messaging.MessageType;
-import com.cascadebot.cascadebot.permissions.SecurityLevel;
 import com.cascadebot.cascadebot.utils.ConfirmUtils;
+import com.cascadebot.shared.SecurityLevel;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 
@@ -54,7 +54,7 @@ public class ShutdownCommand implements ICommandRestricted {
     }
 
     @Override
-    public String defaultCommand() {
+    public String command() {
         return "shutdown";
     }
 

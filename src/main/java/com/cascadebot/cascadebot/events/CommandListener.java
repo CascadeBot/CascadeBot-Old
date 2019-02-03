@@ -7,8 +7,9 @@ package com.cascadebot.cascadebot.events;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.ICommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.commandmeta.IMainCommand;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
@@ -33,68 +34,83 @@ public class CommandListener extends ListenerAdapter {
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         String prefix = Config.INS.getDefaultPrefix(); //TODO: Add guild data prefix here
         GuildData guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
+        String commandWithArgs;
+        String trigger;
+        String[] args;
+        boolean isMention = false;
         if (message.startsWith(prefix)) {
-            String commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-            String trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
-            String[] args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
-
-            ICommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
-            if (cmd != null) {
-                CommandContext context = new CommandContext(
-                        event.getChannel(),
-                        event.getMessage(),
-                        event.getGuild(),
-                        guildData,
-                        args,
-                        event.getMember(),
-                        trigger,
-                        false
-                );
-                dispatchCommand(cmd, context);
-            }
+            commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
+            trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
+            args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
         } else if (guildData.isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
-
-            String commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
-            String trigger = commandWithArgs.split(" ")[0];
-            String[] args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
-
-            ICommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
-            if (cmd != null) {
-                CommandContext context = new CommandContext(
-                        event.getChannel(),
-                        event.getMessage(),
-                        event.getGuild(),
-                        guildData,
-                        args,
-                        event.getMember(),
-                        trigger,
-                        true
-                );
-                if (CascadeBot.INS.getPermissionsManager().isAuthorised(cmd, guildData, event.getMember())) {
-                    dispatchCommand(cmd, context);
-                } else {
-                    if (!(cmd instanceof ICommandRestricted)) { // Silently fail on restricted commands, users shouldn't know what the commands are
-                        // Send error message about not being authorised
-                    }
+            commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
+            trigger = commandWithArgs.split(" ")[0];
+            args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
+            isMention = true;
+        } else {
+            return;
+        }
+        IMainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
+        if (cmd != null) {
+            CommandContext context = new CommandContext(
+                    event.getChannel(),
+                    event.getMessage(),
+                    event.getGuild(),
+                    guildData,
+                    args,
+                    event.getMember(),
+                    trigger,
+                    isMention
+            );
+            if (args.length >= 1) {
+                if (processSubCommands(cmd, args, context)) {
+                    return;
                 }
             }
-        } else {
-
+            if (CascadeBot.INS.getPermissionsManager().isAuthorised(cmd, guildData, event.getMember())) {
+                dispatchCommand(cmd, context);
+            } else {
+                if (!(cmd instanceof ICommandRestricted)) { // Silently fail on restricted commands, users shouldn't know what the commands are
+                    // Send error message about not being authorised
+                }
+            }
         }
     }
 
-    private void dispatchCommand(final ICommand command, final CommandContext context) {
+    private boolean processSubCommands(IMainCommand cmd, String[] args, CommandContext parentCommandContext) {
+        for (ICommandExecutable subCommand : cmd.getSubCommands()) {
+            if (subCommand.command().equalsIgnoreCase(args[0])) {
+                CommandContext subCommandContext = new CommandContext(
+                        parentCommandContext.getChannel(),
+                        parentCommandContext.getMessage(),
+                        parentCommandContext.getGuild(),
+                        parentCommandContext.getData(),
+                        ArrayUtils.remove(args, 0),
+                        parentCommandContext.getMember(),
+                        parentCommandContext.getTrigger() + " " + args[0],
+                        parentCommandContext.isMention()
+                );
+                dispatchCommand(subCommand, subCommandContext);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void dispatchCommand(final ICommandExecutable command, final CommandContext context) {
         COMMAND_POOL.submit(() -> {
-            CascadeBot.logger.info("Command {} executed by {} with args: {}",
-                    command.defaultCommand() + (command.defaultCommand().equalsIgnoreCase(context.getTrigger()) ? "" : context.getTrigger()),
-                    context.getUser().getName() + "#" + context.getUser().getDiscriminator(), // TODO: Util this
+            CascadeBot.logger.info("{}Command {}{} executed by {} with args: {}",
+                    (command instanceof IMainCommand ? "" : "Sub"),
+                    command.command(),
+                    (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"),
+                    context.getUser().getAsTag(),
                     Arrays.toString(context.getArgs()));
             try {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
                 CascadeBot.logger.error(String.format(
                         "Error in command %s Guild ID: %s User: %s",
-                        command.defaultCommand(), context.getGuild().getId(), context.getMember().getEffectiveName()
+                        command.command(), context.getGuild().getId(), context.getMember().getEffectiveName()
                 ), e);
             }
         });

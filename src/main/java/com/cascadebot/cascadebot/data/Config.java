@@ -6,10 +6,13 @@
 package com.cascadebot.cascadebot.data;
 
 import ch.qos.logback.classic.Level;
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.music.MusicHandler;
-import com.cascadebot.cascadebot.permissions.SecurityLevel;
+import com.cascadebot.cascadebot.permissions.Security;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
+import com.cascadebot.shared.Auth;
+import com.cascadebot.shared.SecurityLevel;
 import com.google.common.collect.HashMultimap;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.EnumUtils;
@@ -24,7 +27,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,9 +44,13 @@ public class Config {
 
     private boolean debug;
 
+    private Auth auth;
+
     private String botToken;
     private Long botID;
     private HashMultimap<SecurityLevel, Long> securityLevels;
+
+    private Map<String, Long> globalEmotes;
 
     private boolean prettyJson;
     private String defaultPrefix;
@@ -156,17 +166,28 @@ public class Config {
                     SecurityLevel securityLevel = SecurityLevel.valueOf(level.toUpperCase());
                     Object value = configSecurityLevels.get(level);
                     if (value instanceof List) {
-                        for (Integer id : (List<Integer>) value) {
-                            this.securityLevels.put(securityLevel, id.longValue());
+                        for (Long id : (List<Long>) value) {
+                            this.securityLevels.put(securityLevel, id);
                         }
-                    } else if (value instanceof Integer) {
-                        this.securityLevels.put(securityLevel, ((Integer) value).longValue());
+                    } else if (value instanceof Long) {
+                        this.securityLevels.put(securityLevel, (Long) value);
                     }
                 }
             }
         } else {
             LOG.error("Please define security levels in your config! Without these, you won't be able to run privileged commands!");
             ShutdownHandler.exitWithError();
+        }
+
+        this.globalEmotes = new HashMap<>();
+        ConfigurationSection configGlobalEmotes = config.getConfigurationSection("global_emotes");
+        if (configGlobalEmotes != null) {
+            for (String emoteKey : configGlobalEmotes.getKeys(false)) {
+                Long emoteId = configGlobalEmotes.getLong(emoteKey);
+                if (emoteId > 0) {
+                    this.globalEmotes.put(emoteKey, emoteId);
+                }
+            }
         }
 
         this.hasteServer = warnOnDefault(config, "haste.server", "https://hastebin.com/documents");
@@ -183,6 +204,14 @@ public class Config {
                     LOG.warn("Invalid url for node provided", e);
                 }
             }
+        }
+
+        String secret = warnOnDefault(config, "web.auth", "");
+
+        try {
+            auth = new Auth(secret);
+        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
+            CascadeBot.logger.warn("Auth failed to initiate. this might cause errors if working with he wrapper or website if the bot is working with those.", e);
         }
 
         LOG.info("Finished loading configuration!");
@@ -219,6 +248,10 @@ public class Config {
 
     public HashMultimap<SecurityLevel, Long> getSecurityLevels() {
         return securityLevels;
+    }
+
+    public Map<String, Long> getGlobalEmotes() {
+        return globalEmotes;
     }
 
     public String getHasteServer() {
@@ -265,4 +298,7 @@ public class Config {
         return officialServerId;
     }
 
+    public Auth getAuth() {
+        return auth;
+    }
 }
