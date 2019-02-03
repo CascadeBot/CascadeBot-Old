@@ -46,8 +46,6 @@ public class ConsoleReader implements Runnable {
                                 if(Config.INS.getAuth().verifyEncrypt(args[1], args[2])) {
                                     String[] roles = args[3].split(",");
 
-                                    CascadeBot.logger.info(Arrays.toString(roles));
-
                                     Set<Long> ids = Arrays.stream(roles).map(Long::parseLong).collect(Collectors.toSet());
 
                                     SecurityLevel userLevel = Security.getLevelById(id, ids);
