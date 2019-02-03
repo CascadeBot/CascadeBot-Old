@@ -39,13 +39,6 @@ public class Security {
         return comparingLevel.isAuthorised(level);
     }
 
-    public static SecurityLevel getSecurityLevelById(long userId, Set<Long> roleIds){
-        if(getLevelById(userId, roleIds) == null) {
-            return null;
-        }
-        return getLevelById(userId, roleIds);
-    }
-
     /**
      * Returns the highest security level a user has access to.
      *

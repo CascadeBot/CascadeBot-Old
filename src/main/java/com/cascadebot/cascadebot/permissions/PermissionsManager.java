@@ -26,7 +26,7 @@ public class PermissionsManager {
     private LoadingCache<Long, SecurityLevel> securityLevelCache = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .refreshAfterWrite(5, TimeUnit.MINUTES)
-            .build(id -> Security.getSecurityLevelById(id, officialGuildRoleIDCache.get(id)));
+            .build(id -> Security.getLevelById(id, officialGuildRoleIDCache.get(id)));
 
     public boolean isAuthorised(ICommandExecutable command, GuildData guildData, Member member) {
         if (command instanceof ICommandRestricted) {
