@@ -5,15 +5,11 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
-import com.cascadebot.cascadebot.permissions.Permission;
-
 import java.util.Set;
 
 public interface IMainCommand extends ICommandExecutable {
 
-    public CommandType getType();
-
-    public Permission getPermission();
+    CommandType getType();
 
     default boolean forceDefault() {
         return false;

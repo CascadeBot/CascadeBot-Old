@@ -5,12 +5,15 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
+import com.cascadebot.cascadebot.permissions.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
 public interface ICommandExecutable {
 
-    public void onCommand(Member sender, CommandContext context);
+    void onCommand(Member sender, CommandContext context);
 
-    public String command();
+    String command();
+
+    Permission getPermission();
 
 }
