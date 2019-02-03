@@ -201,4 +201,12 @@ public class GuildData {
     public void setCommandPrefix(String commandPrefix) {
         this.commandPrefix = commandPrefix;
     }
+
+    public boolean willDisplayPermissionErrors() {
+        return displayPermissionErrors;
+    }
+
+    public void setDisplayPermissionErrors(boolean displayPermissionErrors) {
+        this.displayPermissionErrors = displayPermissionErrors;
+    }
 }
