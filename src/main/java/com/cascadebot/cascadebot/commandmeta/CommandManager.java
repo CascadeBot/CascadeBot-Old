@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class CommandManager {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
     private static CommandManager instance = null;
 
     private final List<ICommandMain> commands = Collections.synchronizedList(new ArrayList<>());
@@ -33,9 +34,9 @@ public class CommandManager {
                 if (ICommandMain.class.isAssignableFrom(c))
                     commands.add((ICommandMain) ConstructorUtils.invokeConstructor(c));
             }
-            logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
+            LOGGER.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
         } catch (Exception e) {
-            logger.error("Could not load commands!", e);
+            LOGGER.error("Could not load commands!", e);
             ShutdownHandler.exitWithError();
         }
     }

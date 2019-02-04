@@ -28,9 +28,9 @@ public class DebugLogCallback<T> implements SingleResultCallback<T> {
     @Override
     public void onResult(T result, Throwable t) {
         if (t != null) {
-            LoggerFactory.getLogger("mongocallback").error("Error in a Mongo callback", t);
+            LoggerFactory.getLogger(DebugLogCallback.class).error("Error in a Mongo callback", t);
         } else if (OBJECT_TO_LOG != null) {
-            LoggerFactory.getLogger("mongocallback").debug(MESSAGE + ": " + OBJECT_TO_LOG.toString().replace("\n", ""));
+            LoggerFactory.getLogger(DebugLogCallback.class).debug(MESSAGE + ": " + OBJECT_TO_LOG.toString().replace("\n", ""));
         }
     }
 
