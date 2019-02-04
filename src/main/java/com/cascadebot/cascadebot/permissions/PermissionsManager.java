@@ -9,20 +9,23 @@ import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
-import com.cascadebot.cascadebot.commandmeta.IMainCommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.shared.SecurityLevel;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import net.dv8tion.jda.core.entities.Member;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class PermissionsManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PermissionsManager.class);
 
     private LoadingCache<Long, Set<Long>> officialGuildRoleIDCache = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
@@ -38,7 +41,10 @@ public class PermissionsManager {
     public void registerPermissions() {
         if (!permissions.isEmpty()) throw new IllegalStateException("Permissions have already been registered!");
 
-        for (IMainCommand command : CommandManager.instance().getCommands()) {
+        long startTime = System.currentTimeMillis();
+
+        for (ICommandMain command : CommandManager.instance().getCommands()) {
+            if (command.getPermission() == null || command instanceof ICommandRestricted) continue;
             registerPermission(command.getPermission());
             for (ICommandExecutable subCommand : command.getSubCommands()) {
                 registerPermission(subCommand.getPermission());
@@ -49,6 +55,9 @@ public class PermissionsManager {
 
         registerPermission(Permission.of("Core Category", "category.core", true, CommandType.CORE));
         registerPermission(Permission.of("Info Category", "category.info", true, CommandType.INFORMATIONAL));
+
+        LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
+
     }
 
     private void registerPermission(Permission permission) {
