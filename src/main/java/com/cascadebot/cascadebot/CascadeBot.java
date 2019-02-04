@@ -137,6 +137,7 @@ public class CascadeBot {
 
         commandManager = new CommandManager();
         permissionsManager = new PermissionsManager();
+        permissionsManager.registerPermissions();
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
