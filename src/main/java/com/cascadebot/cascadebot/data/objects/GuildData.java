@@ -8,13 +8,11 @@ package com.cascadebot.cascadebot.data.objects;
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.IMainCommand;
-import com.cascadebot.cascadebot.commandmeta.IMainCommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
-import com.cascadebot.shared.SharedConstants;
 import com.cascadebot.shared.Version;
 import de.bild.codec.annotations.Id;
 import de.bild.codec.annotations.PreSave;
@@ -42,7 +40,7 @@ public class GuildData {
     private Version configVersion = Constants.CONFIG_VERSION;
     //endregion
 
-    private ConcurrentHashMap<Class<? extends IMainCommand>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
     private String commandPrefix = Config.INS.getDefaultPrefix();
 
     //region Boolean flags
@@ -72,7 +70,7 @@ public class GuildData {
         this.guildID = guildID;
     }
 
-    public void enableCommand(IMainCommand command) {
+    public void enableCommand(ICommandMain command) {
         if (!command.getType().isAvailableModule()) return;
         if (commandInfo.contains(command.getClass())) {
             commandInfo.get(command.getClass()).setEnabled(true);
@@ -80,24 +78,24 @@ public class GuildData {
     }
 
     public void enableCommandByType(CommandType commandType) {
-        for (IMainCommand command : CommandManager.instance().getCommandsByType(commandType)) {
+        for (ICommandMain command : CommandManager.instance().getCommandsByType(commandType)) {
             enableCommand(command);
         }
     }
 
-    public void disableCommand(IMainCommand command) {
+    public void disableCommand(ICommandMain command) {
         if (!command.getType().isAvailableModule()) return;
         commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command)).setEnabled(false);
     }
 
     public void disableCommandByType(CommandType commandType) {
         if (!commandType.isAvailableModule()) return;
-        for (IMainCommand command : CommandManager.instance().getCommandsByType(commandType)) {
+        for (ICommandMain command : CommandManager.instance().getCommandsByType(commandType)) {
             disableCommand(command);
         }
     }
 
-    public boolean isCommandEnabled(IMainCommand command) {
+    public boolean isCommandEnabled(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).isEnabled();
         }
@@ -106,46 +104,46 @@ public class GuildData {
 
     public boolean isTypeEnabled(CommandType type) {
         boolean enabled = true;
-        for (IMainCommand command : CommandManager.instance().getCommandsByType(type)) {
+        for (ICommandMain command : CommandManager.instance().getCommandsByType(type)) {
             enabled &= commandInfo.get(command.getClass()).isEnabled();
         }
         return enabled;
     }
 
-    public String getCommandName(IMainCommand command) {
+    public String getCommandName(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getCommand();
         }
         return command.command();
     }
 
-    public Set<String> getCommandArgs(IMainCommand command) {
+    public Set<String> getCommandArgs(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
             return getGuildCommandInfo(command).getAliases();
         }
         return command.getGlobalAliases();
     }
 
-    public void setCommandName(IMainCommand command, String commandName) {
+    public void setCommandName(ICommandMain command, String commandName) {
         getGuildCommandInfo(command).setCommand(commandName);
     }
 
-    public boolean addAlias(IMainCommand command, String alias) {
+    public boolean addAlias(ICommandMain command, String alias) {
         boolean success = getGuildCommandInfo(command).addAlias(alias);
         return success;
     }
 
-    public boolean removeAlias(IMainCommand command, String alias) {
+    public boolean removeAlias(ICommandMain command, String alias) {
         boolean success = getGuildCommandInfo(command).removeAlias(alias);
         return success;
     }
 
     @BsonIgnore
-    private GuildCommandInfo getGuildCommandInfo(IMainCommand command) {
+    private GuildCommandInfo getGuildCommandInfo(ICommandMain command) {
         return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command));
     }
 
-    public ConcurrentHashMap<Class<? extends IMainCommand>, GuildCommandInfo> getCommandInfo() {
+    public ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
         return commandInfo;
     }
 

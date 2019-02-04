@@ -7,7 +7,7 @@ package com.cascadebot.cascadebot.commandmeta;
 
 import java.util.Set;
 
-public interface IMainCommand extends ICommandExecutable {
+public interface ICommandMain extends ICommandExecutable {
 
     CommandType getType();
 

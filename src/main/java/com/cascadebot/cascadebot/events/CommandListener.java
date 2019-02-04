@@ -9,7 +9,7 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
-import com.cascadebot.cascadebot.commandmeta.IMainCommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.shared.Regex;
@@ -58,7 +58,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
-        IMainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
+        ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
         if (cmd != null) {
             CommandContext context = new CommandContext(
                     event.getChannel(),
@@ -79,7 +79,7 @@ public class CommandListener extends ListenerAdapter {
         }
     }
 
-    private boolean processSubCommands(IMainCommand cmd, String[] args, CommandContext parentCommandContext) {
+    private boolean processSubCommands(ICommandMain cmd, String[] args, CommandContext parentCommandContext) {
         for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(
@@ -109,7 +109,7 @@ public class CommandListener extends ListenerAdapter {
         }
         COMMAND_POOL.submit(() -> {
             CascadeBot.logger.info("{}Command {}{} executed by {} with args: {}",
-                    (command instanceof IMainCommand ? "" : "Sub"),
+                    (command instanceof ICommandMain ? "" : "Sub"),
                     command.command(),
                     (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"),
                     context.getUser().getAsTag(),

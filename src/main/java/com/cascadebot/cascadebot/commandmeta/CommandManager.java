@@ -22,8 +22,7 @@ public class CommandManager {
 
     private static CommandManager instance = null;
 
-    private final List<IMainCommand> commands = Collections.synchronizedList(new ArrayList<>());
-    private final Logger logger = LoggerFactory.getLogger("Command Manager");
+    private final List<ICommandMain> commands = Collections.synchronizedList(new ArrayList<>());
 
     public CommandManager() {
         instance = this;
@@ -31,8 +30,8 @@ public class CommandManager {
         long start = System.currentTimeMillis();
         try {
             for (Class<?> c : ReflectionUtils.getClasses("com.cascadebot.cascadebot.commands")) {
-                if (IMainCommand.class.isAssignableFrom(c))
-                    commands.add((IMainCommand) ConstructorUtils.invokeConstructor(c));
+                if (ICommandMain.class.isAssignableFrom(c))
+                    commands.add((ICommandMain) ConstructorUtils.invokeConstructor(c));
             }
             logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
         } catch (Exception e) {
@@ -41,9 +40,9 @@ public class CommandManager {
         }
     }
 
-    public IMainCommand getCommand(String command, User user, GuildData data) {
+    public ICommandMain getCommand(String command, User user, GuildData data) {
         synchronized (commands) {
-            for (IMainCommand cmd : commands) {
+            for (ICommandMain cmd : commands) {
                 if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
                     return cmd;
                 } else if (data.getCommandArgs(cmd).contains(command)) {
@@ -54,11 +53,11 @@ public class CommandManager {
         return null;
     }
 
-    public List<IMainCommand> getCommands() {
+    public List<ICommandMain> getCommands() {
         return commands;
     }
 
-    public List<IMainCommand> getCommandsByType(CommandType type) {
+    public List<ICommandMain> getCommandsByType(CommandType type) {
         synchronized (commands) {
             return commands.stream().filter(command -> command.getType() == type).collect(Collectors.toList());
         }

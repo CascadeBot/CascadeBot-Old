@@ -7,11 +7,11 @@ package com.cascadebot.cascadebot.commands.core;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.IMainCommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.permissions.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
-public class InviteCommand implements IMainCommand {
+public class InviteCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

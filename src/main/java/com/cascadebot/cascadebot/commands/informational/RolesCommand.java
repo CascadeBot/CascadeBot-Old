@@ -5,14 +5,11 @@
 
 package com.cascadebot.cascadebot.commands.informational;
 
-import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.IMainCommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.permissions.Permission;
 import com.cascadebot.cascadebot.utils.FormatUtils;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 
@@ -21,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class RolesCommand implements IMainCommand {
+public class RolesCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
