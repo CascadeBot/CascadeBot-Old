@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.Environment;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
@@ -21,7 +22,7 @@ public class ShutdownCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         // A confirmation check to make sure we actually want to shut down on production
-        if (!CascadeBot.getVersion().getBuild().equalsIgnoreCase("dev")) {
+        if (Environment.isProduction()) {
             if (!ConfirmUtils.hasConfirmedAction("shutdown_bot", sender.getUser().getIdLong())) {
                 ConfirmUtils.confirmAction(
                         sender.getUser().getIdLong(),

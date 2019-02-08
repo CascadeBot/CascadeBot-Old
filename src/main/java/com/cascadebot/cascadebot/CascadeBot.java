@@ -120,7 +120,7 @@ public class CascadeBot {
                     //.setAudioSendFactory(new NativeAudioSendFactory())
                     .setShardsTotal(-1)
                     .setGameProvider(shardId -> {
-                        if (version.getBuild().equalsIgnoreCase("dev")) {
+                        if (Environment.isDevelopment()) {
                             return Game.streaming(" the devs mistakes", "https://twitch.tv/someone");
                         } else {
                             return Game.playing("CascadeBot Version " + version);
