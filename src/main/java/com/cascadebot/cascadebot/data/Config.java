@@ -9,7 +9,6 @@ import ch.qos.logback.classic.Level;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.music.MusicHandler;
-import com.cascadebot.cascadebot.permissions.Security;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
 import com.cascadebot.shared.Auth;
 import com.cascadebot.shared.SecurityLevel;
@@ -45,6 +44,7 @@ public class Config {
     private boolean debug;
 
     private Auth auth;
+    private String sentryDSN;
 
     private String botToken;
     private Long botID;
@@ -101,6 +101,13 @@ public class Config {
             LOG.error("Invalid yaml configuration", e);
             ShutdownHandler.exitWithError();
             return;
+        }
+
+        if (config.contains("sentry_dsn")) {
+            sentryDSN = config.getString("sentry_dsn");
+        } else {
+            LOG.warn("No sentry DSN was provided in the config, sentry may not work as expected!");
+            sentryDSN = "";
         }
 
         this.debug = config.getBoolean("debug", false);
@@ -301,4 +308,9 @@ public class Config {
     public Auth getAuth() {
         return auth;
     }
+
+    public String getSentryDSN() {
+        return sentryDSN;
+    }
+
 }

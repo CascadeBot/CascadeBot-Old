@@ -19,6 +19,9 @@
 # Whether to output DEBUG messages to STDOUT
 debug: false
 
+# The Sentry DSN to use for reporting errors
+sentry_dsn: ''
+
 # REQUIRED
 # The token and client ID for the bot, kinda self explanatory...
 bot:

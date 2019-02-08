@@ -16,6 +16,8 @@ import com.cascadebot.cascadebot.permissions.PermissionsManager;
 import com.cascadebot.shared.Version;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.sentry.Sentry;
+import io.sentry.SentryClient;
 import lavalink.client.io.jda.JdaLavalink;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
@@ -88,6 +90,10 @@ public class CascadeBot {
             ShutdownHandler.exitWithError();
             return;
         }
+
+        SentryClient client = Sentry.init(Config.INS.getSentryDSN());
+        client.setEnvironment(Environment.isDevelopment() ? "development" : "production");
+        client.setRelease(version.toString());
 
         httpClient = new OkHttpClient.Builder().build();
 
