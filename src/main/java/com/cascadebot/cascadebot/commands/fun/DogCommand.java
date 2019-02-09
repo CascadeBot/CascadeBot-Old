@@ -47,7 +47,7 @@ public class DogCommand implements IMainCommand {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            context.replyDanger("Our goblins scared away all of the dogs!");
         }
     }
 
