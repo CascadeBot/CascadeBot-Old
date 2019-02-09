@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot.commandmeta;
 public enum CommandType {
 
     CORE,
+    FUN,
     INFORMATIONAL,
     DEVELOPER(false);
 
