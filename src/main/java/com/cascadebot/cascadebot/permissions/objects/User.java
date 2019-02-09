@@ -31,4 +31,5 @@ public class User {
     public Set<Permission> getPermissions() {
         return permissions;
     }
+
 }

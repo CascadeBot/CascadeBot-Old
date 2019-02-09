@@ -9,7 +9,6 @@ import ch.qos.logback.classic.Level;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.music.MusicHandler;
-import com.cascadebot.cascadebot.permissions.Security;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
 import com.cascadebot.shared.Auth;
 import com.cascadebot.shared.SecurityLevel;
@@ -301,4 +300,5 @@ public class Config {
     public Auth getAuth() {
         return auth;
     }
+
 }

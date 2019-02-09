@@ -26,13 +26,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UserInfoCommand implements ICommandMain {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Member memberForInfo = sender;
-        if(context.getArgs().length > 0) {
+        if (context.getArgs().length > 0) {
             memberForInfo = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
         }
-        if(memberForInfo == null) {
+        if (memberForInfo == null) {
             context.reply("Invalid User!");
             return;
         }
@@ -62,7 +63,7 @@ public class UserInfoCommand implements ICommandMain {
         List<String> header = Arrays.asList("Role ID", "Role Name");
 
         List<List<String>> body = new ArrayList<>();
-        for(Role role : memberForInfo.getRoles()) {
+        for (Role role : memberForInfo.getRoles()) {
             List<String> row = new ArrayList<>();
             row.add(role.getId());
             row.add(role.getName());

@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot.utils.pagination;
 import net.dv8tion.jda.core.entities.Message;
 
 public interface Page {
+
     /**
      * Method that's called when the page is shown
      *

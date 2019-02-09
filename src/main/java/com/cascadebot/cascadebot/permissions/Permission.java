@@ -6,11 +6,9 @@
 package com.cascadebot.cascadebot.permissions;
 
 import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.utils.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.EnumSet;
-import java.util.Map;
 
 public class Permission {
 

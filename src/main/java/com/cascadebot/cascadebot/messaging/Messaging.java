@@ -16,7 +16,11 @@ import com.cascadebot.cascadebot.utils.pagination.PageCache;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import net.dv8tion.jda.core.utils.Checks;
@@ -175,12 +179,12 @@ public final class Messaging {
 
     public static RequestFuture<Message> sendPagedMessage(TextChannel channel, Member owner, List<Page> pages) {
         ButtonGroup group = new ButtonGroup(owner.getUser().getIdLong(), channel.getGuild().getIdLong());
-        group.addButton(new Button.UnicodeButton("\u23EE" /* ⏮ */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u23EE" /* Rewind, start at beginning */, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());
             pageGroup.setCurrentPage(1);
         }));
-        group.addButton(new Button.UnicodeButton("\u25C0" /* ◀ */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u25C0" /* Left arrow, go back one page */, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() - 1;
             if (newPage < 1) {
@@ -189,7 +193,7 @@ public final class Messaging {
             pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
             pageGroup.setCurrentPage(newPage);
         }));
-        group.addButton(new Button.UnicodeButton("\u25B6" /* ▶ */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u25B6" /* Right arrow, go forward one page */, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() + 1;
             if (newPage > pageGroup.getPages()) {
@@ -198,7 +202,7 @@ public final class Messaging {
             pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
             pageGroup.setCurrentPage(newPage);
         }));
-        group.addButton(new Button.UnicodeButton("\u23ED" /* ⏭ */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u23ED" /* Fast-forward, go to last page */, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
             pageGroup.setCurrentPage(pageGroup.getPages());

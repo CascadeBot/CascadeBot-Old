@@ -51,13 +51,13 @@ public class ButtonGroup {
 
     public void handleButton(Member clicker, TextChannel channel, Message buttonMessage, MessageReaction.ReactionEmote emote) {
         for (Button button : buttons) {
-            if(button instanceof Button.EmoteButton && emote.isEmote()) {
-                if(((Button.EmoteButton) button).emote.equals(emote.getEmote())) {
+            if (button instanceof Button.EmoteButton && emote.isEmote()) {
+                if (((Button.EmoteButton) button).emote.equals(emote.getEmote())) {
                     button.runnable.run(clicker, channel, buttonMessage);
                     return;
                 }
-            } else if(button instanceof Button.UnicodeButton && !emote.isEmote()) {
-                if(((Button.UnicodeButton) button).unicode.equals(emote.getName())) {
+            } else if (button instanceof Button.UnicodeButton && !emote.isEmote()) {
+                if (((Button.UnicodeButton) button).unicode.equals(emote.getName())) {
                     button.runnable.run(clicker, channel, buttonMessage);
                     return;
                 }

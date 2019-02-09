@@ -89,25 +89,25 @@ public class FormatUtils {
     public static String formatEmbed(MessageEmbed embed) {
         StringBuilder sb = new StringBuilder();
         sb.append("__**").append(embed.getTitle()).append("**__\n");
-        if(embed.getDescription() != null) {
+        if (embed.getDescription() != null) {
             sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
         }
         List<MessageEmbed.Field> inline = null;
         int i = 0;
         for (MessageEmbed.Field field : embed.getFields()) {
-            if(field.isInline() && field.getName().length() <= 20 && field.getValue().length() <= 20) {
-                if(inline == null) {
+            if (field.isInline() && field.getName().length() <= 20 && field.getValue().length() <= 20) {
+                if (inline == null) {
                     inline = new ArrayList<>();
                 }
                 inline.add(field);
-                if(i == 2) {
+                if (i == 2) {
                     sb.append(getFormattedInlineFields(inline)).append("\n\n");
                     inline.clear();
                     i = 0;
                 }
                 i++;
             } else {
-                if(inline != null) {
+                if (inline != null) {
                     sb.append(getFormattedInlineFields(inline)).append("\n\n");
                     inline.clear();
                 }
@@ -128,28 +128,28 @@ public class FormatUtils {
         List<String> header = new ArrayList<>();
         List<String> body = new ArrayList<>();
 
-        for(MessageEmbed.Field field : fieldList) {
+        for (MessageEmbed.Field field : fieldList) {
             header.add(field.getName());
             body.add(field.getValue());
         }
 
         sb.append('`');
 
-        for(String head : header) {
+        for (String head : header) {
             sb.append(String.format("%-25s", head));
         }
 
-        sb.append("\u200B`");
+        sb.append("\u200B`"); // Zero width space
 
         sb.append("\n");
 
         sb.append('`');
 
-        for(String bodyString : body) {
+        for (String bodyString : body) {
             sb.append(String.format("%-25s", bodyString));
         }
 
-        sb.append("\u200B`");
+        sb.append("\u200B`"); // Zero width space
 
         return sb.toString();
     }

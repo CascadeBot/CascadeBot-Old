@@ -28,7 +28,9 @@ public class RestartCommand implements ICommandRestricted {
     }
 
     @Override
-    public SecurityLevel getCommandLevel() { return SecurityLevel.OWNER; }
+    public SecurityLevel getCommandLevel() {
+        return SecurityLevel.OWNER;
+    }
 
     @Override
     public CommandType getType() {
@@ -39,4 +41,5 @@ public class RestartCommand implements ICommandRestricted {
     public boolean forceDefault() {
         return true;
     }
+
 }

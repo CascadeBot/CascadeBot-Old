@@ -44,7 +44,7 @@ public class CascadePlayer {
 
     public double getPlaylistLength() {
         double start = player.getPlayingTrack().getDuration();
-        for(AudioTrack track : tracks) {
+        for (AudioTrack track : tracks) {
             start += track.getDuration();
         }
         return start;
@@ -61,10 +61,11 @@ public class CascadePlayer {
 
     //TODO implement player methods
     public void addTrack(AudioTrack track) {
-        if(player.getPlayingTrack() != null) {
+        if (player.getPlayingTrack() != null) {
             tracks.add(track);
         } else {
             player.playTrack(track);
         }
     }
+
 }

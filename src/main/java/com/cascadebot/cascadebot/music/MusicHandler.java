@@ -21,6 +21,7 @@ public class MusicHandler {
     private static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
     private CascadeBot instance;
+
     public MusicHandler(CascadeBot instance) {
         this.instance = instance;
     }
@@ -35,7 +36,7 @@ public class MusicHandler {
                 Config.INS.getShardNum(),
                 shardId -> instance.getShardManager().getShardById(shardId));
 
-        if(Config.INS.getMusicNodes().size() > 0) {
+        if (Config.INS.getMusicNodes().size() > 0) {
             for (MusicNode musicNode : Config.INS.getMusicNodes()) {
                 lavalink.addNode(musicNode.uri, musicNode.password); //TODO give nodes a name
             }
@@ -71,6 +72,7 @@ public class MusicHandler {
             this.uri = uri;
             this.password = password;
         }
+
     }
 
     static JdaLavalink getLavaLink() {
@@ -80,4 +82,5 @@ public class MusicHandler {
     public static boolean isLavalinkEnabled() {
         return lavalinkEnabled;
     }
+
 }

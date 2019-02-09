@@ -16,6 +16,8 @@ import com.cascadebot.cascadebot.permissions.PermissionsManager;
 import com.cascadebot.shared.Version;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.sentry.Sentry;
+import io.sentry.SentryClient;
 import lavalink.client.io.jda.JdaLavalink;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
@@ -48,6 +50,9 @@ public class CascadeBot {
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
+        if (System.getenv("SENTRY_DSN") == null) {
+            logger.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
+        }
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
             version = Version.parseVer(scanner.next());
         }
@@ -68,13 +73,12 @@ public class CascadeBot {
     }
 
     /**
-     *  Runs once all shards are loaded
+     * Runs once all shards are loaded
      */
     public void run() {
         logger.info("All shards successfully logged in!");
         logger.info("Cascade Bot version {} successfully booted up!", version);
     }
-
 
 
     private void init() {
@@ -88,6 +92,10 @@ public class CascadeBot {
             ShutdownHandler.exitWithError();
             return;
         }
+
+        SentryClient client = Sentry.getStoredClient();
+        client.setEnvironment(Environment.isDevelopment() ? "development" : "production");
+        client.setRelease(version.toString());
 
         httpClient = new OkHttpClient.Builder().build();
 
