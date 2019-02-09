@@ -139,7 +139,7 @@ public class FormatUtils {
             sb.append(String.format("%-25s", head));
         }
 
-        sb.append("\u200B`");
+        sb.append("\u200B`"); // Zero width space
 
         sb.append("\n");
 
@@ -149,7 +149,7 @@ public class FormatUtils {
             sb.append(String.format("%-25s", bodyString));
         }
 
-        sb.append("\u200B`");
+        sb.append("\u200B`"); // Zero width space
 
         return sb.toString();
     }
