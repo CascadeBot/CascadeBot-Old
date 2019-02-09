@@ -9,7 +9,7 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.Environment;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.messaging.MessageType;
 import com.cascadebot.cascadebot.utils.ConfirmUtils;
@@ -65,8 +65,8 @@ public class ShutdownCommand implements ICommandRestricted {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.DEVELOPER;
+    public Module getType() {
+        return Module.DEVELOPER;
     }
 
     @Override

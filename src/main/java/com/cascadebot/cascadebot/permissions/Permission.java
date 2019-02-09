@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.permissions;
 
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -16,14 +16,14 @@ public class Permission {
     private final String permission;
     private final boolean defaultPerm;
     private final EnumSet<net.dv8tion.jda.core.Permission> discordPerm;
-    private final CommandType commandType;
+    private final Module module;
 
 
-    private Permission(String label, String permission, boolean defaultPerm, CommandType commandType, net.dv8tion.jda.core.Permission... discordPerm) {
+    private Permission(String label, String permission, boolean defaultPerm, Module module, net.dv8tion.jda.core.Permission... discordPerm) {
         this.label = label;
         this.permission = "cascade." + permission;
         this.defaultPerm = defaultPerm;
-        this.commandType = commandType;
+        this.module = module;
         this.discordPerm = EnumSet.noneOf(net.dv8tion.jda.core.Permission.class);
         this.discordPerm.addAll(Arrays.asList(discordPerm));
     }
@@ -40,12 +40,12 @@ public class Permission {
         return new Permission(label, permission, defaultPerm, null);
     }
 
-    public static Permission of(String label, String permission, CommandType commandType) {
-        return new Permission(label, permission, false, commandType);
+    public static Permission of(String label, String permission, Module module) {
+        return new Permission(label, permission, false, module);
     }
 
-    public static Permission of(String label, String permission, boolean defaultPerm, CommandType commandType) {
-        return new Permission(label, permission, defaultPerm, commandType);
+    public static Permission of(String label, String permission, boolean defaultPerm, Module module) {
+        return new Permission(label, permission, defaultPerm, module);
     }
 
     public static Permission of(String label, String permission, boolean defaultPerm, net.dv8tion.jda.core.Permission... discordPerm) {
@@ -61,12 +61,12 @@ public class Permission {
         return defaultPerm;
     }
 
-    public CommandType getCommandType() {
-        return commandType;
+    public Module getModule() {
+        return module;
     }
 
-    /*public static Permission getPermission(CommandType commandType) {
-        return COMMAND_TYPE_MAP.get(commandType);
+    /*public static Permission getPermission(Module module) {
+        return COMMAND_TYPE_MAP.get(module);
     }
 
     public static Permission getPermission(String permission) {

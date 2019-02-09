@@ -6,10 +6,9 @@
 package com.cascadebot.cascadebot.commands.fun;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.permissions.Permission;
-import com.google.gson.JsonObject;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import okhttp3.*;
@@ -62,8 +61,8 @@ public class DogCommand implements ICommandMain {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.FUN;
+    public Module getType() {
+        return Module.FUN;
     }
 
     @Override

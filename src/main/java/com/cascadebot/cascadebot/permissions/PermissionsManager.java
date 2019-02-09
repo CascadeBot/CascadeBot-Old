@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot.permissions;
 
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
@@ -53,8 +53,8 @@ public class PermissionsManager {
 
         registerPermission(Permission.of("All permissions", "*"));
 
-        registerPermission(Permission.of("Core Category", "category.core", true, CommandType.CORE));
-        registerPermission(Permission.of("Info Category", "category.info", true, CommandType.INFORMATIONAL));
+        registerPermission(Permission.of("Core Category", "category.core", true, Module.CORE));
+        registerPermission(Permission.of("Info Category", "category.info", true, Module.INFORMATIONAL));
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 

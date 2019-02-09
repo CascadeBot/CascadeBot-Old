@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot.commands.core;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.permissions.Permission;
 import net.dv8tion.jda.core.entities.Member;
@@ -29,8 +29,8 @@ public class InviteCommand implements ICommandMain {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.CORE;
+    public Module getType() {
+        return Module.CORE;
     }
 
     @Override

@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
-public enum CommandType {
+public enum Module {
 
     CORE,
     FUN,
@@ -14,11 +14,11 @@ public enum CommandType {
 
     private boolean availableModule;
 
-    CommandType() {
+    Module() {
         this.availableModule = true;
     }
 
-    CommandType(boolean availableModule) {
+    Module(boolean availableModule) {
         this.availableModule = availableModule;
     }
 

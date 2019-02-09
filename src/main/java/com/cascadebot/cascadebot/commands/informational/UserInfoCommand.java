@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot.commands.informational;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.Permission;
@@ -81,8 +81,8 @@ public class UserInfoCommand implements ICommandMain {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.INFORMATIONAL;
+    public Module getType() {
+        return Module.INFORMATIONAL;
     }
 
     @Override

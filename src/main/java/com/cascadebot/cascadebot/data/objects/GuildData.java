@@ -7,7 +7,7 @@ package com.cascadebot.cascadebot.data.objects;
 
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -77,8 +77,8 @@ public class GuildData {
         }
     }
 
-    public void enableCommandByType(CommandType commandType) {
-        for (ICommandMain command : CommandManager.instance().getCommandsByType(commandType)) {
+    public void enableCommandByType(Module module) {
+        for (ICommandMain command : CommandManager.instance().getCommandsByType(module)) {
             enableCommand(command);
         }
     }
@@ -88,9 +88,9 @@ public class GuildData {
         commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command)).setEnabled(false);
     }
 
-    public void disableCommandByType(CommandType commandType) {
-        if (!commandType.isAvailableModule()) return;
-        for (ICommandMain command : CommandManager.instance().getCommandsByType(commandType)) {
+    public void disableCommandByType(Module module) {
+        if (!module.isAvailableModule()) return;
+        for (ICommandMain command : CommandManager.instance().getCommandsByType(module)) {
             disableCommand(command);
         }
     }
@@ -102,7 +102,7 @@ public class GuildData {
         return true;
     }
 
-    public boolean isTypeEnabled(CommandType type) {
+    public boolean isTypeEnabled(Module type) {
         boolean enabled = true;
         for (ICommandMain command : CommandManager.instance().getCommandsByType(type)) {
             enabled &= commandInfo.get(command.getClass()).isEnabled();

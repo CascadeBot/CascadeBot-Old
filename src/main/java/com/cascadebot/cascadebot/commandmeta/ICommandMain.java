@@ -9,7 +9,7 @@ import java.util.Set;
 
 public interface ICommandMain extends ICommandExecutable {
 
-    CommandType getType();
+    Module getType();
 
     default boolean forceDefault() {
         return false;

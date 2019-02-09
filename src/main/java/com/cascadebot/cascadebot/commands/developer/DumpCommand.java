@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.shared.SecurityLevel;
@@ -34,8 +34,8 @@ public class DumpCommand implements ICommandRestricted {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.DEVELOPER;
+    public Module getType() {
+        return Module.DEVELOPER;
     }
 
     @Override

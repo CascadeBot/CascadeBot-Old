@@ -7,7 +7,7 @@ package com.cascadebot.cascadebot.commands.informational;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.permissions.Permission;
 import com.cascadebot.cascadebot.utils.FormatUtils;
@@ -50,8 +50,8 @@ public class ServerInfoCommand implements ICommandMain {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.INFORMATIONAL;
+    public Module getType() {
+        return Module.INFORMATIONAL;
     }
 
     @Override
