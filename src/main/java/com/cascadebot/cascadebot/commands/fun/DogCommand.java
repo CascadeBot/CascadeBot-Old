@@ -18,13 +18,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 
-public class CatCommand implements IMainCommand {
+public class DogCommand implements IMainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://api.thecatapi.com/v1/images/search").newBuilder();
+        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://api.thedogapi.com/v1/images/search").newBuilder();
         String url = urlBuilder.build().toString();
 
         Request request = new Request.Builder()
@@ -37,23 +37,23 @@ public class CatCommand implements IMainCommand {
             if (response != null) {
                 JSONArray jsonArray = new JSONArray(response.body().string());
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
-                String catUrl = jsonObject.getString("url");
+                String dogUrl = jsonObject.getString("url");
                 if (context.getData().getUseEmbedForMessages()) {
                     EmbedBuilder embedBuilder = new EmbedBuilder();
-                    embedBuilder.setImage(catUrl);
+                    embedBuilder.setImage(dogUrl);
                     context.reply(embedBuilder.build());
                 } else {
-                    context.reply(catUrl);
+                    context.reply(dogUrl);
                 }
             }
         } catch (IOException e) {
-            context.replyDanger("Our goblins scared away all of the cats!");
+            e.printStackTrace();
         }
     }
 
     @Override
     public String command() {
-        return "cat";
+        return "dog";
     }
 
     @Override
