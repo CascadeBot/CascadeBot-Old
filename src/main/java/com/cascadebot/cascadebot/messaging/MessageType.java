@@ -11,11 +11,11 @@ import java.awt.Color;
 
 public enum MessageType {
 
-    INFO(Color.CYAN, "\u2139"), // Information icon
-    SUCCESS(Color.GREEN, "\u2705"), // Tick
-    WARNING(Color.YELLOW, "\u26A0"), // Warning symbol
-    MODERATION(Color.WHITE, "\uD83D\uDC6E"), // Police symbol
-    DANGER(Color.RED, "\u274C"), // Red cross
+    INFO(Color.CYAN, "\u2139"), // ℹ Information icon
+    SUCCESS(Color.GREEN, "\u2705"), // ✅ Tick
+    WARNING(Color.YELLOW, "\u26A0"), // ⚠ Warning symbol
+    MODERATION(Color.WHITE, "\uD83D\uDC6E"), // 👮 Police symbol
+    DANGER(Color.RED, "\u274C"), // ❌ Red cross
     NEUTRAL(SharedConstants.CASCADE_COLOR, "");
 
     private final Color color;
