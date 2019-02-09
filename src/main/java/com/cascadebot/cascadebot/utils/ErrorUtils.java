@@ -29,7 +29,7 @@ public class ErrorUtils {
         try {
             Response response = CascadeBot.INS.getHttpClient().newCall(request).execute();
             JsonParser parser = new JsonParser();
-            if(response.body() != null) {
+            if (response.body() != null) {
                 JsonObject object = parser.parse(response.body().string()).getAsJsonObject();
                 return Config.INS.getHasteLink() + object.get("key").getAsString();
             }

@@ -32,7 +32,7 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            if(GuildDataMapper.getGuildData(message.getTextChannel().getGuild().getIdLong()).getUseEmbedForMessages()) {
+            if (GuildDataMapper.getGuildData(message.getTextChannel().getGuild().getIdLong()).getUseEmbedForMessages()) {
                 if (numbersInEmbed) {
                     embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
                     message.editMessage(embed.build()).override(true).queue();
@@ -46,6 +46,7 @@ public class PageObjects {
                 message.editMessage(content).override(true).queue();
             }
         }
+
     }
 
     public static class StringPage implements Page {
@@ -60,6 +61,7 @@ public class PageObjects {
         public void pageShow(Message message, int page, int total) {
             message.editMessage(content + "\n\nPage " + page + "/" + total).override(true).queue();
         }
+
     }
 
     public static class TablePage implements Page {
@@ -90,12 +92,14 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            if(numbersInTable) {
+            if (numbersInTable) {
                 footer = "Page " + page + "/" + total;
             }
             String table = FormatUtils.makeAsciiTable(header, body, footer);
-            if(!numbersInTable) table += "\n\nPage " + page + "/" + total;
+            if (!numbersInTable) table += "\n\nPage " + page + "/" + total;
             message.editMessage(table).override(true).queue();
         }
+
     }
+
 }

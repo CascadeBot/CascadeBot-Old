@@ -48,7 +48,7 @@ public class ConfirmUtils {
         if (channel.getGuild().getMember(CascadeBot.INS.getSelfUser()).hasPermission(channel, Permission.MESSAGE_ADD_REACTION)) {
             Task.getScheduler().schedule(() -> {
                 ButtonGroup group = new ButtonGroup(userId, channel.getGuild().getIdLong());
-                group.addButton(new Button.UnicodeButton("\u2705" /* ✅ */, (runner, channel1, message1) -> {
+                group.addButton(new Button.UnicodeButton("\u2705" /* Tick, confirm action */, (runner, channel1, message1) -> {
                     if (runner.getUser().getIdLong() != action.userID) return;
                     action.run();
                 }));

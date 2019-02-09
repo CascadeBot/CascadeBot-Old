@@ -60,7 +60,9 @@ public class ShutdownCommand implements ICommandRestricted {
     }
 
     @Override
-    public SecurityLevel getCommandLevel() { return SecurityLevel.OWNER; }
+    public SecurityLevel getCommandLevel() {
+        return SecurityLevel.OWNER;
+    }
 
     @Override
     public CommandType getType() {

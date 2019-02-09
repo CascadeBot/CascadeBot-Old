@@ -73,13 +73,12 @@ public class CascadeBot {
     }
 
     /**
-     *  Runs once all shards are loaded
+     * Runs once all shards are loaded
      */
     public void run() {
         logger.info("All shards successfully logged in!");
         logger.info("Cascade Bot version {} successfully booted up!", version);
     }
-
 
 
     private void init() {

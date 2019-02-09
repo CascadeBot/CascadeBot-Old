@@ -19,15 +19,15 @@ public class ButtonEventListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
-        if(e.getMember().equals(e.getGuild().getSelfMember())) {
+        if (e.getMember().equals(e.getGuild().getSelfMember())) {
             return;
         }
-        if(e.getChannel().getType().equals(ChannelType.TEXT)) {
+        if (e.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) e.getChannel();
             GuildData data = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
             ButtonsCache cache = data.getButtonsCache();
-            if(cache.containsKey(channel.getIdLong())) {
-                if(cache.get(channel.getIdLong()).containsKey(e.getMessageIdLong())) {
+            if (cache.containsKey(channel.getIdLong())) {
+                if (cache.get(channel.getIdLong()).containsKey(e.getMessageIdLong())) {
                     ButtonGroup group = cache.get(channel.getIdLong()).get(e.getMessageIdLong());
                     e.getChannel().getMessageById(e.getMessageId()).queue(message -> group.handleButton(e.getMember(), channel, message, e.getReactionEmote()));
                     e.getReaction().removeReaction(e.getMember().getUser()).queue(); //Idk if we want to allow other reactions on the message
@@ -39,7 +39,7 @@ public class ButtonEventListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(MessageDeleteEvent e) {
-        if(e.getChannel().getType().equals(ChannelType.TEXT)) {
+        if (e.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) e.getChannel();
             GuildData data = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
             ButtonsCache cache = data.getButtonsCache();
@@ -48,4 +48,5 @@ public class ButtonEventListener extends ListenerAdapter {
             }
         }
     }
+
 }
