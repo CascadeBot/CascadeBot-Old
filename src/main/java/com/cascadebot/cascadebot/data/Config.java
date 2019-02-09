@@ -103,13 +103,6 @@ public class Config {
             return;
         }
 
-        if (config.contains("sentry_dsn")) {
-            sentryDSN = config.getString("sentry_dsn");
-        } else {
-            LOG.warn("No sentry DSN was provided in the config, sentry may not work as expected!");
-            sentryDSN = "";
-        }
-
         this.debug = config.getBoolean("debug", false);
         if (this.debug) {
             LOG.info("Debug mode enabled!");
@@ -307,10 +300,6 @@ public class Config {
 
     public Auth getAuth() {
         return auth;
-    }
-
-    public String getSentryDSN() {
-        return sentryDSN;
     }
 
 }

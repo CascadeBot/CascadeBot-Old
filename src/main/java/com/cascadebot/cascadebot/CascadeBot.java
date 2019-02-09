@@ -50,6 +50,9 @@ public class CascadeBot {
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
+        if (System.getenv("SENTRY_DSN") == null) {
+            logger.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
+        }
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
             version = Version.parseVer(scanner.next());
         }
@@ -91,7 +94,7 @@ public class CascadeBot {
             return;
         }
 
-        SentryClient client = Sentry.init(Config.INS.getSentryDSN());
+        SentryClient client = Sentry.getStoredClient();
         client.setEnvironment(Environment.isDevelopment() ? "development" : "production");
         client.setRelease(version.toString());
 
