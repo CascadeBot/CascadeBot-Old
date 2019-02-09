@@ -44,7 +44,6 @@ public class Config {
     private boolean debug;
 
     private Auth auth;
-    private String sentryDSN;
 
     private String botToken;
     private Long botID;
