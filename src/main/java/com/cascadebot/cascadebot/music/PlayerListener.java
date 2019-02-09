@@ -13,13 +13,14 @@ import lavalink.client.player.event.TrackEndEvent;
 public class PlayerListener implements IPlayerEventListener {
 
     CascadePlayer player;
+
     public PlayerListener(CascadePlayer player) {
         this.player = player;
     }
 
     @Override
     public void onEvent(PlayerEvent playerEvent) {
-        if(playerEvent instanceof TrackEndEvent) {
+        if (playerEvent instanceof TrackEndEvent) {
             try {
                 AudioTrack audioTrack = player.getTracks().remove();
                 player.getPlayer().playTrack(audioTrack);
@@ -28,4 +29,5 @@ public class PlayerListener implements IPlayerEventListener {
             }
         }
     }
+
 }

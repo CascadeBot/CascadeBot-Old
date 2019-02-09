@@ -22,4 +22,5 @@ public class Group {
     public String getName() {
         return name;
     }
+
 }

@@ -35,4 +35,5 @@ public class TestCommand implements ICommandRestricted {
     public boolean forceDefault() {
         return true;
     }
+
 }

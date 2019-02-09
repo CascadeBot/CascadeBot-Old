@@ -26,7 +26,7 @@ public class RolesCommand implements ICommandMain {
         List<String> header = Arrays.asList("Role ID", "Role Name");
 
         List<List<String>> body = new ArrayList<>();
-        for(Role role : context.getGuild().getRoles()) {
+        for (Role role : context.getGuild().getRoles()) {
             List<String> row = new ArrayList<>();
             row.add(role.getId());
             row.add(role.getName());
@@ -55,4 +55,5 @@ public class RolesCommand implements ICommandMain {
     public Set<String> getGlobalAliases() {
         return Set.of("roleinfo");
     }
+
 }

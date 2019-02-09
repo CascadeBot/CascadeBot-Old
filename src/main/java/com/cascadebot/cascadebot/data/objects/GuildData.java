@@ -207,4 +207,5 @@ public class GuildData {
     public void setDisplayPermissionErrors(boolean displayPermissionErrors) {
         this.displayPermissionErrors = displayPermissionErrors;
     }
+
 }

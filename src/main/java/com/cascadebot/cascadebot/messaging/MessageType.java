@@ -7,7 +7,7 @@ package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.shared.SharedConstants;
 
-import java.awt.*;
+import java.awt.Color;
 
 public enum MessageType {
 
@@ -33,4 +33,5 @@ public enum MessageType {
     public String getEmoji() {
         return emoji;
     }
+
 }

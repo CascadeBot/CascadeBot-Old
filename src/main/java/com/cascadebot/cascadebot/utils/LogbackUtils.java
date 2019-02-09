@@ -74,7 +74,7 @@ public class LogbackUtils {
      * Sets the specified appender's level by disabling all other ThresholdFilters and programmatically adding
      * a threshold filter set at the specified level.
      *
-     * @param name The name of the appender to add to change the level of.
+     * @param name  The name of the appender to add to change the level of.
      * @param level The level to set the appender to.
      * @throws IllegalArgumentException If the provided name does not map to a assigned appender.
      */
@@ -109,7 +109,7 @@ public class LogbackUtils {
      * Reloads the logback configuration from the specified InputStream.
      *
      * @param inputStream The input stream to read the configuration from.
-     * @throws JoranException  If the configurator encounters an issue with the config.
+     * @throws JoranException If the configurator encounters an issue with the config.
      */
     public static void reloadFromConfig(InputStream inputStream) throws JoranException {
         LoggerContext context = getLoggerContext();

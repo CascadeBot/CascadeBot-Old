@@ -15,6 +15,7 @@ public class PageCache extends HashMap<Long, PageCache.Pages> {
     }
 
     public class Pages {
+
         List<Page> pages;
 
         int currentPage;
@@ -39,5 +40,7 @@ public class PageCache extends HashMap<Long, PageCache.Pages> {
         public int getPages() {
             return pages.size();
         }
+
     }
+
 }

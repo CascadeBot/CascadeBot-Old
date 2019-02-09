@@ -15,8 +15,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,17 +39,17 @@ public class ConsoleReader implements Runnable {
                             ShutdownHandler.stopByWrapper();
                             break;
                         } else if (args[0].equalsIgnoreCase("user")) {
-                            if(args.length > 2) {
+                            if (args.length > 2) {
                                 Long id = Long.parseLong(args[1]);
-                                if(Config.INS.getAuth().verifyEncrypt(args[1], args[2])) {
+                                if (Config.INS.getAuth().verifyEncrypt(args[1], args[2])) {
                                     String[] roles = args[3].split(",");
 
                                     Set<Long> ids = Arrays.stream(roles).map(Long::parseLong).collect(Collectors.toSet());
 
                                     SecurityLevel userLevel = Security.getLevelById(id, ids);
-                                    if(userLevel != null) {
+                                    if (userLevel != null) {
                                         CascadeBot.logger.info(userLevel.name());
-                                        if(userLevel.isAuthorised(SecurityLevel.STAFF)) {
+                                        if (userLevel.isAuthorised(SecurityLevel.STAFF)) {
                                             System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " authorized " + args[1] + " " + userLevel.name());
                                             continue;
                                         }
@@ -74,4 +72,5 @@ public class ConsoleReader implements Runnable {
             }
         }
     }
+
 }
