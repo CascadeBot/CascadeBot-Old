@@ -19,23 +19,20 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.IOException;
 
-
 public class CatCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        OkHttpClient client = new OkHttpClient();
 
+        OkHttpClient client = new OkHttpClient();
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://api.thecatapi.com/v1/images/search").newBuilder();
         String url = urlBuilder.build().toString();
-
         Request request = new Request.Builder()
                 .url(url)
                 .build();
 
         try {
             Response response = client.newCall(request).execute();
-
             if (response != null) {
                 JSONArray jsonArray = new JSONArray(response.body().string());
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
