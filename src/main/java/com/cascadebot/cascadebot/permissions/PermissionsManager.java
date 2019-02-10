@@ -15,12 +15,12 @@ import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.shared.SecurityLevel;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.google.common.collect.ImmutableSet;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +40,7 @@ public class PermissionsManager {
             .build(id -> Security.getLevelById(id, officialGuildRoleIDCache.get(id)));
 
     private ConcurrentHashMap<String, Permission> permissions = new ConcurrentHashMap<>();
-    private Map<Module, Permission> permissionModuleMap = Map.of();
+    private Set<Permission> defaultPermissions = Set.of();
 
     public void registerPermissions() {
         if (!permissions.isEmpty()) throw new IllegalStateException("Permissions have already been registered!");
@@ -60,13 +60,11 @@ public class PermissionsManager {
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 
-        Map<Module, Permission> tempMap = new HashMap<>();
-        permissions
-                .entrySet()
+        defaultPermissions = permissions.entrySet()
                 .stream()
-                .filter(p -> p.getValue().getModule() != null)
-                .forEach((e) -> tempMap.put(e.getValue().getModule(), e.getValue()));
-        permissionModuleMap = Map.copyOf(tempMap);
+                .filter(p -> p.getValue().isDefaultPerm())
+                .map(Map.Entry::getValue)
+                .collect(ImmutableSet.toImmutableSet());
 
     }
 
@@ -79,7 +77,14 @@ public class PermissionsManager {
     }
 
     public Permission getPermissionFromModule(Module module) {
-        return permissionModuleMap.get(module);
+        return permissions
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().getModule().equals(module))
+                .map(Map.Entry::getValue)
+                .findFirst()
+                .orElse(null); // Gets the permission connected to this module or returns null
+    }
     }
 
 
