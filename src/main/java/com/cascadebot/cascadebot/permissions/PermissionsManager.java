@@ -59,6 +59,7 @@ public class PermissionsManager {
 
         registerPermission(Permission.of("Core Category", "module.core", true, Module.CORE));
         registerPermission(Permission.of("Info Category", "module.info", true, Module.INFORMATIONAL));
+        registerPermission(Permission.of("Fun Category", "module.fun", true, Module.FUN));
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 
