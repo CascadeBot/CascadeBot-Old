@@ -56,18 +56,13 @@ public class DogCommand implements ICommandMain {
     }
 
     @Override
-    public boolean forceDefault() {
-        return true;
-    }
-
-    @Override
     public CommandType getType() {
         return CommandType.FUN;
     }
 
     @Override
     public Permission getPermission() {
-        return Permission.of("Dog command", "dog");
+        return Permission.of("Dog command", "dog", true);
     }
 
 }

@@ -55,18 +55,13 @@ public class CatCommand implements ICommandMain {
     }
 
     @Override
-    public boolean forceDefault() {
-        return true;
-    }
-
-    @Override
     public CommandType getType() {
         return CommandType.FUN;
     }
 
     @Override
     public Permission getPermission() {
-        return Permission.of("Cat command", "cat");
+        return Permission.of("Cat command", "cat", true);
     }
 
 }
