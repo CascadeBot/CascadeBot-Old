@@ -66,7 +66,7 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public Permission getPermission() {
-        return null; // Cannot be restricted
+        return Permission.of("Cat command", "cat", true);
     }
 
 }
