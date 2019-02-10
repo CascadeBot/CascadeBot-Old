@@ -67,33 +67,24 @@ public class Permission {
         return module;
     }
 
-    /*public static Permission getPermission(Module module) {
-        return COMMAND_TYPE_MAP.get(module);
-    }
-
-    public static Permission getPermission(String permission) {
-        return PERMISSION_MAP.get(permission.toLowerCase());
-    }
-
-    public static boolean isValidPermission(String permission) {
-        if (permission.contains("*") && permission.contains(".")) {
-            PermissionNode node = new PermissionNode(permission);
-            for (Permission perm : Permission.VALUES) {
-                if (perm != Permission.ALL_PERMISSIONS) {
-                    if (node.test(perm.getPermissionNode())) return true;
-                }
-            }
-        }
-        return getPermission(permission.substring(permission.startsWith("-") ? 1 : 0)) != null;
-    }
-
     public EnumSet<net.dv8tion.jda.core.Permission> getDiscordPerm() {
         return discordPerm;
-    }*/ // TODO: Move this to permissions manager
+    }
 
     @Override
     public String toString() {
         return getPermissionNode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Permission)) return false;
+        Permission otherPerm = (Permission) obj;
+        return this.label.equals(otherPerm.label) &&
+                this.defaultPerm == otherPerm.defaultPerm &&
+                this.module == otherPerm.module &&
+                this.permission.equals(otherPerm.permission) &&
+                this.discordPerm.equals(otherPerm.discordPerm);
     }
 
 }

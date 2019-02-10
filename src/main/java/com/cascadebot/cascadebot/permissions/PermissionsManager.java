@@ -21,10 +21,12 @@ import net.dv8tion.jda.core.entities.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class PermissionsManager {
 
@@ -85,6 +87,43 @@ public class PermissionsManager {
                 .findFirst()
                 .orElse(null); // Gets the permission connected to this module or returns null
     }
+
+    public boolean isValidPermission(String permission) {
+        return isValidPermission(null, permission);
+    }
+
+    public boolean isValidPermission(Guild guild, String permission) {
+        Set<Permission> permissions = getPermissions(guild);
+        if (permission.contains("*") && permission.contains(".")) {
+            PermissionNode node = new PermissionNode(permission);
+            for (Permission perm : permissions) {
+                if (perm != Permission.ALL_PERMISSIONS) {
+                    if (node.test(perm.getPermissionNode())) return true;
+                }
+            }
+        }
+        return getPermission(permission.substring(permission.startsWith("-") ? 1 : 0)) != null;
+    }
+
+    public Set<Permission> getDefaultPermissions() {
+        return defaultPermissions;
+    }
+
+    public Set<Permission> getPermissions() {
+        return getPermissions(null);
+    }
+
+    public Set<Permission> getPermissions(Guild guild) {
+        return getPermissions(guild, false);
+    }
+
+    public Set<Permission> getPermissions(Guild guild, boolean defaultOnly) {
+        // TODO: Add custom permission to guild data and add it here
+        if (defaultOnly) {
+            return defaultPermissions;
+        } else {
+            return permissions.values().stream().collect(ImmutableSet.toImmutableSet());
+        }
     }
 
 
