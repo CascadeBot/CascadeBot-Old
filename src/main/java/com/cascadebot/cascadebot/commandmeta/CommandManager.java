@@ -58,9 +58,9 @@ public class CommandManager {
         return commands;
     }
 
-    public List<ICommandMain> getCommandsByType(Module type) {
+    public List<ICommandMain> getCommandsByModule(Module type) {
         synchronized (commands) {
-            return commands.stream().filter(command -> command.getType() == type).collect(Collectors.toList());
+            return commands.stream().filter(command -> command.getModule() == type).collect(Collectors.toList());
         }
     }
 

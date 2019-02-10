@@ -34,7 +34,7 @@ public class DumpCommand implements ICommandRestricted {
     }
 
     @Override
-    public Module getType() {
+    public Module getModule() {
         return Module.DEVELOPER;
     }
 

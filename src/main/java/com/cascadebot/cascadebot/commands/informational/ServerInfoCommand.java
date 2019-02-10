@@ -50,7 +50,7 @@ public class ServerInfoCommand implements ICommandMain {
     }
 
     @Override
-    public Module getType() {
+    public Module getModule() {
         return Module.INFORMATIONAL;
     }
 

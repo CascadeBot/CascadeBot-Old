@@ -110,7 +110,7 @@ public class EvalCommand implements ICommandRestricted {
     }
 
     @Override
-    public Module getType() {
+    public Module getModule() {
         return Module.DEVELOPER;
     }
 

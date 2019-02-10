@@ -61,7 +61,7 @@ public class CatCommand implements ICommandMain {
     }
 
     @Override
-    public Module getType() {
+    public Module getModule() {
         return Module.FUN;
     }
 
