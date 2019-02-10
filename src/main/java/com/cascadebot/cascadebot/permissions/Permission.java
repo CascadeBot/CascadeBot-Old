@@ -12,6 +12,8 @@ import java.util.EnumSet;
 
 public class Permission {
 
+    public static final Permission ALL_PERMISSIONS = Permission.of("All permissions", "*");
+
     private final String label;
     private final String permission;
     private final boolean defaultPerm;
