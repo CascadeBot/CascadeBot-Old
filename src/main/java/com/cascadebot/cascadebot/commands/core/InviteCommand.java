@@ -6,12 +6,10 @@
 package com.cascadebot.cascadebot.commands.core;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.ICommandMain;
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.commandmeta.ICommandCore;
 import net.dv8tion.jda.core.entities.Member;
 
-public class InviteCommand implements ICommandMain {
+public class InviteCommand implements ICommandCore {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -21,21 +19,6 @@ public class InviteCommand implements ICommandMain {
     @Override
     public String command() {
         return "invite";
-    }
-
-    @Override
-    public boolean forceDefault() {
-        return true;
-    }
-
-    @Override
-    public CommandType getType() {
-        return CommandType.CORE;
-    }
-
-    @Override
-    public Permission getPermission() {
-        return null; // Cannot be restricted
     }
 
 }
