@@ -67,7 +67,7 @@ public class DogCommand implements ICommandMain {
 
     @Override
     public Permission getPermission() {
-        return Permission.of("Dog command", "dog", true);
+        return Permission.of("Dog command", "dog");
     }
 
 }
