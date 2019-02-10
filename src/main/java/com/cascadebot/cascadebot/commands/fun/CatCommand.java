@@ -23,7 +23,6 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-
         OkHttpClient client = new OkHttpClient();
         HttpUrl.Builder urlBuilder = HttpUrl.parse("https://api.thecatapi.com/v1/images/search").newBuilder();
         String url = urlBuilder.build().toString();
