@@ -7,8 +7,8 @@ package com.cascadebot.cascadebot.data.objects;
 
 import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.CommandManager;
-import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
@@ -24,6 +24,7 @@ import org.bson.codecs.pojo.annotations.BsonIgnore;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,6 +42,7 @@ public class GuildData {
     //endregion
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
+    private EnumSet<Module> enabledModules = EnumSet.of(Module.CORE, Module.INFORMATIONAL);
     private String commandPrefix = Config.INS.getDefaultPrefix();
 
     //region Boolean flags
@@ -64,12 +66,12 @@ public class GuildData {
     public void preSave() {
         this.stateLock = UUID.randomUUID();
     }
-
-
+    
     public GuildData(long guildID) {
         this.guildID = guildID;
     }
 
+    //region Commands
     public void enableCommand(ICommandMain command) {
         if (!command.getModule().isAvailableModule()) return;
         if (commandInfo.contains(command.getClass())) {
@@ -117,15 +119,15 @@ public class GuildData {
         return command.command();
     }
 
+    public void setCommandName(ICommandMain command, String commandName) {
+        getGuildCommandInfo(command).setCommand(commandName);
+    }
+
     public Set<String> getCommandArgs(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
             return getGuildCommandInfo(command).getAliases();
         }
         return command.getGlobalAliases();
-    }
-
-    public void setCommandName(ICommandMain command, String commandName) {
-        getGuildCommandInfo(command).setCommand(commandName);
     }
 
     public boolean addAlias(ICommandMain command, String alias) {
@@ -146,7 +148,36 @@ public class GuildData {
     public ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
         return commandInfo;
     }
+    //endregion
 
+    //region Modules
+    public void enableModule(Module module) {
+        if (!module.isAvailableModule()) {
+            throw new IllegalArgumentException("This module is not available to be enabled!");
+        }
+        this.enabledModules.add(module);
+    }
+
+    public void disableModule(Module module) {
+        if (!module.isAvailableModule()) {
+            throw new IllegalArgumentException("This module is not available to be disabled!");
+        } else if (module == Module.CORE) {
+            throw new IllegalArgumentException("Cannot disable the core module!");
+        }
+        this.enabledModules.remove(module);
+    }
+
+    public boolean isModuleEnabled(Module module) {
+        return this.enabledModules.contains(module);
+    }
+    //endregion
+
+    public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
+        group.setMessage(message.getIdLong());
+        buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
+    }
+
+    //region Getters and setters
     public long getGuildID() {
         return guildID;
     }
@@ -167,17 +198,16 @@ public class GuildData {
         this.useEmbedForMessages = useEmbedForMessages;
     }
 
-    public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
-        group.setMessage(message.getIdLong());
-        buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
-    }
-
     public ButtonsCache getButtonsCache() {
         return buttonsCache;
     }
 
     public Collection<GuildCommandInfo> getGuildCommandInfos() {
         return commandInfo.values();
+    }
+
+    public EnumSet<Module> getEnabledModules() {
+        return enabledModules;
     }
 
     public Version getConfigVersion() {
@@ -207,5 +237,6 @@ public class GuildData {
     public void setDisplayPermissionErrors(boolean displayPermissionErrors) {
         this.displayPermissionErrors = displayPermissionErrors;
     }
+    //endregion
 
 }
