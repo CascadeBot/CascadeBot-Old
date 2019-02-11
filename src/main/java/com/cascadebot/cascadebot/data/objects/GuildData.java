@@ -66,7 +66,7 @@ public class GuildData {
     public void preSave() {
         this.stateLock = UUID.randomUUID();
     }
-    
+
     public GuildData(long guildID) {
         this.guildID = guildID;
     }
