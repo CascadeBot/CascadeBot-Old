@@ -10,6 +10,9 @@ import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.utils.WebUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import okhttp3.OkHttpClient;
@@ -24,30 +27,15 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        OkHttpClient client = new OkHttpClient();
-        HttpUrl.Builder urlBuilder = HttpUrl.parse("https://api.thecatapi.com/v1/images/search").newBuilder();
-        String url = urlBuilder.build().toString();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
+        JsonArray jsonArray = null;
         try {
-            Response response = client.newCall(request).execute();
-            if (response != null) {
-                JSONArray jsonArray = new JSONArray(response.body().string());
-                JSONObject jsonObject = jsonArray.getJSONObject(0);
-                String catUrl = jsonObject.getString("url");
-                if (context.getData().getUseEmbedForMessages()) {
-                    EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-                    embedBuilder.setImage(catUrl);
-                    context.reply(embedBuilder.build());
-                } else {
-                    context.reply(catUrl);
-                }
-            }
+            jsonArray = WebUtils.getJsonFromURL("https://api.thecatapi.com/v1/images/search").getAsJsonArray();
         } catch (IOException e) {
-            context.replyDanger("Our goblins scared away all of the cats!");
+            context.replyDanger("Error loading cat picture \uD83D\uDE26");
         }
+        JsonObject jsonObject = jsonArray.get(0).getAsJsonObject();
+        String dogUrl = jsonObject.get("url").getAsString();
+        context.replyImage(dogUrl);
     }
 
     @Override

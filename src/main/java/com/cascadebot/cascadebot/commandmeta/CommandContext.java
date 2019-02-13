@@ -9,6 +9,7 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.messaging.Messaging;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.shared.Regex;
@@ -217,6 +218,16 @@ public class CommandContext {
     public void replyDanger(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
         Messaging.sendDangerMessage(channel, builder, data.getUseEmbedForMessages());
+    }
+
+    public void replyImage(String url) {
+        if (getData().getUseEmbedForMessages()) {
+            EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+            embedBuilder.setImage(url);
+            reply(embedBuilder.build());
+        } else {
+            reply(url);
+        }
     }
 
     /**
