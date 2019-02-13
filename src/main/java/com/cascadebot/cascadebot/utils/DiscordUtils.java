@@ -41,15 +41,7 @@ public class DiscordUtils {
      */
     public static Member getMember(String search, Guild guild) {
         Checks.notBlank(search, "user");
-        Checks.notNull(guild, "guild");
-        String id = null;
-        if (idPattern.matcher(search).matches()) {
-            id = search;
-        }
-        Matcher matcher = userMentionPattern.matcher(search);
-        if (matcher.matches()) {
-            id = matcher.group(1);
-        }
+        String id = getIdFromString(search, guild, userMentionPattern);
 
         if (id != null) {
             User user = getUserById(Long.parseLong(id));
@@ -89,15 +81,7 @@ public class DiscordUtils {
      */
     public static Role getRole(String search, Guild guild) {
         Checks.notBlank(search, "role");
-        Checks.notNull(guild, "guild");
-        String id = null;
-        if (idPattern.matcher(search).matches()) {
-            id = search;
-        }
-        Matcher matcher = roleMentionPattern.matcher(search);
-        if (matcher.matches()) {
-            id = matcher.group(1);
-        }
+        String id = getIdFromString(search, guild, roleMentionPattern);
 
         if (id != null) {
             Role role = guild.getRoleById(id);
@@ -172,4 +156,17 @@ public class DiscordUtils {
         return member.hasPermission(channel, permissions);
     }
 
+    private static String getIdFromString(String search, Guild guild, Pattern pattern) {
+        Checks.notNull(guild, "guild");
+        String id = null;
+        if (idPattern.matcher(search).matches()) {
+            id = search;
+        }
+        Matcher matcher = pattern.matcher(search);
+        if (matcher.matches()) {
+            id = matcher.group(1);
+        }
+
+        return id;
+    }
 }
