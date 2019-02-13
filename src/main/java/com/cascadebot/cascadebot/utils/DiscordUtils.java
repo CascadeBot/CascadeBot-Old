@@ -150,7 +150,7 @@ public class DiscordUtils {
      * @throws IllegalArgumentException if permissions are empty or null.
      * @throws IllegalArgumentException if member is null or not in the same guild.
      */
-    public boolean hasPermission(Member member, Channel channel, Permission... permissions) {
+    public static boolean hasPermission(Member member, Channel channel, Permission... permissions) {
         Checks.notEmpty(permissions, "Permissions");
         Checks.check(member.getGuild().getIdLong() == channel.getGuild().getIdLong(), "Member and channel need to be in the same guild!");
         return member.hasPermission(channel, permissions);
