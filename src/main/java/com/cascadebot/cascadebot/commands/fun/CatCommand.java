@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot.commands.fun;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.Permission;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
@@ -37,7 +38,7 @@ public class CatCommand implements ICommandMain {
                 JSONObject jsonObject = jsonArray.getJSONObject(0);
                 String catUrl = jsonObject.getString("url");
                 if (context.getData().getUseEmbedForMessages()) {
-                    EmbedBuilder embedBuilder = new EmbedBuilder();
+                    EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     embedBuilder.setImage(catUrl);
                     context.reply(embedBuilder.build());
                 } else {

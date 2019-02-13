@@ -9,6 +9,8 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
+import com.cascadebot.cascadebot.messaging.Messaging;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.Permission;
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -31,7 +33,7 @@ public class ServerInfoCommand implements ICommandMain {
             return;
         }
 
-        EmbedBuilder builder = new EmbedBuilder();
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(guildForInfo.getName());
         builder.setThumbnail(guildForInfo.getIconUrl());
         builder.addField("Creation Date", FormatUtils.formatDateTime(guildForInfo.getCreationTime()), true);
