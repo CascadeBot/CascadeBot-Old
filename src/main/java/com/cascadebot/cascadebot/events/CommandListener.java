@@ -12,6 +12,7 @@ import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.shared.Regex;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
@@ -60,6 +61,11 @@ public class CommandListener extends ListenerAdapter {
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
         if (cmd != null) {
+            if (cmd.getModule().isPublicModule() &&
+                    !guildData.isModuleEnabled(cmd.getModule()) &&
+                    guildData.willDisplayModuleErrors()) {
+                Messaging.sendDangerMessage(event.getChannel(), String.format("Module `%s` disabled!", cmd.getModule().toString()), guildData.getUseEmbedForMessages());
+            }
             CommandContext context = new CommandContext(
                     event.getChannel(),
                     event.getMessage(),
