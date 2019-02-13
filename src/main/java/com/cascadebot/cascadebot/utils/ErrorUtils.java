@@ -34,7 +34,7 @@ public class ErrorUtils {
                 return Config.INS.getHasteLink() + object.get("key").getAsString();
             }
         } catch (IOException e) {
-            e.printStackTrace(); //TODO log this separately so things don't infinite loop.
+            CascadeBot.logger.error("Error while trying to post!", e);
         }
         return "";
     }
