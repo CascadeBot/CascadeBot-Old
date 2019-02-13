@@ -29,6 +29,7 @@ public class ConfirmUtils {
     // Holds the users that have confirmed an action
     private static ListMultimap<String, ConfirmRunnable> confirmedMap = ArrayListMultimap.create();
 
+    //region Confirm Action
     public static boolean confirmAction(long userId, String actionKey, TextChannel channel, MessageType type, String message, long buttonDelay, long expiry, ConfirmRunnable action) {
         GuildData guildData = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
         boolean useEmbed = guildData.getUseEmbedForMessages();
@@ -91,6 +92,7 @@ public class ConfirmUtils {
                 action
         );
     }
+    //endregion
 
     public static boolean hasConfirmedAction(String actionKey, long userId) {
         return confirmedMap.entries().stream().anyMatch(entry -> entry.getKey().equals(actionKey) && entry.getValue().userID == userId);
