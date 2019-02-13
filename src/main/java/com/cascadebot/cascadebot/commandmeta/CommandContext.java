@@ -22,10 +22,16 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.requests.RequestFuture;
+import net.dv8tion.jda.core.requests.RestFuture;
+import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class CommandContext {
@@ -220,13 +226,13 @@ public class CommandContext {
         Messaging.sendDangerMessage(channel, builder, data.getUseEmbedForMessages());
     }
 
-    public void replyImage(String url) {
+    public MessageAction replyImage(String url) {
         if (getData().getUseEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setImage(url);
-            reply(embedBuilder.build());
+            return channel.sendMessage(embedBuilder.build());
         } else {
-            reply(url);
+            return channel.sendMessage(url);
         }
     }
 
