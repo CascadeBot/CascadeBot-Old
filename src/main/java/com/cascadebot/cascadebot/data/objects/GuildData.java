@@ -49,6 +49,7 @@ public class GuildData {
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
     private boolean useEmbedForMessages = true;
     private boolean displayPermissionErrors = true; // Whether commands will silently fail on no permissions
+    private boolean displayModuleErrors = false;
     //endregion
 
     //region Transient fields
@@ -235,6 +236,14 @@ public class GuildData {
 
     public void setDisplayPermissionErrors(boolean displayPermissionErrors) {
         this.displayPermissionErrors = displayPermissionErrors;
+    }
+
+    public boolean willDisplayModuleErrors() {
+        return displayModuleErrors;
+    }
+
+    public void setDisplayModuleErrors(boolean displayModuleErrors) {
+        this.displayModuleErrors = displayModuleErrors;
     }
     //endregion
 
