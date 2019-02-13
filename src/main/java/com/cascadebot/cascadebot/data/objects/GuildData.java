@@ -73,7 +73,7 @@ public class GuildData {
 
     //region Commands
     public void enableCommand(ICommandMain command) {
-        if (!command.getModule().isAvailableModule()) return;
+        if (!command.getModule().isPublicModule()) return;
         if (commandInfo.contains(command.getClass())) {
             commandInfo.get(command.getClass()).setEnabled(true);
         }
@@ -86,12 +86,12 @@ public class GuildData {
     }
 
     public void disableCommand(ICommandMain command) {
-        if (!command.getModule().isAvailableModule()) return;
+        if (!command.getModule().isPublicModule()) return;
         commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command)).setEnabled(false);
     }
 
     public void disableCommandByType(Module module) {
-        if (!module.isAvailableModule()) return;
+        if (!module.isPublicModule()) return;
         for (ICommandMain command : CommandManager.instance().getCommandsByModule(module)) {
             disableCommand(command);
         }
@@ -152,14 +152,14 @@ public class GuildData {
 
     //region Modules
     public void enableModule(Module module) {
-        if (!module.isAvailableModule()) {
+        if (!module.isPublicModule()) {
             throw new IllegalArgumentException("This module is not available to be enabled!");
         }
         this.enabledModules.add(module);
     }
 
     public void disableModule(Module module) {
-        if (!module.isAvailableModule()) {
+        if (!module.isPublicModule()) {
             throw new IllegalArgumentException("This module is not available to be disabled!");
         } else if (module == Module.CORE) {
             throw new IllegalArgumentException("Cannot disable the core module!");

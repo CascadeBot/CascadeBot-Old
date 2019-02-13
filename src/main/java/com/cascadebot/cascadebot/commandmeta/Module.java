@@ -12,17 +12,17 @@ public enum Module {
     INFORMATIONAL,
     DEVELOPER(false);
 
-    private boolean availableModule;
+    private boolean publicModule;
 
     Module() {
-        this.availableModule = true;
+        this.publicModule = true;
     }
 
-    Module(boolean availableModule) {
-        this.availableModule = availableModule;
+    Module(boolean publicModule) {
+        this.publicModule = publicModule;
     }
 
-    public boolean isAvailableModule() {
-        return availableModule;
+    public boolean isPublicModule() {
+        return publicModule;
     }
 }
