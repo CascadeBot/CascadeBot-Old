@@ -36,8 +36,7 @@ public class DatabaseManager {
             CodecRegistries.fromProviders(PojoCodecProvider.builder().register(
                     "com.cascadebot.cascadebot.data.objects",
                     "com.cascadebot.shared"
-            ).build()),
-            CodecRegistries.fromCodecs()
+            ).build())
     );
 
     private String databaseName;
