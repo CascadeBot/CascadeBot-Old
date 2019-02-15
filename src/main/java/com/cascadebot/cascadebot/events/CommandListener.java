@@ -39,7 +39,7 @@ public class CommandListener extends ListenerAdapter {
             guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
             if (guildData == null) {
                 // This should *hopefully* never happen but just in case :D
-                throw new IllegalStateException(String.format("Guild Data for guild ID: %s is null!", event.getGuild().getId()));
+                throw new IllegalStateException(String.format("Guild data for guild ID: %s is null!", event.getGuild().getId()));
             }
         } catch (Exception e) {
             Messaging.sendDangerMessage(
