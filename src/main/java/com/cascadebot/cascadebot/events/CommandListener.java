@@ -12,6 +12,8 @@ import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.messaging.Messaging;
+import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.shared.Regex;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
@@ -32,7 +34,24 @@ public class CommandListener extends ListenerAdapter {
         if (event.getAuthor().isBot()) return;
 
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
-        GuildData guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
+        GuildData guildData;
+        try {
+            guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
+            if (guildData == null) {
+                // This should *hopefully* never happen but just in case :D
+                throw new IllegalStateException(String.format("Guild Data for guild ID: %s is null!", event.getGuild().getId()));
+            }
+        } catch (Exception e) {
+            Messaging.sendDangerMessage(
+                    event.getChannel(),
+                    // TODO: Add official server invite
+                    String.format(
+                            "We have failed to process your guild data! Please report this error and [this link](%s) to the developers!",
+                            ErrorUtils.paste(ErrorUtils.getStackTrace(e))
+                    )
+            );
+            return;
+        }
 
         String prefix = guildData.getCommandPrefix();
         boolean isMention = false;
