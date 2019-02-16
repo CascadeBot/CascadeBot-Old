@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.permissions.objects;
 
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.google.common.collect.Sets;
 
 import java.util.Set;
@@ -13,7 +13,7 @@ import java.util.Set;
 public class User {
 
     private final Set<String> groups = Sets.newConcurrentHashSet();
-    private final Set<Permission> permissions = Sets.newConcurrentHashSet();
+    private final Set<CascadePermission> permissions = Sets.newConcurrentHashSet();
 
     public boolean addGroup(Group group) {
         return groups.add(group.getName());
@@ -28,7 +28,7 @@ public class User {
         return groups;
     }
 
-    public Set<Permission> getPermissions() {
+    public Set<CascadePermission> getPermissions() {
         return permissions;
     }
 

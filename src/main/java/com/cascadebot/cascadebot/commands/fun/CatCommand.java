@@ -8,7 +8,7 @@ package com.cascadebot.cascadebot.commands.fun;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import okhttp3.OkHttpClient;
@@ -60,8 +60,8 @@ public class CatCommand implements ICommandMain {
     }
 
     @Override
-    public Permission getPermission() {
-        return Permission.of("Cat command", "cat", true);
+    public CascadePermission getPermission() {
+        return CascadePermission.of("Cat command", "cat", true);
     }
 
 }

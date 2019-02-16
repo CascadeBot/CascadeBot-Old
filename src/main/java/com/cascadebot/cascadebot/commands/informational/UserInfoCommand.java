@@ -9,7 +9,7 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
@@ -86,8 +86,8 @@ public class UserInfoCommand implements ICommandMain {
     }
 
     @Override
-    public Permission getPermission() {
-        return Permission.of("User info command", "userinfo", true);
+    public CascadePermission getPermission() {
+        return CascadePermission.of("User info command", "userinfo", true);
     }
 
 }

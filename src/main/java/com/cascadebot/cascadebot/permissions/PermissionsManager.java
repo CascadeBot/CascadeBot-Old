@@ -21,12 +21,10 @@ import net.dv8tion.jda.core.entities.Member;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class PermissionsManager {
 
@@ -41,8 +39,8 @@ public class PermissionsManager {
             .refreshAfterWrite(5, TimeUnit.MINUTES)
             .build(id -> Security.getLevelById(id, officialGuildRoleIDCache.get(id)));
 
-    private ConcurrentHashMap<String, Permission> permissions = new ConcurrentHashMap<>();
-    private Set<Permission> defaultPermissions = Set.of();
+    private ConcurrentHashMap<String, CascadePermission> permissions = new ConcurrentHashMap<>();
+    private Set<CascadePermission> defaultPermissions = Set.of();
 
     public void registerPermissions() {
         if (!permissions.isEmpty()) throw new IllegalStateException("Permissions have already been registered!");
@@ -57,9 +55,9 @@ public class PermissionsManager {
             }
         }
 
-        registerPermission(Permission.of("Core Category", "module.core", true, Module.CORE));
-        registerPermission(Permission.of("Info Category", "module.info", true, Module.INFORMATIONAL));
-        registerPermission(Permission.of("Fun Category", "module.fun", true, Module.FUN));
+        registerPermission(CascadePermission.of("Core Category", "module.core", true, Module.CORE));
+        registerPermission(CascadePermission.of("Info Category", "module.info", true, Module.INFORMATIONAL));
+        registerPermission(CascadePermission.of("Fun Category", "module.fun", true, Module.FUN));
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 
@@ -71,15 +69,15 @@ public class PermissionsManager {
 
     }
 
-    private void registerPermission(Permission permission) {
+    private void registerPermission(CascadePermission permission) {
         permissions.put(permission.getPermissionNode(), permission);
     }
 
-    public Permission getPermission(String permission) {
+    public CascadePermission getPermission(String permission) {
         return permissions.get(permission);
     }
 
-    public Permission getPermissionFromModule(Module module) {
+    public CascadePermission getPermissionFromModule(Module module) {
         return permissions
                 .entrySet()
                 .stream()
@@ -94,11 +92,11 @@ public class PermissionsManager {
     }
 
     public boolean isValidPermission(Guild guild, String permission) {
-        Set<Permission> permissions = getPermissions(guild);
+        Set<CascadePermission> permissions = getPermissions(guild);
         if (permission.contains("*") && permission.contains(".")) {
             PermissionNode node = new PermissionNode(permission);
-            for (Permission perm : permissions) {
-                if (perm != Permission.ALL_PERMISSIONS) {
+            for (CascadePermission perm : permissions) {
+                if (perm != CascadePermission.ALL_PERMISSIONS) {
                     if (node.test(perm.getPermissionNode())) return true;
                 }
             }
@@ -106,19 +104,19 @@ public class PermissionsManager {
         return getPermission(permission.substring(permission.startsWith("-") ? 1 : 0)) != null;
     }
 
-    public Set<Permission> getDefaultPermissions() {
+    public Set<CascadePermission> getDefaultPermissions() {
         return defaultPermissions;
     }
 
-    public Set<Permission> getPermissions() {
+    public Set<CascadePermission> getPermissions() {
         return getPermissions(null);
     }
 
-    public Set<Permission> getPermissions(Guild guild) {
+    public Set<CascadePermission> getPermissions(Guild guild) {
         return getPermissions(guild, false);
     }
 
-    public Set<Permission> getPermissions(Guild guild, boolean defaultOnly) {
+    public Set<CascadePermission> getPermissions(Guild guild, boolean defaultOnly) {
         // TODO: Add custom permission to guild data and add it here
         if (defaultOnly) {
             return defaultPermissions;
