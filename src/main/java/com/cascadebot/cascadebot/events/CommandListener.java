@@ -76,7 +76,17 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        processCommands(event, guildData, trigger, args, isMention);
+        try {
+            processCommands(event, guildData, trigger, args, isMention);
+        } catch (Exception e) {
+            Messaging.sendDangerMessage(
+                    event.getChannel(),
+                    String.format(
+                            "There was an error while processing your command! Please report this error and [this link](%s) to the developers!",
+                            ErrorUtils.paste(ErrorUtils.getStackTrace(e))
+                    )
+            );
+        }
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
