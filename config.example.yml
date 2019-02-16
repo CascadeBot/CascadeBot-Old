@@ -73,6 +73,7 @@ global_emotes:
   nitro:
   muted:
   deafened:
+  mobile:
 
 
 # The haste server to use for "hasting" messages.
