@@ -40,7 +40,7 @@ public class UserInfoCommand implements ICommandMain {
         User user = memberForInfo.getUser();
 
         List<Page> pageList = new ArrayList<>();
-        EmbedBuilder builder = MessagingObjects.getInfoEmbedBuilder();
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(user.getAsTag());
         builder.setThumbnail(user.getAvatarUrl());
         builder.addField("User Created", user.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);

@@ -10,7 +10,7 @@ import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.database.DatabaseManager;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
-import com.cascadebot.cascadebot.events.Events;
+import com.cascadebot.cascadebot.events.GeneralEvents;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.cascadebot.permissions.PermissionsManager;
 import com.cascadebot.shared.Version;
@@ -121,7 +121,7 @@ public class CascadeBot {
         try {
             shardManager = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
-                    .addEventListeners(new Events())
+                    .addEventListeners(new GeneralEvents())
                     .addEventListeners(new ButtonEventListener())
                     .addEventListeners(lavalink)
                     .setToken(Config.INS.getBotToken())

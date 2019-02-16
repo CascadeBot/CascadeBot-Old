@@ -13,6 +13,7 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.slf4j.MarkerFactory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -34,7 +35,7 @@ public class ErrorUtils {
                 return Config.INS.getHasteLink() + object.get("key").getAsString();
             }
         } catch (IOException e) {
-            e.printStackTrace(); //TODO log this separately so things don't infinite loop.
+            CascadeBot.logger.error(MarkerFactory.getMarker("HASTEBIN"), "Error while trying to post!", e);
         }
         return "";
     }

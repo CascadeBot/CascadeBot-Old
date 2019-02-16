@@ -9,6 +9,7 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.messaging.Messaging;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.shared.Regex;
@@ -21,10 +22,16 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.requests.RequestFuture;
+import net.dv8tion.jda.core.requests.RestFuture;
+import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class CommandContext {
@@ -217,6 +224,16 @@ public class CommandContext {
     public void replyDanger(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
         Messaging.sendDangerMessage(channel, builder, data.getUseEmbedForMessages());
+    }
+
+    public MessageAction replyImage(String url) {
+        if (getData().getUseEmbedForMessages()) {
+            EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+            embedBuilder.setImage(url);
+            return channel.sendMessage(embedBuilder.build());
+        } else {
+            return channel.sendMessage(url);
+        }
     }
 
     /**
