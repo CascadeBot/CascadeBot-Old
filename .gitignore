@@ -24,4 +24,3 @@ config.yml
 !config.example.yml
 
 TestCommand.java
-MemberCountCommand.java
