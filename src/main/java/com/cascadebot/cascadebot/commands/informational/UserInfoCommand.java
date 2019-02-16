@@ -14,6 +14,7 @@ import com.cascadebot.cascadebot.utils.DiscordUtils;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
@@ -39,6 +40,20 @@ public class UserInfoCommand implements ICommandMain {
         }
         User user = memberForInfo.getUser();
 
+        String status = "";
+
+        if (memberForInfo.getOnlineStatus() == OnlineStatus.ONLINE) {
+            status = context.globalEmote("online");
+        } else if (memberForInfo.getOnlineStatus() == OnlineStatus.OFFLINE) {
+            status = context.globalEmote("offline");
+        } else if (memberForInfo.getOnlineStatus() == OnlineStatus.DO_NOT_DISTURB) {
+            status = context.globalEmote("dnd");
+        } else if (memberForInfo.getOnlineStatus() == OnlineStatus.IDLE) {
+            status = context.globalEmote("idle");
+        } else {
+            status = context.globalEmote("offline");
+        }
+
         List<Page> pageList = new ArrayList<>();
         EmbedBuilder builder = MessagingObjects.getInfoEmbedBuilder();
         builder.setTitle(user.getAsTag());
@@ -46,17 +61,17 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField("User Created", user.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
         builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
         builder.addField("User ID", user.getId(), true);
-        builder.addField("Status", StringUtils.capitalize(memberForInfo.getOnlineStatus().toString().replace("_", " ").toLowerCase()), true);
+        builder.addField("Status", StringUtils.capitalize(memberForInfo.getOnlineStatus().toString().replace("_", " ").toLowerCase()) + "  " + status, true);
 
         Game game = memberForInfo.getGame();
         if (game != null && !game.isRich()) {
-            String status = "";
+            String gameStatus = "";
             if (game.isRich()) {
                 // TODO: This will require API I think
             } else {
-                status = StringUtils.capitalize(game.getType().toString().toLowerCase()) + " " + game.getName();
+                gameStatus = StringUtils.capitalize(game.getType().toString().toLowerCase()) + " " + game.getName();
             }
-            builder.addField("Activity", status, true);
+            builder.addField("Activity", gameStatus, true);
         }
         pageList.add(new PageObjects.EmbedPage(builder));
 
