@@ -73,12 +73,7 @@ public class CommandListener extends ListenerAdapter {
                     builder.setFooter("Requested by " + event.getAuthor().getAsTag(), event.getAuthor().getEffectiveAvatarUrl());
                     Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getUseEmbedForMessages());
                 }
-                CascadeBot.logger.info(
-                        "[Guild: {} Id: {}] {} tried to execute command {} when the module {} was disabled!",
-                        event.getGuild().getName(),
-                        event.getGuild().getId(),
-                        event.getAuthor().getAsTag(),
-                        cmd.getModule().toString());
+                // TODO: Modlog?
                 return;
             }
             CommandContext context = new CommandContext(
