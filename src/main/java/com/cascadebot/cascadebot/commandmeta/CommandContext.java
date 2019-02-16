@@ -412,6 +412,7 @@ public class CommandContext {
     public Emote getGlobalEmote(String key) {
         Long emoteId = Config.INS.getGlobalEmotes().get(key);
         if (emoteId != null) {
+            CascadeBot.logger.warn("Tried to get global emote that doesn't exist! Key: {}", key);
             return CascadeBot.INS.getShardManager().getEmoteById(emoteId);
         }
         return null;

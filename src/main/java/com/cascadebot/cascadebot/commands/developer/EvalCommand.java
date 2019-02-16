@@ -90,6 +90,7 @@ public class EvalCommand implements ICommandRestricted {
                 String codeToRun = imports + " " + code;
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
                 if (results.length() < 2048) {
+                    if (results.isBlank()) results = "Empty result!";
                     context.reply(results);
                 } else {
                     context.reply(ErrorUtils.paste(results));
