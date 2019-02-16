@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import net.dv8tion.jda.core.entities.Member;
 
 public interface ICommandExecutable {
@@ -14,6 +14,6 @@ public interface ICommandExecutable {
 
     String command();
 
-    Permission getPermission();
+    CascadePermission getPermission();
 
 }

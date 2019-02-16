@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import net.dv8tion.jda.core.entities.Member;
 
@@ -27,8 +27,8 @@ public class TestCommand implements ICommandRestricted {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.DEVELOPER;
+    public Module getModule() {
+        return Module.DEVELOPER;
     }
 
     @Override

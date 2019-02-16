@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.shared.SecurityLevel;
 
 public interface ICommandRestricted extends ICommandMain {
@@ -15,7 +15,7 @@ public interface ICommandRestricted extends ICommandMain {
     }
 
     @Override
-    default Permission getPermission() {
+    default CascadePermission getPermission() {
         return null; // Since these cannot be run by normal guilds, this cannot have a permission
     }
 

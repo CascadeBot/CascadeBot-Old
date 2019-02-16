@@ -6,9 +6,9 @@
 package com.cascadebot.cascadebot.commands.informational;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
@@ -42,13 +42,13 @@ public class RolesCommand implements ICommandMain {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.INFORMATIONAL;
+    public Module getModule() {
+        return Module.INFORMATIONAL;
     }
 
     @Override
-    public Permission getPermission() {
-        return Permission.of("Roles command", "roles", false);
+    public CascadePermission getPermission() {
+        return CascadePermission.of("Roles command", "roles", false);
     }
 
     @Override
