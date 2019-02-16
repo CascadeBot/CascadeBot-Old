@@ -50,8 +50,6 @@ public class UserInfoCommand implements ICommandMain {
             status = context.globalEmote("dnd");
         } else if (memberForInfo.getOnlineStatus() == OnlineStatus.IDLE) {
             status = context.globalEmote("idle");
-        } else {
-            status = context.globalEmote("offline");
         }
 
         List<Page> pageList = new ArrayList<>();
