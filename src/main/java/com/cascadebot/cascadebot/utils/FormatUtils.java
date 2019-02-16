@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FormatUtils {
-
+    //region Table methods
     public static String makeAsciiTable(java.util.List<String> headers, java.util.List<java.util.List<String>> table, String footer) {
         StringBuilder sb = new StringBuilder();
         int padding = 1;
@@ -85,7 +85,9 @@ public class FormatUtils {
         sb.append("|\n");
         return sb.toString();
     }
+    //endregion
 
+    //region Embed methods
     public static String formatEmbed(MessageEmbed embed) {
         StringBuilder sb = new StringBuilder();
         sb.append("__**").append(embed.getTitle()).append("**__\n");
@@ -153,9 +155,21 @@ public class FormatUtils {
 
         return sb.toString();
     }
+    //endregion
 
     public static String formatDateTime(OffsetDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
+    }
+
+    /**
+     * Rounds number to a specified number of decimal places
+     *
+     * @param number The number to round
+     * @param dp     The number of decimal places to round to
+     * @return The rounded number
+     */
+    public static double round(double number, int dp) {
+        return Math.round(number * Math.pow(10, dp)) / Math.pow(10, dp);
     }
 
 }

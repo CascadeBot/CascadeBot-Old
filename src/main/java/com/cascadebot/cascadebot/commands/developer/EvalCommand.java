@@ -7,7 +7,7 @@ package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.permissions.PermissionNode;
@@ -58,7 +58,7 @@ public class EvalCommand implements ICommandRestricted {
     );
 
     @Override
-    public void onCommand(Member sender, CommandContext context) {
+    public void onCommand (Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
             //TODO add utils for error messages
             Messaging.sendWarningMessage(context.getChannel(), "Not enough args", false);
@@ -110,8 +110,8 @@ public class EvalCommand implements ICommandRestricted {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.DEVELOPER;
+    public Module getModule() {
+        return Module.DEVELOPER;
     }
 
     @Override

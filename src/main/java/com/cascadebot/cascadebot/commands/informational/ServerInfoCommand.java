@@ -7,9 +7,10 @@ package com.cascadebot.cascadebot.commands.informational;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.commandmeta.Module;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -31,7 +32,7 @@ public class ServerInfoCommand implements ICommandMain {
             return;
         }
 
-        EmbedBuilder builder = new EmbedBuilder();
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(guildForInfo.getName());
         builder.setThumbnail(guildForInfo.getIconUrl());
         builder.addField("Creation Date", FormatUtils.formatDateTime(guildForInfo.getCreationTime()), true);
@@ -50,13 +51,13 @@ public class ServerInfoCommand implements ICommandMain {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.INFORMATIONAL;
+    public Module getModule() {
+        return Module.INFORMATIONAL;
     }
 
     @Override
-    public Permission getPermission() {
-        return Permission.of("Server info command", "serverinfo", true);
+    public CascadePermission getPermission() {
+        return CascadePermission.of("Server info command", "serverinfo", true);
     }
 
     @Override

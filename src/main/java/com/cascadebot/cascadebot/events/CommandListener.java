@@ -14,12 +14,15 @@ import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.shared.Regex;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 
@@ -79,6 +82,18 @@ public class CommandListener extends ListenerAdapter {
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
         if (cmd != null) {
+            if (cmd.getModule().isPublicModule() &&
+                    !guildData.isModuleEnabled(cmd.getModule())) {
+                if (guildData.willDisplayModuleErrors()) {
+                    EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+                    builder.setDescription(String.format("Module `%s` disabled!", cmd.getModule().toString()));
+                    builder.setTimestamp(Instant.now());
+                    builder.setFooter("Requested by " + event.getAuthor().getAsTag(), event.getAuthor().getEffectiveAvatarUrl());
+                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getUseEmbedForMessages());
+                }
+                // TODO: Modlog?
+                return;
+            }
             CommandContext context = new CommandContext(
                     event.getChannel(),
                     event.getMessage(),

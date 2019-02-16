@@ -30,6 +30,7 @@ public class DiscordUtils {
     private static final Pattern userMentionPattern = Pattern.compile("<@!?([0-9]{17,})>");
     private static final Pattern roleMentionPattern = Pattern.compile("<@&([0-9]{17,})>");
 
+    //region Members and Users
     /**
      * Attempts to find a member using a string input.
      * The string can be their id, a mention, or a name.
@@ -42,14 +43,7 @@ public class DiscordUtils {
     public static Member getMember(String search, Guild guild) {
         Checks.notBlank(search, "user");
         Checks.notNull(guild, "guild");
-        String id = null;
-        if (idPattern.matcher(search).matches()) {
-            id = search;
-        }
-        Matcher matcher = userMentionPattern.matcher(search);
-        if (matcher.matches()) {
-            id = matcher.group(1);
-        }
+        String id = getIdFromString(search, userMentionPattern);
 
         if (id != null) {
             User user = getUserById(Long.parseLong(id));
@@ -72,6 +66,7 @@ public class DiscordUtils {
     private static User getUserById(Long userId) {
         return CascadeBot.INS.getShardManager().getUserById(userId);
     }
+    //endregion
 
     private static Guild getGuildById(Long guildId) {
         return CascadeBot.INS.getShardManager().getGuildById(guildId);
@@ -81,6 +76,7 @@ public class DiscordUtils {
         return CascadeBot.INS.getShardManager().getTextChannelById(channelId);
     }
 
+    //region Roles
     /**
      * @param search The string to find the {@link Role} with.
      * @param guild  The {@link Guild} to fnd the {@link Role} in.
@@ -89,15 +85,7 @@ public class DiscordUtils {
      */
     public static Role getRole(String search, Guild guild) {
         Checks.notBlank(search, "role");
-        Checks.notNull(guild, "guild");
-        String id = null;
-        if (idPattern.matcher(search).matches()) {
-            id = search;
-        }
-        Matcher matcher = roleMentionPattern.matcher(search);
-        if (matcher.matches()) {
-            id = matcher.group(1);
-        }
+        String id = getIdFromString(search, roleMentionPattern);
 
         if (id != null) {
             Role role = guild.getRoleById(id);
@@ -115,7 +103,6 @@ public class DiscordUtils {
             //TODO maybe add an option to get roles from a group with buttons?
             return null;
         }
-        //TODO Combine these methods so intellij stops complaining about duplicate code.
     }
 
     public static Set<Role> getAllRoles(Member member) {
@@ -133,11 +120,33 @@ public class DiscordUtils {
             return Set.of();
         }
     }
+    //endregion
 
     public static Guild getOfficialGuild() {
         return getGuildById(Config.INS.getOfficialServerId());
     }
 
+    /**
+     * Gets an id from a string using a pattern
+     *
+     * @param search The string to search in
+     * @param pattern The patten to use to look for the id. The id should be in group 1 (I'll expand this later)
+     * @return The id in form of a string
+     */
+    private static String getIdFromString(String search, Pattern pattern) {
+        String id = null;
+        if (idPattern.matcher(search).matches()) {
+            id = search;
+        }
+        Matcher matcher = pattern.matcher(search);
+        if (matcher.matches()) {
+            id = matcher.group(1);
+        }
+
+        return id;
+    }
+
+    //region Checks
     /**
      * Checks if a specific {@link Member} can delete the specified {@link Message}
      *
@@ -166,10 +175,10 @@ public class DiscordUtils {
      * @throws IllegalArgumentException if permissions are empty or null.
      * @throws IllegalArgumentException if member is null or not in the same guild.
      */
-    public boolean hasPermission(Member member, Channel channel, Permission... permissions) {
+    public static boolean hasPermission(Member member, Channel channel, Permission... permissions) {
         Checks.notEmpty(permissions, "Permissions");
         Checks.check(member.getGuild().getIdLong() == channel.getGuild().getIdLong(), "Member and channel need to be in the same guild!");
         return member.hasPermission(channel, permissions);
     }
-
+    //endregion
 }

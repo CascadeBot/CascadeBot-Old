@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot.commandmeta;
 
 
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 
 /**
  * Core commands cannot be overridden, given aliases or disabled. They also do not have permissions.
@@ -19,12 +19,12 @@ public interface ICommandCore extends ICommandMain {
     }
 
     @Override
-    default CommandType getType() {
-        return CommandType.CORE;
+    default Module getModule() {
+        return Module.CORE;
     }
 
     @Override
-    default Permission getPermission() {
+    default CascadePermission getPermission() {
         return null;
     }
 
