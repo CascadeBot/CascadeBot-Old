@@ -6,11 +6,10 @@
 package com.cascadebot.cascadebot.commands.fun;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
-import com.cascadebot.cascadebot.permissions.CascadePermission;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.WebUtils;
 import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
