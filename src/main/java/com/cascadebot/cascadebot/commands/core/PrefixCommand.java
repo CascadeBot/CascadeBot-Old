@@ -3,27 +3,29 @@ package com.cascadebot.cascadebot.commands.core;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandCore;
+import com.cascadebot.cascadebot.data.Config;
 import net.dv8tion.jda.core.entities.Member;
 
 public class PrefixCommand implements ICommandCore {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        String newPrefix = "";
 
-        if (context.getArgs().length > 1) {
-            newPrefix = context.getArg(1);
-            context.getData().setCommandPrefix(newPrefix);
-        } else if (context.getArgs().length > 0) {
-            if (context.getArgs().length > 1) {
-                newPrefix = context.getArg(1);
-                context.getData().setCommandPrefix(newPrefix);
-            } else {
-                context.reply(context.getData().getCommandPrefix());
+        if (context.getArgs().length > 0) {
+            String newPrefix = context.getArg(0);
+            if (newPrefix.equals("reset")) {
+                context.getData().setCommandPrefix(Config.INS.getDefaultPrefix());
+                context.replyInfo("The prefix has been reset to: `%s`", Config.INS.getDefaultPrefix());
+                return;
             }
-        } if (newPrefix.length() > 5) {
-            context.reply("Your new prefix must be less than 4 characters!");
-            return;
+            if (newPrefix.length() > 5) {
+                context.replyDanger("The requested prefix is too long!");
+                return;
+            }
+            context.getData().setCommandPrefix(newPrefix);
+            context.replyInfo("The new prefix is: `%s`", newPrefix);
+        } else {
+            context.replyInfo("The current server prefix is `%s`", context.getData().getCommandPrefix());
         }
     }
 
