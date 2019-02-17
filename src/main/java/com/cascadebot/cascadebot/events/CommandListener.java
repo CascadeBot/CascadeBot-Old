@@ -8,13 +8,13 @@ package com.cascadebot.cascadebot.events;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.Environment;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
+import com.cascadebot.cascadebot.commandmeta.CommandException;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.messaging.Messaging;
-import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.shared.Regex;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
@@ -46,14 +46,7 @@ public class CommandListener extends ListenerAdapter {
                 throw new IllegalStateException(String.format("Guild data for guild ID: %s is null!", event.getGuild().getId()));
             }
         } catch (Exception e) {
-            Messaging.sendDangerMessage(
-                    event.getChannel(),
-                    // TODO: Add official server invite
-                    String.format(
-                            "We have failed to process your guild data! Please report this error and [this link](%s) to the developers!",
-                            ErrorUtils.paste(ErrorUtils.getStackTrace(e))
-                    )
-            );
+            Messaging.sendExceptionMessage(event.getChannel(), "We have failed to process your guild data!", new CommandException(e, event.getGuild(), ""));
             return;
         }
 
@@ -80,13 +73,10 @@ public class CommandListener extends ListenerAdapter {
         try {
             processCommands(event, guildData, trigger, args, isMention);
         } catch (Exception e) {
-            Messaging.sendDangerMessage(
+            Messaging.sendExceptionMessage(
                     event.getChannel(),
-                    String.format(
-                            "There was an error while processing your command! Please report this error and [this link](%s) to the developers!",
-                            ErrorUtils.paste(ErrorUtils.getStackTrace(e))
-                    )
-            );
+                    "There was an error while processing your command!",
+                    new CommandException(e, event.getGuild(), trigger));
         }
     }
 
@@ -97,7 +87,7 @@ public class CommandListener extends ListenerAdapter {
                     !guildData.isModuleEnabled(cmd.getModule())) {
                 if (guildData.willDisplayModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-                    builder.setDescription(String.format("Module `%s` disabled!", cmd.getModule().toString()));
+                    builder.setDescription(String.format("The module `%s` for command `%s` is disabled!", cmd.getModule().toString(), trigger));
                     builder.setTimestamp(Instant.now());
                     builder.setFooter("Requested by " + event.getAuthor().getAsTag(), event.getAuthor().getEffectiveAvatarUrl());
                     Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getUseEmbedForMessages());
@@ -162,6 +152,7 @@ public class CommandListener extends ListenerAdapter {
             try {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
+                context.replyException("There was an error running the command!", e);
                 CascadeBot.logger.error(String.format(
                         "Error in command %s Guild ID: %s User: %s",
                         command.command(), context.getGuild().getId(), context.getMember().getEffectiveName()

@@ -6,8 +6,10 @@
 package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.utils.ErrorUtils;
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -128,6 +130,13 @@ public final class Messaging {
         return sendMessageTypeEmbedMessage(channel, MessageType.DANGER, builder, embed);
     }
 
+    public static RequestFuture<Message> sendExceptionMessage(MessageChannel channel, String s, Exception e) {
+        String message = "**" + s + "**" +
+                "\nStack trace: " + ErrorUtils.paste(ErrorUtils.getStackTrace(e)) +
+                "\nPlease report the stack trace and the error to the developers here: " + Constants.serverInvite;
+        return sendDangerMessage(channel, message);
+    }
+    
     public static void sendAutoDeleteMessage(MessageChannel channel, String message, long delay) {
         channel.sendMessage(message).queue(messageToDelete -> {
             // We should always be able to delete our own message
