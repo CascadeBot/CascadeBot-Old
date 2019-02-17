@@ -422,6 +422,11 @@ public class CommandContext {
         return emote == null ? "" : emote.getAsMention();
     }
 
+    public boolean hasPermission(String permission) {
+        CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
+        return cascadePermission != null; // TODO: Check actual perms
+    }
+
     //endregion
 
 

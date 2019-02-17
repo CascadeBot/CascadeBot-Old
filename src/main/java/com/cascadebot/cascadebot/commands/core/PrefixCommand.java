@@ -1,6 +1,5 @@
 package com.cascadebot.cascadebot.commands.core;
 
-import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandCore;
 import com.cascadebot.cascadebot.data.Config;
@@ -12,11 +11,23 @@ public class PrefixCommand implements ICommandCore {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
             String newPrefix = context.getArg(0);
+
             if (newPrefix.equals("reset")) {
-                context.getData().setCommandPrefix(Config.INS.getDefaultPrefix());
-                context.replyInfo("The prefix has been reset to: `%s`", Config.INS.getDefaultPrefix());
+                if (context.hasPermission("prefix.reset")) {
+                    context.getData().setCommandPrefix(Config.INS.getDefaultPrefix());
+                    context.replyInfo("The prefix has been reset to: `%s`", Config.INS.getDefaultPrefix());
+                } else {
+                    context.sendPermissionsError("prefix.reset");
+                }
                 return;
-            } else if (newPrefix.length() > 5) {
+            }
+
+            if (!context.hasPermission("prefix.set")) {
+                context.sendPermissionsError("prefix.set");
+                return;
+            }
+
+            if (newPrefix.length() > 5) {
                 context.replyDanger("The requested prefix is too long!");
                 return;
             }
