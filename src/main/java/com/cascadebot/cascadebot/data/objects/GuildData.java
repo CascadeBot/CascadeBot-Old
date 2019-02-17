@@ -124,7 +124,7 @@ public class GuildData {
         getGuildCommandInfo(command).setCommand(commandName);
     }
 
-    public Set<String> getCommandArgs(ICommandMain command) {
+    public Set<String> getCommandAliases(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
             return getGuildCommandInfo(command).getAliases();
         }
