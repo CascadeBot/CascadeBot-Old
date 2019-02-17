@@ -10,7 +10,6 @@ public class PrefixCommand implements ICommandCore {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-
         if (context.getArgs().length > 0) {
             String newPrefix = context.getArg(0);
             if (newPrefix.equals("reset")) {
