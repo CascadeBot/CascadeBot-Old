@@ -12,6 +12,7 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.messaging.MessageType;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.ConfirmUtils;
 import com.cascadebot.shared.SecurityLevel;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -46,7 +47,7 @@ public class ShutdownCommand implements ICommandRestricted {
     }
 
     private void shutdown(CommandContext context) {
-        EmbedBuilder builder = new EmbedBuilder();
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setFooter(context.getMember().getUser().getAsTag(), context.getMember().getUser().getEffectiveAvatarUrl());
         builder.setDescription("Cascade bot shutting down!");
         context.replyInfo(builder);
