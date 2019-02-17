@@ -39,7 +39,7 @@ public class PageUtils {
      * @param string The string to split
      * @param length The length you want the final pages. Always splits to a length that is <= the length you provide. Cannot be > 1800 as that's the discord limit (including page numbers)
      * @param c The character you want to split it at (this should be something like a space or a new line character)
-     * @return A list of String pages
+     * @return A list of Embed pages
      */
     public static List<Page> splitStringToEmbedPages(String string, int length, char c) {
         List<String> strings = splitString(string, length, c);
@@ -88,6 +88,60 @@ public class PageUtils {
         }
 
         return strings;
+    }
+
+    /**
+     * Splits table data out into a give number of rows.
+     * I don't suggest using this as you can possibly exceed the discord message limit
+     *
+     * @param header The header data
+     * @param body The body data
+     * @param rows The amount of rows to split to
+     * @return A list of pages
+     */
+    public static List<Page> splitTableDataToPages(List<String> header, List<List<String>> body, int rows) {
+        int i = 0;
+        List<Page> pages = new ArrayList<>();
+        List<List<String>> pageContent = new ArrayList<>();
+        for(List<String> row : body) {
+            i++;
+            pageContent.add(row);
+
+            if(i == rows) {
+                pages.add(new PageObjects.TablePage(header, pageContent));
+                pageContent = new ArrayList<>();
+                i = 0;
+            }
+        }
+        pages.add(new PageObjects.TablePage(header, pageContent));
+        return pages;
+    }
+
+    /**
+     * Splits table data out into a pages with content length less then the length provides
+     *
+     * @param header The header data
+     * @param body The body data
+     * @param length The max content length you're trying to achieve
+     * @return A list of pages
+     */
+    public static List<Page> splitTableDataToPagesWithCharLength(List<String> header, List<List<String>> body, int length) {
+        int maxLength = 0;
+        for(List<String> row : body) {
+            StringBuilder stringBuilder = new StringBuilder("| ");
+            for(String content : row) {
+                stringBuilder.append(content).append(" | ");
+            }
+            stringBuilder.append(" |");
+            String rowContent = stringBuilder.toString();
+            if(rowContent.length() > maxLength) {
+                maxLength = rowContent.length();
+            }
+        }
+
+        int rows = (int) ((double) length / (double) maxLength);
+
+        return splitTableDataToPages(header, body, rows);
     }
 
 }
