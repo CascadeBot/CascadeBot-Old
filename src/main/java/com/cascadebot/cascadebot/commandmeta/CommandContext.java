@@ -153,7 +153,7 @@ public class CommandContext {
 
     public void replyInfo(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendInfoMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendInfoMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
     }
 
     public void replyInfo(String message, Object... objects) {
@@ -167,7 +167,7 @@ public class CommandContext {
 
     public void replySuccess(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendSuccessMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendSuccessMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
     }
 
     public void replySuccess(String message, Object... objects) {
@@ -181,7 +181,7 @@ public class CommandContext {
 
     public void replyWarning(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendWarningMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendWarningMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
     }
 
     public void replyWarning(String message, Object... objects) {
@@ -195,7 +195,7 @@ public class CommandContext {
 
     public void replyModeration(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendModerationMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendModerationMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
     }
 
     public void replyModeration(String message, Object... objects) {
@@ -209,7 +209,7 @@ public class CommandContext {
 
     public void replyDanger(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendDangerMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendDangerMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
     }
 
     public void replyDanger(String message, Object... objects) {

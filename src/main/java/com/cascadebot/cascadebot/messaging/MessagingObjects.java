@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot.messaging;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.User;
 
 public final class MessagingObjects {
 
@@ -28,6 +29,12 @@ public final class MessagingObjects {
                 .setAuthor(null, null, null)
                 .setFooter(null, null)
                 .setImage(null);
+    }
+
+    public static EmbedBuilder getStandardMessageEmbed(String message, User requestedBy) {
+        return getClearThreadLocalEmbedBuilder()
+                .setDescription(message)
+                .setFooter("Requested by " + requestedBy.getAsTag(), requestedBy.getEffectiveAvatarUrl());
     }
 
     public static EmbedBuilder getMessageTypeEmbedBuilder(MessageType messageType) {
