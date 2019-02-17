@@ -11,7 +11,7 @@ public class GuildSaveSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArg(0) == null) {
+        if (context.getArg(0).length() == 0) {
             GuildDataMapper.getGuilds().invalidate(context.getGuild().getIdLong());
             context.replySuccess("Saved **this guild's** information successfully!");
         } else if (context.getArg(0).equals("all")) {
