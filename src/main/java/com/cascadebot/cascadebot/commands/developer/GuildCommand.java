@@ -13,6 +13,7 @@ public class GuildCommand implements ICommandRestricted {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        context.replyInfo("Do `" + context.getData().getCommandPrefix() + "guild save` to save this guild's data.");
     }
 
     @Override
