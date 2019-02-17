@@ -10,6 +10,7 @@ import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.shared.Regex;
@@ -233,6 +234,10 @@ public class CommandContext {
         } else {
             return channel.sendMessage(url);
         }
+    }
+
+    public void sendPermissionsError(String permission) {
+        replyDanger("You don't have the permission `%s` to do this!", permission);
     }
 
     /**
