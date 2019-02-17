@@ -16,8 +16,7 @@ public class PrefixCommand implements ICommandCore {
                 context.getData().setCommandPrefix(Config.INS.getDefaultPrefix());
                 context.replyInfo("The prefix has been reset to: `%s`", Config.INS.getDefaultPrefix());
                 return;
-            }
-            if (newPrefix.length() > 5) {
+            } else if (newPrefix.length() > 5) {
                 context.replyDanger("The requested prefix is too long!");
                 return;
             }
