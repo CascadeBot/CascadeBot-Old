@@ -74,7 +74,7 @@ public class PageUtils {
             int start = length * i;
             int end = Math.min(start + (length - 1), string.length());
 
-            String temp = toAdd + string.substring(start, end - toAdd.length());
+            String temp = toAdd + string.substring(start, end == string.length() ? end : end - toAdd.length());
             int last;
             if(end != string.length()) {
                 last = temp.lastIndexOf(c);
