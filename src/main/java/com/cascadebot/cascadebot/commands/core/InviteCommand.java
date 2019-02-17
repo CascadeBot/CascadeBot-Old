@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.commands.core;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandCore;
 import net.dv8tion.jda.core.entities.Member;
@@ -13,7 +14,7 @@ public class InviteCommand implements ICommandCore {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        // context.reply(CascadeBot.getInvite());
+        context.replyDM(CascadeBot.getInvite(), true);
     }
 
     @Override
