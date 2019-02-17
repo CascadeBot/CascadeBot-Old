@@ -24,7 +24,7 @@ public class CascadePermission {
 
     private CascadePermission(String label, String permission, boolean defaultPerm, Module module, Permission... discordPerm) {
         this.label = label;
-        this.permission = "cascade." + permission;
+        this.permission = PermissionsManager.PERMISSION_PREFIX + permission;
         this.defaultPerm = defaultPerm;
         this.module = module;
         this.discordPerm = EnumSet.noneOf(Permission.class);
