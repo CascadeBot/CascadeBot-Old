@@ -39,7 +39,7 @@ public class DogCommand implements ICommandMain {
                     message.editMessage(getDogUrl()).queue();
                 }
             } catch (IOException e) {
-                message.editMessage("Error loading cat picture \uD83D\uDE26" /* Frowning 😦*/).queue();
+                message.editMessage("Error loading dog picture \uD83D\uDE26" /* Frowning 😦*/).queue();
             }
         }));
         try {
@@ -49,7 +49,7 @@ public class DogCommand implements ICommandMain {
                 context.getData().addButtonGroup(context.getChannel(), message, dogButtons);
             });
         } catch (IOException e) {
-            context.replyDanger("Error loading cat picture \uD83D\uDE26" /* Frowning 😦*/);
+            context.replyDanger("Error loading dog picture \uD83D\uDE26" /* Frowning 😦*/);
         }
     }
 
