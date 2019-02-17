@@ -16,7 +16,7 @@ public class ModuleCommand implements ICommandCore {
 
     @Override
     public String command() {
-        return null;
+        return "module";
     }
 
     @Override

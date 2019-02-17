@@ -5,19 +5,26 @@ import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import net.dv8tion.jda.core.entities.Member;
+import org.apache.commons.lang3.EnumUtils;
 
 public class ModuleDisableSubcommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        String selectedModule = context.getArg(0);
+        String selectedModule = context.getArg(0).toUpperCase();
+        Module module = EnumUtils.getEnum(Module.class, selectedModule);
 
-        if (selectedModule == "fun") {
-            context.getData().disableModule(Module.FUN);
-            context.replySuccess("We have disabled the `%s` module!", selectedModule);
-        } else if (selectedModule == "informational") {
-            context.getData().disableModule(Module.INFORMATIONAL);
-            context.replySuccess("We have disabled the `%s` module!", selectedModule);
+        if (module != null) {
+            if (!context.getData().isModuleEnabled(module)) {
+                context.replyInfo("The module `%s` is already disabled!", module.toString());
+                return;
+            }
+            try {
+                context.getData().disableModule(module);
+                context.replySuccess("Module `%s` has been disabled!", module.toString());
+            } catch (IllegalArgumentException ex) {
+                context.replyDanger(ex.getMessage());
+            }
         } else {
             context.replyDanger("We couldn't find that module. Use `" + context.getData().getCommandPrefix() + "module list` for a list of modules.");
         }
