@@ -6,6 +6,7 @@
 package com.cascadebot.cascadebot.events;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.Environment;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -94,7 +95,7 @@ public class CommandListener extends ListenerAdapter {
         if (cmd != null) {
             if (cmd.getModule().isPublicModule() &&
                     !guildData.isModuleEnabled(cmd.getModule())) {
-                if (guildData.willDisplayModuleErrors()) {
+                if (guildData.willDisplayModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     builder.setDescription(String.format("Module `%s` disabled!", cmd.getModule().toString()));
                     builder.setTimestamp(Instant.now());
