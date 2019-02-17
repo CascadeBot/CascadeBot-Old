@@ -11,16 +11,20 @@ public class PrefixCommand implements ICommandCore {
     public void onCommand(Member sender, CommandContext context) {
         String newPrefix = "";
 
-        if (newPrefix.length() > 5) {
-            context.replyDanger("Your new prefix must be less than 4 characters!");
-            return;
+        if (context.getArgs().length > 1) {
+            newPrefix = context.getArg(1);
+            context.getData().setCommandPrefix(newPrefix);
         } else if (context.getArgs().length > 0) {
-            newPrefix = context.getArg(0);
-        } else if (context.getArg(0) == null) {
-            context.replyDanger("Please provide an argument!");
+            if (context.getArgs().length > 1) {
+                newPrefix = context.getArg(1);
+                context.getData().setCommandPrefix(newPrefix);
+            } else {
+                context.reply(context.getData().getCommandPrefix());
+            }
+        } if (newPrefix.length() > 5) {
+            context.reply("Your new prefix must be less than 4 characters!");
             return;
         }
-        context.reply(newPrefix);
     }
 
     @Override
