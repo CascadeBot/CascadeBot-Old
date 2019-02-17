@@ -136,7 +136,7 @@ public final class Messaging {
                 "\nPlease report the stack trace and the error to the developers here: " + Constants.serverInvite;
         return sendDangerMessage(channel, message);
     }
-    
+
     public static void sendAutoDeleteMessage(MessageChannel channel, String message, long delay) {
         channel.sendMessage(message).queue(messageToDelete -> {
             // We should always be able to delete our own message
