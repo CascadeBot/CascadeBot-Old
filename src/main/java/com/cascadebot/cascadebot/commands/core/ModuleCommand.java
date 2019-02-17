@@ -11,7 +11,7 @@ public class ModuleCommand implements ICommandCore {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-
+        context.replyInfo("Use subcommands disable, enable and list!");
     }
 
     @Override
