@@ -22,9 +22,4 @@ public class SupportCommand implements ICommandCore {
         return "support";
     }
 
-    @Override
-    public boolean forceDefault() {
-        return true;
-    }
-
 }
