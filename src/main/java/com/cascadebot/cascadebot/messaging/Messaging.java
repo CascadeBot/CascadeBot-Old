@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.Constants;
+import com.cascadebot.cascadebot.Environment;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
@@ -133,7 +134,7 @@ public final class Messaging {
     public static RequestFuture<Message> sendExceptionMessage(MessageChannel channel, String s, Exception e) {
         String message = "**" + s + "**" +
                 "\nStack trace: " + ErrorUtils.paste(ErrorUtils.getStackTrace(e)) +
-                "\nPlease report the stack trace and the error to the developers here: " + Constants.serverInvite;
+                (Environment.isDevelopment() ? "" : "\nPlease report the stack trace and the error to the developers here: " + Constants.serverInvite);
         return sendDangerMessage(channel, message);
     }
 
