@@ -12,11 +12,14 @@ import com.cascadebot.cascadebot.commandmeta.CommandException;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.commands.core.PrefixCommand;
+import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.shared.Regex;
+import com.cascadebot.shared.SharedConstants;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
@@ -66,6 +69,10 @@ public class CommandListener extends ListenerAdapter {
             trigger = commandWithArgs.split(" ")[0];
             args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
             isMention = true;
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getCommandPrefix())) {
+            commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
+            trigger = commandWithArgs.split(" ")[0];
+            args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
         } else {
             return;
         }
