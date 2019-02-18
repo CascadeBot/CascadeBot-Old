@@ -11,6 +11,10 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        if (context.getArgs().length == 0) {
+            context.replyDanger("Not enough Args (No specified member)");
+            return;
+        }
         Member targetMember = DiscordUtils.getMember(context.getMessage(0),context.getGuild());
         if (targetMember == null){
             context.replyDanger("Could not find that user");
