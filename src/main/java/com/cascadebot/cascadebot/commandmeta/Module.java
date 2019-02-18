@@ -10,6 +10,7 @@ public enum Module {
     CORE,
     FUN,
     INFORMATIONAL,
+    MANAGEMENT,
     DEVELOPER(false);
 
     private boolean publicModule;
