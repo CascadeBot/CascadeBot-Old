@@ -16,6 +16,7 @@ import com.cascadebot.shared.SecurityLevel;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import org.slf4j.Logger;
@@ -27,6 +28,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class PermissionsManager {
+
+    public static final String PERMISSION_PREFIX = "cascade.";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionsManager.class);
 
@@ -59,6 +62,10 @@ public class PermissionsManager {
         registerPermission(CascadePermission.of("Info Category", "module.info", true, Module.INFORMATIONAL));
         registerPermission(CascadePermission.of("Fun Category", "module.fun", true, Module.FUN));
 
+        registerPermission(CascadePermission.of("Reset command prefix", "prefix.reset", false, Permission.MANAGE_SERVER));
+        registerPermission(CascadePermission.of("Set command prefix", "prefix.set", false, Permission.MANAGE_SERVER));
+
+
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 
         defaultPermissions = permissions.entrySet()
@@ -74,7 +81,7 @@ public class PermissionsManager {
     }
 
     public CascadePermission getPermission(String permission) {
-        return permissions.get(permission);
+        return permissions.get(PERMISSION_PREFIX + permission);
     }
 
     public CascadePermission getPermissionFromModule(Module module) {
