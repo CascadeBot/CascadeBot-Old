@@ -11,10 +11,9 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Member Target = DiscordUtils.getMember(context.getArg(0),context.getGuild());
-        String User = DiscordUtils.getMember(context.getArg(0),context.getGuild()).getUser().getAsTag();
-        context.getGuild().getController().kick(Target).queue();
-        context.reply("User: " + User + " has been kicked");
+        Member TargetMember = DiscordUtils.getMember(context.getArg(0),context.getGuild());
+        context.getGuild().getController().kick(TargetMember).queue();
+        context.reply("User: " + TargetMember.getUser().getAsTag() + " has been kicked");
         }
 
     @Override
