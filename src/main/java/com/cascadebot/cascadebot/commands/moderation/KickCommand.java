@@ -46,9 +46,9 @@ public class KickCommand implements ICommandMain {
                 false, Permission.KICK_MEMBERS);
     }
 
-
     @Override
     public Module getModule() {
         return Module.MODERATION;
     }
+
 }
