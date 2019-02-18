@@ -6,7 +6,7 @@
 package com.cascadebot.cascadebot.commandmeta;
 
 public enum Module {
-
+    MODERATION,
     CORE,
     FUN,
     INFORMATIONAL,
