@@ -11,9 +11,9 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Member TargetMember = DiscordUtils.getMember(context.getArg(0),context.getGuild());
-        context.getGuild().getController().kick(TargetMember).queue();
-        context.replyInfo("User: " + TargetMember.getUser().getAsTag() + " has been kicked");
+        Member targetMember = DiscordUtils.getMember(context.getArg(0),context.getGuild());
+        context.getGuild().getController().kick(targetMember).queue();
+        context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been kicked");
         }
 
     @Override
@@ -23,7 +23,7 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Kick Command", "Kick", true);
+        return CascadePermission.of("Kick Command", "kick", true);
     }
 
 
