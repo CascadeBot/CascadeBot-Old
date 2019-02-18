@@ -23,7 +23,7 @@ public class SoftBanCommand implements ICommandMain {
             context.replyDanger("Could not find that user");
         } else {
             try {
-                context.getGuild().getController().ban(targetMember.getUser(),7).complete();
+                context.getGuild().getController().ban(targetMember.getUser(), 7).complete();
                 context.getGuild().getController().unban(targetMember.getUser()).complete();
                 context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been softbanned");
             } catch (InsufficientPermissionException e) {
