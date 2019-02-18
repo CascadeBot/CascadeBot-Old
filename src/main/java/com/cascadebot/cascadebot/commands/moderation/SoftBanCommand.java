@@ -25,12 +25,12 @@ public class SoftBanCommand implements ICommandMain {
             try {
                 context.getGuild().getController().ban(targetMember.getUser(),7).complete();
                 context.getGuild().getController().unban(targetMember.getUser()).complete();
-                context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been kicked");
+                context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been softbanned");
             } catch (InsufficientPermissionException e) {
-                context.replyWarning("Cannot kick user " + targetMember.getUser().getAsTag() +
+                context.replyWarning("Cannot softbanned user " + targetMember.getUser().getAsTag() +
                         ", missing Kick Members permission");
             } catch (HierarchyException e) {
-                context.replyWarning("Cannot kick user " + targetMember.getUser().getAsTag() +
+                context.replyWarning("Cannot softbanned user " + targetMember.getUser().getAsTag() +
                         ", the top role they have is higher than mine");
             }
         }
