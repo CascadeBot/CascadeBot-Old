@@ -6,6 +6,10 @@ import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.HierarchyException;
+import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
+
+import java.util.function.Consumer;
 
 public class KickCommand implements ICommandMain {
 
@@ -19,8 +23,14 @@ public class KickCommand implements ICommandMain {
         if (targetMember == null) {
             context.replyDanger("Could not find that user");
         } else {
-            context.getGuild().getController().kick(targetMember).queue();
-            context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been kicked");
+            try {
+                context.getGuild().getController().kick(targetMember).queue();
+                context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been kicked");
+            } catch (InsufficientPermissionException e) {
+                context.replyWarning("Cannot kick user " + targetMember.getUser().getAsTag() + " due to lack of permissions");
+            } catch (HierarchyException e) {
+                context.replyWarning("Cannot kick user " + targetMember.getUser().getAsTag() + " due to them being higher then me");
+            }
         }
     }
 
