@@ -33,7 +33,7 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Kick Command", "kick", true);
+        return CascadePermission.of("Kick Command", "kick", false);
     }
 
 
