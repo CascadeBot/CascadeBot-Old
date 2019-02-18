@@ -1,4 +1,9 @@
-package com.cascadebot.cascadebot.commands.core;
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
+package com.cascadebot.cascadebot.subcommands.module;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
@@ -11,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class ModuleListSubcommand implements ICommandExecutable {
+public class ModuleListSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -29,7 +34,7 @@ public class ModuleListSubcommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return null;
+        return CascadePermission.of("core.module.list");
     }
 
 }

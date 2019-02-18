@@ -1,4 +1,9 @@
-package com.cascadebot.cascadebot.commands.developer;
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
+package com.cascadebot.cascadebot.subcommands.guild;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;

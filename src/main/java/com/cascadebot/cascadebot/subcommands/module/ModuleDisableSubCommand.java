@@ -1,4 +1,9 @@
-package com.cascadebot.cascadebot.commands.core;
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
+package com.cascadebot.cascadebot.subcommands.module;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
@@ -7,7 +12,7 @@ import com.cascadebot.cascadebot.permissions.CascadePermission;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 
-public class ModuleEnableSubcommand implements ICommandExecutable {
+public class ModuleDisableSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -15,13 +20,13 @@ public class ModuleEnableSubcommand implements ICommandExecutable {
         Module module = EnumUtils.getEnum(Module.class, selectedModule);
 
         if (module != null) {
-            if (context.getData().isModuleEnabled(module)) {
-                context.replyInfo("The module `%s` is already enabled!", module.toString());
+            if (!context.getData().isModuleEnabled(module)) {
+                context.replyInfo("The module `%s` is already disabled!", module.toString());
                 return;
             }
             try {
-                context.getData().enableModule(module);
-                context.replySuccess("Module `%s` has been enabled!", module.toString());
+                context.getData().disableModule(module);
+                context.replySuccess("Module `%s` has been disabled!", module.toString());
             } catch (IllegalArgumentException ex) {
                 context.replyDanger(ex.getMessage());
             }
@@ -33,12 +38,12 @@ public class ModuleEnableSubcommand implements ICommandExecutable {
 
     @Override
     public String command() {
-        return "enable";
+        return "disable";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return null;
+        return CascadePermission.of("core.module.disable");
     }
 
 }
