@@ -3,12 +3,13 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.subcommands.module;
+package com.cascadebot.cascadebot.commands.subcommands.module;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 
@@ -43,7 +44,7 @@ public class ModuleEnableSubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("core.module.enable");
+        return CascadePermission.of("Enable module subcommand", "module.enable", false, Permission.MANAGE_SERVER);
     }
 
 }

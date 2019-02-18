@@ -3,9 +3,8 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.subcommands.guild;
+package com.cascadebot.cascadebot.commands.subcommands.guild;
 
-import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;

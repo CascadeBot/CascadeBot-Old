@@ -3,15 +3,14 @@
  * Licensed under the MIT license.
  */
 
-package com.cascadebot.cascadebot.subcommands.module;
+package com.cascadebot.cascadebot.commands.subcommands.module;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
-import org.apache.commons.lang3.EnumUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -34,7 +33,7 @@ public class ModuleListSubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("core.module.list");
+        return CascadePermission.of("List modules subcommand", "module.list", false, Permission.MANAGE_SERVER);
     }
 
 }
