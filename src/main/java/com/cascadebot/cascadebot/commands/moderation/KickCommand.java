@@ -11,7 +11,7 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Member targetMember = DiscordUtils.getMember(context.getArg(0),context.getGuild());
+        Member targetMember = DiscordUtils.getMember(context.getMessage(0),context.getGuild());
         if (targetMember == null){
             context.replyDanger("Could not find that user");
             return;
