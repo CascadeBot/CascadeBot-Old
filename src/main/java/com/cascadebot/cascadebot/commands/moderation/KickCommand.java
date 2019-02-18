@@ -30,7 +30,8 @@ public class KickCommand implements ICommandMain {
             } catch (InsufficientPermissionException e) {
                 context.replyWarning("Cannot kick user " + targetMember.getUser().getAsTag() + " due to lack of permissions");
             } catch (HierarchyException e) {
-                context.replyWarning("Cannot kick user " + targetMember.getUser().getAsTag() + " due to them being higher then me");
+                context.replyWarning("Cannot kick user " + targetMember.getUser().getAsTag() +
+                        ", the top role they have is higher than mine");
             }
         }
     }
@@ -43,7 +44,7 @@ public class KickCommand implements ICommandMain {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("Kick Command", "kick",
-                false, Permission.KICK_MEMBERS));
+                false, Permission.KICK_MEMBERS);
     }
 
 
