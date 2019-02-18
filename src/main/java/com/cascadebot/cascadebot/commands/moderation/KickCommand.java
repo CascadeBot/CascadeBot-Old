@@ -15,17 +15,16 @@ public class KickCommand implements ICommandMain {
             context.replyDanger("Not enough Args (No specified member)");
             return;
         }
-        Member targetMember = DiscordUtils.getMember(context.getMessage(0),context.getGuild());
-        if (targetMember == null){
+        Member targetMember = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
+        if (targetMember == null) {
             context.replyDanger("Could not find that user");
             return;
-        }
-        else{
+        } else {
             context.getGuild().getController().kick(targetMember).queue();
             context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been kicked");
             return;
         }
-        }
+    }
 
     @Override
     public String command() {
