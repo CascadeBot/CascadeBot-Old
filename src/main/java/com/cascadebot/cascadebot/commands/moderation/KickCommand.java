@@ -10,8 +10,6 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.HierarchyException;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 
-import java.util.function.Consumer;
-
 public class KickCommand implements ICommandMain {
 
     @Override
