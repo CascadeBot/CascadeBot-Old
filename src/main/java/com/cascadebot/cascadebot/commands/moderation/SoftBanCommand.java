@@ -23,14 +23,15 @@ public class SoftBanCommand implements ICommandMain {
             context.replyDanger("Could not find that user");
         } else {
             try {
-                context.getGuild().getController().ban(targetMember.getUser(), 7).queue();
-                context.getGuild().getController().unban(targetMember.getUser()).queue();
+                context.getGuild().getController().ban(targetMember.getUser(), 7).queue(aVoid -> {
+                    context.getGuild().getController().unban(targetMember.getUser()).queue();
+                });
                 context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been softbanned");
             } catch (InsufficientPermissionException e) {
-                context.replyWarning("Cannot softbanned user " + targetMember.getUser().getAsTag() +
-                        ", missing Kick Members permission");
+                context.replyWarning("Cannot soft ban user " + targetMember.getUser().getAsTag() +
+                        ", missing Ban Members permission");
             } catch (HierarchyException e) {
-                context.replyWarning("Cannot softbanned user " + targetMember.getUser().getAsTag() +
+                context.replyWarning("Cannot soft ban user " + targetMember.getUser().getAsTag() +
                         ", the top role they have is higher than mine");
             }
         }
