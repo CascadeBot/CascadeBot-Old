@@ -24,7 +24,7 @@ public class KickCommand implements ICommandMain {
             return;
         }
         if (targetMember.getUser() == context.getSelfMember().getUser()) {
-            context.replyWarning("I'm not going to soft ban myself~");
+            context.replyWarning("I'm not going to kick myself~");
             return;
         }
         if (targetMember == null) {
