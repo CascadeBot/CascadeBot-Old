@@ -27,7 +27,7 @@ public class ModuleEnableSubCommand implements ICommandExecutable {
             }
             try {
                 context.getData().enableModule(module);
-                context.replySuccess("Module `%s` has been enabled!", module.toString());
+                context.replySuccess("The module `%s` has been enabled!", module.toString());
             } catch (IllegalArgumentException ex) {
                 context.replyDanger(ex.getMessage());
             }
