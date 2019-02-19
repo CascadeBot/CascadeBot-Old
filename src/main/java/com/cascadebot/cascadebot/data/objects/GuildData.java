@@ -43,7 +43,13 @@ public class GuildData {
     //endregion
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
-    private Set<Module> enabledModules = Sets.newConcurrentHashSet(Sets.newHashSet(Module.CORE, Module.INFORMATIONAL));
+    private Set<Module> enabledModules = Sets.newConcurrentHashSet(
+            Sets.newHashSet(
+                    Module.CORE,
+                    Module.MANAGEMENT,
+                    Module.INFORMATIONAL
+            )
+    );
     private String commandPrefix = Config.INS.getDefaultPrefix();
 
     //region Boolean flags
@@ -162,8 +168,8 @@ public class GuildData {
     public void disableModule(Module module) {
         if (!module.isPublicModule()) {
             throw new IllegalArgumentException("This module is not available to be disabled!");
-        } else if (module == Module.CORE) {
-            throw new IllegalArgumentException("Cannot disable the core module!");
+        } else if (Module.CORE_MODULES.contains(module)) {
+            throw new IllegalArgumentException(String.format("Cannot disable the %s module!", module.toString().toLowerCase()));
         }
         this.enabledModules.remove(module);
     }
