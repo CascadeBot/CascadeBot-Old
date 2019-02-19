@@ -222,8 +222,12 @@ public class CommandContext {
         Messaging.sendDangerMessage(channel, builder, data.getUseEmbedForMessages());
     }
 
-    public void replyException(String message, Exception e) {
-        Messaging.sendExceptionMessage(channel, message, new CommandException(e, guild, trigger));
+    public void replyException(String message, Throwable throwable) {
+        Messaging.sendExceptionMessage(channel, message, new CommandException(throwable, guild, trigger));
+    }
+
+    public void replyException(String message, Throwable throwable, Object... objects) {
+        Messaging.sendExceptionMessage(channel, String.format(message, objects), new CommandException(throwable, guild, trigger));
     }
 
     public MessageAction replyImage(String url) {
