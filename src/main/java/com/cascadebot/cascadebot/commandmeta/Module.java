@@ -5,6 +5,8 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
+import java.util.Set;
+
 public enum Module {
     MODERATION,
     CORE,
@@ -12,6 +14,9 @@ public enum Module {
     INFORMATIONAL,
     MANAGEMENT,
     DEVELOPER(false);
+
+    // A set of modules that are always enabled and cannot be disabled
+    public static final Set<Module> CORE_MODULES = Set.of(Module.CORE, Module.MANAGEMENT);
 
     private boolean publicModule;
 
