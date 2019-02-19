@@ -10,6 +10,8 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.HierarchyException;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 
+import java.util.function.Consumer;
+
 public class SoftBanCommand implements ICommandMain {
 
     @Override
@@ -23,10 +25,13 @@ public class SoftBanCommand implements ICommandMain {
             context.replyDanger("Could not find that user");
         } else {
             try {
+                // Failure consumer to be used on both the ban and the unban
+                Consumer<Throwable> failure = throwable -> context.replyException("Could not softban the user %s!", throwable, targetMember.getUser().getAsTag());
                 context.getGuild().getController().ban(targetMember.getUser(), 7).queue(aVoid -> {
-                    context.getGuild().getController().unban(targetMember.getUser()).queue();
-                });
-                context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been softbanned");
+                    // This is considered successful if the user is banned. If the user is unable to be unbanned an exception will be thrown
+                    context.replyInfo("%s has been softbanned!", targetMember.getUser().getAsTag());
+                    context.getGuild().getController().unban(targetMember.getUser()).queue(null, failure);
+                }, failure);
             } catch (InsufficientPermissionException e) {
                 context.replyWarning("Cannot soft ban user " + targetMember.getUser().getAsTag() +
                         ", missing Ban Members permission");

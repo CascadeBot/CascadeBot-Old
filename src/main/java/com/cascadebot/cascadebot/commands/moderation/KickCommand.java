@@ -23,8 +23,11 @@ public class KickCommand implements ICommandMain {
             context.replyDanger("Could not find that user");
         } else {
             try {
-                context.getGuild().getController().kick(targetMember).queue();
-                context.replyInfo("User: " + targetMember.getUser().getAsTag() + " has been kicked");
+                context.getGuild().getController().kick(targetMember).queue(aVoid -> {
+                    context.replyInfo("%s has been kicked!", targetMember.getUser().getAsTag());
+                }, throwable -> {
+                    context.replyException("Could not kick the user %s!", throwable, targetMember.getUser().getAsTag());
+                });
             } catch (InsufficientPermissionException e) {
                 context.replyWarning("Cannot kick user " + targetMember.getUser().getAsTag() +
                         ", missing Kick Members permission");
