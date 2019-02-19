@@ -27,7 +27,7 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
             }
             try {
                 context.getData().disableModule(module);
-                context.replySuccess("Module `%s` has been disabled!", module.toString());
+                context.replySuccess("The module `%s` has been disabled!", module.toString());
             } catch (IllegalArgumentException ex) {
                 context.replyDanger(ex.getMessage());
             }
