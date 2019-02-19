@@ -26,7 +26,7 @@ public class SoftBanCommand implements ICommandMain {
             return;
         }
         if (targetMember.getUser() == context.getSelfMember()) {
-            context.replyWarning(("I'm not going to soft ban  myself"));
+            context.replyWarning(("I'm not going to soft ban  myself~"));
             return;
         }
         if (targetMember == null) {
