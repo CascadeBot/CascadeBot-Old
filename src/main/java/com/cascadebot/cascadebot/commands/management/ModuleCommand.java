@@ -32,6 +32,11 @@ public class ModuleCommand implements ICommandMain {
     }
 
     @Override
+    public boolean forceDefault() {
+        return true;
+    }
+
+    @Override
     public Module getModule() {
         return Module.MANAGEMENT;
     }
