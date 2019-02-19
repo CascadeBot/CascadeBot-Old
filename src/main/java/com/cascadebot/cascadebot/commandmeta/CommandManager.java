@@ -31,8 +31,13 @@ public class CommandManager {
         long start = System.currentTimeMillis();
         try {
             for (Class<?> c : ReflectionUtils.getClasses("com.cascadebot.cascadebot.commands")) {
-                if (ICommandMain.class.isAssignableFrom(c))
-                    commands.add((ICommandMain) ConstructorUtils.invokeConstructor(c));
+                if (ICommandMain.class.isAssignableFrom(c)) {
+                    ICommandMain command = (ICommandMain) ConstructorUtils.invokeConstructor(c);
+                    if (command.getModule() == null) {
+                        throw new IllegalStateException(String.format("Command %s could not be loaded as its module was null!", command.getClass().getSimpleName()));
+                    }
+                    commands.add(command);
+                }
             }
             LOGGER.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
         } catch (Exception e) {
