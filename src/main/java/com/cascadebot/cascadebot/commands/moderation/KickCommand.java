@@ -20,11 +20,11 @@ public class KickCommand implements ICommandMain {
         }
         Member targetMember = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
         if (targetMember.getUser() == sender.getUser()) {
-            context.replyWarning("Why would I kick you~");
+            context.replyWarning("Why would you want to kick yourself~");
             return;
         }
         if (targetMember.getUser() == context.getSelfMember().getUser()) {
-            context.replyWarning("I'm not going to kick myself~");
+            context.replyWarning("My programming forbids me to kick myself~");
             return;
         }
         if (targetMember == null) {
