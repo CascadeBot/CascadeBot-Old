@@ -19,6 +19,14 @@ public class KickCommand implements ICommandMain {
             return;
         }
         Member targetMember = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
+        if (targetMember.getUser() == sender.getUser()) {
+            context.replyWarning("Why would I kick you~");
+            return;
+        }
+        if (targetMember.getUser() == context.getSelfMember().getUser()) {
+            context.replyWarning("I'm not going to soft ban myself~");
+            return;
+        }
         if (targetMember == null) {
             context.replyDanger("Could not find that user");
         } else {

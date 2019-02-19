@@ -21,6 +21,12 @@ public class SoftBanCommand implements ICommandMain {
             return;
         }
         Member targetMember = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
+        if (targetMember.getUser() == sender.getUser()) {
+            context.replyWarning("Why would I soft ban you~");
+        }
+        if (targetMember.getUser() == context.getSelfMember()) {
+            context.replyWarning(("I'm not going to kick myself"));
+        }
         if (targetMember == null) {
             context.replyDanger("Could not find that user");
         } else {
