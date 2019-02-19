@@ -5,7 +5,10 @@
 
 package com.cascadebot.cascadebot.commands.developer;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
+import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.utils.ErrorUtils;
@@ -18,12 +21,30 @@ public class DumpCommand implements ICommandRestricted {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        if (context.getArgs().length < 1) {
+            context.replyDanger("Hmmm either pick: `threads`, `commands` or `permissions`");
+            return;
+        }
         if (context.getArg(0).equalsIgnoreCase("threads")) {
             String threads = Thread.getAllStackTraces().keySet().stream().map(Thread::getName).sorted().collect(Collectors.joining("\n"));
             if (threads.length() > 2048) {
                 context.reply(ErrorUtils.paste(threads));
             } else {
                 context.reply(threads);
+            }
+        } else if (context.getArg(0).equalsIgnoreCase("commands")) {
+            StringBuilder builder = new StringBuilder();
+            for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
+                builder.append(command.command()).append(" `").append(command.getModule().toString().toLowerCase()).append("`");
+                for (ICommandExecutable subcommand : command.getSubCommands()) {
+                    builder.append("\n - ").append(subcommand.command());
+                }
+                builder.append("\n");
+            }
+            if (builder.toString().length() > 2048) {
+                context.reply(ErrorUtils.paste(builder.toString()));
+            } else {
+                context.reply(builder.toString());
             }
         }
     }
