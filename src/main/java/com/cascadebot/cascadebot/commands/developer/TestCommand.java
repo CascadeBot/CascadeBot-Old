@@ -6,8 +6,8 @@
 package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import net.dv8tion.jda.core.entities.Member;
 
 public class TestCommand implements ICommandRestricted {
