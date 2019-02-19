@@ -11,7 +11,7 @@ import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.commandmeta.Module;
-import com.cascadebot.cascadebot.utils.ErrorUtils;
+import com.cascadebot.cascadebot.utils.PasteUtils;
 import com.cascadebot.shared.SecurityLevel;
 import net.dv8tion.jda.core.entities.Member;
 
@@ -27,11 +27,7 @@ public class DumpCommand implements ICommandRestricted {
         }
         if (context.getArg(0).equalsIgnoreCase("threads")) {
             String threads = Thread.getAllStackTraces().keySet().stream().map(Thread::getName).sorted().collect(Collectors.joining("\n"));
-            if (threads.length() > 2048) {
-                context.reply(ErrorUtils.paste(threads));
-            } else {
-                context.reply(threads);
-            }
+            PasteUtils.pasteIfLong(threads, 2048, context::reply);
         } else if (context.getArg(0).equalsIgnoreCase("commands")) {
             StringBuilder builder = new StringBuilder();
             for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
@@ -41,11 +37,7 @@ public class DumpCommand implements ICommandRestricted {
                 }
                 builder.append("\n");
             }
-            if (builder.toString().length() > 2048) {
-                context.reply(ErrorUtils.paste(builder.toString()));
-            } else {
-                context.reply(builder.toString());
-            }
+            PasteUtils.pasteIfLong(builder.toString(), 2048, context::reply);
         }
     }
 
