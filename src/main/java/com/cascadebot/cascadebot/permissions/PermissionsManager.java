@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.permissions;
 
-import com.cascadebot.cascadebot.commandmeta.CommandManager;
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
@@ -50,7 +50,7 @@ public class PermissionsManager {
 
         long startTime = System.currentTimeMillis();
 
-        for (ICommandMain command : CommandManager.instance().getCommands()) {
+        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
             if (command.getPermission() == null || command instanceof ICommandRestricted) continue;
             registerPermission(command.getPermission());
             for (ICommandExecutable subCommand : command.getSubCommands()) {

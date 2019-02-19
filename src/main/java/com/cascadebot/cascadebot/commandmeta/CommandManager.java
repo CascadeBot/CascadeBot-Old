@@ -21,12 +21,10 @@ import java.util.stream.Collectors;
 public class CommandManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
-    private static CommandManager instance = null;
 
     private final List<ICommandMain> commands = Collections.synchronizedList(new ArrayList<>());
 
     public CommandManager() {
-        instance = this;
 
         long start = System.currentTimeMillis();
         try {
@@ -73,10 +71,6 @@ public class CommandManager {
         synchronized (commands) {
             return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
         }
-    }
-
-    public static CommandManager instance() {
-        return instance;
     }
 
 }
