@@ -45,6 +45,11 @@ public class RolesCommand implements ICommandMain {
     }
 
     @Override
+    public String description() {
+        return "Get the roles on the server";
+    }
+
+    @Override
     public Set<String> getGlobalAliases() {
         return Set.of("roleinfo");
     }

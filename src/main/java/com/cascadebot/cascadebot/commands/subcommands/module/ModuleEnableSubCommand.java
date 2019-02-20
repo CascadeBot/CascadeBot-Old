@@ -47,4 +47,9 @@ public class ModuleEnableSubCommand implements ICommandExecutable {
         return CascadePermission.of("Enable module subcommand", "module.enable", false, Permission.MANAGE_SERVER);
     }
 
+    @Override
+    public String description() {
+        return "enable a module";
+    }
+
 }

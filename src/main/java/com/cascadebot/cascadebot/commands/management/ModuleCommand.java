@@ -50,4 +50,9 @@ public class ModuleCommand implements ICommandMain {
         return CascadePermission.of("Module command", "module", false, Permission.MANAGE_SERVER);
     }
 
+    @Override
+    public String description() {
+        return "interact with modules";
+    }
+
 }

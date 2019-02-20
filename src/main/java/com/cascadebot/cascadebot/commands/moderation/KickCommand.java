@@ -58,6 +58,11 @@ public class KickCommand implements ICommandMain {
     }
 
     @Override
+    public String description() {
+        return "Kick a user";
+    }
+
+    @Override
     public Module getModule() {
         return Module.MODERATION;
     }

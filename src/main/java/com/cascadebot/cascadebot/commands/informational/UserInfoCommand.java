@@ -99,4 +99,9 @@ public class UserInfoCommand implements ICommandMain {
         return CascadePermission.of("User info command", "userinfo", true);
     }
 
+    @Override
+    public String description() {
+        return "Get info on a user";
+    }
+
 }

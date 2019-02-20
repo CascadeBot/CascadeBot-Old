@@ -37,4 +37,9 @@ public class GuildSaveSubCommand implements ICommandExecutable {
         return null;
     }
 
+    @Override
+    public String description() {
+        return "save a guilds data";
+    }
+
 }

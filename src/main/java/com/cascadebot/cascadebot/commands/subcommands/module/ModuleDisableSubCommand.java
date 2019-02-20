@@ -47,4 +47,9 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
         return CascadePermission.of("Disable module subcommand", "module.disable", false, Permission.MANAGE_SERVER);
     }
 
+    @Override
+    public String description() {
+        return "disable a module";
+    }
+
 }

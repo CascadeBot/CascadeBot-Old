@@ -37,4 +37,9 @@ public class GuildCommand implements ICommandRestricted {
         return "guild";
     }
 
+    @Override
+    public String description() {
+        return "interact with the guild";
+    }
+
 }

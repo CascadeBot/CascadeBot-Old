@@ -61,6 +61,11 @@ public class SoftBanCommand implements ICommandMain {
                 false, Permission.BAN_MEMBERS);
     }
 
+    @Override
+    public String description() {
+        return "Ban a user";
+    }
+
 
     @Override
     public Module getModule() {

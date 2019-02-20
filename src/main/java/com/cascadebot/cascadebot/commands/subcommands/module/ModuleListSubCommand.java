@@ -37,4 +37,9 @@ public class ModuleListSubCommand implements ICommandExecutable {
         return CascadePermission.of("List modules subcommand", "module.list", false, Permission.MANAGE_SERVER);
     }
 
+    @Override
+    public String description() {
+        return "list all modules";
+    }
+
 }

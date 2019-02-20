@@ -61,6 +61,11 @@ public class ShutdownCommand implements ICommandRestricted {
     }
 
     @Override
+    public String description() {
+        return "stop the bot";
+    }
+
+    @Override
     public SecurityLevel getCommandLevel() {
         return SecurityLevel.OWNER;
     }
