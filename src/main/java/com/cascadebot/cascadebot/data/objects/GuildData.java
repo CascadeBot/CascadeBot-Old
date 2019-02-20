@@ -217,10 +217,6 @@ public class GuildData {
         return Collections.unmodifiableSet(enabledModules);
     }
 
-    public Version getConfigVersion() {
-        return configVersion;
-    }
-
     public PageCache getPageCache() {
         return pageCache;
     }
