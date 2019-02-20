@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FormatUtils {
+
     //region Table methods
     public static String makeAsciiTable(java.util.List<String> headers, java.util.List<java.util.List<String>> table, String footer) {
         StringBuilder sb = new StringBuilder();
