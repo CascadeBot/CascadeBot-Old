@@ -10,6 +10,7 @@ import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.FormatUtils;
+import com.cascadebot.cascadebot.utils.Table;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 
@@ -22,18 +23,13 @@ public class RolesCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        Table.TableBuilder builder = new Table.TableBuilder("Role ID", "Role Name");
 
-        List<String> header = Arrays.asList("Role ID", "Role Name");
-
-        List<List<String>> body = new ArrayList<>();
         for (Role role : context.getGuild().getRoles()) {
-            List<String> row = new ArrayList<>();
-            row.add(role.getId());
-            row.add(role.getName());
-            body.add(row);
+            builder.addRow(role.getId(), role.getName());
         }
 
-        context.reply(FormatUtils.makeAsciiTable(header, body, null));
+        context.reply(builder.build().toString());
     }
 
     @Override
