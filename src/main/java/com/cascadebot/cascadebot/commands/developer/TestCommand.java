@@ -27,6 +27,11 @@ public class TestCommand implements ICommandRestricted {
     }
 
     @Override
+    public String description() {
+        return "Command that developers change when testing stuff";
+    }
+
+    @Override
     public Module getModule() {
         return Module.DEVELOPER;
     }
