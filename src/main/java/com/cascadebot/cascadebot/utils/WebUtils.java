@@ -9,13 +9,11 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class WebUtils {
 

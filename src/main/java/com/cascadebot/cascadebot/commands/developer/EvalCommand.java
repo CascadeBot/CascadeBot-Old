@@ -7,8 +7,8 @@ package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.permissions.PermissionNode;
 import com.cascadebot.cascadebot.utils.ErrorUtils;

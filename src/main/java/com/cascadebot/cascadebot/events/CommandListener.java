@@ -12,16 +12,15 @@ import com.cascadebot.cascadebot.commandmeta.CommandException;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
-import com.cascadebot.cascadebot.commands.core.PrefixCommand;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.shared.Regex;
-import com.cascadebot.shared.SharedConstants;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
@@ -84,7 +83,19 @@ public class CommandListener extends ListenerAdapter {
                     event.getChannel(),
                     "There was an error while processing your command!",
                     new CommandException(e, event.getGuild(), trigger));
+            return;
         }
+
+        if (guildData.willDeleteCommandMessages()) {
+            if (event.getGuild().getSelfMember().hasPermission(event.getChannel(), Permission.MESSAGE_MANAGE)) {
+                event.getMessage().delete().queue();
+            } else {
+                event.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
+                    // Sad face :( We'll just let them suffer in silence.
+                });
+            }
+        }
+
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {

@@ -5,8 +5,8 @@
 
 package com.cascadebot.cascadebot.data.objects;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.Constants;
-import com.cascadebot.cascadebot.commandmeta.CommandManager;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.data.Config;
@@ -39,7 +39,6 @@ public class GuildData {
     //region Meta information
     private UUID stateLock = UUID.randomUUID(); // This is for checking state between the wrapper, bot and panel
     private Date creationDate = new Date();
-    private Version configVersion = Constants.CONFIG_VERSION;
     //endregion
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
@@ -54,6 +53,7 @@ public class GuildData {
 
     //region Boolean flags
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
+    private boolean deleteCommandMessages = true;
     private boolean useEmbedForMessages = true;
     private boolean displayPermissionErrors = true; // Whether commands will silently fail on no permissions
     private boolean displayModuleErrors = false;
@@ -87,7 +87,7 @@ public class GuildData {
     }
 
     public void enableCommandByType(Module module) {
-        for (ICommandMain command : CommandManager.instance().getCommandsByModule(module)) {
+        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             enableCommand(command);
         }
     }
@@ -99,7 +99,7 @@ public class GuildData {
 
     public void disableCommandByType(Module module) {
         if (!module.isPublicModule()) return;
-        for (ICommandMain command : CommandManager.instance().getCommandsByModule(module)) {
+        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             disableCommand(command);
         }
     }
@@ -113,7 +113,7 @@ public class GuildData {
 
     public boolean isTypeEnabled(Module type) {
         boolean enabled = true;
-        for (ICommandMain command : CommandManager.instance().getCommandsByModule(type)) {
+        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(type)) {
             enabled &= commandInfo.get(command.getClass()).isEnabled();
         }
         return enabled;
@@ -252,6 +252,15 @@ public class GuildData {
     public void setDisplayModuleErrors(boolean displayModuleErrors) {
         this.displayModuleErrors = displayModuleErrors;
     }
+
+    public boolean willDeleteCommandMessages() {
+        return deleteCommandMessages;
+    }
+
+    public void setDeleteCommandMessages(boolean deleteCommandMessages) {
+        this.deleteCommandMessages = deleteCommandMessages;
+    }
+
     //endregion
 
 }
