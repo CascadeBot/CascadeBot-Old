@@ -243,6 +243,10 @@ public class CommandContext {
     }
 
     public void replyUsage(ICommandExecutable command) {
+        replyUsage(command, null);
+    }
+
+    public void replyUsage(ICommandExecutable command, String parent) {
         Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
         if(command instanceof ICommandMain) {
             for (ICommandExecutable subCommand : ((ICommandMain)command).getSubCommands()) {
@@ -261,7 +265,7 @@ public class CommandContext {
             }
         }
 
-        String commandString = data.getCommandPrefix() + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
+        String commandString = data.getCommandPrefix() + (parent == null ? "" : parent + " ") + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
         replyWarning("Incorrect usage. Proper usage:\n" + parentArg.getUnformattedUsageString(commandString));
     }
 
