@@ -86,19 +86,6 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        if (guildData.willDeleteCommandMessages()) {
-            if (event.getGuild().getSelfMember().hasPermission(event.getChannel(), Permission.MESSAGE_MANAGE)) {
-                event.getMessage().delete().queue();
-            } else {
-                event.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(
-                        "We can't delete guild messages as we won't have the permission manage messages! Please either give me this " +
-                                "permission or turn off command message deletion!"
-                ).queue(), exception -> {
-                    // Sad face :( We'll just let them suffer in silence.
-                });
-            }
-        }
-
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
@@ -181,6 +168,21 @@ public class CommandListener extends ListenerAdapter {
             }
         });
         return true;
+    }
+
+    private void deleteMessages(ICommandExecutable command, CommandContext context) {
+        if (context.getData().willDeleteCommandMessages() && command.deleteMessages()) {
+            if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
+                context.getMessage().delete().queue();
+            } else {
+                context.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(
+                        "We can't delete guild messages as we won't have the permission manage messages! Please either give me this " +
+                                "permission or turn off command message deletion!"
+                ).queue(), exception -> {
+                    // Sad face :( We'll just let them suffer in silence.
+                });
+            }
+        }
     }
 
     public static void shutdownCommandPool() {
