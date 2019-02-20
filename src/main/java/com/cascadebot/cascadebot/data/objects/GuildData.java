@@ -39,7 +39,6 @@ public class GuildData {
     //region Meta information
     private UUID stateLock = UUID.randomUUID(); // This is for checking state between the wrapper, bot and panel
     private Date creationDate = new Date();
-    private Version configVersion = Constants.CONFIG_VERSION;
     //endregion
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
