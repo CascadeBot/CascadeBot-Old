@@ -91,7 +91,8 @@ public class CommandListener extends ListenerAdapter {
                 event.getMessage().delete().queue();
             } else {
                 event.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(
-                        "We can't delete guild messages as we won't have the permission manage messages!"
+                        "We can't delete guild messages as we won't have the permission manage messages! Please either give me this " +
+                                "permission or turn off command message deletion!"
                 ).queue(), exception -> {
                     // Sad face :( We'll just let them suffer in silence.
                 });
