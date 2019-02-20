@@ -9,14 +9,11 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
-import com.cascadebot.cascadebot.utils.FormatUtils;
 import com.cascadebot.cascadebot.utils.Table;
+import com.cascadebot.cascadebot.utils.pagination.PageUtils;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 public class RolesCommand implements ICommandMain {
@@ -29,7 +26,7 @@ public class RolesCommand implements ICommandMain {
             builder.addRow(role.getId(), role.getName());
         }
 
-        context.reply(builder.build().toString());
+        context.sendPagedMessage(PageUtils.splitTableDataToPages(builder, 20));
     }
 
     @Override

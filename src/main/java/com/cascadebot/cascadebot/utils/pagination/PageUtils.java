@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.utils.pagination;
 
+import com.cascadebot.cascadebot.utils.Table;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.utils.Checks;
 
@@ -94,40 +95,38 @@ public class PageUtils {
      * Splits table data out into a give number of rows.
      * I don't suggest using this as you can possibly exceed the discord message limit
      *
-     * @param header The header data
-     * @param body The body data
+     * @param table The table to use
      * @param rows The amount of rows to split to
      * @return A list of pages
      */
-    public static List<Page> splitTableDataToPages(List<String> header, List<List<String>> body, int rows) {
+    public static List<Page> splitTableDataToPages(Table table, int rows) {
         int i = 0;
         List<Page> pages = new ArrayList<>();
         List<List<String>> pageContent = new ArrayList<>();
-        for(List<String> row : body) {
+        for(List<String> row : table.getBody()) {
             i++;
             pageContent.add(row);
 
             if(i == rows) {
-                pages.add(new PageObjects.TablePage(header, pageContent));
+                pages.add(new PageObjects.TablePage(table));
                 pageContent = new ArrayList<>();
                 i = 0;
             }
         }
-        pages.add(new PageObjects.TablePage(header, pageContent));
+        pages.add(new PageObjects.TablePage(table));
         return pages;
     }
 
     /**
      * Splits table data out into a pages with content length less then the length provides
      *
-     * @param header The header data
-     * @param body The body data
-     * @param length The max content length you're trying to achieve
+     * @param table The table to split.
+     * @param length The max content length you're trying to achieve.
      * @return A list of pages
      */
-    public static List<Page> splitTableDataToPagesWithCharLength(List<String> header, List<List<String>> body, int length) {
+    public static List<Page> splitTableDataToPagesWithCharLength(Table table, int length) {
         int maxLength = 0;
-        for(List<String> row : body) {
+        for(List<String> row : table.getBody()) {
             StringBuilder stringBuilder = new StringBuilder("| ");
             for(String content : row) {
                 stringBuilder.append(content).append(" | ");
@@ -141,7 +140,7 @@ public class PageUtils {
 
         int rows = (int) ((double) length / (double) maxLength);
 
-        return splitTableDataToPages(header, body, rows);
+        return splitTableDataToPages(table, rows);
     }
 
 }

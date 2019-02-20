@@ -91,6 +91,14 @@ public final class Table {
         return FormatUtils.makeAsciiTable(headings, body, footer);
     }
 
+    public TableBuilder edit() {
+        TableBuilder tableBuilder = new TableBuilder();
+        tableBuilder.headings = new ArrayList<>(headings);
+        tableBuilder.body = new ArrayList<>(body);
+        tableBuilder.footer = footer;
+        return tableBuilder;
+    }
+
     public static class TableBuilder {
 
         private List<String> headings = new ArrayList<>();
@@ -154,6 +162,18 @@ public final class Table {
         public TableBuilder setFooter(String footer) {
             this.footer = footer;
             return this;
+        }
+
+        public List<String> getHeadings() {
+            return headings;
+        }
+
+        public List<List<String>> getBody() {
+            return body;
+        }
+
+        public String getFooter() {
+            return footer;
         }
 
         /**
