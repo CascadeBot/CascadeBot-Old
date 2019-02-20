@@ -167,6 +167,7 @@ public class CommandListener extends ListenerAdapter {
                 ), e);
             }
         });
+        deleteMessages(command, context);
         return true;
     }
 
