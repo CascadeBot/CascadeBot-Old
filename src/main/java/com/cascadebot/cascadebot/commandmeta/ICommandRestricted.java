@@ -15,6 +15,11 @@ public interface ICommandRestricted extends ICommandMain {
     }
 
     @Override
+    default boolean forceDefault() {
+        return true;
+    }
+
+    @Override
     default CascadePermission getPermission() {
         return null; // Since these cannot be run by normal guilds, this cannot have a permission
     }

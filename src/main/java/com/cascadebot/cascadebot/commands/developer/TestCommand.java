@@ -31,9 +31,4 @@ public class TestCommand implements ICommandRestricted {
         return Module.DEVELOPER;
     }
 
-    @Override
-    public boolean forceDefault() {
-        return true;
-    }
-
 }

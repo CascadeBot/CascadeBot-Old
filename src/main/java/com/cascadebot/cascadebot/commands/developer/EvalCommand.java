@@ -121,8 +121,8 @@ public class EvalCommand implements ICommandRestricted {
     }
 
     @Override
-    public boolean forceDefault() {
-        return true;
+    public boolean deleteMessages() {
+        return false;
     }
 
     public static void shutdownEvalPool() {
