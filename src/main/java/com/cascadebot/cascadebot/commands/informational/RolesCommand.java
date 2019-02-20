@@ -26,7 +26,7 @@ public class RolesCommand implements ICommandMain {
             builder.addRow(role.getId(), role.getName());
         }
 
-        context.sendPagedMessage(PageUtils.splitTableDataToPages(builder, 20));
+        context.sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
     }
 
     @Override
