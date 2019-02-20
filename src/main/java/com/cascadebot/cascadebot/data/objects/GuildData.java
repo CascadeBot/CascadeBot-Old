@@ -54,6 +54,7 @@ public class GuildData {
 
     //region Boolean flags
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
+    private boolean deleteCommandMessages = true;
     private boolean useEmbedForMessages = true;
     private boolean displayPermissionErrors = true; // Whether commands will silently fail on no permissions
     private boolean displayModuleErrors = false;
@@ -252,6 +253,15 @@ public class GuildData {
     public void setDisplayModuleErrors(boolean displayModuleErrors) {
         this.displayModuleErrors = displayModuleErrors;
     }
+
+    public boolean willDeleteCommandMessages() {
+        return deleteCommandMessages;
+    }
+
+    public void setDeleteCommandMessages(boolean deleteCommandMessages) {
+        this.deleteCommandMessages = deleteCommandMessages;
+    }
+
     //endregion
 
 }
