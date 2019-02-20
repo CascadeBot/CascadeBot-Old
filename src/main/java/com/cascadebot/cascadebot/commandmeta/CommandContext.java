@@ -242,10 +242,12 @@ public class CommandContext {
         }
     }
 
-    public void replyUsage(ICommandMain command) {
+    public void replyUsage(ICommandExecutable command) {
         Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
-        for(ICommandExecutable subCommand : command.getSubCommands()) {
-            arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
+        if(command instanceof ICommandMain) {
+            for (ICommandExecutable subCommand : ((ICommandMain)command).getSubCommands()) {
+                arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
+            }
         }
 
         Argument parentArg = Argument.of(command.command(), command.description(), arguments);
