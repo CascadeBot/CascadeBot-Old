@@ -15,7 +15,6 @@ import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 
 public class UnbanCommand implements ICommandMain {
 
-
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
@@ -31,7 +30,6 @@ public class UnbanCommand implements ICommandMain {
         }
 
     }
-
 
     @Override
     public String command() {
