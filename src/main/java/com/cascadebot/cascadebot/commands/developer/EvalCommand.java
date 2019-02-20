@@ -11,7 +11,7 @@ import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.permissions.PermissionNode;
-import com.cascadebot.cascadebot.utils.ErrorUtils;
+import com.cascadebot.cascadebot.utils.PasteUtils;
 import com.cascadebot.shared.SecurityLevel;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.entities.Member;
@@ -89,15 +89,11 @@ public class EvalCommand implements ICommandRestricted {
 
                 String codeToRun = imports + " " + code;
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
-                if (results.length() < 2048) {
-                    if (results.isBlank()) results = "Empty result!";
-                    context.reply(results);
-                } else {
-                    context.reply(ErrorUtils.paste(results));
-                }
+                if (results.isBlank()) results = "Empty result!";
+                PasteUtils.pasteIfLong(results, 2048, context::reply);
             } catch (ScriptException e) {
                 context.replyDanger("Error running script: %s \n**%s** \n```swift\n%s```",
-                        ErrorUtils.paste(ErrorUtils.getStackTrace(e)),
+                        PasteUtils.paste(PasteUtils.getStackTrace(e)),
                         e.getClass().getName(),
                         e.getMessage()
                 );

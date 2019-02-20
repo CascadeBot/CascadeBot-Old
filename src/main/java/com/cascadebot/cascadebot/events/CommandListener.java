@@ -28,12 +28,14 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CommandListener extends ListenerAdapter {
 
     private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
+    private static final AtomicInteger threadCounter = new AtomicInteger(0);
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newFixedThreadPool(5, r ->
-            new Thread(COMMAND_THREADS, r, "Command Pool-" + COMMAND_THREADS.activeCount()), CascadeBot.logger);
+            new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.logger);
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
