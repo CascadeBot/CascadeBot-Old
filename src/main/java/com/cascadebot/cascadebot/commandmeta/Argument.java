@@ -46,14 +46,14 @@ public class Argument {
         return new Argument(arg, description, subArgs, ArgumentType.COMMAND);
     }
 
-    protected String getUnformattedUsageString(String command) {
+    protected String getUnformattedUsageString(String base) {
         StringBuilder usageBuilder = new StringBuilder();
         if (subArgs.size() > 0) {
             if (!description.isBlank()) {
-                usageBuilder.append("`").append(command).append(" ").append(arg).append("` - ").append(description).append('\n');
+                usageBuilder.append("`").append(base).append(arg).append("` - ").append(description).append('\n');
             }
             for (Argument subArg : subArgs) {
-                usageBuilder.append(subArg.getUnformattedUsageString(command + " " + arg));
+                usageBuilder.append(subArg.getUnformattedUsageString(base + arg + " "));
             }
         } else {
             String param = arg;
@@ -62,7 +62,7 @@ public class Argument {
             } else if (type.equals(ArgumentType.REQUIRED)) {
                 param = "<" + param + ">";
             }
-            usageBuilder.append("`").append(command).append(" ").append(param).append("`");
+            usageBuilder.append("`").append(base).append(param).append("`");
             if (!description.isBlank()) {
                 usageBuilder.append(" - ").append(description);
             }
