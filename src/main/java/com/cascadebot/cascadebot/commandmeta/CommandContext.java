@@ -28,6 +28,7 @@ import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -242,7 +243,7 @@ public class CommandContext {
     }
 
     public void replyUsage(ICommandMain command) {
-        Set<Argument> arguments = command.getUndefinedArguments();
+        Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
         for(ICommandExecutable subCommand : command.getSubCommands()) {
             arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
         }
