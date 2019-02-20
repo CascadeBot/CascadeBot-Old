@@ -17,6 +17,7 @@ import com.cascadebot.cascadebot.utils.PasteUtils;
 import com.cascadebot.cascadebot.utils.Table;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import com.cascadebot.shared.SecurityLevel;
+import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.core.entities.Member;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class DumpCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.replyDanger("Hmmm either pick: `threads`, `commands` or `permissions`");
+            context.replyDanger("Hmmm either pick: `threads`, `commands`, `permissions` or `guild`");
             return;
         }
         if (context.getArg(0).equalsIgnoreCase("threads")) {
@@ -51,6 +52,8 @@ public class DumpCommand implements ICommandRestricted {
                 builder.addRow(permission.getPermissionNode(), permission.getDiscordPerm().toString());
             }
             PasteUtils.pasteIfLong(builder.build().toString(), 2048, context::reply);
+        } else if (context.getArg(0).equalsIgnoreCase("guild")) {
+            PasteUtils.pasteIfLong("```json\n" + new GsonBuilder().setPrettyPrinting().create().toJson(context.getData()) + "```", 2048, context::reply);
         } else {
             context.replyDanger("I can't seem to find that argument \uD83E\uDD14" /* Thinking emoji 🤔 */);
         }
