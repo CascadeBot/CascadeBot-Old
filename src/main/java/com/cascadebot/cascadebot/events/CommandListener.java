@@ -90,7 +90,9 @@ public class CommandListener extends ListenerAdapter {
             if (event.getGuild().getSelfMember().hasPermission(event.getChannel(), Permission.MESSAGE_MANAGE)) {
                 event.getMessage().delete().queue();
             } else {
-                event.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
+                event.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(
+                        "We can't delete guild messages as we won't have the permission manage messages!"
+                ).queue(), exception -> {
                     // Sad face :( We'll just let them suffer in silence.
                 });
             }
