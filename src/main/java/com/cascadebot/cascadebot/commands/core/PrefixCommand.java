@@ -14,7 +14,7 @@ public class PrefixCommand implements ICommandCore {
 
             if (newPrefix.equals("reset")) {
                 if (context.hasPermission("prefix.reset")) {
-                    context.getData().setCommandPrefix(Config.INS.getDefaultPrefix());
+                    context.getSettings().setPrefix(Config.INS.getDefaultPrefix());
                     context.replyInfo("The prefix has been reset to: `%s`", Config.INS.getDefaultPrefix());
                 } else {
                     context.sendPermissionsError("prefix.reset");
@@ -31,10 +31,10 @@ public class PrefixCommand implements ICommandCore {
                 context.replyDanger("The requested prefix is too long!");
                 return;
             }
-            context.getData().setCommandPrefix(newPrefix);
+            context.getSettings().setPrefix(newPrefix);
             context.replyInfo("The new prefix is: `%s`", newPrefix);
         } else {
-            context.replyInfo("The current server prefix is `%s`", context.getData().getCommandPrefix());
+            context.replyInfo("The current server prefix is `%s`", context.getSettings().getPrefix());
         }
     }
 

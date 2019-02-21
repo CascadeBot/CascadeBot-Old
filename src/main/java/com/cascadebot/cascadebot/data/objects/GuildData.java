@@ -50,15 +50,8 @@ public class GuildData {
                     Module.INFORMATIONAL
             )
     );
-    private String commandPrefix = Config.INS.getDefaultPrefix();
 
-    //region Boolean flags
-    private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
-    private boolean deleteCommandMessages = true;
-    private boolean useEmbedForMessages = true;
-    private boolean displayPermissionErrors = true; // Whether commands will silently fail on no permissions
-    private boolean displayModuleErrors = false;
-    //endregion
+    private GuildSettings guildSettings = new GuildSettings();
 
     //region Transient fields
     @Transient
@@ -190,20 +183,8 @@ public class GuildData {
         return guildID;
     }
 
-    public boolean isMentionPrefix() {
-        return mentionPrefix;
-    }
-
-    public void setMentionPrefix(boolean mentionPrefix) {
-        this.mentionPrefix = mentionPrefix;
-    }
-
-    public boolean getUseEmbedForMessages() {
-        return useEmbedForMessages;
-    }
-
-    public void setUseEmbedForMessages(boolean useEmbedForMessages) {
-        this.useEmbedForMessages = useEmbedForMessages;
+    public GuildSettings getSettings() {
+        return guildSettings;
     }
 
     public ButtonsCache getButtonsCache() {
@@ -228,38 +209,6 @@ public class GuildData {
 
     public Date getCreationDate() {
         return creationDate;
-    }
-
-    public String getCommandPrefix() {
-        return commandPrefix;
-    }
-
-    public void setCommandPrefix(String commandPrefix) {
-        this.commandPrefix = commandPrefix;
-    }
-
-    public boolean willDisplayPermissionErrors() {
-        return displayPermissionErrors;
-    }
-
-    public void setDisplayPermissionErrors(boolean displayPermissionErrors) {
-        this.displayPermissionErrors = displayPermissionErrors;
-    }
-
-    public boolean willDisplayModuleErrors() {
-        return displayModuleErrors;
-    }
-
-    public void setDisplayModuleErrors(boolean displayModuleErrors) {
-        this.displayModuleErrors = displayModuleErrors;
-    }
-
-    public boolean willDeleteCommandMessages() {
-        return deleteCommandMessages;
-    }
-
-    public void setDeleteCommandMessages(boolean deleteCommandMessages) {
-        this.deleteCommandMessages = deleteCommandMessages;
     }
 
     //endregion

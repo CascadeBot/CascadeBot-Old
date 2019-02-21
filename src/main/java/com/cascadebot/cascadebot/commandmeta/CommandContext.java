@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot.commandmeta;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.data.objects.GuildSettings;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
@@ -61,6 +62,10 @@ public class CommandContext {
 
     public GuildData getData() {
         return data;
+    }
+
+    public GuildSettings getSettings() {
+        return data.getSettings();
     }
 
     public TextChannel getChannel() {
@@ -154,7 +159,7 @@ public class CommandContext {
 
     public void replyInfo(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendInfoMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendInfoMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyInfo(String message, Object... objects) {
@@ -163,12 +168,12 @@ public class CommandContext {
 
     public void replyInfo(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendInfoMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendInfoMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replySuccess(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendSuccessMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendSuccessMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replySuccess(String message, Object... objects) {
@@ -177,12 +182,12 @@ public class CommandContext {
 
     public void replySuccess(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendSuccessMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendSuccessMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyWarning(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendWarningMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendWarningMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyWarning(String message, Object... objects) {
@@ -191,12 +196,12 @@ public class CommandContext {
 
     public void replyWarning(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendWarningMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendWarningMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyModeration(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendModerationMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendModerationMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyModeration(String message, Object... objects) {
@@ -205,12 +210,12 @@ public class CommandContext {
 
     public void replyModeration(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendModerationMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendModerationMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyDanger(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendDangerMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendDangerMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyDanger(String message, Object... objects) {
@@ -219,7 +224,7 @@ public class CommandContext {
 
     public void replyDanger(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendDangerMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendDangerMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyException(String message, Throwable throwable) {
@@ -231,7 +236,7 @@ public class CommandContext {
     }
 
     public MessageAction replyImage(String url) {
-        if (getData().getUseEmbedForMessages()) {
+        if (getSettings().useEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setImage(url);
             return channel.sendMessage(embedBuilder.build());

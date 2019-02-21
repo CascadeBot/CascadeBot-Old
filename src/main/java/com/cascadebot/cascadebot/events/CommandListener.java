@@ -52,7 +52,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String prefix = guildData.getCommandPrefix();
+        String prefix = guildData.getSettings().getPrefix();
         boolean isMention = false;
 
         String commandWithArgs;
@@ -63,12 +63,12 @@ public class CommandListener extends ListenerAdapter {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
             trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
             args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
-        } else if (guildData.isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
+        } else if (guildData.getSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
             commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
             trigger = commandWithArgs.split(" ")[0];
             args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
             isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getCommandPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getSettings().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
             trigger = commandWithArgs.split(" ")[0];
             args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
@@ -86,7 +86,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        if (guildData.willDeleteCommandMessages()) {
+        if (guildData.getSettings().willDeleteCommand()) {
             if (event.getGuild().getSelfMember().hasPermission(event.getChannel(), Permission.MESSAGE_MANAGE)) {
                 event.getMessage().delete().queue();
             } else {
@@ -103,12 +103,12 @@ public class CommandListener extends ListenerAdapter {
         if (cmd != null) {
             if (cmd.getModule().isPublicModule() &&
                     !guildData.isModuleEnabled(cmd.getModule())) {
-                if (guildData.willDisplayModuleErrors() || Environment.isDevelopment()) {
+                if (guildData.getSettings().willDisplayModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     builder.setDescription(String.format("The module `%s` for command `%s` is disabled!", cmd.getModule().toString(), trigger));
                     builder.setTimestamp(Instant.now());
                     builder.setFooter("Requested by " + event.getAuthor().getAsTag(), event.getAuthor().getEffectiveAvatarUrl());
-                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getUseEmbedForMessages());
+                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getSettings().useEmbedForMessages());
                 }
                 // TODO: Modlog?
                 return;
@@ -154,7 +154,7 @@ public class CommandListener extends ListenerAdapter {
     private boolean dispatchCommand(final ICommandExecutable command, final CommandContext context) {
         if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
             if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
-                if (context.getData().willDisplayPermissionErrors()) {
+                if (context.getSettings().willShowPermErrors()) {
                     context.replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
                 }
             }
