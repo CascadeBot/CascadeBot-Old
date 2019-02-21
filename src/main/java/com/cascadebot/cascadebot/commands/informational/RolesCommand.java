@@ -9,31 +9,24 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
-import com.cascadebot.cascadebot.utils.FormatUtils;
+import com.cascadebot.cascadebot.utils.Table;
+import com.cascadebot.cascadebot.utils.pagination.PageUtils;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 public class RolesCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        Table.TableBuilder builder = new Table.TableBuilder("Role ID", "Role Name");
 
-        List<String> header = Arrays.asList("Role ID", "Role Name");
-
-        List<List<String>> body = new ArrayList<>();
         for (Role role : context.getGuild().getRoles()) {
-            List<String> row = new ArrayList<>();
-            row.add(role.getId());
-            row.add(role.getName());
-            body.add(row);
+            builder.addRow(role.getId(), role.getName());
         }
 
-        context.reply(FormatUtils.makeAsciiTable(header, body, null));
+        context.sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
     }
 
     @Override

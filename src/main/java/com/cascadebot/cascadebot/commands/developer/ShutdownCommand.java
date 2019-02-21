@@ -70,9 +70,4 @@ public class ShutdownCommand implements ICommandRestricted {
         return Module.DEVELOPER;
     }
 
-    @Override
-    public boolean forceDefault() {
-        return true;
-    }
-
 }

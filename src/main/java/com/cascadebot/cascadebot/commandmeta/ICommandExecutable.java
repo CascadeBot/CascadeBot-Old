@@ -16,4 +16,8 @@ public interface ICommandExecutable {
 
     CascadePermission getPermission();
 
+    default boolean deleteMessages() {
+        return true;
+    }
+
 }

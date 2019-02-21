@@ -7,11 +7,10 @@ package com.cascadebot.cascadebot.utils.pagination;
 
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.utils.FormatUtils;
+import com.cascadebot.cascadebot.utils.Table;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
-
-import java.util.List;
 
 public class PageObjects {
 
@@ -66,38 +65,29 @@ public class PageObjects {
 
     public static class TablePage implements Page {
 
-        List<String> header;
-        List<List<String>> body;
-        String footer = "";
+        private Table table;
+        boolean numbersInTable;
 
-        boolean numbersInTable = true;
-
-        public TablePage(List<String> header, List<List<String>> body) {
-            this.header = header;
-            this.body = body;
+        public TablePage(Table table) {
+            this(table, false);
         }
 
-        public TablePage(List<String> header, List<List<String>> body, boolean numbersInTable) {
-            this.header = header;
-            this.body = body;
+        public TablePage(Table table, boolean numbersInTable) {
+            this.table = table;
             this.numbersInTable = numbersInTable;
-        }
-
-        public TablePage(List<String> header, List<List<String>> body, String footer) {
-            this.header = header;
-            this.body = body;
-            this.footer = footer;
-            this.numbersInTable = false;
         }
 
         @Override
         public void pageShow(Message message, int page, int total) {
             if (numbersInTable) {
-                footer = "Page " + page + "/" + total;
+                Table.TableBuilder builder = this.table.edit();
+                builder.setFooter("Page " + page + "/" + total);
+                message.editMessage(builder.build().toString()).override(true).queue();
+            } else {
+                String table = this.table.toString();
+                table += "\n\nPage " + page + "/" + total;
+                message.editMessage(table).override(true).queue();
             }
-            String table = FormatUtils.makeAsciiTable(header, body, footer);
-            if (!numbersInTable) table += "\n\nPage " + page + "/" + total;
-            message.editMessage(table).override(true).queue();
         }
 
     }
