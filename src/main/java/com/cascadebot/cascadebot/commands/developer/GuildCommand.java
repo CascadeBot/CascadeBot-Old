@@ -5,7 +5,6 @@ import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.commands.subcommands.guild.GuildSaveSubCommand;
-import com.cascadebot.cascadebot.commands.subcommands.guild.GuildSettingsSubCommand;
 import com.cascadebot.shared.SecurityLevel;
 import net.dv8tion.jda.core.entities.Member;
 
@@ -30,7 +29,7 @@ public class GuildCommand implements ICommandRestricted {
 
     @Override
     public Set<ICommandExecutable> getSubCommands() {
-        return Set.of(new GuildSaveSubCommand(), new GuildSettingsSubCommand());
+        return Set.of(new GuildSaveSubCommand());
     }
 
     @Override
