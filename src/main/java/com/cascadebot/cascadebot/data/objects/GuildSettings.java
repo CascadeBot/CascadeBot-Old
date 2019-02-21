@@ -9,8 +9,6 @@ import com.cascadebot.cascadebot.data.Config;
 
 public class GuildSettings {
 
-    private String prefix = Config.INS.getDefaultPrefix();
-
     //region Boolean flags
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
     private boolean deleteCommand = true;
@@ -18,14 +16,6 @@ public class GuildSettings {
     private boolean showPermErrors = true; // Whether commands will silently fail on no permissions
     private boolean showModuleErrors = false;
     //endregion
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
 
     public boolean isMentionPrefix() {
         return mentionPrefix;

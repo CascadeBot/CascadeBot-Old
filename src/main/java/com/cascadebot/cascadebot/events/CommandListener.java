@@ -54,7 +54,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String prefix = guildData.getSettings().getPrefix();
+        String prefix = guildData.getPrefix();
         boolean isMention = false;
 
         String commandWithArgs;
@@ -70,7 +70,7 @@ public class CommandListener extends ListenerAdapter {
             trigger = commandWithArgs.split(" ")[0];
             args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
             isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getSettings().getPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
             trigger = commandWithArgs.split(" ")[0];
             args = ArrayUtils.remove(commandWithArgs.split(" "), 0);

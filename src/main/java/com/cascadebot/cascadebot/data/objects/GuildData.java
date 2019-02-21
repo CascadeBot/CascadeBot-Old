@@ -50,6 +50,8 @@ public class GuildData {
             )
     );
 
+    private String prefix = Config.INS.getDefaultPrefix();
+
     private GuildSettings guildSettings = new GuildSettings();
 
     //region Transient fields
@@ -204,6 +206,14 @@ public class GuildData {
 
     public Date getCreationDate() {
         return creationDate;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 
     //endregion
