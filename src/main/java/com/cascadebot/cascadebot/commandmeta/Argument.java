@@ -32,20 +32,40 @@ public class Argument {
         return new Argument(arg, "", new HashSet<>(), ArgumentType.COMMAND, new HashSet<>());
     }
 
+    public static Argument ofA(String arg, Set<String> aliases) {
+        return new Argument(arg, "", new HashSet<>(), ArgumentType.COMMAND, aliases);
+    }
+
     public static Argument of(String arg, ArgumentType type) {
         return new Argument(arg, "", new HashSet<>(), type, new HashSet<>());
+    }
+
+    public static Argument ofA(String arg, ArgumentType type, Set<String> aliases) {
+        return new Argument(arg, "", new HashSet<>(), type, aliases);
     }
 
     public static Argument of(String arg, String description) {
         return new Argument(arg, description, new HashSet<>(), ArgumentType.COMMAND, new HashSet<>());
     }
 
+    public static Argument ofA(String arg, String description, Set<String> aliases) {
+        return new Argument(arg, description, new HashSet<>(), ArgumentType.COMMAND, aliases);
+    }
+
     public static Argument of(String arg, String description, ArgumentType type) {
         return new Argument(arg, description, new HashSet<>(), type, new HashSet<>());
     }
 
+    public static Argument ofA(String arg, String description, ArgumentType type, Set<String> aliases) {
+        return new Argument(arg, description, new HashSet<>(), type, aliases);
+    }
+
     public static Argument of(String arg, String description, Set<Argument> subArgs) {
         return new Argument(arg, description, subArgs, ArgumentType.COMMAND, new HashSet<>());
+    }
+
+    public static Argument ofA(String arg, String description, Set<Argument> subArgs, Set<String> aliases) {
+        return new Argument(arg, description, subArgs, ArgumentType.COMMAND, aliases);
     }
 
     protected String getUnformattedUsageString(String base) {

@@ -5,11 +5,15 @@
 
 package com.cascadebot.cascadebot.commands.subcommands.guild;
 
+import com.cascadebot.cascadebot.commandmeta.Argument;
+import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import net.dv8tion.jda.core.entities.Member;
+
+import java.util.Set;
 
 public class GuildSaveSubCommand implements ICommandExecutable {
 
@@ -39,7 +43,13 @@ public class GuildSaveSubCommand implements ICommandExecutable {
 
     @Override
     public String description() {
-        return "save a guilds data";
+        return "save current guilds data";
     }
+
+    @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.ofA("guildId", "Saves a specific guild", ArgumentType.REQUIRED, Set.of("all")));
+    }
+
 
 }
