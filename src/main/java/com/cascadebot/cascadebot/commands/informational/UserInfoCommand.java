@@ -41,8 +41,12 @@ public class UserInfoCommand implements ICommandMain {
         User user = memberForInfo.getUser();
 
         String status = "";
+        String statusName = StringUtils.capitalize(memberForInfo.getOnlineStatus().toString().replace("_", " ").toLowerCase());
 
-        if (memberForInfo.getOnlineStatus() == OnlineStatus.ONLINE) {
+        if (memberForInfo.getGame() != null && memberForInfo.getGame().getType() == Game.GameType.STREAMING) {
+            status = context.globalEmote("streaming");
+            statusName = "Streaming";
+        } else if (memberForInfo.getOnlineStatus() == OnlineStatus.ONLINE) {
             status = context.globalEmote("online");
         } else if (memberForInfo.getOnlineStatus() == OnlineStatus.OFFLINE) {
             status = context.globalEmote("offline");
@@ -59,7 +63,7 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField("User Created", user.getCreationTime().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
         builder.addField("Join Date", memberForInfo.getJoinDate().format(DateTimeFormatter.RFC_1123_DATE_TIME), true);
         builder.addField("User ID", user.getId(), true);
-        builder.addField("Status", StringUtils.capitalize(memberForInfo.getOnlineStatus().toString().replace("_", " ").toLowerCase()) + "  " + status, true);
+        builder.addField("Status", status + statusName, true);
 
         Game game = memberForInfo.getGame();
         if (game != null && !game.isRich()) {
