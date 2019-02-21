@@ -11,6 +11,7 @@ import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
+import com.cascadebot.cascadebot.utils.Table;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.cascadebot.utils.pagination.PageObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -23,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UserInfoCommand implements ICommandMain {
@@ -73,17 +73,13 @@ public class UserInfoCommand implements ICommandMain {
         }
         pageList.add(new PageObjects.EmbedPage(builder));
 
-        List<String> header = Arrays.asList("Role ID", "Role Name");
+        Table.TableBuilder tableBuilder = new Table.TableBuilder("Role ID", "Role Name");
 
-        List<List<String>> body = new ArrayList<>();
         for (Role role : memberForInfo.getRoles()) {
-            List<String> row = new ArrayList<>();
-            row.add(role.getId());
-            row.add(role.getName());
-            body.add(row);
+            tableBuilder.addRow(role.getId(), role.getName());
         }
 
-        pageList.add(new PageObjects.TablePage(header, body));
+        pageList.add(new PageObjects.TablePage(tableBuilder.build()));
 
         context.sendPagedMessage(pageList);
     }
