@@ -55,7 +55,7 @@ public class UnbanCommand implements ICommandMain {
         try {
             context.getGuild().getController().unban(user).queue(success -> {
                 context.replySuccess("User %s has been unbanned!", user.getAsTag());
-            }, error -> context.replyException("Could not ban user %s!", error, user.getAsTag()));
+            }, error -> context.replyException("Could not unban user %s!", error, user.getAsTag()));
         } catch (InsufficientPermissionException e) {
             context.replyDanger("Cannot unban user %s, missing %s permission!", user.getAsTag(), e.getPermission().getName());
         }
