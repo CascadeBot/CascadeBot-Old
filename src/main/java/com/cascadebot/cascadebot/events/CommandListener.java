@@ -28,12 +28,14 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CommandListener extends ListenerAdapter {
 
     private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
+    private static final AtomicInteger threadCounter = new AtomicInteger(0);
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newFixedThreadPool(5, r ->
-            new Thread(COMMAND_THREADS, r, "Command Pool-" + COMMAND_THREADS.activeCount()), CascadeBot.logger);
+            new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.logger);
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
@@ -84,19 +86,6 @@ public class CommandListener extends ListenerAdapter {
                     "There was an error while processing your command!",
                     new CommandException(e, event.getGuild(), trigger));
             return;
-        }
-
-        if (guildData.willDeleteCommandMessages()) {
-            if (event.getGuild().getSelfMember().hasPermission(event.getChannel(), Permission.MESSAGE_MANAGE)) {
-                event.getMessage().delete().queue();
-            } else {
-                event.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(
-                        "We can't delete guild messages as we won't have the permission manage messages! Please either give me this " +
-                                "permission or turn off command message deletion!"
-                ).queue(), exception -> {
-                    // Sad face :( We'll just let them suffer in silence.
-                });
-            }
         }
 
     }
@@ -180,7 +169,23 @@ public class CommandListener extends ListenerAdapter {
                 ), e);
             }
         });
+        deleteMessages(command, context);
         return true;
+    }
+
+    private void deleteMessages(ICommandExecutable command, CommandContext context) {
+        if (context.getData().willDeleteCommandMessages() && command.deleteMessages()) {
+            if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
+                context.getMessage().delete().queue();
+            } else {
+                context.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(
+                        "We can't delete guild messages as we won't have the permission manage messages! Please either give me this " +
+                                "permission or turn off command message deletion!"
+                ).queue(), exception -> {
+                    // Sad face :( We'll just let them suffer in silence.
+                });
+            }
+        }
     }
 
     public static void shutdownCommandPool() {

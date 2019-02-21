@@ -18,8 +18,9 @@ import org.slf4j.MarkerFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.function.Consumer;
 
-public class ErrorUtils {
+public class PasteUtils {
 
     public static String paste(String paste) {
         Request request = new Request.Builder()
@@ -38,6 +39,14 @@ public class ErrorUtils {
             CascadeBot.logger.error(MarkerFactory.getMarker("HASTEBIN"), "Error while trying to post!", e);
         }
         return "";
+    }
+
+    public static void pasteIfLong(String message, int maxLength, Consumer<String> action) {
+        if (message.length() > maxLength) {
+            action.accept(paste(message));
+        } else {
+            action.accept(message);
+        }
     }
 
     public static String getStackTrace(Throwable throwable) {

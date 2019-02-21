@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot.utils;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.Config;
+import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
@@ -26,10 +27,6 @@ import java.util.stream.Collectors;
 
 public class DiscordUtils {
 
-    private static final Pattern idPattern = Pattern.compile("[0-9]{17,}");
-    private static final Pattern userMentionPattern = Pattern.compile("<@!?([0-9]{17,})>");
-    private static final Pattern roleMentionPattern = Pattern.compile("<@&([0-9]{17,})>");
-
     //region Members and Users
     /**
      * Attempts to find a member using a string input.
@@ -43,7 +40,7 @@ public class DiscordUtils {
     public static Member getMember(String search, Guild guild) {
         Checks.notBlank(search, "user");
         Checks.notNull(guild, "guild");
-        String id = getIdFromString(search, userMentionPattern);
+        String id = getIdFromString(search, Regex.USER_MENTION);
 
         if (id != null) {
             User user = getUserById(Long.parseLong(id));
@@ -85,7 +82,7 @@ public class DiscordUtils {
      */
     public static Role getRole(String search, Guild guild) {
         Checks.notBlank(search, "role");
-        String id = getIdFromString(search, roleMentionPattern);
+        String id = getIdFromString(search, Regex.ROLE_MENTION);
 
         if (id != null) {
             Role role = guild.getRoleById(id);
@@ -135,7 +132,7 @@ public class DiscordUtils {
      */
     private static String getIdFromString(String search, Pattern pattern) {
         String id = null;
-        if (idPattern.matcher(search).matches()) {
+        if (Regex.ID.matcher(search).matches()) {
             id = search;
         }
         Matcher matcher = pattern.matcher(search);
