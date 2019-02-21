@@ -31,7 +31,7 @@ public interface ICommandExecutable {
      * @return A set of arguments not being defined else where
      */
     default Set<Argument> getUndefinedArguments() {
-        return new HashSet<>();
+        return Set.of();
     }
 
 }

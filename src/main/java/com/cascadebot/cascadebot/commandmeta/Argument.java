@@ -29,39 +29,39 @@ public class Argument {
     }
 
     public static Argument of(String arg) {
-        return new Argument(arg, "", new HashSet<>(), ArgumentType.COMMAND, new HashSet<>());
+        return new Argument(arg, "", Set.of(), ArgumentType.COMMAND, Set.of());
     }
 
     public static Argument ofA(String arg, Set<String> aliases) {
-        return new Argument(arg, "", new HashSet<>(), ArgumentType.COMMAND, aliases);
+        return new Argument(arg, "", Set.of(), ArgumentType.COMMAND, aliases);
     }
 
     public static Argument of(String arg, ArgumentType type) {
-        return new Argument(arg, "", new HashSet<>(), type, new HashSet<>());
+        return new Argument(arg, "", Set.of(), type, Set.of());
     }
 
     public static Argument ofA(String arg, ArgumentType type, Set<String> aliases) {
-        return new Argument(arg, "", new HashSet<>(), type, aliases);
+        return new Argument(arg, "", Set.of(), type, aliases);
     }
 
     public static Argument of(String arg, String description) {
-        return new Argument(arg, description, new HashSet<>(), ArgumentType.COMMAND, new HashSet<>());
+        return new Argument(arg, description, Set.of(), ArgumentType.COMMAND, Set.of());
     }
 
     public static Argument ofA(String arg, String description, Set<String> aliases) {
-        return new Argument(arg, description, new HashSet<>(), ArgumentType.COMMAND, aliases);
+        return new Argument(arg, description, Set.of(), ArgumentType.COMMAND, aliases);
     }
 
     public static Argument of(String arg, String description, ArgumentType type) {
-        return new Argument(arg, description, new HashSet<>(), type, new HashSet<>());
+        return new Argument(arg, description, Set.of(), type, Set.of());
     }
 
     public static Argument ofA(String arg, String description, ArgumentType type, Set<String> aliases) {
-        return new Argument(arg, description, new HashSet<>(), type, aliases);
+        return new Argument(arg, description, Set.of(), type, aliases);
     }
 
     public static Argument of(String arg, String description, Set<Argument> subArgs) {
-        return new Argument(arg, description, subArgs, ArgumentType.COMMAND, new HashSet<>());
+        return new Argument(arg, description, subArgs, ArgumentType.COMMAND, Set.of());
     }
 
     public static Argument ofA(String arg, String description, Set<Argument> subArgs, Set<String> aliases) {
