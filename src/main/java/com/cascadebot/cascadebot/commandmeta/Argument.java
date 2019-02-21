@@ -5,27 +5,27 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.Set;
 
 public class Argument {
 
-    private String arg;
-    private String description;
-    private Set<Argument> subArgs;
-    private ArgumentType type;
-    private Set<String> aliases;
+    private final String arg;
+    private final String description;
+    private final Set<Argument> subArgs;
+    private final ArgumentType type;
+    private final Set<String> aliases;
 
     private Argument(String arg, String description, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
         this.arg = arg;
         this.description = description;
-        this.subArgs = subArgs;
+        this.subArgs = Collections.unmodifiableSet(subArgs);
         if (subArgs.size() > 0) {
             this.type = ArgumentType.COMMAND;
         } else {
             this.type = type;
         }
-        this.aliases = aliases;
+        this.aliases = Collections.unmodifiableSet(aliases);
     }
 
     public static Argument of(String arg) {
