@@ -10,6 +10,7 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
+import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -20,8 +21,6 @@ import java.util.regex.Pattern;
 
 public class UnbanCommand implements ICommandMain {
 
-    private Pattern userId = Pattern.compile("^[0-9]{17,}$");
-
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
@@ -29,7 +28,7 @@ public class UnbanCommand implements ICommandMain {
             return;
         }
         String target = context.getMessage(0);
-        if (userId.matcher(target).matches()) {
+        if (Regex.ID.matcher(target).matches()) {
             CascadeBot.INS.getShardManager().retrieveUserById(target).queue(user -> {
                 banUser(context, user);
             }, failure -> {
@@ -51,6 +50,7 @@ public class UnbanCommand implements ICommandMain {
         }
     }
 
+    // TODO: Make a moderation handler that does the action, handling perms etc.
     private void banUser(CommandContext context, User user) {
         try {
             context.getGuild().getController().unban(user).queue(success -> {
