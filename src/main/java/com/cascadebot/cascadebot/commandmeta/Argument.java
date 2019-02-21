@@ -28,22 +28,6 @@ public class Argument {
         this.aliases = Collections.unmodifiableSet(aliases);
     }
 
-    public static Argument of(String arg) {
-        return new Argument(arg, "", Set.of(), ArgumentType.COMMAND, Set.of());
-    }
-
-    public static Argument ofA(String arg, Set<String> aliases) {
-        return new Argument(arg, "", Set.of(), ArgumentType.COMMAND, aliases);
-    }
-
-    public static Argument of(String arg, ArgumentType type) {
-        return new Argument(arg, "", Set.of(), type, Set.of());
-    }
-
-    public static Argument ofA(String arg, ArgumentType type, Set<String> aliases) {
-        return new Argument(arg, "", Set.of(), type, aliases);
-    }
-
     public static Argument of(String arg, String description) {
         return new Argument(arg, description, Set.of(), ArgumentType.COMMAND, Set.of());
     }
