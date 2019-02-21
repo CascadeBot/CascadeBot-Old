@@ -22,7 +22,7 @@ public class ModuleCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.replyInfo("Use subcommands disable, enable and list!");
+        context.replyUsage(this);
     }
 
     @Override
