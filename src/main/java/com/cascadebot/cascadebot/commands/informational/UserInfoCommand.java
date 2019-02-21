@@ -43,7 +43,7 @@ public class UserInfoCommand implements ICommandMain {
         String status = "";
         String statusName = StringUtils.capitalize(memberForInfo.getOnlineStatus().toString().replace("_", " ").toLowerCase());
 
-        if (memberForInfo.getGame().getType() == Game.GameType.STREAMING) {
+        if (memberForInfo.getGame() != null && memberForInfo.getGame().getType() == Game.GameType.STREAMING) {
             status = context.globalEmote("streaming");
             statusName = "Streaming";
         } else if (memberForInfo.getOnlineStatus() == OnlineStatus.ONLINE) {
