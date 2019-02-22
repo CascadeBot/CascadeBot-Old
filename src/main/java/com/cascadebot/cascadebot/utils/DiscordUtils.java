@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 public class DiscordUtils {
 
     //region Members and Users
+
     /**
      * Attempts to find a member using a string input.
      * The string can be their id, a mention, or a name.
@@ -35,7 +36,7 @@ public class DiscordUtils {
      * @param search The string to find the {@link Member} with.
      * @param guild  The {@link Guild} to fnd the {@link Member} in.
      * @return The {@link Member} found or null if no member was found with the search.
-     * @throws IllegalArgumentException if search is null.
+     * @throws IllegalArgumentException if search is null or blank.
      */
     public static Member getMember(String search, Guild guild) {
         Checks.notBlank(search, "user");
@@ -60,6 +61,29 @@ public class DiscordUtils {
         }
     }
 
+    /**
+     * Attempts to find a member using a string input.
+     * This first checks the guilds the bot is in and
+     * then attempts to retrieve the user from Discord
+     * if initially unsuccessful.
+     *
+     * The string can be their id or a mention.
+     *
+     * @param search The string to find the {@link User} with.
+     * @return The {@link User} found or null if no user was found with the search.
+     * @throws IllegalArgumentException if search is null or blank.
+     */
+    public static User getUser(String search) {
+        Checks.notBlank(search, "search");
+        String id = getIdFromString(search, Regex.USER_MENTION);
+        if (id == null) return null;
+        User user = getUserById(Long.valueOf(id));
+        if (user == null) {
+            user = CascadeBot.INS.getShardManager().retrieveUserById(id).complete();
+        }
+        return user;
+    }
+
     private static User getUserById(Long userId) {
         return CascadeBot.INS.getShardManager().getUserById(userId);
     }
@@ -74,6 +98,7 @@ public class DiscordUtils {
     }
 
     //region Roles
+
     /**
      * @param search The string to find the {@link Role} with.
      * @param guild  The {@link Guild} to fnd the {@link Role} in.
@@ -126,7 +151,7 @@ public class DiscordUtils {
     /**
      * Gets an id from a string using a pattern
      *
-     * @param search The string to search in
+     * @param search  The string to search in
      * @param pattern The patten to use to look for the id. The id should be in group 1 (I'll expand this later)
      * @return The id in form of a string
      */
@@ -144,6 +169,7 @@ public class DiscordUtils {
     }
 
     //region Checks
+
     /**
      * Checks if a specific {@link Member} can delete the specified {@link Message}
      *
