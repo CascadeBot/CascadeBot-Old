@@ -5,6 +5,7 @@ import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.HierarchyException;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
@@ -48,7 +49,7 @@ public class BanCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return null;
+        return CascadePermission.of("Ban command", "ban", false, Permission.BAN_MEMBERS);
     }
 
 }
