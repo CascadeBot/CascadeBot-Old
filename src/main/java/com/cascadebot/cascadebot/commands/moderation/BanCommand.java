@@ -24,7 +24,8 @@ public class BanCommand implements ICommandMain {
         Member targetMember = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
 
         if (targetMember == null) {
-            context.replyDanger("Please supply a username!");
+            context.replyDanger("We couldn't find that user!");
+            return;
         }
 
         try {
