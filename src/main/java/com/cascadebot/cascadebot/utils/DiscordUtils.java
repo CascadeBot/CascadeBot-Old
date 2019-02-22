@@ -70,15 +70,17 @@ public class DiscordUtils {
      * The string can be their id or a mention.
      *
      * @param search The string to find the {@link User} with.
+     * @param retrieve Whether to request the user from discord if none of our guilds has them in.
+     *                 This causes an extra request to be sent off so it will be slower if this is enabled!
      * @return The {@link User} found or null if no user was found with the search.
      * @throws IllegalArgumentException if search is null or blank.
      */
-    public static User getUser(String search) {
+    public static User getUser(String search, boolean retrieve) {
         Checks.notBlank(search, "search");
         String id = getIdFromString(search, Regex.USER_MENTION);
         if (id == null) return null;
         User user = getUserById(Long.valueOf(id));
-        if (user == null) {
+        if (user == null && retrieve) {
             user = CascadeBot.INS.getShardManager().retrieveUserById(id).complete();
         }
         return user;
