@@ -16,12 +16,17 @@ public class BanCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
 
-        if (context.getArg(0) == null) {
-            context.replyDanger("Not enough arguments, please supply a username!");
+        if (context.getArgs().length == 0) {
+            context.replyDanger("Not enough arguments!");
             return;
         }
 
         Member targetMember = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
+
+        if (targetMember == null) {
+            context.replyDanger("Please supply a username!");
+        }
+
         try {
             context.getGuild().getController().ban(targetMember.getUser(), 7).queue(aVoid -> {
                 context.replyInfo("**%s** has been banned!", targetMember.getUser().getAsTag());
