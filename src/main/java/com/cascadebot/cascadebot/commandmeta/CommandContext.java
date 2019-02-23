@@ -15,12 +15,14 @@ import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
@@ -35,6 +37,7 @@ public class CommandContext {
 
     private final GuildData data;
 
+    private final JDA jda;
     private final TextChannel channel;
     private final Message message;
     private final Guild guild;
@@ -44,8 +47,9 @@ public class CommandContext {
     private final String trigger;
     private final boolean isMention;
 
-    public CommandContext(TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
+    public CommandContext(JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
+        this.jda = jda;
         this.channel = channel;
         this.message = message;
         this.guild = guild;
@@ -61,6 +65,10 @@ public class CommandContext {
 
     public GuildData getData() {
         return data;
+    }
+
+    public JDA getJDA() {
+        return jda;
     }
 
     public TextChannel getChannel() {
@@ -310,12 +318,21 @@ public class CommandContext {
     }
 
     /**
-     * Gets the bot {@link Member}.
+     * Get's the bot's {@link SelfUser}
      *
-     * @return The bot {@link Member} for this guild.
+     * @return The bot's {@link SelfUser}
+     */
+    public SelfUser getSelfUser() {
+        return jda.getSelfUser();
+    }
+
+    /**
+     * Gets the bot's {@link Member}.
+     *
+     * @return The bot's {@link Member} for this guild.
      */
     public Member getSelfMember() {
-        return guild.getMember(CascadeBot.INS.getSelfUser());
+        return guild.getMember(jda.getSelfUser());
     }
 
     /**

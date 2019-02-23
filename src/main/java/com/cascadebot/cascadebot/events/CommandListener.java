@@ -106,6 +106,7 @@ public class CommandListener extends ListenerAdapter {
                 return;
             }
             CommandContext context = new CommandContext(
+                    event.getJDA(),
                     event.getChannel(),
                     event.getMessage(),
                     event.getGuild(),
@@ -128,6 +129,7 @@ public class CommandListener extends ListenerAdapter {
         for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(
+                        parentCommandContext.getJDA(),
                         parentCommandContext.getChannel(),
                         parentCommandContext.getMessage(),
                         parentCommandContext.getGuild(),
