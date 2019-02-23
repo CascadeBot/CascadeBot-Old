@@ -30,7 +30,7 @@ public class EvalCommand implements ICommandRestricted {
 
     private static final ThreadGroup EVAL_THREADS = new ThreadGroup("EvalCommand Thread Pool");
     private static final ExecutorService EVAL_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r -> new Thread(EVAL_THREADS, r,
-            EVAL_THREADS.getName() + EVAL_THREADS.activeCount()), CascadeBot.logger);
+            EVAL_THREADS.getName() + EVAL_THREADS.activeCount()), CascadeBot.LOGGER);
 
     private static final List<String> IMPORTS = List.of(
             "com.cascadebot.cascadebot",

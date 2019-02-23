@@ -36,7 +36,7 @@ public class PasteUtils {
                 return Config.INS.getHasteLink() + object.get("key").getAsString();
             }
         } catch (IOException e) {
-            CascadeBot.logger.error(MarkerFactory.getMarker("HASTEBIN"), "Error while trying to post!", e);
+            CascadeBot.LOGGER.error(MarkerFactory.getMarker("HASTEBIN"), "Error while trying to post!", e);
         }
         return "";
     }
