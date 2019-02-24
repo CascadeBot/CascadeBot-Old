@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot.utils;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.Config;
+import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
@@ -26,11 +27,8 @@ import java.util.stream.Collectors;
 
 public class DiscordUtils {
 
-    private static final Pattern idPattern = Pattern.compile("[0-9]{17,}");
-    private static final Pattern userMentionPattern = Pattern.compile("<@!?([0-9]{17,})>");
-    private static final Pattern roleMentionPattern = Pattern.compile("<@&([0-9]{17,})>");
-
     //region Members and Users
+
     /**
      * Attempts to find a member using a string input.
      * The string can be their id, a mention, or a name.
@@ -38,12 +36,12 @@ public class DiscordUtils {
      * @param search The string to find the {@link Member} with.
      * @param guild  The {@link Guild} to fnd the {@link Member} in.
      * @return The {@link Member} found or null if no member was found with the search.
-     * @throws IllegalArgumentException if search is null.
+     * @throws IllegalArgumentException if search is null or blank.
      */
     public static Member getMember(String search, Guild guild) {
         Checks.notBlank(search, "user");
         Checks.notNull(guild, "guild");
-        String id = getIdFromString(search, userMentionPattern);
+        String id = getIdFromString(search, Regex.USER_MENTION);
 
         if (id != null) {
             User user = getUserById(Long.parseLong(id));
@@ -63,6 +61,31 @@ public class DiscordUtils {
         }
     }
 
+    /**
+     * Attempts to find a member using a string input.
+     * This first checks the guilds the bot is in and
+     * then attempts to retrieve the user from Discord
+     * if initially unsuccessful.
+     *
+     * The string can be their id or a mention.
+     *
+     * @param search The string to find the {@link User} with.
+     * @param retrieve Whether to request the user from discord if none of our guilds has them in.
+     *                 This causes an extra request to be sent off so it will be slower if this is enabled!
+     * @return The {@link User} found or null if no user was found with the search.
+     * @throws IllegalArgumentException if search is null or blank.
+     */
+    public static User getUser(String search, boolean retrieve) {
+        Checks.notBlank(search, "search");
+        String id = getIdFromString(search, Regex.USER_MENTION);
+        if (id == null) return null;
+        User user = getUserById(Long.valueOf(id));
+        if (user == null && retrieve) {
+            user = CascadeBot.INS.getShardManager().retrieveUserById(id).complete();
+        }
+        return user;
+    }
+
     private static User getUserById(Long userId) {
         return CascadeBot.INS.getShardManager().getUserById(userId);
     }
@@ -77,6 +100,7 @@ public class DiscordUtils {
     }
 
     //region Roles
+
     /**
      * @param search The string to find the {@link Role} with.
      * @param guild  The {@link Guild} to fnd the {@link Role} in.
@@ -85,7 +109,7 @@ public class DiscordUtils {
      */
     public static Role getRole(String search, Guild guild) {
         Checks.notBlank(search, "role");
-        String id = getIdFromString(search, roleMentionPattern);
+        String id = getIdFromString(search, Regex.ROLE_MENTION);
 
         if (id != null) {
             Role role = guild.getRoleById(id);
@@ -129,13 +153,13 @@ public class DiscordUtils {
     /**
      * Gets an id from a string using a pattern
      *
-     * @param search The string to search in
+     * @param search  The string to search in
      * @param pattern The patten to use to look for the id. The id should be in group 1 (I'll expand this later)
      * @return The id in form of a string
      */
     private static String getIdFromString(String search, Pattern pattern) {
         String id = null;
-        if (idPattern.matcher(search).matches()) {
+        if (Regex.ID.matcher(search).matches()) {
             id = search;
         }
         Matcher matcher = pattern.matcher(search);
@@ -147,6 +171,7 @@ public class DiscordUtils {
     }
 
     //region Checks
+
     /**
      * Checks if a specific {@link Member} can delete the specified {@link Message}
      *

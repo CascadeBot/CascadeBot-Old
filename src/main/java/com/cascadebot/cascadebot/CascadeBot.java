@@ -38,8 +38,8 @@ import java.util.Scanner;
 public class CascadeBot {
 
     public static final CascadeBot INS = new CascadeBot();
+    public static final Logger LOGGER = LoggerFactory.getLogger(CascadeBot.class);
 
-    public static Logger logger = LoggerFactory.getLogger(CascadeBot.class);
     private static Version version;
     private static Gson gson;
 
@@ -51,7 +51,7 @@ public class CascadeBot {
 
     public static void main(String[] args) {
         if (System.getenv("SENTRY_DSN") == null) {
-            logger.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
+            LOGGER.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
         }
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
             version = Version.parseVer(scanner.next());
@@ -76,8 +76,8 @@ public class CascadeBot {
      * Runs once all shards are loaded
      */
     public void run() {
-        logger.info("All shards successfully logged in!");
-        logger.info("Cascade Bot version {} successfully booted up!", version);
+        LOGGER.info("All shards successfully logged in!");
+        LOGGER.info("Cascade Bot version {} successfully booted up!", version);
     }
 
 
@@ -88,7 +88,7 @@ public class CascadeBot {
         try {
             Config.init("config.yml");
         } catch (IOException e) {
-            logger.error("Error reading config file", e);
+            LOGGER.error("Error reading config file", e);
             ShutdownHandler.exitWithError();
             return;
         }
@@ -138,7 +138,7 @@ public class CascadeBot {
                     .setEnableShutdownHook(false)
                     .build();
         } catch (LoginException e) {
-            logger.error("Error building JDA", e);
+            LOGGER.error("Error building JDA", e);
             ShutdownHandler.exitWithError();
             return;
         }
@@ -147,12 +147,12 @@ public class CascadeBot {
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
 
-        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
+        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
-                .setUncaughtExceptionHandler(((t, e) -> logger.error("Uncaught exception in thread " + t, e)));
+                .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
 
         RestAction.DEFAULT_FAILURE = throwable -> {
-            logger.error("Uncaught exception in rest action", throwable);
+            LOGGER.error("Uncaught exception in rest action", throwable);
         };
 
     }
@@ -183,7 +183,7 @@ public class CascadeBot {
     }
 
     public Logger getLogger() {
-        return logger;
+        return LOGGER;
     }
 
     public ShardManager getShardManager() {

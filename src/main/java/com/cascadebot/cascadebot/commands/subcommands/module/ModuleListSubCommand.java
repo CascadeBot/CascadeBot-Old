@@ -5,6 +5,8 @@
 
 package com.cascadebot.cascadebot.commands.subcommands.module;
 
+import com.cascadebot.cascadebot.commandmeta.Argument;
+import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.Module;
@@ -13,6 +15,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
 import java.util.Arrays;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ModuleListSubCommand implements ICommandExecutable {
@@ -35,6 +38,11 @@ public class ModuleListSubCommand implements ICommandExecutable {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("List modules subcommand", "module.list", false, Permission.MANAGE_SERVER);
+    }
+
+    @Override
+    public String description() {
+        return "Lists all modules";
     }
 
 }

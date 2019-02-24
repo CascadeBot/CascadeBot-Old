@@ -69,6 +69,7 @@ global_emotes:
   offline:
   dnd:
   idle:
+  streaming:
   server_owner:
   nitro:
   muted:

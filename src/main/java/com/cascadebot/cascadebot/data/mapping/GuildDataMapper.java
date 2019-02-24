@@ -28,13 +28,13 @@ public final class GuildDataMapper {
             .build(id -> {
                 GuildData dbData = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("_id", id)).first();
                 if (dbData == null) {
-                    CascadeBot.logger.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
+                    CascadeBot.LOGGER.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
                     GuildData data = new GuildData(id);
                     GuildDataMapper.insert(id, data);
                     return data;
                 }
 
-                CascadeBot.logger.debug("Loaded data from database for guild ID: " + id);
+                CascadeBot.LOGGER.debug("Loaded data from database for guild ID: " + id);
                 return dbData;
             });
 

@@ -27,4 +27,9 @@ public class InviteCommand implements ICommandCore {
         return "invite";
     }
 
+    @Override
+    public String description() {
+        return "Gets the bot invite link";
+    }
+
 }

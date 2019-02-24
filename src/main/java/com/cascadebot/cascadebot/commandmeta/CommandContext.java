@@ -16,12 +16,14 @@ import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
@@ -29,13 +31,16 @@ import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CommandContext {
 
 
     private final GuildData data;
 
+    private final JDA jda;
     private final TextChannel channel;
     private final Message message;
     private final Guild guild;
@@ -45,8 +50,9 @@ public class CommandContext {
     private final String trigger;
     private final boolean isMention;
 
-    public CommandContext(TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
+    public CommandContext(JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
+        this.jda = jda;
         this.channel = channel;
         this.message = message;
         this.guild = guild;
@@ -66,6 +72,10 @@ public class CommandContext {
 
     public GuildSettings getSettings() {
         return data.getSettings();
+    }
+
+    public JDA getJDA() {
+        return jda;
     }
 
     public TextChannel getChannel() {
@@ -245,6 +255,51 @@ public class CommandContext {
         }
     }
 
+    public String getUsage(ICommandExecutable command) {
+        return getUsage(command, null);
+    }
+
+    public String getUsage(ICommandExecutable command, String parent) {
+        Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
+        if(command instanceof ICommandMain) {
+            for (ICommandExecutable subCommand : ((ICommandMain)command).getSubCommands()) {
+                arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
+            }
+        }
+
+        Argument parentArg = Argument.of(command.command(), command.description(), arguments);
+
+        int levels = 0;
+        for(String arg : args) {
+            levels ++;
+            Argument argument = getArgFromSet(parentArg.getSubArgs(), arg);
+            if(argument != null) {
+                parentArg = argument;
+            }
+        }
+
+        String commandString = data.getPrefix() + (parent == null ? "" : parent + " ") + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
+        return parentArg.getUsageString(commandString);
+    }
+
+    public void replyUsage(ICommandExecutable command) {
+        replyUsage(command, null);
+    }
+
+    public void replyUsage(ICommandExecutable command, String parent) {
+
+        replyWarning("Incorrect usage. Proper usage:\n" + getUsage(command, parent));
+    }
+
+    private Argument getArgFromSet(Set<Argument> arguments, String arg) {
+        for(Argument argument : arguments) {
+            if(argument.argStartsWith(arg)) {
+                return argument;
+            }
+        }
+        return null;
+    }
+
     public void sendPermissionsError(String permission) {
         replyDanger("You don't have the permission `%s` to do this!", permission);
     }
@@ -315,12 +370,21 @@ public class CommandContext {
     }
 
     /**
-     * Gets the bot {@link Member}.
+     * Get's the bot's {@link SelfUser}
      *
-     * @return The bot {@link Member} for this guild.
+     * @return The bot's {@link SelfUser}
+     */
+    public SelfUser getSelfUser() {
+        return jda.getSelfUser();
+    }
+
+    /**
+     * Gets the bot's {@link Member}.
+     *
+     * @return The bot's {@link Member} for this guild.
      */
     public Member getSelfMember() {
-        return guild.getMember(CascadeBot.INS.getSelfUser());
+        return guild.getMember(jda.getSelfUser());
     }
 
     /**
@@ -427,7 +491,7 @@ public class CommandContext {
         if (emoteId != null) {
             return CascadeBot.INS.getShardManager().getEmoteById(emoteId);
         }
-        CascadeBot.logger.warn("Tried to get global emote that doesn't exist! Key: {}", key);
+        CascadeBot.LOGGER.warn("Tried to get global emote that doesn't exist! Key: {}", key);
         return null;
     }
 

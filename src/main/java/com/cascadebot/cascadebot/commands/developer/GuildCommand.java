@@ -14,7 +14,7 @@ public class GuildCommand implements ICommandRestricted {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.replyInfo("Do `" + "" + "guild save` to save this guild's data.");
+        context.replyUsage(this);
     }
 
     @Override
@@ -35,6 +35,11 @@ public class GuildCommand implements ICommandRestricted {
     @Override
     public String command() {
         return "guild";
+    }
+
+    @Override
+    public String description() {
+        return "interact with the guild";
     }
 
 }

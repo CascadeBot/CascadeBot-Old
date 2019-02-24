@@ -35,7 +35,7 @@ public class CommandListener extends ListenerAdapter {
     private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
     private static final AtomicInteger threadCounter = new AtomicInteger(0);
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newFixedThreadPool(5, r ->
-            new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.logger);
+            new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
@@ -105,6 +105,7 @@ public class CommandListener extends ListenerAdapter {
                 return;
             }
             CommandContext context = new CommandContext(
+                    event.getJDA(),
                     event.getChannel(),
                     event.getMessage(),
                     event.getGuild(),
@@ -127,6 +128,7 @@ public class CommandListener extends ListenerAdapter {
         for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(
+                        parentCommandContext.getJDA(),
                         parentCommandContext.getChannel(),
                         parentCommandContext.getMessage(),
                         parentCommandContext.getGuild(),
@@ -152,7 +154,7 @@ public class CommandListener extends ListenerAdapter {
             return false;
         }
         COMMAND_POOL.submit(() -> {
-            CascadeBot.logger.info("{}Command {}{} executed by {} with args: {}",
+            CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}",
                     (command instanceof ICommandMain ? "" : "Sub"),
                     command.command(),
                     (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"),
@@ -162,7 +164,7 @@ public class CommandListener extends ListenerAdapter {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
                 context.replyException("There was an error running the command!", e);
-                CascadeBot.logger.error(String.format(
+                CascadeBot.LOGGER.error(String.format(
                         "Error in command %s Guild ID: %s User: %s",
                         command.command(), context.getGuild().getId(), context.getMember().getEffectiveName()
                 ), e);

@@ -74,4 +74,9 @@ public class DogCommand implements ICommandMain {
         return CascadePermission.of("Dog command", "dog", true);
     }
 
+    @Override
+    public String description() {
+        return "Shows a random picture of a dog";
+    }
+
 }

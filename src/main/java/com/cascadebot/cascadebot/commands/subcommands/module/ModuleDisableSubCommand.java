@@ -5,6 +5,8 @@
 
 package com.cascadebot.cascadebot.commands.subcommands.module;
 
+import com.cascadebot.cascadebot.commandmeta.Argument;
+import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.Module;
@@ -13,10 +15,16 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 
+import java.util.Set;
+
 public class ModuleDisableSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        if(context.getArgs().length < 1) {
+            context.replyUsage(this, "module");
+            return;
+        }
         String selectedModule = context.getArg(0).toUpperCase();
         Module module = EnumUtils.getEnum(Module.class, selectedModule);
 
@@ -45,6 +53,16 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("Disable module subcommand", "module.disable", false, Permission.MANAGE_SERVER);
+    }
+
+    @Override
+    public String description() {
+        return "";
+    }
+
+    @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.of("module", "Disables a module", ArgumentType.REQUIRED));
     }
 
 }
