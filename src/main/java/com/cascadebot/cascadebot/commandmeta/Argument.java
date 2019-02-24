@@ -55,6 +55,11 @@ public class Argument {
     /**
      * Gets the usage string.
      *
+     * Formatting:
+     *  - Aliased arguments are shown as {@code <alias1/alias2}} for as many aliases as the argument has.
+     *  - A required parameter is show as {@code <argument>}
+     *  - An optional parameter is show as {@code [argument]}
+     *
      * @param base The base command/prefix to use. Example: ';help '.
      * @return A string representing the usage.
      */
