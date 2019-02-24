@@ -22,4 +22,9 @@ public class SupportCommand implements ICommandCore {
         return "support";
     }
 
+    @Override
+    public String description() {
+        return "Gives you a link to the support server";
+    }
+
 }

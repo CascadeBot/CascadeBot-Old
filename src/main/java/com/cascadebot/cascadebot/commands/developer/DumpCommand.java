@@ -65,6 +65,11 @@ public class DumpCommand implements ICommandRestricted {
     }
 
     @Override
+    public String description() {
+        return "dump command";
+    }
+
+    @Override
     public Module getModule() {
         return Module.DEVELOPER;
     }

@@ -73,4 +73,9 @@ public class CatCommand implements ICommandMain {
         return CascadePermission.of("Cat command", "cat", true);
     }
 
+    @Override
+    public String description() {
+        return "Shows a random picture of a cat";
+    }
+
 }

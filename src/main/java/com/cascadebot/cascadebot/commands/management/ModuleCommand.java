@@ -22,7 +22,7 @@ public class ModuleCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.replyInfo("Use subcommands disable, enable and list!");
+        context.replyUsage(this);
     }
 
     @Override
@@ -48,6 +48,11 @@ public class ModuleCommand implements ICommandMain {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("Module command", "module", false, Permission.MANAGE_SERVER);
+    }
+
+    @Override
+    public String description() {
+        return "interact with modules";
     }
 
 }

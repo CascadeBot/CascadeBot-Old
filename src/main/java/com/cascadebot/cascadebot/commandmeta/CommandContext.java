@@ -30,7 +30,9 @@ import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CommandContext {
 
@@ -246,6 +248,51 @@ public class CommandContext {
         } else {
             return channel.sendMessage(url);
         }
+    }
+
+    public String getUsage(ICommandExecutable command) {
+        return getUsage(command, null);
+    }
+
+    public String getUsage(ICommandExecutable command, String parent) {
+        Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
+        if(command instanceof ICommandMain) {
+            for (ICommandExecutable subCommand : ((ICommandMain)command).getSubCommands()) {
+                arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
+            }
+        }
+
+        Argument parentArg = Argument.of(command.command(), command.description(), arguments);
+
+        int levels = 0;
+        for(String arg : args) {
+            levels ++;
+            Argument argument = getArgFromSet(parentArg.getSubArgs(), arg);
+            if(argument != null) {
+                parentArg = argument;
+            }
+        }
+
+        String commandString = data.getCommandPrefix() + (parent == null ? "" : parent + " ") + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
+        return parentArg.getUsageString(commandString);
+    }
+
+    public void replyUsage(ICommandExecutable command) {
+        replyUsage(command, null);
+    }
+
+    public void replyUsage(ICommandExecutable command, String parent) {
+
+        replyWarning("Incorrect usage. Proper usage:\n" + getUsage(command, parent));
+    }
+
+    private Argument getArgFromSet(Set<Argument> arguments, String arg) {
+        for(Argument argument : arguments) {
+            if(argument.argStartsWith(arg)) {
+                return argument;
+            }
+        }
+        return null;
     }
 
     public void sendPermissionsError(String permission) {

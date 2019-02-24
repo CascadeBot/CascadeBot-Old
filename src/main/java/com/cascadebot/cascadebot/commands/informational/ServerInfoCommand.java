@@ -61,6 +61,11 @@ public class ServerInfoCommand implements ICommandMain {
     }
 
     @Override
+    public String description() {
+        return "Get info on the server";
+    }
+
+    @Override
     public Set<String> getGlobalAliases() {
         return Set.of("guildinfo");
     }
