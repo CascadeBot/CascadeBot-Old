@@ -67,6 +67,11 @@ public class UnbanCommand implements ICommandMain {
     }
 
     @Override
+    public String description() {
+        return "Unbans a user";
+    }
+
+    @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("Unban Command", "ban",
                 false, Permission.BAN_MEMBERS);
