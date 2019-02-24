@@ -21,9 +21,7 @@ public class GuildSaveSubCommand implements ICommandExecutable {
             GuildDataMapper.replace(context.getGuild().getIdLong(), context.getData());
             context.replySuccess("Saved **this guild's** information successfully!");
         } else if (context.getArg(0).equals("all")) {
-            for (var entry : GuildDataMapper.getGuilds().asMap().entrySet()) {
-                GuildDataMapper.replace(entry.getKey(), entry.getValue());
-            }
+            GuildDataMapper.getGuilds().asMap().forEach(GuildDataMapper::replace);
             context.replySuccess("Saved **all** guild information successfully!");
         } else {
             GuildData guildData = GuildDataMapper.getGuilds().asMap().get(Long.parseLong(context.getArg(0)));
