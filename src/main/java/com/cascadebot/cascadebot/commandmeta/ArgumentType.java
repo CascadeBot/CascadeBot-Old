@@ -11,11 +11,11 @@ public enum ArgumentType {
      */
     OPTIONAL,
     /**
-     * Represents an required param
+     * Represents an required parameter.
      */
     REQUIRED,
     /**
-     * Represents that this is just part of the command and isn't a pram
+     * Represents that this is just part of the command and isn't a parameter.
      */
     COMMAND
 }
