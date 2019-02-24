@@ -5,6 +5,8 @@
 
 package com.cascadebot.cascadebot.commands.informational;
 
+import com.cascadebot.cascadebot.commandmeta.Argument;
+import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
@@ -25,13 +27,16 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class UserInfoCommand implements ICommandMain {
+
+    Argument userArg = Argument.of("user", "Gets a specific users info", ArgumentType.OPTIONAL);
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Member memberForInfo = sender;
-        if (context.getArgs().length > 0) {
+        if (userArg.argExists(context.getArgs(), 0)) {
             memberForInfo = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
         }
         if (memberForInfo == null) {
@@ -106,6 +111,11 @@ public class UserInfoCommand implements ICommandMain {
     @Override
     public String description() {
         return "Get info on a user";
+    }
+
+    @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(userArg);
     }
 
 }

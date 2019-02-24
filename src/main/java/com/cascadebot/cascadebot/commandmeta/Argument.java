@@ -17,7 +17,7 @@ public class Argument {
     private final Set<String> aliases;
 
     private Argument(String arg, String description, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
-        this.arg = arg;
+        this.arg = arg.toLowerCase(); //This probably isn't needed but megh
         this.description = description;
         this.subArgs = Collections.unmodifiableSet(subArgs);
         if (subArgs.size() > 0) {
@@ -97,12 +97,40 @@ public class Argument {
         return usageBuilder.toString();
     }
 
+    public boolean argExists(String[] args, int pos) {
+        if(args.length <= pos) {
+            return false;
+        }
+        if(type.equals(ArgumentType.REQUIRED)) {
+            return true;
+        }
+        if(!args[pos].equalsIgnoreCase(arg) && !this.type.equals(ArgumentType.OPTIONAL)) {
+            for(String alias : aliases) {
+                if(!args[pos].equalsIgnoreCase(alias)) {
+                    return false;
+                }
+            }
+        }
+        if(this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.description.isEmpty()) {
+            for(Argument sub : this.subArgs) {
+                if(sub.type.equals(ArgumentType.REQUIRED) || sub.type.equals(ArgumentType.COMMAND)) {
+                    return sub.argExists(args, pos + 1);
+                }
+            }
+        }
+        return true;
+    }
+
     public Set<Argument> getSubArgs() {
         return subArgs;
     }
 
     public boolean argEquals(String arg) {
         return this.arg.equalsIgnoreCase(arg);
+    }
+
+    public boolean argStartsWith(String start) {
+        return this.arg.startsWith(start.toLowerCase());
     }
 
     //TODO implement utils for checking arguments in the command. we have a class here why not use it.
