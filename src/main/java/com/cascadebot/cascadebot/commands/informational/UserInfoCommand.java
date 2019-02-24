@@ -37,7 +37,7 @@ public class UserInfoCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         User userForInfo = sender.getUser();
-        if (context.getArgs().length > 0) {
+        if (if(userArg.argExists(context.getArgs(), 0)) {
             userForInfo = DiscordUtils.getUser(context.getMessage(0), true);
         }
         if (userForInfo == null) {
