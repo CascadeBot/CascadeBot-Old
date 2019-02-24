@@ -52,7 +52,7 @@ public class Argument {
         return new Argument(arg, description, subArgs, ArgumentType.COMMAND, aliases);
     }
 
-    protected String getUnformattedUsageString(String base) {
+    protected String getUsageString(String base) {
         StringBuilder usageBuilder = new StringBuilder();
         if (subArgs.size() > 0) {
             String field = arg;
@@ -70,7 +70,7 @@ public class Argument {
                 }
             }
             for (Argument subArg : subArgs) {
-                usageBuilder.append(subArg.getUnformattedUsageString(base + field + " "));
+                usageBuilder.append(subArg.getUsageString(base + field + " "));
             }
         } else {
             String param = arg;

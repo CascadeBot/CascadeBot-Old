@@ -274,7 +274,7 @@ public class CommandContext {
         }
 
         String commandString = data.getCommandPrefix() + (parent == null ? "" : parent + " ") + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
-        replyWarning("Incorrect usage. Proper usage:\n" + parentArg.getUnformattedUsageString(commandString));
+        replyWarning("Incorrect usage. Proper usage:\n" + parentArg.getUsageString(commandString));
     }
 
     private Argument getArgFromSet(Set<Argument> arguments, String arg) {
