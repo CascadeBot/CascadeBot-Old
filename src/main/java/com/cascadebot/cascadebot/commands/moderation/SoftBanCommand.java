@@ -20,31 +20,28 @@ public class SoftBanCommand implements ICommandMain {
             context.replyDanger("Not enough arguments (No specified member)");
             return;
         }
+
         Member targetMember = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
-        if (targetMember.getUser() == sender.getUser()) {
-            context.replyWarning("Why would you want to soft ban yourself");
-            return;
-        }
-        if (targetMember.getUser() == context.getSelfMember()) {
-            context.replyWarning("My programming forbids me to soft ban myself");
-            return;
-        }
         if (targetMember == null) {
-            context.replyDanger("Could not find that user");
+            context.replyDanger("Could not find that user!");
+        } else if (targetMember == sender) {
+            context.replyDanger("You are unable to soft-ban yourself!");
+        } else if (targetMember == context.getSelfMember()) {
+            context.replyDanger("My programming forbids me to soft ban myself!");
         } else {
             try {
                 // Failure consumer to be used on both the ban and the unban
-                Consumer<Throwable> failure = throwable -> context.replyException("Could not softban the user %s!", throwable, targetMember.getUser().getAsTag());
+                Consumer<Throwable> failure = throwable -> context.replyException("Could not soft-ban the user %s!", throwable, targetMember.getUser().getAsTag());
                 context.getGuild().getController().ban(targetMember.getUser(), 7).queue(aVoid -> {
                     // This is considered successful if the user is banned. If the user is unable to be unbanned an exception will be thrown
-                    context.replyInfo("%s has been softbanned!", targetMember.getUser().getAsTag());
+                    context.replyInfo("%s has been soft-banned!", targetMember.getUser().getAsTag());
                     context.getGuild().getController().unban(targetMember.getUser()).queue(null, failure);
                 }, failure);
             } catch (InsufficientPermissionException e) {
-                context.replyWarning("Cannot soft ban user " + targetMember.getUser().getAsTag() +
+                context.replyWarning("Cannot soft-ban user " + targetMember.getUser().getAsTag() +
                         ", missing Ban Members permission");
             } catch (HierarchyException e) {
-                context.replyWarning("Cannot soft ban user " + targetMember.getUser().getAsTag() +
+                context.replyWarning("Cannot soft-ban user " + targetMember.getUser().getAsTag() +
                         ", the top role they have is higher than mine");
             }
         }
@@ -57,7 +54,7 @@ public class SoftBanCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Softban Command", "softban",
+        return CascadePermission.of("Soft-ban Command", "softban",
                 false, Permission.BAN_MEMBERS);
     }
 
