@@ -7,7 +7,7 @@ package com.cascadebot.cascadebot.commandmeta;
 
 public enum ArgumentType {
     /**
-     * Represents an option param
+     * Represents an optional parameter.
      */
     OPTIONAL,
     /**
