@@ -279,7 +279,7 @@ public class CommandContext {
 
     private Argument getArgFromSet(Set<Argument> arguments, String arg) {
         for(Argument argument : arguments) {
-            if(argument.argEquals(arg)) {
+            if(argument.argStartsWith(arg)) {
                 return argument;
             }
         }
