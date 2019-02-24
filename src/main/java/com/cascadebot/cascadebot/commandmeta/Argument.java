@@ -55,8 +55,8 @@ public class Argument {
     /**
      * Gets the usage string.
      *
-     * @param base The base command/preifx to use. Example: ';help '
-     * @return A string representing the usage
+     * @param base The base command/prefix to use. Example: ';help '.
+     * @return A string representing the usage.
      */
     protected String getUsageString(String base) {
         StringBuilder usageBuilder = new StringBuilder();
@@ -106,9 +106,9 @@ public class Argument {
     /**
      * Checks for this argument at a given position.
      *
-     * @param args The args sent in from the command
-     * @param pos  The position this argument should be in
-     * @return If the argument exists at that position
+     * @param args The arguments sent in from the command.
+     * @param pos  The position this argument should be in.
+     * @return If the argument exists at that position.
      */
     public boolean argExists(String[] args, int pos) {
         if(args.length <= pos) {
