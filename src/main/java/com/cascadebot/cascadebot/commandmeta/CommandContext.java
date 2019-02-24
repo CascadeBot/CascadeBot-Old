@@ -250,11 +250,11 @@ public class CommandContext {
         }
     }
 
-    public void replyUsage(ICommandExecutable command) {
-        replyUsage(command, null);
+    public String getUsage(ICommandExecutable command) {
+        return getUsage(command, null);
     }
 
-    public void replyUsage(ICommandExecutable command, String parent) {
+    public String getUsage(ICommandExecutable command, String parent) {
         Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
         if(command instanceof ICommandMain) {
             for (ICommandExecutable subCommand : ((ICommandMain)command).getSubCommands()) {
@@ -274,7 +274,16 @@ public class CommandContext {
         }
 
         String commandString = data.getCommandPrefix() + (parent == null ? "" : parent + " ") + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
-        replyWarning("Incorrect usage. Proper usage:\n" + parentArg.getUsageString(commandString));
+        return parentArg.getUsageString(commandString);
+    }
+
+    public void replyUsage(ICommandExecutable command) {
+        replyUsage(command, null);
+    }
+
+    public void replyUsage(ICommandExecutable command, String parent) {
+
+        replyWarning("Incorrect usage. Proper usage:\n" + getUsage(command, parent));
     }
 
     private Argument getArgFromSet(Set<Argument> arguments, String arg) {
