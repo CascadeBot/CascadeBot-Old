@@ -104,7 +104,7 @@ public class Argument {
     }
 
     /**
-     * Checks for this argument at a giving position.
+     * Checks for this argument at a given position.
      *
      * @param args The args sent in from the command
      * @param pos  The position this argument should be in
