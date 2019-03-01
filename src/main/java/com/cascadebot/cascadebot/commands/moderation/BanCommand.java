@@ -28,6 +28,11 @@ public class BanCommand implements ICommandMain {
             return;
         }
 
+        if (targetMember.equals(context.getMember())) {
+            context.replyDanger("You can't ban yourself!");
+            return;
+        }
+
         try {
             context.getGuild().getController().ban(targetMember.getUser(), 7).queue(success -> {
                 context.replyInfo("**%s** has been banned!", targetMember.getUser().getAsTag());
