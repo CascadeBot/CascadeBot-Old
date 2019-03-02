@@ -40,7 +40,7 @@ public class ModuleEnableSubCommand implements ICommandExecutable {
                 context.replyDanger(ex.getMessage());
             }
         } else {
-            context.replyDanger("We couldn't find that module. Use `" + context.getData().getCommandPrefix() + "module list` for a list of modules.");
+            context.replyDanger("We couldn't find that module. Use `" + "" + "module list` for a list of modules.");
         }
 
     }
