@@ -31,6 +31,9 @@ public class BanCommand implements ICommandMain {
         if (targetMember.equals(sender)) {
             context.replyDanger("You can't ban yourself!");
             return;
+        } else if (targetMember.equals(context.getSelfMember())) {
+            context.replyDanger("You can't ban me! :(");
+            return;
         }
 
         try {
