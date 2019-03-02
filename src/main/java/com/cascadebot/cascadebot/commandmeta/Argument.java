@@ -68,39 +68,15 @@ public class Argument {
     protected String getUsageString(String base) {
         StringBuilder usageBuilder = new StringBuilder();
         if (subArgs.size() > 0) {
-            String field = arg;
-            if (aliases.size() > 0) {
-                StringBuilder fieldBuilder = new StringBuilder();
-                fieldBuilder.append("<").append(field);
-                for (String alias : aliases) {
-                    fieldBuilder.append("/").append(alias);
-                }
-                fieldBuilder.append(">");
-                field = fieldBuilder.toString();
-            } else {
-                if (!StringUtils.isBlank(description) && (subArgs.isEmpty() || subArgs.stream().allMatch(argument -> argument.getType() == ArgumentType.OPTIONAL))) {
-                    usageBuilder.append("`").append(base).append(arg).append("` - ").append(description).append('\n');
-                }
+            String field = this.toString();
+            if (!StringUtils.isBlank(description) && (subArgs.isEmpty() || subArgs.stream().allMatch(argument -> argument.getType() == ArgumentType.OPTIONAL))) {
+                usageBuilder.append("`").append(base).append(arg).append("` - ").append(description).append('\n');
             }
             for (Argument subArg : subArgs) {
                 usageBuilder.append(subArg.getUsageString(base + field + " "));
             }
         } else {
-            String param = arg;
-            if (aliases.size() > 0) {
-                StringBuilder paramBuilder = new StringBuilder();
-                paramBuilder.append(param);
-                for (String alias : aliases) {
-                    paramBuilder.append("/").append(alias);
-                }
-                param = paramBuilder.toString();
-            }
-            if (type.equals(ArgumentType.OPTIONAL)) {
-                param = "[" + param + "]";
-            } else if (type.equals(ArgumentType.REQUIRED)) {
-                param = "<" + param + ">";
-            }
-            usageBuilder.append("`").append(base).append(param).append("`");
+            usageBuilder.append("`").append(base).append(this.toString()).append("`");
             if (!description.isBlank()) {
                 usageBuilder.append(" - ").append(description);
             }
@@ -151,6 +127,28 @@ public class Argument {
 
     public ArgumentType getType() {
         return type;
+    }
+
+    @Override
+    public String toString() {
+        String argument = arg;
+        if (aliases.size() > 0) {
+            StringBuilder paramBuilder = new StringBuilder();
+            paramBuilder.append(argument);
+            for (String alias : aliases) {
+                paramBuilder.append("|").append(alias);
+            }
+            argument = paramBuilder.toString();
+        }
+        switch (type) {
+            case OPTIONAL:
+                argument = "[" + argument + "]";
+                break;
+            case REQUIRED:
+                argument = "<" + argument + ">";
+                break;
+        }
+        return argument;
     }
 
     public boolean argEquals(String arg) {
