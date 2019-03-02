@@ -261,8 +261,8 @@ public class CommandContext {
 
     public String getUsage(ICommandExecutable command, String parent) {
         Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
-        if(command instanceof ICommandMain) {
-            for (ICommandExecutable subCommand : ((ICommandMain)command).getSubCommands()) {
+        if (command instanceof ICommandMain) {
+            for (ICommandExecutable subCommand : ((ICommandMain) command).getSubCommands()) {
                 arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
             }
         }
@@ -270,10 +270,10 @@ public class CommandContext {
         Argument parentArg = Argument.of(command.command(), command.description(), arguments);
 
         int levels = 0;
-        for(String arg : args) {
-            levels ++;
+        for (String arg : args) {
+            levels++;
             Argument argument = getArgFromSet(parentArg.getSubArgs(), arg);
-            if(argument != null) {
+            if (argument != null) {
                 parentArg = argument;
             }
         }
@@ -292,8 +292,8 @@ public class CommandContext {
     }
 
     private Argument getArgFromSet(Set<Argument> arguments, String arg) {
-        for(Argument argument : arguments) {
-            if(argument.argStartsWith(arg)) {
+        for (Argument argument : arguments) {
+            if (argument.argStartsWith(arg)) {
                 return argument;
             }
         }

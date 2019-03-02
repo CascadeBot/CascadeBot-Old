@@ -5,6 +5,8 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -54,11 +56,11 @@ public class Argument {
 
     /**
      * Gets the usage string.
-     *
+     * <p>
      * Formatting:
-     *  - Aliased arguments are shown as {@code <alias1/alias2>} for as many aliases as the argument has.
-     *  - A required parameter is show as {@code <argument>}
-     *  - An optional parameter is show as {@code [argument]}
+     * - Aliased arguments are shown as {@code <alias1/alias2>} for as many aliases as the argument has.
+     * - A required parameter is show as {@code <argument>}
+     * - An optional parameter is show as {@code [argument]}
      *
      * @param base The base command/prefix to use. Example: ';help '.
      * @return A string representing the usage.
@@ -67,16 +69,16 @@ public class Argument {
         StringBuilder usageBuilder = new StringBuilder();
         if (subArgs.size() > 0) {
             String field = arg;
-            if(aliases.size() > 0) {
+            if (aliases.size() > 0) {
                 StringBuilder fieldBuilder = new StringBuilder();
                 fieldBuilder.append("<").append(field);
-                for(String alias : aliases) {
+                for (String alias : aliases) {
                     fieldBuilder.append("/").append(alias);
                 }
                 fieldBuilder.append(">");
                 field = fieldBuilder.toString();
             } else {
-                if (!description.isBlank()) {
+                if (!StringUtils.isBlank(description)) {
                     usageBuilder.append("`").append(base).append(arg).append("` - ").append(description).append('\n');
                 }
             }
@@ -85,10 +87,10 @@ public class Argument {
             }
         } else {
             String param = arg;
-            if(aliases.size() > 0) {
+            if (aliases.size() > 0) {
                 StringBuilder paramBuilder = new StringBuilder();
                 paramBuilder.append(param);
-                for(String alias : aliases) {
+                for (String alias : aliases) {
                     paramBuilder.append("/").append(alias);
                 }
                 param = paramBuilder.toString();
@@ -116,22 +118,22 @@ public class Argument {
      * @return If the argument exists at that position.
      */
     public boolean argExists(String[] args, int pos) {
-        if(args.length <= pos) {
+        if (args.length <= pos) {
             return false;
         }
-        if(type.equals(ArgumentType.REQUIRED)) {
+        if (type.equals(ArgumentType.REQUIRED)) {
             return true;
         }
-        if(!args[pos].equalsIgnoreCase(arg) && !this.type.equals(ArgumentType.OPTIONAL)) {
-            for(String alias : aliases) {
-                if(!args[pos].equalsIgnoreCase(alias)) {
+        if (!args[pos].equalsIgnoreCase(arg) && !this.type.equals(ArgumentType.OPTIONAL)) {
+            for (String alias : aliases) {
+                if (!args[pos].equalsIgnoreCase(alias)) {
                     return false;
                 }
             }
         }
-        if(this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.description.isEmpty()) {
-            for(Argument sub : this.subArgs) {
-                if(sub.type.equals(ArgumentType.REQUIRED) || sub.type.equals(ArgumentType.COMMAND)) {
+        if (this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.description.isEmpty()) {
+            for (Argument sub : this.subArgs) {
+                if (sub.type.equals(ArgumentType.REQUIRED) || sub.type.equals(ArgumentType.COMMAND)) {
                     return sub.argExists(args, pos + 1);
                 }
             }
