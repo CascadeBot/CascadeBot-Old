@@ -78,7 +78,7 @@ public class Argument {
                 fieldBuilder.append(">");
                 field = fieldBuilder.toString();
             } else {
-                if (!StringUtils.isBlank(description)) {
+                if (!StringUtils.isBlank(description) && (subArgs.isEmpty() || subArgs.stream().allMatch(argument -> argument.getType() == ArgumentType.OPTIONAL))) {
                     usageBuilder.append("`").append(base).append(arg).append("` - ").append(description).append('\n');
                 }
             }
