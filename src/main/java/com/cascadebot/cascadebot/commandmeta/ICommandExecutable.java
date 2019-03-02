@@ -34,4 +34,13 @@ public interface ICommandExecutable {
         return Set.of();
     }
 
+    default Set<Argument> getArguments() {
+        Set<Argument> arguments = new HashSet<>(this.getUndefinedArguments());
+        if (this instanceof ICommandMain) {
+            for (ICommandExecutable subCommand : ((ICommandMain) this).getSubCommands()) {
+                arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
+            }
+        }
+        return Set.copyOf(arguments);
+    }
 }
