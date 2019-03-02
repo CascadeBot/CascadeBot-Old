@@ -63,6 +63,11 @@ public class BanCommand implements ICommandMain {
     }
 
     @Override
+    public String description() {
+        return "Bans people I guess ;)";
+    }
+
+    @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("Ban command", "ban", false, Permission.BAN_MEMBERS);
     }

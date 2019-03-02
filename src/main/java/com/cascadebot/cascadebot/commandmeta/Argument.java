@@ -52,6 +52,10 @@ public class Argument {
         return new Argument(arg, description, subArgs, ArgumentType.COMMAND, aliases);
     }
 
+    public static Argument of(String arg, String description, ArgumentType type, Set<Argument> subArgs) {
+        return new Argument(arg, description, subArgs, type, Set.of());
+    }
+
     /**
      * Gets the usage string.
      *
