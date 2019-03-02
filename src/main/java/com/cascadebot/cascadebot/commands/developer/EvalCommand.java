@@ -7,11 +7,11 @@ package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.permissions.PermissionNode;
-import com.cascadebot.cascadebot.utils.ErrorUtils;
+import com.cascadebot.cascadebot.utils.PasteUtils;
 import com.cascadebot.shared.SecurityLevel;
 import com.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import net.dv8tion.jda.core.entities.Member;
@@ -30,7 +30,7 @@ public class EvalCommand implements ICommandRestricted {
 
     private static final ThreadGroup EVAL_THREADS = new ThreadGroup("EvalCommand Thread Pool");
     private static final ExecutorService EVAL_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r -> new Thread(EVAL_THREADS, r,
-            EVAL_THREADS.getName() + EVAL_THREADS.activeCount()), CascadeBot.logger);
+            EVAL_THREADS.getName() + EVAL_THREADS.activeCount()), CascadeBot.LOGGER);
 
     private static final List<String> IMPORTS = List.of(
             "com.cascadebot.cascadebot",
@@ -58,7 +58,7 @@ public class EvalCommand implements ICommandRestricted {
     );
 
     @Override
-    public void onCommand(Member sender, CommandContext context) {
+    public void onCommand (Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
             //TODO add utils for error messages
             Messaging.sendWarningMessage(context.getChannel(), "Not enough args", false);
@@ -89,14 +89,11 @@ public class EvalCommand implements ICommandRestricted {
 
                 String codeToRun = imports + " " + code;
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
-                if (results.length() < 2048) {
-                    context.reply(results);
-                } else {
-                    context.reply(ErrorUtils.paste(results));
-                }
+                if (results.isBlank()) results = "Empty result!";
+                PasteUtils.pasteIfLong(results, 2048, context::reply);
             } catch (ScriptException e) {
                 context.replyDanger("Error running script: %s \n**%s** \n```swift\n%s```",
-                        ErrorUtils.paste(ErrorUtils.getStackTrace(e)),
+                        PasteUtils.paste(PasteUtils.getStackTrace(e)),
                         e.getClass().getName(),
                         e.getMessage()
                 );
@@ -110,8 +107,13 @@ public class EvalCommand implements ICommandRestricted {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.DEVELOPER;
+    public String description() {
+        return "evaluate code";
+    }
+
+    @Override
+    public Module getModule() {
+        return Module.DEVELOPER;
     }
 
     @Override
@@ -120,8 +122,8 @@ public class EvalCommand implements ICommandRestricted {
     }
 
     @Override
-    public boolean forceDefault() {
-        return true;
+    public boolean deleteMessages() {
+        return false;
     }
 
     public static void shutdownEvalPool() {

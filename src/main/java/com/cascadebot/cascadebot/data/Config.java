@@ -9,7 +9,6 @@ import ch.qos.logback.classic.Level;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.music.MusicHandler;
-import com.cascadebot.cascadebot.permissions.Security;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
 import com.cascadebot.shared.Auth;
 import com.cascadebot.shared.SecurityLevel;
@@ -206,12 +205,12 @@ public class Config {
             }
         }
 
-        String secret = warnOnDefault(config, "web.auth", "");
+        String secret = warnOnDefault(config, "web.secret_key", "");
 
         try {
             auth = new Auth(secret);
-        } catch (NoSuchAlgorithmException | InvalidKeyException e) {
-            CascadeBot.logger.warn("Auth failed to initiate. this might cause errors if working with he wrapper or website if the bot is working with those.", e);
+        } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalArgumentException e) {
+            CascadeBot.LOGGER.warn("Auth failed to initiate. this might cause errors if working with he wrapper or website if the bot is working with those.", e);
         }
 
         LOG.info("Finished loading configuration!");
@@ -301,4 +300,5 @@ public class Config {
     public Auth getAuth() {
         return auth;
     }
+
 }

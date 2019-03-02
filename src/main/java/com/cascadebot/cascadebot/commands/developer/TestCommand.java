@@ -6,8 +6,8 @@
 package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import net.dv8tion.jda.core.entities.Member;
 
 public class TestCommand implements ICommandRestricted {
@@ -27,12 +27,13 @@ public class TestCommand implements ICommandRestricted {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.DEVELOPER;
+    public String description() {
+        return "Command that developers change when testing stuff";
     }
 
     @Override
-    public boolean forceDefault() {
-        return true;
+    public Module getModule() {
+        return Module.DEVELOPER;
     }
+
 }

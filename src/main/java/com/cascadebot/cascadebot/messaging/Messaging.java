@@ -6,8 +6,11 @@
 package com.cascadebot.cascadebot.messaging;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.Constants;
+import com.cascadebot.cascadebot.Environment;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.utils.PasteUtils;
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import com.cascadebot.cascadebot.utils.buttons.Button;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -16,7 +19,11 @@ import com.cascadebot.cascadebot.utils.pagination.PageCache;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import net.dv8tion.jda.core.utils.Checks;
@@ -124,6 +131,13 @@ public final class Messaging {
         return sendMessageTypeEmbedMessage(channel, MessageType.DANGER, builder, embed);
     }
 
+    public static RequestFuture<Message> sendExceptionMessage(MessageChannel channel, String s, Exception e) {
+        String message = "**" + s + "**" +
+                "\nStack trace: " + PasteUtils.paste(PasteUtils.getStackTrace(e)) +
+                (Environment.isDevelopment() ? "" : "\nPlease report the stack trace and the error to the developers here: " + Constants.serverInvite);
+        return sendDangerMessage(channel, message);
+    }
+
     public static void sendAutoDeleteMessage(MessageChannel channel, String message, long delay) {
         channel.sendMessage(message).queue(messageToDelete -> {
             // We should always be able to delete our own message
@@ -175,12 +189,12 @@ public final class Messaging {
 
     public static RequestFuture<Message> sendPagedMessage(TextChannel channel, Member owner, List<Page> pages) {
         ButtonGroup group = new ButtonGroup(owner.getUser().getIdLong(), channel.getGuild().getIdLong());
-        group.addButton(new Button.UnicodeButton("\u23EE" /* ⏮ */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u23EE" /* Rewind, start at beginning */, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());
             pageGroup.setCurrentPage(1);
         }));
-        group.addButton(new Button.UnicodeButton("\u25C0" /* ◀ */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u25C0" /* Left arrow, go back one page */, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() - 1;
             if (newPage < 1) {
@@ -189,7 +203,7 @@ public final class Messaging {
             pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
             pageGroup.setCurrentPage(newPage);
         }));
-        group.addButton(new Button.UnicodeButton("\u25B6" /* ▶ */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u25B6" /* Right arrow, go forward one page */, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() + 1;
             if (newPage > pageGroup.getPages()) {
@@ -198,7 +212,7 @@ public final class Messaging {
             pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
             pageGroup.setCurrentPage(newPage);
         }));
-        group.addButton(new Button.UnicodeButton("\u23ED" /* ⏭ */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton("\u23ED" /* Fast-forward, go to last page */, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
             pageGroup.setCurrentPage(pageGroup.getPages());

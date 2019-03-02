@@ -5,7 +5,12 @@
 
 package com.cascadebot.cascadebot.utils;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 public class CollectionUtils {

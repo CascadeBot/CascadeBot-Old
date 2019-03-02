@@ -37,4 +37,5 @@ public class PermissionNode implements Predicate<String> {
         // And then it lets Java REGEXP compare them. Ty @I-Al-Istannen for making me do this comment
         return permission.matches(textNode);
     }
+
 }

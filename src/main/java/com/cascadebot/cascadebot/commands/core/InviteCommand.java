@@ -5,17 +5,21 @@
 
 package com.cascadebot.cascadebot.commands.core;
 
+import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.Environment;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.IMainCommand;
-import com.cascadebot.cascadebot.permissions.Permission;
+import com.cascadebot.cascadebot.commandmeta.ICommandCore;
 import net.dv8tion.jda.core.entities.Member;
 
-public class InviteCommand implements IMainCommand {
+public class InviteCommand implements ICommandCore {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-    //    context.reply(CascadeBot.getInvite());
+        if (Environment.isProduction()) {
+            context.replyDM(CascadeBot.getInvite(), true);
+        } else {
+            context.replyDM("https://www.youtube.com/watch?v=ARJ8cAGm6JE");
+        }
     }
 
     @Override
@@ -24,18 +28,8 @@ public class InviteCommand implements IMainCommand {
     }
 
     @Override
-    public boolean forceDefault() {
-        return true;
-    }
-
-    @Override
-    public CommandType getType() {
-        return CommandType.CORE;
-    }
-
-    @Override
-    public Permission getPermission() {
-        return null; // Cannot be restricted
+    public String description() {
+        return "Gets the bot invite link";
     }
 
 }

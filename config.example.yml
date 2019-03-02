@@ -69,10 +69,12 @@ global_emotes:
   offline:
   dnd:
   idle:
+  streaming:
   server_owner:
   nitro:
   muted:
   deafened:
+  mobile:
 
 
 # The haste server to use for "hasting" messages.
@@ -83,4 +85,4 @@ haste:
 
 web:
   # The secret to use when authenticating with the site/wrapper
-  auth:
+  secret_key:

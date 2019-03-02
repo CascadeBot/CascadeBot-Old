@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.entities.Message;
 public abstract class Button {
 
     IButtonRunnable runnable;
+
     private Button(IButtonRunnable runnable) {
         this.runnable = runnable;
     }
@@ -30,6 +31,7 @@ public abstract class Button {
         public void addReaction(Message message) {
             message.addReaction(emote).queue();
         }
+
     }
 
     public static class UnicodeButton extends Button {
@@ -45,5 +47,7 @@ public abstract class Button {
         public void addReaction(Message message) {
             message.addReaction(unicode).queue();
         }
+
     }
+
 }

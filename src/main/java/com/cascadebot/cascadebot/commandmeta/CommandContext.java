@@ -8,30 +8,39 @@ package com.cascadebot.cascadebot.commandmeta;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.data.objects.GuildSettings;
 import com.cascadebot.cascadebot.messaging.Messaging;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CommandContext {
 
 
     private final GuildData data;
 
+    private final JDA jda;
     private final TextChannel channel;
     private final Message message;
     private final Guild guild;
@@ -41,8 +50,9 @@ public class CommandContext {
     private final String trigger;
     private final boolean isMention;
 
-    public CommandContext(TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
+    public CommandContext(JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
+        this.jda = jda;
         this.channel = channel;
         this.message = message;
         this.guild = guild;
@@ -58,6 +68,14 @@ public class CommandContext {
 
     public GuildData getData() {
         return data;
+    }
+
+    public GuildSettings getSettings() {
+        return data.getSettings();
+    }
+
+    public JDA getJDA() {
+        return jda;
     }
 
     public TextChannel getChannel() {
@@ -151,7 +169,7 @@ public class CommandContext {
 
     public void replyInfo(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendInfoMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendInfoMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyInfo(String message, Object... objects) {
@@ -160,12 +178,12 @@ public class CommandContext {
 
     public void replyInfo(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendInfoMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendInfoMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replySuccess(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendSuccessMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendSuccessMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replySuccess(String message, Object... objects) {
@@ -174,12 +192,12 @@ public class CommandContext {
 
     public void replySuccess(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendSuccessMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendSuccessMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyWarning(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendWarningMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendWarningMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyWarning(String message, Object... objects) {
@@ -188,12 +206,12 @@ public class CommandContext {
 
     public void replyWarning(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendWarningMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendWarningMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyModeration(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendModerationMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendModerationMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyModeration(String message, Object... objects) {
@@ -202,12 +220,12 @@ public class CommandContext {
 
     public void replyModeration(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendModerationMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendModerationMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyDanger(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendDangerMessage(channel, message, data.getUseEmbedForMessages());
+        Messaging.sendDangerMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyDanger(String message, Object... objects) {
@@ -216,7 +234,74 @@ public class CommandContext {
 
     public void replyDanger(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendDangerMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendDangerMessage(channel, builder, getSettings().useEmbedForMessages());
+    }
+
+    public void replyException(String message, Throwable throwable) {
+        Messaging.sendExceptionMessage(channel, message, new CommandException(throwable, guild, trigger));
+    }
+
+    public void replyException(String message, Throwable throwable, Object... objects) {
+        Messaging.sendExceptionMessage(channel, String.format(message, objects), new CommandException(throwable, guild, trigger));
+    }
+
+    public MessageAction replyImage(String url) {
+        if (getSettings().useEmbedForMessages()) {
+            EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+            embedBuilder.setImage(url);
+            return channel.sendMessage(embedBuilder.build());
+        } else {
+            return channel.sendMessage(url);
+        }
+    }
+
+    public String getUsage(ICommandExecutable command) {
+        return getUsage(command, null);
+    }
+
+    public String getUsage(ICommandExecutable command, String parent) {
+        Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
+        if(command instanceof ICommandMain) {
+            for (ICommandExecutable subCommand : ((ICommandMain)command).getSubCommands()) {
+                arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
+            }
+        }
+
+        Argument parentArg = Argument.of(command.command(), command.description(), arguments);
+
+        int levels = 0;
+        for(String arg : args) {
+            levels ++;
+            Argument argument = getArgFromSet(parentArg.getSubArgs(), arg);
+            if(argument != null) {
+                parentArg = argument;
+            }
+        }
+
+        String commandString = data.getPrefix() + (parent == null ? "" : parent + " ") + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
+        return parentArg.getUsageString(commandString);
+    }
+
+    public void replyUsage(ICommandExecutable command) {
+        replyUsage(command, null);
+    }
+
+    public void replyUsage(ICommandExecutable command, String parent) {
+
+        replyWarning("Incorrect usage. Proper usage:\n" + getUsage(command, parent));
+    }
+
+    private Argument getArgFromSet(Set<Argument> arguments, String arg) {
+        for(Argument argument : arguments) {
+            if(argument.argStartsWith(arg)) {
+                return argument;
+            }
+        }
+        return null;
+    }
+
+    public void sendPermissionsError(String permission) {
+        replyDanger("You don't have the permission `%s` to do this!", permission);
     }
 
     /**
@@ -285,12 +370,21 @@ public class CommandContext {
     }
 
     /**
-     * Gets the bot {@link Member}.
+     * Get's the bot's {@link SelfUser}
      *
-     * @return The bot {@link Member} for this guild.
+     * @return The bot's {@link SelfUser}
+     */
+    public SelfUser getSelfUser() {
+        return jda.getSelfUser();
+    }
+
+    /**
+     * Gets the bot's {@link Member}.
+     *
+     * @return The bot's {@link Member} for this guild.
      */
     public Member getSelfMember() {
-        return guild.getMember(CascadeBot.INS.getSelfUser());
+        return guild.getMember(jda.getSelfUser());
     }
 
     /**
@@ -397,12 +491,18 @@ public class CommandContext {
         if (emoteId != null) {
             return CascadeBot.INS.getShardManager().getEmoteById(emoteId);
         }
+        CascadeBot.LOGGER.warn("Tried to get global emote that doesn't exist! Key: {}", key);
         return null;
     }
 
     public String globalEmote(String key) {
         Emote emote = getGlobalEmote(key);
         return emote == null ? "" : emote.getAsMention();
+    }
+
+    public boolean hasPermission(String permission) {
+        CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
+        return cascadePermission != null; // TODO: Check actual perms
     }
 
     //endregion

@@ -22,19 +22,18 @@ public final class GuildDataMapper {
     public static final String COLLECTION = "guilds";
 
     private static LoadingCache<Long, GuildData> guilds = Caffeine.newBuilder()
-            .refreshAfterWrite(5, TimeUnit.MINUTES)
-            .expireAfterAccess(10, TimeUnit.MINUTES)
+            .expireAfterAccess(5, TimeUnit.MINUTES)
             .removalListener(new GuildSaveListener())
             .build(id -> {
                 GuildData dbData = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("_id", id)).first();
                 if (dbData == null) {
-                    CascadeBot.logger.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
+                    CascadeBot.LOGGER.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
                     GuildData data = new GuildData(id);
                     GuildDataMapper.insert(id, data);
                     return data;
                 }
 
-                CascadeBot.logger.debug("Loaded data from database for guild ID: " + id);
+                CascadeBot.LOGGER.debug("Loaded data from database for guild ID: " + id);
                 return dbData;
             });
 

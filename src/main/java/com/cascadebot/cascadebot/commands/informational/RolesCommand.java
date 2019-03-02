@@ -5,38 +5,28 @@
 
 package com.cascadebot.cascadebot.commands.informational;
 
-import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
-import com.cascadebot.cascadebot.commandmeta.IMainCommand;
-import com.cascadebot.cascadebot.permissions.Permission;
-import com.cascadebot.cascadebot.utils.FormatUtils;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
+import com.cascadebot.cascadebot.commandmeta.ICommandMain;
+import com.cascadebot.cascadebot.commandmeta.Module;
+import com.cascadebot.cascadebot.permissions.CascadePermission;
+import com.cascadebot.cascadebot.utils.Table;
+import com.cascadebot.cascadebot.utils.pagination.PageUtils;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
-public class RolesCommand implements IMainCommand {
+public class RolesCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        Table.TableBuilder builder = new Table.TableBuilder("Role ID", "Role Name");
 
-        List<String> header = Arrays.asList("Role ID", "Role Name");
-
-        List<List<String>> body = new ArrayList<>();
-        for(Role role : context.getGuild().getRoles()) {
-            List<String> row = new ArrayList<>();
-            row.add(role.getId());
-            row.add(role.getName());
-            body.add(row);
+        for (Role role : context.getGuild().getRoles()) {
+            builder.addRow(role.getId(), role.getName());
         }
 
-        context.reply(FormatUtils.makeAsciiTable(header, body, null));
+        context.sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
     }
 
     @Override
@@ -45,17 +35,23 @@ public class RolesCommand implements IMainCommand {
     }
 
     @Override
-    public CommandType getType() {
-        return CommandType.INFORMATIONAL;
+    public Module getModule() {
+        return Module.INFORMATIONAL;
     }
 
     @Override
-    public Permission getPermission() {
-        return Permission.ROLES_COMMAND;
+    public CascadePermission getPermission() {
+        return CascadePermission.of("Roles command", "roles", false);
+    }
+
+    @Override
+    public String description() {
+        return "Get the roles on the server";
     }
 
     @Override
     public Set<String> getGlobalAliases() {
         return Set.of("roleinfo");
     }
+
 }

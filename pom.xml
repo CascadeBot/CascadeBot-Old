@@ -153,7 +153,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
-            <version>1.8.10</version>
+            <version>1.9.2</version>
         </dependency>
 
         <!-- Utilities -->
@@ -261,6 +261,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.sentry</groupId>
+            <artifactId>sentry-logback</artifactId>
+            <version>1.7.16</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>

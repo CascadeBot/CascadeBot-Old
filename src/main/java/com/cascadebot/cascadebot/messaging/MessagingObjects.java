@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot.messaging;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
+import net.dv8tion.jda.core.entities.User;
 
 public final class MessagingObjects {
 
@@ -30,63 +31,19 @@ public final class MessagingObjects {
                 .setImage(null);
     }
 
+    public static EmbedBuilder getStandardMessageEmbed(String message, User requestedBy) {
+        return getClearThreadLocalEmbedBuilder()
+                .setDescription(message)
+                .setFooter("Requested by " + requestedBy.getAsTag(), requestedBy.getEffectiveAvatarUrl());
+    }
+
     public static EmbedBuilder getMessageTypeEmbedBuilder(MessageType messageType) {
         return getClearThreadLocalEmbedBuilder().setColor(messageType.getColor());
-    }
-
-    public static EmbedBuilder getColoredEmbedBuilder() {
-        return getMessageTypeEmbedBuilder(MessageType.NEUTRAL);
-    }
-
-    public static EmbedBuilder getSuccessEmbedBuilder() {
-        return getMessageTypeEmbedBuilder(MessageType.SUCCESS);
-    }
-
-    public static EmbedBuilder getInfoEmbedBuilder() {
-        return getMessageTypeEmbedBuilder(MessageType.INFO);
-    }
-
-    public static EmbedBuilder getWarningEmbedBuilder() {
-        return getMessageTypeEmbedBuilder(MessageType.WARNING);
-    }
-
-    public static EmbedBuilder getDangerEmbedBuilder() {
-        return getMessageTypeEmbedBuilder(MessageType.DANGER);
-    }
-
-    public static EmbedBuilder getModerationEmbedBuilder() {
-        return getMessageTypeEmbedBuilder(MessageType.MODERATION);
     }
 
     public static MessageBuilder getMessageTypeMessageBuilder(MessageType messageType) {
         return getClearThreadLocalMessageBuilder().append(messageType.getEmoji()).append(" ");
     }
-
-    public static MessageBuilder getColoredMessageBuilder() {
-        return getMessageTypeMessageBuilder(MessageType.NEUTRAL);
-    }
-
-    public static MessageBuilder getSuccessMessageBuilder() {
-        return getMessageTypeMessageBuilder(MessageType.SUCCESS);
-    }
-
-    public static MessageBuilder getInfoMessageBuilder() {
-        return getMessageTypeMessageBuilder(MessageType.INFO);
-    }
-
-    public static MessageBuilder getWarningMessageBuilder() {
-        return getMessageTypeMessageBuilder(MessageType.WARNING);
-    }
-
-    public static MessageBuilder getDangerMessageBuilder() {
-        return getMessageTypeMessageBuilder(MessageType.DANGER);
-    }
-
-    public static MessageBuilder getModerationMessageBuilder() {
-        return getMessageTypeMessageBuilder(MessageType.MODERATION);
-    }
-
-
 
 
 }

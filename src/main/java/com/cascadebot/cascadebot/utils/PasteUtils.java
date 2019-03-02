@@ -13,12 +13,14 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.slf4j.MarkerFactory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.function.Consumer;
 
-public class ErrorUtils {
+public class PasteUtils {
 
     public static String paste(String paste) {
         Request request = new Request.Builder()
@@ -29,14 +31,22 @@ public class ErrorUtils {
         try {
             Response response = CascadeBot.INS.getHttpClient().newCall(request).execute();
             JsonParser parser = new JsonParser();
-            if(response.body() != null) {
+            if (response.body() != null) {
                 JsonObject object = parser.parse(response.body().string()).getAsJsonObject();
                 return Config.INS.getHasteLink() + object.get("key").getAsString();
             }
         } catch (IOException e) {
-            e.printStackTrace(); //TODO log this separately so things don't infinite loop.
+            CascadeBot.LOGGER.error(MarkerFactory.getMarker("HASTEBIN"), "Error while trying to post!", e);
         }
         return "";
+    }
+
+    public static void pasteIfLong(String message, int maxLength, Consumer<String> action) {
+        if (message.length() > maxLength) {
+            action.accept(paste(message));
+        } else {
+            action.accept(message);
+        }
     }
 
     public static String getStackTrace(Throwable throwable) {

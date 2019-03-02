@@ -13,58 +13,64 @@ import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class CommandManager {
 
-    private static CommandManager instance = null;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
 
-    private final List<IMainCommand> commands = new CopyOnWriteArrayList<>();
-    private final Logger logger = LoggerFactory.getLogger("Command Manager");
+    private final List<ICommandMain> commands = Collections.synchronizedList(new ArrayList<>());
 
     public CommandManager() {
-        instance = this;
 
         long start = System.currentTimeMillis();
         try {
             for (Class<?> c : ReflectionUtils.getClasses("com.cascadebot.cascadebot.commands")) {
-                if (IMainCommand.class.isAssignableFrom(c))
-                    commands.add((IMainCommand) ConstructorUtils.invokeConstructor(c));
+                if (ICommandMain.class.isAssignableFrom(c)) {
+                    ICommandMain command = (ICommandMain) ConstructorUtils.invokeConstructor(c);
+                    if (command.getModule() == null) {
+                        throw new IllegalStateException(String.format("Command %s could not be loaded as its module was null!", command.getClass().getSimpleName()));
+                    }
+                    commands.add(command);
+                }
             }
-            logger.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
+            LOGGER.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
         } catch (Exception e) {
-            logger.error("Could not load commands!", e);
+            LOGGER.error("Could not load commands!", e);
             ShutdownHandler.exitWithError();
         }
     }
 
-    public IMainCommand getCommand(String command, User user, GuildData data) {
-        for (IMainCommand cmd : getCommands()) {
-            if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
-                return cmd;
-            } else if (data.getCommandArgs(cmd).contains(command)) {
-                return cmd;
+    public ICommandMain getCommand(String command, User user, GuildData data) {
+        synchronized (commands) {
+            for (ICommandMain cmd : commands) {
+                if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
+                    return cmd;
+                } else if (data.getCommandAliases(cmd).contains(command)) {
+                    return cmd;
+                }
             }
         }
         return null;
     }
 
-    public List<IMainCommand> getCommands() {
+    public List<ICommandMain> getCommands() {
         return commands;
     }
 
-    public List<IMainCommand> getCommandsByType(CommandType type) {
-        return commands.stream().filter(command -> command.getType() == type).collect(Collectors.toList());
+    public List<ICommandMain> getCommandsByModule(Module type) {
+        synchronized (commands) {
+            return commands.stream().filter(command -> command.getModule() == type).collect(Collectors.toList());
+        }
     }
 
     public ICommandExecutable getCommandByDefault(String defaultCommand) {
-        return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
-    }
-
-    public static CommandManager instance() {
-        return instance;
+        synchronized (commands) {
+            return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
+        }
     }
 
 }

@@ -8,8 +8,6 @@ package com.cascadebot.cascadebot.permissions;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.shared.SecurityLevel;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -18,10 +16,23 @@ import java.util.Set;
  */
 public class Security {
 
+    /**
+     * Returns the list of role and user IDs that will authenticate against this security level
+     *
+     * @param level The level to get IDs for
+     * @return The list of IDs authenticated against this level
+     */
     public static Set<Long> getIds(SecurityLevel level) {
         return Config.INS.getSecurityLevels().get(level);
     }
 
+    /**
+     * Checks if the level is greater than or equal to the level we are comparing against.
+     *
+     * @param level          The level we are checking.
+     * @param comparingLevel The level to compare against.
+     * @return where level >= comparing level.
+     */
     public static boolean isAuthorised(SecurityLevel level, SecurityLevel comparingLevel) {
         return comparingLevel.isAuthorised(level);
     }
@@ -29,7 +40,7 @@ public class Security {
     /**
      * Returns the highest security level a user has access to.
      *
-     * @param userId The ID of the user to check.
+     * @param userId  The ID of the user to check.
      * @param roleIds The list of role IDs to check against, this will almost always be the roles from the official server.
      * @return The highest security level the user has access to or {@code null} if they do not have access to anything.
      */

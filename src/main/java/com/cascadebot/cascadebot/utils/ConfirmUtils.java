@@ -29,9 +29,10 @@ public class ConfirmUtils {
     // Holds the users that have confirmed an action
     private static ListMultimap<String, ConfirmRunnable> confirmedMap = ArrayListMultimap.create();
 
+    //region Confirm Action
     public static boolean confirmAction(long userId, String actionKey, TextChannel channel, MessageType type, String message, long buttonDelay, long expiry, ConfirmRunnable action) {
         GuildData guildData = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
-        boolean useEmbed = guildData.getUseEmbedForMessages();
+        boolean useEmbed = guildData.getSettings().useEmbedForMessages();
         Message sentMessage;
         try {
             sentMessage = Messaging.sendMessageTypeMessage(channel, type, message, useEmbed).get();
@@ -48,7 +49,7 @@ public class ConfirmUtils {
         if (channel.getGuild().getMember(CascadeBot.INS.getSelfUser()).hasPermission(channel, Permission.MESSAGE_ADD_REACTION)) {
             Task.getScheduler().schedule(() -> {
                 ButtonGroup group = new ButtonGroup(userId, channel.getGuild().getIdLong());
-                group.addButton(new Button.UnicodeButton("\u2705" /* ✅ */, (runner, channel1, message1) -> {
+                group.addButton(new Button.UnicodeButton("\u2705" /* Tick, confirm action */, (runner, channel1, message1) -> {
                     if (runner.getUser().getIdLong() != action.userID) return;
                     action.run();
                 }));
@@ -91,6 +92,7 @@ public class ConfirmUtils {
                 action
         );
     }
+    //endregion
 
     public static boolean hasConfirmedAction(String actionKey, long userId) {
         return confirmedMap.entries().stream().anyMatch(entry -> entry.getKey().equals(actionKey) && entry.getValue().userID == userId);

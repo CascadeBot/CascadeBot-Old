@@ -6,11 +6,13 @@
 package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.Environment;
 import com.cascadebot.cascadebot.ShutdownHandler;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.CommandType;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.messaging.MessageType;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.utils.ConfirmUtils;
 import com.cascadebot.shared.SecurityLevel;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -21,7 +23,7 @@ public class ShutdownCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         // A confirmation check to make sure we actually want to shut down on production
-        if (!CascadeBot.getVersion().getBuild().equalsIgnoreCase("dev")) {
+        if (Environment.isProduction()) {
             if (!ConfirmUtils.hasConfirmedAction("shutdown_bot", sender.getUser().getIdLong())) {
                 ConfirmUtils.confirmAction(
                         sender.getUser().getIdLong(),
@@ -45,11 +47,11 @@ public class ShutdownCommand implements ICommandRestricted {
     }
 
     private void shutdown(CommandContext context) {
-        EmbedBuilder builder = new EmbedBuilder();
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setFooter(context.getMember().getUser().getAsTag(), context.getMember().getUser().getEffectiveAvatarUrl());
         builder.setDescription("Cascade bot shutting down!");
         context.replyInfo(builder);
-        CascadeBot.logger.info("Shutting down via command! Issuer: " + context.getUser().getAsTag());
+        CascadeBot.LOGGER.info("Shutting down via command! Issuer: " + context.getUser().getAsTag());
         ShutdownHandler.stop();
     }
 
@@ -59,16 +61,18 @@ public class ShutdownCommand implements ICommandRestricted {
     }
 
     @Override
-    public SecurityLevel getCommandLevel() { return SecurityLevel.OWNER; }
-
-    @Override
-    public CommandType getType() {
-        return CommandType.DEVELOPER;
+    public String description() {
+        return "stop the bot";
     }
 
     @Override
-    public boolean forceDefault() {
-        return true;
+    public SecurityLevel getCommandLevel() {
+        return SecurityLevel.OWNER;
+    }
+
+    @Override
+    public Module getModule() {
+        return Module.DEVELOPER;
     }
 
 }

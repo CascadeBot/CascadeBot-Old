@@ -10,7 +10,7 @@ import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-public class Events extends ListenerAdapter {
+public class GeneralEvents extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {

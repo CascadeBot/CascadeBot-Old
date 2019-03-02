@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.data.objects;
 
-import com.cascadebot.cascadebot.commandmeta.IMainCommand;
+import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 
 import java.util.Set;
 
@@ -19,7 +19,7 @@ public class GuildCommandInfo {
 
     private GuildCommandInfo() {} // For mongodb object serialisation
 
-    public GuildCommandInfo(IMainCommand command) {
+    public GuildCommandInfo(ICommandMain command) {
         this.command = command.command();
         this.defaultCommand = command.command();
         this.forceDefault = command.forceDefault();
