@@ -20,11 +20,7 @@ public class Argument {
         this.arg = arg.toLowerCase(); //This probably isn't needed but megh
         this.description = description;
         this.subArgs = Collections.unmodifiableSet(subArgs);
-        if (subArgs.size() > 0) {
-            this.type = ArgumentType.COMMAND;
-        } else {
-            this.type = type;
-        }
+        this.type = type;
         this.aliases = Collections.unmodifiableSet(aliases);
     }
 
@@ -143,8 +139,16 @@ public class Argument {
         return true;
     }
 
+    public String getArg() {
+        return arg;
+    }
+
     public Set<Argument> getSubArgs() {
         return subArgs;
+    }
+
+    public ArgumentType getType() {
+        return type;
     }
 
     public boolean argEquals(String arg) {
