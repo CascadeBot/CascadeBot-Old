@@ -1,15 +1,24 @@
 package com.cascadebot.cascadebot.commands.moderation;
 
+import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.commandmeta.Argument;
+import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
+import com.cascadebot.cascadebot.messaging.MessageType;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.HierarchyException;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang.ObjectUtils;
+
+import java.util.Set;
 
 public class BanCommand implements ICommandMain {
 
@@ -21,35 +30,29 @@ public class BanCommand implements ICommandMain {
             return;
         }
 
-        Member targetMember = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
+        Member targetMember = DiscordUtils.getMember(context.getArg(0), context.getGuild());
 
         if (targetMember == null) {
-            context.replyDanger("We couldn't find that member!");
+            EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed("We couldn't find that user in this guild!\n" +
+                    "To forcibly ban a user not in this guild, use `;forceban`!", sender.getUser());
+            builder.setTitle("Error");
+            context.replyDanger(builder);
             return;
         }
 
-        if (targetMember.equals(sender)) {
-            context.replyDanger("You can't ban yourself!");
-            return;
-        } else if (targetMember.equals(context.getSelfMember())) {
-            context.replyDanger("You can't ban me! :(");
-            return;
+        String reason = null;
+
+        if (context.getArgs().length >= 2) {
+            reason = context.getMessage(1);
         }
 
-        try {
-            context.getGuild().getController().ban(targetMember.getUser(), 7).queue(success -> {
-                context.replyInfo("**%s** has been banned!", targetMember.getUser().getAsTag());
-            }, throwable -> {
-                context.replyException("Could not ban the user %s!", throwable, targetMember.getUser().getAsTag());
-            });
-
-        }  catch (InsufficientPermissionException e) {
-            context.replyWarning("Cannot ban user " + targetMember.getUser().getAsTag() +
-                    ", missing Ban Members permission");
-        } catch (HierarchyException e) {
-            context.replyWarning("Cannot ban user " + targetMember.getUser().getAsTag() +
-                    ", the top role they have is higher than mine");
-        }
+        CascadeBot.INS.getModerationManager().handleModeration(
+                context,
+                ModAction.BAN,
+                targetMember.getUser(),
+                sender,
+                reason
+        );
     }
 
     @Override
@@ -65,6 +68,11 @@ public class BanCommand implements ICommandMain {
     @Override
     public String description() {
         return "Bans people I guess ;)";
+    }
+
+    @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.of("reason", "The reason to ban the user for", ArgumentType.OPTIONAL));
     }
 
     @Override

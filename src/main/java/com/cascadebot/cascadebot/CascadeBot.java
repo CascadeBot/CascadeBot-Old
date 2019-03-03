@@ -11,6 +11,7 @@ import com.cascadebot.cascadebot.data.database.DatabaseManager;
 import com.cascadebot.cascadebot.events.ButtonEventListener;
 import com.cascadebot.cascadebot.events.CommandListener;
 import com.cascadebot.cascadebot.events.GeneralEvents;
+import com.cascadebot.cascadebot.moderation.ModerationManager;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.cascadebot.permissions.PermissionsManager;
 import com.cascadebot.shared.Version;
@@ -47,6 +48,7 @@ public class CascadeBot {
     private CommandManager commandManager;
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
+    private ModerationManager moderationManager;
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
@@ -146,6 +148,7 @@ public class CascadeBot {
         commandManager = new CommandManager();
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
+        moderationManager = new ModerationManager();
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
@@ -200,6 +203,10 @@ public class CascadeBot {
 
     public PermissionsManager getPermissionsManager() {
         return permissionsManager;
+    }
+
+    public ModerationManager getModerationManager() {
+        return moderationManager;
     }
 
     public OkHttpClient getHttpClient() {
