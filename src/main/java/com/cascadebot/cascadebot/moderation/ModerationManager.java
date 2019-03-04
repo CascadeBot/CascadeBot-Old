@@ -8,75 +8,90 @@ package com.cascadebot.cascadebot.moderation;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.exceptions.HierarchyException;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.function.BiConsumer;
-
 public class ModerationManager {
 
-    public static final BiConsumer<Throwable, ModerationAction> FAILURE_CONSUMER = ((throwable, moderationAction) -> {
-        moderationAction.context.replyException("Could not %s the user %s!", throwable, moderationAction.action, moderationAction.target.getAsTag());
+    private static final FailureConsumer FAILURE_CONSUMER = ((context, throwable, target, action) -> {
+        context.replyException("Could not %s the user %s due to an exception!", throwable, action, target.getAsTag());
     });
 
-    public void handleModeration(CommandContext context, ModAction action, User target, Member submitter) {
-        handleModeration(context, action, target, submitter, null);
+    public void ban(CommandContext context, ModAction action, User target, Member submitter, String reason, int messagesToDelete) {
+        if (runChecks(action, target, submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild().getController()
+                        .ban(target, messagesToDelete, reason)
+                        .queue(success -> {
+                            EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(String.format(
+                                    "%s has been %s!", target.getAsTag(), action.getVerb()
+                            ), submitter.getUser());
+
+                            if (!StringUtils.isBlank(reason)) {
+                                builder.addField("Reason", reason, false);
+                            }
+
+                            builder.setTitle(StringUtils.capitalize(action.getVerb()) + " user");
+                            context.replySuccess(builder);
+                        }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, action));
+            }, context, action, target);
+        }
     }
 
-    public void handleModeration(CommandContext context, ModAction action, User target, Member submitter, String reason) {
-        Guild guild = context.getGuild();
-        if (!guild.equals(submitter.getGuild())) {
+    public void unban(CommandContext context, ModAction action, User target, Member submitter, String reason) {
+        if (runChecks(action, target, submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild().getController().unban(target).reason(reason).queue(success -> {
+                    context.replySuccess("User %s has been unbanned!", target.getAsTag());
+                }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, action));
+            }, context, action, target);
+        }
+    }
+
+    public void softBan(CommandContext context, ModAction action, User target, Member submitter, String reason, int messagesToDelete) {
+        if (runChecks(action, target, submitter, context)) {
+            ban(context, action, target, submitter, reason, messagesToDelete);
+            runWithCheckedExceptions(() -> {
+                context.getGuild().getController()
+                        .unban(target)
+                        .reason("Softban: Unbanned user")
+                        .queue(null, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, action));
+            }, context, action, target);
+        }
+    }
+
+    public void kick(CommandContext context, ModAction action, Member target, Member submitter, String reason) {
+        if (runChecks(action, target.getUser(), submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild().getController()
+                        .kick(target, reason)
+                        .queue(success -> {
+                            context.replySuccess("Use %s has been kicked!", target.getUser().getAsTag());
+                        }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target.getUser(), action));
+            }, context, action, target.getUser());
+        }
+    }
+
+    private boolean runChecks(ModAction action, User target, Member submitter, CommandContext context) {
+        if (!context.getGuild().equals(submitter.getGuild())) {
             // This should never really happen, this is here to make sure it definitely never happens
-            return;
-        }
-
-        Member targetMember = guild.getMember(target);
-
-        if (action.needsMember() && targetMember == null) {
-            context.replyWarning("The user %s is not in the guild to be %s!%s",
-                    target.getAsTag(),
-                    action.getVerb(),
-                    action == ModAction.BAN ? "\nUse `;forceban` to forcibly ban a user!" : "");
-            return;
-        }
-
-        if (target.equals(submitter.getUser())) {
+            return false;
+        } else if (target.equals(submitter.getUser())) {
             context.replyWarning("You cannot %s yourself!", action);
-            return;
-        }
-
-        if (target.isBot()) {
+            return false;
+        } else if (target.isBot()) {
             context.replyWarning("You cannot %s a bot!", action);
-            return;
+            return false;
         }
+        return true;
+    }
 
-        ModerationAction moderationAction = new ModerationAction(context, action, target, submitter, reason);
-
+    private void runWithCheckedExceptions(Runnable actionToRun, CommandContext context, ModAction action, User target) {
         try {
-            switch (action) {
-                case BAN:
-                    ban(moderationAction);
-                    break;
-                case UNBAN:
-                    unban(moderationAction);
-                    break;
-                case SOFT_BAN:
-                    softBan(moderationAction);
-                    break;
-                case KICK:
-                    kick(moderationAction);
-                    break;
-                case MUTE:
-                    // Unimplemented
-                    break;
-                case WARN:
-                    // Unimplemented
-                    break;
-            }
+            actionToRun.run();
         } catch (InsufficientPermissionException e) {
             context.replyDanger("Cannot %s user %s, missing `%s` permission!", action, target.getAsTag(), e.getPermission().getName());
         } catch (HierarchyException e) {
@@ -84,57 +99,10 @@ public class ModerationManager {
         }
     }
 
-    private void ban(ModerationAction modAction) {
-        modAction.context.getGuild().getController()
-                .ban(modAction.target, 7, modAction.reason)
-                .queue(success -> {
-            EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(String.format(
-                    "%s has been %s!", modAction.target.getAsTag(), modAction.action.getVerb()
-            ), modAction.submitter.getUser());
+    @FunctionalInterface
+    private interface FailureConsumer {
 
-            if (!StringUtils.isBlank(modAction.reason)) {
-                builder.addField("Reason", modAction.reason, false);
-            }
-
-            builder.setTitle(StringUtils.capitalize(modAction.action.getVerb()) + " user");
-            modAction.context.replySuccess(builder);
-        }, (throwable -> FAILURE_CONSUMER.accept(throwable, modAction)));
-    }
-
-    private void unban(ModerationAction modAction) {
-        modAction.context.getGuild().getController().unban(modAction.target).queue(success -> {
-            modAction.context.replySuccess("User %s has been unbanned!", modAction.target.getAsTag());
-        }, throwable -> FAILURE_CONSUMER.accept(throwable, modAction));
-    }
-
-    private void softBan(ModerationAction modAction) {
-        ban(modAction);
-        modAction.context.getGuild().getController()
-                .unban(modAction.target)
-                .reason("Softban: Unbanned user")
-                .queue(null, throwable -> FAILURE_CONSUMER.accept(throwable, modAction));
-    }
-
-    private void kick(ModerationAction moderationAction) {
-
-    }
-
-
-    private class ModerationAction {
-
-        private CommandContext context;
-        private ModAction action;
-        private User target;
-        private Member submitter;
-        private String reason;
-
-        public ModerationAction(CommandContext context, ModAction action, User target, Member submitter, String reason) {
-            this.context = context;
-            this.action = action;
-            this.target = target;
-            this.submitter = submitter;
-            this.reason = reason;
-        }
+        void accept(CommandContext context, Throwable throwable, User target, ModAction action);
 
     }
 
