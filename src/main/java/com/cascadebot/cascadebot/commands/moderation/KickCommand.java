@@ -20,17 +20,23 @@ public class KickCommand implements ICommandMain {
             context.replyDanger("Not enough arguments (No specified member)");
             return;
         }
-        Member targetMember = DiscordUtils.getMember(context.getMessage(0), context.getGuild());
+        Member targetMember = DiscordUtils.getMember(context.getArg(0), context.getGuild());
 
         if (targetMember == null) {
-            context.replyDanger("Could not find that user");
+            context.replyDanger("Could not find that user!");
+            return;
+        }
+
+        String reason = null;
+        if (context.getArgs().length >= 2) {
+            reason = context.getMessage(1);
         }
 
         CascadeBot.INS.getModerationManager().kick(
                 context,
                 targetMember,
                 sender,
-                "" // TODO add this
+                reason
         );
     }
 
