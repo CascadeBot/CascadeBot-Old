@@ -41,37 +41,37 @@ public class ModerationManager {
         }
     }
 
-    public void unban(CommandContext context, ModAction action, User target, Member submitter, String reason) {
-        if (runChecks(action, target, submitter, context)) {
+    public void unban(CommandContext context, User target, Member submitter, String reason) {
+        if (runChecks(ModAction.UNBAN, target, submitter, context)) {
             runWithCheckedExceptions(() -> {
                 context.getGuild().getController().unban(target).reason(reason).queue(success -> {
                     context.replySuccess("User %s has been unbanned!", target.getAsTag());
-                }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, action));
-            }, context, action, target);
+                }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, ModAction.UNBAN));
+            }, context, ModAction.UNBAN, target);
         }
     }
 
-    public void softBan(CommandContext context, ModAction action, User target, Member submitter, String reason, int messagesToDelete) {
-        if (runChecks(action, target, submitter, context)) {
-            ban(context, action, target, submitter, reason, messagesToDelete);
+    public void softBan(CommandContext context, User target, Member submitter, String reason, int messagesToDelete) {
+        if (runChecks(ModAction.SOFT_BAN, target, submitter, context)) {
+            ban(context, ModAction.SOFT_BAN, target, submitter, reason, messagesToDelete);
             runWithCheckedExceptions(() -> {
                 context.getGuild().getController()
                         .unban(target)
                         .reason("Softban: Unbanned user")
-                        .queue(null, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, action));
-            }, context, action, target);
+                        .queue(null, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, ModAction.SOFT_BAN));
+            }, context, ModAction.SOFT_BAN, target);
         }
     }
 
-    public void kick(CommandContext context, ModAction action, Member target, Member submitter, String reason) {
-        if (runChecks(action, target.getUser(), submitter, context)) {
+    public void kick(CommandContext context, Member target, Member submitter, String reason) {
+        if (runChecks(ModAction.KICK, target.getUser(), submitter, context)) {
             runWithCheckedExceptions(() -> {
                 context.getGuild().getController()
                         .kick(target, reason)
                         .queue(success -> {
                             context.replySuccess("Use %s has been kicked!", target.getUser().getAsTag());
-                        }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target.getUser(), action));
-            }, context, action, target.getUser());
+                        }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target.getUser(), ModAction.KICK));
+            }, context, ModAction.KICK, target.getUser());
         }
     }
 

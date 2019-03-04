@@ -33,7 +33,6 @@ public class SoftBanCommand implements ICommandMain {
 
         CascadeBot.INS.getModerationManager().softBan(
                 context,
-                ModAction.SOFT_BAN,
                 targetMember.getUser(),
                 sender,
                 reason,

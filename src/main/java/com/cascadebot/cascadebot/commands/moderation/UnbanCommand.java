@@ -32,7 +32,6 @@ public class UnbanCommand implements ICommandMain {
             CascadeBot.INS.getShardManager().retrieveUserById(target).queue(user -> {
                 CascadeBot.INS.getModerationManager().unban(
                         context,
-                        ModAction.UNBAN,
                         user,
                         sender,
                         "Test" // TODO?
@@ -54,7 +53,6 @@ public class UnbanCommand implements ICommandMain {
                     }
                     CascadeBot.INS.getModerationManager().unban(
                             context,
-                            ModAction.UNBAN,
                             bannedUser,
                             sender,
                             "" // TODO?

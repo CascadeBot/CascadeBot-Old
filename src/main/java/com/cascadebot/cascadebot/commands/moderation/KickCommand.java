@@ -28,7 +28,6 @@ public class KickCommand implements ICommandMain {
 
         CascadeBot.INS.getModerationManager().kick(
                 context,
-                ModAction.KICK,
                 targetMember,
                 sender,
                 "" // TODO add this
