@@ -31,12 +31,13 @@ public class SoftBanCommand implements ICommandMain {
             reason = context.getMessage(1);
         }
 
-        CascadeBot.INS.getModerationManager().handleModeration(
+        CascadeBot.INS.getModerationManager().softBan(
                 context,
                 ModAction.SOFT_BAN,
                 targetMember.getUser(),
                 sender,
-                reason
+                reason,
+                7 // TODO
         );
 
     }

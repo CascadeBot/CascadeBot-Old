@@ -9,6 +9,7 @@ import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
+import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.Permission;
@@ -16,8 +17,6 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
-
-import java.util.regex.Pattern;
 
 public class UnbanCommand implements ICommandMain {
 
@@ -28,9 +27,16 @@ public class UnbanCommand implements ICommandMain {
             return;
         }
         String target = context.getMessage(0);
+
         if (Regex.ID.matcher(target).matches()) {
             CascadeBot.INS.getShardManager().retrieveUserById(target).queue(user -> {
-                unbanUser(context, user);
+                CascadeBot.INS.getModerationManager().unban(
+                        context,
+                        ModAction.UNBAN,
+                        user,
+                        sender,
+                        "Test" // TODO?
+                );
             }, failure -> {
                 context.replyDanger("Could not find user with ID %s!", target);
             });
@@ -42,7 +48,17 @@ public class UnbanCommand implements ICommandMain {
                             .filter(user -> user.getName().equalsIgnoreCase(target) || user.getAsTag().equalsIgnoreCase(target))
                             .findFirst()
                             .orElse(null);
-                    unbanUser(context, bannedUser);
+                    if (bannedUser == null) {
+                        context.replyDanger("Could not find a user to unban matching: %s", target);
+                        return;
+                    }
+                    CascadeBot.INS.getModerationManager().unban(
+                            context,
+                            ModAction.UNBAN,
+                            bannedUser,
+                            sender,
+                            "" // TODO?
+                    );
                 });
             } catch (InsufficientPermissionException e) {
                 context.replyDanger("Cannot get banned user list, missing %s permission!", e.getPermission().getName());

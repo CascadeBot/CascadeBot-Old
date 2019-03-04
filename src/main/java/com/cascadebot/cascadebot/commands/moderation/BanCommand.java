@@ -46,12 +46,13 @@ public class BanCommand implements ICommandMain {
             reason = context.getMessage(1);
         }
 
-        CascadeBot.INS.getModerationManager().handleModeration(
+        CascadeBot.INS.getModerationManager().ban(
                 context,
                 ModAction.BAN,
                 targetMember.getUser(),
                 sender,
-                reason
+                reason,
+                7 // TODO: add this as an arg
         );
     }
 
