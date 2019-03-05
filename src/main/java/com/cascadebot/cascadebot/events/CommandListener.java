@@ -26,9 +26,11 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class CommandListener extends ListenerAdapter {
 
@@ -37,11 +39,15 @@ public class CommandListener extends ListenerAdapter {
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newFixedThreadPool(5, r ->
             new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
 
+    private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
+
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
 
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
+        message = MULTIQUOTE_REGEX.matcher(message).replaceAll("");
+
         GuildData guildData;
         try {
             guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
