@@ -63,20 +63,20 @@ public class CommandListener extends ListenerAdapter {
 
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-            trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
-            args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
         } else if (guildData.getSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
             commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
-            trigger = commandWithArgs.split(" ")[0];
-            args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
             isMention = true;
         } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
-            trigger = commandWithArgs.split(" ")[0];
-            args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
         } else {
             return;
         }
+
+        trigger = commandWithArgs.split(" ")[0];
+        commandWithArgs = commandWithArgs.substring(trigger.length()).trim();
+        // Allow ' and " to be treated equally #quoteshavefeelingstoo
+        commandWithArgs = commandWithArgs.replace("'", "\"");
+        args = splitArgs(commandWithArgs);
 
         try {
             processCommands(event, guildData, trigger, args, isMention);
