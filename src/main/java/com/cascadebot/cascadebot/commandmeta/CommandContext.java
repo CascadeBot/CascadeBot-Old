@@ -384,7 +384,7 @@ public class CommandContext {
      * @return The bot's {@link Member} for this guild.
      */
     public Member getSelfMember() {
-        return guild.getMember(jda.getSelfUser());
+        return guild.getMember(getSelfUser());
     }
 
     /**
