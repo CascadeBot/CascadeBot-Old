@@ -26,9 +26,11 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class CommandListener extends ListenerAdapter {
 
@@ -37,11 +39,15 @@ public class CommandListener extends ListenerAdapter {
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newFixedThreadPool(5, r ->
             new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
 
+    private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
+
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
 
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
+        message = MULTIQUOTE_REGEX.matcher(message).replaceAll("");
+
         GuildData guildData;
         try {
             guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
@@ -63,20 +69,18 @@ public class CommandListener extends ListenerAdapter {
 
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-            trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
-            args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
         } else if (guildData.getSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
             commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
-            trigger = commandWithArgs.split(" ")[0];
-            args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
             isMention = true;
         } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
-            trigger = commandWithArgs.split(" ")[0];
-            args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
         } else {
             return;
         }
+
+        trigger = commandWithArgs.split(" ")[0];
+        commandWithArgs = commandWithArgs.substring(trigger.length()).trim();
+        args = splitArgs(commandWithArgs);
 
         try {
             processCommands(event, guildData, trigger, args, isMention);
@@ -87,6 +91,43 @@ public class CommandListener extends ListenerAdapter {
                     new CommandException(e, event.getGuild(), trigger));
             return;
         }
+    }
+
+    public String[] splitArgs(String input) {
+        // Allow ' and " to be treated equally #quoteshavefeelingstoo
+        input = input.replace("'", "\"");
+        boolean inQuotes = false; // Whether the current position is surrounded by quotes or not
+        int splitFrom = 0; // We initially start the first split from 0 to the first space
+        var args = new ArrayList<String>();
+        for (int pos = 0; pos < input.length(); pos++) {
+            char charAtPos = input.charAt(pos);
+            if (charAtPos == ' ') {
+                int splitTo = pos;
+                // If there is a quote to close this
+                if (inQuotes && (input.substring(pos).contains("\""))) {
+                    continue;
+                }
+                if (input.charAt(pos - 1) == '"') {
+                    splitTo = pos - 1; // If we are splitting after a quote, don't include the quote in the split
+                }
+                args.add(input.substring(splitFrom, splitTo));
+                splitFrom = pos + 1; // Set the next split start to be after
+            } else if (pos == input.length() - 1) {
+                int splitTo = input.length();
+                // If the end character is a quote, we want to "split" before the quote to no include it.
+                if (input.charAt(pos) == '"') {
+                    splitTo = pos;
+                }
+                args.add(input.substring(splitFrom, splitTo));
+                // End of string so do nothing else
+            } else if (charAtPos == '"') {
+                if (!inQuotes) {
+                    splitFrom += 1; // Start the split after the first quote
+                }
+                inQuotes = !inQuotes;
+            }
+        }
+        return args.toArray(String[]::new);
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
