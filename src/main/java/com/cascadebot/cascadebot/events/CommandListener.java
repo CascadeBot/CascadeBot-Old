@@ -80,8 +80,6 @@ public class CommandListener extends ListenerAdapter {
 
         trigger = commandWithArgs.split(" ")[0];
         commandWithArgs = commandWithArgs.substring(trigger.length()).trim();
-        // Allow ' and " to be treated equally #quoteshavefeelingstoo
-        commandWithArgs = commandWithArgs.replace("'", "\"");
         args = splitArgs(commandWithArgs);
 
         try {
@@ -95,7 +93,9 @@ public class CommandListener extends ListenerAdapter {
         }
     }
 
-    private String[] splitArgs(String input) {
+    public String[] splitArgs(String input) {
+        // Allow ' and " to be treated equally #quoteshavefeelingstoo
+        input = input.replace("'", "\"");
         boolean inQuotes = false; // Whether the current position is surrounded by quotes or not
         int splitFrom = 0; // We initially start the first split from 0 to the first space
         var args = new ArrayList<String>();
