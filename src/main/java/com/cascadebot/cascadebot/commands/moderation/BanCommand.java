@@ -11,6 +11,7 @@ import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
+import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
@@ -18,6 +19,7 @@ import net.dv8tion.jda.core.exceptions.HierarchyException;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang.ObjectUtils;
 
+import java.util.List;
 import java.util.Set;
 
 public class BanCommand implements ICommandMain {
@@ -30,7 +32,7 @@ public class BanCommand implements ICommandMain {
             return;
         }
 
-        Member targetMember = DiscordUtils.getMember(context.getArg(0), context.getGuild());
+        Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
 
         if (targetMember == null) {
             EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed("We couldn't find that user in this guild!\n" +

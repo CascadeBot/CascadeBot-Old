@@ -11,12 +11,16 @@ import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
+import com.cascadebot.cascadebot.utils.pagination.Page;
 import com.cascadebot.shared.Regex;
+import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
+
+import java.util.List;
 
 public class UnbanCommand implements ICommandMain {
 
@@ -26,42 +30,28 @@ public class UnbanCommand implements ICommandMain {
             context.replyDanger("Not enough arguments (No specified member)");
             return;
         }
-        String target = context.getMessage(0);
 
-        if (Regex.ID.matcher(target).matches()) {
-            CascadeBot.INS.getShardManager().retrieveUserById(target).queue(user -> {
-                CascadeBot.INS.getModerationManager().unban(
-                        context,
-                        user,
-                        sender,
-                        "Test" // TODO?
-                );
-            }, failure -> {
-                context.replyDanger("Could not find user with ID %s!", target);
-            });
-        } else {
-            try {
-                context.getGuild().getBanList().queue(list -> {
-                    User bannedUser = list.stream()
-                            .map(Guild.Ban::getUser)
-                            .filter(user -> user.getName().equalsIgnoreCase(target) || user.getAsTag().equalsIgnoreCase(target))
-                            .findFirst()
-                            .orElse(null);
-                    if (bannedUser == null) {
-                        context.replyDanger("Could not find a user to unban matching: %s", target);
-                        return;
-                    }
-                    CascadeBot.INS.getModerationManager().unban(
-                            context,
-                            bannedUser,
-                            sender,
-                            "" // TODO?
-                    );
-                });
-            } catch (InsufficientPermissionException e) {
-                context.replyDanger("Cannot get banned user list, missing %s permission!", e.getPermission().getName());
-            }
+        String target = context.getArg(0);
+        String reason = null;
+        if (context.getArgs().length > 1) {
+            reason = context.getMessage(1);
         }
+
+        List<User> bannedUsers = FinderUtil.findBannedUsers(target, context.getGuild());
+
+        if (bannedUsers.size() == 0) {
+            context.replyDanger("Could not find a user to unban matching: %s", target);
+        } else if (bannedUsers.size() == 1) {
+            CascadeBot.INS.getModerationManager().unban(
+                    context,
+                    bannedUsers.get(0),
+                    sender,
+                    reason
+            );
+        } else {
+            context.replyDanger("There is more than one user that matches this criteria! Please enter the ID or the user's full name!");
+        }
+
     }
 
     @Override

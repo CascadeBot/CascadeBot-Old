@@ -38,7 +38,7 @@ public class UserInfoCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         User userForInfo = sender.getUser();
         if (userArg.argExists(context.getArgs(), 0)) {
-            userForInfo = DiscordUtils.getUser(context.getMessage(0), true);
+            userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         }
         if (userForInfo == null) {
             context.replyDanger("Invalid User!");

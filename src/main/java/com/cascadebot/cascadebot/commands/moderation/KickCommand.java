@@ -7,10 +7,13 @@ import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
+import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.HierarchyException;
 import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
+
+import java.util.List;
 
 public class KickCommand implements ICommandMain {
 
@@ -20,7 +23,8 @@ public class KickCommand implements ICommandMain {
             context.replyDanger("Not enough arguments (No specified member)");
             return;
         }
-        Member targetMember = DiscordUtils.getMember(context.getArg(0), context.getGuild());
+
+        Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
 
         if (targetMember == null) {
             context.replyDanger("Could not find that user!");

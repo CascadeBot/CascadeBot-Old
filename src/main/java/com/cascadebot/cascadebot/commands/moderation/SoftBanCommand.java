@@ -19,7 +19,7 @@ public class SoftBanCommand implements ICommandMain {
             return;
         }
 
-        Member targetMember = DiscordUtils.getMember(context.getArg(0), context.getGuild());
+        Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         if (targetMember == null) {
             context.replyDanger("Could not find that user!");
             return;
