@@ -156,6 +156,10 @@ public class CommandListener extends ListenerAdapter {
                     trigger,
                     isMention
             );
+            // We need to check before we process sub-commands so users can't run sub-commands with a null permission
+            if (!isAuthorised(cmd, context)) {
+                return;
+            }
             if (args.length >= 1) {
                 if (processSubCommands(cmd, args, context)) {
                     return;
@@ -179,6 +183,9 @@ public class CommandListener extends ListenerAdapter {
                         parentCommandContext.getTrigger() + " " + args[0],
                         parentCommandContext.isMention()
                 );
+                if (!isAuthorised(cmd, subCommandContext)) {
+                    return false;
+                }
                 return dispatchCommand(subCommand, subCommandContext);
             }
         }
@@ -186,14 +193,6 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private boolean dispatchCommand(final ICommandExecutable command, final CommandContext context) {
-        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
-            if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
-                if (context.getSettings().willShowPermErrors()) {
-                    context.replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
-                }
-            }
-            return false;
-        }
         COMMAND_POOL.submit(() -> {
             CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}",
                     (command instanceof ICommandMain ? "" : "Sub"),
@@ -212,6 +211,18 @@ public class CommandListener extends ListenerAdapter {
             }
         });
         deleteMessages(command, context);
+        return true;
+    }
+
+    private boolean isAuthorised(ICommandExecutable command, CommandContext context) {
+        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
+            if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
+                if (context.getSettings().willShowPermErrors()) {
+                    context.replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
+                }
+            }
+            return false;
+        }
         return true;
     }
 
