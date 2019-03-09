@@ -6,20 +6,14 @@ import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
-import com.cascadebot.cascadebot.messaging.MessageType;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
-import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.exceptions.HierarchyException;
-import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
-import org.apache.commons.lang.ObjectUtils;
 
-import java.util.List;
 import java.util.Set;
 
 public class BanCommand implements ICommandMain {
@@ -75,7 +69,11 @@ public class BanCommand implements ICommandMain {
 
     @Override
     public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("reason", "The reason to ban the user for", ArgumentType.OPTIONAL));
+        return Set.of(Argument.of(
+                "member", "", ArgumentType.REQUIRED, Set.of(
+                        Argument.of("reason", "Bans a member", ArgumentType.OPTIONAL)
+                )
+        ));
     }
 
     @Override

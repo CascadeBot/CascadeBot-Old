@@ -1,14 +1,17 @@
 package com.cascadebot.cascadebot.commands.moderation;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.commandmeta.Argument;
+import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
-import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
+
+import java.util.Set;
 
 public class SoftBanCommand implements ICommandMain {
 
@@ -53,8 +56,18 @@ public class SoftBanCommand implements ICommandMain {
     }
 
     @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.of(
+                "member", "", ArgumentType.REQUIRED, Set.of(
+                        Argument.of("reason", "Soft-bans a member", ArgumentType.OPTIONAL)
+                )
+        ));
+    }
+
+
+    @Override
     public String description() {
-        return "Ban a user";
+        return "Soft-ban a user";
     }
 
 
