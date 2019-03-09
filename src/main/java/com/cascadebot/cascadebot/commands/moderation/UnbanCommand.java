@@ -11,6 +11,7 @@ import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import net.dv8tion.jda.core.Permission;
@@ -38,7 +39,7 @@ public class UnbanCommand implements ICommandMain {
         List<User> bannedUsers = FinderUtil.findBannedUsers(target, context.getGuild());
 
         if (bannedUsers.size() == 0) {
-            context.replyDanger("Could not find a user to unban matching: %s", target);
+            context.replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find a user to unban matching: " + target, context.getUser()));
         } else if (bannedUsers.size() == 1) {
             CascadeBot.INS.getModerationManager().unban(
                     context,
@@ -47,7 +48,8 @@ public class UnbanCommand implements ICommandMain {
                     reason
             );
         } else {
-            context.replyDanger("There is more than one user that matches this criteria! Please enter the ID or the user's full name!");
+            context.replyDanger(MessagingObjects.getStandardMessageEmbed("There is more than one user that matches this criteria!" +
+                    " Please enter the ID or the user's full name!", context.getUser()));
         }
 
     }

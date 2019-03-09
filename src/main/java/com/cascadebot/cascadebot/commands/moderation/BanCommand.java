@@ -10,7 +10,6 @@ import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
@@ -20,19 +19,16 @@ public class BanCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-
         if (context.getArgs().length == 0) {
-            context.replyDanger("Not enough arguments!");
+            context.replyUsage(this);
             return;
         }
 
         Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
 
         if (targetMember == null) {
-            EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed("We couldn't find that user in this guild!\n" +
-                    "To forcibly ban a user not in this guild, use `;forceban`!", sender.getUser());
-            builder.setTitle("Error");
-            context.replyDanger(builder);
+            context.replyDanger(MessagingObjects.getStandardMessageEmbed("We couldn't find that user in this guild!\n" +
+                    "To forcibly ban a user not in this guild, use `;forceban`!", sender.getUser()));
             return;
         }
 
