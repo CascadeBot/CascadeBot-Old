@@ -34,7 +34,6 @@ public final class MessagingObjects {
 
     public static EmbedBuilder getStandardMessageEmbed(String message, User requestedBy) {
         return getClearThreadLocalEmbedBuilder()
-                .setAuthor(CascadeBot.INS.getSelfUser().getName(), null, CascadeBot.INS.getSelfUser().getEffectiveAvatarUrl())
                 .setDescription(message)
                 .setFooter("Requested by " + requestedBy.getAsTag(), requestedBy.getEffectiveAvatarUrl());
     }
