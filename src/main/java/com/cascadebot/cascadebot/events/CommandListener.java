@@ -121,7 +121,7 @@ public class CommandListener extends ListenerAdapter {
                 args.add(input.substring(splitFrom, splitTo));
                 // End of string so do nothing else
             } else if (charAtPos == '"') {
-                if (!inQuotes) {
+                if (!inQuotes && (pos == 0 || input.charAt(pos - 1) == ' ')) {
                     splitFrom += 1; // Start the split after the first quote
                 }
                 inQuotes = !inQuotes;
