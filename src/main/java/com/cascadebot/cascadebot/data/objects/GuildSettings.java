@@ -5,9 +5,21 @@
 
 package com.cascadebot.cascadebot.data.objects;
 
-import com.cascadebot.cascadebot.data.Config;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GuildSettings {
+
+    public static Map<String, Field> VALUES = new HashMap<>();
+
+    static {
+        for (Field field : GuildSettings.class.getDeclaredFields()) {
+            if (field.getName().equals("VALUES")) continue;
+            field.setAccessible(true);
+            VALUES.put(field.getName().toLowerCase(), field);
+        }
+    }
 
     //region Boolean flags
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix

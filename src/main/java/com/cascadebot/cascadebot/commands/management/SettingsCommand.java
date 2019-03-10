@@ -8,58 +8,57 @@ package com.cascadebot.cascadebot.commands.management;
 import com.cascadebot.cascadebot.commandmeta.Argument;
 import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
-import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.data.objects.GuildSettings;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
+import com.cascadebot.cascadebot.utils.PasteUtils;
 import com.cascadebot.cascadebot.utils.Table;
-import com.google.common.collect.Sets;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Set;
 
 public class SettingsCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.replyUsage(this);
-        Field field = Arrays.stream(GuildSettings.class.getDeclaredFields())
-                .filter(f -> f.getName().equalsIgnoreCase(context.getArg(0)))
-                .findFirst()
-                .orElse(null);
+        Field field = GuildSettings.VALUES.get(context.getArg(0).toLowerCase());
 
         if (field != null) {
-            field.setAccessible(true);
             try {
+                String value = context.getArg(1);
                 if (field.getType() == boolean.class) {
-                    field.setBoolean(context.getSettings(), Boolean.valueOf(context.getArg(1)));
+                    boolean booleanValue = Boolean.valueOf(value);
+                    value = String.valueOf(booleanValue);
+                    field.setBoolean(context.getSettings(), booleanValue);
                 } else if (field.getType() == String.class) {
-                    field.set(context.getSettings(), context.getArg(1));
+                    field.set(context.getSettings(), value);
                 } else {
                     return;
                 }
-                context.replySuccess("Setting `%s` has been set to a value of `%s`", field.getName(), context.getArg(1));
+                context.replySuccess("Setting `%s` has been set to a value of `%s`", field.getName(), value);
             } catch (IllegalAccessException e) {
                 context.replyException("Could not access that setting!", e);
             }
         } else if (context.getArg(0).equalsIgnoreCase("list")) {
             Table.TableBuilder tableBuilder = new Table.TableBuilder("Setting", "Current value");
-            Arrays.stream(GuildSettings.class.getDeclaredFields())
-                    .sorted(Comparator.comparing(Field::getName))
-                    .forEach(f -> {
+            GuildSettings.VALUES
+                    .entrySet()
+                    .stream()
+                    .sorted(Comparator.comparing(Map.Entry::getKey))
+                    .map(Map.Entry::getValue)
+                    .forEach((f) -> {
                         try {
-                            f.setAccessible(true);
                             tableBuilder.addRow(f.getName(), String.valueOf(f.get(context.getSettings())));
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
                     });
-            context.reply(tableBuilder.build().toString());
+            PasteUtils.pasteIfLong(tableBuilder.build().toString(), 2000, context::reply);
         } else {
             context.replyDanger("Cannot find that field!");
         }
