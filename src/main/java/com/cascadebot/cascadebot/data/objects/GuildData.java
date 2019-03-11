@@ -184,6 +184,10 @@ public class GuildData {
         return guildID;
     }
 
+    public UUID getStateLock() {
+        return stateLock;
+    }
+
     public GuildSettings getSettings() {
         return guildSettings;
     }
