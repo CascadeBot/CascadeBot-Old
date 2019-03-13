@@ -5,6 +5,7 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
+import com.cascadebot.cascadebot.data.objects.Flags;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import net.dv8tion.jda.core.entities.Member;
 
@@ -23,6 +24,10 @@ public interface ICommandExecutable {
 
     default boolean deleteMessages() {
         return true;
+    }
+
+    default Set<Flags> getFlags() {
+        return Set.of();
     }
 
     /**
