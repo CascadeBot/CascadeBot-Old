@@ -6,7 +6,6 @@
 package com.cascadebot.cascadebot.utils.buttons;
 
 import com.cascadebot.cascadebot.CascadeBot;
-import com.cascadebot.cascadebot.utils.DiscordUtils;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction;
@@ -34,7 +33,7 @@ public class ButtonGroup {
     }
 
     public Member getOwner() {
-        return DiscordUtils.getMember(String.valueOf(ownerId), CascadeBot.INS.getShardManager().getGuildById(guildId)); //TODO util method for getting guild from id
+        return CascadeBot.INS.getShardManager().getGuildById(guildId).getMemberById(ownerId);
     }
 
     public void setMessage(long id) {

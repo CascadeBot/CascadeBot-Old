@@ -6,8 +6,10 @@
 package com.cascadebot.cascadebot.utils;
 
 import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.shared.Regex;
+import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Guild;
@@ -38,27 +40,16 @@ public class DiscordUtils {
      * @return The {@link Member} found or null if no member was found with the search.
      * @throws IllegalArgumentException if search is null or blank.
      */
-    public static Member getMember(String search, Guild guild) {
-        Checks.notBlank(search, "user");
-        Checks.notNull(guild, "guild");
-        String id = getIdFromString(search, Regex.USER_MENTION);
+    public static Member getMember(Guild guild, String search) {
+        List<Member> members = FinderUtil.findMembers(search, guild);
+        Member targetMember = null;
 
-        if (id != null) {
-            User user = getUserById(Long.parseLong(id));
-            if (user != null) {
-                return guild.getMember(user);
-            }
-        }
-
-        List<Member> members = guild.getMembersByEffectiveName(search, true);
-        if (members.size() == 0) {
-            return null;
-        } else if (members.size() == 1) {
-            return members.get(0);
+        if (members.size() > 1) {
+            /*context.replyDanger("There is more than one user that matches this criterion! Please enter the ID or the user's full name!");*/
         } else {
-            //TODO maybe add an option to get users from a group with buttons?
-            return null;
+            targetMember = members.size() != 1 ? null : members.get(0);
         }
+        return targetMember;
     }
 
     /**
@@ -75,13 +66,16 @@ public class DiscordUtils {
      * @return The {@link User} found or null if no user was found with the search.
      * @throws IllegalArgumentException if search is null or blank.
      */
-    public static User getUser(String search, boolean retrieve) {
-        Checks.notBlank(search, "search");
-        String id = getIdFromString(search, Regex.USER_MENTION);
-        if (id == null) return null;
-        User user = getUserById(Long.valueOf(id));
-        if (user == null && retrieve) {
-            user = CascadeBot.INS.getShardManager().retrieveUserById(id).complete();
+    public static User getUser(Guild guild, String search, boolean retrieve) {
+        Checks.notBlank(search, "user");
+        List<User> users = FinderUtil.findUsers(search, guild.getJDA());
+        if (users.size() > 1) {
+            /*context.replyDanger("There is more than one user that matches this criterion! Please enter the ID or the user's full name!");*/
+            return null;
+        }
+        User user = users.size() != 1 ? null : users.get(0);
+        if (user == null && Regex.ID.matcher(search).matches() && retrieve) {
+            user = CascadeBot.INS.getShardManager().retrieveUserById(Long.valueOf(search)).complete();
         }
         return user;
     }
@@ -109,16 +103,8 @@ public class DiscordUtils {
      */
     public static Role getRole(String search, Guild guild) {
         Checks.notBlank(search, "role");
-        String id = getIdFromString(search, Regex.ROLE_MENTION);
 
-        if (id != null) {
-            Role role = guild.getRoleById(id);
-            if (role != null) {
-                return role; //I'm returning here in case for some reasons the role name looks like a id.
-            }
-        }
-
-        List<Role> roles = guild.getRolesByName(search, true);
+        List<Role> roles = FinderUtil.findRoles(search, guild);
         if (roles.size() == 0) {
             return null;
         } else if (roles.size() == 1) {
@@ -170,40 +156,4 @@ public class DiscordUtils {
         return id;
     }
 
-    //region Checks
-
-    /**
-     * Checks if a specific {@link Member} can delete the specified {@link Message}
-     *
-     * @param member  The non-null {@link Member} used to check.
-     * @param message The non-null {@link Message} to check.
-     * @return true if the {@link Member} can delete the {@link Message}, else false.
-     * @throws IllegalArgumentException if member or message are null.
-     */
-    public boolean canDeleteMessage(Member member, Message message) {
-        Checks.notNull(member, "member");
-        Checks.notNull(message, "message");
-        if (message.getChannel().getType().isGuild()) {
-            TextChannel channel = message.getTextChannel();
-            return member.hasPermission(channel, Permission.MESSAGE_MANAGE);
-        } else {
-            return member.getUser().getIdLong() == message.getAuthor().getIdLong();
-        }
-    }
-
-    /**
-     * Checks the permission for the member and channel provided for the context.
-     * Usually this is the channel a command was sent in and the member who send the command.
-     *
-     * @param permissions Non-null and non empty permissions to check.
-     * @return true if the member has all of the specified permissions in the channel.
-     * @throws IllegalArgumentException if permissions are empty or null.
-     * @throws IllegalArgumentException if member is null or not in the same guild.
-     */
-    public static boolean hasPermission(Member member, Channel channel, Permission... permissions) {
-        Checks.notEmpty(permissions, "Permissions");
-        Checks.check(member.getGuild().getIdLong() == channel.getGuild().getIdLong(), "Member and channel need to be in the same guild!");
-        return member.hasPermission(channel, permissions);
-    }
-    //endregion
 }

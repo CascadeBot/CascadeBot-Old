@@ -52,7 +52,19 @@ public class GuildData {
 
     private String prefix = Config.INS.getDefaultPrefix();
 
+
+
+    //region Guild data containers
+
     private GuildSettings guildSettings = new GuildSettings();
+    /*
+        Eventually these will be used but they're commented out for now
+
+        private GuildModeration guildModeration = new GuildModeration();
+        private GuildPermissions guildPermissions = new GuildPermissions();
+    */
+
+    //endregion
 
     //region Transient fields
     @Transient

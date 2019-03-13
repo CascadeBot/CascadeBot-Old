@@ -287,7 +287,6 @@ public class CommandContext {
     }
 
     public void replyUsage(ICommandExecutable command, String parent) {
-
         replyWarning("Incorrect usage. Proper usage:\n" + getUsage(command, parent));
     }
 
