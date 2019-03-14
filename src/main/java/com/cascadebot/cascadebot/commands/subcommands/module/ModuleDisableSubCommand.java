@@ -29,13 +29,14 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
         Module module = EnumUtils.getEnum(Module.class, selectedModule);
 
         if (module != null) {
-            if (!context.getData().isModuleEnabled(module)) {
-                context.replyInfo("The module `%s` is already disabled!", module.toString());
-                return;
-            }
             try {
-                context.getData().disableModule(module);
-                context.replySuccess("The module `%s` has been disabled!", module.toString());
+                if (context.getData().disableModule(module)) {
+                    // If module wasn't already disabled
+                    context.replySuccess("The module `%s` has been disabled!", module.toString());
+                } else {
+                    // If module was already disabled
+                    context.replyInfo("The module `%s` is already disabled!", module.toString());
+                }
             } catch (IllegalArgumentException ex) {
                 context.replyDanger(ex.getMessage());
             }

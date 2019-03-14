@@ -11,6 +11,7 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
+import com.cascadebot.cascadebot.utils.pagination.Page;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
@@ -29,13 +30,14 @@ public class ModuleEnableSubCommand implements ICommandExecutable {
         Module module = EnumUtils.getEnum(Module.class, selectedModule);
 
         if (module != null) {
-            if (context.getData().isModuleEnabled(module)) {
-                context.replyInfo("The module `%s` is already enabled!", module.toString());
-                return;
-            }
             try {
-                context.getData().enableModule(module);
-                context.replySuccess("The module `%s` has been enabled!", module.toString());
+                if (context.getData().enableModule(module)) {
+                    // If the module wasn't enabled
+                    context.replySuccess("The module `%s` has been enabled!", module.toString());
+                } else {
+                    // If the module was enabled
+                    context.replyInfo("The module `%s` is already enabled!", module.toString());
+                }
             } catch (IllegalArgumentException ex) {
                 context.replyDanger(ex.getMessage());
             }
