@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
-import com.cascadebot.cascadebot.data.objects.Flags;
+import com.cascadebot.cascadebot.data.objects.Flag;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import net.dv8tion.jda.core.entities.Member;
 
@@ -26,7 +26,7 @@ public interface ICommandExecutable {
         return true;
     }
 
-    default Set<Flags> getFlags() {
+    default Set<Flag> getFlags() {
         return Set.of();
     }
 

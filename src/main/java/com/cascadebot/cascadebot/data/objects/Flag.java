@@ -5,7 +5,7 @@
 
 package com.cascadebot.cascadebot.data.objects;
 
-public enum Flags {
+public enum Flag {
 
     BETA
 
