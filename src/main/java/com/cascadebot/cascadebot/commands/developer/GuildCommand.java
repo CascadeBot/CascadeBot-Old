@@ -33,6 +33,15 @@ public class GuildCommand implements ICommandRestricted {
     }
 
     @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.of("flag", "", ArgumentType.OPTIONAL,
+                Set.of(
+                        Argument.of("guild_id", "Toggles a flag for this guild [or a different guild].", ArgumentType.OPTIONAL)
+                )
+        ));
+    }
+
+    @Override
     public String command() {
         return "guild";
     }
