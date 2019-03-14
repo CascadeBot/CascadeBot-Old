@@ -6,14 +6,12 @@
 package com.cascadebot.cascadebot.data.objects;
 
 import com.cascadebot.cascadebot.CascadeBot;
-import com.cascadebot.cascadebot.Constants;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import com.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import com.cascadebot.cascadebot.utils.pagination.PageCache;
-import com.cascadebot.shared.Version;
 import com.google.common.collect.Sets;
 import de.bild.codec.annotations.Id;
 import de.bild.codec.annotations.PreSave;
@@ -49,6 +47,7 @@ public class GuildData {
                     Module.INFORMATIONAL
             )
     );
+    private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
     private String prefix = Config.INS.getDefaultPrefix();
 
@@ -165,26 +164,42 @@ public class GuildData {
     //endregion
 
     //region Modules
-    public void enableModule(Module module) {
+    public boolean enableModule(Module module) {
         if (!module.isPublicModule()) {
             throw new IllegalArgumentException("This module is not available to be enabled!");
         }
-        this.enabledModules.add(module);
+        return this.enabledModules.add(module);
     }
 
-    public void disableModule(Module module) {
+    public boolean disableModule(Module module) {
         if (!module.isPublicModule()) {
             throw new IllegalArgumentException("This module is not available to be disabled!");
         } else if (Module.CORE_MODULES.contains(module)) {
             throw new IllegalArgumentException(String.format("Cannot disable the %s module!", module.toString().toLowerCase()));
         }
-        this.enabledModules.remove(module);
+        return this.enabledModules.remove(module);
     }
 
     public boolean isModuleEnabled(Module module) {
         return this.enabledModules.contains(module);
     }
     //endregion
+
+    public boolean enableFlag(Flag flag) {
+        return this.enabledFlags.add(flag);
+    }
+
+    public boolean disableFlag(Flag flag) {
+        return this.enabledFlags.remove(flag);
+    }
+
+    public boolean isFlagEnabled(Flag flag) {
+        return this.enabledFlags.contains(flag);
+    }
+
+    public Set<Flag> getEnabledFlags() {
+        return Set.copyOf(this.enabledFlags);
+    }
 
     public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
