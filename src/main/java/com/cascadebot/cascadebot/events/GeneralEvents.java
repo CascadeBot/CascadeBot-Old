@@ -31,11 +31,7 @@ public class GeneralEvents extends ListenerAdapter {
             Guild guild = event.getGuild();
             guild.getOwner().getUser().openPrivateChannel().queue(privateChannel -> {
                 privateChannel.sendMessage(Config.INS.getGuildWelcomeMessage()).queue();
-            }, error -> {
-                if (guild.getDefaultChannel() != null) {
-                    guild.getDefaultChannel().sendMessage(Config.INS.getGuildWelcomeMessage()).queue();
-                }
-            });
+            }, error -> { /* Do nothing */ });
         }
     }
 
@@ -44,7 +40,7 @@ public class GeneralEvents extends ListenerAdapter {
         if (!StringUtils.isBlank(Config.INS.getGuildGoodbyeMessage())) {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> {
                 privateChannel.sendMessage(Config.INS.getGuildGoodbyeMessage()).queue();
-            });
+            }, error -> { /* Do nothing */ });
         }
     }
 
