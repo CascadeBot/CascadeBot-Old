@@ -5,6 +5,8 @@
 
 package com.cascadebot.cascadebot.commandmeta;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Collections;
 import java.util.Set;
 
@@ -20,11 +22,7 @@ public class Argument {
         this.arg = arg.toLowerCase(); //This probably isn't needed but megh
         this.description = description;
         this.subArgs = Collections.unmodifiableSet(subArgs);
-        if (subArgs.size() > 0) {
-            this.type = ArgumentType.COMMAND;
-        } else {
-            this.type = type;
-        }
+        this.type = type;
         this.aliases = Collections.unmodifiableSet(aliases);
     }
 
@@ -52,13 +50,17 @@ public class Argument {
         return new Argument(arg, description, subArgs, ArgumentType.COMMAND, aliases);
     }
 
+    public static Argument of(String arg, String description, ArgumentType type, Set<Argument> subArgs) {
+        return new Argument(arg, description, subArgs, type, Set.of());
+    }
+
     /**
      * Gets the usage string.
-     *
+     * <p>
      * Formatting:
-     *  - Aliased arguments are shown as {@code <alias1/alias2>} for as many aliases as the argument has.
-     *  - A required parameter is show as {@code <argument>}
-     *  - An optional parameter is show as {@code [argument]}
+     * - Aliased arguments are shown as {@code <alias1/alias2>} for as many aliases as the argument has.
+     * - A required parameter is show as {@code <argument>}
+     * - An optional parameter is show as {@code [argument]}
      *
      * @param base The base command/prefix to use. Example: ';help '.
      * @return A string representing the usage.
@@ -66,39 +68,15 @@ public class Argument {
     protected String getUsageString(String base) {
         StringBuilder usageBuilder = new StringBuilder();
         if (subArgs.size() > 0) {
-            String field = arg;
-            if(aliases.size() > 0) {
-                StringBuilder fieldBuilder = new StringBuilder();
-                fieldBuilder.append("<").append(field);
-                for(String alias : aliases) {
-                    fieldBuilder.append("/").append(alias);
-                }
-                fieldBuilder.append(">");
-                field = fieldBuilder.toString();
-            } else {
-                if (!description.isBlank()) {
-                    usageBuilder.append("`").append(base).append(arg).append("` - ").append(description).append('\n');
-                }
+            String field = this.toString();
+            if (!StringUtils.isBlank(description) && (subArgs.isEmpty() || subArgs.stream().allMatch(argument -> argument.getType() == ArgumentType.OPTIONAL))) {
+                usageBuilder.append("`").append(base).append(arg).append("` - ").append(description).append('\n');
             }
             for (Argument subArg : subArgs) {
                 usageBuilder.append(subArg.getUsageString(base + field + " "));
             }
         } else {
-            String param = arg;
-            if(aliases.size() > 0) {
-                StringBuilder paramBuilder = new StringBuilder();
-                paramBuilder.append(param);
-                for(String alias : aliases) {
-                    paramBuilder.append("/").append(alias);
-                }
-                param = paramBuilder.toString();
-            }
-            if (type.equals(ArgumentType.OPTIONAL)) {
-                param = "[" + param + "]";
-            } else if (type.equals(ArgumentType.REQUIRED)) {
-                param = "<" + param + ">";
-            }
-            usageBuilder.append("`").append(base).append(param).append("`");
+            usageBuilder.append("`").append(base).append(this.toString()).append("`");
             if (!description.isBlank()) {
                 usageBuilder.append(" - ").append(description);
             }
@@ -116,22 +94,22 @@ public class Argument {
      * @return If the argument exists at that position.
      */
     public boolean argExists(String[] args, int pos) {
-        if(args.length <= pos) {
+        if (args.length <= pos) {
             return false;
         }
-        if(type.equals(ArgumentType.REQUIRED)) {
+        if (type.equals(ArgumentType.REQUIRED)) {
             return true;
         }
-        if(!args[pos].equalsIgnoreCase(arg) && !this.type.equals(ArgumentType.OPTIONAL)) {
-            for(String alias : aliases) {
-                if(!args[pos].equalsIgnoreCase(alias)) {
+        if (!args[pos].equalsIgnoreCase(arg) && !this.type.equals(ArgumentType.OPTIONAL)) {
+            for (String alias : aliases) {
+                if (!args[pos].equalsIgnoreCase(alias)) {
                     return false;
                 }
             }
         }
-        if(this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.description.isEmpty()) {
-            for(Argument sub : this.subArgs) {
-                if(sub.type.equals(ArgumentType.REQUIRED) || sub.type.equals(ArgumentType.COMMAND)) {
+        if (this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.description.isEmpty()) {
+            for (Argument sub : this.subArgs) {
+                if (sub.type.equals(ArgumentType.REQUIRED) || sub.type.equals(ArgumentType.COMMAND)) {
                     return sub.argExists(args, pos + 1);
                 }
             }
@@ -139,8 +117,38 @@ public class Argument {
         return true;
     }
 
+    public String getArg() {
+        return arg;
+    }
+
     public Set<Argument> getSubArgs() {
         return subArgs;
+    }
+
+    public ArgumentType getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        String argument = arg;
+        if (aliases.size() > 0) {
+            StringBuilder paramBuilder = new StringBuilder();
+            paramBuilder.append(argument);
+            for (String alias : aliases) {
+                paramBuilder.append("|").append(alias);
+            }
+            argument = paramBuilder.toString();
+        }
+        switch (type) {
+            case OPTIONAL:
+                argument = "[" + argument + "]";
+                break;
+            case REQUIRED:
+                argument = "<" + argument + ">";
+                break;
+        }
+        return argument;
     }
 
     public boolean argEquals(String arg) {

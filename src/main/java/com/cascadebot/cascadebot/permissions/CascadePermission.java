@@ -55,6 +55,9 @@ public class CascadePermission {
         return new CascadePermission(label, permission, defaultPerm, null, discordPerm);
     }
 
+    public String getLabel() {
+        return label;
+    }
 
     public String getPermissionNode() {
         return permission;

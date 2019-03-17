@@ -7,6 +7,7 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
 import net.dv8tion.jda.core.Permission;
@@ -14,7 +15,7 @@ import net.dv8tion.jda.core.entities.Member;
 
 import java.util.Set;
 
-public class KickCommand implements ICommandMain {
+public class BanCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -26,51 +27,54 @@ public class KickCommand implements ICommandMain {
         Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
 
         if (targetMember == null) {
-            context.replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find that user!", context.getUser()));
+            context.replyDanger(MessagingObjects.getStandardMessageEmbed("We couldn't find that user in this guild!\n" +
+                    "To forcibly ban a user not in this guild, use `;forceban`!", sender.getUser()));
             return;
         }
 
         String reason = null;
-        if (context.getArgs().length > 1) {
+
+        if (context.getArgs().length >= 2) {
             reason = context.getMessage(1);
         }
 
-        CascadeBot.INS.getModerationManager().kick(
+        CascadeBot.INS.getModerationManager().ban(
                 context,
-                targetMember,
+                ModAction.BAN,
+                targetMember.getUser(),
                 sender,
-                reason
+                reason,
+                7 // TODO: add this as an arg
         );
     }
 
     @Override
-    public String command() {
-        return "kick";
+    public Module getModule() {
+        return Module.MODERATION;
     }
 
     @Override
-    public CascadePermission getPermission() {
-        return CascadePermission.of("Kick Command", "kick",
-                true, Permission.KICK_MEMBERS);
+    public String command() {
+        return "ban";
     }
 
     @Override
     public String description() {
-        return "Kick a user";
+        return "Bans people I guess ;)";
     }
 
     @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of(
                 "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Kicks a member", ArgumentType.OPTIONAL)
+                        Argument.of("reason", "Bans a member", ArgumentType.OPTIONAL)
                 )
         ));
     }
 
     @Override
-    public Module getModule() {
-        return Module.MODERATION;
+    public CascadePermission getPermission() {
+        return CascadePermission.of("Ban command", "ban", false, Permission.BAN_MEMBERS);
     }
 
 }

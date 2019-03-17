@@ -22,8 +22,7 @@ public final class GuildDataMapper {
     public static final String COLLECTION = "guilds";
 
     private static LoadingCache<Long, GuildData> guilds = Caffeine.newBuilder()
-            .refreshAfterWrite(5, TimeUnit.MINUTES)
-            .expireAfterAccess(10, TimeUnit.MINUTES)
+            .expireAfterAccess(5, TimeUnit.MINUTES)
             .removalListener(new GuildSaveListener())
             .build(id -> {
                 GuildData dbData = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("_id", id)).first();

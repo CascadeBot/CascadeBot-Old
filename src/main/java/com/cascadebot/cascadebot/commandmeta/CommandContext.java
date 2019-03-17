@@ -8,6 +8,7 @@ package com.cascadebot.cascadebot.commandmeta;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.Config;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.data.objects.GuildSettings;
 import com.cascadebot.cascadebot.messaging.Messaging;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
@@ -67,6 +68,10 @@ public class CommandContext {
 
     public GuildData getData() {
         return data;
+    }
+
+    public GuildSettings getSettings() {
+        return data.getSettings();
     }
 
     public JDA getJDA() {
@@ -164,7 +169,7 @@ public class CommandContext {
 
     public void replyInfo(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendInfoMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendInfoMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyInfo(String message, Object... objects) {
@@ -173,12 +178,12 @@ public class CommandContext {
 
     public void replyInfo(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendInfoMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendInfoMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replySuccess(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendSuccessMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendSuccessMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replySuccess(String message, Object... objects) {
@@ -187,12 +192,12 @@ public class CommandContext {
 
     public void replySuccess(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendSuccessMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendSuccessMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyWarning(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendWarningMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendWarningMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyWarning(String message, Object... objects) {
@@ -201,12 +206,12 @@ public class CommandContext {
 
     public void replyWarning(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendWarningMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendWarningMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyModeration(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendModerationMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendModerationMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyModeration(String message, Object... objects) {
@@ -215,12 +220,12 @@ public class CommandContext {
 
     public void replyModeration(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendModerationMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendModerationMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyDanger(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendDangerMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), data.getUseEmbedForMessages());
+        Messaging.sendDangerMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
     }
 
     public void replyDanger(String message, Object... objects) {
@@ -229,7 +234,7 @@ public class CommandContext {
 
     public void replyDanger(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendDangerMessage(channel, builder, data.getUseEmbedForMessages());
+        Messaging.sendDangerMessage(channel, builder, getSettings().useEmbedForMessages());
     }
 
     public void replyException(String message, Throwable throwable) {
@@ -241,7 +246,7 @@ public class CommandContext {
     }
 
     public MessageAction replyImage(String url) {
-        if (getData().getUseEmbedForMessages()) {
+        if (getSettings().useEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setImage(url);
             return channel.sendMessage(embedBuilder.build());
@@ -256,8 +261,8 @@ public class CommandContext {
 
     public String getUsage(ICommandExecutable command, String parent) {
         Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
-        if(command instanceof ICommandMain) {
-            for (ICommandExecutable subCommand : ((ICommandMain)command).getSubCommands()) {
+        if (command instanceof ICommandMain) {
+            for (ICommandExecutable subCommand : ((ICommandMain) command).getSubCommands()) {
                 arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
             }
         }
@@ -265,15 +270,15 @@ public class CommandContext {
         Argument parentArg = Argument.of(command.command(), command.description(), arguments);
 
         int levels = 0;
-        for(String arg : args) {
-            levels ++;
+        for (String arg : args) {
+            levels++;
             Argument argument = getArgFromSet(parentArg.getSubArgs(), arg);
-            if(argument != null) {
+            if (argument != null) {
                 parentArg = argument;
             }
         }
 
-        String commandString = data.getCommandPrefix() + (parent == null ? "" : parent + " ") + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
+        String commandString = data.getPrefix() + (parent == null ? "" : parent + " ") + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
         return parentArg.getUsageString(commandString);
     }
 
@@ -282,13 +287,12 @@ public class CommandContext {
     }
 
     public void replyUsage(ICommandExecutable command, String parent) {
-
         replyWarning("Incorrect usage. Proper usage:\n" + getUsage(command, parent));
     }
 
     private Argument getArgFromSet(Set<Argument> arguments, String arg) {
-        for(Argument argument : arguments) {
-            if(argument.argStartsWith(arg)) {
+        for (Argument argument : arguments) {
+            if (argument.argStartsWith(arg)) {
                 return argument;
             }
         }
@@ -379,7 +383,7 @@ public class CommandContext {
      * @return The bot's {@link Member} for this guild.
      */
     public Member getSelfMember() {
-        return guild.getMember(jda.getSelfUser());
+        return guild.getMember(getSelfUser());
     }
 
     /**

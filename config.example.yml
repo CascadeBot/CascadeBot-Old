@@ -19,6 +19,17 @@
 # Whether to output DEBUG messages to STDOUT
 debug: false
 
+# This is the message that will either be DMed to the guild owner
+# or posted in the first text channel whichever comes first.
+guild_welcome: |-
+  Thank you for adding CascadeBot!
+
+# This is the message that will be DMed to the guild owner
+# when we are removed from a guild.
+guild_goodbye: |-
+  We're sorry that this is goodbye! We hope we see you again soon :(
+  If you have a moment, please let us know what we did wrong here: <insert form link>
+
 # REQUIRED
 # The token and client ID for the bot, kinda self explanatory...
 bot:

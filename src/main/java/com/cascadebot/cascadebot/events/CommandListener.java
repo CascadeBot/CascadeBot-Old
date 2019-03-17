@@ -26,9 +26,11 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class CommandListener extends ListenerAdapter {
 
@@ -37,11 +39,15 @@ public class CommandListener extends ListenerAdapter {
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newFixedThreadPool(5, r ->
             new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
 
+    private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
+
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
 
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
+        message = MULTIQUOTE_REGEX.matcher(message).replaceAll("");
+
         GuildData guildData;
         try {
             guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
@@ -54,7 +60,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String prefix = guildData.getCommandPrefix();
+        String prefix = guildData.getPrefix();
         boolean isMention = false;
 
         String commandWithArgs;
@@ -63,20 +69,18 @@ public class CommandListener extends ListenerAdapter {
 
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-            trigger = commandWithArgs.split(" ")[0]; // Get first string before a space
-            args = ArrayUtils.remove(commandWithArgs.split(" "), 0); // Remove the command portion of the string
-        } else if (guildData.isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
+        } else if (guildData.getSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
             commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
-            trigger = commandWithArgs.split(" ")[0];
-            args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
             isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getCommandPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
-            trigger = commandWithArgs.split(" ")[0];
-            args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
         } else {
             return;
         }
+
+        trigger = commandWithArgs.split(" ")[0];
+        commandWithArgs = commandWithArgs.substring(trigger.length()).trim();
+        args = splitArgs(commandWithArgs);
 
         try {
             processCommands(event, guildData, trigger, args, isMention);
@@ -87,7 +91,43 @@ public class CommandListener extends ListenerAdapter {
                     new CommandException(e, event.getGuild(), trigger));
             return;
         }
+    }
 
+    public String[] splitArgs(String input) {
+        // Allow ' and " to be treated equally #quoteshavefeelingstoo
+        input = input.replace("'", "\"");
+        boolean inQuotes = false; // Whether the current position is surrounded by quotes or not
+        int splitFrom = 0; // We initially start the first split from 0 to the first space
+        var args = new ArrayList<String>();
+        for (int pos = 0; pos < input.length(); pos++) {
+            char charAtPos = input.charAt(pos);
+            if (charAtPos == ' ') {
+                int splitTo = pos;
+                // If there is a quote to close this
+                if (inQuotes && (input.substring(pos).contains("\""))) {
+                    continue;
+                }
+                if (input.charAt(pos - 1) == '"') {
+                    splitTo = pos - 1; // If we are splitting after a quote, don't include the quote in the split
+                }
+                args.add(input.substring(splitFrom, splitTo));
+                splitFrom = pos + 1; // Set the next split start to be after
+            } else if (pos == input.length() - 1) {
+                int splitTo = input.length();
+                // If the end character is a quote, we want to "split" before the quote to no include it.
+                if (input.charAt(pos) == '"') {
+                    splitTo = pos;
+                }
+                args.add(input.substring(splitFrom, splitTo));
+                // End of string so do nothing else
+            } else if (charAtPos == '"') {
+                if (!inQuotes && (pos == 0 || input.charAt(pos - 1) == ' ')) {
+                    splitFrom += 1; // Start the split after the first quote
+                }
+                inQuotes = !inQuotes;
+            }
+        }
+        return args.toArray(String[]::new);
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
@@ -95,12 +135,12 @@ public class CommandListener extends ListenerAdapter {
         if (cmd != null) {
             if (cmd.getModule().isPublicModule() &&
                     !guildData.isModuleEnabled(cmd.getModule())) {
-                if (guildData.willDisplayModuleErrors() || Environment.isDevelopment()) {
+                if (guildData.getSettings().willDisplayModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     builder.setDescription(String.format("The module `%s` for command `%s` is disabled!", cmd.getModule().toString(), trigger));
                     builder.setTimestamp(Instant.now());
                     builder.setFooter("Requested by " + event.getAuthor().getAsTag(), event.getAuthor().getEffectiveAvatarUrl());
-                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getUseEmbedForMessages());
+                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getSettings().useEmbedForMessages());
                 }
                 // TODO: Modlog?
                 return;
@@ -116,6 +156,10 @@ public class CommandListener extends ListenerAdapter {
                     trigger,
                     isMention
             );
+            // We need to check before we process sub-commands so users can't run sub-commands with a null permission
+            if (!isAuthorised(cmd, context)) {
+                return;
+            }
             if (args.length >= 1) {
                 if (processSubCommands(cmd, args, context)) {
                     return;
@@ -139,6 +183,9 @@ public class CommandListener extends ListenerAdapter {
                         parentCommandContext.getTrigger() + " " + args[0],
                         parentCommandContext.isMention()
                 );
+                if (!isAuthorised(cmd, subCommandContext)) {
+                    return false;
+                }
                 return dispatchCommand(subCommand, subCommandContext);
             }
         }
@@ -146,14 +193,6 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private boolean dispatchCommand(final ICommandExecutable command, final CommandContext context) {
-        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
-            if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
-                if (context.getData().willDisplayPermissionErrors()) {
-                    context.replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
-                }
-            }
-            return false;
-        }
         COMMAND_POOL.submit(() -> {
             CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}",
                     (command instanceof ICommandMain ? "" : "Sub"),
@@ -175,8 +214,20 @@ public class CommandListener extends ListenerAdapter {
         return true;
     }
 
+    private boolean isAuthorised(ICommandExecutable command, CommandContext context) {
+        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
+            if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
+                if (context.getSettings().willShowPermErrors()) {
+                    context.replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
+                }
+            }
+            return false;
+        }
+        return true;
+    }
+
     private void deleteMessages(ICommandExecutable command, CommandContext context) {
-        if (context.getData().willDeleteCommandMessages() && command.deleteMessages()) {
+        if (context.getSettings().willDeleteCommand() && command.deleteMessages()) {
             if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
                 context.getMessage().delete().queue();
             } else {
