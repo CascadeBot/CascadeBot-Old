@@ -66,6 +66,9 @@ public class Config {
 
     private int shardNum;
 
+    private String guildWelcomeMessage;
+    private String guildGoodbyeMessage;
+
     private long officialServerId;
 
     private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
@@ -152,6 +155,9 @@ public class Config {
             LOG.warn("There is no official server specified! Role checking will not work!");
             officialServerId = -1L;
         }
+
+        this.guildWelcomeMessage = config.getString("guild_welcome");
+        this.guildGoodbyeMessage = config.getString("guild_goodbye");
 
         this.prettyJson = config.getBoolean("pretty_json", false);
 
@@ -295,6 +301,14 @@ public class Config {
 
     public long getOfficialServerId() {
         return officialServerId;
+    }
+
+    public String getGuildWelcomeMessage() {
+        return guildWelcomeMessage;
+    }
+
+    public String getGuildGoodbyeMessage() {
+        return guildGoodbyeMessage;
     }
 
     public Auth getAuth() {
