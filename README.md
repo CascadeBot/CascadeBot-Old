@@ -4,7 +4,7 @@ CascadeBot runs on JDK 11 to have the latest features available to provide the b
 
 ### Project Owners
 
-Lots of talented developers have put work into CascadeBot, although the three main owners have put incredible amounts of work into CascadeBot, getting it to the stage it is now. Here's some more information about them:
+Lots of talented developers have put work into CascadeBot, although the three main owners have put incredible amounts of work into it, getting it to the stage it is now. Here's some more information about them:
 
  - [BinaryOverload](https://github.com/binaryoverload) (BinaryOverload#2382)
  - [mrjvs](https://github.com/mrjvs) (mrjvs#2165) 
