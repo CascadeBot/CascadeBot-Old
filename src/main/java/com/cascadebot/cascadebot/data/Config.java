@@ -6,8 +6,11 @@
 package com.cascadebot.cascadebot.data;
 
 import ch.qos.logback.classic.Level;
+import club.minnced.discord.webhook.WebhookClient;
+import club.minnced.discord.webhook.WebhookClientBuilder;
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.ShutdownHandler;
+import com.cascadebot.cascadebot.messaging.NoOpWebhookClient;
 import com.cascadebot.cascadebot.music.MusicHandler;
 import com.cascadebot.cascadebot.utils.LogbackUtils;
 import com.cascadebot.shared.Auth;
@@ -15,6 +18,7 @@ import com.cascadebot.shared.SecurityLevel;
 import com.google.common.collect.HashMultimap;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,6 +46,8 @@ public class Config {
     private File config;
 
     private boolean debug;
+
+    private WebhookClient eventWebhook;
 
     private Auth auth;
 
@@ -110,6 +116,14 @@ public class Config {
             LOG.info("Debug mode enabled!");
             LogbackUtils.setAppenderLevel("STDOUT", Level.DEBUG);
             LogbackUtils.setLoggerLevel("org.mongodb.driver.cluster", Level.DEBUG);
+        }
+
+        if (!StringUtils.isBlank(config.getString("event_webhook"))) {
+            try {
+                this.eventWebhook = new WebhookClientBuilder(config.getString("event_webhook")).build();
+            } catch (IllegalArgumentException e) {
+                // Ignored, this is if the webhook URL is invalid.
+            }
         }
 
         this.botID = config.getLong("bot.id", -1);
@@ -220,7 +234,6 @@ public class Config {
         }
 
         LOG.info("Finished loading configuration!");
-        LOG.debug("Configuration: {}", new GsonBuilder().create().toJson(this)); // Need to create new GSON as global GSON hasn't been build yet
 
     }
 
@@ -233,6 +246,13 @@ public class Config {
         } else {
             return object;
         }
+    }
+
+    public WebhookClient getEventWebhook() {
+        if (eventWebhook == null) {
+            return new NoOpWebhookClient();
+        }
+        return eventWebhook;
     }
 
     public String getBotToken() {

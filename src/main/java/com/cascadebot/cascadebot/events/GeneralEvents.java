@@ -7,6 +7,7 @@ package com.cascadebot.cascadebot.events;
 
 import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.data.Config;
+import com.cascadebot.cascadebot.messaging.MessageType;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -22,6 +23,9 @@ public class GeneralEvents extends ListenerAdapter {
         ShardManager shardManager = CascadeBot.INS.getShardManager();
         if (shardManager.getShards().size() == shardManager.getShardsTotal()) {
             CascadeBot.INS.run();
+            Config.INS.getEventWebhook().send(
+                    MessageType.SUCCESS.getEmoji() + " All shards ready!"
+            );
         }
     }
 
