@@ -87,7 +87,7 @@ public class ModerationManager {
         } catch (InsufficientPermissionException e) {
             context.replyDanger("Cannot %s user %s, missing `%s` permission!", action, target.getAsTag(), e.getPermission().getName());
         } catch (HierarchyException e) {
-            if (context.getGuild().getOwner().getUser().getIdLong() == target.getIdLong()) {
+            if (context.getGuild().getOwner().getUser().equals(target)){
                 context.replyDanger("Cannot %s user %s as they are the owner of the guild!", action, target.getAsTag());
             } else {
                 context.replyDanger("Cannot %s user %s the top role they have is higher than mine!", action, target.getAsTag());
