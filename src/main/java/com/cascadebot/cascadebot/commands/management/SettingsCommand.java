@@ -26,6 +26,11 @@ public class SettingsCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        if (context.getArgs().length == 0) {
+            context.replyUsage(this);
+            return;
+        }
+
         Field field = GuildSettings.VALUES.get(context.getArg(0).toLowerCase());
 
         if (field != null) {
