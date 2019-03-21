@@ -28,6 +28,7 @@ import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,6 +95,12 @@ public class CascadeBot {
             ShutdownHandler.exitWithError();
             return;
         }
+
+        // Sends a message to break up the status log flow to see what events apply to each bot run
+        Config.INS.getEventWebhook().send(
+                "\u200B\n" +
+                        StringUtils.repeat("-", 30) + " BOT RESTART " + StringUtils.repeat("-", 30) + "\n" +
+                        "\u200B");
 
         SentryClient client = Sentry.getStoredClient();
         client.setEnvironment(Environment.isDevelopment() ? "development" : "production");
