@@ -77,7 +77,7 @@ public class Argument {
             }
         } else {
             usageBuilder.append("`").append(base).append(this.toString()).append("`");
-            if (!description.isBlank()) {
+            if (!StringUtils.isBlank(description)) {
                 usageBuilder.append(" - ").append(description);
             }
             usageBuilder.append('\n');
