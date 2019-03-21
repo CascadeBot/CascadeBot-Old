@@ -162,6 +162,10 @@ public class FormatUtils {
         return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
 
+    public static <T extends Enum> String formatEnum(T theEnum) {
+        return StringUtils.capitalize(theEnum.name().toLowerCase().replace("_", " "));
+    }
+
     /**
      * Rounds number to a specified number of decimal places
      *

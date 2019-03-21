@@ -19,6 +19,9 @@
 # Whether to output DEBUG messages to STDOUT
 debug: false
 
+# The webhook to send important bot update events to
+event_webhook:
+
 # This is the message that will either be DMed to the guild owner
 # or posted in the first text channel whichever comes first.
 guild_welcome: |-

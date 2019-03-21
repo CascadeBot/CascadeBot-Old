@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
 package com.cascadebot.cascadebot.commands.developer;
 
 import com.cascadebot.cascadebot.CascadeBot;
@@ -7,6 +12,7 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.commandmeta.Module;
+import com.cascadebot.cascadebot.commands.subcommands.guild.GuildLeaveSubCommand;
 import com.cascadebot.cascadebot.commands.subcommands.guild.GuildSaveSubCommand;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.Flag;
@@ -77,7 +83,7 @@ public class GuildCommand implements ICommandRestricted {
 
     @Override
     public Set<ICommandExecutable> getSubCommands() {
-        return Set.of(new GuildSaveSubCommand());
+        return Set.of(new GuildSaveSubCommand(), new GuildLeaveSubCommand());
     }
 
     @Override

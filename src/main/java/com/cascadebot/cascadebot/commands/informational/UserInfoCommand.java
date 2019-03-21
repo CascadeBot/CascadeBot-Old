@@ -50,7 +50,7 @@ public class UserInfoCommand implements ICommandMain {
         String statusName = "";
 
         if (member != null) {
-            statusName = StringUtils.capitalize(member.getOnlineStatus().toString().replace("_", " ").toLowerCase());
+            statusName = FormatUtils.formatEnum(member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
                 statusName = "Streaming";
@@ -80,7 +80,7 @@ public class UserInfoCommand implements ICommandMain {
             Game game = member.getGame();
             if (game != null) {
                 String gameStatus;
-                String gameType = StringUtils.capitalize(game.getType().toString().toLowerCase());
+                String gameType = FormatUtils.formatEnum(game.getType());
                 switch (game.getType()) {
                     case LISTENING:
                         gameType += " to";
