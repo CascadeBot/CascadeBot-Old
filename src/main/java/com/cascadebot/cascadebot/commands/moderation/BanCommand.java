@@ -41,17 +41,19 @@ public class BanCommand implements ICommandMain {
         User targetUser;
         String reason = null;
 
+        if (context.getArgs().length >= 2) {
+            reason = context.getMessage(1);
+        }
+
         if (targetMember == null) {
-            targetUser = CascadeBot.INS.getShardManager().retrieveUserById(context.getGuild().getId());
+            targetUser = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         } else {
             targetUser = targetMember.getUser();
         }
 
-        String reason = null;
-        context.reply("targetUser" + targetUser);
-        context.reply("targetMember" + targetMember);
         if (targetMember == null) {
             if (!ConfirmUtils.hasConfirmedAction("forceban_user", sender.getUser().getIdLong())) {
+                String finalReason = reason;
                 ConfirmUtils.confirmAction(
                         sender.getUser().getIdLong(),
                         "forceban_user",
@@ -67,15 +69,11 @@ public class BanCommand implements ICommandMain {
                                         ModAction.FORCE_BAN,
                                         targetUser,
                                         sender,
-                                        reason,
+                                        finalReason,
                                         7 // TODO: add this as an arg
                                 );
                             }
                         });
-
-            if (context.getArgs().length >= 2) {
-                reason = context.getMessage(1);
-            }
 
             if (targetMember == null) {
                 return;
@@ -88,12 +86,8 @@ public class BanCommand implements ICommandMain {
                     sender,
                     reason,
                     7 // TODO: add this as an arg
-            );
+            ); }
         }
-
-
-
-
     }
 
     @Override
