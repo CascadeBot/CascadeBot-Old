@@ -10,7 +10,7 @@ public enum ModAction {
     BAN("banned"), // Bans a user
     UNBAN("unbanned"), // Unbans a user
     SOFT_BAN("soft-banned"), // Bans a user then unbans them, clears messages without actually banning them
-    FORCE_BAN("force-banned"), // Bans a user in a guild, even if the user isn't in the guild
+    FORCE_BAN("forcefully banned"), // Bans a user in a guild, even if the user isn't in the guild
     KICK("kicked"), // Kicks a user from a guild
     MUTE("muted"), // Mutes a user in a guild
     WARN("warned"); // Warns a user in a guild
