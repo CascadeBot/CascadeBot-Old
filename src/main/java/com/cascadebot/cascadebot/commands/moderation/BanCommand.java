@@ -54,7 +54,7 @@ public class BanCommand implements ICommandMain {
                         context.getChannel(),
                         MessageType.DANGER,
                         "**We couldn't find that user in this guild!** \n" +
-                                "If you would like to forceban them, please react to this message!",
+                                "If you would like to forcefully ban them, please react to this message!",
                         new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
