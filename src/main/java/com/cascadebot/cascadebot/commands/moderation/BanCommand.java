@@ -51,43 +51,38 @@ public class BanCommand implements ICommandMain {
         }
 
         if (targetMember == null) {
-            if (!ConfirmUtils.hasConfirmedAction("forceban_user", sender.getUser().getIdLong())) {
-                String finalReason = reason;
-                ConfirmUtils.confirmAction(
-                        sender.getUser().getIdLong(),
-                        "forceban_user",
-                        context.getChannel(),
-                        MessageType.DANGER,
-                        "**We couldn't find that user in this guild!** \n" +
-                                "If you would like to forcefully ban them, please react to this message!",
-                        new ConfirmUtils.ConfirmRunnable() {
-                            @Override
-                            public void execute() {
-                                CascadeBot.INS.getModerationManager().ban(
-                                        context,
-                                        ModAction.FORCE_BAN,
-                                        targetUser,
-                                        sender,
-                                        finalReason,
-                                        7 // TODO: add this as an arg
-                                );
-                            }
-                        });
-
-                if (targetMember == null) {
-                    return;
-                }
-
-                CascadeBot.INS.getModerationManager().ban(
-                        context,
-                        ModAction.BAN,
-                        targetMember.getUser(),
-                        sender,
-                        reason,
-                        7 // TODO: add this as an arg
-                );
-            }
+            String finalReason = reason;
+            ConfirmUtils.confirmAction(
+                    sender.getUser().getIdLong(),
+                    "forceban_user",
+                    context.getChannel(),
+                    MessageType.DANGER,
+                    "**We couldn't find that user in this guild!** \n" +
+                            "If you would like to forcefully ban them, please react to this message!",
+                    new ConfirmUtils.ConfirmRunnable() {
+                        @Override
+                        public void execute() {
+                            CascadeBot.INS.getModerationManager().ban(
+                                    context,
+                                    ModAction.FORCE_BAN,
+                                    targetUser,
+                                    sender,
+                                    finalReason,
+                                    7 // TODO: add this as an arg
+                            );
+                        }
+                    });
         }
+
+        CascadeBot.INS.getModerationManager().ban(
+                context,
+                ModAction.BAN,
+                targetMember.getUser(),
+                sender,
+                reason,
+                7 // TODO: add this as an arg
+        );
+
     }
 
     @Override
