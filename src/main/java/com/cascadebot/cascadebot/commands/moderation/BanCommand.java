@@ -75,18 +75,19 @@ public class BanCommand implements ICommandMain {
                             }
                         });
 
-            if (targetMember == null) {
-                return;
-            }
+                if (targetMember == null) {
+                    return;
+                }
 
-            CascadeBot.INS.getModerationManager().ban(
-                    context,
-                    ModAction.BAN,
-                    targetMember.getUser(),
-                    sender,
-                    reason,
-                    7 // TODO: add this as an arg
-            ); }
+                CascadeBot.INS.getModerationManager().ban(
+                        context,
+                        ModAction.BAN,
+                        targetMember.getUser(),
+                        sender,
+                        reason,
+                        7 // TODO: add this as an arg
+                );
+            }
         }
     }
 
@@ -102,14 +103,14 @@ public class BanCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Bans people I guess ;)";
+        return "Bans and forcebans people I guess ;)";
     }
 
     @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of(
                 "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Bans a member", ArgumentType.OPTIONAL)
+                        Argument.of("reason", "Bans/forcebans a member", ArgumentType.OPTIONAL)
                 )
         ));
     }
