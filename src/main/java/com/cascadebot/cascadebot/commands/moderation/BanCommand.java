@@ -45,6 +45,11 @@ public class BanCommand implements ICommandMain {
             targetUser = targetMember.getUser();
         }
 
+        if (targetUser == null) {
+            context.replyDanger("We could not find that user!");
+            return;
+        }
+
         if (targetMember == null) {
             if (!ConfirmUtils.hasConfirmedAction("forceban_user", sender.getUser().getIdLong())) {
                 String finalReason = reason;
