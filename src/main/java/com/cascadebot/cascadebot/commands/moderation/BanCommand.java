@@ -110,7 +110,7 @@ public class BanCommand implements ICommandMain {
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of(
                 "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Bans/forcebans a member", ArgumentType.OPTIONAL)
+                        Argument.of("reason", "Bans a member and can optionally forcefully ban a user", ArgumentType.OPTIONAL)
                 )
         ));
     }
