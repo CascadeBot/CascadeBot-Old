@@ -12,21 +12,15 @@ import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandMain;
 import com.cascadebot.cascadebot.commandmeta.Module;
 import com.cascadebot.cascadebot.messaging.MessageType;
-import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.ConfirmUtils;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
-import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.exceptions.HierarchyException;
-import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
 
 public class BanCommand implements ICommandMain {
 
