@@ -70,18 +70,6 @@ public class ModerationManager {
         }
     }
 
-    public void forceban(CommandContext context, Member target, Member submitter, String reason, int messagesToDelete) {
-        if (runChecks(ModAction.FORCE_BAN, target.getUser(), submitter, context)) {
-            runWithCheckedExceptions(() -> {
-                context.getGuild().getController()
-                        .kick(target, reason)
-                        .queue(success -> {
-                            sendSuccess(context, target.getUser(), submitter, ModAction.FORCE_BAN, reason);
-                        }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target.getUser(), ModAction.FORCE_BAN));
-            }, context, ModAction.FORCE_BAN, target.getUser());
-        }
-    }
-
     private boolean runChecks(ModAction action, User target, Member submitter, CommandContext context) {
         if (!context.getGuild().equals(submitter.getGuild())) {
             // This should never really happen, this is here to make sure it definitely never happens
