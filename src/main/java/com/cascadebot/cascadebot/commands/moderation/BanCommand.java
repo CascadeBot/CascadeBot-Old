@@ -30,8 +30,6 @@ import java.util.regex.Pattern;
 
 public class BanCommand implements ICommandMain {
 
-    private Pattern userId = Pattern.compile("^[0-9]{17,}$");
-
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
@@ -41,15 +39,17 @@ public class BanCommand implements ICommandMain {
 
         Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         User targetUser;
+        String reason = null;
 
         if (targetMember == null) {
-            targetUser = CascadeBot.INS.getShardManager().retrieveUserById(context.getGuild().getIdLong());
+            targetUser = CascadeBot.INS.getShardManager().retrieveUserById(context.getGuild().getId());
         } else {
             targetUser = targetMember.getUser();
         }
 
         String reason = null;
-
+        context.reply("targetUser" + targetUser);
+        context.reply("targetMember" + targetMember);
         if (targetMember == null) {
             if (!ConfirmUtils.hasConfirmedAction("forceban_user", sender.getUser().getIdLong())) {
                 ConfirmUtils.confirmAction(
@@ -62,23 +62,16 @@ public class BanCommand implements ICommandMain {
                         new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
-                                try {
-                                    context.getGuild().getController().ban(targetUser, 7).queue(success -> {
-                                        context.replyInfo("%s has been forcebanned!", targetUser.getAsTag());
-                                    }, throwable -> {
-                                        context.replyDanger("An unknown error occured!");
-                                    });
-                                }  catch (InsufficientPermissionException e) {
-                                    context.replyWarning("Cannot forceban user " + targetUser.getAsTag() +
-                                            ", missing Ban Members permission");
-                                } catch (HierarchyException e) {
-                                    context.replyWarning("Cannot forceban user " + targetUser.getAsTag() +
-                                            ", the top role they have is higher than mine");
-                                }
+                                CascadeBot.INS.getModerationManager().ban(
+                                        context,
+                                        ModAction.FORCE_BAN,
+                                        targetUser,
+                                        sender,
+                                        reason,
+                                        7 // TODO: add this as an arg
+                                );
                             }
                         });
-                return;
-            }
 
             if (context.getArgs().length >= 2) {
                 reason = context.getMessage(1);
