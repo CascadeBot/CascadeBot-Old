@@ -17,6 +17,7 @@ import com.cascadebot.cascadebot.moderation.ModAction;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.ConfirmUtils;
 import com.cascadebot.cascadebot.utils.DiscordUtils;
+import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
@@ -42,7 +43,7 @@ public class BanCommand implements ICommandMain {
         User targetUser;
 
         if (targetMember == null) {
-            targetUser = context.getUser().getAsTag(context.getGuild().getIdLong());
+            targetUser = CascadeBot.INS.getShardManager().retrieveUserById(context.getGuild().getIdLong());
         } else {
             targetUser = targetMember.getUser();
         }
@@ -71,7 +72,7 @@ public class BanCommand implements ICommandMain {
                                     context.replyWarning("Cannot forceban user " + targetUser.getAsTag() +
                                             ", missing Ban Members permission");
                                 } catch (HierarchyException e) {
-                                    context.replyWarning("Cannot forcebanban user " + targetUser.getAsTag() +
+                                    context.replyWarning("Cannot forceban user " + targetUser.getAsTag() +
                                             ", the top role they have is higher than mine");
                                 }
                             }
