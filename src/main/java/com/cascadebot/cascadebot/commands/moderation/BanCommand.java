@@ -25,8 +25,11 @@ import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 public class BanCommand implements ICommandMain {
+
+    private Pattern userId = Pattern.compile("^[0-9]{17,}$");
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -36,7 +39,14 @@ public class BanCommand implements ICommandMain {
         }
 
         Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
-        User targetUser = context.getUser();
+        User targetUser;
+
+        if (targetMember == null) {
+            targetUser = context.getUser().getAsTag(context.getGuild().getIdLong());
+        } else {
+            targetUser = targetMember.getUser();
+        }
+
         String reason = null;
 
         if (targetMember == null) {
