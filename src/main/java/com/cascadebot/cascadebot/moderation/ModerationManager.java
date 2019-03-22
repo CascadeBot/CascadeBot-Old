@@ -5,8 +5,11 @@
 
 package com.cascadebot.cascadebot.moderation;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.utils.DiscordUtils;
+import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
@@ -64,6 +67,18 @@ public class ModerationManager {
                             sendSuccess(context, target.getUser(), submitter, ModAction.KICK, reason);
                         }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target.getUser(), ModAction.KICK));
             }, context, ModAction.KICK, target.getUser());
+        }
+    }
+
+    public void forceban(CommandContext context, Member target, Member submitter, String reason, int messagesToDelete) {
+        if (runChecks(ModAction.FORCE_BAN, target.getUser(), submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild().getController()
+                        .kick(target, reason)
+                        .queue(success -> {
+                            sendSuccess(context, target.getUser(), submitter, ModAction.FORCE_BAN, reason);
+                        }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target.getUser(), ModAction.FORCE_BAN));
+            }, context, ModAction.FORCE_BAN, target.getUser());
         }
     }
 
