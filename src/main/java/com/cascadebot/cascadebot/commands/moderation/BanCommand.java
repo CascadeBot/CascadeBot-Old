@@ -26,15 +26,14 @@ public class BanCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length == 0) {
-            context.replyUsage(this);
-            return;
-        }
-
         Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         User targetUser;
         String reason = null;
 
+        if (context.getArgs().length == 0) {
+            context.replyUsage(this);
+            return;
+        }
         if (context.getArgs().length >= 2) {
             reason = context.getMessage(1);
         }
@@ -72,17 +71,16 @@ public class BanCommand implements ICommandMain {
                             );
                         }
                     });
+        } else {
+            CascadeBot.INS.getModerationManager().ban(
+                    context,
+                    ModAction.BAN,
+                    targetMember.getUser(),
+                    sender,
+                    reason,
+                    7 // TODO: add this as an arg
+            );
         }
-
-        CascadeBot.INS.getModerationManager().ban(
-                context,
-                ModAction.BAN,
-                targetMember.getUser(),
-                sender,
-                reason,
-                7 // TODO: add this as an arg
-        );
-
     }
 
     @Override
