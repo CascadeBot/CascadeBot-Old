@@ -39,12 +39,16 @@ public class BanCommand implements ICommandMain {
         }
 
         if (targetMember == null) {
+            // If the member is null, the user does not exist in the guild.
+            // This attempts to retrieve the user from Discord.
             targetUser = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         } else {
+            // If the member is not null, we can safely get the user from the member.
             targetUser = targetMember.getUser();
         }
 
         if (targetUser == null) {
+            // We couldn't find user from a member or from discord so just end here
             context.replyDanger("We could not find that user!");
             return;
         }
@@ -75,7 +79,7 @@ public class BanCommand implements ICommandMain {
             CascadeBot.INS.getModerationManager().ban(
                     context,
                     ModAction.BAN,
-                    targetMember.getUser(),
+                    targetUser,
                     sender,
                     reason,
                     7 // TODO: add this as an arg
