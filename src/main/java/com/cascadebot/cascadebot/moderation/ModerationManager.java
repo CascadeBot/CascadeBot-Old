@@ -5,8 +5,11 @@
 
 package com.cascadebot.cascadebot.moderation;
 
+import com.cascadebot.cascadebot.CascadeBot;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.messaging.MessagingObjects;
+import com.cascadebot.cascadebot.utils.DiscordUtils;
+import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
