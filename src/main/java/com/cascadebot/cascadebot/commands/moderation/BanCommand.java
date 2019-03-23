@@ -26,14 +26,15 @@ public class BanCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
-        User targetUser;
-        String reason = null;
-
         if (context.getArgs().length == 0) {
             context.replyUsage(this);
             return;
         }
+
+        Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
+        User targetUser;
+        String reason = null;
+
         if (context.getArgs().length >= 2) {
             reason = context.getMessage(1);
         }
