@@ -8,7 +8,7 @@ package com.cascadebot.cascadebot;
 public final class Constants {
 
     // Changeable constants if needed
-    public static final String serverInvite = "https://discord.gg/UcmXMyH";
+    public static final String serverInvite = "https://discord.gg/P23GZFB";
 
 
 }
