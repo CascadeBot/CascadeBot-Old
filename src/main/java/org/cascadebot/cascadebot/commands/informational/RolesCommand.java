@@ -46,7 +46,7 @@ public class RolesCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Returns the roles of the server";
+        return "Returns the server's roles";
     }
 
     @Override
