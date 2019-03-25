@@ -73,7 +73,7 @@ public class SoftBanCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Ban and then unban (to remove messages) of a specified user";
+        return "Bans and then unbans a specified user to remove messages";
     }
 
 
