@@ -13,9 +13,11 @@ import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
 import com.cascadebot.cascadebot.data.objects.Flag;
 import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.messaging.MessagingObjects;
 import com.cascadebot.cascadebot.permissions.CascadePermission;
 import com.cascadebot.cascadebot.utils.FormatUtils;
 import com.cascadebot.shared.Regex;
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
@@ -32,11 +34,12 @@ public class GuildFlagSubCommand implements ICommandExecutable {
             Flag flag;
             if (!EnumUtils.isValidEnumIgnoreCase(Flag.class, context.getArg(0))) {
                 if (context.getArg(0).equalsIgnoreCase("list")) {
-                    // TODO: Format embed better :( 
-                    context.replyInfo(Arrays.stream(Flag.values())
-                            .map(e -> String.format("`%s`", FormatUtils.formatEnum(e)))
-                            .collect(Collectors.joining("\n"))
-                    );
+                    EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+                    embedBuilder.setTitle("Flags");
+                    embedBuilder.setDescription(Arrays.stream(Flag.values())
+                            .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e)))
+                            .collect(Collectors.joining("\n")));
+                    context.replyInfo(embedBuilder);
                     return;
                 }
                 context.replyDanger("Invalid flag! Possible values: %s", Arrays.toString(Flag.values()));
@@ -64,11 +67,9 @@ public class GuildFlagSubCommand implements ICommandExecutable {
             if (guildData.isFlagEnabled(flag)) {
                 guildData.disableFlag(flag);
                 context.replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
-                return;
             } else {
                 guildData.enableFlag(flag);
                 context.replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
-                return;
             }
 
         }
