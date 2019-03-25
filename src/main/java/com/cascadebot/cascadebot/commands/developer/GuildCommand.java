@@ -5,15 +5,28 @@
 
 package com.cascadebot.cascadebot.commands.developer;
 
+import com.cascadebot.cascadebot.CascadeBot;
+import com.cascadebot.cascadebot.commandmeta.Argument;
+import com.cascadebot.cascadebot.commandmeta.ArgumentType;
 import com.cascadebot.cascadebot.commandmeta.CommandContext;
 import com.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import com.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import com.cascadebot.cascadebot.commandmeta.Module;
+import com.cascadebot.cascadebot.commands.subcommands.guild.GuildFlagSubCommand;
 import com.cascadebot.cascadebot.commands.subcommands.guild.GuildLeaveSubCommand;
 import com.cascadebot.cascadebot.commands.subcommands.guild.GuildSaveSubCommand;
+import com.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import com.cascadebot.cascadebot.data.objects.Flag;
+import com.cascadebot.cascadebot.data.objects.GuildData;
+import com.cascadebot.cascadebot.utils.DiscordUtils;
+import com.cascadebot.shared.Regex;
 import com.cascadebot.shared.SecurityLevel;
+import com.jagrosh.jdautilities.commons.utils.FinderUtil;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import org.apache.commons.lang3.EnumUtils;
 
+import java.util.Arrays;
 import java.util.Set;
 
 public class GuildCommand implements ICommandRestricted {
@@ -35,7 +48,7 @@ public class GuildCommand implements ICommandRestricted {
 
     @Override
     public Set<ICommandExecutable> getSubCommands() {
-        return Set.of(new GuildSaveSubCommand(), new GuildLeaveSubCommand());
+        return Set.of(new GuildSaveSubCommand(), new GuildLeaveSubCommand(), new GuildFlagSubCommand());
     }
 
     @Override
