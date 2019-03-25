@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>CascadeBot</groupId>
-    <artifactId>CascadeBot</artifactId>
+    <groupId>org.cascadebot</groupId>
+    <artifactId>cascadebot</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -39,7 +39,7 @@
                     <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifest>
-                            <mainClass>com.cascadebot.cascadebot.CascadeBot</mainClass>
+                            <mainClass>org.cascadebot.cascadebot.CascadeBot</mainClass>
                         </manifest>
                     </archive>
 
@@ -164,7 +164,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
-            <version>1.9.2</version>
+            <version>2.0.0</version>
         </dependency>
 
         <!-- Utilities -->
