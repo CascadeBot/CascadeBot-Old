@@ -34,8 +34,8 @@ public class DatabaseManager {
     private final CodecRegistry CODEC_REGISTRY = CodecRegistries.fromRegistries(
             MongoClientSettings.getDefaultCodecRegistry(),
             CodecRegistries.fromProviders(PojoCodecProvider.builder().register(
-                    "com.cascadebot.cascadebot.data.objects",
-                    "com.cascadebot.shared"
+                    "org.cascadebot.cascadebot.data.objects",
+                    "org.cascadebot.shared"
             ).build())
     );
 

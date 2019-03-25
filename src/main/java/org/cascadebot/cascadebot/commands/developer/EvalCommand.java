@@ -33,10 +33,10 @@ public class EvalCommand implements ICommandRestricted {
             EVAL_THREADS.getName() + EVAL_THREADS.activeCount()), CascadeBot.LOGGER);
 
     private static final List<String> IMPORTS = List.of(
-            "com.cascadebot.cascadebot",
-            "com.cascadebot.cascadebot.data",
-            "com.cascadebot.cascadebot.messaging",
-            "com.cascadebot.cascadebot.utils",
+            "org.cascadebot.cascadebot",
+            "org.cascadebot.cascadebot.data",
+            "org.cascadebot.cascadebot.messaging",
+            "org.cascadebot.cascadebot.utils",
             "net.dv8tion.jda.core",
             "net.dv8tion.jda.core.managers",
             "net.dv8tion.jda.core.entities",
