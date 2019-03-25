@@ -99,7 +99,7 @@ public class BanCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Bans/forcebans the specified user";
+        return "Bans or forcebans the specified user";
     }
 
     @Override
