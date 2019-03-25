@@ -73,7 +73,7 @@ public class SoftBanCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Soft-ban a user";
+        return "Soft-ban the specified user";
     }
 
 

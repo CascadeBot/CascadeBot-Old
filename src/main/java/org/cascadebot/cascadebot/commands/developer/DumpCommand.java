@@ -62,7 +62,7 @@ public class DumpCommand implements ICommandRestricted {
 
     @Override
     public String description() {
-        return "dump command";
+        return "Dump command";
     }
 
     @Override

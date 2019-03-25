@@ -61,7 +61,7 @@ public class UnbanCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Unbans a user";
+        return "Unbans the specified user";
     }
 
     @Override

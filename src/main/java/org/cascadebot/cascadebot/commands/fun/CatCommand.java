@@ -75,7 +75,7 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Shows a random picture of a cat";
+        return "Returns a random picture of a cat";
     }
 
 }

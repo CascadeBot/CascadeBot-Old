@@ -108,7 +108,7 @@ public class EvalCommand implements ICommandRestricted {
 
     @Override
     public String description() {
-        return "evaluate code";
+        return "Evaluate code";
     }
 
     @Override

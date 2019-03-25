@@ -29,7 +29,7 @@ public class InviteCommand implements ICommandCore {
 
     @Override
     public String description() {
-        return "Gets the bot invite link";
+        return "Returns the bot invite link";
     }
 
 }
