@@ -52,7 +52,7 @@ public class ModuleCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Interact with modules";
+        return "Interact with modules by enabling, disabling or listing them";
     }
 
 }
