@@ -12,6 +12,7 @@ public enum Module {
     CORE, // A module that contains the bot's meta commands. These cannot be disabled!
     MANAGEMENT, // This module contains commands that are used to manage the bot settings for the guild.
     INFORMATIONAL, // The commands in this module display various pieces of information about discord entities.
+    MUSIC, // This is music, what do you think this is?
     MODERATION, // This module speaks for itself, it contains commands that allow the admins of a guild to moderate said guild
     FUN, // This is a bit of a random module containing smaller commands.
     DEVELOPER(false); // All our special commands :D
