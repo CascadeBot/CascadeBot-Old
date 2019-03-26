@@ -9,12 +9,24 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.io.jda.JdaLavalink;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
 
+import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
 public class MusicHandler {
 
@@ -31,6 +43,16 @@ public class MusicHandler {
 
     public JdaLavalink buildMusic() {
         AudioSourceManagers.registerRemoteSources(playerManager);
+
+        YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(false);
+        youtubeAudioSourceManager.configureRequests(config -> RequestConfig.copy(config).setCookieSpec(CookieSpecs.IGNORE_COOKIES).setConnectTimeout(5000).build());
+
+        playerManager.registerSourceManager(youtubeAudioSourceManager);
+
+        playerManager.registerSourceManager(new BeamAudioSourceManager());
+        playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
+        playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
+
         lavalink = new JdaLavalink(
                 Config.INS.getBotID().toString(),
                 Config.INS.getShardNum(),
@@ -51,7 +73,23 @@ public class MusicHandler {
         return CascadePlayer.getCascadePlayer(guildId);
     }
 
-    public AudioTrack getTrack(String search) {
+    public List<AudioTrack> searchTracks(String search) { //TODO this
+        Request request = new Request.Builder().url("https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + search + "&key=" + Config.INS.getYoutubeKey() + "&maxResults=5").build();
+        CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+
+            }
+        });
+        return null;
+    }
+
+    public AudioTrack getTrack(String url) {
 
         return null;
     }

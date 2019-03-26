@@ -51,6 +51,7 @@ public class CascadeBot {
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
     private OkHttpClient httpClient;
+    private MusicHandler musicHandler;
 
     public static void main(String[] args) {
         if (System.getenv("SENTRY_DSN") == null) {
@@ -156,6 +157,8 @@ public class CascadeBot {
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
+        musicHandler = new MusicHandler(this);
+        musicHandler.buildMusic();
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()
@@ -220,4 +223,7 @@ public class CascadeBot {
         return httpClient;
     }
 
+    public MusicHandler getMusicHandler() {
+        return musicHandler;
+    }
 }

@@ -8,11 +8,13 @@ package org.cascadebot.cascadebot.music;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
+import lavalink.client.player.event.IPlayerEventListener;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 
 public class CascadePlayer {
@@ -68,4 +70,12 @@ public class CascadePlayer {
         }
     }
 
+    public boolean skip() {
+        try {
+            player.playTrack(tracks.remove());
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
 }

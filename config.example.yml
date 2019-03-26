@@ -65,6 +65,10 @@ pretty_json: false
 # The default prefix that the bot should use.
 default_prefix: ';'
 
+musickeys:
+  #key for youtube searching
+  youtube: ''
+
 # Config the security levels for the bot
 # Each security level can have role IDs and user IDs assigned to it
 # The available security levels are: staff, developer and owner

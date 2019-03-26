@@ -25,7 +25,7 @@ public class PlayerListener implements IPlayerEventListener {
                 AudioTrack audioTrack = player.getTracks().remove();
                 player.getPlayer().playTrack(audioTrack);
             } catch (Exception e) {
-                //NOTHING!
+                //TODO Add Events for playlist complete
             }
         }
     }
