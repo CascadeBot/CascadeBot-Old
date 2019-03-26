@@ -46,7 +46,7 @@ public class GuildCommand implements ICommandRestricted {
 
     @Override
     public String description() {
-        return "Interact with guilds";
+        return "Allows administrative actions to be run on guilds";
     }
 
 }
