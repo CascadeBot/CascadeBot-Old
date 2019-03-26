@@ -11,7 +11,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
@@ -31,7 +31,7 @@ public class ConfirmUtils {
 
     //region Confirm Action
     public static boolean confirmAction(long userId, String actionKey, TextChannel channel, MessageType type, String message, long buttonDelay, long expiry, ConfirmRunnable action) {
-        GuildData guildData = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
+        GuildData guildData = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
         boolean useEmbed = guildData.getSettings().useEmbedForMessages();
         Message sentMessage;
         try {

@@ -14,7 +14,7 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
-import org.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
@@ -62,7 +62,7 @@ public class GuildFlagSubCommand implements ICommandExecutable {
                 }
             }
 
-            GuildData guildData = GuildDataMapper.getGuildData(guild.getIdLong());
+            GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
 
             if (guildData.isFlagEnabled(flag)) {
                 guildData.disableFlag(flag);
