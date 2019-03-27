@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.utils.Checks;
 
 public class MessagingTyped {
+
     CommandContext context;
     public MessagingTyped(CommandContext context) {
         this.context = context;

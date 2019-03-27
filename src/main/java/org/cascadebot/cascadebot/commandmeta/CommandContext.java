@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.data.objects.GuildSettings;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.messaging.MessagingTimed;
 import org.cascadebot.cascadebot.messaging.MessagingTyped;
 import org.cascadebot.cascadebot.messaging.MessagingUI;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -54,6 +55,7 @@ public class CommandContext {
     private final MessagingTyped messagingTyped = new MessagingTyped(this);
     private final MessagingDirectMessage messagingDirectMessage = new MessagingDirectMessage(this);
     private final MessagingUI messagingUI = new MessagingUI(this);
+    private final MessagingTimed messagingTimed = new MessagingTimed(this);
 
     public CommandContext(JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
@@ -129,6 +131,10 @@ public class CommandContext {
 
     public MessagingUI getUIMessaging() {
         return messagingUI;
+    }
+
+    public MessagingTimed getTimedMessaging() {
+        return messagingTimed;
     }
 
     //endregion
@@ -234,41 +240,6 @@ public class CommandContext {
 
     public void sendPermissionsError(String permission) {
         messagingTyped.replyDanger("You don't have the permission `%s` to do this!", permission);
-    }
-
-    /**
-     * Sends a message that auto deletes it's self after the specified delay (in mills).
-     *
-     * @param message The string message to send which cannot be blank.
-     * @param delay   The amount of time to wait before it deletes it's self.
-     * @throws IllegalArgumentException if message is blank.
-     */
-    public void sendAutoDeleteMessage(String message, long delay) {
-        Checks.notBlank(message, "message");
-        Messaging.sendAutoDeleteMessage(this.channel, message, delay);
-    }
-
-    /**
-     * Sends a message that auto deletes it's self after the specified delay (in mills).
-     *
-     * @param embed The non-null {@link MessageEmbed} object to send.
-     * @param delay The amount of time to wait before it deletes it's self.
-     */
-    public void sendAutoDeleteMessage(MessageEmbed embed, long delay) {
-        Checks.notNull(embed, "embed");
-        Messaging.sendAutoDeleteMessage(this.channel, embed, delay);
-    }
-
-    /**
-     * Sends a message that auto deletes it's self after the specified delay (in mills).
-     *
-     * @param message The non-null {@link Message} object to send.
-     * @param delay   The amount of time to wait before it deletes it's self.
-     * @throws IllegalArgumentException if message is null.
-     */
-    public void sendAutoDeleteMessage(Message message, long delay) {
-        Checks.notNull(message, "message");
-        Messaging.sendAutoDeleteMessage(this.channel, message, delay);
     }
 
     /**

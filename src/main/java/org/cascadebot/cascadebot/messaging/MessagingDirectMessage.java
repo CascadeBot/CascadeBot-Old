@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.utils.Checks;
 
 public class MessagingDirectMessage { //TODO come up with better name
+
     private CommandContext context;
     public MessagingDirectMessage(CommandContext context) {
         this.context = context;
@@ -36,7 +37,7 @@ public class MessagingDirectMessage { //TODO come up with better name
         Checks.notBlank(message, "message");
         context.getMember().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
             if (allowChannel) {
-                context.sendAutoDeleteMessage(message, 5000);
+                context.getTimedMessaging().sendAutoDeleteMessage(message, 5000);
             }
         });
     }
@@ -63,7 +64,7 @@ public class MessagingDirectMessage { //TODO come up with better name
         Checks.notNull(embed, "embed");
         context.getMember().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue(), exception -> {
             if (allowChannel) {
-                context.sendAutoDeleteMessage(embed, 5000);
+                context.getTimedMessaging().sendAutoDeleteMessage(embed, 5000);
             }
         });
     }
@@ -90,7 +91,7 @@ public class MessagingDirectMessage { //TODO come up with better name
         Checks.notNull(message, "message");
         context.getMember().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
             if (allowChannel) {
-                context.sendAutoDeleteMessage(message, 5000);
+                context.getTimedMessaging().sendAutoDeleteMessage(message, 5000);
             }
         });
     }
