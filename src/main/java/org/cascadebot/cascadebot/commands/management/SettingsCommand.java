@@ -12,8 +12,10 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.objects.FlagRequired;
 import org.cascadebot.cascadebot.data.objects.GuildSettings;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.cascadebot.utils.Table;
 
@@ -36,6 +38,16 @@ public class SettingsCommand implements ICommandMain {
         if (field != null) {
             try {
                 String value = context.getArg(1);
+                FlagRequired flagsRequiredAnnotation = field.getAnnotation(FlagRequired.class);
+                if (flagsRequiredAnnotation != null) {
+                    if (!context.getData().getEnabledFlags().contains(flagsRequiredAnnotation.value())) {
+                        context.replyDanger(
+                                "You cannot edit this setting! You need the: %s flag to do this!",
+                                FormatUtils.formatEnum(flagsRequiredAnnotation.value())
+                        );
+                        return;
+                    }
+                }
                 if (field.getType() == boolean.class) {
                     boolean booleanValue = Boolean.valueOf(value);
                     value = String.valueOf(booleanValue);
