@@ -12,6 +12,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
 import lavalink.client.player.event.IPlayerEventListener;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -39,6 +41,8 @@ public class CascadePlayer {
     private Queue<AudioTrack> tracks = new LinkedList<>();
 
     private IPlayer player;
+
+    protected boolean loop;
 
     public CascadePlayer(Long guildId) {
         player = MusicHandler.isLavalinkEnabled() ?
@@ -72,13 +76,16 @@ public class CascadePlayer {
         return StringsUtil.getProgressBar((100f / player.getPlayingTrack().getDuration() * player.getTrackPosition()));
     }
 
-    //TODO implement player methods
     public void addTrack(AudioTrack track) {
         if (player.getPlayingTrack() != null) {
             tracks.add(track);
         } else {
             player.playTrack(track);
         }
+    }
+
+    public void loop(boolean loop) {
+        loop = loop;
     }
 
     public boolean skip() {
@@ -88,6 +95,19 @@ public class CascadePlayer {
         } catch (NoSuchElementException e) {
             return false;
         }
+    }
+
+    public void join(VoiceChannel channel) {
+        MusicHandler.getLavaLink().getLink(channel.getGuild()).connect(channel);
+    }
+
+    public void leave(Guild guild) {
+        guild.getAudioManager().closeAudioConnection();
+    }
+
+    public void stop() {
+        tracks.clear();
+        player.stopTrack();
     }
 
     public void loadLink(String stringUrl, Consumer<Void> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer) {

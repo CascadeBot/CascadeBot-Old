@@ -22,6 +22,10 @@ public class PlayerListener implements IPlayerEventListener {
     public void onEvent(PlayerEvent playerEvent) {
         if (playerEvent instanceof TrackEndEvent) {
             try {
+                if(player.loop) {
+                    TrackEndEvent endEvent = (TrackEndEvent) playerEvent;
+                    player.getTracks().add(endEvent.getTrack());
+                }
                 AudioTrack audioTrack = player.getTracks().remove();
                 player.getPlayer().playTrack(audioTrack);
             } catch (Exception e) {
