@@ -21,19 +21,13 @@ public class CascadePlayer {
 
     private Queue<AudioTrack> tracks = new LinkedList<>();
 
-    private static Map<Long, CascadePlayer> playerMap = new HashMap<>();
-
     private IPlayer player;
 
-    private CascadePlayer(Long guildId) {
+    public CascadePlayer(Long guildId) {
         player = MusicHandler.isLavalinkEnabled() ?
                 MusicHandler.getLavaLink().getLink(guildId.toString()).getPlayer() :
                 new LavaplayerPlayerWrapper(MusicHandler.createLavaLinkPlayer());
         player.addListener(new PlayerListener(this));
-    }
-
-    public static CascadePlayer getCascadePlayer(Long guildId) {
-        return playerMap.computeIfAbsent(guildId, CascadePlayer::new);
     }
 
     public IPlayer getPlayer() {
