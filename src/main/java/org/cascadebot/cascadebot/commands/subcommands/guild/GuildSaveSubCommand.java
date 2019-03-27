@@ -10,7 +10,7 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
-import org.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
@@ -21,18 +21,18 @@ public class GuildSaveSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            GuildDataMapper.replace(context.getGuild().getIdLong(), context.getData());
+            GuildDataManager.replace(context.getGuild().getIdLong(), context.getData());
             context.replySuccess("Saved **this guild's** information successfully!");
         } else if (context.getArg(0).equals("all")) {
-            GuildDataMapper.getGuilds().asMap().forEach(GuildDataMapper::replace);
+            GuildDataManager.getGuilds().asMap().forEach(GuildDataManager::replace);
             context.replySuccess("Saved **all** guild information successfully!");
         } else {
-            GuildData guildData = GuildDataMapper.getGuilds().asMap().get(Long.parseLong(context.getArg(0)));
+            GuildData guildData = GuildDataManager.getGuilds().asMap().get(Long.parseLong(context.getArg(0)));
             if (guildData == null) {
                 context.replyDanger("Cannot find guild to save!");
                 return;
             }
-            GuildDataMapper.replace(guildData.getGuildID(), guildData);
+            GuildDataManager.replace(guildData.getGuildID(), guildData);
             context.replySuccess("Saved guild information for guild **" + context.getArg(0) + "**!");
         }
     }

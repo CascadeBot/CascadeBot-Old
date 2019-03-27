@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.data.mapping;
+package org.cascadebot.cascadebot.data.managers;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.Filters.eq;
 
-public final class GuildDataMapper {
+public final class GuildDataManager {
 
     public static final String COLLECTION = "guilds";
 
@@ -29,7 +29,7 @@ public final class GuildDataMapper {
                 if (dbData == null) {
                     CascadeBot.LOGGER.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
                     GuildData data = new GuildData(id);
-                    GuildDataMapper.insert(id, data);
+                    GuildDataManager.insert(id, data);
                     return data;
                 }
 

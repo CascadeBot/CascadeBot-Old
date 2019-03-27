@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.utils.pagination;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
-import org.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.Table;
 
@@ -31,7 +31,7 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            if (GuildDataMapper.getGuildData(message.getTextChannel().getGuild().getIdLong()).getSettings().useEmbedForMessages()) {
+            if (GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong()).getSettings().useEmbedForMessages()) {
                 if (numbersInEmbed) {
                     embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
                     message.editMessage(embed.build()).override(true).queue();

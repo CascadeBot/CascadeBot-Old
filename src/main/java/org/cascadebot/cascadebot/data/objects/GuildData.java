@@ -17,6 +17,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
@@ -71,6 +72,10 @@ public class GuildData {
 
     @Transient
     private PageCache pageCache = new PageCache();
+
+    @Transient
+    private CascadePlayer musicPlayer;
+
     //endregion
 
     private GuildData() {} // This is for mongodb object serialisation
@@ -233,6 +238,10 @@ public class GuildData {
 
     public PageCache getPageCache() {
         return pageCache;
+    }
+
+    public CascadePlayer getMusicPlayer() {
+        return (musicPlayer == null ? (musicPlayer = new CascadePlayer(guildID)) : musicPlayer);
     }
 
     public Date getCreationDate() {
