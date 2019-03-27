@@ -148,7 +148,7 @@ public class MusicHandler {
                     }
                     searchResultConsumer.accept(searchResults);
                 } catch (IOException e) {
-                    Messaging.sendExceptionMessage(channel, "Error Reading Youtube data!", e);
+                    Messaging.sendExceptionMessage(channel, "Error reading YouTube data!", e);
                 }
             }
         });
