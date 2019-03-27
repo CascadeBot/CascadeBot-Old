@@ -76,7 +76,7 @@ public class DogCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Shows a random picture of a dog";
+        return "Returns a random picture of a dog";
     }
 
 }

@@ -61,7 +61,7 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Kick a user";
+        return "Kicks the specified user";
     }
 
     @Override
