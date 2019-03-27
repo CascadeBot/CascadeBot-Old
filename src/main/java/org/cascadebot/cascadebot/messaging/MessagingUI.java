@@ -21,6 +21,7 @@ import java.util.List;
 public class MessagingUI {
 
     private CommandContext context;
+
     public MessagingUI(CommandContext context) {
         this.context = context;
     }

@@ -13,6 +13,7 @@ import net.dv8tion.jda.core.utils.Checks;
 public class MessagingDirectMessage { //TODO come up with better name
 
     private CommandContext context;
+
     public MessagingDirectMessage(CommandContext context) {
         this.context = context;
     }

@@ -12,7 +12,8 @@ import net.dv8tion.jda.core.utils.Checks;
 
 public class MessagingTyped {
 
-    CommandContext context;
+    private CommandContext context;
+
     public MessagingTyped(CommandContext context) {
         this.context = context;
     }

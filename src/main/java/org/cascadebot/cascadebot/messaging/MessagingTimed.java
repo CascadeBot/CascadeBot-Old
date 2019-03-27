@@ -12,7 +12,8 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
 public class MessagingTimed {
 
-    CommandContext context;
+    private CommandContext context;
+
     public MessagingTimed(CommandContext context) {
         this.context = context;
     }
