@@ -127,7 +127,7 @@ public class UserInfoCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Get info on a user";
+        return "Returns information regarding the specified user";
     }
 
     @Override
