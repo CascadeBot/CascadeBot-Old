@@ -43,6 +43,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -102,7 +103,7 @@ public class MusicHandler {
      * @param channel The {@link TextChannel} to send any errors to
      * @return The list of tracks that where found
      */
-    public void searchTracks(String search, TextChannel channel, SearchResultsRunnable resultsRunnable) {
+    public void searchTracks(String search, TextChannel channel, Consumer<List<SearchResult>> searchResultConsumer) {
         Request request = new Request.Builder().url("https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + URLEncoder.encode(search, StandardCharsets.UTF_8) + "&key=" + Config.INS.getYoutubeKey() + "&maxResults=5&type=video,playlist").build();
         CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {
             @Override
@@ -145,7 +146,7 @@ public class MusicHandler {
                         String title = snippetElm.get("title").getAsString();
                         searchResults.add(new SearchResult(searchResultType, url, title));
                     }
-                    resultsRunnable.run(searchResults);
+                    searchResultConsumer.accept(searchResults);
                 } catch (IOException e) {
                     Messaging.sendExceptionMessage(channel, "Error Reading Youtube data!", e);
                 }
@@ -200,10 +201,6 @@ public class MusicHandler {
     public enum SearchResultType {
         VIDEO,
         PLAYLIST
-    }
-
-    public interface SearchResultsRunnable {
-        void run(List<SearchResult> results);
     }
 
     static JdaLavalink getLavaLink() {
