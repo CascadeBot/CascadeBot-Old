@@ -37,7 +37,6 @@ public class SettingsCommand implements ICommandMain {
 
         if (field != null) {
             try {
-                String value = context.getArg(1);
                 FlagRequired flagsRequiredAnnotation = field.getAnnotation(FlagRequired.class);
                 if (flagsRequiredAnnotation != null) {
                     if (!context.getData().getEnabledFlags().contains(flagsRequiredAnnotation.value())) {
@@ -48,6 +47,8 @@ public class SettingsCommand implements ICommandMain {
                         return;
                     }
                 }
+
+                String value = context.getArg(1);
                 if (field.getType() == boolean.class) {
                     boolean booleanValue = Boolean.valueOf(value);
                     value = String.valueOf(booleanValue);
