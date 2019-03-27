@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import java.util.function.Consumer;
 
 public class CascadePlayer {
 
@@ -78,7 +79,7 @@ public class CascadePlayer {
         }
     }
 
-    public void loadLink(String stringUrl) throws MalformedURLException {
+    public void loadLink(String stringUrl, Consumer<Void> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer) throws MalformedURLException {
         URL url = new URL(stringUrl);
         MusicHandler.playerManager.loadItem(url.toString(), new AudioLoadResultHandler() {
             @Override
@@ -95,12 +96,12 @@ public class CascadePlayer {
 
             @Override
             public void noMatches() {
-                //TODO something here
+                noMatchConsumer.accept(null);
             }
 
             @Override
             public void loadFailed(FriendlyException e) {
-                //TODO something here
+                exceptionConsumer.accept(e);
             }
         });
     }
