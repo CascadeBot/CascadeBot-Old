@@ -45,11 +45,11 @@ public class CascadePlayer {
     }
 
     public double getPlaylistLength() {
-        double start = player.getPlayingTrack().getDuration();
+        double playlistLength = player.getPlayingTrack().getDuration();
         for (AudioTrack track : tracks) {
-            start += track.getDuration();
+            playlistLength += track.getDuration();
         }
-        return start;
+        return playlistLength;
     }
 
     /**
