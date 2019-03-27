@@ -5,12 +5,17 @@
 
 package org.cascadebot.cascadebot.music;
 
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
 import lavalink.client.player.event.IPlayerEventListener;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -71,5 +76,32 @@ public class CascadePlayer {
         } catch (NoSuchElementException e) {
             return false;
         }
+    }
+
+    public void loadLink(String stringUrl) throws MalformedURLException {
+        URL url = new URL(stringUrl);
+        MusicHandler.playerManager.loadItem(url.toString(), new AudioLoadResultHandler() {
+            @Override
+            public void trackLoaded(AudioTrack audioTrack) {
+                addTrack(audioTrack);
+            }
+
+            @Override
+            public void playlistLoaded(AudioPlaylist audioPlaylist) {
+                for(AudioTrack track : audioPlaylist.getTracks()) {
+                    addTrack(track);
+                }
+            }
+
+            @Override
+            public void noMatches() {
+                //TODO something here
+            }
+
+            @Override
+            public void loadFailed(FriendlyException e) {
+                //TODO something here
+            }
+        });
     }
 }

@@ -9,6 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -17,6 +18,8 @@ import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
+import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.io.jda.JdaLavalink;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -33,7 +36,9 @@ import org.cascadebot.cascadebot.messaging.Messaging;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -43,7 +48,7 @@ import java.util.regex.Pattern;
 
 public class MusicHandler {
 
-    private static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+    protected static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
     private Pattern typePattern = Pattern.compile("youtube#([A-z]+)");
 
@@ -146,11 +151,6 @@ public class MusicHandler {
                 }
             }
         });
-    }
-
-    public AudioTrack getTrack(String url) {
-
-        return null;
     }
 
     public static AudioPlayer createLavaLinkPlayer() {
