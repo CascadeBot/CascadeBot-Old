@@ -36,20 +36,25 @@ public class DogCommand implements ICommandMain {
                     embedBuilder.setImage(getDogUrl());
                     message.editMessage(embedBuilder.build()).queue();
                 } else {
-                    message.editMessage(getDogUrl()).queue();
+                    context.getUIMessaging().replyImage(getDogUrl()).thenAccept(dogMessage -> {
+                        dogButtons.addButtonsToMessage(dogMessage);
+                        dogButtons.setMessage(dogMessage.getIdLong());
+                        context.getData().addButtonGroup(context.getChannel(), dogMessage, dogButtons);
+                    });
+                    message.delete().queue();
                 }
             } catch (IOException e) {
                 message.editMessage("Error loading dog picture \uD83D\uDE26" /* Frowning 😦*/).queue();
             }
         }));
         try {
-            context.replyImage(getDogUrl()).queue(message -> {
+            context.getUIMessaging().replyImage(getDogUrl()).thenAccept(message -> {
                 dogButtons.addButtonsToMessage(message);
                 dogButtons.setMessage(message.getIdLong());
                 context.getData().addButtonGroup(context.getChannel(), message, dogButtons);
             });
         } catch (IOException e) {
-            context.replyDanger("Error loading dog picture \uD83D\uDE26" /* Frowning 😦*/);
+            context.getTypedMessaging().replyDanger("Error loading dog picture \uD83D\uDE26" /* Frowning 😦*/);
         }
     }
 

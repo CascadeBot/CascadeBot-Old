@@ -46,7 +46,7 @@ public class BanCommand implements ICommandMain {
 
             if (targetUser == null) {
                 // We couldn't find user from a member or from discord so just end here
-                context.replyDanger("We could not find that user!");
+                context.getTypedMessaging().replyDanger("We could not find that user!");
                 return;
             }
 

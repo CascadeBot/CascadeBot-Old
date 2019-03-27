@@ -203,7 +203,7 @@ public class CommandListener extends ListenerAdapter {
             try {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
-                context.replyException("There was an error running the command!", e);
+                context.getTypedMessaging().replyException("There was an error running the command!", e);
                 CascadeBot.LOGGER.error(String.format(
                         "Error in command %s Guild ID: %s User: %s",
                         command.command(), context.getGuild().getId(), context.getMember().getEffectiveName()
@@ -218,7 +218,7 @@ public class CommandListener extends ListenerAdapter {
         if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
             if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
                 if (context.getSettings().willShowPermErrors()) {
-                    context.replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
+                    context.getTypedMessaging().replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
                 }
             }
             return false;

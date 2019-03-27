@@ -31,7 +31,7 @@ public class KickCommand implements ICommandMain {
         Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
 
         if (targetMember == null) {
-            context.replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find that user!", context.getUser()));
+            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find that user!", context.getUser()));
             return;
         }
 
