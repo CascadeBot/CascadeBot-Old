@@ -19,7 +19,7 @@ import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.Environment;
-import org.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.PasteUtils;
@@ -172,7 +172,7 @@ public final class Messaging {
         future.thenAccept((sentMessage -> {
             buttonGroup.addButtonsToMessage(sentMessage);
             buttonGroup.setMessage(sentMessage.getIdLong());
-            GuildDataMapper.getGuildData(sentMessage.getGuild().getIdLong()).addButtonGroup(channel, sentMessage, buttonGroup);
+            GuildDataManager.getGuildData(sentMessage.getGuild().getIdLong()).addButtonGroup(channel, sentMessage, buttonGroup);
         }));
         return future;
     }
@@ -190,12 +190,12 @@ public final class Messaging {
     public static RequestFuture<Message> sendPagedMessage(TextChannel channel, Member owner, List<Page> pages) {
         ButtonGroup group = new ButtonGroup(owner.getUser().getIdLong(), channel.getGuild().getIdLong());
         group.addButton(new Button.UnicodeButton("\u23EE" /* Rewind, start at beginning */, (runner, textChannel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
+            PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());
             pageGroup.setCurrentPage(1);
         }));
         group.addButton(new Button.UnicodeButton("\u25C0" /* Left arrow, go back one page */, (runner, textChannel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
+            PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() - 1;
             if (newPage < 1) {
                 return;
@@ -204,7 +204,7 @@ public final class Messaging {
             pageGroup.setCurrentPage(newPage);
         }));
         group.addButton(new Button.UnicodeButton("\u25B6" /* Right arrow, go forward one page */, (runner, textChannel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
+            PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() + 1;
             if (newPage > pageGroup.getPages()) {
                 return;
@@ -213,7 +213,7 @@ public final class Messaging {
             pageGroup.setCurrentPage(newPage);
         }));
         group.addButton(new Button.UnicodeButton("\u23ED" /* Fast-forward, go to last page */, (runner, textChannel, message) -> {
-            PageCache.Pages pageGroup = GuildDataMapper.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
+            PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
             pageGroup.setCurrentPage(pageGroup.getPages());
         }));
@@ -222,7 +222,7 @@ public final class Messaging {
             pages.get(0).pageShow(sentMessage, 1, pages.size());
             group.addButtonsToMessage(sentMessage);
             group.setMessage(sentMessage.getIdLong());
-            GuildData guildData = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
+            GuildData guildData = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
             guildData.addButtonGroup(channel, sentMessage, group);
             guildData.getPageCache().put(pages, sentMessage.getIdLong());
         });

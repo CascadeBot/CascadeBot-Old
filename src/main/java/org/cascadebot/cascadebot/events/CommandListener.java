@@ -18,7 +18,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.data.Config;
-import org.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
@@ -50,7 +50,7 @@ public class CommandListener extends ListenerAdapter {
 
         GuildData guildData;
         try {
-            guildData = GuildDataMapper.getGuildData(event.getGuild().getIdLong());
+            guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
             if (guildData == null) {
                 // This should *hopefully* never happen but just in case :D
                 throw new IllegalStateException(String.format("Guild data for guild ID: %s is null!", event.getGuild().getId()));

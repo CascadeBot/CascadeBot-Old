@@ -10,7 +10,7 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import org.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
@@ -24,7 +24,7 @@ public class ButtonEventListener extends ListenerAdapter {
         }
         if (e.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) e.getChannel();
-            GuildData data = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
+            GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
             ButtonsCache cache = data.getButtonsCache();
             if (cache.containsKey(channel.getIdLong())) {
                 if (cache.get(channel.getIdLong()).containsKey(e.getMessageIdLong())) {
@@ -41,7 +41,7 @@ public class ButtonEventListener extends ListenerAdapter {
     public void onMessageDelete(MessageDeleteEvent e) {
         if (e.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) e.getChannel();
-            GuildData data = GuildDataMapper.getGuildData(channel.getGuild().getIdLong());
+            GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
             ButtonsCache cache = data.getButtonsCache();
             if (cache.containsKey(channel.getIdLong())) {
                 cache.get(channel.getIdLong()).remove(e.getMessageIdLong());

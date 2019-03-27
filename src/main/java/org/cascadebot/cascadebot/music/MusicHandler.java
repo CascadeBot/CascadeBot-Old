@@ -23,7 +23,7 @@ import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
-import org.cascadebot.cascadebot.data.mapping.GuildDataMapper;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 
 import java.io.IOException;
 import java.net.URI;
@@ -71,7 +71,7 @@ public class MusicHandler {
     }
 
     public CascadePlayer getPlayer(Long guildId) {
-        return GuildDataMapper.getGuildData(guildId).getMusicPlayer();
+        return GuildDataManager.getGuildData(guildId).getMusicPlayer();
     }
 
     public List<AudioTrack> searchTracks(String search) { //TODO this
