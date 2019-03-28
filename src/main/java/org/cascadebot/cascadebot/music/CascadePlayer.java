@@ -81,7 +81,7 @@ public class CascadePlayer {
         this.loopMode = loopMode;
     }
 
-    public void toggleSuffleOnRepeat() {
+    public void toggleShuffleOnRepeat() {
         shuffle = !shuffle;
     }
 
