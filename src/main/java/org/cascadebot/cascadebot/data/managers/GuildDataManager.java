@@ -19,7 +19,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public final class GuildDataManager {
 
-    public static final String COLLECTION = "guilds";
+    private static final String COLLECTION = "guilds";
 
     private static LoadingCache<Long, GuildData> guilds = Caffeine.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
