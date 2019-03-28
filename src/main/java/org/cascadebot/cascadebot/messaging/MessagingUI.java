@@ -29,8 +29,8 @@ public class MessagingUI {
 
     /**
      * Sends an image to the channel in the context
-     * When embeds are on it embeds the image into the embed
-     * When embeds are off it downloads the image and sends it via the {@link net.dv8tion.jda.core.entities.TextChannel#sendFile(File)} method
+     * When embeds are on, it embeds the image into the embed.
+     * When embeds are off, it downloads the image and sends it via the {@link net.dv8tion.jda.core.entities.TextChannel#sendFile(File)} method
      *
      * @param url The url of the image.
      * @return A {@link RequestFuture<Message>} so you can interact with the message after it sends.

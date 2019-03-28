@@ -19,10 +19,10 @@ public class MessagingTimed {
     }
 
     /**
-     * Sends a message that auto deletes it's self after the specified delay (in mills).
+     * Sends a message that auto deletes itself after the specified delay (in milliseconds).
      *
      * @param message The string message to send which cannot be blank.
-     * @param delay   The amount of time to wait before it deletes it's self.
+     * @param delay   The amount of time to wait before it deletes itself.
      * @throws IllegalArgumentException if message is blank.
      */
     public void sendAutoDeleteMessage(String message, long delay) {
@@ -31,10 +31,10 @@ public class MessagingTimed {
     }
 
     /**
-     * Sends a message that auto deletes it's self after the specified delay (in mills).
+     * Sends a message that auto deletes itself after the specified delay (in milliseconds).
      *
      * @param embed The non-null {@link MessageEmbed} object to send.
-     * @param delay The amount of time to wait before it deletes it's self.
+     * @param delay The amount of time to wait before it deletes itself.
      */
     public void sendAutoDeleteMessage(MessageEmbed embed, long delay) {
         Checks.notNull(embed, "embed");
@@ -42,10 +42,10 @@ public class MessagingTimed {
     }
 
     /**
-     * Sends a message that auto deletes it's self after the specified delay (in mills).
+     * Sends a message that auto deletes itself after the specified delay (in milliseconds).
      *
      * @param message The non-null {@link Message} object to send.
-     * @param delay   The amount of time to wait before it deletes it's self.
+     * @param delay   The amount of time to wait before it deletes itself.
      * @throws IllegalArgumentException if message is null.
      */
     public void sendAutoDeleteMessage(Message message, long delay) {

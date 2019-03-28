@@ -21,9 +21,9 @@ public class MessagingTyped {
 
     /**
      * Replies to the channel in the command context as an info message.
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#INFO},
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#INFO},
      *     and with the message being in the description of the embed
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#INFO} at the top of the message
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#INFO} at the top of the message
      *
      * @param message The String message to send.
      */
@@ -33,10 +33,10 @@ public class MessagingTyped {
     }
 
     /**
-     * Replies to the channel in the command context as an info message. After formatting the string using javas {@link String#format(String, Object...)}
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#INFO},
+     * Replies to the channel in the command context as an info message. After formatting the string using {@link String#format(String, Object...)}
+     * When embeds for the guild are on, it replies with an embed with embed bar color being the color defined in {@link MessageType#INFO},
      *     and with the message being in the description of the embed
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#INFO} at the top of the message
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#INFO} at the top of the message
      *
      * @param message The String message to send.
      * @param objects The objects to use with the formatting.
@@ -47,8 +47,8 @@ public class MessagingTyped {
 
     /**
      * Replies to the channel in the command context as an info message using the passed in {@link EmbedBuilder}.
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#INFO}
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#INFO} in the title and the embed formatted using {@link org.cascadebot.cascadebot.utils.FormatUtils#formatEmbed(MessageEmbed)}
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#INFO}
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#INFO} in the title and the embed formatted using {@link org.cascadebot.cascadebot.utils.FormatUtils#formatEmbed(MessageEmbed)}
      *
      * @param builder The embed builder to use as the message.
      */
@@ -59,9 +59,9 @@ public class MessagingTyped {
 
     /**
      * Replies to the channel in the command context as a warning message.
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#WARNING},
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#WARNING},
      *     and with the message being in the description of the embed
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#WARNING} at the top of the message
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#WARNING} at the top of the message
      *
      * @param message The String message to send.
      */
@@ -71,10 +71,10 @@ public class MessagingTyped {
     }
 
     /**
-     * Replies to the channel in the command context as a warning message. After formatting the string using javas {@link String#format(String, Object...)}
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#INFO},
+     * Replies to the channel in the command context as a warning message. After formatting the string using {@link String#format(String, Object...)}
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#INFO},
      *     and with the message being in the description of the embed
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#INFO} at the top of the message
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#INFO} at the top of the message
      *
      * @param message The String message to send.
      * @param objects The objects to use with the formatting.
@@ -85,8 +85,8 @@ public class MessagingTyped {
 
     /**
      * Replies to the channel in the command context as a warning message using the passed in {@link EmbedBuilder}.
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#INFO}
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#INFO} in the title and the embed formatted using {@link org.cascadebot.cascadebot.utils.FormatUtils#formatEmbed(MessageEmbed)}
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#INFO}
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#INFO} in the title and the embed formatted using {@link org.cascadebot.cascadebot.utils.FormatUtils#formatEmbed(MessageEmbed)}
      *
      * @param builder The embed builder to use as the message.
      */
@@ -97,9 +97,9 @@ public class MessagingTyped {
 
     /**
      * Replies to the channel in the command context as a success message.
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#WARNING},
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#WARNING},
      *     and with the message being in the description of the embed
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#WARNING} at the top of the message
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#WARNING} at the top of the message
      *
      * @param message The String message to send.
      */
@@ -109,10 +109,10 @@ public class MessagingTyped {
     }
 
     /**
-     * Replies to the channel in the command context as a success message. After formatting the string using javas {@link String#format(String, Object...)}
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#WARNING},
+     * Replies to the channel in the command context as a success message. After formatting the string using {@link String#format(String, Object...)}
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#WARNING},
      *     and with the message being in the description of the embed
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#WARNING} at the top of the message
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#WARNING} at the top of the message
      *
      * @param message The String message to send.
      * @param objects The objects to use with the formatting.
@@ -123,8 +123,8 @@ public class MessagingTyped {
 
     /**
      * Replies to the channel in the command context as a success message using the passed in {@link EmbedBuilder}.
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#WARNING}
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#WARNING} in the title and the embed formatted using {@link org.cascadebot.cascadebot.utils.FormatUtils#formatEmbed(MessageEmbed)}
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#WARNING}
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#WARNING} in the title and the embed formatted using {@link org.cascadebot.cascadebot.utils.FormatUtils#formatEmbed(MessageEmbed)}
      *
      * @param builder The embed builder to use as the message.
      */
@@ -135,9 +135,9 @@ public class MessagingTyped {
 
     /**
      * Replies to the channel in the command context as a moderation message.
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#MODERATION,
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#MODERATION,
      *     and with the message being in the description of the embed
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#MODERATION} at the top of the message
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#MODERATION} at the top of the message
      *
      * @param message The String message to send.
      */
@@ -147,10 +147,10 @@ public class MessagingTyped {
     }
 
     /**
-     * Replies to the channel in the command context as a moderation message. After formatting the string using javas {@link String#format(String, Object...)}
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#MODERATION},
+     * Replies to the channel in the command context as a moderation message. After formatting the string using {@link String#format(String, Object...)}
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#MODERATION},
      *     and with the message being in the description of the embed
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#MODERATION} at the top of the message
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#MODERATION} at the top of the message
      *
      * @param message The String message to send.
      * @param objects The objects to use with the formatting.
@@ -161,8 +161,8 @@ public class MessagingTyped {
 
     /**
      * Replies to the channel in the command context as a moderation message using the passed in {@link EmbedBuilder}.
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#MODERATION}
-     * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#MODERATION} in the title and the embed formatted using {@link org.cascadebot.cascadebot.utils.FormatUtils#formatEmbed(MessageEmbed)}
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#MODERATION}
+     * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#MODERATION} in the title and the embed formatted using {@link org.cascadebot.cascadebot.utils.FormatUtils#formatEmbed(MessageEmbed)}
      *
      * @param builder The embed builder to use as the message.
      */
@@ -173,7 +173,7 @@ public class MessagingTyped {
 
     /**
      * Replies to the channel in the command context as a danger message.
-     * When embeds for guild are own it replies with an embed with the bar color being the color defined in {@link MessageType#DANGER,
+     * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#DANGER,
      *     and with the message being in the description of the embed
      * If embeds are turned off it replies with a normal message with the unicode character defined in {@link MessageType#DANGER} at the top of the message
      *

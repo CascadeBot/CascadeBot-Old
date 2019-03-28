@@ -31,7 +31,7 @@ public class MessagingDirectMessage { //TODO come up with better name
      * Sends a DM to the user in this context.
      *
      * @param message      The message to send which cannot be blank.
-     * @param allowChannel Whether or not we should send to a channel if DMs are closed off.
+     * @param allowChannel Whether or not we should send to the original channel if DMs are closed off.
      * @throws IllegalArgumentException if message is blank.
      */
     public void replyDM(String message, boolean allowChannel) {
@@ -58,7 +58,7 @@ public class MessagingDirectMessage { //TODO come up with better name
      * Replies to the user in the context with a {@link MessageEmbed} by direct messages.
      *
      * @param embed        The non-null {@link MessageEmbed} object to send.
-     * @param allowChannel Whether or not we should send to a channel if DMs are closed off.
+     * @param allowChannel Whether or not we should send to the original channel if DMs are closed off.
      * @throws IllegalArgumentException if embed is null.
      */
     public void replyDM(MessageEmbed embed, boolean allowChannel) {
@@ -85,7 +85,7 @@ public class MessagingDirectMessage { //TODO come up with better name
      * Replies to the user in the context with a {@link Message} by direct messages.
      *
      * @param message      The {@link Message} object to send.
-     * @param allowChannel Whether or not we should send to a channel if DMs are closed off.
+     * @param allowChannel Whether or not we should send to the original channel if DMs are closed off.
      * @throws IllegalArgumentException if message is null.
      */
     public void replyDM(Message message, boolean allowChannel) {
