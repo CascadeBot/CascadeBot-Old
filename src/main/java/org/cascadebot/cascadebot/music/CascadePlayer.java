@@ -11,30 +11,19 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
-import lavalink.client.player.event.IPlayerEventListener;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
-import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.data.database.DebugLogCallback;
-import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.managers.PlaylistManager;
 import org.cascadebot.cascadebot.data.objects.Playlist;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.function.Consumer;
-
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Updates.combine;
 
 public class CascadePlayer {
 
@@ -136,14 +125,6 @@ public class CascadePlayer {
         });
     }
 
-    public List<Playlist> getPlaylists(long owner, PlaylistType scope) {
-        List<Playlist> playlists = new ArrayList<>();
-        for (Playlist playlist : CascadeBot.INS.getDatabaseManager().getDatabase().getCollection("playlists", Playlist.class).find(combine(eq("ownerID", owner), eq("scope", scope)))) {
-            playlists.add(playlist);
-        }
-        return playlists;
-    }
-
     public void loadPlaylist(Playlist playlist) {
         for (String url : playlist.getTracks()) {
             loadLink(url, avoid -> {
@@ -158,26 +139,19 @@ public class CascadePlayer {
         List<AudioTrack> tracks = new ArrayList<>();
         tracks.add(player.getPlayingTrack());
         tracks.addAll(this.tracks);
-        boolean exists = false;
+
         List<String> ids = new ArrayList<>();
         for (AudioTrack track : tracks) {
             ids.add(track.getIdentifier());
         }
-        for(Playlist playlist : getPlaylists(owner, scope)) {
-            if(playlist.getName().equals(name)) {
-                exists = true;
-                playlist.setTracks(ids);
-                CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
-                    database.getCollection("playlists", Playlist.class).replaceOne(eq("_id", playlist.getPlaylistID()), playlist, new DebugLogCallback<>("Replaced Playlist ID " + playlist.getPlaylistID().toString()));
-                });
-                break;
-            }
-        }
-        if(!exists) {
-            Playlist playlist = new Playlist(owner, name, scope, ids);
-            CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
-                database.getCollection("playlists", Playlist.class).insertOne(playlist, new DebugLogCallback<>("Inserted new playlist with ID " + playlist.getPlaylistID().toString()));
-            });
+
+        Playlist search = PlaylistManager.getPlaylistByName(owner, scope, name);
+        if (search != null) {
+            search.setTracks(ids);
+            PlaylistManager.replacePlaylist(search);
+        } else {
+            PlaylistManager.savePlaylist(new Playlist(owner, name, scope, ids));
         }
     }
+
 }
