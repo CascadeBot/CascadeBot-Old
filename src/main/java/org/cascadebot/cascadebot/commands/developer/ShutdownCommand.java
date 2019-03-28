@@ -49,7 +49,7 @@ public class ShutdownCommand implements ICommandRestricted {
     private void shutdown(CommandContext context) {
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setFooter(context.getMember().getUser().getAsTag(), context.getMember().getUser().getEffectiveAvatarUrl());
-        builder.setDescription("Cascade bot shutting down!");
+        builder.setDescription("Cascade is now shutting down!");
         context.getTypedMessaging().replyInfo(builder);
         CascadeBot.LOGGER.info("Shutting down via command! Issuer: " + context.getUser().getAsTag());
         ShutdownHandler.stop();
@@ -62,7 +62,7 @@ public class ShutdownCommand implements ICommandRestricted {
 
     @Override
     public String description() {
-        return "stop the bot";
+        return "Stops the bot";
     }
 
     @Override

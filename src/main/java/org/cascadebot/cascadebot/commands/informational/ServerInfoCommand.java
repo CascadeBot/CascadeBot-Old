@@ -62,7 +62,7 @@ public class ServerInfoCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Get info on the server";
+        return "Returns information regarding the specified server";
     }
 
     @Override
