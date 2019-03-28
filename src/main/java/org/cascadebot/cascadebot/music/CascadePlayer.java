@@ -20,6 +20,7 @@ import org.cascadebot.cascadebot.events.PlayerListener;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -33,6 +34,7 @@ public class CascadePlayer {
     private IPlayer player;
 
     private LoopMode loopMode = LoopMode.DISABLED;
+    private boolean shuffle = false;
 
     public CascadePlayer(Long guildId) {
         player = MusicHandler.isLavalinkEnabled() ?
@@ -68,6 +70,7 @@ public class CascadePlayer {
 
     public void addTrack(AudioTrack track) {
         if (player.getPlayingTrack() != null) {
+
             tracks.add(track);
         } else {
             player.playTrack(track);
@@ -76,6 +79,17 @@ public class CascadePlayer {
 
     public void loopMode(LoopMode loopMode) {
         this.loopMode = loopMode;
+    }
+
+    public void toggleSuffleOnRepeat() {
+        shuffle = !shuffle;
+    }
+
+    public void shuffle() {
+        List<AudioTrack> tracks = new ArrayList<>(getTracks());
+        Collections.shuffle(tracks);
+        this.tracks = new LinkedList<>();
+        this.tracks.addAll(tracks);
     }
 
     public LoopMode getLoopMode() {
