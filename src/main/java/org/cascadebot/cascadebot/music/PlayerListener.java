@@ -22,12 +22,17 @@ public class PlayerListener implements IPlayerEventListener {
     public void onEvent(PlayerEvent playerEvent) {
         if (playerEvent instanceof TrackEndEvent) {
             try {
-                if(player.loop) {
+                if(player.loop.equals(CascadePlayer.LoopType.DISABLED) || player.loop.equals(CascadePlayer.LoopType.PLAYLIST)) {
+                    if (player.loop.equals(CascadePlayer.LoopType.PLAYLIST)) {
+                        TrackEndEvent endEvent = (TrackEndEvent) playerEvent;
+                        player.getTracks().add(endEvent.getTrack());
+                    }
+                    AudioTrack audioTrack = player.getTracks().remove();
+                    player.getPlayer().playTrack(audioTrack);
+                } else if (player.loop.equals(CascadePlayer.LoopType.SONG)) {
                     TrackEndEvent endEvent = (TrackEndEvent) playerEvent;
-                    player.getTracks().add(endEvent.getTrack());
+                    player.getPlayer().playTrack(endEvent.getTrack());
                 }
-                AudioTrack audioTrack = player.getTracks().remove();
-                player.getPlayer().playTrack(audioTrack);
             } catch (Exception e) {
                 //TODO Add Events for playlist complete
             }

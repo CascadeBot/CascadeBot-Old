@@ -31,7 +31,7 @@ public class CascadePlayer {
 
     private IPlayer player;
 
-    protected boolean loop;
+    protected LoopType loop = LoopType.DISABLED;
 
     public CascadePlayer(Long guildId) {
         player = MusicHandler.isLavalinkEnabled() ?
@@ -73,7 +73,7 @@ public class CascadePlayer {
         }
     }
 
-    public void loop(boolean loop) {
+    public void loop(LoopType loop) {
         this.loop = loop;
     }
 
@@ -152,6 +152,12 @@ public class CascadePlayer {
         } else {
             PlaylistManager.savePlaylist(new Playlist(owner, name, scope, ids));
         }
+    }
+
+    public enum LoopType {
+        DISABLED,
+        PLAYLIST,
+        SONG
     }
 
 }
