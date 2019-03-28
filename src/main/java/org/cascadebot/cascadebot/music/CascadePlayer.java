@@ -127,7 +127,7 @@ public class CascadePlayer {
 
     public void loadPlaylist(Playlist playlist) {
         for (String url : playlist.getTracks()) {
-            loadLink(url, avoid -> {
+            loadLink(url, noMatch -> {
                 playlist.removeTrack(url);
             }, exception -> {
                 playlist.removeTrack(url);

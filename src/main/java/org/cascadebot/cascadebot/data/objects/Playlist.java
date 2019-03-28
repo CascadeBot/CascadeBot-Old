@@ -50,7 +50,7 @@ public class Playlist {
         return tracks;
     }
 
-    public void addTack(String url) {
+    public void addTrack(String url) {
         tracks.add(url);
     }
 
