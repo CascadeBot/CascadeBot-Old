@@ -16,6 +16,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
 import org.cascadebot.cascadebot.data.objects.Playlist;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.events.PlayerListener;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class CascadePlayer {
 
     private IPlayer player;
 
-    protected LoopType loop = LoopType.DISABLED;
+    private LoopMode loopMode = LoopMode.DISABLED;
 
     public CascadePlayer(Long guildId) {
         player = MusicHandler.isLavalinkEnabled() ?
@@ -73,8 +74,12 @@ public class CascadePlayer {
         }
     }
 
-    public void loop(LoopType loop) {
-        this.loop = loop;
+    public void setLoopMode(LoopMode loopMode) {
+        this.loopMode = loopMode;
+    }
+
+    public LoopMode getLoopMode() {
+        return this.loopMode;
     }
 
     public boolean skip() {
@@ -154,7 +159,7 @@ public class CascadePlayer {
         }
     }
 
-    public enum LoopType {
+    public enum LoopMode {
         DISABLED,
         PLAYLIST,
         SONG
