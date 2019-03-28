@@ -48,12 +48,12 @@ public class CascadePlayer {
         return tracks;
     }
 
-    public double getPlaylistLength() {
-        double playlistLength = player.getPlayingTrack().getDuration();
+    public double getQueueLength() {
+        double queueLength = player.getPlayingTrack().getDuration();
         for (AudioTrack track : tracks) {
-            playlistLength += track.getDuration();
+            queueLength += track.getDuration();
         }
-        return playlistLength;
+        return queueLength;
     }
 
     /**
@@ -74,7 +74,7 @@ public class CascadePlayer {
     }
 
     public void loop(boolean loop) {
-        loop = loop;
+        this.loop = loop;
     }
 
     public boolean skip() {
