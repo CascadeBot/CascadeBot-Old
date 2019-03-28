@@ -18,15 +18,23 @@ public class PlayerListener implements IPlayerEventListener {
     public PlayerListener(CascadePlayer player) {
         this.player = player;
     }
+    
+    private int songPlayCount = 0;
 
     @Override
     public void onEvent(PlayerEvent playerEvent) {
         if (playerEvent instanceof TrackEndEvent) {
             try {
+                songPlayCount++;
                 if(player.getLoopMode().equals(CascadePlayer.LoopMode.DISABLED) || player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
                     if (player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
                         TrackEndEvent endEvent = (TrackEndEvent) playerEvent;
                         player.getTracks().add(endEvent.getTrack());
+                        if(player.getShuffle()) {
+                            if(songPlayCount % player.getTracks().size() == 0) {
+                                player.shuffle(); //Shuffle when the tracks start over.
+                            }
+                        }
                     }
                     AudioTrack audioTrack = player.getTracks().remove();
                     player.getPlayer().playTrack(audioTrack);

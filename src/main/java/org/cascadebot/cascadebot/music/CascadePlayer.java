@@ -81,6 +81,7 @@ public class CascadePlayer {
         this.loopMode = loopMode;
     }
 
+    //Don't know if this will eb uses at all, but it's here if we want to.
     public void toggleShuffleOnRepeat() {
         shuffle = !shuffle;
     }
@@ -94,6 +95,10 @@ public class CascadePlayer {
 
     public LoopMode getLoopMode() {
         return this.loopMode;
+    }
+
+    public boolean getShuffle() {
+        return shuffle;
     }
 
     public boolean skip() {
