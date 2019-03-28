@@ -74,7 +74,7 @@ public class CascadePlayer {
         }
     }
 
-    public void setLoopMode(LoopMode loopMode) {
+    public void loopMode(LoopMode loopMode) {
         this.loopMode = loopMode;
     }
 
