@@ -72,10 +72,10 @@ public class ModerationManager {
             // This should never really happen, this is here to make sure it definitely never happens
             return false;
         } else if (target.equals(submitter.getUser())) {
-            context.replyWarning("You cannot %s yourself!", action);
+            context.replyDanger("You cannot %s yourself!", action);
             return false;
-        } else if (target.isBot()) {
-            context.replyWarning("You cannot %s a bot!", action);
+        } else if (target.equals(context.getSelfUser())) {
+            context.replyDanger("I cannot %s myself!", action);
             return false;
         }
         return true;
