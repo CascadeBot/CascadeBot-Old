@@ -6,14 +6,14 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import de.bild.codec.annotations.Id;
+import org.bson.types.ObjectId;
 
 import java.util.List;
-import java.util.UUID;
 
 public class Playlist {
 
     @Id
-    private UUID playlistID = UUID.randomUUID();
+    private ObjectId playlistID = ObjectId.get();
 
     private String name;
     private long ownerID;
@@ -21,7 +21,7 @@ public class Playlist {
 
     private List<String> tracks;
 
-    private Playlist() {}
+    private Playlist() {} // Used for mongodb
 
     public Playlist(long ownerId, String name, PlaylistType scope, List<String> tracks) {
         this.ownerID = ownerId;
@@ -30,7 +30,7 @@ public class Playlist {
         this.tracks = tracks;
     }
 
-    public UUID getPlaylistID() {
+    public ObjectId getPlaylistID() {
         return playlistID;
     }
 
