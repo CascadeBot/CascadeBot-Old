@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Arrays;
@@ -20,7 +21,7 @@ public class ModuleListSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         context.reply("**Modules**\n" + Arrays.stream(Module.values())
-                .filter(Module::isPublicModule)
+                .filter(module -> !module.isFlagEnabled(ModuleFlag.PRIVATE))
                 .map(module -> module.toString().toLowerCase() +
                         " - " +
                         (context.getData().isModuleEnabled(module) ? "Enabled" : "Disabled"))
