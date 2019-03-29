@@ -21,7 +21,7 @@ public class StopCommand implements ICommandMain {
             context.getData().getMusicPlayer().getPlayer().stopTrack(); // stop track
             context.getData().getMusicPlayer().getTracks().clear(); // clear queue
             context.replySuccess("Music has been stopped!");
-        } else if (context.getData().getMusicPlayer().getPlayer().getPlayingTrack() == null) { // If playing track is null
+        } else {
             context.replyDanger("Music isn't playing, nothing to stop!");
         }
     }
