@@ -18,12 +18,11 @@ public class ResumeCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (CascadeBot.INS.getMusicHandler().getPlayer(context.getGuild().getIdLong()).getPlayer().isPaused()) {
-            CascadeBot.INS.getMusicHandler().getPlayer(context.getGuild().getIdLong()).getPlayer().setPaused(false);
+        if (context.getData().getMusicPlayer().getPlayer().isPaused()) {
+            context.getData().getMusicPlayer().getPlayer().setPaused(false);
             context.replySuccess("Music has been resumed!");
-        } else if (!CascadeBot.INS.getMusicHandler().getPlayer(context.getGuild().getIdLong()).getPlayer().isPaused()) {
+        } else {
             context.replyDanger("Music is already playing! Use **" + context.getData().getPrefix() + "pause** to pause it.");
-            return;
         }
     }
 

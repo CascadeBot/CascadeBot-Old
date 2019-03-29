@@ -20,11 +20,10 @@ public class PauseCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (CascadeBot.INS.getMusicHandler().getPlayer(context.getGuild().getIdLong()).getPlayer().isPaused()) {
+        if (context.getData().getMusicPlayer().getPlayer().isPaused()) {
             context.replyDanger("Music has already been paused! Use **" + context.getData().getPrefix() + "resume** to resume.");
-            return;
-        } else if (!CascadeBot.INS.getMusicHandler().getPlayer(context.getGuild().getIdLong()).getPlayer().isPaused()) {
-            CascadeBot.INS.getMusicHandler().getPlayer(context.getGuild().getIdLong()).getPlayer().setPaused(true);
+        } else {
+            context.getData().getMusicPlayer().getPlayer().setPaused(true);
             context.replySuccess("Paused! Use **" + context.getData().getPrefix() + "resume** to resume.");
         }
     }
