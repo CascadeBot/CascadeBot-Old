@@ -125,17 +125,16 @@ public class CascadeBot {
             );
         }
 
-        JdaLavalink lavalink = new MusicHandler(this).buildMusic();
+        musicHandler = new MusicHandler(this);
+        musicHandler.buildMusic();
 
         gson = builder.create();
         try {
-            shardManager = new DefaultShardManagerBuilder()
+            DefaultShardManagerBuilder defaultShardManagerBuilder = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new GeneralEvents())
                     .addEventListeners(new ButtonEventListener())
-                    .addEventListeners(lavalink)
                     .setToken(Config.INS.getBotToken())
-                    //.setAudioSendFactory(new NativeAudioSendFactory())
                     .setShardsTotal(-1)
                     .setGameProvider(shardId -> {
                         if (Environment.isDevelopment()) {
@@ -145,8 +144,13 @@ public class CascadeBot {
                         }
                     })
                     .setBulkDeleteSplittingEnabled(false)
-                    .setEnableShutdownHook(false)
-                    .build();
+                    .setEnableShutdownHook(false);
+
+            if(MusicHandler.isLavalinkEnabled()) {
+                defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
+            }
+
+            shardManager = defaultShardManagerBuilder.build();
         } catch (LoginException e) {
             LOGGER.error("Error building JDA", e);
             ShutdownHandler.exitWithError();
@@ -157,8 +161,6 @@ public class CascadeBot {
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
-        musicHandler = new MusicHandler(this);
-        musicHandler.buildMusic();
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
         Thread.currentThread()

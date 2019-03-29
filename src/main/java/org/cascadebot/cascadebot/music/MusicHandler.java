@@ -64,7 +64,7 @@ public class MusicHandler {
     private static JdaLavalink lavalink;
     private static boolean lavalinkEnabled;
 
-    public JdaLavalink buildMusic() {
+    public void buildMusic() {
         AudioSourceManagers.registerRemoteSources(playerManager);
 
         YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(false);
@@ -76,11 +76,6 @@ public class MusicHandler {
         playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
         playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
 
-        lavalink = new JdaLavalink(
-                Config.INS.getBotID().toString(),
-                Config.INS.getShardNum(),
-                shardId -> instance.getShardManager().getShardById(shardId));
-
         if (Config.INS.getMusicNodes().size() > 0) {
             for (MusicNode musicNode : Config.INS.getMusicNodes()) {
                 lavalink.addNode(musicNode.uri, musicNode.password); //TODO give nodes a name
@@ -89,7 +84,13 @@ public class MusicHandler {
         } else {
             lavalinkEnabled = false;
         }
-        return lavalink;
+
+        if(lavalinkEnabled) {
+            lavalink = new JdaLavalink(
+                    Config.INS.getBotID().toString(),
+                    Config.INS.getShardNum(),
+                    shardId -> instance.getShardManager().getShardById(shardId));
+        }
     }
 
     public CascadePlayer getPlayer(Long guildId) {
@@ -156,6 +157,10 @@ public class MusicHandler {
 
     public static AudioPlayer createLavaLinkPlayer() {
         return playerManager.createPlayer();
+    }
+
+    public static JdaLavalink getLavalink() {
+        return lavalink;
     }
 
     public static class MusicNode {

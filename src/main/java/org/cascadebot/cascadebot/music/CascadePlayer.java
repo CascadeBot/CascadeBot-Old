@@ -6,11 +6,14 @@
 package org.cascadebot.cascadebot.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
+import net.dv8tion.jda.core.audio.AudioSendHandler;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
@@ -36,10 +39,26 @@ public class CascadePlayer {
     private LoopMode loopMode = LoopMode.DISABLED;
     private boolean shuffle = false;
 
-    public CascadePlayer(Long guildId) {
-        player = MusicHandler.isLavalinkEnabled() ?
-                MusicHandler.getLavaLink().getLink(guildId.toString()).getPlayer() :
-                new LavaplayerPlayerWrapper(MusicHandler.createLavaLinkPlayer());
+    public CascadePlayer(Guild guild) {
+        if(MusicHandler.isLavalinkEnabled()) {
+            player = MusicHandler.getLavaLink().getLink(guild).getPlayer();
+        } else {
+            AudioPlayer aPlayer = MusicHandler.createLavaLinkPlayer();
+            player = new LavaplayerPlayerWrapper(aPlayer);
+            guild.getAudioManager().setSendingHandler(new AudioSendHandler() {
+                private AudioFrame lastFrame;
+                @Override
+                public boolean canProvide() {
+                    lastFrame = aPlayer.provide();
+                    return lastFrame != null;
+                }
+
+                @Override
+                public byte[] provide20MsAudio() {
+                    return lastFrame.getData();
+                }
+            });
+        }
         player.addListener(new PlayerListener(this));
     }
 
@@ -111,7 +130,11 @@ public class CascadePlayer {
     }
 
     public void join(VoiceChannel channel) {
-        MusicHandler.getLavaLink().getLink(channel.getGuild()).connect(channel);
+        if(MusicHandler.isLavalinkEnabled()) {
+            MusicHandler.getLavaLink().getLink(channel.getGuild()).connect(channel);
+        } else {
+            channel.getGuild().getAudioManager().openAudioConnection(channel);
+        }
     }
 
     public void leave(Guild guild) {
