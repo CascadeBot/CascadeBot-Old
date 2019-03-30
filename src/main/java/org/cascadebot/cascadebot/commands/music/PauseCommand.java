@@ -21,10 +21,10 @@ public class PauseCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getData().getMusicPlayer().getPlayer().isPaused()) {
-            context.replyDanger("Music has already been paused! Use **" + context.getData().getPrefix() + "resume** to resume.");
+            context.getTypedMessaging().replyDanger("Music has already been paused! Use **" + context.getData().getPrefix() + "resume** to resume.");
         } else {
             context.getData().getMusicPlayer().getPlayer().setPaused(true);
-            context.replySuccess("Paused! Use **" + context.getData().getPrefix() + "resume** to resume.");
+            context.getTypedMessaging().replySuccess("Paused! Use **" + context.getData().getPrefix() + "resume** to resume.");
         }
     }
 
