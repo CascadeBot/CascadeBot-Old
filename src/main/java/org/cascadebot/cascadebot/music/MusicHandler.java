@@ -9,7 +9,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -18,9 +17,6 @@ import com.sedmelluq.discord.lavaplayer.source.beam.BeamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
-import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.io.jda.JdaLavalink;
 import net.dv8tion.jda.core.entities.TextChannel;
 import okhttp3.Call;
@@ -36,9 +32,7 @@ import org.cascadebot.cascadebot.messaging.Messaging;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -76,6 +70,11 @@ public class MusicHandler {
         playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
         playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
 
+        lavalink = new JdaLavalink(
+                Config.INS.getBotID().toString(),
+                Config.INS.getShardNum(),
+                shardId -> instance.getShardManager().getShardById(shardId));
+
         if (Config.INS.getMusicNodes().size() > 0) {
             for (MusicNode musicNode : Config.INS.getMusicNodes()) {
                 lavalink.addNode(musicNode.uri, musicNode.password); //TODO give nodes a name
@@ -85,12 +84,6 @@ public class MusicHandler {
             lavalinkEnabled = false;
         }
 
-        if(lavalinkEnabled) {
-            lavalink = new JdaLavalink(
-                    Config.INS.getBotID().toString(),
-                    Config.INS.getShardNum(),
-                    shardId -> instance.getShardManager().getShardById(shardId));
-        }
     }
 
     public CascadePlayer getPlayer(Long guildId) {
@@ -100,7 +93,7 @@ public class MusicHandler {
     /**
      * Searches for a list of 5 tracks and if it errors send the error to the specified channel
      *
-     * @param search The string to search
+     * @param search  The string to search
      * @param channel The {@link TextChannel} to send any errors to
      * @return The list of tracks that where found
      */
@@ -114,7 +107,7 @@ public class MusicHandler {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
-                if(response.body() == null) {
+                if (response.body() == null) {
                     Messaging.sendDangerMessage(channel, "Youtube didn't return any data!");
                     return;
                 }
@@ -122,12 +115,12 @@ public class MusicHandler {
                     List<SearchResult> searchResults = new ArrayList<>();
                     JsonObject json = musicJsonParser.parse(response.body().string()).getAsJsonObject();
                     JsonArray items = json.getAsJsonArray("items");
-                    for(JsonElement elm : items) {
+                    for (JsonElement elm : items) {
                         JsonObject item = elm.getAsJsonObject();
                         JsonObject idElm = item.getAsJsonObject("id");
                         String type = idElm.get("kind").getAsString();
                         Matcher matcher = typePattern.matcher(type);
-                        if(!matcher.matches()) {
+                        if (!matcher.matches()) {
                             break;
                         }
                         type = matcher.group(1);
@@ -201,6 +194,7 @@ public class MusicHandler {
         public String getTitle() {
             return title;
         }
+
     }
 
     public enum SearchResultType {
