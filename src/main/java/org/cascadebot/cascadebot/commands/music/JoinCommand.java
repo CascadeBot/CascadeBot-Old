@@ -38,17 +38,15 @@ public class JoinCommand implements ICommandMain {
                 context.getTypedMessaging().replyWarning("I am already connected to your channel!");
                 return;
             } else {
-                if (context.hasPermission("join.other")) {
-                    context.getData().getMusicPlayer().join(voiceChannel);
-                } else {
+                if (!context.hasPermission("join.other")) {
                     context.getUIMessaging().sendPermissionError("join.other");
                     return;
                 }
             }
-        } else {
-            context.getData().getMusicPlayer().join(voiceChannel);
+            return;
         }
-        context.getTypedMessaging().replySuccess("Joined the voice channel `%s`", voiceChannel.getName());
+        context.getData().getMusicPlayer().join(voiceChannel);
+        context.getTypedMessaging().replySuccess("I have successfully joined the voice channel `#%s`", voiceChannel.getName());
     }
 
     @Override
@@ -58,7 +56,7 @@ public class JoinCommand implements ICommandMain {
 
     @Override
     public Set<String> getGlobalAliases() {
-        return Set.of("summon");
+        return Set.of("summon", "connect", "getinhere");
     }
 
     @Override
@@ -73,7 +71,7 @@ public class JoinCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return null;
+        return "Joins the bot to a voice channel";
     }
 
 }
