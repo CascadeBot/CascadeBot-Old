@@ -16,6 +16,7 @@ import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
@@ -86,25 +87,26 @@ public class GuildData {
 
     //region Commands
     public void enableCommand(ICommandMain command) {
-        if (!command.getModule().isPublicModule()) return;
+        if (command.getModule().isFlagEnabled(ModuleFlag.PRIVATE)) return;
         if (commandInfo.contains(command.getClass())) {
             commandInfo.get(command.getClass()).setEnabled(true);
         }
     }
 
-    public void enableCommandByType(Module module) {
+    public void enableCommandByModule(Module module) {
+        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
         for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             enableCommand(command);
         }
     }
 
     public void disableCommand(ICommandMain command) {
-        if (!command.getModule().isPublicModule()) return;
+        if (command.getModule().isFlagEnabled(ModuleFlag.PRIVATE)) return;
         commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command)).setEnabled(false);
     }
 
-    public void disableCommandByType(Module module) {
-        if (!module.isPublicModule()) return;
+    public void disableCommandByModule(Module module) {
+        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
         for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             disableCommand(command);
         }
@@ -165,23 +167,28 @@ public class GuildData {
 
     //region Modules
     public boolean enableModule(Module module) {
-        if (!module.isPublicModule()) {
+        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
             throw new IllegalArgumentException("This module is not available to be enabled!");
         }
         return this.enabledModules.add(module);
     }
 
     public boolean disableModule(Module module) {
-        if (!module.isPublicModule()) {
+        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
             throw new IllegalArgumentException("This module is not available to be disabled!");
-        } else if (Module.CORE_MODULES.contains(module)) {
+        } else if (module.isFlagEnabled(ModuleFlag.REQUIRED)) {
             throw new IllegalArgumentException(String.format("Cannot disable the %s module!", module.toString().toLowerCase()));
         }
         return this.enabledModules.remove(module);
     }
 
     public boolean isModuleEnabled(Module module) {
-        return this.enabledModules.contains(module);
+        boolean isEnabled = this.enabledModules.contains(module);
+        if (!isEnabled && module.isFlagEnabled(ModuleFlag.REQUIRED)) {
+            this.enabledModules.add(module);
+            return true;
+        }
+        return isEnabled;
     }
     //endregion
 

@@ -5,31 +5,54 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
-import java.util.Set;
+import java.util.Arrays;
+import java.util.EnumSet;
 
 public enum Module {
 
-    CORE, // A module that contains the bot's meta commands. These cannot be disabled!
-    MANAGEMENT, // This module contains commands that are used to manage the bot settings for the guild.
-    INFORMATIONAL, // The commands in this module display various pieces of information about discord entities.
-    MODERATION, // This module speaks for itself, it contains commands that allow the admins of a guild to moderate said guild
-    FUN, // This is a bit of a random module containing smaller commands.
-    DEVELOPER(false); // All our special commands :D
+    /**
+     * A module that contains the bot's meta commands. These cannot be disabled!
+     */
+    CORE(ModuleFlag.REQUIRED),
+    /**
+     * This module contains commands that are used to manage the bot settings for the guild.
+     */
+    MANAGEMENT(ModuleFlag.REQUIRED),
+    /**
+     * The commands in this module display various pieces of information about discord entities.
+     */
+    INFORMATIONAL,
+    /**
+     * This module speaks for itself, it contains commands that allow the admins of a guild to moderate said guild
+     */
+    MODERATION,
+    /**
+     * This is a bit of a random module containing smaller commands.
+     */
+    FUN,
+    /**
+     * All our special commands :D
+     */
+    DEVELOPER(ModuleFlag.PRIVATE);
 
-    // A set of modules that are always enabled and cannot be disabled
-    public static final Set<Module> CORE_MODULES = Set.of(Module.CORE, Module.MANAGEMENT);
-
-    private boolean publicModule;
+    private EnumSet<ModuleFlag> flags;
 
     Module() {
-        this.publicModule = true;
+        this.flags = EnumSet.noneOf(ModuleFlag.class); // Public module that is not required
     }
 
-    Module(boolean publicModule) {
-        this.publicModule = publicModule;
+    Module(ModuleFlag... flags) {
+        this.flags = EnumSet.noneOf(ModuleFlag.class);
+        this.flags.addAll(Arrays.asList(flags));
     }
 
-    public boolean isPublicModule() {
-        return publicModule;
+    public EnumSet<ModuleFlag> getFlags() {
+        return flags;
     }
+
+    public boolean isFlagEnabled(ModuleFlag flag) {
+        return this.flags.contains(flag);
+    }
+
+
 }

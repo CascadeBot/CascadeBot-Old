@@ -74,7 +74,7 @@ public class ModerationManager {
         } else if (target.equals(submitter.getUser())) {
             context.getTypedMessaging().replyWarning("You cannot %s yourself!", action);
             return false;
-        } else if (target.isBot()) {
+        } else if (target.equals(context.getSelfUser())) {
             context.getTypedMessaging().replyWarning("You cannot %s a bot!", action);
             return false;
         }
