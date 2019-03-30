@@ -40,7 +40,7 @@ public class UserInfoCommand implements ICommandMain {
             userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         }
         if (userForInfo == null) {
-            context.replyDanger("Invalid User!");
+            context.getTypedMessaging().replyDanger("Invalid User!");
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
@@ -107,7 +107,7 @@ public class UserInfoCommand implements ICommandMain {
         }
 
         pageList.add(0, new PageObjects.EmbedPage(builder));
-        context.sendPagedMessage(pageList);
+        context.getUIMessaging().sendPagedMessage(pageList);
     }
 
     @Override

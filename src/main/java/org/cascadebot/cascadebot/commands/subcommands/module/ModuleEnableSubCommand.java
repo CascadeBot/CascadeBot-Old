@@ -22,7 +22,7 @@ public class ModuleEnableSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if(context.getArgs().length < 1) {
-            context.replyUsage(this, "module");
+            context.getUIMessaging().replyUsage(this, "module");
             return;
         }
         String selectedModule = context.getArg(0).toUpperCase();
@@ -32,16 +32,16 @@ public class ModuleEnableSubCommand implements ICommandExecutable {
             try {
                 if (context.getData().enableModule(module)) {
                     // If the module wasn't enabled
-                    context.replySuccess("The module `%s` has been enabled!", module.toString());
+                    context.getTypedMessaging().replySuccess("The module `%s` has been enabled!", module.toString());
                 } else {
                     // If the module was enabled
-                    context.replyInfo("The module `%s` is already enabled!", module.toString());
+                    context.getTypedMessaging().replyInfo("The module `%s` is already enabled!", module.toString());
                 }
             } catch (IllegalArgumentException ex) {
-                context.replyDanger(ex.getMessage());
+                context.getTypedMessaging().replyDanger(ex.getMessage());
             }
         } else {
-            context.replyDanger("We couldn't find that module. Use `" + "" + "module list` for a list of modules.");
+            context.getTypedMessaging().replyDanger("We couldn't find that module. Use `" + "" + "module list` for a list of modules.");
         }
 
     }

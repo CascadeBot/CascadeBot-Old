@@ -73,7 +73,7 @@ public class EvalCommand implements ICommandRestricted {
 
         for (String blacklistedItem : BLACKLIST) {
             if (new PermissionNode(blacklistedItem).test(code)) {
-                context.replyDanger("You cannot run this code as it contains blacklisted items!");
+                context.getTypedMessaging().replyDanger("You cannot run this code as it contains blacklisted items!");
                 return;
             }
         }
@@ -92,7 +92,7 @@ public class EvalCommand implements ICommandRestricted {
                 if (results.isBlank()) results = "Empty result!";
                 PasteUtils.pasteIfLong(results, 2048, context::reply);
             } catch (ScriptException e) {
-                context.replyDanger("Error running script: %s \n**%s** \n```swift\n%s```",
+                context.getTypedMessaging().replyDanger("Error running script: %s \n**%s** \n```swift\n%s```",
                         PasteUtils.paste(PasteUtils.getStackTrace(e)),
                         e.getClass().getName(),
                         e.getMessage()

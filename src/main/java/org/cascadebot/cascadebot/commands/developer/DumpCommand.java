@@ -25,7 +25,7 @@ public class DumpCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.replyDanger("Hmmm either pick: `threads`, `commands`, `permissions` or `guild`");
+            context.getTypedMessaging().replyDanger("Hmmm either pick: `threads`, `commands`, `permissions` or `guild`");
             return;
         }
         if (context.getArg(0).equalsIgnoreCase("threads")) {
@@ -51,7 +51,7 @@ public class DumpCommand implements ICommandRestricted {
         } else if (context.getArg(0).equalsIgnoreCase("guild")) {
             PasteUtils.pasteIfLong("```json\n" + new GsonBuilder().setPrettyPrinting().create().toJson(context.getData()) + "```", 2048, context::reply);
         } else {
-            context.replyDanger("I can't seem to find that argument \uD83E\uDD14" /* Thinking emoji 🤔 */);
+            context.getTypedMessaging().replyDanger("I can't seem to find that argument \uD83E\uDD14" /* Thinking emoji 🤔 */);
         }
     }
 
