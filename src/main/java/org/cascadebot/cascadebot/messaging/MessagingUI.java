@@ -6,10 +6,12 @@
 package org.cascadebot.cascadebot.messaging;
 
 import net.dv8tion.jda.core.Permission;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.CommandException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -106,9 +108,10 @@ public class MessagingUI {
     /**
      * Sends a permission error.
      *
-     * @param permission The Cascade Permission that they don't have
+     * @param stringPermission The Cascade Permission that they don't have.
      */
-    public void sendPermissionsError(CascadePermission permission) {
+    public void sendPermissionsError(String stringPermission) {
+        CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
         if(permission.getDiscordPerm().size() > 0) {
             EnumSet<Permission> permissions = permission.getDiscordPerm();
             StringBuilder discordPermBuilder = new StringBuilder();
