@@ -7,6 +7,7 @@ package org.cascadebot.cascadebot;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
 import lavalink.client.io.jda.JdaLavalink;
@@ -148,6 +149,8 @@ public class CascadeBot {
 
             if(MusicHandler.isLavalinkEnabled()) {
                 defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
+            } else {
+                defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
             }
 
             shardManager = defaultShardManagerBuilder.build();

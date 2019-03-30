@@ -66,6 +66,8 @@ public class PermissionsManager {
         registerPermission(CascadePermission.of("Reset command prefix", "prefix.reset", false, Permission.MANAGE_SERVER));
         registerPermission(CascadePermission.of("Set command prefix", "prefix.set", false, Permission.MANAGE_SERVER));
 
+        registerPermission(CascadePermission.of("Join other voice channel", "join.other", false, Permission.VOICE_MOVE_OTHERS));
+        registerPermission(CascadePermission.of("Leave other voice channel", "leave.other", false, Permission.VOICE_MOVE_OTHERS));
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 

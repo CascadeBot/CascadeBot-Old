@@ -219,7 +219,7 @@ public class CommandListener extends ListenerAdapter {
         if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
             if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
                 if (context.getSettings().willShowPermErrors()) {
-                    context.getTypedMessaging().replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
+                    context.getUIMessaging().sendPermissionError(command.getPermission().getPermissionNode());
                 }
             }
             return false;

@@ -106,7 +106,7 @@ public class MessagingUI {
      *
      * @param stringPermission The Cascade permission that the user doesn't have.
      */
-    public void sendPermissionsError(String stringPermission) {
+    public void sendPermissionError(String stringPermission) {
         CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
         if (permission.getDiscordPerm().size() > 0) {
             EnumSet<Permission> permissions = permission.getDiscordPerm();
@@ -114,7 +114,7 @@ public class MessagingUI {
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s`, or the discord permission%s %s to do this!", permission.getPermissionNode(), permissions.size() > 1 ? "(s)" : "", discordPerms);
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s`, or the Discord permission(s) %s to do this!", permission.getPermissionNode(), discordPerms);
         } else {
             context.getTypedMessaging().replyDanger("You don't have the permission `%s` to do this!", permission.getPermissionNode());
         }
@@ -125,8 +125,12 @@ public class MessagingUI {
      *
      * @param permission The Discord Permission that the user doesn't have.
      */
-    public void sendPermissionsError(Permission permission) {
-        context.getTypedMessaging().replyDanger("You don't have the discord permission `%s` to do this!", permission.getName());
+    public void sendUserPermissionError(Permission permission) {
+        context.getTypedMessaging().replyDanger("You don't have the Discord permission `%s` to do this!", permission.getName());
+    }
+
+    public void sendBotPermissionError(Permission permission) {
+        context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` to do this!", permission.getName());
     }
 
     public void replyUsage(ICommandExecutable command) {

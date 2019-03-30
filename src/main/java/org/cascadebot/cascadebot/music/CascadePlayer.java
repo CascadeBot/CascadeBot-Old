@@ -10,12 +10,12 @@ import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
+import lavalink.client.io.jda.JdaLink;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
-import net.dv8tion.jda.core.audio.AudioSendHandler;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.VoiceChannel;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
 import org.cascadebot.cascadebot.data.objects.Playlist;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
@@ -34,6 +34,7 @@ public class CascadePlayer {
 
     private Queue<AudioTrack> tracks = new LinkedList<>();
 
+    private long guildId;
     private IPlayer player;
 
     private LoopMode loopMode = LoopMode.DISABLED;
@@ -48,6 +49,7 @@ public class CascadePlayer {
             guild.getAudioManager().setSendingHandler(new LavaPlayerAudioSendHandler(aPlayer));
         }
         player.addListener(new PlayerListener(this));
+        guildId = guild.getIdLong();
     }
 
     public IPlayer getPlayer() {
@@ -119,14 +121,34 @@ public class CascadePlayer {
 
     public void join(VoiceChannel channel) {
         if(MusicHandler.isLavalinkEnabled()) {
-            MusicHandler.getLavaLink().getLink(channel.getGuild()).connect(channel);
+            getLink().connect(channel);
         } else {
             channel.getGuild().getAudioManager().openAudioConnection(channel);
         }
     }
 
-    public void leave(Guild guild) {
-        guild.getAudioManager().closeAudioConnection();
+    public void leave() {
+        if (MusicHandler.isLavalinkEnabled()) {
+            getLink().disconnect();
+        } else {
+            getGuild().getAudioManager().closeAudioConnection();
+        }
+    }
+
+    public VoiceChannel getConnectedChannel() {
+        if (MusicHandler.isLavalinkEnabled()) {
+            return CascadeBot.INS.getShardManager().getVoiceChannelById(getLink().getChannel());
+        } else {
+            return getGuild().getAudioManager().getConnectedChannel();
+        }
+    }
+
+    private Guild getGuild() {
+        return CascadeBot.INS.getShardManager().getGuildById(guildId);
+    }
+
+    public JdaLink getLink() {
+        return MusicHandler.getLavaLink().getLink(getGuild());
     }
 
     public void stop() {
