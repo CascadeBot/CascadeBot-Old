@@ -28,6 +28,12 @@ public class JoinCommand implements ICommandMain {
             if (context.getData().getMusicPlayer().getConnectedChannel().equals(voiceChannel)) {
                 context.replyWarning("I am already connected to your channel!");
                 return;
+            } else {
+                if (context.hasPermission("join.other")) {
+                    context.getData().getMusicPlayer().join(voiceChannel);
+                } else {
+                    context.replyDanger("");
+                }
             }
             
         }
