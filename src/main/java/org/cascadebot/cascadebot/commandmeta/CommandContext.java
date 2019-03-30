@@ -5,6 +5,20 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.GuildSettings;
+import org.cascadebot.cascadebot.messaging.Messaging;
+import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.messaging.MessagingTimed;
+import org.cascadebot.cascadebot.messaging.MessagingTyped;
+import org.cascadebot.cascadebot.messaging.MessagingUI;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.pagination.Page;
+import org.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
@@ -16,23 +30,11 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.SelfUser;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.requests.restaction.MessageAction;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.data.Config;
-import org.cascadebot.cascadebot.data.objects.GuildData;
-import org.cascadebot.cascadebot.data.objects.GuildSettings;
-import org.cascadebot.cascadebot.messaging.Messaging;
-import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
-import org.cascadebot.cascadebot.utils.pagination.Page;
-import org.cascadebot.shared.Regex;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class CommandContext {
@@ -49,6 +51,11 @@ public class CommandContext {
     private final String[] args;
     private final String trigger;
     private final boolean isMention;
+
+    private final MessagingTyped messagingTyped = new MessagingTyped(this);
+    private final MessagingDirectMessage messagingDirectMessage = new MessagingDirectMessage(this);
+    private final MessagingUI messagingUI = new MessagingUI(this);
+    private final MessagingTimed messagingTimed = new MessagingTimed(this);
 
     public CommandContext(JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
@@ -112,6 +119,26 @@ public class CommandContext {
 
     //endregion
 
+    //region Messaging Objects
+
+    public MessagingTyped getTypedMessaging() {
+        return messagingTyped;
+    }
+
+    public MessagingDirectMessage getDirectMessageMessaging() {
+        return messagingDirectMessage;
+    }
+
+    public MessagingUI getUIMessaging() {
+        return messagingUI;
+    }
+
+    public MessagingTimed getTimedMessaging() {
+        return messagingTimed;
+    }
+
+    //endregion
+
     //region Helper methods for arguments
 
     public String getMessage(int start) {
@@ -167,94 +194,6 @@ public class CommandContext {
         channel.sendMessage(message).queue();
     }
 
-    public void replyInfo(String message) {
-        Checks.notBlank(message, "message");
-        Messaging.sendInfoMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
-    }
-
-    public void replyInfo(String message, Object... objects) {
-        replyInfo(String.format(message, objects));
-    }
-
-    public void replyInfo(EmbedBuilder builder) {
-        Checks.notNull(builder, "build");
-        Messaging.sendInfoMessage(channel, builder, getSettings().useEmbedForMessages());
-    }
-
-    public void replySuccess(String message) {
-        Checks.notBlank(message, "message");
-        Messaging.sendSuccessMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
-    }
-
-    public void replySuccess(String message, Object... objects) {
-        replySuccess(String.format(message, objects));
-    }
-
-    public void replySuccess(EmbedBuilder builder) {
-        Checks.notNull(builder, "build");
-        Messaging.sendSuccessMessage(channel, builder, getSettings().useEmbedForMessages());
-    }
-
-    public void replyWarning(String message) {
-        Checks.notBlank(message, "message");
-        Messaging.sendWarningMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
-    }
-
-    public void replyWarning(String message, Object... objects) {
-        replyWarning(String.format(message, objects));
-    }
-
-    public void replyWarning(EmbedBuilder builder) {
-        Checks.notNull(builder, "build");
-        Messaging.sendWarningMessage(channel, builder, getSettings().useEmbedForMessages());
-    }
-
-    public void replyModeration(String message) {
-        Checks.notBlank(message, "message");
-        Messaging.sendModerationMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
-    }
-
-    public void replyModeration(String message, Object... objects) {
-        replyModeration(String.format(message, objects));
-    }
-
-    public void replyModeration(EmbedBuilder builder) {
-        Checks.notNull(builder, "build");
-        Messaging.sendModerationMessage(channel, builder, getSettings().useEmbedForMessages());
-    }
-
-    public void replyDanger(String message) {
-        Checks.notBlank(message, "message");
-        Messaging.sendDangerMessage(channel, MessagingObjects.getStandardMessageEmbed(message, getUser()), getSettings().useEmbedForMessages());
-    }
-
-    public void replyDanger(String message, Object... objects) {
-        replyDanger(String.format(message, objects));
-    }
-
-    public void replyDanger(EmbedBuilder builder) {
-        Checks.notNull(builder, "build");
-        Messaging.sendDangerMessage(channel, builder, getSettings().useEmbedForMessages());
-    }
-
-    public void replyException(String message, Throwable throwable) {
-        Messaging.sendExceptionMessage(channel, message, new CommandException(throwable, guild, trigger));
-    }
-
-    public void replyException(String message, Throwable throwable, Object... objects) {
-        Messaging.sendExceptionMessage(channel, String.format(message, objects), new CommandException(throwable, guild, trigger));
-    }
-
-    public MessageAction replyImage(String url) {
-        if (getSettings().useEmbedForMessages()) {
-            EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-            embedBuilder.setImage(url);
-            return channel.sendMessage(embedBuilder.build());
-        } else {
-            return channel.sendMessage(url);
-        }
-    }
-
     public String getUsage(ICommandExecutable command) {
         return getUsage(command, null);
     }
@@ -282,14 +221,6 @@ public class CommandContext {
         return parentArg.getUsageString(commandString);
     }
 
-    public void replyUsage(ICommandExecutable command) {
-        replyUsage(command, null);
-    }
-
-    public void replyUsage(ICommandExecutable command, String parent) {
-        replyWarning("Incorrect usage. Proper usage:\n" + getUsage(command, parent));
-    }
-
     private Argument getArgFromSet(Set<Argument> arguments, String arg) {
         for (Argument argument : arguments) {
             if (argument.argStartsWith(arg)) {
@@ -297,45 +228,6 @@ public class CommandContext {
             }
         }
         return null;
-    }
-
-    public void sendPermissionsError(String permission) {
-        replyDanger("You don't have the permission `%s` to do this!", permission);
-    }
-
-    /**
-     * Sends a message that auto deletes it's self after the specified delay (in mills).
-     *
-     * @param message The string message to send which cannot be blank.
-     * @param delay   The amount of time to wait before it deletes it's self.
-     * @throws IllegalArgumentException if message is blank.
-     */
-    public void sendAutoDeleteMessage(String message, long delay) {
-        Checks.notBlank(message, "message");
-        Messaging.sendAutoDeleteMessage(this.channel, message, delay);
-    }
-
-    /**
-     * Sends a message that auto deletes it's self after the specified delay (in mills).
-     *
-     * @param embed The non-null {@link MessageEmbed} object to send.
-     * @param delay The amount of time to wait before it deletes it's self.
-     */
-    public void sendAutoDeleteMessage(MessageEmbed embed, long delay) {
-        Checks.notNull(embed, "embed");
-        Messaging.sendAutoDeleteMessage(this.channel, embed, delay);
-    }
-
-    /**
-     * Sends a message that auto deletes it's self after the specified delay (in mills).
-     *
-     * @param message The non-null {@link Message} object to send.
-     * @param delay   The amount of time to wait before it deletes it's self.
-     * @throws IllegalArgumentException if message is null.
-     */
-    public void sendAutoDeleteMessage(Message message, long delay) {
-        Checks.notNull(message, "message");
-        Messaging.sendAutoDeleteMessage(this.channel, message, delay);
     }
 
     /**
@@ -384,101 +276,6 @@ public class CommandContext {
      */
     public Member getSelfMember() {
         return guild.getMember(getSelfUser());
-    }
-
-    /**
-     * Sends a DM to the user in this context.
-     *
-     * @param message The message to send.
-     */
-    public void replyDM(String message) {
-        replyDM(message, false);
-    }
-
-    /**
-     * Sends a DM to the user in this context.
-     *
-     * @param message      The message to send which cannot be blank.
-     * @param allowChannel Whether or not we should send to a channel if DMs are closed off.
-     * @throws IllegalArgumentException if message is blank.
-     */
-    public void replyDM(String message, boolean allowChannel) {
-        Checks.notBlank(message, "message");
-        member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
-            if (allowChannel) {
-                sendAutoDeleteMessage(message, 5000);
-            }
-        });
-    }
-
-    /**
-     * Replies to the user in the context with a {@link MessageEmbed} by direct messages.
-     *
-     * @param embed The non-null {@link MessageEmbed} object to send.
-     * @throws IllegalArgumentException if embed is null.
-     * @see CommandContext#replyDM(MessageEmbed, boolean)
-     */
-    public void replyDM(MessageEmbed embed) {
-        replyDM(embed, false);
-    }
-
-    /**
-     * Replies to the user in the context with a {@link MessageEmbed} by direct messages.
-     *
-     * @param embed        The non-null {@link MessageEmbed} object to send.
-     * @param allowChannel Whether or not we should send to a channel if DMs are closed off.
-     * @throws IllegalArgumentException if embed is null.
-     */
-    public void replyDM(MessageEmbed embed, boolean allowChannel) {
-        Checks.notNull(embed, "embed");
-        member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(embed).queue(), exception -> {
-            if (allowChannel) {
-                sendAutoDeleteMessage(embed, 5000);
-            }
-        });
-    }
-
-    /**
-     * Replies to the user in the context with a {@link Message} by direct messages.
-     *
-     * @param message The {@link Message} object to send.
-     * @throws IllegalArgumentException if message is null.
-     * @see CommandContext#replyDM(Message, boolean).
-     */
-    public void replyDM(Message message) {
-        replyDM(message, false);
-    }
-
-    /**
-     * Replies to the user in the context with a {@link Message} by direct messages.
-     *
-     * @param message      The {@link Message} object to send.
-     * @param allowChannel Whether or not we should send to a channel if DMs are closed off.
-     * @throws IllegalArgumentException if message is null.
-     */
-    public void replyDM(Message message, boolean allowChannel) {
-        Checks.notNull(message, "message");
-        member.getUser().openPrivateChannel().queue(channel -> channel.sendMessage(message).queue(), exception -> {
-            if (allowChannel) {
-                sendAutoDeleteMessage(message, 5000);
-            }
-        });
-    }
-
-    public void sendButtonedMessage(String message, ButtonGroup group) {
-        Messaging.sendButtonedMessage(channel, message, group);
-    }
-
-    public void sendButtonedMessage(MessageEmbed embed, ButtonGroup group) {
-        Messaging.sendButtonedMessage(channel, embed, group);
-    }
-
-    public void sendButtonedMessage(Message message, ButtonGroup group) {
-        Messaging.sendButtonedMessage(channel, message, group);
-    }
-
-    public void sendPagedMessage(List<Page> pages) {
-        Messaging.sendPagedMessage(channel, member, pages);
     }
 
     //endregion

@@ -29,7 +29,7 @@ public class SettingsCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.replyUsage(this);
+            context.getUIMessaging().replyUsage(this);
             return;
         }
 
@@ -40,7 +40,7 @@ public class SettingsCommand implements ICommandMain {
                 FlagRequired flagsRequiredAnnotation = field.getAnnotation(FlagRequired.class);
                 if (flagsRequiredAnnotation != null) {
                     if (!context.getData().getEnabledFlags().contains(flagsRequiredAnnotation.value())) {
-                        context.replyDanger(
+                        context.getTypedMessaging().replyDanger(
                                 "You cannot edit this setting! You need the: %s flag to do this!",
                                 FormatUtils.formatEnum(flagsRequiredAnnotation.value())
                         );
@@ -58,9 +58,9 @@ public class SettingsCommand implements ICommandMain {
                 } else {
                     return;
                 }
-                context.replySuccess("Setting `%s` has been set to a value of `%s`", field.getName(), value);
+                context.getTypedMessaging().replySuccess("Setting `%s` has been set to a value of `%s`", field.getName(), value);
             } catch (IllegalAccessException e) {
-                context.replyException("Could not access that setting!", e);
+                context.getTypedMessaging().replyException("Could not access that setting!", e);
             }
         } else if (context.getArg(0).equalsIgnoreCase("list")) {
             Table.TableBuilder tableBuilder = new Table.TableBuilder("Setting", "Current value");
@@ -78,7 +78,7 @@ public class SettingsCommand implements ICommandMain {
                     });
             PasteUtils.pasteIfLong(tableBuilder.build().toString(), 2000, context::reply);
         } else {
-            context.replyDanger("Cannot find that field!");
+            context.getTypedMessaging().replyDanger("Cannot find that field!");
         }
     }
 

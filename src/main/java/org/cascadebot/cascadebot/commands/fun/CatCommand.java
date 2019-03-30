@@ -35,20 +35,25 @@ public class CatCommand implements ICommandMain {
                         embedBuilder.setImage(getCatUrl());
                         message.editMessage(embedBuilder.build()).queue();
                     } else {
-                        message.editMessage(getCatUrl()).queue();
+                        context.getUIMessaging().replyImage(getCatUrl()).thenAccept(catMessage -> {
+                            catButtons.addButtonsToMessage(catMessage);
+                            catButtons.setMessage(catMessage.getIdLong());
+                            context.getData().addButtonGroup(context.getChannel(), catMessage, catButtons);
+                        });
+                        message.delete().queue();
                     }
                 } catch (IOException e) {
                     message.editMessage("Error loading cat picture \uD83D\uDE26" /* Frowning 😦*/).queue();
                 }
             }));
             try {
-                context.replyImage(getCatUrl()).queue(message -> {
+                context.getUIMessaging().replyImage(getCatUrl()).thenAccept(message -> {
                     catButtons.addButtonsToMessage(message);
                     catButtons.setMessage(message.getIdLong());
                     context.getData().addButtonGroup(context.getChannel(), message, catButtons);
                 });
             } catch (IOException e) {
-                context.replyDanger("Error loading cat picture \uD83D\uDE26" /* Frowning 😦*/);
+                context.getTypedMessaging().replyDanger("Error loading cat picture \uD83D\uDE26" /* Frowning 😦*/);
             }
     }
 

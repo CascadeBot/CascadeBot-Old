@@ -28,7 +28,7 @@ public class ServerInfoCommand implements ICommandMain {
             guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
         }
         if (guildForInfo == null) {
-            context.replyDanger("We couldn't find that guild!");
+            context.getTypedMessaging().replyDanger("We couldn't find that guild!");
             return;
         }
 
@@ -42,7 +42,7 @@ public class ServerInfoCommand implements ICommandMain {
         builder.addField("Member Count", String.valueOf(guildForInfo.getMemberCache().size()), true);
         builder.setFooter("ID: " + guildForInfo.getId(), guildForInfo.getIconUrl());
 
-        context.replyInfo(builder); // Send the embed
+        context.getTypedMessaging().replyInfo(builder); // Send the embed
     }
 
     @Override
