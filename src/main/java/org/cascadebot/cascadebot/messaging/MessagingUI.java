@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.messaging;
 
+import net.dv8tion.jda.core.Permission;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.CommandException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
@@ -19,6 +20,7 @@ import net.dv8tion.jda.core.requests.RequestFuture;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.EnumSet;
 import java.util.List;
 
 public class MessagingUI {
@@ -107,7 +109,22 @@ public class MessagingUI {
      * @param permission The Cascade Permission that they don't have
      */
     public void sendPermissionsError(CascadePermission permission) {
-        context.getTypedMessaging().replyDanger("You don't have the permission `%s` to do this!", permission.getPermissionNode());
+        if(permission.getDiscordPerm().size() > 0) {
+            EnumSet<Permission> permissions = permission.getDiscordPerm();
+            StringBuilder discordPermBuilder = new StringBuilder();
+            boolean first = true;
+            for(Permission discordPermission : permissions) {
+                if(first) {
+                    discordPermBuilder.append(discordPermission.getName());
+                    first = false;
+                } else {
+                    discordPermBuilder.append(", ").append(discordPermission.getName());
+                }
+            }
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s`, or the discord permission(s) `%s` to do this!", permission.getPermissionNode(), discordPermBuilder.toString());
+        } else {
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` to do this!", permission.getPermissionNode());
+        }
     }
 
     public void replyUsage(ICommandExecutable command) {
