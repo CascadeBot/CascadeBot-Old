@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.music;
 
+import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -20,23 +21,34 @@ public class JoinCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         VoiceChannel voiceChannel = sender.getVoiceState().getChannel();
         if (voiceChannel == null) {
-            context.replyDanger("You are not connected to a voice channel!");
+            context.getTypedMessaging().replyDanger("You are not connected to a voice channel!");
+            return;
+        }
+
+        if (!context.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT)) {
+            context.getUIMessaging().sendBotPermissionError(Permission.VOICE_CONNECT);
+            return;
+        } else if (!context.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_SPEAK)) {
+            context.getUIMessaging().sendBotPermissionError(Permission.VOICE_SPEAK);
             return;
         }
 
         if (context.getData().getMusicPlayer().getConnectedChannel() != null) {
             if (context.getData().getMusicPlayer().getConnectedChannel().equals(voiceChannel)) {
-                context.replyWarning("I am already connected to your channel!");
+                context.getTypedMessaging().replyWarning("I am already connected to your channel!");
                 return;
             } else {
                 if (context.hasPermission("join.other")) {
                     context.getData().getMusicPlayer().join(voiceChannel);
                 } else {
-                    context.replyDanger("");
+                    context.getUIMessaging().sendPermissionError("join.other");
+                    return;
                 }
             }
-            
+        } else {
+            context.getData().getMusicPlayer().join(voiceChannel);
         }
+        context.getTypedMessaging().replySuccess("Joined the voice channel `%s`", voiceChannel.getName());
     }
 
     @Override
