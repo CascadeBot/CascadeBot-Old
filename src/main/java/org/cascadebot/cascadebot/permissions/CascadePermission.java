@@ -55,6 +55,10 @@ public class CascadePermission {
         return new CascadePermission(label, permission, defaultPerm, null, discordPerm);
     }
 
+    public static CascadePermission of(String label, String permission, boolean defaultPerm, Module module, Permission... discordPerm) {
+        return new CascadePermission(label, permission, defaultPerm, module, discordPerm);
+    }
+
     public String getLabel() {
         return label;
     }

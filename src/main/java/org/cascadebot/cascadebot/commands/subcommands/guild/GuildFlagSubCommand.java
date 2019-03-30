@@ -39,10 +39,10 @@ public class GuildFlagSubCommand implements ICommandExecutable {
                     embedBuilder.setDescription(Arrays.stream(Flag.values())
                             .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e)))
                             .collect(Collectors.joining("\n")));
-                    context.replyInfo(embedBuilder);
+                    context.getTypedMessaging().replyInfo(embedBuilder);
                     return;
                 }
-                context.replyDanger("Invalid flag! Possible values: %s", Arrays.toString(Flag.values()));
+                context.getTypedMessaging().replyDanger("Invalid flag! Possible values: %s", Arrays.toString(Flag.values()));
                 return;
             } else {
                 flag = EnumUtils.getEnum(Flag.class, context.getArg(0).toUpperCase());
@@ -53,11 +53,11 @@ public class GuildFlagSubCommand implements ICommandExecutable {
                 if (Regex.ID.matcher(context.getArg(1)).matches()) {
                     guild = CascadeBot.INS.getShardManager().getGuildById(context.getArg(1));
                     if (guild == null) {
-                        context.replyDanger("Cannot find that guild!");
+                        context.getTypedMessaging().replyDanger("Cannot find that guild!");
                         return;
                     }
                 } else {
-                    context.replyDanger("Invalid guild ID!");
+                    context.getTypedMessaging().replyDanger("Invalid guild ID!");
                     return;
                 }
             }
@@ -66,10 +66,10 @@ public class GuildFlagSubCommand implements ICommandExecutable {
 
             if (guildData.isFlagEnabled(flag)) {
                 guildData.disableFlag(flag);
-                context.replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
+                context.getTypedMessaging().replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
             } else {
                 guildData.enableFlag(flag);
-                context.replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
+                context.getTypedMessaging().replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
             }
 
         }

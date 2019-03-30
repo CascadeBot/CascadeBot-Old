@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class PrefixCommand implements ICommandCore {
 
@@ -20,26 +21,26 @@ public class PrefixCommand implements ICommandCore {
             if (newPrefix.equals("reset")) {
                 if (context.hasPermission("prefix.reset")) {
                     context.getData().setPrefix(Config.INS.getDefaultPrefix());
-                    context.replyInfo("The prefix has been reset to: `%s`", Config.INS.getDefaultPrefix());
+                    context.getTypedMessaging().replyInfo("The prefix has been reset to: `%s`", Config.INS.getDefaultPrefix());
                 } else {
-                    context.sendPermissionsError("prefix.reset");
+                    context.getUIMessaging().sendPermissionsError("prefix.reset");
                 }
                 return;
             }
 
             if (!context.hasPermission("prefix.set")) {
-                context.sendPermissionsError("prefix.set");
+                context.getUIMessaging().sendPermissionsError("prefix.set");
                 return;
             }
 
             if (newPrefix.length() > 5) {
-                context.replyDanger("The requested prefix is too long!");
+                context.getTypedMessaging().replyDanger("The requested prefix is too long!");
                 return;
             }
             context.getData().setPrefix(newPrefix);
-            context.replyInfo("The new prefix is: `%s`", newPrefix);
+            context.getTypedMessaging().replyInfo("The new prefix is: `%s`", newPrefix);
         } else {
-            context.replyInfo("The current server prefix is `%s`", context.getData().getPrefix());
+            context.getTypedMessaging().replyInfo("The current server prefix is `%s`", context.getData().getPrefix());
         }
     }
 
