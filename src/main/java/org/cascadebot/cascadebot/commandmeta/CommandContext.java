@@ -221,14 +221,6 @@ public class CommandContext {
         return parentArg.getUsageString(commandString);
     }
 
-    public void replyUsage(ICommandExecutable command) {
-        replyUsage(command, null);
-    }
-
-    public void replyUsage(ICommandExecutable command, String parent) {
-        messagingTyped.replyWarning("Incorrect usage. Proper usage:\n" + getUsage(command, parent));
-    }
-
     private Argument getArgFromSet(Set<Argument> arguments, String arg) {
         for (Argument argument : arguments) {
             if (argument.argStartsWith(arg)) {
@@ -236,10 +228,6 @@ public class CommandContext {
             }
         }
         return null;
-    }
-
-    public void sendPermissionsError(String permission) {
-        messagingTyped.replyDanger("You don't have the permission `%s` to do this!", permission);
     }
 
     /**

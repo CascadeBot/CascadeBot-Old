@@ -7,6 +7,8 @@ package org.cascadebot.cascadebot.messaging;
 
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.CommandException;
+import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import net.dv8tion.jda.core.EmbedBuilder;
@@ -97,5 +99,22 @@ public class MessagingUI {
      */
     public void sendPagedMessage(List<Page> pages) {
         Messaging.sendPagedMessage(context.getChannel(), context.getMember(), pages);
+    }
+
+    /**
+     * Sends a permission error.
+     *
+     * @param permission The Cascade Permission that they don't have
+     */
+    public void sendPermissionsError(CascadePermission permission) {
+        context.getTypedMessaging().replyDanger("You don't have the permission `%s` to do this!", permission.getPermissionNode());
+    }
+
+    public void replyUsage(ICommandExecutable command) {
+        replyUsage(command, null);
+    }
+
+    public void replyUsage(ICommandExecutable command, String parent) {
+        context.getTypedMessaging().replyWarning("Incorrect usage. Proper usage:\n" + context.getUsage(command, parent));
     }
 }

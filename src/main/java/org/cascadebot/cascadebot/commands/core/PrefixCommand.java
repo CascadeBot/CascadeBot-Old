@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class PrefixCommand implements ICommandCore {
 
@@ -22,13 +23,13 @@ public class PrefixCommand implements ICommandCore {
                     context.getData().setPrefix(Config.INS.getDefaultPrefix());
                     context.getTypedMessaging().replyInfo("The prefix has been reset to: `%s`", Config.INS.getDefaultPrefix());
                 } else {
-                    context.sendPermissionsError("prefix.reset");
+                    context.getUIMessaging().sendPermissionsError(CascadePermission.of("prefix reset", "prefix.reset", getModule()));
                 }
                 return;
             }
 
             if (!context.hasPermission("prefix.set")) {
-                context.sendPermissionsError("prefix.set");
+                context.getUIMessaging().sendPermissionsError(CascadePermission.of("prefix set", "prefix.set", getModule()));
                 return;
             }
 
