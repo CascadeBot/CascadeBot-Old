@@ -5,25 +5,25 @@
 
 package org.cascadebot.cascadebot.messaging;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.requests.RequestFuture;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.CommandException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.requests.RequestFuture;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MessagingUI {
 
@@ -59,10 +59,9 @@ public class MessagingUI {
     /**
      * Sends a message with reactions to function as "buttons".
      *
-     * @see ButtonGroup
-     *
      * @param message The String message to send.
      * @param group   The {@link ButtonGroup} to use for buttons.
+     * @see ButtonGroup
      */
     public void sendButtonedMessage(String message, ButtonGroup group) {
         Messaging.sendButtonedMessage(context.getChannel(), message, group);
@@ -71,10 +70,9 @@ public class MessagingUI {
     /**
      * Sends a message with reactions to function as "buttons".
      *
-     * @see ButtonGroup
-     *
      * @param embed The {@link MessageEmbed} to use as the message.
      * @param group The {@link ButtonGroup} to use for buttons.
+     * @see ButtonGroup
      */
     public void sendButtonedMessage(MessageEmbed embed, ButtonGroup group) {
         Messaging.sendButtonedMessage(context.getChannel(), embed, group);
@@ -83,10 +81,9 @@ public class MessagingUI {
     /**
      * Sends a message with reactions to function as "buttons".
      *
-     * @see ButtonGroup
-     *
      * @param message The message to send.
      * @param group   The {@link ButtonGroup} to use for buttons.
+     * @see ButtonGroup
      */
     public void sendButtonedMessage(Message message, ButtonGroup group) {
         Messaging.sendButtonedMessage(context.getChannel(), message, group);
@@ -95,11 +92,10 @@ public class MessagingUI {
     /**
      * Sends a pages message with buttons for page navigation.
      *
+     * @param pages The list of pages to use. see {@link org.cascadebot.cascadebot.utils.pagination.PageObjects.EmbedPage}, {@link org.cascadebot.cascadebot.utils.pagination.PageObjects.StringPage}, and {@link org.cascadebot.cascadebot.utils.pagination.PageObjects.TablePage}.
      * @see org.cascadebot.cascadebot.utils.pagination.PageObjects.EmbedPage
      * @see org.cascadebot.cascadebot.utils.pagination.PageObjects.StringPage
      * @see org.cascadebot.cascadebot.utils.pagination.PageObjects.TablePage
-     *
-     * @param pages The list of pages to use. see {@link org.cascadebot.cascadebot.utils.pagination.PageObjects.EmbedPage}, {@link org.cascadebot.cascadebot.utils.pagination.PageObjects.StringPage}, and {@link org.cascadebot.cascadebot.utils.pagination.PageObjects.TablePage}.
      */
     public void sendPagedMessage(List<Page> pages) {
         Messaging.sendPagedMessage(context.getChannel(), context.getMember(), pages);
@@ -108,26 +104,29 @@ public class MessagingUI {
     /**
      * Sends a permission error.
      *
-     * @param stringPermission The Cascade Permission that they don't have.
+     * @param stringPermission The Cascade permission that the user doesn't have.
      */
     public void sendPermissionsError(String stringPermission) {
         CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
-        if(permission.getDiscordPerm().size() > 0) {
+        if (permission.getDiscordPerm().size() > 0) {
             EnumSet<Permission> permissions = permission.getDiscordPerm();
-            StringBuilder discordPermBuilder = new StringBuilder();
-            boolean first = true;
-            for(Permission discordPermission : permissions) {
-                if(first) {
-                    discordPermBuilder.append(discordPermission.getName());
-                    first = false;
-                } else {
-                    discordPermBuilder.append(", ").append(discordPermission.getName());
-                }
-            }
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s`, or the discord permission(s) `%s` to do this!", permission.getPermissionNode(), discordPermBuilder.toString());
+            String discordPerms = permissions.stream()
+                    .map(Permission::getName)
+                    .map(p -> "`" + p + "`")
+                    .collect(Collectors.joining(", "));
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s`, or the discord permission%s %s to do this!", permission.getPermissionNode(), permissions.size() > 1 ? "(s)" : "", discordPerms);
         } else {
             context.getTypedMessaging().replyDanger("You don't have the permission `%s` to do this!", permission.getPermissionNode());
         }
+    }
+
+    /**
+     * Sends a permission error.
+     *
+     * @param permission The Discord Permission that the user doesn't have.
+     */
+    public void sendPermissionsError(Permission permission) {
+        context.getTypedMessaging().replyDanger("You don't have the discord permission `%s` to do this!", permission.getName());
     }
 
     public void replyUsage(ICommandExecutable command) {
@@ -137,4 +136,5 @@ public class MessagingUI {
     public void replyUsage(ICommandExecutable command, String parent) {
         context.getTypedMessaging().replyWarning("Incorrect usage. Proper usage:\n" + context.getUsage(command, parent));
     }
+
 }
