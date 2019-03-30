@@ -1,28 +1,25 @@
 /*
- *
- *  * Copyright (c) 2019 CascadeBot. All rights reserved.
- *  * Licensed under the MIT license.
- *
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
  */
 
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-public class ResumeCommand implements ICommandMain {
+public class StopCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getMusicPlayer().getPlayer().isPaused()) {
-            context.getData().getMusicPlayer().getPlayer().setPaused(false);
-            context.getTypedMessaging().replySuccess("Music has been resumed!");
+        if (context.getData().getMusicPlayer().getPlayer().getPlayingTrack() != null) { // If the playing track isn't null, and the bot isn't paused
+            context.getData().getMusicPlayer().stop();
+            context.getTypedMessaging().replySuccess("Music has been stopped!");
         } else {
-            context.getTypedMessaging().replyDanger("Music is already playing! Use **" + context.getData().getPrefix() + "pause** to pause it.");
+            context.getTypedMessaging().replyDanger("Music isn't playing, nothing to stop!");
         }
     }
 
@@ -33,16 +30,17 @@ public class ResumeCommand implements ICommandMain {
 
     @Override
     public String command() {
-        return "resume";
+        return "stop";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Resume command", "resume", true);
+        return CascadePermission.of("Stop music command", "stop", false);
     }
 
     @Override
     public String description() {
-        return "Resumes music";
+        return "Stops music when playing";
     }
+
 }

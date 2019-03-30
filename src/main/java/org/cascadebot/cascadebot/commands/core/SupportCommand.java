@@ -14,7 +14,7 @@ public class SupportCommand implements ICommandCore {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.replyInfo("Cascade Support Server: " + Constants.serverInvite);
+        context.getTypedMessaging().replyInfo("Cascade Support Server: " + Constants.serverInvite);
     }
 
     @Override

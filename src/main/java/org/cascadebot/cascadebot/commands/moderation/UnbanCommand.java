@@ -26,7 +26,7 @@ public class UnbanCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.replyUsage(this);
+            context.getUIMessaging().replyUsage(this);
             return;
         }
 
@@ -39,7 +39,7 @@ public class UnbanCommand implements ICommandMain {
         List<User> bannedUsers = FinderUtil.findBannedUsers(target, context.getGuild());
 
         if (bannedUsers.size() == 0) {
-            context.replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find a user to unban matching: " + target, context.getUser()));
+            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find a user to unban matching: " + target, context.getUser()));
         } else if (bannedUsers.size() == 1) {
             CascadeBot.INS.getModerationManager().unban(
                     context,
@@ -48,7 +48,7 @@ public class UnbanCommand implements ICommandMain {
                     reason
             );
         } else {
-            context.replyDanger(MessagingObjects.getStandardMessageEmbed("There is more than one user that matches this criteria!" +
+            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed("There is more than one user that matches this criteria!" +
                     " Please enter the ID or the user's full name!", context.getUser()));
         }
 
