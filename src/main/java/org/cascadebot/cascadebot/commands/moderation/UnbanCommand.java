@@ -26,7 +26,7 @@ public class UnbanCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.replyUsage(this);
+            context.getUIMessaging().replyUsage(this);
             return;
         }
 

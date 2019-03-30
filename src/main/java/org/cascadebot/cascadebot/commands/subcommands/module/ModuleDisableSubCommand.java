@@ -22,7 +22,7 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if(context.getArgs().length < 1) {
-            context.replyUsage(this, "module");
+            context.getUIMessaging().replyUsage(this, "module");
             return;
         }
         String selectedModule = context.getArg(0).toUpperCase();
