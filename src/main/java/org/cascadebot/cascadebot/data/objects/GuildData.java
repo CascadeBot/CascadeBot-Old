@@ -248,7 +248,7 @@ public class GuildData {
     }
 
     public CascadePlayer getMusicPlayer() {
-        return (musicPlayer == null ? (musicPlayer = new CascadePlayer(guildID)) : musicPlayer);
+        return (musicPlayer == null ? (musicPlayer = new CascadePlayer(CascadeBot.INS.getShardManager().getGuildById(guildID))) : musicPlayer);
     }
 
     public Date getCreationDate() {
