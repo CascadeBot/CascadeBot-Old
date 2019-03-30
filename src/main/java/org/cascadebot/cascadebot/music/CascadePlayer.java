@@ -45,19 +45,7 @@ public class CascadePlayer {
         } else {
             AudioPlayer aPlayer = MusicHandler.createLavaLinkPlayer();
             player = new LavaplayerPlayerWrapper(aPlayer);
-            guild.getAudioManager().setSendingHandler(new AudioSendHandler() {
-                private AudioFrame lastFrame;
-                @Override
-                public boolean canProvide() {
-                    lastFrame = aPlayer.provide();
-                    return lastFrame != null;
-                }
-
-                @Override
-                public byte[] provide20MsAudio() {
-                    return lastFrame.getData();
-                }
-            });
+            guild.getAudioManager().setSendingHandler(new LavaPlayerAudioSendHandler(aPlayer));
         }
         player.addListener(new PlayerListener(this));
     }
