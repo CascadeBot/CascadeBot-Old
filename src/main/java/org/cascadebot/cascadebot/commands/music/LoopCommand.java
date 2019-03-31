@@ -56,9 +56,9 @@ public class LoopCommand implements ICommandMain {
     @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of(
-                "playlist", "Sets loop mode to **playlist**", ArgumentType.COMMAND), Argument.of(
-                "song", "Sets loop mode to **song**", ArgumentType.COMMAND), Argument.of(
-                "off", "Sets loop mode to **off**", ArgumentType.COMMAND)
+                "playlist", "Loops the current playlist", ArgumentType.COMMAND), Argument.of(
+                "song", "Loops the current song", ArgumentType.COMMAND), Argument.of(
+                "off", "Turns looping off", ArgumentType.COMMAND)
         );
     }
 
