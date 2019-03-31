@@ -156,18 +156,24 @@ public class CascadePlayer {
         player.stopTrack();
     }
 
-    public void loadLink(String stringUrl, Consumer<Void> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer) {
+    public void loadLink(String stringUrl, Consumer<Void> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
         MusicHandler.playerManager.loadItem(stringUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
+                List<AudioTrack> tracks = new ArrayList<>();
+                tracks.add(audioTrack);
+                resultTracks.accept(tracks);
                 addTrack(audioTrack);
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
+                List<AudioTrack> tracks = new ArrayList<>();
                 for (AudioTrack track : audioPlaylist.getTracks()) {
+                    tracks.add(track);
                     addTrack(track);
                 }
+                resultTracks.accept(tracks);
             }
 
             @Override
@@ -188,6 +194,8 @@ public class CascadePlayer {
                 playlist.removeTrack(url);
             }, exception -> {
                 playlist.removeTrack(url);
+            }, tracks -> {
+
             });
         }
     }
