@@ -160,9 +160,7 @@ public class CascadePlayer {
         MusicHandler.playerManager.loadItem(stringUrl, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
-                List<AudioTrack> tracks = new ArrayList<>();
-                tracks.add(audioTrack);
-                resultTracks.accept(tracks);
+                resultTracks.accept(Collections.singletonList(audioTrack));
                 addTrack(audioTrack);
             }
 
@@ -173,7 +171,7 @@ public class CascadePlayer {
                     tracks.add(track);
                     addTrack(track);
                 }
-                resultTracks.accept(tracks);
+                resultTracks.accept(Collections.unmodifiableList(tracks));
             }
 
             @Override
