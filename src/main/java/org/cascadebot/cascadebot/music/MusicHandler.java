@@ -23,12 +23,15 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
+import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -97,24 +100,39 @@ public class MusicHandler {
      * @return The list of tracks that where found
      */
     public void searchTracks(String search, TextChannel channel, Consumer<List<SearchResult>> searchResultConsumer) {
+        if (StringUtils.isBlank(Config.INS.getYoutubeKey())) {
+            // TODO: Some way to disable searching?
+            return;
+        }
         Request request = new Request.Builder().url("https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + URLEncoder.encode(search, StandardCharsets.UTF_8) + "&key=" + Config.INS.getYoutubeKey() + "&maxResults=5&type=video,playlist").build();
         CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Messaging.sendExceptionMessage(channel, "Error searching from youtube", e);
+                Messaging.sendExceptionMessage(channel, "Error searching from YouTube!", e);
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 if (response.body() == null) {
-                    Messaging.sendDangerMessage(channel, "Youtube didn't return any data!");
+                    Messaging.sendDangerMessage(channel, "YouTube didn't return any data!");
                     return;
                 }
+
                 try {
+                    if (!response.isSuccessful()) {
+                        Messaging.sendDangerMessage(channel, String.format("The query was unsuccessful! Response: %s", PasteUtils.paste(response.body().string())));
+                        return;
+                    }
                     List<SearchResult> searchResults = new ArrayList<>();
                     JsonObject json = musicJsonParser.parse(response.body().string()).getAsJsonObject();
                     JsonArray items = json.getAsJsonArray("items");
+                    int i = 0;
                     for (JsonElement elm : items) {
+                        i++;
+                        if (i > 5) {
+                            CascadeBot.LOGGER.warn("YouTube returned more then 5 results! A check of the YouTube api is recommended");
+                            break;
+                        }
                         JsonObject item = elm.getAsJsonObject();
                         JsonObject idElm = item.getAsJsonObject("id");
                         String type = idElm.get("kind").getAsString();

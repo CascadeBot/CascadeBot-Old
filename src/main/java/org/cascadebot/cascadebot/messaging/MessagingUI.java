@@ -5,16 +5,19 @@
 
 package org.cascadebot.cascadebot.messaging;
 
+import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.CommandException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 
@@ -139,6 +142,24 @@ public class MessagingUI {
 
     public void replyUsage(ICommandExecutable command, String parent) {
         context.getTypedMessaging().replyWarning("Incorrect usage. Proper usage:\n" + context.getUsage(command, parent));
+    }
+
+    public void sendTracksFound(List<AudioTrack> tracks) {
+        if(tracks.size() > 1) {
+            long time = 0;
+            for(AudioTrack track : tracks) {
+                time += track.getDuration();
+            }
+            context.getTypedMessaging().replySuccess("Loaded `%s` tracks with a total length of `%s`", tracks.size(), FormatUtils.formatLongTimeMills(time));
+        } else {
+            AudioTrack track = tracks.get(0);
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setTitle("Loaded Track");
+            builder.setDescription(track.getInfo().title);
+            builder.addField("Length", FormatUtils.formatLongTimeMills(track.getDuration()), true);
+            builder.addField("Author", track.getInfo().author, true);
+            context.getTypedMessaging().replySuccess(builder);
+        }
     }
 
 }

@@ -14,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class FormatUtils {
 
@@ -177,4 +178,10 @@ public class FormatUtils {
         return Math.round(number * Math.pow(10, dp)) / Math.pow(10, dp);
     }
 
+    public static String formatLongTimeMills(long time) {
+        long hours = TimeUnit.MILLISECONDS.toHours(time);
+        long mins = TimeUnit.MILLISECONDS.toMinutes(time) - (hours * 60);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(time) - (TimeUnit.MILLISECONDS.toMinutes(time) * 60);
+        return String.format("%s:%s:%s", hours, mins, seconds);
+    }
 }
