@@ -6,8 +6,6 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
@@ -18,7 +16,6 @@ import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
-import org.cascadebot.cascadebot.utils.buttons.IButtonRunnable;
 
 import java.util.Set;
 
@@ -37,7 +34,7 @@ public class SearchCommand implements ICommandMain {
             StringBuilder messageBuilder = new StringBuilder();
             for(MusicHandler.SearchResult result : searchResults) {
                 i++;
-                char unicode = (char) (0x0030 + i);
+                char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
                 buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
                     if (!runner.equals(buttonGroup.getOwner())) {
                         return;
@@ -53,7 +50,6 @@ public class SearchCommand implements ICommandMain {
                 }));
                 messageBuilder.append(result.getTitle()).append(" - ");
                 switch (result.getType()) {
-
                     case VIDEO:
                         messageBuilder.append("\uD83C\uDFB5");
                         break;

@@ -114,7 +114,13 @@ public class MusicHandler {
                     List<SearchResult> searchResults = new ArrayList<>();
                     JsonObject json = musicJsonParser.parse(response.body().string()).getAsJsonObject();
                     JsonArray items = json.getAsJsonArray("items");
+                    int i = 0;
                     for (JsonElement elm : items) {
+                        i++;
+                        if (i > 5) {
+                            CascadeBot.LOGGER.warn("Youtube returned more then 5 results! A check of the youtube api is recommended");
+                            break;
+                        }
                         JsonObject item = elm.getAsJsonObject();
                         JsonObject idElm = item.getAsJsonObject("id");
                         String type = idElm.get("kind").getAsString();
