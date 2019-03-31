@@ -14,9 +14,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;
 
-import static org.cascadebot.cascadebot.music.CascadePlayer.LoopMode.DISABLED;
-import static org.cascadebot.cascadebot.music.CascadePlayer.LoopMode.PLAYLIST;
-import static org.cascadebot.cascadebot.music.CascadePlayer.LoopMode.SONG;
+import static org.cascadebot.cascadebot.music.CascadePlayer.LoopMode.*;
 
 public class LoopCommand implements ICommandMain {
 
@@ -31,15 +29,15 @@ public class LoopCommand implements ICommandMain {
 
         if (loopMode.equals("off")) {
             context.getData().getMusicPlayer().loopMode(DISABLED);
-            context.getTypedMessaging().replySuccess("Loop mode has been set to **disabled**.");
+            context.getTypedMessaging().replySuccess("Loop mode has been set to `disabled`.");
         } else if (loopMode.equals("playlist")) {
             context.getData().getMusicPlayer().loopMode(PLAYLIST);
-            context.getTypedMessaging().replySuccess("Loop mode has been set to **playlist**.");
+            context.getTypedMessaging().replySuccess("Loop mode has been set to `playlist`.");
         } else if (loopMode.equals("song")) {
             context.getData().getMusicPlayer().loopMode(SONG);
-            context.getTypedMessaging().replySuccess("Loop mode has been set to **song**.");
+            context.getTypedMessaging().replySuccess("Loop mode has been set to `song`.");
         } else {
-            context.getTypedMessaging().replyDanger("I don't understand which loop mode you would like.\n To view the usage for this command, type **" + context.getData().getPrefix() + "loop**.");
+            context.getTypedMessaging().replyDanger("I don't understand which loop mode you would like.\n To view the usage for this command, type `" + context.getData().getPrefix() + "loop`.");
         }
     }
 
