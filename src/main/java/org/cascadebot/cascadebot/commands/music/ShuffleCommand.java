@@ -25,7 +25,6 @@ public class ShuffleCommand implements ICommandMain {
                 context.getTypedMessaging().replySuccess("Shuffling has been disabled!");
             }
         }
-
     }
 
     @Override
