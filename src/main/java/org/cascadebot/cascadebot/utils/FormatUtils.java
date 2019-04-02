@@ -92,7 +92,9 @@ public class FormatUtils {
     //region Embed methods
     public static String formatEmbed(MessageEmbed embed) {
         StringBuilder sb = new StringBuilder();
-        sb.append("__**").append(embed.getTitle()).append("**__\n");
+        if(embed.getTitle() != null) {
+            sb.append("__**").append(embed.getTitle()).append("**__\n");
+        }
         if (embed.getDescription() != null) {
             sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
         }
@@ -120,7 +122,9 @@ public class FormatUtils {
                 sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(field.getValue()))).append("\n\n");
             }
         }
-        sb.append(getFormattedInlineFields(inline)).append("\n\n");
+        if(inline != null) {
+            sb.append(getFormattedInlineFields(inline)).append("\n\n");
+        }
         sb.append("_").append(embed.getFooter().getText()).append("_");
 
         return sb.toString();
