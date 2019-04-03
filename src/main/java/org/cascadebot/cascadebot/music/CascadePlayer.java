@@ -74,8 +74,13 @@ public class CascadePlayer {
      *
      * @return The progress bar for the current track
      */
-    public String getTrackProgressBar() {
-        return StringsUtil.getProgressBar((100f / player.getPlayingTrack().getDuration() * player.getTrackPosition()));
+    public String getTrackProgressBar(boolean embed) {
+        float process = (100f / player.getPlayingTrack().getDuration() * player.getTrackPosition());
+        if(embed) {
+            return StringsUtil.getProgressBarEmbed(process);
+        } else {
+            return StringsUtil.getProgressBar(process);
+        }
     }
 
     public void addTrack(AudioTrack track) {
