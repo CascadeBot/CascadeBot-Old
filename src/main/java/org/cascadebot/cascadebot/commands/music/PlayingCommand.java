@@ -11,6 +11,8 @@ import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
+import java.util.Set;
+
 public class PlayingCommand implements ICommandMain {
 
     @Override
@@ -39,6 +41,10 @@ public class PlayingCommand implements ICommandMain {
         return Module.MUSIC;
     }
 
+    @Override
+    public Set<String> getGlobalAliases() {
+        return Set.of("song");
+    }
 
     @Override
     public String command() {
