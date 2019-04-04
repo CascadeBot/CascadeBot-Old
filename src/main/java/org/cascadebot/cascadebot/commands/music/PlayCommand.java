@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -21,14 +22,24 @@ public class PlayCommand implements ICommandMain {
             context.getData().getMusicPlayer().loadLink(context.getArg(0), input -> {
                 context.getTypedMessaging().replyDanger("We could not find music that matches: `%s`", input);
             }, exception -> {
-                context.getTypedMessaging().replyException("We encounted an error processing that!", exception);
+                context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
             }, tracks -> {
                 context.getData().getMusicPlayer().addTracks(tracks);
                 context.getUIMessaging().sendTracksFound(tracks);
             });
         } else {
-            // Allow this?
-            context.runOtherCommand("search", sender, context);
+            CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
+                if (searchResults.isEmpty()) {
+                    context.getTypedMessaging().replyDanger("We could not find music that matches: `%s`", context.getArg(0));
+                } else {
+                    context.getData().getMusicPlayer().loadLink(searchResults.get(0).getUrl(), itShouldMatch -> {}, exception -> {
+                        context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
+                    }, tracks -> {
+                        context.getData().getMusicPlayer().addTracks(tracks);
+                        context.getUIMessaging().sendTracksFound(tracks);
+                    });
+                }
+            });
         }
     }
 
