@@ -1,7 +1,6 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import lavalink.client.player.IPlayer;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -32,12 +31,12 @@ public class PlayingCommand implements ICommandMain {
             }
             embedBuilder.addField("Status", player.getPlayer().isPaused() ? "\u23F8 Paused" : "\u25B6 Playing", true);
 
-            if (!track.getInfo().isStream){
+            if (!track.getInfo().isStream) {
                 embedBuilder.addField("Progress", player.getTrackProgressBar(context.getData().getSettings().useEmbedForMessages()), false);
             }
 
             embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(track.getPosition()) + "/" +
-                    (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : "\u221e" /* Infinity Symbol */)   , true);
+                    (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : "\u221e" /* Infinity Symbol */), true);
             embedBuilder.addField("Volume", player.getPlayer().getVolume() + "%", true);
             embedBuilder.setFooter("Requested by " + sender.getUser().getAsTag(), sender.getUser().getEffectiveAvatarUrl());
             context.getTypedMessaging().replyInfo(embedBuilder);
