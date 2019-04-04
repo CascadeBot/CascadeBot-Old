@@ -8,6 +8,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
@@ -17,25 +18,27 @@ public class PlayingCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        IPlayer player = context.getData().getMusicPlayer().getPlayer();
-        AudioTrack track = player.getPlayingTrack();
+        CascadePlayer player = context.getData().getMusicPlayer();
+        AudioTrack track = player.getPlayer().getPlayingTrack();
 
-        if (player.getPlayingTrack() == null) {
+        if (player.getPlayer().getPlayingTrack() == null) {
             context.getTypedMessaging().replyWarning("No music playing!");
         } else {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setAuthor(track.getInfo().author);
             embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
-            embedBuilder.setThumbnail("https://img.youtube.com/vi/" + track.getIdentifier() + "/hqdefault.jpg");
-            embedBuilder.addField("Status", player.isPaused() ? "\u23F8 Paused" : "\u25B6 Playing", true);
+            if (player.getArtwork() != null) {
+                embedBuilder.setThumbnail(player.getArtwork());
+            }
+            embedBuilder.addField("Status", player.getPlayer().isPaused() ? "\u23F8 Paused" : "\u25B6 Playing", true);
 
             if (!track.getInfo().isStream){
-                embedBuilder.addField("Progress", context.getData().getMusicPlayer().getTrackProgressBar(context.getData().getSettings().useEmbedForMessages()), false);
+                embedBuilder.addField("Progress", player.getTrackProgressBar(context.getData().getSettings().useEmbedForMessages()), false);
             }
 
             embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(track.getPosition()) + "/" +
                     (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : "\u221e" /* Infinity Symbol */)   , true);
-            embedBuilder.addField("Volume", player.getVolume() + "%", true);
+            embedBuilder.addField("Volume", player.getPlayer().getVolume() + "%", true);
             embedBuilder.setFooter("Requested by " + sender.getUser().getAsTag(), sender.getUser().getEffectiveAvatarUrl());
             context.getTypedMessaging().replyInfo(embedBuilder);
         }
