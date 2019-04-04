@@ -257,7 +257,7 @@ public class CommandContext {
 
     public void runOtherCommand(String command, Member sender, CommandContext context) {
         ICommandMain commandMain = CascadeBot.INS.getCommandManager().getCommandByDefault(command);
-        if (hasPermission(commandMain.getPermission().getPermissionNode())) {
+        if (hasPermission(commandMain.getPermission())) {
             commandMain.onCommand(member, context);
         } else {
             context.getUIMessaging().sendPermissionError(commandMain.getPermission().getPermissionNode());
@@ -303,6 +303,10 @@ public class CommandContext {
     public boolean hasPermission(String permission) {
         CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
         return cascadePermission != null; // TODO: Check actual perms
+    }
+
+    public boolean hasPermission(CascadePermission permission) {
+        return permission != null; // TODO: Check actual perms
     }
 
     //endregion
