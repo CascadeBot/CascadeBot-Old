@@ -10,7 +10,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -20,6 +19,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
+import spark.utils.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,7 +111,7 @@ public class MessagingUI {
      */
     public void sendPermissionError(String stringPermission) {
         CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
-        if (permission.getDiscordPerm().size() > 0) {
+        if (!CollectionUtils.isEmpty(permission.getDiscordPerm())) {
             EnumSet<Permission> permissions = permission.getDiscordPerm();
             String discordPerms = permissions.stream()
                     .map(Permission::getName)
