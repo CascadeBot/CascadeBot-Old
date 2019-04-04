@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,12 +21,12 @@ public class CommandManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
 
-    private final List<ICommandMain> commands = Collections.synchronizedList(new ArrayList<>());
+    private List<ICommandMain> commands;
 
     public CommandManager() {
-
         long start = System.currentTimeMillis();
         try {
+            List<ICommandMain> commands = new ArrayList<>();
             for (Class<?> c : ReflectionUtils.getClasses("org.cascadebot.cascadebot.commands")) {
                 if (ICommandMain.class.isAssignableFrom(c)) {
                     ICommandMain command = (ICommandMain) ConstructorUtils.invokeConstructor(c);
@@ -38,6 +37,7 @@ public class CommandManager {
                 }
             }
             LOGGER.info("Loaded {} commands in {}ms.", commands.size(), (System.currentTimeMillis() - start));
+            this.commands = List.copyOf(commands);
         } catch (Exception e) {
             LOGGER.error("Could not load commands!", e);
             ShutdownHandler.exitWithError();
@@ -45,13 +45,11 @@ public class CommandManager {
     }
 
     public ICommandMain getCommand(String command, User user, GuildData data) {
-        synchronized (commands) {
-            for (ICommandMain cmd : commands) {
-                if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
-                    return cmd;
-                } else if (data.getCommandAliases(cmd).contains(command)) {
-                    return cmd;
-                }
+        for (ICommandMain cmd : commands) {
+            if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
+                return cmd;
+            } else if (data.getCommandAliases(cmd).contains(command)) {
+                return cmd;
             }
         }
         return null;
@@ -62,15 +60,11 @@ public class CommandManager {
     }
 
     public List<ICommandMain> getCommandsByModule(Module type) {
-        synchronized (commands) {
-            return commands.stream().filter(command -> command.getModule() == type).collect(Collectors.toList());
-        }
+        return commands.stream().filter(command -> command.getModule() == type).collect(Collectors.toList());
     }
 
     public ICommandExecutable getCommandByDefault(String defaultCommand) {
-        synchronized (commands) {
-            return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
-        }
+        return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
     }
 
 }
