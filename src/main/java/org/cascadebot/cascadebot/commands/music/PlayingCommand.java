@@ -24,7 +24,8 @@ public class PlayingCommand implements ICommandMain {
             context.getTypedMessaging().replyWarning("No music playing!");
         } else {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-            embedBuilder.setTitle(track.getInfo().title + " - " + track.getInfo().author, track.getInfo().uri);
+            embedBuilder.setAuthor(track.getInfo().author);
+            embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
             embedBuilder.setThumbnail("https://img.youtube.com/vi/" + track.getIdentifier() + "/hqdefault.jpg");
             embedBuilder.addField("Status", player.isPaused() ? "\u23F8 Paused" : "\u25B6 Playing", true);
             embedBuilder.addField("Duration", track.getInfo().isStream ? "This is a livestream!" : FormatUtils.formatLongTimeMills(track.getDuration()), true);
