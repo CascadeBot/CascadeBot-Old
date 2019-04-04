@@ -28,8 +28,13 @@ public class PlayingCommand implements ICommandMain {
             embedBuilder.setTitle(track.getInfo().title, track.getInfo().uri);
             embedBuilder.setThumbnail("https://img.youtube.com/vi/" + track.getIdentifier() + "/hqdefault.jpg");
             embedBuilder.addField("Status", player.isPaused() ? "\u23F8 Paused" : "\u25B6 Playing", true);
-            embedBuilder.addField("Duration", track.getInfo().isStream ? "This is a livestream!" : FormatUtils.formatLongTimeMills(track.getDuration()), true);
-            embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(track.getPosition()), true);
+
+            if (!track.getInfo().isStream){
+                embedBuilder.addField("Progress", context.getData().getMusicPlayer().getTrackProgressBar(context.getData().getSettings().useEmbedForMessages()), false);
+            }
+
+            embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(track.getPosition()) + "/" +
+                    (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : "\u221e" /* Infinity Symbol */)   , true);
             embedBuilder.addField("Volume", player.getVolume() + "%", true);
             embedBuilder.setFooter("Requested by " + sender.getUser().getAsTag(), sender.getUser().getEffectiveAvatarUrl());
             context.getTypedMessaging().replyInfo(embedBuilder);
