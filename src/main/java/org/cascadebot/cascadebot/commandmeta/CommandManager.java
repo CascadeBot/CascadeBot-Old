@@ -67,7 +67,7 @@ public class CommandManager {
         }
     }
 
-    public ICommandExecutable getCommandByDefault(String defaultCommand) {
+    public ICommandMain getCommandByDefault(String defaultCommand) {
         synchronized (commands) {
             return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
         }

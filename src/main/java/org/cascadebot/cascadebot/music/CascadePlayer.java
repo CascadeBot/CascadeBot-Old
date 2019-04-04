@@ -24,6 +24,7 @@ import org.cascadebot.cascadebot.events.PlayerListener;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,6 +91,10 @@ public class CascadePlayer {
         } else {
             player.playTrack(track);
         }
+    }
+
+    public void addTracks(Collection<AudioTrack> tracks) {
+        tracks.forEach(this::addTrack);
     }
 
     public void loopMode(LoopMode loopMode) {
@@ -162,8 +167,8 @@ public class CascadePlayer {
         player.stopTrack();
     }
 
-    public void loadLink(String stringUrl, Consumer<Void> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
-        MusicHandler.playerManager.loadItem(stringUrl, new AudioLoadResultHandler() {
+    public void loadLink(String input, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
+        MusicHandler.playerManager.loadItem(input, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
                 resultTracks.accept(Collections.singletonList(audioTrack));
@@ -182,7 +187,7 @@ public class CascadePlayer {
 
             @Override
             public void noMatches() {
-                noMatchConsumer.accept(null);
+                noMatchConsumer.accept(input);
             }
 
             @Override

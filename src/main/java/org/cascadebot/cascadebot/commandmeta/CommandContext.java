@@ -9,17 +9,12 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.GuildSettings;
-import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
-import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.messaging.MessagingTimed;
 import org.cascadebot.cascadebot.messaging.MessagingTyped;
 import org.cascadebot.cascadebot.messaging.MessagingUI;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
-import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.shared.Regex;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Emote;
@@ -258,6 +253,15 @@ public class CommandContext {
                 "Member needs to be in the same guild as this context! Guild ID: " + guild.getId());
         Checks.notEmpty(permissions, "Permissions");
         return this.member.hasPermission(this.channel, permissions);
+    }
+
+    public void runOtherCommand(String command, Member sender, CommandContext context) {
+        ICommandMain commandMain = CascadeBot.INS.getCommandManager().getCommandByDefault(command);
+        if (hasPermission(commandMain.getPermission().getPermissionNode())) {
+            commandMain.onCommand(member, context);
+        } else {
+            context.getUIMessaging().sendPermissionError(commandMain.getPermission().getPermissionNode());
+        }
     }
 
     /**
