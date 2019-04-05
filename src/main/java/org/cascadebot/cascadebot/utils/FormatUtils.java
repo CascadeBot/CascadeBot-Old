@@ -9,6 +9,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.UnicodeConstants;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -142,7 +143,7 @@ public class FormatUtils {
             sb.append(String.format("%-25s", head));
         }
 
-        sb.append("\u200B`"); // Zero width space
+        sb.append(UnicodeConstants.ZERO_WIDTH_SPACE + "`"); // Zero width space
 
         sb.append("\n");
 
@@ -152,7 +153,7 @@ public class FormatUtils {
             sb.append(String.format("%-25s", bodyString));
         }
 
-        sb.append("\u200B`"); // Zero width space
+        sb.append(UnicodeConstants.ZERO_WIDTH_SPACE + "`"); // Zero width space
 
         return sb.toString();
     }

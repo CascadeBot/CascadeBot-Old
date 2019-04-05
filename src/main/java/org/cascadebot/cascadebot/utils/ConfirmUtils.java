@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.messaging.MessageType;
@@ -49,7 +50,7 @@ public class ConfirmUtils {
         if (channel.getGuild().getMember(CascadeBot.INS.getSelfUser()).hasPermission(channel, Permission.MESSAGE_ADD_REACTION)) {
             Task.getScheduler().schedule(() -> {
                 ButtonGroup group = new ButtonGroup(userId, channel.getGuild().getIdLong());
-                group.addButton(new Button.UnicodeButton("\u2705" /* Tick, confirm action */, (runner, channel1, message1) -> {
+                group.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel1, message1) -> {
                     if (runner.getUser().getIdLong() != action.userID) return;
                     action.run();
                 }));
