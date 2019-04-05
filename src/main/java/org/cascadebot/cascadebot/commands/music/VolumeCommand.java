@@ -1,11 +1,15 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.commandmeta.Argument;
+import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+
+import java.util.Set;
 
 public class VolumeCommand implements ICommandMain {
 
@@ -13,11 +17,11 @@ public class VolumeCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         CascadePlayer player = context.getData().getMusicPlayer();
         if (context.getArgs().length == 0) {
-            context.getTypedMessaging().replyInfo("Current volume is %s%%", player.getPlayer().getVolume());
+            context.getTypedMessaging().replyInfo("Current volume is %d%%", player.getPlayer().getVolume());
             return;
         }
         int volume = -1;
-        if(context.isArgInteger(0)) {
+        if (context.isArgInteger(0)) {
             volume = context.getArgAsInteger(0);
             context.getUIMessaging().replyUsage(this);
             return;
@@ -28,10 +32,10 @@ public class VolumeCommand implements ICommandMain {
         }
 
         if (volume == context.getData().getMusicPlayer().getPlayer().getVolume()) {
-            context.getTypedMessaging().replyInfo("Volume is already %s%%", player.getPlayer().getVolume());
+            context.getTypedMessaging().replyInfo("Volume is already %d%%", player.getPlayer().getVolume());
         } else {
             player.getPlayer().setVolume(volume);
-            context.getTypedMessaging().replyInfo("Volume set to %s%%", player.getPlayer().getVolume());
+            context.getTypedMessaging().replyInfo("Volume set to %d%%", player.getPlayer().getVolume());
         }
 
     }
@@ -45,6 +49,11 @@ public class VolumeCommand implements ICommandMain {
     @Override
     public String command() {
         return "volume";
+    }
+
+    @Override
+    public Set<Argument> getArguments() {
+        return Set.of(Argument.of("volume", "sets the volume to this value", ArgumentType.OPTIONAL));
     }
 
     @Override
