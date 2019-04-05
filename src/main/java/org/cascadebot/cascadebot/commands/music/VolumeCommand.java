@@ -16,23 +16,21 @@ public class VolumeCommand implements ICommandMain {
             context.getTypedMessaging().replyInfo("Current volume is %s%%", player.getPlayer().getVolume());
             return;
         }
-        Integer Volume = null;
-        try {
-            Volume = context.getArgAsInteger(0);
-
-        } catch (java.lang.NumberFormatException e) {
+        int volume = -1;
+        if(context.isArgInteger(0)) {
+            volume = context.getArgAsInteger(0);
             context.getUIMessaging().replyUsage(this);
             return;
         }
-        if (Volume < 0 || Volume > 100) {
+        if (volume < 0 || volume > 100) {
             context.getTypedMessaging().replyWarning("Volume needs to be between 100 and 0");
             return;
         }
 
-        if (Volume == context.getData().getMusicPlayer().getPlayer().getVolume()) {
+        if (volume == context.getData().getMusicPlayer().getPlayer().getVolume()) {
             context.getTypedMessaging().replyInfo("Volume is already %s%%", player.getPlayer().getVolume());
         } else {
-            player.getPlayer().setVolume(Volume);
+            player.getPlayer().setVolume(volume);
             context.getTypedMessaging().replyInfo("Volume set to %s%%", player.getPlayer().getVolume());
         }
 
