@@ -62,11 +62,17 @@ public class PlayingCommand implements ICommandMain {
                 buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD09" /* 🔉 Volume down */, (runner, channel, message) -> {
                     int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
                     volume -= 10;
+                    if (volume <= 0) {
+                        volume = 0;
+                    }
                     context.getData().getMusicPlayer().getPlayer().setVolume(volume);
                 }));
                 buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD0A" /* 🔊 Volume up */, (runner, channel, message) -> {
                     int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
                     volume += 10;
+                    if(volume >= 200) {
+                        volume = 200;
+                    }
                     context.getData().getMusicPlayer().getPlayer().setVolume(volume);
                 }));
             }
