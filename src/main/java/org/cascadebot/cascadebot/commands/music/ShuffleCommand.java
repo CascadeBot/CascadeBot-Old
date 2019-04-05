@@ -21,9 +21,7 @@ public class ShuffleCommand implements ICommandMain {
                 context.getTypedMessaging().replySuccess("Shuffling has been enabled!");
             }
         } else {
-            if (!context.getData().getMusicPlayer().isShuffleEnabled()){
-                context.getTypedMessaging().replySuccess("Shuffling has been disabled!");
-            }
+            context.getTypedMessaging().replySuccess("Shuffling has been disabled!");
         }
     }
 
