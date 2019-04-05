@@ -6,6 +6,7 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
@@ -20,6 +21,7 @@ public class VolumeCommand implements ICommandMain {
             context.getTypedMessaging().replyInfo("Current volume is %d%%", player.getPlayer().getVolume());
             return;
         }
+
         int volume;
         if (context.isArgInteger(0)) {
             volume = context.getArgAsInteger(0);
@@ -27,6 +29,7 @@ public class VolumeCommand implements ICommandMain {
             context.getUIMessaging().replyUsage(this);
             return;
         }
+
         if (volume < 0 || volume > 100) {
             context.getTypedMessaging().replyWarning("Volume needs to be between 100 and 0");
             return;
@@ -65,6 +68,11 @@ public class VolumeCommand implements ICommandMain {
     @Override
     public String description() {
         return "Changes the players volume";
+    }
+
+    @Override
+    public Set<Flag> getFlags() {
+        return Set.of(Flag.MUSIC_SERVICES);
     }
 
 }
