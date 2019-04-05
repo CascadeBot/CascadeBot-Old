@@ -29,7 +29,7 @@ public class PlayingCommand implements ICommandMain {
             if (player.getArtwork() != null) {
                 embedBuilder.setThumbnail(player.getArtwork());
             }
-            embedBuilder.addField("Status", player.getPlayer().isPaused() ? "\u23F8 Paused" : "\u25B6 Playing", true);
+            embedBuilder.addField("Status", player.getPlayer().isPaused() ? "\u23F8 Paused" /* ⏸ Paused */ : "\u25B6 Playing" /* ▶ Playing */, true);
 
             if (!track.getInfo().isStream) {
                 embedBuilder.addField("Progress", player.getTrackProgressBar(context.getData().getSettings().useEmbedForMessages()), false);

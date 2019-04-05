@@ -156,7 +156,9 @@ public class MessagingUI {
             EmbedBuilder builder = new EmbedBuilder();
             builder.setTitle("Loaded Track");
             builder.setDescription(track.getInfo().title);
-            builder.addField("Length", FormatUtils.formatLongTimeMills(track.getDuration()), true);
+            if(!track.getInfo().isStream) {
+                builder.addField("Length", FormatUtils.formatLongTimeMills(track.getDuration()), true);
+            }
             builder.addField("Author", track.getInfo().author, true);
             context.getTypedMessaging().replySuccess(builder);
         }
