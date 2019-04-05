@@ -39,7 +39,8 @@ public class VolumeCommand implements ICommandMain {
         } else if (volume > 100 && volume <= 200) {
             if (context.hasPermission("volume.extreme")) {
                 ConfirmUtils.confirmAction(sender.getUser().getIdLong(),
-                        "volume-extreme", context.getChannel(),
+                        "volume-extreme",
+                        context.getChannel(),
                         MessageType.WARNING,
                         "Are you sure you want to exceed 100% volume?",
                         0,
