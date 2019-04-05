@@ -99,7 +99,7 @@ public class PlayingCommand implements ICommandMain {
                     buttonGroup.addButton(noRepeat);
                     break;
             }
-            
+
             buttonGroup.addButton(player.getPlayer().isPaused() ? playButton : pauseButton);
 
             context.getUIMessaging().sendButtonedMessage(getSongEmbed(context.getData().getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
