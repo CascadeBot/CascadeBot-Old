@@ -20,24 +20,19 @@ public class LoopCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length == 0) {
-            context.getUIMessaging().replyUsage(this);
-            return;
-        }
-
-        String loopMode = context.getMessage(0);
-
-        if (loopMode.equals("off")) {
-            context.getData().getMusicPlayer().loopMode(DISABLED);
-            context.getTypedMessaging().replySuccess("Loop mode has been set to `disabled`.");
-        } else if (loopMode.equals("playlist")) {
+        if (context.getData().getMusicPlayer().getLoopMode() == DISABLED) {
             context.getData().getMusicPlayer().loopMode(PLAYLIST);
             context.getTypedMessaging().replySuccess("Loop mode has been set to `playlist`.");
-        } else if (loopMode.equals("song")) {
+            return;
+        } if (context.getData().getMusicPlayer().getLoopMode() == PLAYLIST) {
             context.getData().getMusicPlayer().loopMode(SONG);
             context.getTypedMessaging().replySuccess("Loop mode has been set to `song`.");
+            return;
+        } if (context.getData().getMusicPlayer().getLoopMode() == SONG) {
+            context.getData().getMusicPlayer().loopMode(DISABLED);
+            context.getTypedMessaging().replySuccess("Loop mode has been set to `disabled`.");
         } else {
-            context.getTypedMessaging().replyDanger("I don't understand which loop mode you would like.\n To view the usage for this command, type `" + context.getData().getPrefix() + "loop`.");
+            context.getTypedMessaging().replyDanger("I can't change the loop mode.");
         }
     }
 
@@ -52,22 +47,13 @@ public class LoopCommand implements ICommandMain {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "playlist", "Loops the current playlist", ArgumentType.COMMAND), Argument.of(
-                "song", "Loops the current song", ArgumentType.COMMAND), Argument.of(
-                "off", "Turns looping off", ArgumentType.COMMAND)
-        );
-    }
-
-    @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("Loop command", "loop", true);
     }
 
     @Override
     public String description() {
-        return "Loop command";
+        return "Changes the loop mode";
     }
 
 }
