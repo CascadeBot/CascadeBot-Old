@@ -56,15 +56,6 @@ public class PlayingCommand implements ICommandMain {
             embedBuilder.setFooter("Requested by " + sender.getUser().getAsTag(), sender.getUser().getEffectiveAvatarUrl());
 
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-
-            buttonGroup.addButton(player.getPlayer().isPaused() ? playButton : pauseButton);
-            buttonGroup.addButton(new Button.UnicodeButton("\u23F9" /* ⏹ Stop */, (runner, channel, message) -> {
-                context.getData().getMusicPlayer().stop();
-                message.delete().queue();
-            }));
-            buttonGroup.addButton(new Button.UnicodeButton("\u23ED" /* ⏭ Skip */, (runner, channel, message) -> {
-                context.getData().getMusicPlayer().skip();
-            }));
             //TODO check if donator guild
             buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD09" /* 🔉 Volume down */, (runner, channel, message) -> {
                 int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
@@ -76,6 +67,15 @@ public class PlayingCommand implements ICommandMain {
                 volume += 10;
                 context.getData().getMusicPlayer().getPlayer().setVolume(volume);
             }));
+
+            buttonGroup.addButton(new Button.UnicodeButton("\u23F9" /* ⏹ Stop */, (runner, channel, message) -> {
+                context.getData().getMusicPlayer().stop();
+                message.delete().queue();
+            }));
+            buttonGroup.addButton(new Button.UnicodeButton("\u23ED" /* ⏭ Skip */, (runner, channel, message) -> {
+                context.getData().getMusicPlayer().skip(); //TODO make this run skip command
+            }));
+            buttonGroup.addButton(player.getPlayer().isPaused() ? playButton : pauseButton);
 
             context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
         }
