@@ -16,9 +16,10 @@ public class VolumeCommand implements ICommandMain {
             context.getTypedMessaging().replyInfo("Current volume is %s%%", player.getPlayer().getVolume());
             return;
         }
-        int volume = -1;
+        int volume;
         if(context.isArgInteger(0)) {
             volume = context.getArgAsInteger(0);
+        } else {
             context.getUIMessaging().replyUsage(this);
             return;
         }
