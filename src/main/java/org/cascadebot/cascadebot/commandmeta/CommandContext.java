@@ -212,7 +212,7 @@ public class CommandContext {
             }
         }
 
-        String commandString = data.getPrefix() + (parent == null ? "" : parent + " ") + (levels > 0 ? command.command() + " " + (levels > 1 ? getMessage(0, levels - 1) + " " : "") : "");
+        String commandString = data.getPrefix() + (parent == null ? "" : parent + " ");
         return parentArg.getUsageString(commandString);
     }
 

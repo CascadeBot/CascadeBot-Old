@@ -7,6 +7,7 @@ package org.cascadebot.cascadebot.utils.buttons;
 
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
+import org.cascadebot.cascadebot.CascadeBot;
 
 public abstract class Button {
 
@@ -45,7 +46,7 @@ public abstract class Button {
 
         @Override
         public void addReaction(Message message) {
-            message.addReaction(unicode).queue();
+            message.addReaction(unicode).queue(null, error -> CascadeBot.LOGGER.debug("Failed to add reaction!", error));
         }
 
     }

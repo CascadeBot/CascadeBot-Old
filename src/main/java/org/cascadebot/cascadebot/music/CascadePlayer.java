@@ -84,6 +84,13 @@ public class CascadePlayer {
         }
     }
 
+    public String getArtwork() {
+        if (player.getPlayingTrack().getInfo().uri.contains("youtube")) {
+            return "https://img.youtube.com/vi/" + player.getPlayingTrack().getIdentifier() + "/hqdefault.jpg";
+        }
+        return null;
+    }
+
     public void addTrack(AudioTrack track) {
         if (player.getPlayingTrack() != null) {
 

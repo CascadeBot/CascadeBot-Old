@@ -104,7 +104,7 @@ public class MusicHandler {
             // TODO: Some way to disable searching?
             return;
         }
-        Request request = new Request.Builder().url("https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + URLEncoder.encode(search, StandardCharsets.UTF_8) + "&key=" + Config.INS.getYoutubeKey() + "&maxResults=5&type=video,playlist").build();
+        Request request = new Request.Builder().url("https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + URLEncoder.encode(search, StandardCharsets.UTF_8) + "&key=" + URLEncoder.encode(Config.INS.getYoutubeKey(), StandardCharsets.UTF_8) + "&maxResults=5&type=video,playlist").build();
         CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
