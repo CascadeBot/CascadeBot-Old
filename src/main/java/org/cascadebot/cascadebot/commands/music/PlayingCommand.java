@@ -9,6 +9,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -57,16 +58,18 @@ public class PlayingCommand implements ICommandMain {
 
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             //TODO check if donator guild
-            buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD09" /* 🔉 Volume down */, (runner, channel, message) -> {
-                int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
-                volume -= 10;
-                context.getData().getMusicPlayer().getPlayer().setVolume(volume);
-            }));
-            buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD0A" /* 🔊 Volume up */, (runner, channel, message) -> {
-                int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
-                volume += 10;
-                context.getData().getMusicPlayer().getPlayer().setVolume(volume);
-            }));
+            if(context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
+                buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD09" /* 🔉 Volume down */, (runner, channel, message) -> {
+                    int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
+                    volume -= 10;
+                    context.getData().getMusicPlayer().getPlayer().setVolume(volume);
+                }));
+                buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD0A" /* 🔊 Volume up */, (runner, channel, message) -> {
+                    int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
+                    volume += 10;
+                    context.getData().getMusicPlayer().getPlayer().setVolume(volume);
+                }));
+            }
 
             buttonGroup.addButton(new Button.UnicodeButton("\u23F9" /* ⏹ Stop */, (runner, channel, message) -> {
                 context.getData().getMusicPlayer().stop();
