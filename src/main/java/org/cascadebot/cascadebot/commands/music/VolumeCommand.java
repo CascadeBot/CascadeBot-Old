@@ -17,7 +17,7 @@ public class VolumeCommand implements ICommandMain {
             return;
         }
         Integer Arguments = Integer.valueOf(context.getMessage(0));
-        if (Arguments > 100 || Arguments < 0) {
+        if (Arguments < 0 || Arguments > 100) {
             context.getTypedMessaging().replyWarning("Volume needs to be between 100 and 0");
             return;
         }
