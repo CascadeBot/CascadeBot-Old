@@ -186,6 +186,6 @@ public class FormatUtils {
         long hours = TimeUnit.MILLISECONDS.toHours(time);
         long mins = TimeUnit.MILLISECONDS.toMinutes(time) - (hours * 60);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time) - (TimeUnit.MILLISECONDS.toMinutes(time) * 60);
-        return String.format("%s:%s:%s", hours, mins, seconds);
+        return String.format("%02d:%02d:%02d", hours, mins, seconds);
     }
 }
