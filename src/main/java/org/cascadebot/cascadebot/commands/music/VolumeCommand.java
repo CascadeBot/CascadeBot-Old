@@ -51,10 +51,14 @@ public class VolumeCommand implements ICommandMain {
                                 context.getTypedMessaging().replyInfo("Volume set to %d%%", player.getPlayer().getVolume());
                             }
                         });
+                return;
             } else {
                 context.getUIMessaging().sendPermissionError("volume.extreme");
                 return;
             }
+        } else if (volume > 200) {
+            context.getTypedMessaging().replyWarning("Volume needs to be between 0 and 200");
+            return;
         }
 
         if (volume == context.getData().getMusicPlayer().getPlayer().getVolume()) {
@@ -79,7 +83,7 @@ public class VolumeCommand implements ICommandMain {
 
     @Override
     public Set<Argument> getArguments() {
-        return Set.of(Argument.of("volume", "sets the volume to this value", ArgumentType.OPTIONAL));
+        return Set.of(Argument.of("volume", "sets the volume to this value", ArgumentType.REQUIRED));
     }
 
     @Override
@@ -89,7 +93,7 @@ public class VolumeCommand implements ICommandMain {
 
     @Override
     public String description() {
-        return "Changes the players volume";
+        return "Returns the current volume";
     }
 
     @Override
