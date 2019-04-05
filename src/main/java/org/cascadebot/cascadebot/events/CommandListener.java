@@ -146,6 +146,7 @@ public class CommandListener extends ListenerAdapter {
                 // TODO: Modlog?
                 return;
             }
+            // TODO: Flag checking for binary :)
             CommandContext context = new CommandContext(
                     event.getJDA(),
                     event.getChannel(),
