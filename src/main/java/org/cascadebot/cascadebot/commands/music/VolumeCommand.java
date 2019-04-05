@@ -7,10 +7,13 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.Flag;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.ConfirmUtils;
 
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class VolumeCommand implements ICommandMain {
 
@@ -30,9 +33,28 @@ public class VolumeCommand implements ICommandMain {
             return;
         }
 
-        if (volume < 0 || volume > 100) {
-            context.getTypedMessaging().replyWarning("Volume needs to be between 100 and 0");
+        if (volume < 0) {
+            context.getTypedMessaging().replyWarning("Volume needs to be greater than 0");
             return;
+        } else if (volume > 100 && volume <= 200) {
+            if (context.hasPermission("volume.extreme")) {
+                ConfirmUtils.confirmAction(sender.getUser().getIdLong(),
+                        "volume-extreme", context.getChannel(),
+                        MessageType.WARNING,
+                        "Are you sure you want to exceed 100% volume?",
+                        0,
+                        TimeUnit.SECONDS.toMillis(30),
+                        new ConfirmUtils.ConfirmRunnable() {
+                            @Override
+                            public void execute() {
+                                player.getPlayer().setVolume(volume);
+                                context.getTypedMessaging().replyInfo("Volume set to %d%%", player.getPlayer().getVolume());
+                            }
+                        });
+            } else {
+                context.getUIMessaging().sendPermissionError("volume.extreme");
+                return;
+            }
         }
 
         if (volume == context.getData().getMusicPlayer().getPlayer().getVolume()) {
