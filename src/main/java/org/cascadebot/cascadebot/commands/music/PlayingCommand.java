@@ -58,7 +58,7 @@ public class PlayingCommand implements ICommandMain {
 
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             //TODO check if donator guild
-            if(context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
+            if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
                 buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD09" /* 🔉 Volume down */, (runner, channel, message) -> {
                     int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
                     volume -= 10;
@@ -87,7 +87,7 @@ public class PlayingCommand implements ICommandMain {
 
     public void handlePlayPause(ButtonGroup buttonGroup) {
         CascadePlayer player = GuildDataManager.getGuildData(buttonGroup.getGuildId()).getMusicPlayer();
-        if(player.getPlayer().isPaused()) {
+        if (player.getPlayer().isPaused()) {
             player.getPlayer().setPaused(false);
             buttonGroup.removeButton(playButton);
             buttonGroup.addButton(pauseButton);

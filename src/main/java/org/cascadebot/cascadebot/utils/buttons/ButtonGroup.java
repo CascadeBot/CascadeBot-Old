@@ -32,25 +32,25 @@ public class ButtonGroup {
 
     public void addButton(Button button) {
         buttons.add(button);
-        if(messageId != 0) {
+        if (messageId != 0) {
             CascadeBot.INS.getShardManager().getGuildById(guildId).getTextChannelById(channelId).getMessageById(messageId).queue(button::addReaction);
         }
     }
 
     public void removeButton(Button button) {
         buttons.remove(button);
-        if(messageId != 0) {
+        if (messageId != 0) {
             CascadeBot.INS.getShardManager().getGuildById(guildId).getTextChannelById(channelId).getMessageById(messageId).queue(message -> {
-                for(MessageReaction reaction : message.getReactions()) {
+                for (MessageReaction reaction : message.getReactions()) {
                     MessageReaction.ReactionEmote reactionEmote = reaction.getReactionEmote();
-                    if(button instanceof Button.UnicodeButton && !reactionEmote.isEmote()) {
+                    if (button instanceof Button.UnicodeButton && !reactionEmote.isEmote()) {
                         Button.UnicodeButton unicodeButton = (Button.UnicodeButton) button;
-                        if(reactionEmote.getName().equals(unicodeButton.unicode)) {
+                        if (reactionEmote.getName().equals(unicodeButton.unicode)) {
                             reaction.removeReaction(CascadeBot.INS.getSelfUser()).queue();
                         }
-                    } else if(button instanceof Button.EmoteButton && reactionEmote.isEmote()) {
+                    } else if (button instanceof Button.EmoteButton && reactionEmote.isEmote()) {
                         Button.EmoteButton emoteButton = (Button.EmoteButton) button;
-                        if(reactionEmote.getEmote().equals(emoteButton.emote)) {
+                        if (reactionEmote.getEmote().equals(emoteButton.emote)) {
                             reaction.removeReaction(CascadeBot.INS.getSelfUser()).queue();
                         }
                     }
