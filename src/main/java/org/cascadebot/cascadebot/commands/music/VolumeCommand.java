@@ -83,8 +83,8 @@ public class VolumeCommand implements ICommandMain {
     }
 
     @Override
-    public Set<Argument> getArguments() {
-        return Set.of(Argument.of("volume", "sets the volume to this value", ArgumentType.REQUIRED));
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.of("volume", "Sets the volume to this value", ArgumentType.OPTIONAL));
     }
 
     @Override
