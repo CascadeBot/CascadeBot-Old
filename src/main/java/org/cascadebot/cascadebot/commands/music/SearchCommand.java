@@ -29,7 +29,7 @@ public class SearchCommand implements ICommandMain {
         }
 
         CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
-            ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getGuild().getIdLong());
+            ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             int i = 0;
             StringBuilder messageBuilder = new StringBuilder();
             for(MusicHandler.SearchResult result : searchResults) {
