@@ -102,5 +102,9 @@ public class ButtonGroup {
         }
     }
 
+    public long getChannelId() {
+        return channelId;
+    }
+
 
 }

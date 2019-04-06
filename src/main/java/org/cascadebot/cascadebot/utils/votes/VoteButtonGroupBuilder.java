@@ -179,6 +179,9 @@ public class VoteButtonGroupBuilder {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
+                    CascadeBot.INS.getShardManager().getGuildById(voteGroup.getGuildId()).getTextChannelById(voteGroup.getChannelId()).getMessageById(voteGroup.getMessageId()).queue(message -> {
+                        message.delete().queue();
+                    });
                     //TODO this, but I need the song buttons to be merged so i can get the message and delete it.
                     Map<Object, Integer> countMap = new HashMap<>();
                     int maxCount = 0;

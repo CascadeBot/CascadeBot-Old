@@ -185,7 +185,7 @@ public class MessagingUI {
 
             AudioTrack selectedTrack = tracks.stream().filter(audioTrack -> audioTrack.getIdentifier().equals(matcher.group("v"))).findFirst().orElse(tracks.get(0));
 
-            ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getGuild().getIdLong());
+            ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
                 message.delete().queue();
                 context.getData().getMusicPlayer().addTrack(selectedTrack);
