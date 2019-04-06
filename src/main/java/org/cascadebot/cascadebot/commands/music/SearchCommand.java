@@ -7,6 +7,7 @@ package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -51,10 +52,10 @@ public class SearchCommand implements ICommandMain {
                 messageBuilder.append(result.getTitle()).append(" - ");
                 switch (result.getType()) {
                     case VIDEO:
-                        messageBuilder.append("\uD83C\uDFB5");
+                        messageBuilder.append(UnicodeConstants.SONG);
                         break;
                     case PLAYLIST:
-                        messageBuilder.append("\uD83C\uDFB6");
+                        messageBuilder.append(UnicodeConstants.PLAYLIST);
                         break;
                 }
                 messageBuilder.append('\n');
