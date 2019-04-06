@@ -160,6 +160,8 @@ public class MusicHandler {
                     searchResultConsumer.accept(searchResults);
                 } catch (IOException e) {
                     Messaging.sendExceptionMessage(channel, "Error reading YouTube data!", e);
+                } catch (Exception e) {
+                    Messaging.sendExceptionMessage(channel, "Error while processing search!", e);
                 }
             }
         });

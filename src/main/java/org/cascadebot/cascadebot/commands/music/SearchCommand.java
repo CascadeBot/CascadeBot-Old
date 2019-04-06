@@ -7,6 +7,7 @@ package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.exceptions.PermissionException;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -70,7 +71,11 @@ public class SearchCommand implements ICommandMain {
             embedBuilder.setTitle("We found multiple results for this search!");
             embedBuilder.setDescription(messageBuilder.toString());
 
-            context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+            try {
+                context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+            } catch (PermissionException e) {
+                context.getUIMessaging().sendBotPermissionError(e.getPermission());
+            }
 
         });
     }
