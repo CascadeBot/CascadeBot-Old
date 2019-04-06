@@ -124,9 +124,9 @@ public class MessagingUI {
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s`, or the Discord permission(s) %s to do this!", permission.getPermissionNode(), discordPerms);
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermissionNode(), discordPerms);
         } else {
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` to do this!", permission.getPermissionNode());
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermissionNode());
         }
     }
 
@@ -136,11 +136,11 @@ public class MessagingUI {
      * @param permission The Discord Permission that the user doesn't have.
      */
     public void sendUserPermissionError(Permission permission) {
-        context.getTypedMessaging().replyDanger("You don't have the Discord permission `%s` to do this!", permission.getName());
+        context.getTypedMessaging().replyDanger("You don't have the Discord permission `%s` that you need to do this!", permission.getName());
     }
 
     public void sendBotPermissionError(Permission permission) {
-        context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` to do this!", permission.getName());
+        context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` that I need to do this!", permission.getName());
     }
 
     public void replyUsage(ICommandExecutable command) {
