@@ -100,9 +100,9 @@ public class CascadeBot {
 
         // Sends a message to break up the status log flow to see what events apply to each bot run
         Config.INS.getEventWebhook().send(
-                "\u200B\n" +
+                UnicodeConstants.ZERO_WIDTH_SPACE + "\n" +
                         StringUtils.repeat("-", 30) + " BOT RESTART " + StringUtils.repeat("-", 30) + "\n" +
-                        "\u200B");
+                        UnicodeConstants.ZERO_WIDTH_SPACE);
 
         SentryClient client = Sentry.getStoredClient();
         client.setEnvironment(Environment.isDevelopment() ? "development" : "production");

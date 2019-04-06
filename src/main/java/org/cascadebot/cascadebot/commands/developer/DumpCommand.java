@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.commands.developer;
 import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -51,7 +52,7 @@ public class DumpCommand implements ICommandRestricted {
         } else if (context.getArg(0).equalsIgnoreCase("guild")) {
             PasteUtils.pasteIfLong("```json\n" + new GsonBuilder().setPrettyPrinting().create().toJson(context.getData()) + "```", 2048, context::reply);
         } else {
-            context.getTypedMessaging().replyDanger("I can't seem to find that argument \uD83E\uDD14" /* Thinking emoji 🤔 */);
+            context.getTypedMessaging().replyDanger("I can't seem to find that argument " + UnicodeConstants.THINKING);
         }
     }
 
