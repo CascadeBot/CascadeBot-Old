@@ -152,9 +152,9 @@ public class MessagingUI {
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {
-        if(tracks.size() > 1) {
+        if (tracks.size() > 1) {
             long time = 0;
-            for(AudioTrack track : tracks) {
+            for (AudioTrack track : tracks) {
                 time += track.getDuration();
             }
             context.getTypedMessaging().replySuccess("Loaded `%s` tracks with a total length of `%s`", tracks.size(), FormatUtils.formatLongTimeMills(time));
@@ -193,9 +193,15 @@ public class MessagingUI {
                 context.getUIMessaging().sendTracksFound(tracks);
             }));
 
-            context.getUIMessaging().sendButtonedMessage(
+            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO);
+            embedBuilder.setTitle("Load as a single song or as a playlist?");
+            embedBuilder.setDescription(
                     String.format(UnicodeConstants.SONG + " - Load as song `%s`\n" +
-                    UnicodeConstants.PLAYLIST + " - Load as playlist `%s`", selectedTrack.getInfo().title, tracks.size() + " tracks"), buttonGroup);
+                                    UnicodeConstants.PLAYLIST + " - Load as playlist `%s`",
+                            selectedTrack.getInfo().title, tracks.size() + " tracks")
+            );
+
+            context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
 
         } else if (tracks.size() == 1) {
             context.getData().getMusicPlayer().addTracks(tracks);
