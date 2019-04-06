@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.CommandException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
@@ -25,11 +26,16 @@ import spark.utils.CollectionUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MessagingUI {
+
+    private static final Pattern YOUTUBE_VIDEO_REGEX = Pattern.compile("v=(?<v>[a-zA-Z0-9_-]{11})");
 
     private CommandContext context;
 
@@ -163,12 +169,34 @@ public class MessagingUI {
         }
     }
 
-    public void checkPlaylistOrSong(List<AudioTrack> tracks, CommandContext context) {
+    public void checkPlaylistOrSong(String input, List<AudioTrack> tracks, CommandContext context) {
         if (tracks.size() > 1) {
-            ButtonGroup buttonGroup = new ButtonGroup();
-            buttonGroup.addButton(new Button.UnicodeButton(, (runner, channel, message) -> {
 
+            Matcher matcher = YOUTUBE_VIDEO_REGEX.matcher(input);
+            if (!matcher.find() || matcher.group("v") == null) {
+                context.getData().getMusicPlayer().addTracks(tracks);
+                context.getUIMessaging().sendTracksFound(tracks);
+                return;
+            }
+
+            AudioTrack selectedTrack = tracks.stream().filter(audioTrack -> audioTrack.getIdentifier().equals(matcher.group("v"))).findFirst().orElse(tracks.get(0));
+
+            ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getGuild().getIdLong());
+            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
+                message.delete().queue();
+                context.getData().getMusicPlayer().addTrack(selectedTrack);
+                context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
             }));
+            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.PLAYLIST, (runner, channel, message) -> {
+                message.delete().queue();
+                context.getData().getMusicPlayer().addTracks(tracks);
+                context.getUIMessaging().sendTracksFound(tracks);
+            }));
+
+            context.getUIMessaging().sendButtonedMessage(
+                    String.format(UnicodeConstants.SONG + " - Load as song `%s`\n" +
+                    UnicodeConstants.PLAYLIST + " - Load as playlist `%s`", selectedTrack.getInfo().title, tracks.size() + " tracks"), buttonGroup);
+
         } else if (tracks.size() == 1) {
             context.getData().getMusicPlayer().addTracks(tracks);
             context.getUIMessaging().sendTracksFound(tracks);

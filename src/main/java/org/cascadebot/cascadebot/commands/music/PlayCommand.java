@@ -24,7 +24,7 @@ public class PlayCommand implements ICommandMain {
             }, exception -> {
                 context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
             }, tracks -> {
-                context.getUIMessaging().checkPlaylistOrSong(tracks, context);
+                context.getUIMessaging().checkPlaylistOrSong(context.getArg(0), tracks, context);
             });
         } else {
             CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
@@ -34,7 +34,8 @@ public class PlayCommand implements ICommandMain {
                     context.getData().getMusicPlayer().loadLink(searchResults.get(0).getUrl(), itShouldMatch -> {}, exception -> {
                         context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
                     }, tracks -> {
-                        context.getUIMessaging().checkPlaylistOrSong(tracks, context);
+                        context.getData().getMusicPlayer().addTracks(tracks);
+                        context.getUIMessaging().sendTracksFound(tracks);
                     });
                 }
             });
