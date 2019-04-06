@@ -93,6 +93,7 @@ global_emotes:
   muted:
   deafened:
   mobile:
+  norepeat:
 
 
 # The haste server to use for "hasting" messages.

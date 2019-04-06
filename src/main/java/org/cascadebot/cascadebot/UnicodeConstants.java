@@ -16,6 +16,11 @@ public final class UnicodeConstants {
     public static final String ROBOT = "\uD83E\uDD16"; // 🤖
     public static final String RED_CROSS = "\u274C"; // ❌
 
+    public static final String PLAY = "\u25B6"; // ▶
+    public static final String PAUSE = "\u23F8"; // ⏸
+    public static final String STOP = "\u23F9"; // ⏹
+    public static final String VOLUME_DOWN = "\uD83D\uDD09"; // 🔉
+    public static final String VOLUME_UP = "\uD83D\uDD0A"; // 🔊
     public static final String REWIND = "\u23EE"; // ⏮
     public static final String LEFT_ARROW = "\u25C0"; // ◀
     public static final String RIGHT_ARROW = "\u25B6"; // ▶
