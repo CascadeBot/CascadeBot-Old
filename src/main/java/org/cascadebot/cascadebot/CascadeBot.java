@@ -29,6 +29,7 @@ import org.cascadebot.cascadebot.events.GeneralEvents;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
+import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ public class CascadeBot {
     private ModerationManager moderationManager;
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
+    private EventWaiter eventWaiter;
 
     public static void main(String[] args) {
         if (System.getenv("SENTRY_DSN") == null) {
@@ -100,9 +102,9 @@ public class CascadeBot {
 
         // Sends a message to break up the status log flow to see what events apply to each bot run
         Config.INS.getEventWebhook().send(
-                "\u200B\n" +
+                UnicodeConstants.ZERO_WIDTH_SPACE + "\n" +
                         StringUtils.repeat("-", 30) + " BOT RESTART " + StringUtils.repeat("-", 30) + "\n" +
-                        "\u200B");
+                        UnicodeConstants.ZERO_WIDTH_SPACE);
 
         SentryClient client = Sentry.getStoredClient();
         client.setEnvironment(Environment.isDevelopment() ? "development" : "production");
@@ -129,12 +131,15 @@ public class CascadeBot {
         musicHandler = new MusicHandler(this);
         musicHandler.buildMusic();
 
+        eventWaiter = new EventWaiter();
         gson = builder.create();
+
         try {
             DefaultShardManagerBuilder defaultShardManagerBuilder = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new GeneralEvents())
                     .addEventListeners(new ButtonEventListener())
+                    .addEventListeners(eventWaiter)
                     .setToken(Config.INS.getBotToken())
                     .setShardsTotal(-1)
                     .setGameProvider(shardId -> {
@@ -231,4 +236,9 @@ public class CascadeBot {
     public MusicHandler getMusicHandler() {
         return musicHandler;
     }
+
+    public EventWaiter getEventWaiter() {
+        return eventWaiter;
+    }
+
 }

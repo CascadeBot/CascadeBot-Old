@@ -14,6 +14,7 @@ import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.utils.FormatUtils;
@@ -42,8 +43,7 @@ public class GeneralEvents extends ListenerAdapter {
             case SHUTDOWN:
             case FAILED_TO_LOGIN:
                 Config.INS.getEventWebhook().send(String.format(
-                        // 🤖 Robot                      ➡ right arrow
-                        "\uD83E\uDD16 Status Update: `%s` to `%s` on shard: `%d`",
+                        UnicodeConstants.ROBOT + " Status Update: `%s` to `%s` on shard: `%d`",
                         FormatUtils.formatEnum(event.getOldStatus()),
                         FormatUtils.formatEnum(event.getNewStatus()),
                         event.getJDA().getShardInfo().getShardId()

@@ -9,17 +9,12 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.GuildSettings;
-import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
-import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.messaging.MessagingTimed;
 import org.cascadebot.cascadebot.messaging.MessagingTyped;
 import org.cascadebot.cascadebot.messaging.MessagingUI;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
-import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.shared.Regex;
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Emote;
@@ -260,6 +255,15 @@ public class CommandContext {
         return this.member.hasPermission(this.channel, permissions);
     }
 
+    public void runOtherCommand(String command, Member sender, CommandContext context) {
+        ICommandMain commandMain = CascadeBot.INS.getCommandManager().getCommandByDefault(command);
+        if (hasPermission(commandMain.getPermission())) {
+            commandMain.onCommand(member, context);
+        } else {
+            context.getUIMessaging().sendPermissionError(commandMain.getPermission().getPermissionNode());
+        }
+    }
+
     /**
      * Get's the bot's {@link SelfUser}
      *
@@ -299,6 +303,10 @@ public class CommandContext {
     public boolean hasPermission(String permission) {
         CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
         return cascadePermission != null; // TODO: Check actual perms
+    }
+
+    public boolean hasPermission(CascadePermission permission) {
+        return permission != null; // TODO: Check actual perms
     }
 
     //endregion

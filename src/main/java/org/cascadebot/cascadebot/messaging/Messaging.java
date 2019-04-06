@@ -19,8 +19,10 @@ import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.Environment;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.exceptions.DiscordPermissionException;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -165,7 +167,7 @@ public final class Messaging {
         Checks.notNull(buttonGroup, "button group");
 
         if (!channel.getGuild().getMember(CascadeBot.INS.getSelfUser()).hasPermission(channel, Permission.MESSAGE_ADD_REACTION)) {
-            throw new PermissionException("Cannot perform action due to a lack of Permission. Missing permission: " + Permission.MESSAGE_ADD_REACTION);
+            throw new DiscordPermissionException(Permission.MESSAGE_ADD_REACTION);
         }
 
         RequestFuture<Message> future = channel.sendMessage(message).submit();
@@ -189,12 +191,12 @@ public final class Messaging {
 
     public static RequestFuture<Message> sendPagedMessage(TextChannel channel, Member owner, List<Page> pages) {
         ButtonGroup group = new ButtonGroup(owner.getUser().getIdLong(), channel.getGuild().getIdLong());
-        group.addButton(new Button.UnicodeButton("\u23EE" /* Rewind, start at beginning */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton(UnicodeConstants.REWIND, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());
             pageGroup.setCurrentPage(1);
         }));
-        group.addButton(new Button.UnicodeButton("\u25C0" /* Left arrow, go back one page */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton(UnicodeConstants.LEFT_ARROW, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() - 1;
             if (newPage < 1) {
@@ -203,7 +205,7 @@ public final class Messaging {
             pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
             pageGroup.setCurrentPage(newPage);
         }));
-        group.addButton(new Button.UnicodeButton("\u25B6" /* Right arrow, go forward one page */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton(UnicodeConstants.RIGHT_ARROW, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() + 1;
             if (newPage > pageGroup.getPages()) {
@@ -212,7 +214,7 @@ public final class Messaging {
             pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
             pageGroup.setCurrentPage(newPage);
         }));
-        group.addButton(new Button.UnicodeButton("\u23ED" /* Fast-forward, go to last page */, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
             pageGroup.setCurrentPage(pageGroup.getPages());

@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
+package org.cascadebot.cascadebot.commands.music;
+
+import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.commandmeta.CommandContext;
+import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
+
+public class PlayCommand implements ICommandMain {
+
+    @Override
+    public void onCommand(Member sender, CommandContext context) {
+        if (context.getArgs().length == 0) {
+            context.runOtherCommand("resume", sender, context);
+        } else if (context.getArgs().length == 1 && context.getArg(0).startsWith("http")) {
+            context.getData().getMusicPlayer().loadLink(context.getArg(0), input -> {
+                context.getTypedMessaging().replyDanger("We could not find music that matches: `%s`", input);
+            }, exception -> {
+                context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
+            }, tracks -> {
+                context.getUIMessaging().checkPlaylistOrSong(context.getArg(0), tracks, context);
+            });
+        } else {
+            CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
+                if (searchResults.isEmpty()) {
+                    context.getTypedMessaging().replyDanger("We could not find music that matches: `%s`", context.getArg(0));
+                } else {
+                    context.getData().getMusicPlayer().loadLink(searchResults.get(0).getUrl(), itShouldMatch -> {}, exception -> {
+                        context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
+                    }, tracks -> {
+                        context.getData().getMusicPlayer().addTracks(tracks);
+                        context.getUIMessaging().sendTracksFound(tracks);
+                    });
+                }
+            });
+        }
+    }
+
+    @Override
+    public Module getModule() {
+        return Module.MUSIC;
+    }
+
+    @Override
+    public String command() {
+        return "Play";
+    }
+
+    @Override
+    public CascadePermission getPermission() {
+        return CascadePermission.of("Play command", "play", true);
+    }
+
+    @Override
+    public String description() {
+        return "Plays music";
+    }
+
+}

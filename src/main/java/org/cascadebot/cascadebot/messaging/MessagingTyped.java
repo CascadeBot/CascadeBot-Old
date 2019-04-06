@@ -235,4 +235,5 @@ public class MessagingTyped {
     public void replyException(String message, Throwable throwable, Object... objects) {
         Messaging.sendExceptionMessage(context.getChannel(), String.format(message, objects), new CommandException(throwable, context.getGuild(), context.getTrigger()));
     }
+
 }

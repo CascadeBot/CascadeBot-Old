@@ -10,25 +10,34 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.CommandException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.FormatUtils;
+import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
+import spark.utils.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class MessagingUI {
+
+    private static final Pattern YOUTUBE_VIDEO_REGEX = Pattern.compile("v=(?<v>[a-zA-Z0-9_-]{11})");
 
     private CommandContext context;
 
@@ -111,15 +120,15 @@ public class MessagingUI {
      */
     public void sendPermissionError(String stringPermission) {
         CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
-        if (permission.getDiscordPerm().size() > 0) {
+        if (!CollectionUtils.isEmpty(permission.getDiscordPerm())) {
             EnumSet<Permission> permissions = permission.getDiscordPerm();
             String discordPerms = permissions.stream()
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s`, or the Discord permission(s) %s to do this!", permission.getPermissionNode(), discordPerms);
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermissionNode(), discordPerms);
         } else {
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` to do this!", permission.getPermissionNode());
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermissionNode());
         }
     }
 
@@ -129,11 +138,11 @@ public class MessagingUI {
      * @param permission The Discord Permission that the user doesn't have.
      */
     public void sendUserPermissionError(Permission permission) {
-        context.getTypedMessaging().replyDanger("You don't have the Discord permission `%s` to do this!", permission.getName());
+        context.getTypedMessaging().replyDanger("You don't have the Discord permission `%s` that you need to do this!", permission.getName());
     }
 
     public void sendBotPermissionError(Permission permission) {
-        context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` to do this!", permission.getName());
+        context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` that I need to do this!", permission.getName());
     }
 
     public void replyUsage(ICommandExecutable command) {
@@ -145,20 +154,76 @@ public class MessagingUI {
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {
-        if(tracks.size() > 1) {
+        if (tracks.size() > 1) {
             long time = 0;
-            for(AudioTrack track : tracks) {
+            for (AudioTrack track : tracks) {
                 time += track.getDuration();
             }
             context.getTypedMessaging().replySuccess("Loaded `%s` tracks with a total length of `%s`", tracks.size(), FormatUtils.formatLongTimeMills(time));
         } else {
             AudioTrack track = tracks.get(0);
-            EmbedBuilder builder = new EmbedBuilder();
+            EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
             builder.setTitle("Loaded Track");
             builder.setDescription(track.getInfo().title);
             builder.addField("Length", FormatUtils.formatLongTimeMills(track.getDuration()), true);
             builder.addField("Author", track.getInfo().author, true);
             context.getTypedMessaging().replySuccess(builder);
+        }
+    }
+
+    public void checkPlaylistOrSong(String input, List<AudioTrack> tracks, CommandContext context) {
+        if (tracks.size() > 1) {
+
+            Matcher matcher = YOUTUBE_VIDEO_REGEX.matcher(input);
+            if (!matcher.find() || matcher.group("v") == null) {
+                context.getData().getMusicPlayer().addTracks(tracks);
+                context.getUIMessaging().sendTracksFound(tracks);
+                return;
+            }
+
+            AudioTrack selectedTrack = tracks.stream().filter(audioTrack -> audioTrack.getIdentifier().equals(matcher.group("v"))).findFirst().orElse(tracks.get(0));
+
+            ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getGuild().getIdLong());
+            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
+                message.delete().queue();
+                context.getData().getMusicPlayer().addTrack(selectedTrack);
+                context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
+            }));
+            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.PLAYLIST, (runner, channel, message) -> {
+                message.delete().queue();
+                context.getData().getMusicPlayer().addTracks(tracks);
+                context.getUIMessaging().sendTracksFound(tracks);
+            }));
+
+            String message = String.format(UnicodeConstants.SONG + " - Load as track `%s`\n" +
+                            UnicodeConstants.PLAYLIST + " - Load as playlist `%s`",
+                    selectedTrack.getInfo().title, tracks.size() + " tracks");
+
+            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
+            embedBuilder.setTitle("Load as a single track or as a playlist?");
+            embedBuilder.setDescription(message);
+
+            try {
+                context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+            } catch (PermissionException e) {
+                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription("\n\n" + "Please type either `track` or `playlist`!"));
+
+                CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
+                        new EventWaiter.TextResponse(event -> {
+                            context.getData().getMusicPlayer().addTrack(selectedTrack);
+                            context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
+                        }, "track"),
+                        new EventWaiter.TextResponse(event -> {
+                            context.getData().getMusicPlayer().addTracks(tracks);
+                            context.getUIMessaging().sendTracksFound(tracks);
+                        }, "playlist"));
+            }
+
+        } else if (tracks.size() == 1) {
+            context.getData().getMusicPlayer().addTracks(tracks);
+            context.getUIMessaging().sendTracksFound(tracks);
+        } else {
+            context.getTypedMessaging().replyDanger("We couldn't find any tracks to load!");
         }
     }
 
