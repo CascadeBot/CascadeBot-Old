@@ -156,7 +156,6 @@ public class VoteButtonGroupBuilder {
 
         @Override
         public void run() {
-            CascadeBot.LOGGER.info("Waiting for button group to send");
 
             while (voteGroup.getMessageId() == 0) {
                 try {
@@ -165,8 +164,6 @@ public class VoteButtonGroupBuilder {
                     e.printStackTrace();
                 }
             }
-
-            CascadeBot.LOGGER.info("Button group sent");
 
             Timer timer = new Timer();
             timer.schedule(new TimerTask() {
