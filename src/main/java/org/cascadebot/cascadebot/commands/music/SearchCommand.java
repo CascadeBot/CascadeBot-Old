@@ -20,11 +20,15 @@ import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.EventWaiter;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
+import java.util.Collections;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class SearchCommand implements ICommandMain {
 
@@ -74,7 +78,29 @@ public class SearchCommand implements ICommandMain {
             try {
                 context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
             } catch (PermissionException e) {
-                context.getUIMessaging().sendBotPermissionError(e.getPermission());
+                embedBuilder.appendDescription("\n\n" + "Please type one of: ");
+                for (int index = 1; index <= searchResults.size(); index++) {
+                    embedBuilder.appendDescription("`").appendDescription(String.valueOf(index)).appendDescription("` ");
+                }
+
+                context.getTypedMessaging().replyInfo(embedBuilder);
+
+                EventWaiter.TextResponse[] responses = new EventWaiter.TextResponse[searchResults.size()];
+                for (int index = 0; index < searchResults.size(); index++) {
+                    MusicHandler.SearchResult result = searchResults.get(index);
+                    responses[index] = new EventWaiter.TextResponse(event -> {
+                        context.getData().getMusicPlayer().loadLink(result.getUrl(), nothing -> {
+                            context.getTypedMessaging().replyWarning("Couldn't find video!");
+                        }, exception -> {
+                            context.getTypedMessaging().replyException("Error loading track", exception);
+                        }, audioTracks -> {
+                            context.getUIMessaging().sendTracksFound(audioTracks);
+                        });
+                    }, String.valueOf(index + 1));
+                }
+                CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(), 30, TimeUnit.SECONDS, () -> {
+                    context.getTypedMessaging().replyWarning("The search for `%s` has timed out!", context.getMessage(0));
+                }, responses);
             }
 
         });
