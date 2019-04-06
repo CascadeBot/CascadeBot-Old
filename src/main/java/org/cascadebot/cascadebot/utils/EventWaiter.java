@@ -9,16 +9,18 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class EventWaiter extends com.jagrosh.jdautilities.commons.waiter.EventWaiter {
 
     public void waitForResponse(User user, TextChannel channel, TextResponse... responses) {
+        waitForResponse(user, channel, -1, null, null, responses);
+    }
+
+    public void waitForResponse(User user, TextChannel channel, long timeout, TimeUnit unit, Runnable timeoutAction, TextResponse... responses) {
         Map<String, TextResponse> responseMap = new HashMap<>();
         for (TextResponse response : responses) {
             for (String expectedResponse : response.getResponses()) {
@@ -31,8 +33,9 @@ public class EventWaiter extends com.jagrosh.jdautilities.commons.waiter.EventWa
                     responseMap.containsKey(event.getMessage().getContentRaw().toLowerCase());
         }, event -> {
             responseMap.get(event.getMessage().getContentRaw().toLowerCase()).getAction().accept(event);
-        });
+        }, timeout, unit, timeoutAction);
     }
+
 
     public static class TextResponse {
 
