@@ -146,13 +146,6 @@ public class VoteButtonGroupBuilder {
         return buttonGroup;
     }
 
-    public enum VoteMessageType {
-        YES_NO,
-        NUMBERS,
-        LETTERS,
-        CUSTOM
-    }
-
     public class VoteWaitRunnable implements Runnable {
 
         ButtonGroup voteGroup;
