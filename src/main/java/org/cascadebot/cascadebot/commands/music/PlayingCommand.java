@@ -7,6 +7,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -26,20 +27,20 @@ import java.util.Set;
 
 public class PlayingCommand implements ICommandMain {
 
-    private Button.UnicodeButton playButton = new Button.UnicodeButton("\u25B6" /* ▶ Play */, (runner, channel, message) -> {
+    private Button.UnicodeButton playButton = new Button.UnicodeButton(UnicodeConstants.PLAY, (runner, channel, message) -> {
         handlePlayPause(GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong()), message);
     });
 
-    private Button.UnicodeButton pauseButton = new Button.UnicodeButton("\u23F8" /* ⏸ Pause */, (runner, channel, message) -> {
+    private Button.UnicodeButton pauseButton = new Button.UnicodeButton(UnicodeConstants.PAUSE, (runner, channel, message) -> {
         handlePlayPause(GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong()), message);
     });
 
-    private Button.UnicodeButton repeat = new Button.UnicodeButton("\uD83D\uDD01" /* 🔁 Repeat */, (runner, channel, message) -> {
+    private Button.UnicodeButton repeat = new Button.UnicodeButton(UnicodeConstants.REPEAT, (runner, channel, message) -> {
         ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
         handleRepeat(buttonGroup, CascadePlayer.LoopMode.PLAYLIST, message);
     });
 
-    private Button.UnicodeButton repeatOne = new Button.UnicodeButton("\uD83D\uDD02" /* 🔂 Repeat Once */, (runner, channel, message) -> {
+    private Button.UnicodeButton repeatOne = new Button.UnicodeButton(UnicodeConstants.REPEAT_ONCE, (runner, channel, message) -> {
         ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
         handleRepeat(buttonGroup, CascadePlayer.LoopMode.SONG, message);
     });
@@ -58,7 +59,7 @@ public class PlayingCommand implements ICommandMain {
         } else {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
-                buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD09" /* 🔉 Volume down */, (runner, channel, message) -> {
+                buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
                     int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
                     volume -= 10;
                     if (volume <= 0) {
@@ -67,7 +68,7 @@ public class PlayingCommand implements ICommandMain {
                     context.getData().getMusicPlayer().getPlayer().setVolume(volume);
                     message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                 }));
-                buttonGroup.addButton(new Button.UnicodeButton("\uD83D\uDD0A" /* 🔊 Volume up */, (runner, channel, message) -> {
+                buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
                     int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
                     volume += 10;
                     if(volume >= 100) {
@@ -78,11 +79,11 @@ public class PlayingCommand implements ICommandMain {
                 }));
             }
 
-            buttonGroup.addButton(new Button.UnicodeButton("\u23F9" /* ⏹ Stop */, (runner, channel, message) -> {
+            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.STOP, (runner, channel, message) -> {
                 context.getData().getMusicPlayer().stop();
                 message.delete().queue();
             }));
-            buttonGroup.addButton(new Button.UnicodeButton("\u23ED" /* ⏭ Skip */, (runner, channel, message) -> {
+            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
                 context.getData().getMusicPlayer().skip(); //TODO make this run skip command
                 message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
             }));
@@ -149,7 +150,6 @@ public class PlayingCommand implements ICommandMain {
     public void handleRepeat(ButtonGroup buttonGroup, CascadePlayer.LoopMode mode, Message buttonMessage) {
         CascadePlayer player = GuildDataManager.getGuildData(buttonGroup.getGuildId()).getMusicPlayer();
         switch (mode) {
-
             case DISABLED:
                 buttonGroup.removeButton(noRepeat);
                 buttonGroup.addButton(repeat);
