@@ -91,8 +91,8 @@ public class VoteButtonGroupBuilder {
         return this;
     }
 
-    public ButtonGroup build(long owner, long guild) {
-        ButtonGroup buttonGroup = new ButtonGroup(owner, guild);
+    public ButtonGroup build(long owner, long channelId, long guild) {
+        ButtonGroup buttonGroup = new ButtonGroup(owner, channelId, guild);
         switch (type) {
             case YES_NO:
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
