@@ -89,7 +89,6 @@ public class PlayingCommand implements ICommandMain {
             }));
 
             switch (player.getLoopMode()) {
-
                 case DISABLED:
                     buttonGroup.addButton(repeat);
                     break;
