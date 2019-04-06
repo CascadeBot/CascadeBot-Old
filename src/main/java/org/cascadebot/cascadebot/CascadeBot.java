@@ -29,6 +29,7 @@ import org.cascadebot.cascadebot.events.GeneralEvents;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
+import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,7 @@ public class CascadeBot {
     private ModerationManager moderationManager;
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
+    private EventWaiter eventWaiter;
 
     public static void main(String[] args) {
         if (System.getenv("SENTRY_DSN") == null) {
@@ -129,12 +131,15 @@ public class CascadeBot {
         musicHandler = new MusicHandler(this);
         musicHandler.buildMusic();
 
+        eventWaiter = new EventWaiter();
         gson = builder.create();
+
         try {
             DefaultShardManagerBuilder defaultShardManagerBuilder = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new GeneralEvents())
                     .addEventListeners(new ButtonEventListener())
+                    .addEventListeners(eventWaiter)
                     .setToken(Config.INS.getBotToken())
                     .setShardsTotal(-1)
                     .setGameProvider(shardId -> {
@@ -231,4 +236,9 @@ public class CascadeBot {
     public MusicHandler getMusicHandler() {
         return musicHandler;
     }
+
+    public EventWaiter getEventWaiter() {
+        return eventWaiter;
+    }
+
 }

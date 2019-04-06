@@ -10,6 +10,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -17,6 +18,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.CommandException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -160,7 +162,7 @@ public class MessagingUI {
             context.getTypedMessaging().replySuccess("Loaded `%s` tracks with a total length of `%s`", tracks.size(), FormatUtils.formatLongTimeMills(time));
         } else {
             AudioTrack track = tracks.get(0);
-            EmbedBuilder builder = new EmbedBuilder();
+            EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
             builder.setTitle("Loaded Track");
             builder.setDescription(track.getInfo().title);
             builder.addField("Length", FormatUtils.formatLongTimeMills(track.getDuration()), true);
@@ -193,15 +195,29 @@ public class MessagingUI {
                 context.getUIMessaging().sendTracksFound(tracks);
             }));
 
-            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO);
-            embedBuilder.setTitle("Load as a single song or as a playlist?");
-            embedBuilder.setDescription(
-                    String.format(UnicodeConstants.SONG + " - Load as song `%s`\n" +
-                                    UnicodeConstants.PLAYLIST + " - Load as playlist `%s`",
-                            selectedTrack.getInfo().title, tracks.size() + " tracks")
-            );
+            String message = String.format(UnicodeConstants.SONG + " - Load as track `%s`\n" +
+                            UnicodeConstants.PLAYLIST + " - Load as playlist `%s`",
+                    selectedTrack.getInfo().title, tracks.size() + " tracks");
 
-            context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
+            embedBuilder.setTitle("Load as a single track or as a playlist?");
+            embedBuilder.setDescription(message);
+
+            try {
+                context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+            } catch (PermissionException e) {
+                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription("\n\n" + "Please type either `track` or `playlist`!"));
+
+                CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
+                        new EventWaiter.TextResponse(event -> {
+                            context.getData().getMusicPlayer().addTrack(selectedTrack);
+                            context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
+                        }, "track"),
+                        new EventWaiter.TextResponse(event -> {
+                            context.getData().getMusicPlayer().addTracks(tracks);
+                            context.getUIMessaging().sendTracksFound(tracks);
+                        }, "playlist"));
+            }
 
         } else if (tracks.size() == 1) {
             context.getData().getMusicPlayer().addTracks(tracks);
