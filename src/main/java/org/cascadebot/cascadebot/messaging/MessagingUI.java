@@ -17,6 +17,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
+import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import spark.utils.CollectionUtils;
@@ -159,6 +160,20 @@ public class MessagingUI {
             builder.addField("Length", FormatUtils.formatLongTimeMills(track.getDuration()), true);
             builder.addField("Author", track.getInfo().author, true);
             context.getTypedMessaging().replySuccess(builder);
+        }
+    }
+
+    public void checkPlaylistOrSong(List<AudioTrack> tracks, CommandContext context) {
+        if (tracks.size() > 1) {
+            ButtonGroup buttonGroup = new ButtonGroup();
+            buttonGroup.addButton(new Button.UnicodeButton(, (runner, channel, message) -> {
+
+            }));
+        } else if (tracks.size() == 1) {
+            context.getData().getMusicPlayer().addTracks(tracks);
+            context.getUIMessaging().sendTracksFound(tracks);
+        } else {
+            context.getTypedMessaging().replyDanger("We couldn't find any tracks to load!");
         }
     }
 
