@@ -22,6 +22,8 @@ public final class UnicodeConstants {
     public static final String FAST_FORWARD = "\u23ED";  // ⏭
     public static final String REPEAT = "\uD83D\uDD01"; // 🔁
     public static final String REPEAT_ONCE = "\uD83D\uDD02"; // 🔂
+    public static final String SONG = "\uD83C\uDFB5"; // 🎵
+    public static final String PLAYLIST = "\uD83C\uDFB6"; // 🎶
 
     public static final String FROWNING = "\uD83D\uDE26"; // 😦
     public static final String THINKING = "\uD83E\uDD14"; // 🤔

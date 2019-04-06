@@ -45,7 +45,7 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
             if (player.getLoopMode().equals(CascadePlayer.LoopMode.DISABLED) || player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
                 if (player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
                     // Add the track to the end of the queue to be repeated
-                    player.getTracks().add(track);
+                    player.getTracks().add(track.makeClone());
                     if (player.isShuffleEnabled()) {
                         if (songPlayCount % player.getTracks().size() == 0) {
                             player.shuffle(); //Shuffle when the tracks start over.
@@ -57,7 +57,7 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
                 player.getPlayer().playTrack(audioTrack);
             } else if (player.getLoopMode().equals(CascadePlayer.LoopMode.SONG)) {
                 // Take the song that just finished and repeat it
-                player.getPlayer().playTrack(track);
+                player.getPlayer().playTrack(track.makeClone());
             }
         } catch (NoSuchElementException e) {
             // No more songs left in the queue
