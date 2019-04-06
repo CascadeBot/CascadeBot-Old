@@ -69,6 +69,8 @@ public class PermissionsManager {
         registerPermission(CascadePermission.of("Join other voice channel", "join.other", false, Permission.VOICE_MOVE_OTHERS));
         registerPermission(CascadePermission.of("Leave other voice channel", "leave.other", false, Permission.VOICE_MOVE_OTHERS));
 
+        registerPermission(CascadePermission.of("Raise volume above 100%", "volume.extreme", false, Permission.MANAGE_SERVER));
+
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 
         defaultPermissions = permissions.entrySet()

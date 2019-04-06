@@ -9,6 +9,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -26,7 +27,7 @@ public class DogCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         ButtonGroup dogButtons = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-        dogButtons.addButton(new Button.UnicodeButton("\uD83D\uDD01" /* Repeat 🔁 */, (member, channel, message) -> {
+        dogButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
             if(member.getUser().getIdLong() != dogButtons.getOwner().getUser().getIdLong()) {
                 return;
             }
@@ -44,7 +45,7 @@ public class DogCommand implements ICommandMain {
                     message.delete().queue();
                 }
             } catch (IOException e) {
-                message.editMessage("Error loading dog picture \uD83D\uDE26" /* Frowning 😦*/).queue();
+                message.editMessage("Error loading dog picture " + UnicodeConstants.FROWNING).queue();
             }
         }));
         try {
@@ -54,7 +55,7 @@ public class DogCommand implements ICommandMain {
                 context.getData().addButtonGroup(context.getChannel(), message, dogButtons);
             });
         } catch (IOException e) {
-            context.getTypedMessaging().replyDanger("Error loading dog picture \uD83D\uDE26" /* Frowning 😦*/);
+            context.getTypedMessaging().replyDanger("Error loading dog picture " + UnicodeConstants.FROWNING);
         }
     }
 

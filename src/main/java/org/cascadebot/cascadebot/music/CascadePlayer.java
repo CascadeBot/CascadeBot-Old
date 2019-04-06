@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.function.Consumer;
+import java.util.regex.Pattern;
 
 public class CascadePlayer {
 
@@ -86,6 +87,10 @@ public class CascadePlayer {
     public String getArtwork() {
         if (player.getPlayingTrack().getInfo().uri.contains("youtube")) {
             return "https://img.youtube.com/vi/" + player.getPlayingTrack().getIdentifier() + "/hqdefault.jpg";
+        }
+        if(player.getPlayingTrack().getInfo().uri.contains("twitch")) {
+            String[] split = player.getPlayingTrack().getInfo().identifier.split("/");
+            return "https://static-cdn.jtvnw.net/previews-ttv/live_user_" + split[split.length - 1] + "-500x400.jpg";
         }
         return null;
     }
