@@ -29,8 +29,6 @@ public class VoteButtonGroupBuilder {
 
     private long voteTime;
 
-    private Map<Long, Object> voteMap = new HashMap<>();
-
     private Consumer<Object> finishConsumer;
 
     public VoteButtonGroupBuilder(VoteMessageType type) {
@@ -91,15 +89,15 @@ public class VoteButtonGroupBuilder {
         return this;
     }
 
-    public ButtonGroup build(long owner, long channelId, long guild) {
-        ButtonGroup buttonGroup = new ButtonGroup(owner, channelId, guild);
+    public VoteButtonGroup build(long owner, long channelId, long guild) {
+        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild);
         switch (type) {
             case YES_NO:
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                    voteMap.putIfAbsent(runner.getUser().getIdLong(), UnicodeConstants.TICK);
+                    buttonGroup.addVote(runner.getUser(), UnicodeConstants.TICK);
                 }));
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, (runner, channel, message) -> {
-                    voteMap.putIfAbsent(runner.getUser().getIdLong(), UnicodeConstants.RED_CROSS);
+                    buttonGroup.addVote(runner.getUser(), UnicodeConstants.RED_CROSS);
                 }));
                 break;
             case NUMBERS:
@@ -107,7 +105,7 @@ public class VoteButtonGroupBuilder {
                     char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
                     final int num = i;
                     buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
-                        voteMap.putIfAbsent(runner.getUser().getIdLong(), num);
+                        buttonGroup.addVote(runner.getUser(), num);
                     }));
                 }
                 break;
@@ -116,7 +114,7 @@ public class VoteButtonGroupBuilder {
                     char unicode = (char) (0xdde0 + (i + 6));
                     final int num = i;
                     buttonGroup.addButton(new Button.UnicodeButton("\uD83C" + unicode, (runner, channel, message) -> {
-                        voteMap.putIfAbsent(runner.getUser().getIdLong(), num);
+                        buttonGroup.addVote(runner.getUser(), num);
                     }));
                 }
                 break;
@@ -125,12 +123,12 @@ public class VoteButtonGroupBuilder {
                     if (object instanceof Emote) {
                         Emote emote = (Emote) object;
                         buttonGroup.addButton(new Button.EmoteButton(emote, (runner, channel, message) -> {
-                            voteMap.putIfAbsent(runner.getUser().getIdLong(), emote.getIdLong());
+                            buttonGroup.addVote(runner.getUser(), emote.getIdLong());
                         }));
                     } else {
                         String unicode = (String) object;
                         buttonGroup.addButton(new Button.UnicodeButton(unicode, (runner, channel, message) -> {
-                            voteMap.putIfAbsent(runner.getUser().getIdLong(), unicode);
+                            buttonGroup.addVote(runner.getUser(), unicode);
                         }));
                     }
                 }
@@ -148,9 +146,9 @@ public class VoteButtonGroupBuilder {
 
     public class VoteWaitRunnable implements Runnable {
 
-        ButtonGroup voteGroup;
+        VoteButtonGroup voteGroup;
 
-        public VoteWaitRunnable(ButtonGroup buttonGroup) {
+        public VoteWaitRunnable(VoteButtonGroup buttonGroup) {
             voteGroup = buttonGroup;
         }
 
@@ -172,11 +170,10 @@ public class VoteButtonGroupBuilder {
                     CascadeBot.INS.getShardManager().getGuildById(voteGroup.getGuildId()).getTextChannelById(voteGroup.getChannelId()).getMessageById(voteGroup.getMessageId()).queue(message -> {
                         message.delete().queue();
                     });
-                    //TODO this, but I need the song buttons to be merged so i can get the message and delete it.
                     Map<Object, Integer> countMap = new HashMap<>();
                     int maxCount = 0;
                     Object maxObject = null;
-                    for (Map.Entry<Long, Object> entry : voteMap.entrySet()) {
+                    for (Map.Entry<Long, Object> entry : voteGroup.getVotes().entrySet()) {
                         if (countMap.containsKey(entry.getValue())) {
                             int value = countMap.get(entry.getValue()) + 1;
                             countMap.put(entry.getValue(), value);
