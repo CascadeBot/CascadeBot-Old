@@ -52,7 +52,7 @@ public class PlayingCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        CascadePlayer player = context.getData().getMusicPlayer();
+        CascadePlayer player = context.getMusicPlayer();
 
         if (player.getPlayer().getPlayingTrack() == null) {
             context.getTypedMessaging().replyWarning("No music playing!");
@@ -60,31 +60,31 @@ public class PlayingCommand implements ICommandMain {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
-                    int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
+                    int volume = context.getMusicPlayer().getPlayer().getVolume();
                     volume -= 10;
                     if (volume <= 0) {
                         volume = 0;
                     }
-                    context.getData().getMusicPlayer().getPlayer().setVolume(volume);
+                    context.getMusicPlayer().getPlayer().setVolume(volume);
                     message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                 }));
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
-                    int volume = context.getData().getMusicPlayer().getPlayer().getVolume();
+                    int volume = context.getMusicPlayer().getPlayer().getVolume();
                     volume += 10;
                     if(volume >= 100) {
                         volume = 100;
                     }
-                    context.getData().getMusicPlayer().getPlayer().setVolume(volume);
+                    context.getMusicPlayer().getPlayer().setVolume(volume);
                     message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                 }));
             }
 
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.STOP, (runner, channel, message) -> {
-                context.getData().getMusicPlayer().stop();
+                context.getMusicPlayer().stop();
                 message.delete().queue();
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
-                context.getData().getMusicPlayer().skip(); //TODO make this run skip command
+                context.getMusicPlayer().skip(); //TODO make this run skip command
                 message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
             }));
 
@@ -102,7 +102,7 @@ public class PlayingCommand implements ICommandMain {
 
             buttonGroup.addButton(player.getPlayer().isPaused() ? playButton : pauseButton);
 
-            context.getUIMessaging().sendButtonedMessage(getSongEmbed(context.getData().getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
+            context.getUIMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
         }
 
     }
@@ -133,7 +133,7 @@ public class PlayingCommand implements ICommandMain {
     }
 
     public void handlePlayPause(ButtonGroup buttonGroup, Message buttonMessage) {
-        CascadePlayer player = GuildDataManager.getGuildData(buttonGroup.getGuildId()).getMusicPlayer();
+        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
         if (player.getPlayer().isPaused()) {
             player.getPlayer().setPaused(false);
             buttonGroup.removeButton(playButton);
@@ -147,7 +147,7 @@ public class PlayingCommand implements ICommandMain {
     }
 
     public void handleRepeat(ButtonGroup buttonGroup, CascadePlayer.LoopMode mode, Message buttonMessage) {
-        CascadePlayer player = GuildDataManager.getGuildData(buttonGroup.getGuildId()).getMusicPlayer();
+        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
         switch (mode) {
             case DISABLED:
                 buttonGroup.removeButton(noRepeat);

@@ -50,8 +50,8 @@ public class JoinCommand implements ICommandMain {
             return;
         }
 
-        if (context.getData().getMusicPlayer().getConnectedChannel() != null) {
-            if (context.getData().getMusicPlayer().getConnectedChannel().equals(voiceChannel)) {
+        if (context.getMusicPlayer().getConnectedChannel() != null) {
+            if (context.getMusicPlayer().getConnectedChannel().equals(voiceChannel)) {
                 context.getTypedMessaging().replyWarning("I am already connected to your channel!");
                 return;
             } else {
@@ -61,7 +61,7 @@ public class JoinCommand implements ICommandMain {
                 }
             }
         }
-        context.getData().getMusicPlayer().join(voiceChannel);
+        context.getMusicPlayer().join(voiceChannel);
         context.getTypedMessaging().replySuccess("I have successfully joined the voice channel `#%s`", voiceChannel.getName());
     }
 

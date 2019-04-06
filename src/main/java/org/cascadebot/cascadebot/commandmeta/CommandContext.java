@@ -13,6 +13,7 @@ import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
 import org.cascadebot.cascadebot.messaging.MessagingTimed;
 import org.cascadebot.cascadebot.messaging.MessagingTyped;
 import org.cascadebot.cascadebot.messaging.MessagingUI;
+import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.JDA;
@@ -78,6 +79,10 @@ public class CommandContext {
 
     public JDA getJDA() {
         return jda;
+    }
+
+    public CascadePlayer getMusicPlayer() {
+        return CascadeBot.INS.getMusicHandler().getPlayer(guild.getIdLong());
     }
 
     public TextChannel getChannel() {

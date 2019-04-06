@@ -74,9 +74,6 @@ public class GuildData {
     @Transient
     private PageCache pageCache = new PageCache();
 
-    @Transient
-    private CascadePlayer musicPlayer;
-
     //endregion
 
     private GuildData() {} // This is for mongodb object serialisation
@@ -245,10 +242,6 @@ public class GuildData {
 
     public PageCache getPageCache() {
         return pageCache;
-    }
-
-    public CascadePlayer getMusicPlayer() {
-        return (musicPlayer == null ? (musicPlayer = new CascadePlayer(CascadeBot.INS.getShardManager().getGuildById(guildID))) : musicPlayer);
     }
 
     public Date getCreationDate() {

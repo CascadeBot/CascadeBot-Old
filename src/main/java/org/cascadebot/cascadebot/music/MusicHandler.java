@@ -18,6 +18,7 @@ import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceM
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import lavalink.client.io.jda.JdaLavalink;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -39,7 +40,9 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,6 +54,8 @@ public class MusicHandler {
     private Pattern typePattern = Pattern.compile("youtube#([A-z]+)");
 
     private CascadeBot instance;
+
+    private static Map<Long, CascadePlayer> players = new HashMap<>();
 
     public MusicHandler(CascadeBot instance) {
         this.instance = instance;
@@ -89,7 +94,14 @@ public class MusicHandler {
     }
 
     public CascadePlayer getPlayer(Long guildId) {
-        return GuildDataManager.getGuildData(guildId).getMusicPlayer();
+        return players.computeIfAbsent(guildId, id -> {
+            Guild guild = CascadeBot.INS.getShardManager().getGuildById(id);
+            if (guild != null) {
+                return new CascadePlayer(guild);
+            } else {
+                return null;
+            }
+        });
     }
 
     /**

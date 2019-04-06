@@ -15,8 +15,8 @@ public class ShuffleCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getMusicPlayer().toggleShuffleOnRepeat()) {
-            context.getData().getMusicPlayer().shuffle();
+        if (context.getMusicPlayer().toggleShuffleOnRepeat()) {
+            context.getMusicPlayer().shuffle();
             context.getTypedMessaging().replySuccess("Shuffling has been enabled!");
         } else {
             context.getTypedMessaging().replySuccess("Shuffling has been disabled!");

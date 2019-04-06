@@ -18,8 +18,8 @@ public class ResumeCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getMusicPlayer().getPlayer().isPaused()) {
-            context.getData().getMusicPlayer().getPlayer().setPaused(false);
+        if (context.getMusicPlayer().getPlayer().isPaused()) {
+            context.getMusicPlayer().getPlayer().setPaused(false);
             context.getTypedMessaging().replySuccess("Music has been resumed!");
         } else {
             context.getTypedMessaging().replyDanger("Music is already playing! Use **" + context.getData().getPrefix() + "pause** to pause it.");
