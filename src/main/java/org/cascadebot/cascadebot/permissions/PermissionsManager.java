@@ -16,6 +16,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.shared.SecurityLevel;
@@ -138,8 +139,8 @@ public class PermissionsManager {
             SecurityLevel levelToCheck = ((ICommandRestricted) command).getCommandLevel();
             return userLevel.isAuthorised(levelToCheck);
         } else {
-            // TODO: Checking command specific perms
-            return true;
+            if (command.getPermission() == null) return true;
+            return guildData.getPermissions().hasPermission(member, command.getPermission());
         }
         // return false;
     }
