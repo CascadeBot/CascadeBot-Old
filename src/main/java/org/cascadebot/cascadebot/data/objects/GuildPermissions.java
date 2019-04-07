@@ -31,6 +31,10 @@ public class GuildPermissions {
     private List<Group> groups = Collections.synchronizedList(new ArrayList<>());
     private Map<Long, User> users = new ConcurrentHashMap<>();
 
+    public boolean hasPermission(Member member, CascadePermission permission) {
+        return hasPermission(member, null, permission);
+    }
+
     public boolean hasPermission(Member member, Channel channel, CascadePermission permission) {
 
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.DEVELOPER)) return true;
@@ -53,7 +57,7 @@ public class GuildPermissions {
             action = evaluatedAction;
         }
 
-        return action != PermissionAction.DENY;
+        return action == PermissionAction.ALLOW;
     }
 
     private PermissionAction evaluateMostRestrictiveMode(User user, List<Group> userGroups, CascadePermission permission) {
