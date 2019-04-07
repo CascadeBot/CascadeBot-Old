@@ -68,10 +68,9 @@ public class PermissionsManager {
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 
-        defaultPermissions = permissions.entrySet()
+        defaultPermissions = permissions.values()
                 .stream()
-                .filter(p -> p.getValue().isDefaultPerm())
-                .map(Map.Entry::getValue)
+                .filter(CascadePermission::isDefaultPerm)
                 .collect(ImmutableSet.toImmutableSet());
 
     }
@@ -143,6 +142,10 @@ public class PermissionsManager {
             return true;
         }
         // return false;
+    }
+
+    public SecurityLevel getUserSecurityLevel(long userId) {
+        return securityLevelCache.get(userId);
     }
 
 
