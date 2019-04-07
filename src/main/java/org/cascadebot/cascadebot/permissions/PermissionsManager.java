@@ -40,7 +40,7 @@ public class PermissionsManager {
     private LoadingCache<Long, SecurityLevel> securityLevelCache = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .refreshAfterWrite(5, TimeUnit.MINUTES)
-            .build(id -> Security.getLevelById(id, officialGuildRoleIDCache.get(id)));
+            .build(userId -> Security.getLevelById(userId, officialGuildRoleIDCache.get(userId)));
 
     private ConcurrentHashMap<String, CascadePermission> permissions = new ConcurrentHashMap<>();
     private Set<CascadePermission> defaultPermissions = Set.of();
