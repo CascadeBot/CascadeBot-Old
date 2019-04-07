@@ -40,9 +40,9 @@ public class User {
         return permissions.remove(permission);
     }
 
-    public PermissionAction getPermissionAction(String permission) {
+    public PermissionAction getPermissionAction(CascadePermission permission) {
         for (String perm : permissions) {
-            if (new PermissionNode(perm.substring(perm.startsWith("-") ? 1 : 0)).test(permission)) {
+            if (new PermissionNode(perm.substring(perm.startsWith("-") ? 1 : 0)).test(permission.getPermissionNode())) {
                 if (perm.startsWith("-"))
                     return PermissionAction.DENY;
                 return PermissionAction.ALLOW;
