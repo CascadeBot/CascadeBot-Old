@@ -7,29 +7,48 @@ package org.cascadebot.cascadebot.permissions.objects;
 
 import com.google.common.collect.Sets;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.permissions.PermissionNode;
 
 import java.util.Set;
 
 public class User {
 
     private final Set<String> groups = Sets.newConcurrentHashSet();
-    private final Set<CascadePermission> permissions = Sets.newConcurrentHashSet();
+    private final Set<String> permissions = Sets.newConcurrentHashSet();
 
     public boolean addGroup(Group group) {
-        return groups.add(group.getName());
+        return groups.add(group.getId());
     }
 
     public boolean removeGroup(Group group) {
-        return groups.remove(group.getName());
+        return groups.remove(group.getId());
     }
 
-
-    public Set<String> getGroups() {
-        return groups;
+    public Set<String> getGroupIds() {
+        return Set.copyOf(groups);
     }
 
-    public Set<CascadePermission> getPermissions() {
-        return permissions;
+    public Set<String> getPermissions() {
+        return Set.copyOf(permissions);
+    }
+
+    public boolean addPermission(String permission) {
+        return permissions.add(permission);
+    }
+
+    public boolean removePermission(String permission) {
+        return permissions.remove(permission);
+    }
+
+    public PermissionAction getPermissionAction(String permission) {
+        for (String perm : permissions) {
+            if (new PermissionNode(perm.substring(perm.startsWith("-") ? 1 : 0)).test(permission)) {
+                if (perm.startsWith("-"))
+                    return PermissionAction.DENY;
+                return PermissionAction.ALLOW;
+            }
+        }
+        return PermissionAction.NEUTRAL;
     }
 
 }
