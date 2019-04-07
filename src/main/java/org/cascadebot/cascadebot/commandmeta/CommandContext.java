@@ -298,7 +298,8 @@ public class CommandContext {
 
     public boolean hasPermission(String permission) {
         CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
-        return cascadePermission != null; // TODO: Check actual perms
+        if (cascadePermission == null) return false;
+        return data.getPermissions().hasPermission(member, channel, cascadePermission);
     }
 
     //endregion
