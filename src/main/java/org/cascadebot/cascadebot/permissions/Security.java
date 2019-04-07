@@ -37,7 +37,7 @@ public class Security {
     public static boolean isAuthorised(long userId, SecurityLevel comparingLevel) {
         SecurityLevel level = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
         if (level == null) return false;
-        return comparingLevel.isAuthorised(level);
+        return level.isAuthorised(comparingLevel);
     }
 
     /**
@@ -48,7 +48,7 @@ public class Security {
      * @return where level >= comparing level.
      */
     public static boolean isAuthorised(SecurityLevel level, SecurityLevel comparingLevel) {
-        return comparingLevel.isAuthorised(level);
+        return level.isAuthorised(comparingLevel);
     }
 
     /**
