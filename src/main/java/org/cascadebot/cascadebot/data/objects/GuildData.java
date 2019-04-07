@@ -57,11 +57,12 @@ public class GuildData {
     //region Guild data containers
 
     private GuildSettings guildSettings = new GuildSettings();
+    private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now
 
         private GuildModeration guildModeration = new GuildModeration();
-        private GuildPermissions guildPermissions = new GuildPermissions();
+
     */
 
     //endregion
@@ -224,6 +225,10 @@ public class GuildData {
 
     public GuildSettings getSettings() {
         return guildSettings;
+    }
+
+    public GuildPermissions getPermissions() {
+        return guildPermissions;
     }
 
     public ButtonsCache getButtonsCache() {
