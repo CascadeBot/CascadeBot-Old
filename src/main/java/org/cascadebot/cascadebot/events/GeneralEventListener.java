@@ -19,7 +19,7 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
-public class GeneralEvents extends ListenerAdapter {
+public class GeneralEventListener extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
@@ -63,6 +63,8 @@ public class GeneralEvents extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
+        CascadeBot.INS.getMusicHandler().removePlayer(event.getGuild().getIdLong());
+
         if (!StringUtils.isBlank(Config.INS.getGuildGoodbyeMessage())) {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> {
                 privateChannel.sendMessage(Config.INS.getGuildGoodbyeMessage()).queue();

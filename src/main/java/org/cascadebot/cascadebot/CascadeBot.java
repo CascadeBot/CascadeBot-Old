@@ -10,7 +10,6 @@ import com.google.gson.GsonBuilder;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
-import lavalink.client.io.jda.JdaLavalink;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDA;
@@ -25,10 +24,11 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
-import org.cascadebot.cascadebot.events.GeneralEvents;
+import org.cascadebot.cascadebot.events.GeneralEventListener;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
+import org.cascadebot.cascadebot.tasks.Task;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
@@ -38,6 +38,7 @@ import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class CascadeBot {
 
@@ -137,7 +138,7 @@ public class CascadeBot {
         try {
             DefaultShardManagerBuilder defaultShardManagerBuilder = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
-                    .addEventListeners(new GeneralEvents())
+                    .addEventListeners(new GeneralEventListener())
                     .addEventListeners(new ButtonEventListener())
                     .addEventListeners(eventWaiter)
                     .setToken(Config.INS.getBotToken())
@@ -178,7 +179,19 @@ public class CascadeBot {
             LOGGER.error("Uncaught exception in rest action", throwable);
         };
 
+        setupTasks();
+
     }
+
+    private void setupTasks() {
+        new Task("prune-players") {
+            @Override
+            protected void execute() {
+                musicHandler.purgeDisconnectedPlayers();
+            }
+        }.start(TimeUnit.MINUTES.toMillis(5), TimeUnit.MINUTES.toMillis(15));
+    }
+
 
     /**
      * This  will return the first connected JDA shard.

@@ -165,7 +165,7 @@ public class MessagingUI {
             EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
             builder.setTitle("Loaded Track");
             builder.setDescription(track.getInfo().title);
-            if(!track.getInfo().isStream) {
+            if (!track.getInfo().isStream) {
                 builder.addField("Length", FormatUtils.formatLongTimeMills(track.getDuration()), true);
             }
             builder.addField("Author", track.getInfo().author, true);
@@ -178,7 +178,7 @@ public class MessagingUI {
 
             Matcher matcher = YOUTUBE_VIDEO_REGEX.matcher(input);
             if (!matcher.find() || matcher.group("v") == null) {
-                context.getData().getMusicPlayer().addTracks(tracks);
+                context.getMusicPlayer().addTracks(tracks);
                 context.getUIMessaging().sendTracksFound(tracks);
                 return;
             }
@@ -188,12 +188,12 @@ public class MessagingUI {
             ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
                 message.delete().queue();
-                context.getData().getMusicPlayer().addTrack(selectedTrack);
+                context.getMusicPlayer().addTrack(selectedTrack);
                 context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.PLAYLIST, (runner, channel, message) -> {
                 message.delete().queue();
-                context.getData().getMusicPlayer().addTracks(tracks);
+                context.getMusicPlayer().addTracks(tracks);
                 context.getUIMessaging().sendTracksFound(tracks);
             }));
 
@@ -212,17 +212,17 @@ public class MessagingUI {
 
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
                         new EventWaiter.TextResponse(event -> {
-                            context.getData().getMusicPlayer().addTrack(selectedTrack);
+                            context.getMusicPlayer().addTrack(selectedTrack);
                             context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
                         }, "track"),
                         new EventWaiter.TextResponse(event -> {
-                            context.getData().getMusicPlayer().addTracks(tracks);
+                            context.getMusicPlayer().addTracks(tracks);
                             context.getUIMessaging().sendTracksFound(tracks);
                         }, "playlist"));
             }
 
         } else if (tracks.size() == 1) {
-            context.getData().getMusicPlayer().addTracks(tracks);
+            context.getMusicPlayer().addTracks(tracks);
             context.getUIMessaging().sendTracksFound(tracks);
         } else {
             context.getTypedMessaging().replyDanger("We couldn't find any tracks to load!");

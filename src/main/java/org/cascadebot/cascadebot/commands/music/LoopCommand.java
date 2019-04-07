@@ -27,13 +27,13 @@ public class LoopCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
             // This gets the next loop mode in the enum or returns to 0 if there are no more
-            CascadePlayer.LoopMode loopMode = CascadePlayer.LoopMode.values()[(context.getData().getMusicPlayer().getLoopMode().ordinal() + 1) % 3];
-            context.getData().getMusicPlayer().loopMode(loopMode);
+            CascadePlayer.LoopMode loopMode = CascadePlayer.LoopMode.values()[(context.getMusicPlayer().getLoopMode().ordinal() + 1) % 3];
+            context.getMusicPlayer().loopMode(loopMode);
             context.getTypedMessaging().replySuccess("Loop mode has been set to `%s`!", loopMode.name().toLowerCase());
         } else {
             if (EnumUtils.isValidEnum(CascadePlayer.LoopMode.class, context.getArg(0).toUpperCase())) {
                 CascadePlayer.LoopMode loopMode = CascadePlayer.LoopMode.valueOf(context.getArg(0).toUpperCase());
-                context.getData().getMusicPlayer().loopMode(loopMode);
+                context.getMusicPlayer().loopMode(loopMode);
                 context.getTypedMessaging().replySuccess("Loop mode has been set to `%s`!", loopMode.name().toLowerCase());
             } else {
                 context.getTypedMessaging().replyDanger("`%s` is not a valid loop mode! Valid modes are: %s",

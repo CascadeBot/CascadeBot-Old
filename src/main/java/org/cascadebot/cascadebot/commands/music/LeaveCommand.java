@@ -18,7 +18,7 @@ public class LeaveCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        VoiceChannel voiceChannel = context.getData().getMusicPlayer().getConnectedChannel();
+        VoiceChannel voiceChannel = context.getMusicPlayer().getConnectedChannel();
         if (voiceChannel == null) {
             context.getTypedMessaging().replyDanger("I am not connected to a voice channel!");
             return;
@@ -30,7 +30,7 @@ public class LeaveCommand implements ICommandMain {
                 return;
             }
         }
-        context.getData().getMusicPlayer().leave();
+        context.getMusicPlayer().leave();
         context.getTypedMessaging().replySuccess("I have successfully left the channel `#%s`", voiceChannel.getName());
     }
 

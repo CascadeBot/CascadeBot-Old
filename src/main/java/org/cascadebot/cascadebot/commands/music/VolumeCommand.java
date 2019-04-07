@@ -19,7 +19,7 @@ public class VolumeCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        CascadePlayer player = context.getData().getMusicPlayer();
+        CascadePlayer player = context.getMusicPlayer();
         if (context.getArgs().length == 0) {
             context.getTypedMessaging().replyInfo("Current volume is %d%%", player.getPlayer().getVolume());
             return;
@@ -62,7 +62,7 @@ public class VolumeCommand implements ICommandMain {
             return;
         }
 
-        if (volume == context.getData().getMusicPlayer().getPlayer().getVolume()) {
+        if (volume == context.getMusicPlayer().getPlayer().getVolume()) {
             context.getTypedMessaging().replyInfo("Volume is already %d%%", player.getPlayer().getVolume());
         } else {
             player.getPlayer().setVolume(volume);

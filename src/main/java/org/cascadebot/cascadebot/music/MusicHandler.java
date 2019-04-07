@@ -18,6 +18,7 @@ import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceM
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import lavalink.client.io.jda.JdaLavalink;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -29,6 +30,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.utils.PasteUtils;
@@ -39,7 +41,9 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,6 +55,8 @@ public class MusicHandler {
     private Pattern typePattern = Pattern.compile("youtube#([A-z]+)");
 
     private CascadeBot instance;
+
+    private static Map<Long, CascadePlayer> players = new HashMap<>();
 
     public MusicHandler(CascadeBot instance) {
         this.instance = instance;
@@ -88,8 +94,24 @@ public class MusicHandler {
 
     }
 
-    public CascadePlayer getPlayer(Long guildId) {
-        return GuildDataManager.getGuildData(guildId).getMusicPlayer();
+    public CascadePlayer getPlayer(long guildId) {
+        return players.computeIfAbsent(guildId, id -> {
+            Guild guild = CascadeBot.INS.getShardManager().getGuildById(id);
+            if (guild != null) {
+                return new CascadePlayer(guild);
+            } else {
+                return null;
+            }
+        });
+    }
+
+    public boolean removePlayer(long guildId) {
+        return players.remove(guildId) != null;
+    }
+
+    public void purgeDisconnectedPlayers() {
+        // Removes all players that are not connected to a channel unless they have supported us on Patreon
+        players.entrySet().removeIf(entry -> entry.getValue().getConnectedChannel() == null && !GuildDataManager.getGuildData(entry.getKey()).isFlagEnabled(Flag.MUSIC_SERVICES));
     }
 
     /**
