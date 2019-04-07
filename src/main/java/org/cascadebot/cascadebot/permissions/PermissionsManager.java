@@ -124,7 +124,6 @@ public class PermissionsManager {
     }
 
     public Set<CascadePermission> getPermissions(Guild guild, boolean defaultOnly) {
-        // TODO: Add custom permission to guild data and add it here
         if (defaultOnly) {
             return defaultPermissions;
         } else {
