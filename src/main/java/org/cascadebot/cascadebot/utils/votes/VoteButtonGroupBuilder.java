@@ -12,6 +12,8 @@ import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,7 @@ public class VoteButtonGroupBuilder {
 
     private long voteTime;
 
-    private Consumer<Object> finishConsumer;
+    private Consumer<List<VoteResult>> finishConsumer;
 
     public VoteButtonGroupBuilder(VoteMessageType type) {
         this.type = type;
@@ -84,7 +86,7 @@ public class VoteButtonGroupBuilder {
         return this;
     }
 
-    public VoteButtonGroupBuilder setVoteFinishConsumer(Consumer<Object> finishConsumer) {
+    public VoteButtonGroupBuilder setVoteFinishConsumer(Consumer<List<VoteResult>> finishConsumer) {
         this.finishConsumer = finishConsumer;
         return this;
     }
@@ -171,24 +173,20 @@ public class VoteButtonGroupBuilder {
                         message.delete().queue();
                     });
                     Map<Object, Integer> countMap = new HashMap<>();
-                    int maxCount = 0;
-                    Object maxObject = null;
                     for (Map.Entry<Long, Object> entry : voteGroup.getVotes().entrySet()) {
                         if (countMap.containsKey(entry.getValue())) {
                             int value = countMap.get(entry.getValue()) + 1;
                             countMap.put(entry.getValue(), value);
-                            if (value > maxCount) {
-                                maxObject = entry.getValue();
-                            }
                         } else {
                             countMap.put(entry.getValue(), 1);
-                            if (1 > maxCount) {
-                                maxCount = 1;
-                                maxObject = entry.getValue();
-                            }
                         }
-                    } //TODO account for ties
-                    finishConsumer.accept(maxObject);
+                    }
+                    List<VoteResult> voteResults = new ArrayList<>();
+                    for(Map.Entry<Object, Integer> entry : countMap.entrySet()) {
+                        voteResults.add(new VoteResult(entry.getValue(), entry.getKey()));
+                    }
+                    Collections.sort(voteResults, Collections.reverseOrder());
+                    finishConsumer.accept(voteResults);
                 }
             }, voteTime);
         }
