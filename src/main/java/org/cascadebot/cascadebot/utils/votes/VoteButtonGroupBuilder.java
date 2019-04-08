@@ -6,17 +6,16 @@
 package org.cascadebot.cascadebot.utils.votes;
 
 import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.Message;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class VoteButtonGroupBuilder {
@@ -25,11 +24,13 @@ public class VoteButtonGroupBuilder {
 
     private List<Button> extraButtonList = new ArrayList<>();
     private List<Object> voteButtons = new ArrayList<>();
-    private int amount;
+    private int amount = 1; //Setting this so things don't break
 
-    private long voteTime;
+    private long voteTime = TimeUnit.SECONDS.toMillis(30);
 
     private Consumer<List<VoteResult>> finishConsumer;
+
+    private IVotePeriodicRunnable periodicConsumer;
 
     public VoteButtonGroupBuilder(VoteMessageType type) {
         this.type = type;
@@ -89,8 +90,13 @@ public class VoteButtonGroupBuilder {
         return this;
     }
 
+    public VoteButtonGroupBuilder setPeriodicConsumer(IVotePeriodicRunnable periodicConsumer) {
+        this.periodicConsumer = periodicConsumer;
+        return this;
+    }
+
     public VoteButtonGroup build(long owner, long channelId, long guild) {
-        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild);
+        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer);
         switch (type) {
             case YES_NO:
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
@@ -144,6 +150,10 @@ public class VoteButtonGroupBuilder {
         return buttonGroup;
     }
 
+    public interface IVotePeriodicRunnable {
+        void run(List<VoteResult> results, Message message);
+    }
+
     public class VoteWaitRunnable implements Runnable {
 
         VoteButtonGroup voteGroup;
@@ -163,21 +173,8 @@ public class VoteButtonGroupBuilder {
                         CascadeBot.INS.getShardManager().getGuildById(voteGroup.getGuildId()).getTextChannelById(voteGroup.getChannelId()).getMessageById(voteGroup.getMessageId()).queue(message -> {
                             message.delete().queue();
                         });
-                        Map<Object, Integer> countMap = new HashMap<>();
-                        for (Map.Entry<Long, Object> entry : voteGroup.getVotes().entrySet()) {
-                            if (countMap.containsKey(entry.getValue())) {
-                                int value = countMap.get(entry.getValue()) + 1;
-                                countMap.put(entry.getValue(), value);
-                            } else {
-                                countMap.put(entry.getValue(), 1);
-                            }
-                        }
-                        List<VoteResult> voteResults = new ArrayList<>();
-                        for(Map.Entry<Object, Integer> entry : countMap.entrySet()) {
-                            voteResults.add(new VoteResult(entry.getValue(), entry.getKey()));
-                        }
-                        voteResults.sort(Collections.reverseOrder());
-                        finishConsumer.accept(voteResults);
+                        voteGroup.voteFinished();
+                        finishConsumer.accept(voteGroup.getOrderedVoteResults());
                     }
                 }, voteTime);
             });

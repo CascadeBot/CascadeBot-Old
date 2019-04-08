@@ -24,7 +24,7 @@ public class ButtonGroup {
 
     private long messageId = 0;
 
-    private Consumer<Void> messageSent;
+    private Runnable messageSent;
 
     public ButtonGroup(long ownerId, long channelId, long guildId) {
         buttons = new ArrayList<>();
@@ -66,16 +66,16 @@ public class ButtonGroup {
         return CascadeBot.INS.getShardManager().getGuildById(guildId).getMemberById(ownerId);
     }
 
-    public void setMessageSentConsumer(Consumer<Void> messageSentConsumer) {
-        this.messageSent = messageSentConsumer;
+    public void setMessageSentConsumer(Runnable messageSentRunnable) {
+        this.messageSent = messageSentRunnable;
         if(messageId != 0) {
-            messageSent.accept(null);
+            messageSent.run();
         }
     }
 
     public void setMessage(long id) {
         messageId = id;
-        messageSent.accept(null);
+        messageSent.run();
     }
 
     public long getMessageId() {

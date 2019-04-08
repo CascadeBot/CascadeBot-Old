@@ -5,19 +5,44 @@
 
 package org.cascadebot.cascadebot.utils.votes;
 
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class VoteButtonGroup extends ButtonGroup {
 
-    Map<Long, Object> votes = new HashMap<>();
+    private Map<Long, Object> votes = new HashMap<>();
 
-    public VoteButtonGroup(long ownerId, long channelId, long guildId) {
+    private VoteButtonGroupBuilder.IVotePeriodicRunnable periodicRunnable;
+
+    private Timer timer = new Timer();
+
+    public VoteButtonGroup(long ownerId, long channelId, long guildId, VoteButtonGroupBuilder.IVotePeriodicRunnable votePeriodicRunnable) {
         super(ownerId, channelId, guildId);
+        this.periodicRunnable = votePeriodicRunnable;
+        if(periodicRunnable != null) {
+            setUpVoteProcessConsumer();
+        }
+    }
+
+    private void setUpVoteProcessConsumer() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).getMessageById(getMessageId()).queue(message -> {
+                    periodicRunnable.run(getOrderedVoteResults(), message);
+                });
+            }
+        }, 5000, 5000);
     }
 
     public void addVote(User user, Object vote) {
@@ -32,5 +57,27 @@ public class VoteButtonGroup extends ButtonGroup {
 
     public Map<Long, Object> getVotes() {
         return votes;
+    }
+
+    public List<VoteResult> getOrderedVoteResults() {
+        Map<Object, Integer> countMap = new HashMap<>();
+        for (Map.Entry<Long, Object> entry : getVotes().entrySet()) {
+            if (countMap.containsKey(entry.getValue())) {
+                int value = countMap.get(entry.getValue()) + 1;
+                countMap.put(entry.getValue(), value);
+            } else {
+                countMap.put(entry.getValue(), 1);
+            }
+        }
+        List<VoteResult> voteResults = new ArrayList<>();
+        for(Map.Entry<Object, Integer> entry : countMap.entrySet()) {
+            voteResults.add(new VoteResult(entry.getValue(), entry.getKey()));
+        }
+        voteResults.sort(Collections.reverseOrder());
+        return voteResults;
+    }
+
+    void voteFinished() {
+        timer.cancel();
     }
 }
