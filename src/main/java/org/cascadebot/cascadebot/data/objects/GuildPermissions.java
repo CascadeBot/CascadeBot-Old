@@ -110,5 +110,12 @@ public class GuildPermissions {
         return group;
     }
 
+    public boolean deleteGroup(String id) {
+        return groups.removeIf(group -> group.getId().equals(id));
+    }
+
+    public List<Group> getGroups() {
+        return List.copyOf(groups);
+    }
 
 }
