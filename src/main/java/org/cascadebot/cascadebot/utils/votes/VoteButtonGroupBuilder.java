@@ -9,11 +9,9 @@ import net.dv8tion.jda.core.entities.Emote;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -157,38 +155,32 @@ public class VoteButtonGroupBuilder {
         @Override
         public void run() {
 
-            while (voteGroup.getMessageId() == 0) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            Timer timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    CascadeBot.INS.getShardManager().getGuildById(voteGroup.getGuildId()).getTextChannelById(voteGroup.getChannelId()).getMessageById(voteGroup.getMessageId()).queue(message -> {
-                        message.delete().queue();
-                    });
-                    Map<Object, Integer> countMap = new HashMap<>();
-                    for (Map.Entry<Long, Object> entry : voteGroup.getVotes().entrySet()) {
-                        if (countMap.containsKey(entry.getValue())) {
-                            int value = countMap.get(entry.getValue()) + 1;
-                            countMap.put(entry.getValue(), value);
-                        } else {
-                            countMap.put(entry.getValue(), 1);
+            voteGroup.setMessageSentConsumer(nothing -> {
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        CascadeBot.INS.getShardManager().getGuildById(voteGroup.getGuildId()).getTextChannelById(voteGroup.getChannelId()).getMessageById(voteGroup.getMessageId()).queue(message -> {
+                            message.delete().queue();
+                        });
+                        Map<Object, Integer> countMap = new HashMap<>();
+                        for (Map.Entry<Long, Object> entry : voteGroup.getVotes().entrySet()) {
+                            if (countMap.containsKey(entry.getValue())) {
+                                int value = countMap.get(entry.getValue()) + 1;
+                                countMap.put(entry.getValue(), value);
+                            } else {
+                                countMap.put(entry.getValue(), 1);
+                            }
                         }
+                        List<VoteResult> voteResults = new ArrayList<>();
+                        for(Map.Entry<Object, Integer> entry : countMap.entrySet()) {
+                            voteResults.add(new VoteResult(entry.getValue(), entry.getKey()));
+                        }
+                        voteResults.sort(Collections.reverseOrder());
+                        finishConsumer.accept(voteResults);
                     }
-                    List<VoteResult> voteResults = new ArrayList<>();
-                    for(Map.Entry<Object, Integer> entry : countMap.entrySet()) {
-                        voteResults.add(new VoteResult(entry.getValue(), entry.getKey()));
-                    }
-                    Collections.sort(voteResults, Collections.reverseOrder());
-                    finishConsumer.accept(voteResults);
-                }
-            }, voteTime);
+                }, voteTime);
+            });
         }
     }
 }

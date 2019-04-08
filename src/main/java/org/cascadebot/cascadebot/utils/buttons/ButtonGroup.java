@@ -13,6 +13,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ButtonGroup {
 
@@ -22,6 +23,8 @@ public class ButtonGroup {
     private long guildId;
 
     private long messageId = 0;
+
+    private Consumer<Void> messageSent;
 
     public ButtonGroup(long ownerId, long channelId, long guildId) {
         buttons = new ArrayList<>();
@@ -63,8 +66,16 @@ public class ButtonGroup {
         return CascadeBot.INS.getShardManager().getGuildById(guildId).getMemberById(ownerId);
     }
 
+    public void setMessageSentConsumer(Consumer<Void> messageSentConsumer) {
+        this.messageSent = messageSentConsumer;
+        if(messageId != 0) {
+            messageSent.accept(null);
+        }
+    }
+
     public void setMessage(long id) {
         messageId = id;
+        messageSent.accept(null);
     }
 
     public long getMessageId() {
@@ -100,6 +111,7 @@ public class ButtonGroup {
         for (Button button : buttons) {
             button.addReaction(message);
         }
+        setMessage(message.getIdLong());
     }
 
     public long getChannelId() {
