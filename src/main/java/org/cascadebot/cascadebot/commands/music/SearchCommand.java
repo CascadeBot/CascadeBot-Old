@@ -51,7 +51,7 @@ public class SearchCommand implements ICommandMain {
                         return;
                     }
                     message.delete().queue();
-                    context.getMusicPlayer().loadLink(result.getUrl(), nothing -> {
+                    context.getMusicPlayer().loadLink(result.getUrl(), sender.getUser().getIdLong(), nothing -> {
                         context.getTypedMessaging().replyWarning("Couldn't find video!");
                     }, exception -> {
                         context.getTypedMessaging().replyException("Error loading track", exception);
@@ -89,7 +89,7 @@ public class SearchCommand implements ICommandMain {
                 for (int index = 0; index < searchResults.size(); index++) {
                     MusicHandler.SearchResult result = searchResults.get(index);
                     responses[index] = new EventWaiter.TextResponse(event -> {
-                        context.getMusicPlayer().loadLink(result.getUrl(), nothing -> {
+                        context.getMusicPlayer().loadLink(result.getUrl(), sender.getUser().getIdLong(), nothing -> {
                             context.getTypedMessaging().replyWarning("Couldn't find video!");
                         }, exception -> {
                             context.getTypedMessaging().replyException("Error loading track", exception);

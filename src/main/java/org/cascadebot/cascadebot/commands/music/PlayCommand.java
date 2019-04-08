@@ -19,7 +19,7 @@ public class PlayCommand implements ICommandMain {
         if (context.getArgs().length == 0) {
             context.runOtherCommand("resume", sender, context);
         } else if (context.getArgs().length == 1 && context.getArg(0).startsWith("http")) {
-            context.getMusicPlayer().loadLink(context.getArg(0), input -> {
+            context.getMusicPlayer().loadLink(context.getArg(0), sender.getUser().getIdLong(), input -> {
                 context.getTypedMessaging().replyDanger("We could not find music that matches: `%s`", input);
             }, exception -> {
                 context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
@@ -31,7 +31,7 @@ public class PlayCommand implements ICommandMain {
                 if (searchResults.isEmpty()) {
                     context.getTypedMessaging().replyDanger("We could not find music that matches: `%s`", context.getArg(0));
                 } else {
-                    context.getMusicPlayer().loadLink(searchResults.get(0).getUrl(), itShouldMatch -> {}, exception -> {
+                    context.getMusicPlayer().loadLink(searchResults.get(0).getUrl(), sender.getUser().getIdLong(), itShouldMatch -> {}, exception -> {
                         context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
                     }, tracks -> {
                         context.getMusicPlayer().addTracks(tracks);

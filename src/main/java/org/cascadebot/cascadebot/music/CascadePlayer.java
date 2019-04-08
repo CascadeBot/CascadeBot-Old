@@ -98,7 +98,6 @@ public class CascadePlayer {
 
     public void addTrack(AudioTrack track) {
         if (player.getPlayingTrack() != null) {
-
             tracks.add(track);
         } else {
             player.playTrack(track);
@@ -179,10 +178,11 @@ public class CascadePlayer {
         player.stopTrack();
     }
 
-    public void loadLink(String input, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
+    public void loadLink(String input, long requestUser, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
         MusicHandler.playerManager.loadItem(input, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
+                audioTrack.setUserData(requestUser);
                 resultTracks.accept(Collections.singletonList(audioTrack));
                 addTrack(audioTrack);
             }
@@ -191,6 +191,7 @@ public class CascadePlayer {
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 List<AudioTrack> tracks = new ArrayList<>();
                 for (AudioTrack track : audioPlaylist.getTracks()) {
+                    track.setUserData(requestUser);
                     tracks.add(track);
                     addTrack(track);
                 }
@@ -209,14 +210,14 @@ public class CascadePlayer {
         });
     }
 
-    public void loadPlaylist(Playlist playlist) {
+    public void loadPlaylist(Playlist playlist, long reqUser) {
         for (String url : playlist.getTracks()) {
-            loadLink(url, noMatch -> {
+            loadLink(url, reqUser, noMatch -> {
                 playlist.removeTrack(url);
             }, exception -> {
                 playlist.removeTrack(url);
             }, tracks -> {
-
+                //TODO add consumer
             });
         }
     }
