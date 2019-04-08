@@ -19,6 +19,7 @@ public class Group {
     private String id = RandomStringUtils.random(5, "abcdefghijkmnopqrstuvwxyzACDEFHJKLMNPRSTUVWXYZ123467890");
     private String name;
     private Set<String> permissions = Sets.newConcurrentHashSet();
+    private Set<Long> roleIds = Sets.newConcurrentHashSet();
 
     public Group(String name) {
         this.name = name;
@@ -46,6 +47,18 @@ public class Group {
 
     public boolean removePermission(String permission) {
         return permissions.remove(permission);
+    }
+
+    public boolean linkRole(long roleId) {
+        return roleIds.add(roleId);
+    }
+
+    public boolean unlinkRole(long roleId) {
+        return roleIds.remove(roleId);
+    }
+
+    public Set<Long> getRoleIds() {
+        return Set.copyOf(roleIds);
     }
 
     public PermissionAction getPermissionAction(CascadePermission permission) {
