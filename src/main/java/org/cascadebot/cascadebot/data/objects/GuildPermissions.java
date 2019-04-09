@@ -16,6 +16,7 @@ import org.cascadebot.cascadebot.permissions.objects.PermissionAction;
 import org.cascadebot.cascadebot.permissions.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.shared.SecurityLevel;
+import spark.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +45,7 @@ public class GuildPermissions {
         if (member.hasPermission(Permission.ADMINISTRATOR)) return true;
 
         User user = users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
-        List<Group> userGroups = groups.stream().filter(group -> user.getGroupIds().contains(group.getId())).collect(Collectors.toList());
+        List<Group> userGroups = getUserGroups(member);
 
         PermissionAction action = getDefaultAction(permission);
         PermissionAction evaluatedAction = PermissionAction.NEUTRAL;
@@ -59,7 +60,20 @@ public class GuildPermissions {
             action = evaluatedAction;
         }
 
+        if (action == PermissionAction.NEUTRAL && hasDiscordPermissions(member, channel, permission.getDiscordPerm())) {
+            action = PermissionAction.ALLOW;
+        }
+
         return action == PermissionAction.ALLOW;
+    }
+
+    private boolean hasDiscordPermissions(Member member, Channel channel, Set<Permission> permissions) {
+        if (CollectionUtils.isEmpty(permissions)) return false;
+        if (channel != null) {
+            return member.hasPermission(channel, permissions);
+        } else {
+            return member.hasPermission(permissions);
+        }
     }
 
     private PermissionAction evaluateMostRestrictiveMode(User user, List<Group> userGroups, CascadePermission permission) {
@@ -112,6 +126,16 @@ public class GuildPermissions {
 
     public boolean deleteGroup(String id) {
         return groups.removeIf(group -> group.getId().equals(id));
+    }
+
+    public List<Group> getUserGroups(Member member) {
+        User user = users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
+        List<Group> userGroups = groups.stream().filter(group -> user.getGroupIds().contains(group.getId())).collect(Collectors.toList());
+
+        groups.stream()
+                .filter(group -> group.getRoleIds().stream().anyMatch(id -> member.getRoles().contains(member.getGuild().getRoleById(id))))
+                .forEach(userGroups::add);
+        return userGroups;
     }
 
     public List<Group> getGroups() {
