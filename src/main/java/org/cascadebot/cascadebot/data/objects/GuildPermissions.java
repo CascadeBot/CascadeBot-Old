@@ -35,11 +35,11 @@ public class GuildPermissions {
     private List<Group> groups = Collections.synchronizedList(new ArrayList<>());
     private Map<Long, User> users = new ConcurrentHashMap<>();
 
-    public boolean hasPermission(Member member, CascadePermission permission) {
-        return hasPermission(member, null, permission);
+    public boolean hasPermission(Member member, CascadePermission permission, GuildSettings settings) {
+        return hasPermission(member, null, permission, settings);
     }
 
-    public boolean hasPermission(Member member, Channel channel, CascadePermission permission) {
+    public boolean hasPermission(Member member, Channel channel, CascadePermission permission, GuildSettings settings) {
 
         Checks.notNull(member, "member");
         Checks.notNull(permission, "permission");

@@ -299,7 +299,7 @@ public class CommandContext {
     public boolean hasPermission(String permission) {
         CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
         if (cascadePermission == null) return false;
-        return data.getPermissions().hasPermission(member, channel, cascadePermission);
+        return data.getPermissions().hasPermission(member, channel, cascadePermission, data.getSettings());
     }
 
     //endregion
