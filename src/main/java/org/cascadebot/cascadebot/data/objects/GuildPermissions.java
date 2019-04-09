@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.data.objects;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.Security;
@@ -38,6 +39,9 @@ public class GuildPermissions {
     }
 
     public boolean hasPermission(Member member, Channel channel, CascadePermission permission) {
+
+        Checks.notNull(member, "member");
+        Checks.notNull(permission, "permission");
 
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.DEVELOPER)) return true;
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.CONTRIBUTOR) && Environment.isDevelopment()) return true;
