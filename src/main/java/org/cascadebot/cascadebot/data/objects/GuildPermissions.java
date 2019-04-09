@@ -44,12 +44,16 @@ public class GuildPermissions {
         Checks.notNull(member, "member");
         Checks.notNull(permission, "permission");
 
+        // This allows developers and owners to go into guilds and fix problems
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.DEVELOPER)) return true;
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.CONTRIBUTOR) && Environment.isDevelopment()) return true;
+        // If the user is owner then they have all perms, obsv..
         if (member.isOwner()) return true;
-        if (member.hasPermission(Permission.ADMINISTRATOR)) return true;
+        // By default all members with the administrator perm have access to all perms; this can be turned off
+        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.doAdminsHaveAllPerms()) return true;
 
         User user = users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
+        // Get all user groups that are directly assigned and the groups assigned through roles
         List<Group> userGroups = getUserGroups(member);
 
         PermissionAction action = getDefaultAction(permission);
@@ -65,6 +69,8 @@ public class GuildPermissions {
             action = evaluatedAction;
         }
 
+        // Discord permissions will only allow a permission if is not already allowed or denied.
+        // It will not override Cascade permissions!
         if (action == PermissionAction.NEUTRAL && hasDiscordPermissions(member, channel, permission.getDiscordPerm())) {
             action = PermissionAction.ALLOW;
         }
@@ -87,7 +93,9 @@ public class GuildPermissions {
 
         for (Group group : userGroups) {
             PermissionAction groupAction = group.getPermissionAction(permission);
+            // If the action is neutral, it has no effect on the existing action.
             if (groupAction == PermissionAction.NEUTRAL) continue;
+            // This is most restrictive mode so if any group permissions is DENY, the evaluated action is DENY.
             if (groupAction == PermissionAction.DENY) return PermissionAction.DENY;
             action = groupAction;
         }
@@ -96,13 +104,16 @@ public class GuildPermissions {
 
     private PermissionAction evaluateHierarchicalMode(User user, List<Group> userGroups, CascadePermission permission) {
         PermissionAction action = PermissionAction.NEUTRAL;
+        // Loop through the groups backwards to preserve hierarchy; groups higher up override lower groups.
         for (int i = userGroups.size() - 1; i >= 0; i--) {
             PermissionAction groupAction = userGroups.get(i).getPermissionAction(permission);
             if (groupAction == PermissionAction.NEUTRAL) continue;
+            // This overrides any previous action with no regard to what it was.
             action = groupAction;
         }
 
         PermissionAction userAction = user.getPermissionAction(permission);
+        // User permissions take ultimate precedence over group permissions
         if (userAction != PermissionAction.NEUTRAL) {
             action = userAction;
         }
@@ -111,6 +122,7 @@ public class GuildPermissions {
     }
 
     private PermissionAction getDefaultAction(CascadePermission permission) {
+        // A default permission will never explicitly deny a permission.
         return permission.isDefaultPerm() ? PermissionAction.ALLOW : PermissionAction.NEUTRAL;
     }
 
@@ -138,6 +150,8 @@ public class GuildPermissions {
         User user = users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
         List<Group> userGroups = groups.stream().filter(group -> user.getGroupIds().contains(group.getId())).collect(Collectors.toList());
 
+        // Now I know this is a mess... If you can figure out a better method hit me up 👀
+        // This adds all the groups which have a id representing a role the member has.
         groups.stream()
                 .filter(group -> group.getRoleIds().stream().anyMatch(id -> member.getRoles().contains(member.getGuild().getRoleById(id))))
                 .forEach(userGroups::add);
