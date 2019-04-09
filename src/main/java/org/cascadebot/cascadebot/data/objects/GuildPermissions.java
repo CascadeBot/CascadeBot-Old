@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.utils.Checks;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.Security;
@@ -121,6 +122,7 @@ public class GuildPermissions {
             group = new Group(name);
             if (++iterations == 7) {
                 // If this happens then... run?
+                CascadeBot.LOGGER.error("Somehow we couldn't manage to create a unique guild ID :(");
                 throw new IllegalStateException("Could not create a group with a unique ID!");
             }
         } while (ids.contains(group.getId()));
