@@ -29,4 +29,5 @@ public class VoteResult implements Comparable<VoteResult> {
     public int compareTo(@NotNull VoteResult o) {
         return Integer.compare(this.amount, o.amount);
     }
+
 }

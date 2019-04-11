@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.utils.votes;
 
-import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -26,7 +25,7 @@ public class VoteButtonGroup extends ButtonGroup {
 
     private Timer timer = new Timer();
 
-    private Timer voreTimer;
+    private Timer voteTimer;
 
     public VoteButtonGroup(long ownerId, long channelId, long guildId, VoteButtonGroupBuilder.IVotePeriodicRunnable votePeriodicRunnable, Timer voteTimer) {
         super(ownerId, channelId, guildId);
@@ -34,7 +33,7 @@ public class VoteButtonGroup extends ButtonGroup {
         if (periodicRunnable != null) {
             setUpVoteProcessConsumer();
         }
-        this.voreTimer = voteTimer;
+        this.voteTimer = voteTimer;
     }
 
     private void setUpVoteProcessConsumer() {
@@ -81,11 +80,12 @@ public class VoteButtonGroup extends ButtonGroup {
     }
 
     public void stopVote() {
-        voreTimer.cancel();
+        voteTimer.cancel();
         timer.cancel();
     }
 
     void voteFinished() {
         timer.cancel();
     }
+    
 }

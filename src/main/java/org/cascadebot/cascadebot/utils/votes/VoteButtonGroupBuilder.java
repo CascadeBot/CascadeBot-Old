@@ -24,6 +24,8 @@ public class VoteButtonGroupBuilder {
 
     private Timer timer = new Timer();
 
+    private boolean sent = false;
+
     private List<Button> extraButtonList = new ArrayList<>();
     private List<Object> voteButtons = new ArrayList<>();
     private int amount = 1; //Setting this so things don't break
@@ -147,7 +149,21 @@ public class VoteButtonGroupBuilder {
             buttonGroup.addButton(button);
         }
 
-        new Thread(new VoteWaitRunnable(buttonGroup)).start();
+        buttonGroup.setMessageSentAction(() -> {
+            if(!sent) {
+                sent = true;
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        CascadeBot.INS.getShardManager().getGuildById(buttonGroup.getGuildId()).getTextChannelById(buttonGroup.getChannelId()).getMessageById(buttonGroup.getMessageId()).queue(message -> {
+                            message.delete().queue();
+                        });
+                        buttonGroup.voteFinished();
+                        finishConsumer.accept(buttonGroup.getOrderedVoteResults());
+                    }
+                }, voteTime);
+            }
+        });
 
         return buttonGroup;
     }
@@ -156,33 +172,4 @@ public class VoteButtonGroupBuilder {
         void run(List<VoteResult> results, Message message);
     }
 
-    public class VoteWaitRunnable implements Runnable {
-
-        VoteButtonGroup voteGroup;
-
-        boolean sent = false;
-
-        public VoteWaitRunnable(VoteButtonGroup buttonGroup) {
-            voteGroup = buttonGroup;
-        }
-
-        @Override
-        public void run() {
-            voteGroup.setMessageSentAction(() -> {
-                if(!sent) {
-                    sent = true;
-                    timer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            CascadeBot.INS.getShardManager().getGuildById(voteGroup.getGuildId()).getTextChannelById(voteGroup.getChannelId()).getMessageById(voteGroup.getMessageId()).queue(message -> {
-                                message.delete().queue();
-                            });
-                            voteGroup.voteFinished();
-                            finishConsumer.accept(voteGroup.getOrderedVoteResults());
-                        }
-                    }, voteTime);
-                }
-            });
-        }
-    }
 }

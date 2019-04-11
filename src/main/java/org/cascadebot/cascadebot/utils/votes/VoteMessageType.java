@@ -6,8 +6,10 @@
 package org.cascadebot.cascadebot.utils.votes;
 
 public enum VoteMessageType {
+
     YES_NO,
     NUMBERS,
     LETTERS,
     CUSTOM
+
 }
