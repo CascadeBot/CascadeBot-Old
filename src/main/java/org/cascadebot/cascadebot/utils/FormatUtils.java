@@ -178,4 +178,8 @@ public class FormatUtils {
         return Math.round(number * Math.pow(10, dp)) / Math.pow(10, dp);
     }
 
+    public static String formatPrefix(String prefix, String string) {
+        return string.replace("{%}", prefix);
+    }
+
 }

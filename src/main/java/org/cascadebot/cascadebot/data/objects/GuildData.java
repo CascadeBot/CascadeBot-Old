@@ -18,6 +18,8 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
@@ -51,6 +53,7 @@ public class GuildData {
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
     private String prefix = Config.INS.getDefaultPrefix();
+    private Locale locale = Locale.getDefaultLocale();
 
 
 
@@ -252,6 +255,14 @@ public class GuildData {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 
     //endregion
