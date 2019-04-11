@@ -71,7 +71,7 @@ public class PlayingCommand implements ICommandMain {
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
                     int volume = context.getMusicPlayer().getPlayer().getVolume();
                     volume += 10;
-                    if(volume >= 100) {
+                    if (volume >= 100) {
                         volume = 100;
                     }
                     context.getMusicPlayer().getPlayer().setVolume(volume);
@@ -110,7 +110,7 @@ public class PlayingCommand implements ICommandMain {
     private MessageEmbed getSongEmbed(CascadePlayer player, long guildID) {
         AudioTrack track = player.getPlayer().getPlayingTrack();
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-        if(track == null) {
+        if (track == null) {
             embedBuilder.setDescription("No song playing");
             return embedBuilder.build();
         }

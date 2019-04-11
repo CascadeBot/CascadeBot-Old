@@ -153,7 +153,7 @@ public class CascadeBot {
                     .setBulkDeleteSplittingEnabled(false)
                     .setEnableShutdownHook(false);
 
-            if(MusicHandler.isLavalinkEnabled()) {
+            if (MusicHandler.isLavalinkEnabled()) {
                 defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
             } else {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());

@@ -54,7 +54,6 @@ public class GuildData {
     private String prefix = Config.INS.getDefaultPrefix();
 
 
-
     //region Guild data containers
 
     private GuildSettings guildSettings = new GuildSettings();

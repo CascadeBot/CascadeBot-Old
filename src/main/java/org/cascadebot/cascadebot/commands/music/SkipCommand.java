@@ -28,19 +28,19 @@ public class SkipCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         AudioTrack track = context.getMusicPlayer().getPlayer().getPlayingTrack();
-        if(track == null) {
+        if (track == null) {
             context.getTypedMessaging().replyDanger("I'm not playing anything!");
             return;
         }
 
-        if(context.getMusicPlayer().getTracks().peek() == null) {
+        if (context.getMusicPlayer().getTracks().peek() == null) {
             context.getTypedMessaging().replyDanger("No song to skip to!");
             return;
         }
 
-        if(context.getArgs().length > 0) {
+        if (context.getArgs().length > 0) {
             if (context.getArg(0).equalsIgnoreCase("force")) {
-                if(context.hasPermission("skip.force")) {
+                if (context.hasPermission("skip.force")) {
                     context.getMusicPlayer().skip();
                     context.getTypedMessaging().replySuccess("Forcefully skipped the song");
                 } else {
@@ -50,12 +50,12 @@ public class SkipCommand implements ICommandMain {
             }
         }
 
-        if(voteMap.containsKey(context.getGuild().getIdLong())) {
-            if(context.getArgs().length > 0) {
-                if(context.getArg(0).equalsIgnoreCase("yes")) {
+        if (voteMap.containsKey(context.getGuild().getIdLong())) {
+            if (context.getArgs().length > 0) {
+                if (context.getArg(0).equalsIgnoreCase("yes")) {
                     voteMap.get(context.getGuild().getIdLong()).addVote(sender.getUser(), UnicodeConstants.TICK);
                     return;
-                } else if(context.getArg(0).equalsIgnoreCase("no")) {
+                } else if (context.getArg(0).equalsIgnoreCase("no")) {
                     voteMap.get(context.getGuild().getIdLong()).addVote(sender.getUser(), UnicodeConstants.RED_CROSS);
                     return;
                 }
@@ -65,7 +65,7 @@ public class SkipCommand implements ICommandMain {
             return;
         }
 
-        if(track.getUserData().equals(sender.getUser().getIdLong())) {
+        if (track.getUserData().equals(sender.getUser().getIdLong())) {
             context.getMusicPlayer().skip();
             context.getTypedMessaging().replySuccess("Skipped currently playing song because you queued it");
             return;
@@ -82,13 +82,13 @@ public class SkipCommand implements ICommandMain {
         }));
         buttonGroupBuilder.setPeriodicConsumer((results, message) -> {
             StringBuilder resultsBuilder = new StringBuilder();
-            for(VoteResult result : results) {
+            for (VoteResult result : results) {
                 resultsBuilder.append(result.getVote()).append(" - ").append(result.getAmount()).append(' ');
             }
             message.editMessage("Skip Vote\n" + resultsBuilder.toString()).queue();
         });
         buttonGroupBuilder.setVoteFinishConsumer(voteResults -> {
-            if(voteResults.get(0).getVote().equals(UnicodeConstants.TICK)) {
+            if (voteResults.get(0).getVote().equals(UnicodeConstants.TICK)) {
                 context.getTypedMessaging().replyInfo("Skipping song!");
                 context.getMusicPlayer().skip();
                 voteMap.remove(context.getGuild().getIdLong());

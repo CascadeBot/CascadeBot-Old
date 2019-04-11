@@ -44,7 +44,7 @@ public class CascadePlayer {
     private boolean shuffle = false;
 
     public CascadePlayer(Guild guild) {
-        if(MusicHandler.isLavalinkEnabled()) {
+        if (MusicHandler.isLavalinkEnabled()) {
             player = MusicHandler.getLavaLink().getLink(guild).getPlayer();
         } else {
             AudioPlayer aPlayer = MusicHandler.createLavaLinkPlayer();
@@ -78,7 +78,7 @@ public class CascadePlayer {
      */
     public String getTrackProgressBar(boolean embed) {
         float process = (100f / player.getPlayingTrack().getDuration() * player.getTrackPosition());
-        if(embed) {
+        if (embed) {
             return StringsUtil.getProgressBarEmbed(process);
         } else {
             return StringsUtil.getProgressBar(process);
@@ -89,7 +89,7 @@ public class CascadePlayer {
         if (player.getPlayingTrack().getInfo().uri.contains("youtube")) {
             return "https://img.youtube.com/vi/" + player.getPlayingTrack().getIdentifier() + "/hqdefault.jpg";
         }
-        if(player.getPlayingTrack().getInfo().uri.contains("twitch")) {
+        if (player.getPlayingTrack().getInfo().uri.contains("twitch")) {
             String[] split = player.getPlayingTrack().getInfo().identifier.split("/");
             return "https://static-cdn.jtvnw.net/previews-ttv/live_user_" + split[split.length - 1] + "-500x400.jpg";
         }
@@ -142,7 +142,7 @@ public class CascadePlayer {
     }
 
     public void join(VoiceChannel channel) {
-        if(MusicHandler.isLavalinkEnabled()) {
+        if (MusicHandler.isLavalinkEnabled()) {
             getLink().connect(channel);
         } else {
             channel.getGuild().getAudioManager().openAudioConnection(channel);

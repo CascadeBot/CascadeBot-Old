@@ -31,7 +31,7 @@ public class VoteButtonGroup extends ButtonGroup {
     public VoteButtonGroup(long ownerId, long channelId, long guildId, VoteButtonGroupBuilder.IVotePeriodicRunnable votePeriodicRunnable, Timer voteTimer) {
         super(ownerId, channelId, guildId);
         this.periodicRunnable = votePeriodicRunnable;
-        if(periodicRunnable != null) {
+        if (periodicRunnable != null) {
             setUpVoteProcessConsumer();
         }
         this.voreTimer = voteTimer;
@@ -49,8 +49,8 @@ public class VoteButtonGroup extends ButtonGroup {
     }
 
     public void addVote(User user, Object vote) {
-        if(votes.containsKey(user.getIdLong())) {
-            if(votes.get(user.getIdLong()).equals(vote)) {
+        if (votes.containsKey(user.getIdLong())) {
+            if (votes.get(user.getIdLong()).equals(vote)) {
                 votes.remove(user.getIdLong());
                 return;
             }
@@ -73,7 +73,7 @@ public class VoteButtonGroup extends ButtonGroup {
             }
         }
         List<VoteResult> voteResults = new ArrayList<>();
-        for(Map.Entry<Object, Integer> entry : countMap.entrySet()) {
+        for (Map.Entry<Object, Integer> entry : countMap.entrySet()) {
             voteResults.add(new VoteResult(entry.getValue(), entry.getKey()));
         }
         voteResults.sort(Collections.reverseOrder());

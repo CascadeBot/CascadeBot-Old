@@ -28,7 +28,7 @@ public class DogCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         ButtonGroup dogButtons = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
         dogButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
-            if(member.getUser().getIdLong() != dogButtons.getOwner().getUser().getIdLong()) {
+            if (member.getUser().getIdLong() != dogButtons.getOwner().getUser().getIdLong()) {
                 return;
             }
             try {

@@ -68,14 +68,14 @@ public class ButtonGroup {
 
     public void setMessageSentConsumer(Runnable messageSentRunnable) {
         this.messageSent = messageSentRunnable;
-        if(messageId != 0) {
+        if (messageId != 0) {
             messageSent.run();
         }
     }
 
     public void setMessage(long id) {
         messageId = id;
-        if(messageSent != null) {
+        if (messageSent != null) {
             messageSent.run();
         }
     }

@@ -8,6 +8,4 @@ package org.cascadebot.cascadebot.data.objects;
 public class GuildPermissions {
 
 
-
-
 }

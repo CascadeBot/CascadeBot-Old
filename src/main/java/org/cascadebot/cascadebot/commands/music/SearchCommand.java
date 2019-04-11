@@ -34,7 +34,7 @@ public class SearchCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 1) {
+        if (context.getArgs().length < 1) {
             context.getUIMessaging().replyUsage(this);
             return;
         }
@@ -43,7 +43,7 @@ public class SearchCommand implements ICommandMain {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             int i = 0;
             StringBuilder messageBuilder = new StringBuilder();
-            for(MusicHandler.SearchResult result : searchResults) {
+            for (MusicHandler.SearchResult result : searchResults) {
                 i++;
                 char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
                 buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {

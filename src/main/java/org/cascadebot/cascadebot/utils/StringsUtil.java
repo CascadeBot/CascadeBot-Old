@@ -139,7 +139,7 @@ public class StringsUtil {
      * @param ellipse Weather or not to use ellipses.
      * @return The truncated String.
      */
-    public static String truncate(String string,int length, boolean ellipse) {
+    public static String truncate(String string, int length, boolean ellipse) {
         return string.substring(0, Math.min(string.length(), length - (ellipse ? 3 : 0))) + (string.length() >
                 length - (ellipse ? 3 : 0) && ellipse ? "..." : "");
     }
