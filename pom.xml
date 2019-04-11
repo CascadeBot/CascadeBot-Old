@@ -206,7 +206,6 @@
             <version>4.5.7</version>
         </dependency>
 
-
         <!-- Data -->
         <dependency>
             <groupId>com.google.code.gson</groupId>

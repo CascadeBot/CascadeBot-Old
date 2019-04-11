@@ -97,7 +97,7 @@ public class SkipCommand implements ICommandMain {
                 voteMap.remove(context.getGuild().getIdLong());
             } else {
                 voteMap.remove(context.getGuild().getIdLong());
-                context.getTypedMessaging().replyInfo("Not skipping the song song!");
+                context.getTypedMessaging().replyInfo("Not skipping the song!");
             }
         });
         VoteButtonGroup buttonGroup = buttonGroupBuilder.build(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
