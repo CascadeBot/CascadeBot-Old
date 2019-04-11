@@ -27,7 +27,7 @@ public class VoteButtonGroup extends ButtonGroup {
 
     private Timer voteTimer;
 
-    public VoteButtonGroup(long ownerId, long channelId, long guildId, VoteButtonGroupBuilder.IVotePeriodicRunnable votePeriodicRunnable, Timer voteTimer) {
+    VoteButtonGroup(long ownerId, long channelId, long guildId, VoteButtonGroupBuilder.IVotePeriodicRunnable votePeriodicRunnable, Timer voteTimer) {
         super(ownerId, channelId, guildId);
         this.periodicRunnable = votePeriodicRunnable;
         if (periodicRunnable != null) {
