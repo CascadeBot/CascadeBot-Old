@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class VoteButtonGroupBuilder {
@@ -34,7 +35,7 @@ public class VoteButtonGroupBuilder {
 
     private Consumer<List<VoteResult>> finishConsumer;
 
-    private IVotePeriodicRunnable periodicRunnable;
+    private BiConsumer<List<VoteResult>, Message> periodicConsumer;
 
     public VoteButtonGroupBuilder(VoteMessageType type) {
         this.type = type;
@@ -94,13 +95,13 @@ public class VoteButtonGroupBuilder {
         return this;
     }
 
-    public VoteButtonGroupBuilder setPeriodicRunnable(IVotePeriodicRunnable periodicRunnable) {
-        this.periodicRunnable = periodicRunnable;
+    public VoteButtonGroupBuilder setPeriodicConsumer(BiConsumer<List<VoteResult>, Message> periodicConsumer) {
+        this.periodicConsumer = periodicConsumer;
         return this;
     }
 
     public VoteButtonGroup build(long owner, long channelId, long guild) {
-        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicRunnable, timer);
+        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer);
         switch (type) {
             case YES_NO:
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
@@ -166,10 +167,6 @@ public class VoteButtonGroupBuilder {
         });
 
         return buttonGroup;
-    }
-
-    public interface IVotePeriodicRunnable {
-        void run(List<VoteResult> results, Message message);
     }
 
 }

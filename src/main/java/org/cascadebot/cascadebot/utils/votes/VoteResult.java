@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class VoteResult implements Comparable<VoteResult> {
 
-    int amount;
+    private int amount;
     private Object vote;
 
     public VoteResult(int amount, Object vote) {

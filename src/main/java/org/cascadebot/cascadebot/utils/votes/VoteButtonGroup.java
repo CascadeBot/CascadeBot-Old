@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.utils.votes;
 
+import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -16,20 +17,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.BiConsumer;
 
 public class VoteButtonGroup extends ButtonGroup {
 
     private Map<Long, Object> votes = new HashMap<>();
 
-    private VoteButtonGroupBuilder.IVotePeriodicRunnable periodicRunnable;
+    private BiConsumer<List<VoteResult>, Message> periodicConsumer;
 
     private Timer timer = new Timer();
 
     private Timer voteTimer;
 
-    VoteButtonGroup(long ownerId, long channelId, long guildId, VoteButtonGroupBuilder.IVotePeriodicRunnable votePeriodicRunnable, Timer voteTimer) {
+    VoteButtonGroup(long ownerId, long channelId, long guildId, BiConsumer<List<VoteResult>, Message> periodicRunnable, Timer voteTimer) {
         super(ownerId, channelId, guildId);
-        this.periodicRunnable = votePeriodicRunnable;
+        this.periodicConsumer = periodicRunnable;
         if (periodicRunnable != null) {
             setUpVoteProcessConsumer();
         }
@@ -41,7 +43,7 @@ public class VoteButtonGroup extends ButtonGroup {
             @Override
             public void run() {
                 CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).getMessageById(getMessageId()).queue(message -> {
-                    periodicRunnable.run(getOrderedVoteResults(), message);
+                    periodicConsumer.accept(getOrderedVoteResults(), message);
                 });
             }
         }, 5000, 5000);

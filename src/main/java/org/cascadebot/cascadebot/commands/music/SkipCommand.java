@@ -80,7 +80,7 @@ public class SkipCommand implements ICommandMain {
             context.getMusicPlayer().skip();
             context.getTypedMessaging().replySuccess("Forcefully skipped the song");
         }));
-        buttonGroupBuilder.setPeriodicRunnable((results, message) -> {
+        buttonGroupBuilder.setPeriodicConsumer((results, message) -> {
             StringBuilder resultsBuilder = new StringBuilder();
             for (VoteResult result : results) {
                 resultsBuilder.append(result.getVote()).append(" - ").append(result.getAmount()).append(' ');
