@@ -134,7 +134,7 @@ public class CascadePlayer {
 
     public boolean skip() {
         try {
-            player.playTrack(tracks.remove());
+            player.stopTrack();
             return true;
         } catch (NoSuchElementException e) {
             return false;

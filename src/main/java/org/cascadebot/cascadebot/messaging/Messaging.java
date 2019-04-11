@@ -173,7 +173,6 @@ public final class Messaging {
         RequestFuture<Message> future = channel.sendMessage(message).submit();
         future.thenAccept((sentMessage -> {
             buttonGroup.addButtonsToMessage(sentMessage);
-            buttonGroup.setMessage(sentMessage.getIdLong());
             GuildDataManager.getGuildData(sentMessage.getGuild().getIdLong()).addButtonGroup(channel, sentMessage, buttonGroup);
         }));
         return future;

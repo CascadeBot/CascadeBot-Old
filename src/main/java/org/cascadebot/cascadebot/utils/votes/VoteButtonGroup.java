@@ -26,12 +26,15 @@ public class VoteButtonGroup extends ButtonGroup {
 
     private Timer timer = new Timer();
 
-    public VoteButtonGroup(long ownerId, long channelId, long guildId, VoteButtonGroupBuilder.IVotePeriodicRunnable votePeriodicRunnable) {
+    private Timer voreTimer;
+
+    public VoteButtonGroup(long ownerId, long channelId, long guildId, VoteButtonGroupBuilder.IVotePeriodicRunnable votePeriodicRunnable, Timer voteTimer) {
         super(ownerId, channelId, guildId);
         this.periodicRunnable = votePeriodicRunnable;
         if(periodicRunnable != null) {
             setUpVoteProcessConsumer();
         }
+        this.voreTimer = voteTimer;
     }
 
     private void setUpVoteProcessConsumer() {
@@ -75,6 +78,11 @@ public class VoteButtonGroup extends ButtonGroup {
         }
         voteResults.sort(Collections.reverseOrder());
         return voteResults;
+    }
+
+    public void stopVote() {
+        voreTimer.cancel();
+        timer.cancel();
     }
 
     void voteFinished() {

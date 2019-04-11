@@ -75,7 +75,9 @@ public class ButtonGroup {
 
     public void setMessage(long id) {
         messageId = id;
-        messageSent.run();
+        if(messageSent != null) {
+            messageSent.run();
+        }
     }
 
     public long getMessageId() {
