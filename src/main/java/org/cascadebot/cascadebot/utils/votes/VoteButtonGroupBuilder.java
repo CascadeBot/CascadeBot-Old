@@ -168,8 +168,8 @@ public class VoteButtonGroupBuilder {
 
         @Override
         public void run() {
-            voteGroup.setMessageSentConsumer(() -> {
-                if (!sent) {
+            voteGroup.setMessageSentAction(() -> {
+                if(!sent) {
                     sent = true;
                     timer.schedule(new TimerTask() {
                         @Override
