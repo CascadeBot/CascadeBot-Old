@@ -8,6 +8,8 @@ package org.cascadebot.cascadebot.commands.music;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.UnicodeConstants;
+import org.cascadebot.cascadebot.commandmeta.Argument;
+import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -20,6 +22,7 @@ import org.cascadebot.cascadebot.utils.votes.VoteResult;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class SkipCommand implements ICommandMain {
 
@@ -122,4 +125,12 @@ public class SkipCommand implements ICommandMain {
     public String description() {
         return "skips the current song";
     }
+
+    @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.of("force", "force skips a track", ArgumentType.OPTIONAL),
+                Argument.of("yes", "votes yes for skipping the song", ArgumentType.COMMAND),
+                Argument.of("no", "votes no for skipping the song", ArgumentType.COMMAND));
+    }
+
 }

@@ -70,6 +70,7 @@ public class PermissionsManager {
         registerPermission(CascadePermission.of("Leave other voice channel", "leave.other", false, Permission.VOICE_MOVE_OTHERS));
 
         registerPermission(CascadePermission.of("Raise volume above 100%", "volume.extreme", false, Permission.MANAGE_SERVER));
+        registerPermission(CascadePermission.of("Force skip a song", "skip.force", false, Permission.MANAGE_CHANNEL));
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 
