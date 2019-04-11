@@ -87,5 +87,5 @@ public class VoteButtonGroup extends ButtonGroup {
     void voteFinished() {
         timer.cancel();
     }
-    
+
 }

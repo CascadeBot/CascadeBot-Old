@@ -34,7 +34,7 @@ public class VoteButtonGroupBuilder {
 
     private Consumer<List<VoteResult>> finishConsumer;
 
-    private IVotePeriodicRunnable periodicConsumer;
+    private IVotePeriodicRunnable periodicRunnable;
 
     public VoteButtonGroupBuilder(VoteMessageType type) {
         this.type = type;
@@ -94,13 +94,13 @@ public class VoteButtonGroupBuilder {
         return this;
     }
 
-    public VoteButtonGroupBuilder setPeriodicConsumer(IVotePeriodicRunnable periodicConsumer) {
-        this.periodicConsumer = periodicConsumer;
+    public VoteButtonGroupBuilder setPeriodicRunnable(IVotePeriodicRunnable periodicRunnable) {
+        this.periodicRunnable = periodicRunnable;
         return this;
     }
 
     public VoteButtonGroup build(long owner, long channelId, long guild) {
-        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer);
+        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicRunnable, timer);
         switch (type) {
             case YES_NO:
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
