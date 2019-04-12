@@ -22,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEvents;
@@ -51,6 +52,7 @@ public class CascadeBot {
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
     private OkHttpClient httpClient;
+    private Language language;
 
     public static void main(String[] args) {
         if (System.getenv("SENTRY_DSN") == null) {
@@ -86,6 +88,9 @@ public class CascadeBot {
 
     private void init() {
         new Thread(new ConsoleReader()).start();
+
+        language = new Language();
+        language.initLanguage();
 
         GsonBuilder builder = new GsonBuilder();
         try {
@@ -218,6 +223,10 @@ public class CascadeBot {
 
     public OkHttpClient getHttpClient() {
         return httpClient;
+    }
+
+    public Language getLanguage() {
+        return language;
     }
 
 }
