@@ -6,6 +6,8 @@
 package org.cascadebot.cascadebot.commandmeta;
 
 import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
@@ -20,6 +22,19 @@ public interface ICommandExecutable {
 
     CascadePermission getPermission();
 
+    default String getDescriptionPath() {
+        return "command_descriptions." + command();
+    }
+
+    default String getDescription(Locale locale) {
+        if (!CascadeBot.INS.getLanguage().hasLanguageEntry(locale, getDescriptionPath())) {
+            return description();
+        } else {
+            return CascadeBot.INS.getLanguage().get(locale, getDescriptionPath());
+        }
+    }
+
+    @Deprecated(forRemoval = true)
     String description();
 
     default boolean deleteMessages() {
