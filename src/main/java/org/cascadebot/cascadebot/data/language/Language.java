@@ -57,13 +57,14 @@ public class Language {
         return languages.get(locale);
     }
 
-    public String get(GuildData guildData, String path, Object... args) {
-        if (languages.containsKey(guildData.getLocale())) {
-            if (languages.containsKey(guildData.getLocale())) {
-                String string = FormatUtils.formatPrefix(
-                        guildData.getPrefix(),
-                        languages.get(guildData.getLocale()).getString(path));
-                Matcher matcher = PLACEHOLDER_REGEX.matcher(string);
+    public boolean hasLanguageEntry(Locale locale, String path) {
+        return languages.containsKey(locale) && languages.get(locale).getString(path) != null;
+    }
+
+    public String get(Locale locale, String path, Object... args) {
+        if (languages.containsKey(locale)) {
+            if (languages.get(locale).getString(path) != null) {
+                Matcher matcher = PLACEHOLDER_REGEX.matcher(languages.get(locale).getString(path));
                 AtomicInteger count = new AtomicInteger(0);
                 return matcher.replaceAll((matchResult -> {
                     if (count.get() >= args.length) return "";
@@ -74,7 +75,7 @@ public class Language {
                 return "No language string for " + path;
             }
         } else {
-            throw new IllegalStateException("The language file matching locale '" + guildData.getLocale().getLanguageCode()
+            throw new IllegalStateException("The language file matching locale '" + locale.getLanguageCode()
                     + "' does not exist or is not loaded!");
         }
     }
