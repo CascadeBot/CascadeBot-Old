@@ -28,6 +28,10 @@ public enum PermissionAction {
      * respond with either {@code NEUTRAL} or {@code DENY}. In most restrictive mode, the
      * permission will be denied regardless of the other permission actions.
      */
-    DENY
+    DENY;
+
+    public Result toResult(PermissionHolder cause) {
+        return new Result(this, cause);
+    }
 
 }

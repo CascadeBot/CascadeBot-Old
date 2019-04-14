@@ -297,15 +297,13 @@ public class CommandContext {
     }
 
     public boolean hasPermission(String permission) {
-        CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
-        if (cascadePermission == null) return false;
-        return data.getPermissions().hasPermission(member, channel, cascadePermission, data.getSettings());
+        return hasPermission(member, permission);
     }
 
     public boolean hasPermission(Member member, String permission) {
         CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
         if (cascadePermission == null) return false;
-        return data.getPermissions().hasPermission(member, channel, cascadePermission, data.getSettings());
+        return data.getPermissions().hasPermission(member, channel, cascadePermission, data.getSettings()).isAllowed();
     }
 
     //endregion
