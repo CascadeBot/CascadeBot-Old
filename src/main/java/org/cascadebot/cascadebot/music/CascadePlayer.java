@@ -132,13 +132,8 @@ public class CascadePlayer {
         return shuffle;
     }
 
-    public boolean skip() {
-        try {
-            player.stopTrack();
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public void skip() {
+        player.stopTrack();
     }
 
     public void join(VoiceChannel channel) {

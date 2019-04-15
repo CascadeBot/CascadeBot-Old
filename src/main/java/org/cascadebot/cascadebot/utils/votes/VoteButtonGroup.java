@@ -25,6 +25,8 @@ public class VoteButtonGroup extends ButtonGroup {
 
     private BiConsumer<List<VoteResult>, Message> periodicConsumer;
 
+    List<Long> allowedUsers;
+
     private Timer timer = new Timer();
 
     private Timer voteTimer;
@@ -79,6 +81,13 @@ public class VoteButtonGroup extends ButtonGroup {
         }
         voteResults.sort(Collections.reverseOrder());
         return voteResults;
+    }
+
+    public List<Long> getAllowedUsers() {
+        if (allowedUsers == null) {
+            allowedUsers = new ArrayList<>();
+        }
+        return allowedUsers;
     }
 
     public void stopVote() {
