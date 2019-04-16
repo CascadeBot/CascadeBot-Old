@@ -30,8 +30,8 @@ public enum PermissionAction {
      */
     DENY;
 
-    public Result toResult(PermissionHolder cause) {
-        return new Result(this, cause);
+    public Result toResult(PermissionHolder holder) {
+        return Result.of(this, holder);
     }
 
 }

@@ -140,7 +140,7 @@ public class PermissionsManager {
             return userLevel.isAuthorised(levelToCheck);
         } else {
             if (command.getPermission() == null) return true;
-            return guildData.getPermissions().hasPermission(member, command.getPermission(), guildData.getSettings()).isAllowed();
+            return guildData.getPermissions().hasPermission(member, command.getPermission(), guildData.getSettings());
         }
         // return false;
     }

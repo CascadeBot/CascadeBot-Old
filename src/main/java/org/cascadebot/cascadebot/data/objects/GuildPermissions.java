@@ -37,27 +37,35 @@ public class GuildPermissions {
     private List<Group> groups = Collections.synchronizedList(new ArrayList<>());
     private Map<Long, User> users = new ConcurrentHashMap<>();
 
-    public Result hasPermission(Member member, CascadePermission permission, GuildSettings settings) {
+    public boolean hasPermission(Member member, CascadePermission permission, GuildSettings settings) {
         return hasPermission(member, null, permission, settings);
     }
 
-    public Result hasPermission(Member member, Channel channel, CascadePermission permission, GuildSettings settings) {
+    public boolean hasPermission(Member sender, Channel channel, CascadePermission permission, GuildSettings settings) {
+        return evalPermission(sender, channel, permission, settings).isAllowed();
+    }
+
+    public Result evalPermission(Member member, CascadePermission permission, GuildSettings settings) {
+        return evalPermission(member, null, permission, settings);
+    }
+
+    public Result evalPermission(Member member, Channel channel, CascadePermission permission, GuildSettings settings) {
 
         Checks.notNull(member, "member");
         Checks.notNull(permission, "permission");
 
         // This allows developers and owners to go into guilds and fix problems
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.DEVELOPER)) {
-            return new Result(PermissionAction.ALLOW, ResultCause.OFFICIAL);
+            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL);
         }
-        if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.CONTRIBUTOR) && Environment.isDevelopment()){
-            return new Result(PermissionAction.ALLOW, ResultCause.OFFICIAL);
+        if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.CONTRIBUTOR) && Environment.isDevelopment()) {
+            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL);
         }
         // If the user is owner then they have all perms, obsv..
-        if (member.isOwner()) return new Result(PermissionAction.ALLOW, ResultCause.GUILD);
+        if (member.isOwner()) return Result.of(PermissionAction.ALLOW, ResultCause.GUILD);
         // By default all members with the administrator perm have access to all perms; this can be turned off
         if (member.hasPermission(Permission.ADMINISTRATOR) && settings.doAdminsHaveAllPerms()) {
-            return new Result(PermissionAction.ALLOW, ResultCause.GUILD);
+            return Result.of(PermissionAction.ALLOW, ResultCause.GUILD);
         }
 
         User user = users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
@@ -65,7 +73,7 @@ public class GuildPermissions {
         List<Group> userGroups = getUserGroups(member);
 
         Result result = getDefaultAction(permission);
-        Result evaluatedResult = new Result(PermissionAction.NEUTRAL);
+        Result evaluatedResult = Result.of(PermissionAction.NEUTRAL);
 
         if (mode == PermissionMode.MOST_RESTRICTIVE) {
             evaluatedResult = evaluateMostRestrictiveMode(user, userGroups, permission);
@@ -80,7 +88,7 @@ public class GuildPermissions {
         // Discord permissions will only allow a permission if is not already allowed or denied.
         // It will not override Cascade permissions!
         if (result.isNeutral() && hasDiscordPermissions(member, channel, permission.getDiscordPerm())) {
-            result = new Result(PermissionAction.ALLOW, ResultCause.DISCORD);
+            result = Result.of(PermissionAction.ALLOW, ResultCause.DISCORD);
         }
 
         return result;
@@ -111,7 +119,7 @@ public class GuildPermissions {
     }
 
     private Result evaluateHierarchicalMode(User user, List<Group> userGroups, CascadePermission permission) {
-        Result result = new Result(PermissionAction.NEUTRAL);
+        Result result = Result.of(PermissionAction.NEUTRAL);
         // Loop through the groups backwards to preserve hierarchy; groups higher up override lower groups.
         for (int i = userGroups.size() - 1; i >= 0; i--) {
             Result groupResult = userGroups.get(i).evaluatePermission(permission);
@@ -132,8 +140,8 @@ public class GuildPermissions {
     private Result getDefaultAction(CascadePermission permission) {
         // A default permission will never explicitly deny a permission.
         return permission.isDefaultPerm() ?
-                new Result(PermissionAction.ALLOW, ResultCause.DEFAULT) :
-                new Result(PermissionAction.DENY, ResultCause.DEFAULT);
+                Result.of(PermissionAction.ALLOW, ResultCause.DEFAULT) :
+                Result.of(PermissionAction.DENY, ResultCause.DEFAULT);
     }
 
     public Group createGroup(String name) {
