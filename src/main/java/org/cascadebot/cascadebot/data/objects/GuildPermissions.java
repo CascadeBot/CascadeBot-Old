@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
-import de.bild.codec.annotations.Transient;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Member;
@@ -25,10 +24,8 @@ import spark.utils.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -39,9 +36,6 @@ public class GuildPermissions {
 
     private List<Group> groups = Collections.synchronizedList(new ArrayList<>());
     private Map<Long, User> users = new ConcurrentHashMap<>();
-
-    @Transient
-    private Map<PermissionCacheKey, Result> cache = new HashMap<>();
 
     public boolean hasPermission(Member member, CascadePermission permission, GuildSettings settings) {
         return hasPermission(member, null, permission, settings);
@@ -184,34 +178,6 @@ public class GuildPermissions {
 
     public List<Group> getGroups() {
         return List.copyOf(groups);
-    }
-
-    private class PermissionCacheKey {
-
-        private long memberId;
-        private long channelId;
-        private CascadePermission permission;
-
-        public PermissionCacheKey(long memberId, long channelId, CascadePermission permission) {
-            this.memberId = memberId;
-            this.channelId = channelId;
-            this.permission = permission;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PermissionCacheKey that = (PermissionCacheKey) o;
-            return memberId == that.memberId &&
-                    channelId == that.channelId &&
-                    permission.equals(that.permission);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(memberId, channelId, permission);
-        }
     }
 
 }
