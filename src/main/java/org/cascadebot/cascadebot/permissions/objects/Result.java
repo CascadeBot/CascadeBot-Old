@@ -8,8 +8,8 @@ import java.util.Map;
 public class Result {
 
     private PermissionAction action;
-    private PermissionHolder container;
     private ResultCause cause;
+    private Object causeObject;
 
     private static Map<Pair<PermissionAction, ResultCause>, Result> cache = new HashMap<>();
 
@@ -25,8 +25,8 @@ public class Result {
     private Result(PermissionAction action, PermissionHolder container) {
         this.action = action;
         if (container != null) {
-            this.container = container;
             this.cause = ResultCause.valueOf(container.getType().name());
+            this.causeObject = container;
         }
     }
 
@@ -40,6 +40,12 @@ public class Result {
         return cache.computeIfAbsent(key, pairKey -> new Result(pairKey.getKey(), pairKey.getValue()));
     }
 
+    public static Result of(PermissionAction action, ResultCause cause, Object causeObject) {
+        var result = of(action, cause);
+        result.causeObject = causeObject;
+        return result;
+    }
+
     public static Result of(PermissionAction action, PermissionHolder container) {
         return new Result(action, container);
     }
@@ -48,12 +54,8 @@ public class Result {
         return action;
     }
 
-    public PermissionHolder getContainer() {
-        return container;
-    }
-
-    public PermissionHolder.HolderType getHolderType() {
-        return container.getType();
+    public Object getCauseObject() {
+        return causeObject;
     }
 
     public ResultCause getCause() {
@@ -70,6 +72,11 @@ public class Result {
 
     public boolean isNeutral() {
         return action == PermissionAction.NEUTRAL;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Result{action=%s, cause=%s, object=%s}", action.name(), cause.name(), causeObject.toString());
     }
 
 }

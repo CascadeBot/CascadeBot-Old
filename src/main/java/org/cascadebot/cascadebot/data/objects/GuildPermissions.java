@@ -56,10 +56,10 @@ public class GuildPermissions {
 
         // This allows developers and owners to go into guilds and fix problems
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.DEVELOPER)) {
-            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL);
+            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL, SecurityLevel.DEVELOPER);
         }
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.CONTRIBUTOR) && Environment.isDevelopment()) {
-            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL);
+            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL, SecurityLevel.CONTRIBUTOR);
         }
         // If the user is owner then they have all perms, obsv..
         if (member.isOwner()) return Result.of(PermissionAction.ALLOW, ResultCause.GUILD);
@@ -87,8 +87,8 @@ public class GuildPermissions {
 
         // Discord permissions will only allow a permission if is not already allowed or denied.
         // It will not override Cascade permissions!
-        if (result.isNeutral() && hasDiscordPermissions(member, channel, permission.getDiscordPerm())) {
-            result = Result.of(PermissionAction.ALLOW, ResultCause.DISCORD);
+        if (result.isNeutral() && hasDiscordPermissions(member, channel, permission.getDiscordPerms())) {
+            result = Result.of(PermissionAction.ALLOW, ResultCause.DISCORD, permission.getDiscordPerms());
         }
 
         return result;
