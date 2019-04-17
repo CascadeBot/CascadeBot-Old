@@ -28,11 +28,11 @@ public abstract class PermissionHolder {
         for (String perm : getPermissions()) {
             if (new PermissionNode(perm.substring(perm.startsWith("-") ? 1 : 0)).test(permission.getPermissionNode())) {
                 if (perm.startsWith("-"))
-                    return PermissionAction.DENY.toResult(this);
-                return PermissionAction.ALLOW.toResult(this);
+                    return Result.of(permission, PermissionAction.DENY, this);
+                return Result.of(permission, PermissionAction.ALLOW, this);
             }
         }
-        return PermissionAction.NEUTRAL.toResult(this);
+        return Result.of(permission, PermissionAction.NEUTRAL, this);
     }
 
     enum HolderType {
