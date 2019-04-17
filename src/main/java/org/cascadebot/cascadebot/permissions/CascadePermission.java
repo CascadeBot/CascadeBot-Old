@@ -75,7 +75,7 @@ public class CascadePermission {
         return module;
     }
 
-    public EnumSet<Permission> getDiscordPerm() {
+    public EnumSet<Permission> getDiscordPerms() {
         return discordPerm;
     }
 
