@@ -1,28 +1,34 @@
 package org.cascadebot.cascadebot.permissions.objects;
 
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class Result {
 
+    private CascadePermission permission;
     private PermissionAction action;
     private ResultCause cause;
     private Object causeObject;
 
-    private static Map<Pair<PermissionAction, ResultCause>, Result> cache = new HashMap<>();
-
-    private Result(PermissionAction action) {
+    private Result(CascadePermission permission, PermissionAction action) {
+        this.permission = permission;
         this.action = action;
     }
 
-    private Result(PermissionAction action, ResultCause cause) {
+    private Result(CascadePermission permission, PermissionAction action, ResultCause cause) {
+        this.permission = permission;
         this.action = action;
         this.cause = cause;
     }
 
-    private Result(PermissionAction action, PermissionHolder container) {
+    private Result(CascadePermission permission, PermissionAction action, ResultCause cause, Object causeObject) {
+        this.permission = permission;
+        this.action = action;
+        this.cause = cause;
+        this.causeObject = causeObject;
+    }
+
+    private Result(CascadePermission permission, PermissionAction action, PermissionHolder container) {
+        this.permission = permission;
         this.action = action;
         if (container != null) {
             this.cause = ResultCause.valueOf(container.getType().name());
@@ -30,24 +36,24 @@ public class Result {
         }
     }
 
-    public static Result of(PermissionAction action) {
-        var key = Pair.of(action, (ResultCause) null);
-        return cache.computeIfAbsent(key, pairKey -> new Result(pairKey.getKey()));
+    public static Result of(CascadePermission permission, PermissionAction action) {
+        return new Result(permission, action);
     }
 
-    public static Result of(PermissionAction action, ResultCause cause) {
-        var key = Pair.of(action, cause);
-        return cache.computeIfAbsent(key, pairKey -> new Result(pairKey.getKey(), pairKey.getValue()));
+    public static Result of(CascadePermission permission, PermissionAction action, ResultCause cause) {
+        return new Result(permission, action, cause);
     }
 
-    public static Result of(PermissionAction action, ResultCause cause, Object causeObject) {
-        var result = of(action, cause);
-        result.causeObject = causeObject;
-        return result;
+    public static Result of(CascadePermission permission, PermissionAction action, ResultCause cause, Object causeObject) {
+        return new Result(permission, action, cause, causeObject);
     }
 
-    public static Result of(PermissionAction action, PermissionHolder container) {
-        return new Result(action, container);
+    public static Result of(CascadePermission permission, PermissionAction action, PermissionHolder container) {
+        return new Result(permission, action, container);
+    }
+
+    public CascadePermission getPermission() {
+        return permission;
     }
 
     public PermissionAction getAction() {
