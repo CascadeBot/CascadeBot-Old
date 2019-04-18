@@ -27,19 +27,19 @@ public class VoiceEventListener extends ListenerAdapter {
 
         if (event instanceof GuildVoiceJoinEvent) {
             GuildVoiceJoinEvent joinEvent = (GuildVoiceJoinEvent) event;
-            if (joinEvent.getChannelJoined().equals(botCurrentChannel)) {
+            if (joinEvent.getChannelJoined().equals(botCurrentChannel) && voteButtonGroup != null) {
                 voteButtonGroup.allowUser(userId);
             }
         } else if (event instanceof GuildVoiceMoveEvent) {
             GuildVoiceMoveEvent moveEvent = (GuildVoiceMoveEvent) event;
-            if (moveEvent.getChannelJoined().equals(botCurrentChannel)) {
+            if (moveEvent.getChannelJoined().equals(botCurrentChannel) && voteButtonGroup != null) {
                 voteButtonGroup.allowUser(userId);
-            } else if (moveEvent.getChannelLeft().equals(botCurrentChannel)) {
+            } else if (moveEvent.getChannelLeft().equals(botCurrentChannel) && voteButtonGroup != null) {
                 voteButtonGroup.denyUser(userId);
             }
         } else if (event instanceof GuildVoiceLeaveEvent) {
             GuildVoiceLeaveEvent leaveEvent = (GuildVoiceLeaveEvent) event;
-            if (leaveEvent.getChannelLeft().equals(botCurrentChannel)) {
+            if (leaveEvent.getChannelLeft().equals(botCurrentChannel) && voteButtonGroup != null) {
                 voteButtonGroup.denyUser(userId);
             }
         }
