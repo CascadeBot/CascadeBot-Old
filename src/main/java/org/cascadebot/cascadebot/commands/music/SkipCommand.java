@@ -116,7 +116,7 @@ public class SkipCommand implements ICommandMain {
         });
         VoteButtonGroup buttonGroup = buttonGroupBuilder.build(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
         for (Member member : context.getGuild().getSelfMember().getVoiceState().getChannel().getMembers()) {
-            buttonGroup.getAllowedUsers().add(member.getUser().getIdLong());
+            buttonGroup.allowUser(member.getUser().getIdLong());
         }
         voteMap.put(context.getGuild().getIdLong(), buttonGroup);
         context.getUIMessaging().sendButtonedMessage("Skip Vote", buttonGroup);

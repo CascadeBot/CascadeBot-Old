@@ -31,7 +31,7 @@ public class VoteButtonGroup extends ButtonGroup {
 
     private BiConsumer<List<VoteResult>, Message> periodicConsumer;
 
-    private Set<Long> allowedUsers = Sets.newConcurrentHashSet();
+    private Set<Long> allowedUsers;
 
     private Timer timer = new Timer();
 
@@ -90,19 +90,22 @@ public class VoteButtonGroup extends ButtonGroup {
     }
 
     public Set<Long> getAllowedUsers() {
+        if (allowedUsers == null) {
+            allowedUsers = Sets.newConcurrentHashSet();
+        }
         return Set.copyOf(allowedUsers);
     }
 
     public boolean isUserAllowed(long userId) {
-        return allowedUsers.contains(userId);
+        return allowedUsers == null || allowedUsers.contains(userId);
     }
 
     public boolean allowUser(long userId) {
-        return allowedUsers.add(userId);
+        return getAllowedUsers().add(userId);
     }
 
     public boolean denyUser(long userId) {
-        return allowedUsers.remove(userId);
+        return getAllowedUsers().remove(userId);
     }
 
     public void stopVote() {
