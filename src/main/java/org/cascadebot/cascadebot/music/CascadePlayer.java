@@ -170,6 +170,7 @@ public class CascadePlayer {
 
     public void stop() {
         tracks.clear();
+        loopMode = LoopMode.DISABLED;
         player.stopTrack();
     }
 
