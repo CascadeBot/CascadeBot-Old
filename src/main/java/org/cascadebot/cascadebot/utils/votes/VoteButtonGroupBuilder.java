@@ -105,18 +105,14 @@ public class VoteButtonGroupBuilder {
         switch (type) {
             case YES_NO:
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                    if (buttonGroup.allowedUsers != null) {
-                        if (!buttonGroup.allowedUsers.contains(runner.getUser().getIdLong())) {
-                            return;
-                        }
+                    if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                        return;
                     }
                     buttonGroup.addVote(runner.getUser(), UnicodeConstants.TICK);
                 }));
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, (runner, channel, message) -> {
-                    if (buttonGroup.allowedUsers != null) {
-                        if (!buttonGroup.allowedUsers.contains(runner.getUser().getIdLong())) {
-                            return;
-                        }
+                    if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                        return;
                     }
                     buttonGroup.addVote(runner.getUser(), UnicodeConstants.RED_CROSS);
                 }));
@@ -126,10 +122,8 @@ public class VoteButtonGroupBuilder {
                     char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
                     final int num = i;
                     buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
-                        if (buttonGroup.allowedUsers != null) {
-                            if (!buttonGroup.allowedUsers.contains(runner.getUser().getIdLong())) {
-                                return;
-                            }
+                        if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                            return;
                         }
                         buttonGroup.addVote(runner.getUser(), num);
                     }));
@@ -140,10 +134,8 @@ public class VoteButtonGroupBuilder {
                     char unicode = (char) (0xdde0 + (i + 6));
                     final int num = i;
                     buttonGroup.addButton(new Button.UnicodeButton("\uD83C" + unicode, (runner, channel, message) -> {
-                        if (buttonGroup.allowedUsers != null) {
-                            if (!buttonGroup.allowedUsers.contains(runner.getUser().getIdLong())) {
-                                return;
-                            }
+                        if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                            return;
                         }
                         buttonGroup.addVote(runner.getUser(), num);
                     }));
@@ -154,20 +146,16 @@ public class VoteButtonGroupBuilder {
                     if (object instanceof Emote) {
                         Emote emote = (Emote) object;
                         buttonGroup.addButton(new Button.EmoteButton(emote, (runner, channel, message) -> {
-                            if (buttonGroup.allowedUsers != null) {
-                                if (!buttonGroup.allowedUsers.contains(runner.getUser().getIdLong())) {
-                                    return;
-                                }
+                            if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                                return;
                             }
                             buttonGroup.addVote(runner.getUser(), emote.getIdLong());
                         }));
                     } else {
                         String unicode = (String) object;
                         buttonGroup.addButton(new Button.UnicodeButton(unicode, (runner, channel, message) -> {
-                            if (buttonGroup.allowedUsers != null) {
-                                if (!buttonGroup.allowedUsers.contains(runner.getUser().getIdLong())) {
-                                    return;
-                                }
+                            if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                                return;
                             }
                             buttonGroup.addVote(runner.getUser(), unicode);
                         }));

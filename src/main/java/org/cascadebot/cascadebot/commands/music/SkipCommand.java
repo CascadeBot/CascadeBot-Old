@@ -53,35 +53,31 @@ public class SkipCommand implements ICommandMain {
             }
         }
 
-        if (!sender.getVoiceState().inVoiceChannel()) {
+        if (!sender.getVoiceState().inVoiceChannel() && !sender.getVoiceState().getChannel().equals(context.getGuild().getSelfMember().getVoiceState().getChannel())) {
             context.getTypedMessaging().replyDanger("Can't skip if you aren't listening to music!");
             return;
-        } else {
-            if (!sender.getVoiceState().getChannel().equals(context.getGuild().getSelfMember().getVoiceState().getChannel())) {
-                context.getTypedMessaging().replyDanger("Can't skip if you aren't listening to music!");
-                return;
-            }
         }
 
+        VoteButtonGroup voteButtonGroup = voteMap.get(context.getGuild().getIdLong());
         if (voteMap.containsKey(context.getGuild().getIdLong())) {
             if (context.getArgs().length > 0) {
                 if (context.getArg(0).equalsIgnoreCase("yes")) {
-                    if (voteMap.get(context.getGuild().getIdLong()).getAllowedUsers().contains(context.getGuild().getIdLong())) {
-                        voteMap.get(context.getGuild().getIdLong()).addVote(sender.getUser(), UnicodeConstants.TICK);
+                    if (voteButtonGroup.isUserAllowed(context.getGuild().getIdLong())) {
+                        voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
                     } else {
                         context.getTypedMessaging().replyDanger("Cannot vote if you aren't listening!");
                     }
                     return;
                 } else if (context.getArg(0).equalsIgnoreCase("no")) {
-                    if (voteMap.get(context.getGuild().getIdLong()).getAllowedUsers().contains(context.getGuild().getIdLong())) {
-                        voteMap.get(context.getGuild().getIdLong()).addVote(sender.getUser(), UnicodeConstants.RED_CROSS);
+                    if (voteButtonGroup.isUserAllowed(context.getGuild().getIdLong())) {
+                        voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.RED_CROSS);
                     } else {
                         context.getTypedMessaging().replyDanger("Cannot vote if you aren't listening!");
                     }
                     return;
                 }
             }
-            voteMap.get(context.getGuild().getIdLong()).addVote(sender.getUser(), UnicodeConstants.TICK);
+            voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
             context.getTypedMessaging().replyWarning("A skip vote is already running, but we added your vote automatically");
             return;
         }
@@ -96,7 +92,7 @@ public class SkipCommand implements ICommandMain {
         buttonGroupBuilder.addExtraButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
             //TODO check perm
             message.delete().queue();
-            voteMap.get(context.getGuild().getIdLong()).stopVote();
+            voteButtonGroup.stopVote();
             voteMap.remove(context.getGuild().getIdLong());
             context.getMusicPlayer().skip();
             context.getTypedMessaging().replySuccess("Forcefully skipped the song");

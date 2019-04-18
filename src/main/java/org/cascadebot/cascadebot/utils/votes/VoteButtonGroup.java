@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.utils.votes;
 
+import com.google.common.collect.Comparators;
+import com.google.common.collect.Sets;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
@@ -12,12 +14,16 @@ import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
 
 public class VoteButtonGroup extends ButtonGroup {
 
@@ -25,7 +31,7 @@ public class VoteButtonGroup extends ButtonGroup {
 
     private BiConsumer<List<VoteResult>, Message> periodicConsumer;
 
-    List<Long> allowedUsers;
+    private Set<Long> allowedUsers = Sets.newConcurrentHashSet();
 
     private Timer timer = new Timer();
 
@@ -67,27 +73,36 @@ public class VoteButtonGroup extends ButtonGroup {
 
     public List<VoteResult> getOrderedVoteResults() {
         Map<Object, Integer> countMap = new HashMap<>();
-        for (Map.Entry<Long, Object> entry : getVotes().entrySet()) {
-            if (countMap.containsKey(entry.getValue())) {
-                int value = countMap.get(entry.getValue()) + 1;
-                countMap.put(entry.getValue(), value);
+        for (Object key : getVotes().values()) {
+            if (countMap.containsKey(key)) {
+                countMap.put(key, countMap.get(key) + 1);
             } else {
-                countMap.put(entry.getValue(), 1);
+                countMap.put(key, 1);
             }
         }
-        List<VoteResult> voteResults = new ArrayList<>();
-        for (Map.Entry<Object, Integer> entry : countMap.entrySet()) {
-            voteResults.add(new VoteResult(entry.getValue(), entry.getKey()));
-        }
-        voteResults.sort(Collections.reverseOrder());
-        return voteResults;
+
+        // Sorts all counts from largest to smallest value
+        return countMap.entrySet()
+                .stream()
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .map(entry -> new VoteResult(entry.getValue(), entry.getKey()))
+                .collect(Collectors.toList());
     }
 
-    public List<Long> getAllowedUsers() {
-        if (allowedUsers == null) {
-            allowedUsers = new ArrayList<>();
-        }
-        return allowedUsers;
+    public Set<Long> getAllowedUsers() {
+        return Set.copyOf(allowedUsers);
+    }
+
+    public boolean isUserAllowed(long userId) {
+        return allowedUsers.contains(userId);
+    }
+
+    public boolean allowUser(long userId) {
+        return allowedUsers.add(userId);
+    }
+
+    public boolean denyUser(long userId) {
+        return allowedUsers.remove(userId);
     }
 
     public void stopVote() {

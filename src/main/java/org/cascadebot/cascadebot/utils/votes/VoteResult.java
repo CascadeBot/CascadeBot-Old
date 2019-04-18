@@ -5,9 +5,7 @@
 
 package org.cascadebot.cascadebot.utils.votes;
 
-import org.jetbrains.annotations.NotNull;
-
-public class VoteResult implements Comparable<VoteResult> {
+public class VoteResult {
 
     private int amount;
     private Object vote;
@@ -23,11 +21,6 @@ public class VoteResult implements Comparable<VoteResult> {
 
     public Object getVote() {
         return vote;
-    }
-
-    @Override
-    public int compareTo(@NotNull VoteResult o) {
-        return Integer.compare(this.amount, o.amount);
     }
 
 }
