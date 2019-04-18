@@ -86,10 +86,9 @@ public class PermissionsManager {
 
     public CascadePermission getPermissionFromModule(Module module) {
         return permissions
-                .entrySet()
+                .values()
                 .stream()
-                .filter(entry -> entry.getValue().getModule().equals(module))
-                .map(Map.Entry::getValue)
+                .filter(permission -> permission.getModule().equals(module))
                 .findFirst()
                 .orElse(null); // Gets the permission connected to this module or returns null
     }
