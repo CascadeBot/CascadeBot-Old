@@ -22,6 +22,7 @@ import org.cascadebot.cascadebot.utils.votes.VoteResult;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class SkipCommand implements ICommandMain {
@@ -82,7 +83,7 @@ public class SkipCommand implements ICommandMain {
             return;
         }
 
-        if (track.getUserData().equals(sender.getUser().getIdLong())) {
+        if (Objects.equals(track.getUserData(), sender.getUser().getIdLong())) {
             context.getMusicPlayer().skip();
             context.getTypedMessaging().replySuccess("Skipped currently playing song because you queued it");
             return;
