@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 public class GuildPermissions {
 
-    private PermissionMode mode = PermissionMode.HIERARCHICAL;
+    private PermissionMode mode = PermissionMode.MOST_RESTRICTIVE;
 
     private List<Group> groups = Collections.synchronizedList(new ArrayList<>());
     private Map<Long, User> users = new ConcurrentHashMap<>();
