@@ -175,8 +175,8 @@ public class VoteButtonGroupBuilder {
                     @Override
                     public void run() {
                         CascadeBot.INS.getShardManager().getGuildById(buttonGroup.getGuildId()).getTextChannelById(buttonGroup.getChannelId()).getMessageById(buttonGroup.getMessageId()).queue(message -> {
-                            message.delete().queue();
-                        });
+                            message.delete().queue(null, ignoredFailure -> {});
+                        }, ignoredFailure -> {});
                         buttonGroup.voteFinished();
                         finishConsumer.accept(buttonGroup.getOrderedVoteResults());
                     }
