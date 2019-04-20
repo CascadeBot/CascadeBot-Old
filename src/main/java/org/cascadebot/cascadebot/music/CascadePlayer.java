@@ -180,7 +180,6 @@ public class CascadePlayer {
             public void trackLoaded(AudioTrack audioTrack) {
                 audioTrack.setUserData(requestUser);
                 resultTracks.accept(Collections.singletonList(audioTrack));
-                addTrack(audioTrack);
             }
 
             @Override
@@ -189,7 +188,6 @@ public class CascadePlayer {
                 for (AudioTrack track : audioPlaylist.getTracks()) {
                     track.setUserData(requestUser);
                     tracks.add(track);
-                    addTrack(track);
                 }
                 resultTracks.accept(Collections.unmodifiableList(tracks));
             }

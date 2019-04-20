@@ -56,6 +56,7 @@ public class SearchCommand implements ICommandMain {
                     }, exception -> {
                         context.getTypedMessaging().replyException("Error loading track", exception);
                     }, audioTracks -> {
+                        context.getMusicPlayer().addTracks(audioTracks);
                         context.getUIMessaging().sendTracksFound(audioTracks);
                     });
                 }));
@@ -94,6 +95,7 @@ public class SearchCommand implements ICommandMain {
                         }, exception -> {
                             context.getTypedMessaging().replyException("Error loading track", exception);
                         }, audioTracks -> {
+                            context.getMusicPlayer().addTracks(audioTracks);
                             context.getUIMessaging().sendTracksFound(audioTracks);
                         });
                     }, String.valueOf(index + 1));
