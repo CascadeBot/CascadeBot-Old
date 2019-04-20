@@ -60,8 +60,7 @@ public class EvalCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            //TODO add utils for error messages
-            Messaging.sendWarningMessage(context.getChannel(), "Not enough args", false);
+            context.getTypedMessaging().replyWarning("Not enough arguments!");
             return;
         }
 

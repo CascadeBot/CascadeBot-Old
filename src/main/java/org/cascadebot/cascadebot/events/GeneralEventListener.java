@@ -11,12 +11,15 @@ import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.StatusChangeEvent;
 import net.dv8tion.jda.core.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.core.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.core.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.messaging.MessageType;
+import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
 public class GeneralEventListener extends ListenerAdapter {
@@ -69,6 +72,13 @@ public class GeneralEventListener extends ListenerAdapter {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> {
                 privateChannel.sendMessage(Config.INS.getGuildGoodbyeMessage()).queue();
             }, error -> { /* Do nothing */ });
+        }
+    }
+
+    @Override
+    public void onRoleDelete(RoleDeleteEvent event) {
+        for (Group group : GuildDataManager.getGuildData(event.getGuild().getIdLong()).getPermissions().getGroups()) {
+            group.unlinkRole(event.getRole().getIdLong());
         }
     }
 

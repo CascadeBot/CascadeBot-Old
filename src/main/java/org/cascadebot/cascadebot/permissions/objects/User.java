@@ -6,30 +6,27 @@
 package org.cascadebot.cascadebot.permissions.objects;
 
 import com.google.common.collect.Sets;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;
 
-public class User {
+public class User extends PermissionHolder {
 
     private final Set<String> groups = Sets.newConcurrentHashSet();
-    private final Set<CascadePermission> permissions = Sets.newConcurrentHashSet();
 
     public boolean addGroup(Group group) {
-        return groups.add(group.getName());
+        return groups.add(group.getId());
     }
 
     public boolean removeGroup(Group group) {
-        return groups.remove(group.getName());
+        return groups.remove(group.getId());
     }
 
-
-    public Set<String> getGroups() {
-        return groups;
+    public Set<String> getGroupIds() {
+        return Set.copyOf(groups);
     }
 
-    public Set<CascadePermission> getPermissions() {
-        return permissions;
+    @Override
+    HolderType getType() {
+        return HolderType.USER;
     }
-
 }

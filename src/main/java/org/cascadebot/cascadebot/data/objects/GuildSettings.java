@@ -27,6 +27,7 @@ public class GuildSettings {
     private boolean useEmbedForMessages = true;
     private boolean showPermErrors = true; // Whether commands will silently fail on no permissions
     private boolean showModuleErrors = false;
+    private boolean adminsHaveAllPerms = true;
     //endregion
 
     public boolean isMentionPrefix() {
@@ -67,6 +68,14 @@ public class GuildSettings {
 
     public void setShowModuleErrors(boolean showModuleErrors) {
         this.showModuleErrors = showModuleErrors;
+    }
+
+    public boolean doAdminsHaveAllPerms() {
+        return adminsHaveAllPerms;
+    }
+
+    public void setAdminsHaveAllPerms(boolean adminsHaveAllPerms) {
+        this.adminsHaveAllPerms = adminsHaveAllPerms;
     }
 
 }
