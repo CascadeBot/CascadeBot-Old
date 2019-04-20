@@ -37,10 +37,23 @@ public class VoteButtonGroupBuilder {
 
     private BiConsumer<List<VoteResult>, Message> periodicConsumer;
 
+    /**
+     * Creates a new build for {@link VoteButtonGroup}
+     *
+     * @param type The {@link VoteMessageType} to use for voting
+     */
     public VoteButtonGroupBuilder(VoteMessageType type) {
         this.type = type;
     }
 
+    /**
+     * Sets the amount of vote options to give. Used when using the {@link VoteMessageType#NUMBERS} or {@link VoteMessageType#LETTERS} types.
+     * When using {@link VoteMessageType#NUMBERS} your limited between 1 and 9 options.
+     * When using {@link VoteMessageType#LETTERS} your limited between 1 and 26 options.
+     *
+     * @param amount The amount of options to have.
+     * @return this.
+     */
     public VoteButtonGroupBuilder setOptionsAmount(int amount) {
         if (type == VoteMessageType.YES_NO || type == VoteMessageType.CUSTOM) {
             throw new UnsupportedOperationException("Cannot set options amount for yes no votes, or custom votes");
@@ -59,12 +72,24 @@ public class VoteButtonGroupBuilder {
         return this;
     }
 
+    /**
+     * Add an extra non-vote related button.
+     *
+     * @param button the non-vote related button to add.
+     * @return this.
+     */
     public VoteButtonGroupBuilder addExtraButton(Button button) {
         extraButtonList.add(button);
 
         return this;
     }
 
+    /**
+     * And a unicode button to be used for votes. Only usable with {@link VoteMessageType#CUSTOM}.
+     *
+     * @param unicode The unicode string to use.
+     * @return this.
+     */
     public VoteButtonGroupBuilder addVoteButtonUnicode(String unicode) {
         if (type != VoteMessageType.CUSTOM) {
             throw new UnsupportedOperationException("Cannot add vote buttons to any type besides custom");
@@ -75,6 +100,12 @@ public class VoteButtonGroupBuilder {
         return this;
     }
 
+    /**
+     * Add a emote button to be used for votes. Only usable with {@link VoteMessageType#CUSTOM}.
+     *
+     * @param emote The {@link Emote} to use for the button.
+     * @return this.
+     */
     public VoteButtonGroupBuilder addVoteButtonEmote(Emote emote) {
         if (type != VoteMessageType.CUSTOM) {
             throw new UnsupportedOperationException("Cannot add vote buttons to any type besides custom");
@@ -85,21 +116,49 @@ public class VoteButtonGroupBuilder {
         return this;
     }
 
+    /**
+     * Set how long the vote will run for.
+     *
+     * @param time The length in ms that the vote will run fo.
+     * @return this.
+     */
     public VoteButtonGroupBuilder setVoteTime(long time) {
         this.voteTime = time;
         return this;
     }
 
+    /**
+     * Sets the consumer to be run when the vote finishes.
+     * This returns an ordered list of {@link VoteResult}s with the reaction with the most votes being ad the top.
+     *
+     * @param finishConsumer The {@link Consumer}.
+     * @return this.
+     */
     public VoteButtonGroupBuilder setVoteFinishConsumer(Consumer<List<VoteResult>> finishConsumer) {
         this.finishConsumer = finishConsumer;
         return this;
     }
 
+    /**
+     * Sets the consumer to be run every 5 seconds the vote is running.
+     * This returns an ordered list of {@link VoteResult}s with the reaction with the most votes being ad the top.
+     *
+     * @param periodicConsumer The {@link Consumer}.
+     * @return this.
+     */
     public VoteButtonGroupBuilder setPeriodicConsumer(BiConsumer<List<VoteResult>, Message> periodicConsumer) {
         this.periodicConsumer = periodicConsumer;
         return this;
     }
 
+    /**
+     * Builds the {@link VoteButtonGroup}
+     *
+     * @param owner The owner/initiator of the vote.
+     * @param channelId The channel in witch the vote takes place.
+     * @param guild The guild in witch the vote is taking place.
+     * @return a {@link VoteButtonGroup}.
+     */
     public VoteButtonGroup build(long owner, long channelId, long guild) {
         VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer);
         switch (type) {

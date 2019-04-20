@@ -5,21 +5,17 @@
 
 package org.cascadebot.cascadebot.utils.votes;
 
-import com.google.common.collect.Comparators;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.BiConsumer;
@@ -57,6 +53,12 @@ public class VoteButtonGroup extends ButtonGroup {
         }, 5000, 5000);
     }
 
+    /**
+     * Adds a vote from a specified user.
+     *
+     * @param user The user this vote came from.
+     * @param vote The unicode or {@link net.dv8tion.jda.core.entities.Emote} that is the vote you want to add.
+     */
     public void addVote(User user, Object vote) {
         if (votes.containsKey(user.getIdLong())) {
             if (votes.get(user.getIdLong()).equals(vote)) {
@@ -89,6 +91,11 @@ public class VoteButtonGroup extends ButtonGroup {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Gets what users are allowed to vote.
+     *
+     * @return A list of users that are allowed to vote.
+     */
     public Set<Long> getAllowedUsers() {
         if (allowedUsers == null) {
             allowedUsers = Sets.newConcurrentHashSet();
