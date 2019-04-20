@@ -15,10 +15,20 @@ public class VoteResult {
         this.vote = vote;
     }
 
+    /**
+     * Gets the amount of votes this got.
+     *
+     * @return the amount of votes this got.
+     */
     public int getAmount() {
         return amount;
     }
 
+    /**
+     * Gets the unicode or {@link net.dv8tion.jda.core.entities.Emote} that was this vote.
+     *
+     * @return the unicode or {@link net.dv8tion.jda.core.entities.Emote} that was this vote.
+     */
     public Object getVote() {
         return vote;
     }
