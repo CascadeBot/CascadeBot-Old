@@ -9,8 +9,6 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
-import org.cascadebot.cascadebot.data.objects.GuildData;
-import org.cascadebot.cascadebot.utils.FormatUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,7 +65,7 @@ public class Language {
                 Matcher matcher = PLACEHOLDER_REGEX.matcher(languages.get(locale).getString(path));
                 AtomicInteger count = new AtomicInteger(0);
                 return matcher.replaceAll((matchResult -> {
-                    if (count.get() >= args.length) return "";
+                    if (count.get() >= args.length) return matchResult.group();
                     return String.valueOf(args[count.getAndIncrement()]);
                 }));
             } else {
