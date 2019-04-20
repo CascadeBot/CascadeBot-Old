@@ -13,6 +13,8 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.messaging.MessageType;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup;
@@ -91,12 +93,16 @@ public class SkipCommand implements ICommandMain {
 
         VoteButtonGroupBuilder buttonGroupBuilder = new VoteButtonGroupBuilder(VoteMessageType.YES_NO);
         buttonGroupBuilder.addExtraButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
-            //TODO check perm
-            message.delete().queue();
-            voteButtonGroup.stopVote();
-            voteMap.remove(context.getGuild().getIdLong());
-            context.getMusicPlayer().skip();
-            context.getTypedMessaging().replySuccess("Forcefully skipped the song");
+            if (context.hasPermission(runner, "skip.force")) {
+                message.delete().queue();
+                voteButtonGroup.stopVote();
+                voteMap.remove(context.getGuild().getIdLong());
+                context.getMusicPlayer().skip();
+                context.getTypedMessaging().replySuccess("Forcefully skipped the song");
+            } else {
+                // TODO: Make permission errors auto delete
+                context.getUIMessaging().sendPermissionError("skip.force");
+            }
         }));
         buttonGroupBuilder.setPeriodicConsumer((results, message) -> {
             StringBuilder resultsBuilder = new StringBuilder();
