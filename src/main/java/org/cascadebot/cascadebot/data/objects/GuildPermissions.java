@@ -15,7 +15,6 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.permissions.objects.PermissionAction;
-import org.cascadebot.cascadebot.permissions.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.objects.Result;
 import org.cascadebot.cascadebot.permissions.objects.ResultCause;
 import org.cascadebot.cascadebot.permissions.objects.User;
@@ -178,6 +177,13 @@ public class GuildPermissions {
 
     public List<Group> getGroups() {
         return List.copyOf(groups);
+    }
+
+    public enum PermissionMode {
+
+        HIERARCHICAL,
+        MOST_RESTRICTIVE
+
     }
 
 }
