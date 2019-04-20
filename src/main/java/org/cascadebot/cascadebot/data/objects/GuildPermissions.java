@@ -152,7 +152,7 @@ public class GuildPermissions {
             group = new Group(name);
             if (++iterations == 7) {
                 // If this happens then... run?
-                CascadeBot.LOGGER.error("Somehow we couldn't manage to create a unique guild ID :(");
+                CascadeBot.LOGGER.error("Somehow we couldn't manage to create a unique group ID :(");
                 throw new IllegalStateException("Could not create a group with a unique ID!");
             }
         } while (ids.contains(group.getId()));
