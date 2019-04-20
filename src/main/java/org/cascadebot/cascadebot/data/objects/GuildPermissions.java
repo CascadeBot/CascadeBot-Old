@@ -16,7 +16,6 @@ import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.permissions.objects.PermissionAction;
 import org.cascadebot.cascadebot.permissions.objects.Result;
-import org.cascadebot.cascadebot.permissions.objects.ResultCause;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.shared.SecurityLevel;
 import spark.utils.CollectionUtils;
@@ -55,16 +54,16 @@ public class GuildPermissions {
 
         // This allows developers and owners to go into guilds and fix problems
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.DEVELOPER)) {
-            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL, SecurityLevel.DEVELOPER);
+            return Result.of(PermissionAction.ALLOW, Result.ResultCause.OFFICIAL, SecurityLevel.DEVELOPER);
         }
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.CONTRIBUTOR) && Environment.isDevelopment()) {
-            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL, SecurityLevel.CONTRIBUTOR);
+            return Result.of(PermissionAction.ALLOW, Result.ResultCause.OFFICIAL, SecurityLevel.CONTRIBUTOR);
         }
         // If the user is owner then they have all perms, obsv..
-        if (member.isOwner()) return Result.of(PermissionAction.ALLOW, ResultCause.GUILD);
+        if (member.isOwner()) return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         // By default all members with the administrator perm have access to all perms; this can be turned off
         if (member.hasPermission(Permission.ADMINISTRATOR) && settings.doAdminsHaveAllPerms()) {
-            return Result.of(PermissionAction.ALLOW, ResultCause.GUILD);
+            return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         }
 
         User user = users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
@@ -87,7 +86,7 @@ public class GuildPermissions {
         // Discord permissions will only allow a permission if is not already allowed or denied.
         // It will not override Cascade permissions!
         if (result.isNeutral() && hasDiscordPermissions(member, channel, permission.getDiscordPerms())) {
-            result = Result.of(PermissionAction.ALLOW, ResultCause.DISCORD, permission.getDiscordPerms());
+            result = Result.of(PermissionAction.ALLOW, Result.ResultCause.DISCORD, permission.getDiscordPerms());
         }
 
         return result;
@@ -139,8 +138,8 @@ public class GuildPermissions {
     private Result getDefaultAction(CascadePermission permission) {
         // A default permission will never explicitly deny a permission.
         return permission.isDefaultPerm() ?
-                Result.of(PermissionAction.ALLOW, ResultCause.DEFAULT) :
-                Result.of(PermissionAction.DENY, ResultCause.DEFAULT);
+                Result.of(PermissionAction.ALLOW, Result.ResultCause.DEFAULT) :
+                Result.of(PermissionAction.DENY, Result.ResultCause.DEFAULT);
     }
 
     public Group createGroup(String name) {
