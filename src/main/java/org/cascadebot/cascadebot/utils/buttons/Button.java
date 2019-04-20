@@ -37,11 +37,15 @@ public abstract class Button {
             }
         }
 
+        public Long getEmoteId() {
+            return emoteId;
+        }
+
     }
 
     public static class UnicodeButton extends Button {
 
-        String unicode;
+        private String unicode;
 
         public UnicodeButton(String unicode, IButtonRunnable runnable) {
             super(runnable);
@@ -51,6 +55,10 @@ public abstract class Button {
         @Override
         public void addReaction(Message message) {
             message.addReaction(unicode).queue(null, error -> CascadeBot.LOGGER.debug("Failed to add reaction!", error));
+        }
+
+        public String getUnicode() {
+            return unicode;
         }
 
     }

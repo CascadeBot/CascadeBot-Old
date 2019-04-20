@@ -47,12 +47,12 @@ public class ButtonGroup {
                     MessageReaction.ReactionEmote reactionEmote = reaction.getReactionEmote();
                     if (button instanceof Button.UnicodeButton && !reactionEmote.isEmote()) {
                         Button.UnicodeButton unicodeButton = (Button.UnicodeButton) button;
-                        if (reactionEmote.getName().equals(unicodeButton.unicode)) {
+                        if (reactionEmote.getName().equals(unicodeButton.getUnicode())) {
                             reaction.removeReaction(CascadeBot.INS.getSelfUser()).queue();
                         }
                     } else if (button instanceof Button.EmoteButton && reactionEmote.isEmote()) {
                         Button.EmoteButton emoteButton = (Button.EmoteButton) button;
-                        if (reactionEmote.getEmote().equals(emoteButton.emote)) {
+                        if (reactionEmote.getEmote().getIdLong() == emoteButton.getEmoteId()) {
                             reaction.removeReaction(CascadeBot.INS.getSelfUser()).queue();
                         }
                     }
@@ -90,12 +90,12 @@ public class ButtonGroup {
     public void handleButton(Member clicker, TextChannel channel, Message buttonMessage, MessageReaction.ReactionEmote emote) {
         for (Button button : buttons) {
             if (button instanceof Button.EmoteButton && emote.isEmote()) {
-                if (((Button.EmoteButton) button).emote.equals(emote.getEmote())) {
+                if (((Button.EmoteButton) button).getEmoteId() == emote.getEmote().getIdLong()) {
                     button.runnable.run(clicker, channel, buttonMessage);
                     return;
                 }
             } else if (button instanceof Button.UnicodeButton && !emote.isEmote()) {
-                if (((Button.UnicodeButton) button).unicode.equals(emote.getName())) {
+                if (((Button.UnicodeButton) button).getUnicode().equals(emote.getName())) {
                     button.runnable.run(clicker, channel, buttonMessage);
                     return;
                 }

@@ -145,7 +145,7 @@ public class VoteButtonGroupBuilder {
                 for (Object object : voteButtons) {
                     if (object instanceof Emote) {
                         Emote emote = (Emote) object;
-                        buttonGroup.addButton(new Button.EmoteButton(emote, (runner, channel, message) -> {
+                        buttonGroup.addButton(new Button.EmoteButton(emote.getIdLong(), (runner, channel, message) -> {
                             if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
                                 return;
                             }
