@@ -45,7 +45,7 @@ public class PlayingCommand implements ICommandMain {
         handleRepeat(buttonGroup, CascadePlayer.LoopMode.SONG, message);
     });
 
-    private Button.EmoteButton noRepeat = new Button.EmoteButton(CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("norepeat")), (runner, channel, message) -> {
+    private Button.EmoteButton noRepeat = new Button.EmoteButton(Config.INS.getGlobalEmotes().get("norepeat"), (runner, channel, message) -> {
         ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
         handleRepeat(buttonGroup, CascadePlayer.LoopMode.DISABLED, message);
     });
