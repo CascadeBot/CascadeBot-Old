@@ -56,16 +56,16 @@ public class GuildPermissions {
 
         // This allows developers and owners to go into guilds and fix problems
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.DEVELOPER)) {
-            return Result.of(permission, PermissionAction.ALLOW, ResultCause.OFFICIAL, SecurityLevel.DEVELOPER);
+            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL, SecurityLevel.DEVELOPER);
         }
         if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.CONTRIBUTOR) && Environment.isDevelopment()) {
-            return Result.of(permission, PermissionAction.ALLOW, ResultCause.OFFICIAL, SecurityLevel.CONTRIBUTOR);
+            return Result.of(PermissionAction.ALLOW, ResultCause.OFFICIAL, SecurityLevel.CONTRIBUTOR);
         }
         // If the user is owner then they have all perms, obsv..
-        if (member.isOwner()) return Result.of(permission, PermissionAction.ALLOW, ResultCause.GUILD);
+        if (member.isOwner()) return Result.of(PermissionAction.ALLOW, ResultCause.GUILD);
         // By default all members with the administrator perm have access to all perms; this can be turned off
         if (member.hasPermission(Permission.ADMINISTRATOR) && settings.doAdminsHaveAllPerms()) {
-            return Result.of(permission, PermissionAction.ALLOW, ResultCause.GUILD);
+            return Result.of(PermissionAction.ALLOW, ResultCause.GUILD);
         }
 
         User user = users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
@@ -73,7 +73,7 @@ public class GuildPermissions {
         List<Group> userGroups = getUserGroups(member);
 
         Result result = getDefaultAction(permission);
-        Result evaluatedResult = Result.of(permission, PermissionAction.NEUTRAL);
+        Result evaluatedResult = Result.of(PermissionAction.NEUTRAL);
 
         if (mode == PermissionMode.MOST_RESTRICTIVE) {
             evaluatedResult = evaluateMostRestrictiveMode(user, userGroups, permission);
@@ -88,7 +88,7 @@ public class GuildPermissions {
         // Discord permissions will only allow a permission if is not already allowed or denied.
         // It will not override Cascade permissions!
         if (result.isNeutral() && hasDiscordPermissions(member, channel, permission.getDiscordPerms())) {
-            result = Result.of(permission, PermissionAction.ALLOW, ResultCause.DISCORD, permission.getDiscordPerms());
+            result = Result.of(PermissionAction.ALLOW, ResultCause.DISCORD, permission.getDiscordPerms());
         }
 
         return result;
@@ -119,7 +119,7 @@ public class GuildPermissions {
     }
 
     private Result evaluateHierarchicalMode(User user, List<Group> userGroups, CascadePermission permission) {
-        Result result = Result.of(permission, PermissionAction.NEUTRAL);
+        Result result = Result.of(PermissionAction.NEUTRAL);
         // Loop through the groups backwards to preserve hierarchy; groups higher up override lower groups.
         for (int i = userGroups.size() - 1; i >= 0; i--) {
             Result groupResult = userGroups.get(i).evaluatePermission(permission);
@@ -140,8 +140,8 @@ public class GuildPermissions {
     private Result getDefaultAction(CascadePermission permission) {
         // A default permission will never explicitly deny a permission.
         return permission.isDefaultPerm() ?
-                Result.of(permission, PermissionAction.ALLOW, ResultCause.DEFAULT) :
-                Result.of(permission, PermissionAction.DENY, ResultCause.DEFAULT);
+                Result.of(PermissionAction.ALLOW, ResultCause.DEFAULT) :
+                Result.of(PermissionAction.DENY, ResultCause.DEFAULT);
     }
 
     public Group createGroup(String name) {

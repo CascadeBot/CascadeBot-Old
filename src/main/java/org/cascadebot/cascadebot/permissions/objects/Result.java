@@ -4,31 +4,26 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class Result {
 
-    private CascadePermission permission;
     private PermissionAction action;
     private ResultCause cause;
     private Object causeObject;
 
-    private Result(CascadePermission permission, PermissionAction action) {
-        this.permission = permission;
+    private Result(PermissionAction action) {
         this.action = action;
     }
 
-    private Result(CascadePermission permission, PermissionAction action, ResultCause cause) {
-        this.permission = permission;
+    private Result(PermissionAction action, ResultCause cause) {
         this.action = action;
         this.cause = cause;
     }
 
-    private Result(CascadePermission permission, PermissionAction action, ResultCause cause, Object causeObject) {
-        this.permission = permission;
+    private Result(PermissionAction action, ResultCause cause, Object causeObject) {
         this.action = action;
         this.cause = cause;
         this.causeObject = causeObject;
     }
 
-    private Result(CascadePermission permission, PermissionAction action, PermissionHolder container) {
-        this.permission = permission;
+    private Result(PermissionAction action, PermissionHolder container) {
         this.action = action;
         if (container != null) {
             this.cause = ResultCause.valueOf(container.getType().name());
@@ -36,24 +31,20 @@ public class Result {
         }
     }
 
-    public static Result of(CascadePermission permission, PermissionAction action) {
-        return new Result(permission, action);
+    public static Result of(PermissionAction action) {
+        return new Result(action);
     }
 
-    public static Result of(CascadePermission permission, PermissionAction action, ResultCause cause) {
-        return new Result(permission, action, cause);
+    public static Result of(PermissionAction action, ResultCause cause) {
+        return new Result(action, cause);
     }
 
-    public static Result of(CascadePermission permission, PermissionAction action, ResultCause cause, Object causeObject) {
-        return new Result(permission, action, cause, causeObject);
+    public static Result of(PermissionAction action, ResultCause cause, Object causeObject) {
+        return new Result(action, cause, causeObject);
     }
 
-    public static Result of(CascadePermission permission, PermissionAction action, PermissionHolder container) {
-        return new Result(permission, action, container);
-    }
-
-    public CascadePermission getPermission() {
-        return permission;
+    public static Result of(PermissionAction action, PermissionHolder container) {
+        return new Result(action, container);
     }
 
     public PermissionAction getAction() {
