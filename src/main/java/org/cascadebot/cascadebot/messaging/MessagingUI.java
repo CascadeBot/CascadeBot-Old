@@ -108,8 +108,8 @@ public class MessagingUI {
      */
     public void sendPermissionsError(String stringPermission) {
         CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
-        if (permission.getDiscordPerm().size() > 0) {
-            EnumSet<Permission> permissions = permission.getDiscordPerm();
+        if (permission.getDiscordPerms().size() > 0) {
+            EnumSet<Permission> permissions = permission.getDiscordPerms();
             String discordPerms = permissions.stream()
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")

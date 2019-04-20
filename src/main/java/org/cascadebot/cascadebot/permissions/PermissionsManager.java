@@ -16,6 +16,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.shared.SecurityLevel;
@@ -40,7 +41,7 @@ public class PermissionsManager {
     private LoadingCache<Long, SecurityLevel> securityLevelCache = Caffeine.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .refreshAfterWrite(5, TimeUnit.MINUTES)
-            .build(id -> Security.getLevelById(id, officialGuildRoleIDCache.get(id)));
+            .build(userId -> Security.getLevelById(userId, officialGuildRoleIDCache.get(userId)));
 
     private ConcurrentHashMap<String, CascadePermission> permissions = new ConcurrentHashMap<>();
     private Set<CascadePermission> defaultPermissions = Set.of();
@@ -68,10 +69,9 @@ public class PermissionsManager {
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 
-        defaultPermissions = permissions.entrySet()
+        defaultPermissions = permissions.values()
                 .stream()
-                .filter(p -> p.getValue().isDefaultPerm())
-                .map(Map.Entry::getValue)
+                .filter(CascadePermission::isDefaultPerm)
                 .collect(ImmutableSet.toImmutableSet());
 
     }
@@ -86,10 +86,9 @@ public class PermissionsManager {
 
     public CascadePermission getPermissionFromModule(Module module) {
         return permissions
-                .entrySet()
+                .values()
                 .stream()
-                .filter(entry -> entry.getValue().getModule().equals(module))
-                .map(Map.Entry::getValue)
+                .filter(permission -> permission.getModule().equals(module))
                 .findFirst()
                 .orElse(null); // Gets the permission connected to this module or returns null
     }
@@ -124,7 +123,6 @@ public class PermissionsManager {
     }
 
     public Set<CascadePermission> getPermissions(Guild guild, boolean defaultOnly) {
-        // TODO: Add custom permission to guild data and add it here
         if (defaultOnly) {
             return defaultPermissions;
         } else {
@@ -140,10 +138,14 @@ public class PermissionsManager {
             SecurityLevel levelToCheck = ((ICommandRestricted) command).getCommandLevel();
             return userLevel.isAuthorised(levelToCheck);
         } else {
-            // TODO: Checking command specific perms
-            return true;
+            if (command.getPermission() == null) return true;
+            return guildData.getPermissions().hasPermission(member, command.getPermission(), guildData.getSettings());
         }
         // return false;
+    }
+
+    public SecurityLevel getUserSecurityLevel(long userId) {
+        return securityLevelCache.get(userId);
     }
 
 
