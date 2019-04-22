@@ -6,6 +6,29 @@
 package org.cascadebot.cascadebot.data.objects;
 
 public class Tag {
-    String content;
-    String category;
+
+    private String content;
+    private String category;
+
+    public Tag(String content, String category) {
+        this.content = content;
+        this.category = category;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
 }
