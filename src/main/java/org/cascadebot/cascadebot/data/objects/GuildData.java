@@ -22,11 +22,7 @@ import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @BsonDiscriminator
@@ -52,7 +48,7 @@ public class GuildData {
 
     private String prefix = Config.INS.getDefaultPrefix();
 
-
+    private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
     //region Guild data containers
 
@@ -163,6 +159,16 @@ public class GuildData {
 
     public ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
         return commandInfo;
+    }
+
+    public ConcurrentHashMap<String, Tag> getTagInfo() { return tags; }
+
+    public void addTag(String key, Tag tag) {
+        tags.put(key, tag);
+    }
+
+    public void removeTag(String key) {
+        tags.remove(key);
     }
     //endregion
 
