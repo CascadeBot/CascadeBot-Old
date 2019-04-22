@@ -28,6 +28,7 @@ public class GuildSettings {
     private boolean showPermErrors = true; // Whether commands will silently fail on no permissions
     private boolean showModuleErrors = false;
     private boolean adminsHaveAllPerms = true;
+    private boolean allowTagCommands = true; // Whether tag commands will be executed by ;<tagname>
     //endregion
 
     public boolean isMentionPrefix() {
@@ -77,5 +78,9 @@ public class GuildSettings {
     public void setAdminsHaveAllPerms(boolean adminsHaveAllPerms) {
         this.adminsHaveAllPerms = adminsHaveAllPerms;
     }
+
+    public boolean willAllowTagCommands() { return allowTagCommands; }
+
+    public void setAllowTagCommands(boolean allowTagCommands) { this.allowTagCommands = allowTagCommands; }
 
 }
