@@ -25,37 +25,37 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-            ButtonGroup catButtons = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            catButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
-                if(member.getUser().getIdLong() != catButtons.getOwner().getUser().getIdLong()) {
-                    return;
-                }
-                try {
-                    if (message.getEmbeds().size() > 0) {
-                        EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-                        embedBuilder.setImage(getCatUrl());
-                        message.editMessage(embedBuilder.build()).queue();
-                    } else {
-                        context.getUIMessaging().replyImage(getCatUrl()).thenAccept(catMessage -> {
-                            catButtons.addButtonsToMessage(catMessage);
-                            catButtons.setMessage(catMessage.getIdLong());
-                            context.getData().addButtonGroup(context.getChannel(), catMessage, catButtons);
-                        });
-                        message.delete().queue();
-                    }
-                } catch (IOException e) {
-                    message.editMessage("Error loading cat picture " + UnicodeConstants.FROWNING).queue();
-                }
-            }));
-            try {
-                context.getUIMessaging().replyImage(getCatUrl()).thenAccept(message -> {
-                    catButtons.addButtonsToMessage(message);
-                    catButtons.setMessage(message.getIdLong());
-                    context.getData().addButtonGroup(context.getChannel(), message, catButtons);
-                });
-            } catch (IOException e) {
-                context.getTypedMessaging().replyDanger("Error loading cat picture " + UnicodeConstants.FROWNING);
+        ButtonGroup catButtons = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+        catButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
+            if (member.getUser().getIdLong() != catButtons.getOwner().getUser().getIdLong()) {
+                return;
             }
+            try {
+                if (message.getEmbeds().size() > 0) {
+                    EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+                    embedBuilder.setImage(getCatUrl());
+                    message.editMessage(embedBuilder.build()).queue();
+                } else {
+                    context.getUIMessaging().replyImage(getCatUrl()).thenAccept(catMessage -> {
+                        catButtons.addButtonsToMessage(catMessage);
+                        catButtons.setMessage(catMessage.getIdLong());
+                        context.getData().addButtonGroup(context.getChannel(), catMessage, catButtons);
+                    });
+                    message.delete().queue();
+                }
+            } catch (IOException e) {
+                message.editMessage("Error loading cat picture " + UnicodeConstants.FROWNING).queue();
+            }
+        }));
+        try {
+            context.getUIMessaging().replyImage(getCatUrl()).thenAccept(message -> {
+                catButtons.addButtonsToMessage(message);
+                catButtons.setMessage(message.getIdLong());
+                context.getData().addButtonGroup(context.getChannel(), message, catButtons);
+            });
+        } catch (IOException e) {
+            context.getTypedMessaging().replyDanger("Error loading cat picture " + UnicodeConstants.FROWNING);
+        }
     }
 
     private String getCatUrl() throws IOException {

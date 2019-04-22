@@ -25,6 +25,7 @@ import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
+import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
@@ -140,6 +141,7 @@ public class CascadeBot {
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new GeneralEventListener())
                     .addEventListeners(new ButtonEventListener())
+                    .addEventListeners(new VoiceEventListener())
                     .addEventListeners(eventWaiter)
                     .setToken(Config.INS.getBotToken())
                     .setShardsTotal(-1)
@@ -153,7 +155,7 @@ public class CascadeBot {
                     .setBulkDeleteSplittingEnabled(false)
                     .setEnableShutdownHook(false);
 
-            if(MusicHandler.isLavalinkEnabled()) {
+            if (MusicHandler.isLavalinkEnabled()) {
                 defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
             } else {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());

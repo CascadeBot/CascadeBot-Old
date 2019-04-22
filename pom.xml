@@ -173,7 +173,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
-            <version>2.0.0</version>
+            <version>2.1.0</version>
         </dependency>
 
         <!-- Utilities -->
@@ -209,8 +209,6 @@
             <artifactId>httpclient</artifactId>
             <version>4.5.7</version>
         </dependency>
-
-
 
         <!-- Data -->
         <dependency>

@@ -44,7 +44,7 @@ public class CascadePlayer {
     private boolean shuffle = false;
 
     public CascadePlayer(Guild guild) {
-        if(MusicHandler.isLavalinkEnabled()) {
+        if (MusicHandler.isLavalinkEnabled()) {
             player = MusicHandler.getLavaLink().getLink(guild).getPlayer();
         } else {
             AudioPlayer aPlayer = MusicHandler.createLavaLinkPlayer();
@@ -78,7 +78,7 @@ public class CascadePlayer {
      */
     public String getTrackProgressBar(boolean embed) {
         float process = (100f / player.getPlayingTrack().getDuration() * player.getTrackPosition());
-        if(embed) {
+        if (embed) {
             return StringsUtil.getProgressBarEmbed(process);
         } else {
             return StringsUtil.getProgressBar(process);
@@ -89,7 +89,7 @@ public class CascadePlayer {
         if (player.getPlayingTrack().getInfo().uri.contains("youtube")) {
             return "https://img.youtube.com/vi/" + player.getPlayingTrack().getIdentifier() + "/hqdefault.jpg";
         }
-        if(player.getPlayingTrack().getInfo().uri.contains("twitch")) {
+        if (player.getPlayingTrack().getInfo().uri.contains("twitch")) {
             String[] split = player.getPlayingTrack().getInfo().identifier.split("/");
             return "https://static-cdn.jtvnw.net/previews-ttv/live_user_" + split[split.length - 1] + "-500x400.jpg";
         }
@@ -98,7 +98,6 @@ public class CascadePlayer {
 
     public void addTrack(AudioTrack track) {
         if (player.getPlayingTrack() != null) {
-
             tracks.add(track);
         } else {
             player.playTrack(track);
@@ -133,17 +132,12 @@ public class CascadePlayer {
         return shuffle;
     }
 
-    public boolean skip() {
-        try {
-            player.playTrack(tracks.remove());
-            return true;
-        } catch (NoSuchElementException e) {
-            return false;
-        }
+    public void skip() {
+        player.stopTrack();
     }
 
     public void join(VoiceChannel channel) {
-        if(MusicHandler.isLavalinkEnabled()) {
+        if (MusicHandler.isLavalinkEnabled()) {
             getLink().connect(channel);
         } else {
             channel.getGuild().getAudioManager().openAudioConnection(channel);
@@ -176,23 +170,24 @@ public class CascadePlayer {
 
     public void stop() {
         tracks.clear();
+        loopMode = LoopMode.DISABLED;
         player.stopTrack();
     }
 
-    public void loadLink(String input, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
+    public void loadLink(String input, long requestUser, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
         MusicHandler.playerManager.loadItem(input, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
+                audioTrack.setUserData(requestUser);
                 resultTracks.accept(Collections.singletonList(audioTrack));
-                addTrack(audioTrack);
             }
 
             @Override
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 List<AudioTrack> tracks = new ArrayList<>();
                 for (AudioTrack track : audioPlaylist.getTracks()) {
+                    track.setUserData(requestUser);
                     tracks.add(track);
-                    addTrack(track);
                 }
                 resultTracks.accept(Collections.unmodifiableList(tracks));
             }
@@ -209,14 +204,14 @@ public class CascadePlayer {
         });
     }
 
-    public void loadPlaylist(Playlist playlist) {
+    public void loadPlaylist(Playlist playlist, long reqUser) {
         for (String url : playlist.getTracks()) {
-            loadLink(url, noMatch -> {
+            loadLink(url, reqUser, noMatch -> {
                 playlist.removeTrack(url);
             }, exception -> {
                 playlist.removeTrack(url);
             }, tracks -> {
-
+                //TODO add consumer
             });
         }
     }

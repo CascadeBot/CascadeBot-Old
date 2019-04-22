@@ -34,7 +34,7 @@ public class SearchCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 1) {
+        if (context.getArgs().length < 1) {
             context.getUIMessaging().replyUsage(this);
             return;
         }
@@ -43,7 +43,7 @@ public class SearchCommand implements ICommandMain {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             int i = 0;
             StringBuilder messageBuilder = new StringBuilder();
-            for(MusicHandler.SearchResult result : searchResults) {
+            for (MusicHandler.SearchResult result : searchResults) {
                 i++;
                 char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
                 buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
@@ -51,11 +51,12 @@ public class SearchCommand implements ICommandMain {
                         return;
                     }
                     message.delete().queue();
-                    context.getMusicPlayer().loadLink(result.getUrl(), nothing -> {
+                    context.getMusicPlayer().loadLink(result.getUrl(), sender.getUser().getIdLong(), nothing -> {
                         context.getTypedMessaging().replyWarning("Couldn't find video!");
                     }, exception -> {
                         context.getTypedMessaging().replyException("Error loading track", exception);
                     }, audioTracks -> {
+                        context.getMusicPlayer().addTracks(audioTracks);
                         context.getUIMessaging().sendTracksFound(audioTracks);
                     });
                 }));
@@ -89,11 +90,12 @@ public class SearchCommand implements ICommandMain {
                 for (int index = 0; index < searchResults.size(); index++) {
                     MusicHandler.SearchResult result = searchResults.get(index);
                     responses[index] = new EventWaiter.TextResponse(event -> {
-                        context.getMusicPlayer().loadLink(result.getUrl(), nothing -> {
+                        context.getMusicPlayer().loadLink(result.getUrl(), sender.getUser().getIdLong(), nothing -> {
                             context.getTypedMessaging().replyWarning("Couldn't find video!");
                         }, exception -> {
                             context.getTypedMessaging().replyException("Error loading track", exception);
                         }, audioTracks -> {
+                            context.getMusicPlayer().addTracks(audioTracks);
                             context.getUIMessaging().sendTracksFound(audioTracks);
                         });
                     }, String.valueOf(index + 1));

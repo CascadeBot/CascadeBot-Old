@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.utils.buttons;
 
-import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
 import org.cascadebot.cascadebot.CascadeBot;
 
@@ -21,23 +20,32 @@ public abstract class Button {
 
     public static class EmoteButton extends Button {
 
-        Emote emote;
+        private Long emoteId;
 
-        public EmoteButton(Emote emote, IButtonRunnable runnable) {
+        public EmoteButton(Long emoteId, IButtonRunnable runnable) {
             super(runnable);
-            this.emote = emote;
+            this.emoteId = emoteId;
+            if (emoteId == null || emoteId <= 0) CascadeBot.LOGGER.warn("An emote button has been registered with an invalid ID!");
         }
 
         @Override
         public void addReaction(Message message) {
-            message.addReaction(emote).queue();
+            if (emoteId != null && CascadeBot.INS.getShardManager().getEmoteById(emoteId) != null) {
+                message.addReaction(CascadeBot.INS.getShardManager().getEmoteById(emoteId)).queue();
+            } else {
+                CascadeBot.LOGGER.warn("An emote button has an invalid emote ID, please update it! ID: {}", emoteId);
+            }
+        }
+
+        public Long getEmoteId() {
+            return emoteId;
         }
 
     }
 
     public static class UnicodeButton extends Button {
 
-        String unicode;
+        private String unicode;
 
         public UnicodeButton(String unicode, IButtonRunnable runnable) {
             super(runnable);
@@ -47,6 +55,10 @@ public abstract class Button {
         @Override
         public void addReaction(Message message) {
             message.addReaction(unicode).queue(null, error -> CascadeBot.LOGGER.debug("Failed to add reaction!", error));
+        }
+
+        public String getUnicode() {
+            return unicode;
         }
 
     }

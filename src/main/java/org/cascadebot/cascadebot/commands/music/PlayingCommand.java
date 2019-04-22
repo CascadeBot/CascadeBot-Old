@@ -5,7 +5,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.TextChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -20,8 +19,6 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
-import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
-import org.cascadebot.cascadebot.utils.buttons.IButtonRunnable;
 
 import java.util.Set;
 
@@ -45,7 +42,7 @@ public class PlayingCommand implements ICommandMain {
         handleRepeat(buttonGroup, CascadePlayer.LoopMode.SONG, message);
     });
 
-    private Button.EmoteButton noRepeat = new Button.EmoteButton(CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("norepeat")), (runner, channel, message) -> {
+    private Button.EmoteButton noRepeat = new Button.EmoteButton(Config.INS.getGlobalEmotes().get("norepeat"), (runner, channel, message) -> {
         ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
         handleRepeat(buttonGroup, CascadePlayer.LoopMode.DISABLED, message);
     });
@@ -71,7 +68,7 @@ public class PlayingCommand implements ICommandMain {
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
                     int volume = context.getMusicPlayer().getPlayer().getVolume();
                     volume += 10;
-                    if(volume >= 100) {
+                    if (volume >= 100) {
                         volume = 100;
                     }
                     context.getMusicPlayer().getPlayer().setVolume(volume);
@@ -110,7 +107,7 @@ public class PlayingCommand implements ICommandMain {
     private MessageEmbed getSongEmbed(CascadePlayer player, long guildID) {
         AudioTrack track = player.getPlayer().getPlayingTrack();
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-        if(track == null) {
+        if (track == null) {
             embedBuilder.setDescription("No song playing");
             return embedBuilder.build();
         }

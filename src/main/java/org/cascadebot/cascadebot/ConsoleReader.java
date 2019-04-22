@@ -14,9 +14,6 @@ import org.cascadebot.shared.SharedConstants;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ConsoleReader implements Runnable {
 
@@ -40,19 +37,11 @@ public class ConsoleReader implements Runnable {
                             break;
                         } else if (args[0].equalsIgnoreCase("user")) {
                             if (args.length > 2) {
-                                Long id = Long.parseLong(args[1]);
+                                long id = Long.parseLong(args[1]);
                                 if (Config.INS.getAuth().verifyEncrypt(args[1], args[2])) {
-                                    String[] roles = args[3].split(",");
-
-                                    Set<Long> ids = Arrays.stream(roles).map(Long::parseLong).collect(Collectors.toSet());
-
-                                    SecurityLevel userLevel = Security.getLevelById(id, ids);
-                                    if (userLevel != null) {
-                                        CascadeBot.LOGGER.info(userLevel.name());
-                                        if (userLevel.isAuthorised(SecurityLevel.STAFF)) {
-                                            System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " authorized " + args[1] + " " + userLevel.name());
-                                            continue;
-                                        }
+                                    if (Security.isAuthorised(id, SecurityLevel.STAFF)) {
+                                        System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " authorized " + args[1]);
+                                        continue;
                                     }
                                 }
                                 System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " not_authorized " + args[1]);
@@ -71,6 +60,7 @@ public class ConsoleReader implements Runnable {
 
             }
         }
+
     }
 
 }

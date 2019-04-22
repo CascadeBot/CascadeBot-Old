@@ -19,13 +19,13 @@ import java.util.Set;
 public class UsageCommand implements ICommandCore {
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 1) {
+        if (context.getArgs().length < 1) {
             context.getTypedMessaging().replyDanger("Please specify command to get usage from");
             return;
         }
 
         ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(context.getArg(0), sender.getUser(), context.getData());
-        if(command == null) {
+        if (command == null) {
             context.getTypedMessaging().replyDanger("Command `%s` not found!", context.getArg(0));
             return;
         }
