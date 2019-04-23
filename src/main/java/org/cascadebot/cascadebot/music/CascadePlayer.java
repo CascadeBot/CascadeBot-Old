@@ -210,7 +210,7 @@ public class CascadePlayer {
         Playlist guild = PlaylistManager.getPlaylistByName(sender.getGuild().getIdLong(), PlaylistType.GUILD, name);
         Playlist user = PlaylistManager.getPlaylistByName(sender.getUser().getIdLong(), PlaylistType.USER, name);
         if(guild != null && user != null) {
-            consumer.accept(LoadPlaylistResult.EXITS_IN_ALL_SCOPES, null);
+            consumer.accept(LoadPlaylistResult.EXISTS_IN_ALL_SCOPES, null);
         } else if (guild != null) {
             loadLoadedPlaylist(guild, sender.getUser().getIdLong(), tracks -> {
                 consumer.accept(LoadPlaylistResult.LOADED_GUILD, tracks);
