@@ -272,7 +272,7 @@ public class CascadePlayer {
 
         Playlist search = PlaylistManager.getPlaylistByName(owner, scope, name);
         if (search != null) {
-            if(overwrite) {
+            if (overwrite) {
                 search.setTracks(ids);
                 PlaylistManager.replacePlaylist(search);
                 return SavePlaylistResult.OVERWRITE;
@@ -304,7 +304,7 @@ public class CascadePlayer {
 
         LOADED_GUILD,
         LOADED_USER,
-        EXITS_IN_ALL_SCOPES,
+        EXISTS_IN_ALL_SCOPES,
         DOESNT_EXISTS
 
     }
