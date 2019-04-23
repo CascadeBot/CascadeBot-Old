@@ -209,7 +209,7 @@ public class CascadePlayer {
     public void loadPlaylist(String name, Member sender, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
         Playlist guild = PlaylistManager.getPlaylistByName(sender.getGuild().getIdLong(), PlaylistType.GUILD, name);
         Playlist user = PlaylistManager.getPlaylistByName(sender.getUser().getIdLong(), PlaylistType.USER, name);
-        if(guild != null && user != null) {
+        if (guild != null && user != null) {
             consumer.accept(LoadPlaylistResult.EXISTS_IN_ALL_SCOPES, null);
         } else if (guild != null) {
             loadLoadedPlaylist(guild, sender.getUser().getIdLong(), tracks -> {
@@ -239,7 +239,7 @@ public class CascadePlayer {
                 break;
         }
         Playlist playlist = PlaylistManager.getPlaylistByName(owner, scope, name);
-        if(playlist == null) {
+        if (playlist == null) {
             consumer.accept(LoadPlaylistResult.DOESNT_EXISTS, null);
             return;
         }
