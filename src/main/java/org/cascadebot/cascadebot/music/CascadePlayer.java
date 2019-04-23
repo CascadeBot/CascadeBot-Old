@@ -251,13 +251,18 @@ public class CascadePlayer {
     }
 
     private void loadLoadedPlaylist(Playlist playlist, long reqUser, Consumer<List<AudioTrack>> loadedConsumer) {
+        List<AudioTrack> tracks = new ArrayList<>();
         for (String url : playlist.getTracks()) {
             loadLink(url, reqUser, noMatch -> {
                 playlist.removeTrack(url);
             }, exception -> {
                 playlist.removeTrack(url);
-            }, loadedConsumer);
+            }, tracks::addAll);
         }
+        while (tracks.size() < playlist.getTracks().size()) {
+            //Wait for tracks to load
+        }
+        loadedConsumer.accept(tracks);
     }
 
     public SavePlaylistResult saveCurrentPlaylist(long owner, PlaylistType scope, String name, boolean overwrite) {
