@@ -16,7 +16,7 @@ public class TagListSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-
+        context.getData();
     }
 
     @Override

@@ -16,7 +16,8 @@ public class TagDeleteSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-
+        context.getData().removeTag(context.getMessage(0));
+        context.getTypedMessaging().replySuccess("Successfully deleted tag!");
     }
 
     @Override
