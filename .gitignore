@@ -23,4 +23,5 @@ target/
 config.yml
 !config.example.yml
 
+*.iml
 TestCommand.java
