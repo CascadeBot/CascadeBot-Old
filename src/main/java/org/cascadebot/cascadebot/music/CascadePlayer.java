@@ -14,7 +14,6 @@ import lavalink.client.io.jda.JdaLink;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
@@ -28,10 +27,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 public class CascadePlayer {
 
@@ -59,7 +56,7 @@ public class CascadePlayer {
         return player;
     }
 
-    public Queue<AudioTrack> getTracks() {
+    public Queue<AudioTrack> getQueue() {
         return tracks;
     }
 
@@ -118,7 +115,7 @@ public class CascadePlayer {
     }
 
     public void shuffle() {
-        List<AudioTrack> tracks = new ArrayList<>(getTracks());
+        List<AudioTrack> tracks = new ArrayList<>(getQueue());
         Collections.shuffle(tracks);
         this.tracks = new LinkedList<>();
         this.tracks.addAll(tracks);

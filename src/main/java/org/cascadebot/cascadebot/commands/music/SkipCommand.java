@@ -13,8 +13,6 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.messaging.MessageType;
-import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup;
@@ -39,7 +37,7 @@ public class SkipCommand implements ICommandMain {
             return;
         }
 
-        if (context.getMusicPlayer().getTracks().peek() == null) {
+        if (context.getMusicPlayer().getQueue().peek() == null) {
             context.getTypedMessaging().replyDanger("No song to skip to!");
             return;
         }

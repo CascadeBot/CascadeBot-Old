@@ -3,7 +3,6 @@ package org.cascadebot.cascadebot.commands.music;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -13,9 +12,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class QueueCommand implements ICommandMain {
 
@@ -26,7 +23,7 @@ public class QueueCommand implements ICommandMain {
 
         embedBuilder.setTitle("Queue");
 
-        if (player.getTracks().isEmpty() && player.getPlayer().getPlayingTrack() == null) {
+        if (player.getQueue().isEmpty() && player.getPlayer().getPlayingTrack() == null) {
             context.getTypedMessaging().replyInfo("There are no tracks playing!");
             return;
         }
@@ -35,7 +32,7 @@ public class QueueCommand implements ICommandMain {
 
         builder.append("Current song: `").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`\n");
 
-        for (AudioTrack track : player.getTracks()) {
+        for (AudioTrack track : player.getQueue()) {
             builder.append("`").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`\n");
         }
 
