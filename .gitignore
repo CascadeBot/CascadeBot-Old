@@ -20,6 +20,7 @@ hs_err_pid*
 
 target/
 *.yml
+!src/main/resources/lang/*.yml
 config.yml
 !config.example.yml
 
