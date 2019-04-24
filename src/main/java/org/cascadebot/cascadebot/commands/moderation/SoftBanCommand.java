@@ -70,13 +70,6 @@ public class SoftBanCommand implements ICommandMain {
         ));
     }
 
-
-    @Override
-    public String description() {
-        return "Bans and then unbans a specified user in order to remove messages and kick the user";
-    }
-
-
     @Override
     public Module getModule() {
         return Module.MODERATION;

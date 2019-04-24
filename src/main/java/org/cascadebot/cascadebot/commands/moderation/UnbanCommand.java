@@ -60,11 +60,6 @@ public class UnbanCommand implements ICommandMain {
     }
 
     @Override
-    public String description() {
-        return "Unbans the specified user";
-    }
-
-    @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of(
                 "user",

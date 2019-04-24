@@ -88,11 +88,6 @@ public class SettingsCommand implements ICommandMain {
     }
 
     @Override
-    public String description() {
-        return "Allows users to change settings for the guild";
-    }
-
-    @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(
                 Argument.of("list", "Lists the current settings for the guild", ArgumentType.COMMAND),

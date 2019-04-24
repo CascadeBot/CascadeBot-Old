@@ -59,11 +59,6 @@ public class KickCommand implements ICommandMain {
     }
 
     @Override
-    public String description() {
-        return "Kicks the specified user";
-    }
-
-    @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of(
                 "member", "", ArgumentType.REQUIRED, Set.of(

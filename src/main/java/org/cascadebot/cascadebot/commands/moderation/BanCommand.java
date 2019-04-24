@@ -98,11 +98,6 @@ public class BanCommand implements ICommandMain {
     }
 
     @Override
-    public String description() {
-        return "Bans or forcebans the specified user";
-    }
-
-    @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of(
                 "member", "", ArgumentType.REQUIRED, Set.of(
