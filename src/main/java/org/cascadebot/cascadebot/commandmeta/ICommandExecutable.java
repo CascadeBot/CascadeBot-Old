@@ -58,7 +58,8 @@ public interface ICommandExecutable {
         Set<Argument> arguments = new HashSet<>(this.getUndefinedArguments());
         if (this instanceof ICommandMain) {
             for (ICommandExecutable subCommand : ((ICommandMain) this).getSubCommands()) {
-                arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
+                // TODO: find a way to get the guild's locale in here
+                arguments.add(Argument.of(subCommand.command(), subCommand.getDescription(Locale.getDefaultLocale()), subCommand.getUndefinedArguments()));
             }
         }
         return Set.copyOf(arguments);
