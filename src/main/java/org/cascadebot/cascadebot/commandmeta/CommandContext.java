@@ -297,8 +297,16 @@ public class CommandContext {
     }
 
     public boolean hasPermission(String permission) {
+        return hasPermission(member, permission);
+    }
+
+    public boolean hasPermission(Member member, String permission) {
         CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
-        return cascadePermission != null; // TODO: Check actual perms
+        if (cascadePermission == null) {
+            CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission);
+            return false;
+        }
+        return data.getPermissions().hasPermission(member, channel, cascadePermission, data.getSettings());
     }
 
     //endregion
