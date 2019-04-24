@@ -35,7 +35,9 @@ public interface ICommandExecutable {
     }
 
     @Deprecated(forRemoval = true)
-    String description();
+    default String description() {
+        return null;
+    }
 
     default boolean deleteMessages() {
         return true;
@@ -64,4 +66,5 @@ public interface ICommandExecutable {
         }
         return Set.copyOf(arguments);
     }
+
 }

@@ -1,0 +1,6 @@
+command_descriptions:
+  # Core
+  invite: "Returns the bot invite link, to invite the bot to other Discord guilds."
+  prefix: "Gets and sets the current guild prefix."
+  support: "Returns a link to the Discord support server."
+  usage: "Gets the usage for a command."

@@ -22,9 +22,4 @@ public class SupportCommand implements ICommandCore {
         return "support";
     }
 
-    @Override
-    public String description() {
-        return "Returns a link to the Discord support server";
-    }
-
 }

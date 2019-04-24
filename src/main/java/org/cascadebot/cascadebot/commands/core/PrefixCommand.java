@@ -49,9 +49,4 @@ public class PrefixCommand implements ICommandCore {
         return "prefix";
     }
 
-    @Override
-    public String description() {
-        return "Gets the current guild prefix";
-    }
-
 }
