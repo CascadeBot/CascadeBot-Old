@@ -19,3 +19,5 @@ command_descriptions:
   kick: "Kicks the specified user."
   softban: "Bans and then unbans a specified user in order to remove messages and kick the user."
   unban: "Unbans the specified user."
+commands:
+  support.cascade_support_server: "Cascade Support Server: "
