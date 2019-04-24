@@ -194,6 +194,10 @@ public class CommandContext {
         channel.sendMessage(message).queue();
     }
 
+    public String i18n(String path, Object... args) {
+        return CascadeBot.INS.getLanguage().get(data.getLocale(), path, args);
+    }
+
     public String getUsage(ICommandExecutable command) {
         return getUsage(command, null);
     }
@@ -202,11 +206,11 @@ public class CommandContext {
         Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
         if (command instanceof ICommandMain) {
             for (ICommandExecutable subCommand : ((ICommandMain) command).getSubCommands()) {
-                arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
+                arguments.add(Argument.of(subCommand.command(), subCommand.getDescription(data.getLocale()), subCommand.getUndefinedArguments()));
             }
         }
 
-        Argument parentArg = Argument.of(command.command(), command.description(), arguments);
+        Argument parentArg = Argument.of(command.command(), command.getDescription(data.getLocale()), arguments);
 
         int levels = 0;
         for (String arg : args) {
