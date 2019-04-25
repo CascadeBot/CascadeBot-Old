@@ -22,18 +22,18 @@ public class GuildSaveSubCommand implements ICommandExecutable {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
             GuildDataManager.replace(context.getGuild().getIdLong(), context.getData());
-            context.getTypedMessaging().replySuccess("Saved **this guild's** information successfully!");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.guild.save.saved_guild_successfully"));
         } else if (context.getArg(0).equals("all")) {
             GuildDataManager.getGuilds().asMap().forEach(GuildDataManager::replace);
-            context.getTypedMessaging().replySuccess("Saved **all** guild information successfully!");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.guild.save.saved_all_successfully"));
         } else {
             GuildData guildData = GuildDataManager.getGuilds().asMap().get(Long.parseLong(context.getArg(0)));
             if (guildData == null) {
-                context.getTypedMessaging().replyDanger("Cannot find guild to save!");
+                context.getTypedMessaging().replyDanger(context.i18n("commands.guild.save.cannot_save"));
                 return;
             }
             GuildDataManager.replace(guildData.getGuildID(), guildData);
-            context.getTypedMessaging().replySuccess("Saved guild information for guild **" + context.getArg(0) + "**!");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.guild.save.saved_other_successfully", context.getArg(0)));
         }
     }
 

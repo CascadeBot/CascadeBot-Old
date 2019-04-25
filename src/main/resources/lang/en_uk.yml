@@ -98,9 +98,21 @@ commands:
       disabled_flag: "Disabled flag `{flag}` for guild `{guild} ({id})`"
       enabled_flag: "Enabled flag `{flag}` for guild `{guild} ({id})`"
     leave:
+      leave_message: "Goodbye!"
     save:
+      saved_guild_successfully: "Saved **this guild's** information successfully!"
+      saved_all_successfully: "Saved **all** guild information successfully!"
+      cannot_save: "Cannot find guild to save!"
+      saved_other_successfully: "Saved guild information for guild **{arg}**!"
   module:
     disable:
+      disabled: "The module `{module}` has been disabled!"
+      already_disabled: "The module `{module}` is already disabled!"
+      cannot_find_module: "We couldn't find that module. Use `{prefix}module list` for a list of modules."
     enable:
+      enabled: "The module `{module}` has been enabled!"
+      already_enabled: "The module `{module}` is already enabled!"
+      cannot_find_module: "We couldn't find that module. Use `{prefix}module list` for a list of modules."
     list:
-
+      enabled: "Enabled"
+      disabled: "Disabled"

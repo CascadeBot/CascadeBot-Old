@@ -32,16 +32,16 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
             try {
                 if (context.getData().disableModule(module)) {
                     // If module wasn't already disabled
-                    context.getTypedMessaging().replySuccess("The module `%s` has been disabled!", module.toString());
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", module.toString()));
                 } else {
                     // If module was already disabled
-                    context.getTypedMessaging().replyInfo("The module `%s` is already disabled!", module.toString());
+                    context.getTypedMessaging().replyInfo(context.i18n("commands.module.disable.already_disabled", module.toString()));
                 }
             } catch (IllegalArgumentException ex) {
                 context.getTypedMessaging().replyDanger(ex.getMessage());
             }
         } else {
-            context.getTypedMessaging().replyDanger("We couldn't find that module. Use `" + "" + "module list` for a list of modules.");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.module.disable.cannot_find_module", context.getData().getPrefix()));
         }
 
     }

@@ -24,7 +24,7 @@ public class ModuleListSubCommand implements ICommandExecutable {
                 .filter(module -> !module.isFlagEnabled(ModuleFlag.PRIVATE))
                 .map(module -> module.toString().toLowerCase() +
                         " - " +
-                        (context.getData().isModuleEnabled(module) ? "Enabled" : "Disabled"))
+                        (context.getData().isModuleEnabled(module) ? context.i18n("commands.module.list.enabled") : context.i18n("commands.module.list.disabled")))
                 .collect(Collectors.joining("\n")));
     }
 

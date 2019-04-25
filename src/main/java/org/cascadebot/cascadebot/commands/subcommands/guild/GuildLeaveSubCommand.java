@@ -15,7 +15,7 @@ public class GuildLeaveSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Messaging.sendSuccessMessage(context.getChannel(), "Goodbye!")
+        Messaging.sendSuccessMessage(context.getChannel(), context.i18n("commands.guild.leave.leave_message"))
                 .thenAccept(message -> context.getGuild().leave().queue());
     }
 
