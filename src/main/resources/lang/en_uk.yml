@@ -51,8 +51,8 @@ commands:
     error_loading: "Error loading dog picture! {frowning_emoji}"
   # Informational
   roles:
-    tableheader1: "Role ID"
-    tableheader2: "Role Name"
+    table_header_1: "Role ID"
+    table_header_2: "Role Name"
   serverinfo:
     guild_creation_date: "Creation Date"
     guild_name: "Guild Name"
