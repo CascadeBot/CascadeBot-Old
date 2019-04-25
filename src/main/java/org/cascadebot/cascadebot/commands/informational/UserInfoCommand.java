@@ -40,7 +40,7 @@ public class UserInfoCommand implements ICommandMain {
             userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         }
         if (userForInfo == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.userinfo.invalid_user"));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.responses.invalid_user"));
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
