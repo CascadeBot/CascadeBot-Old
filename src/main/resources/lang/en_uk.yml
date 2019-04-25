@@ -144,6 +144,16 @@ command_descriptions:
       enabled: "Enabled"
       disabled: "Disabled"
 
+moderation_manager:
+  failed_action: "Could not {action} the user {user} due to an exception!"
+  cannot_action_yourself: "You cannot {action} yourself!"
+  cannot_action_bot: "You cannot {action} a bot!"
+  missing_permission: "Cannot {action} user {user}, missing `{permission}` permission!"
+  cannot_action_owner: "Cannot {action} user {user} as they are the owner of the guild!"
+  cannot_action_superior: "Cannot {action} user {user} the top role they have is higher than mine!"
+  success: "{user} has been {action}!"
+  reason: "Reason"
+
 responses:
   invalid_user: "Invalid User!"
   cannot_find_guild: "We cannot find that guild!"
