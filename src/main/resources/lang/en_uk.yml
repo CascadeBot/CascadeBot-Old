@@ -28,13 +28,12 @@ command_descriptions:
     disable: "Disables the specified module."
     enable: "Enables the specified module."
     list: "Lists all modules."
-commands:
-  # Common
-  responses:
-    invalid_user: "Invalid User!"
-    cannot_find_guild: "We cannot find that guild!"
-  statuses:
-    streaming: "Streaming"
+responses:
+  invalid_user: "Invalid User!"
+  cannot_find_guild: "We cannot find that guild!"
+statuses:
+  streaming: "Streaming"
+  commands:
   # Core
   support:
     cascade_support_server: "Cascade Support Server: {invite_link}"
@@ -106,7 +105,7 @@ commands:
       saved_guild_successfully: "Saved **this guild's** information successfully!"
       saved_all_successfully: "Saved **all** guild information successfully!"
       cannot_save: "Cannot find guild to save!"
-      saved_other_successfully: "Saved guild information for guild **{arg}**!"
+      saved_other_successfully: "Saved guild information for guild **{id}**!"
   module:
     disable:
       disabled: "The module `{module}` has been disabled!"

@@ -40,7 +40,7 @@ public class UserInfoCommand implements ICommandMain {
             userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         }
         if (userForInfo == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.responses.invalid_user"));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.invalid_user"));
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
@@ -52,7 +52,7 @@ public class UserInfoCommand implements ICommandMain {
             statusName = FormatUtils.formatEnum(member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
-                statusName = context.i18n("commands.statuses.streaming");
+                statusName = context.i18n("statuses.streaming");
             } else if (member.getOnlineStatus() == OnlineStatus.ONLINE) {
                 status = context.globalEmote("online");
             } else if (member.getOnlineStatus() == OnlineStatus.OFFLINE) {
