@@ -25,9 +25,9 @@ command_descriptions:
     leave: "Instructs the bot to leave the current guild."
     save: "Save the current guild's data."
   module:
-    disable:
-    enable:
-    list:
+    disable: "Disables the specified module."
+    enable: "Enables the specified module."
+    list: "Lists all modules."
 commands:
   # Core
   support:
@@ -69,4 +69,38 @@ commands:
     role_id: "Role ID"
     role_name: "Role Name"
   # Management
+  settings:
+    cannot_edit: "You cannot edit this setting! You need the: {flag} flag to do this!"
+    setting_set: "Setting {setting} has been set to a value of {value}."
+    cannot_access: "Could not access that setting!"
+    setting: "Setting"
+    current_value: "Current value"
+    cannot_find_field: "Cannot find that field!"
+  # Moderation
+  ban:
+    cannot_find_user: "We can't find that user!"
+    forcefully_ban?: "**We couldn't find that user in this guild!** \n If you would like to forcefully ban them, please react to this message!"
+  kick:
+    cannot_find_user: "Could not find that user!"
+  softban:
+    no_specified_user: "Not enough arguments (No specified member)"
+    cannot_find_user: "Could not find that user!"
+  unban:
+    cannot_unban: "Could not find a user to unban matching: {target}"
+    several_matches: "There is more than one user that matches this criteria! \n Please enter the ID or the user's full name!"
+  # Subcommands
+  guild:
+    flag:
+      flags: "Flags"
+      invalid_flag: "Invalid flag! Possible values: {values}"
+      cannot_find_guild: "Cannot find that guild!"
+      invalid_guild_id: "Invalid guild ID!"
+      disabled_flag: "Disabled flag `{flag}` for guild `{guild} ({id})`"
+      enabled_flag: "Enabled flag `{flag}` for guild `{guild} ({id})`"
+    leave:
+    save:
+  module:
+    disable:
+    enable:
+    list:
 

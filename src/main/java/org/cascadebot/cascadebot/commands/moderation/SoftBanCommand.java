@@ -24,13 +24,13 @@ public class SoftBanCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.getTypedMessaging().replyDanger("Not enough arguments (No specified member)");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.softban.no_specified_user"));
             return;
         }
 
         Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         if (targetMember == null) {
-            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find that user!", context.getUser()));
+            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed(context.i18n("commands.softban.cannot_find_user"), context.getUser()));
             return;
         }
 

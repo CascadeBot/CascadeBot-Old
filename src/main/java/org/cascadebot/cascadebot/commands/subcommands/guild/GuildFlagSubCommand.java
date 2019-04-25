@@ -35,14 +35,14 @@ public class GuildFlagSubCommand implements ICommandExecutable {
             if (!EnumUtils.isValidEnumIgnoreCase(Flag.class, context.getArg(0))) {
                 if (context.getArg(0).equalsIgnoreCase("list")) {
                     EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-                    embedBuilder.setTitle("Flags");
+                    embedBuilder.setTitle(context.i18n("commands.guild.flag.flags"));
                     embedBuilder.setDescription(Arrays.stream(Flag.values())
                             .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e)))
                             .collect(Collectors.joining("\n")));
                     context.getTypedMessaging().replyInfo(embedBuilder);
                     return;
                 }
-                context.getTypedMessaging().replyDanger("Invalid flag! Possible values: %s", Arrays.toString(Flag.values()));
+                context.getTypedMessaging().replyDanger(context.i18n("commands.guild.flag.invalid_flag", Arrays.toString(Flag.values())));
                 return;
             } else {
                 flag = EnumUtils.getEnum(Flag.class, context.getArg(0).toUpperCase());
@@ -53,11 +53,11 @@ public class GuildFlagSubCommand implements ICommandExecutable {
                 if (Regex.ID.matcher(context.getArg(1)).matches()) {
                     guild = CascadeBot.INS.getShardManager().getGuildById(context.getArg(1));
                     if (guild == null) {
-                        context.getTypedMessaging().replyDanger("Cannot find that guild!");
+                        context.getTypedMessaging().replyDanger(context.i18n("commands.guild.flag.cannot_find_guild"));
                         return;
                     }
                 } else {
-                    context.getTypedMessaging().replyDanger("Invalid guild ID!");
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.guild.flag.invalid_guild_id"));
                     return;
                 }
             }
@@ -66,10 +66,10 @@ public class GuildFlagSubCommand implements ICommandExecutable {
 
             if (guildData.isFlagEnabled(flag)) {
                 guildData.disableFlag(flag);
-                context.getTypedMessaging().replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
+                context.getTypedMessaging().replySuccess(context.i18n("commands.guild.flag.disabled_flag", FormatUtils.formatEnum(flag), guild.getName(), guild.getId()));
             } else {
                 guildData.enableFlag(flag);
-                context.getTypedMessaging().replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
+                context.getTypedMessaging().replySuccess(context.i18n("commands.guild.flag.enabled_flag", FormatUtils.formatEnum(flag), guild.getName(), guild.getId()));
             }
 
         }

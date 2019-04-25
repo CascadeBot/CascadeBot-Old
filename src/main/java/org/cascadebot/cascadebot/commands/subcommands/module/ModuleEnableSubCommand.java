@@ -57,11 +57,6 @@ public class ModuleEnableSubCommand implements ICommandExecutable {
     }
 
     @Override
-    public String description() {
-        return "";
-    }
-
-    @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of("module", "Enables a module", ArgumentType.REQUIRED));
     }
