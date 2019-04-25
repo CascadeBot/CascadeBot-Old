@@ -35,7 +35,7 @@ responses:
 
 statuses:
   streaming: "Streaming"
-  
+
   commands:
   # Core
   support:
@@ -63,7 +63,7 @@ statuses:
     guild_owner: "Owner"
     guild_region: "Region"
     guild_member_count: "Member Count"
-    guild_id: "Guild ID"
+    guild_id: "ID: {id}"
   userinfo:
     user_created: "User Created"
     user_join_date: "Join Date"
