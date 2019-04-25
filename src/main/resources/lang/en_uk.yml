@@ -19,15 +19,54 @@ command_descriptions:
   kick: "Kicks the specified user."
   softban: "Bans and then unbans a specified user in order to remove messages and kick the user."
   unban: "Unbans the specified user."
+  # Subcommands
+  guild:
+    flag: "Toggles a flag for this guild [or a different guild]."
+    leave: "Instructs the bot to leave the current guild."
+    save: "Save the current guild's data."
+  module:
+    disable:
+    enable:
+    list:
 commands:
+  # Core
   support:
     cascade_support_server: "Cascade Support Server: {invite_link}"
   prefix:
-    prefix_reset: "The prefix has been reset to: `{default_prefix}`."
+    prefix_reset: "The prefix has been reset to: `{default_prefix}`"
     prefix_too_long: "The requested prefix is too long!"
-    new_prefix: "The new prefix is: `{new_prefix}`."
-    current_prefix: "The current server prefix is `{current_prefix}`."
+    new_prefix: "The new prefix is: `{new_prefix}`"
+    current_prefix: "The current server prefix is `{current_prefix}`"
   usage:
     specify_usage: "Please specify command to get usage from!"
-    command_not_found: "Command {arg} not found!"
+    command_not_found: "Command `{arg}` not found!"
+  # Fun
+  cat:
+    error_loading: "Error loading cat picture! {emoji}"
+  dog:
+    error_loading: "Error loading dog picture! {emoji}"
+  # Informational
+  roles:
+    tableheader1: "Role ID"
+    tableheader2: "Role Name"
+  serverinfo:
+    guild_not_found: "We couldn't find that guild!"
+    guild_creation_date: "Creation Date:"
+    guild_name: "Guild Name:"
+    guild_owner: "Owner:"
+    guild_region: "Region:"
+    guild_member_count: "Member Count:"
+    guild_id: "Guild ID:"
+  userinfo:
+    invalid_user: "Invalid User!"
+    streaming: "Streaming"
+    user_created: "User Created:"
+    user_join_date: "Join Date:"
+    user_id: "User ID:"
+    user_mutual_servers: "Mutual Servers:"
+    status: "Status"
+    activity: "Activity"
+    role_id: "Role ID"
+    role_name: "Role Name"
+  # Management
 

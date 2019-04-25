@@ -44,7 +44,7 @@ public class CatCommand implements ICommandMain {
                         message.delete().queue();
                     }
                 } catch (IOException e) {
-                    message.editMessage("Error loading cat picture " + UnicodeConstants.FROWNING).queue();
+                    message.editMessage(context.i18n("commands.cat.error_loading", UnicodeConstants.FROWNING)).queue();
                 }
             }));
             try {
@@ -54,7 +54,7 @@ public class CatCommand implements ICommandMain {
                     context.getData().addButtonGroup(context.getChannel(), message, catButtons);
                 });
             } catch (IOException e) {
-                context.getTypedMessaging().replyDanger("Error loading cat picture " + UnicodeConstants.FROWNING);
+                context.getTypedMessaging().replyDanger(context.i18n("commands.cat.error_loading", UnicodeConstants.FROWNING));
             }
     }
 

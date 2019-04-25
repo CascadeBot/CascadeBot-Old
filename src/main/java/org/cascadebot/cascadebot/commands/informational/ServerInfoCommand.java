@@ -28,19 +28,19 @@ public class ServerInfoCommand implements ICommandMain {
             guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
         }
         if (guildForInfo == null) {
-            context.getTypedMessaging().replyDanger("We couldn't find that guild!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.serverinfo.guild_not_found"));
             return;
         }
 
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(guildForInfo.getName());
         builder.setThumbnail(guildForInfo.getIconUrl());
-        builder.addField("Creation Date", FormatUtils.formatDateTime(guildForInfo.getCreationTime()), true);
-        builder.addField("Guild Name", guildForInfo.getName(), true);
-        builder.addField("Owner" + context.globalEmote("server_owner"), guildForInfo.getOwner().getUser().getAsTag(), true);
-        builder.addField("Region", guildForInfo.getRegion().toString(), true);
-        builder.addField("Member Count", String.valueOf(guildForInfo.getMemberCache().size()), true);
-        builder.setFooter("ID: " + guildForInfo.getId(), guildForInfo.getIconUrl());
+        builder.addField(context.i18n("commands.serverinfo.guild_creation_date"), FormatUtils.formatDateTime(guildForInfo.getCreationTime()), true);
+        builder.addField(context.i18n("commands.serverinfo.guild_name"), guildForInfo.getName(), true);
+        builder.addField(context.i18n("commands.serverinfo.guild_owner") + context.globalEmote("server_owner"), guildForInfo.getOwner().getUser().getAsTag(), true);
+        builder.addField(context.i18n("commands.serverinfo.guild_region"), guildForInfo.getRegion().toString(), true);
+        builder.addField(context.i18n("commands.serverinfo.guild_member_count"), String.valueOf(guildForInfo.getMemberCache().size()), true);
+        builder.setFooter(context.i18n("commands.serverinfo.guild_id") + guildForInfo.getId(), guildForInfo.getIconUrl());
 
         context.getTypedMessaging().replyInfo(builder); // Send the embed
     }
@@ -58,11 +58,6 @@ public class ServerInfoCommand implements ICommandMain {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("Server info command", "serverinfo", true);
-    }
-
-    @Override
-    public String description() {
-        return "Returns information regarding the specified server";
     }
 
     @Override

@@ -40,7 +40,7 @@ public class UserInfoCommand implements ICommandMain {
             userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         }
         if (userForInfo == null) {
-            context.getTypedMessaging().replyDanger("Invalid User!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.userinfo.invalid_user"));
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
@@ -52,7 +52,7 @@ public class UserInfoCommand implements ICommandMain {
             statusName = FormatUtils.formatEnum(member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
-                statusName = "Streaming";
+                statusName = context.i18n("commands.userinfo.streaming");
             } else if (member.getOnlineStatus() == OnlineStatus.ONLINE) {
                 status = context.globalEmote("online");
             } else if (member.getOnlineStatus() == OnlineStatus.OFFLINE) {
@@ -68,14 +68,14 @@ public class UserInfoCommand implements ICommandMain {
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
-        builder.addField("User Created", FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
-        builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
-        builder.addField("User ID", userForInfo.getId(), true);
-        builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
+        builder.addField(context.i18n("commands.userinfo.user_created"), FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
+        builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getJoinDate()), true);
+        builder.addField(context.i18n("commands.userinfo.user_id"), userForInfo.getId(), true);
+        builder.addField(context.i18n("commands.userinfo.user_mutual_servers"), String.valueOf(userForInfo.getMutualGuilds().size()), true);
 
 
         if (member != null) {
-            builder.addField("Status", status + statusName, true);
+            builder.addField(context.i18n("commands.userinfo.status"), status + statusName, true);
             Game game = member.getGame();
             if (game != null) {
                 String gameStatus;
@@ -94,10 +94,10 @@ public class UserInfoCommand implements ICommandMain {
                 } else {
                     gameStatus = String.format("%s **%s**", gameType, game.getName());
                 }
-                builder.addField("Activity", gameStatus, true);
+                builder.addField(context.i18n("commands.userinfo.activity"), gameStatus, true);
             }
 
-            Table.TableBuilder tableBuilder = new Table.TableBuilder("Role ID", "Role Name");
+            Table.TableBuilder tableBuilder = new Table.TableBuilder(context.i18n("commands.userinfo.role_id"), context.i18n("commands.userinfo.role_name"));
 
             for (Role role : member.getRoles()) {
                 tableBuilder.addRow(role.getId(), role.getName());
@@ -123,11 +123,6 @@ public class UserInfoCommand implements ICommandMain {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("User info command", "userinfo", true);
-    }
-
-    @Override
-    public String description() {
-        return "Returns information regarding the specified user";
     }
 
     @Override

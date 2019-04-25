@@ -97,9 +97,4 @@ public class GuildFlagSubCommand implements ICommandExecutable {
         return null;
     }
 
-    @Override
-    public String description() {
-        return null;
-    }
-
 }

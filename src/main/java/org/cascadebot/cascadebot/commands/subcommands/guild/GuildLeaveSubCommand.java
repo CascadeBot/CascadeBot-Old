@@ -29,9 +29,4 @@ public class GuildLeaveSubCommand implements ICommandExecutable {
         return null;
     }
 
-    @Override
-    public String description() {
-        return "Instructs the bot to leave the current guild";
-    }
-
 }
