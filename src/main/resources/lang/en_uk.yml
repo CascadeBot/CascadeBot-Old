@@ -28,4 +28,6 @@ commands:
     new_prefix: "The new prefix is: `{new_prefix}`."
     current_prefix: "The current server prefix is `{current_prefix}`."
   usage:
+    specify_usage: "Please specify command to get usage from!"
+    command_not_found: "Command {arg} not found!"
 
