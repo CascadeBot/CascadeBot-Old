@@ -52,7 +52,7 @@ public class UserInfoCommand implements ICommandMain {
             statusName = FormatUtils.formatEnum(member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
-                statusName = context.i18n("commands.userinfo.streaming");
+                statusName = context.i18n("commands.statuses.streaming");
             } else if (member.getOnlineStatus() == OnlineStatus.ONLINE) {
                 status = context.globalEmote("online");
             } else if (member.getOnlineStatus() == OnlineStatus.OFFLINE) {

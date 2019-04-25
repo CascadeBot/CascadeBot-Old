@@ -33,6 +33,8 @@ commands:
   responses:
     invalid_user: "Invalid User!"
     cannot_find_guild: "We cannot find that guild!"
+  statuses:
+    streaming: "Streaming"
   # Core
   support:
     cascade_support_server: "Cascade Support Server: {invite_link}"
@@ -61,7 +63,6 @@ commands:
     guild_member_count: "Member Count"
     guild_id: "Guild ID"
   userinfo:
-    streaming: "Streaming"
     user_created: "User Created"
     user_join_date: "Join Date"
     user_id: "User ID"
