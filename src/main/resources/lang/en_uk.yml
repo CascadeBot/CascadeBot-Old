@@ -21,7 +21,7 @@ command_descriptions:
   unban: "Unbans the specified user."
 commands:
   support:
-    cascade_support_server: "Cascade Support Server: `{invite_link}`"
+    cascade_support_server: "Cascade Support Server: {invite_link}"
   prefix:
     prefix_reset: "The prefix has been reset to: `{default_prefix}`."
     prefix_too_long: "The requested prefix is too long!"
