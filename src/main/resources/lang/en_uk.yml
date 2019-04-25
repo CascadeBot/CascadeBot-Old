@@ -35,8 +35,6 @@ command_descriptions:
     enable: "Enables the specified module."
     list: "Lists all modules."
 
-
-
   commands:
   # Core
   support:
