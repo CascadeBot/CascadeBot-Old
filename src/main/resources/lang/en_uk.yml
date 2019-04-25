@@ -20,4 +20,9 @@ command_descriptions:
   softban: "Bans and then unbans a specified user in order to remove messages and kick the user."
   unban: "Unbans the specified user."
 commands:
-  support.cascade_support_server: "Cascade Support Server: "
+  support:
+    cascade_support_server: "Cascade Support Server: {invite_link}"
+  prefix:
+    prefix_reset: "The prefix has been reset to: {default_prefix}"
+  usage:
+
