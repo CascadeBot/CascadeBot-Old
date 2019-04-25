@@ -28,11 +28,14 @@ command_descriptions:
     disable: "Disables the specified module."
     enable: "Enables the specified module."
     list: "Lists all modules."
+
 responses:
   invalid_user: "Invalid User!"
   cannot_find_guild: "We cannot find that guild!"
+
 statuses:
   streaming: "Streaming"
+  
   commands:
   # Core
   support:
