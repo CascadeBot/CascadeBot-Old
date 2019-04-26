@@ -23,6 +23,12 @@ public interface ICommandExecutable {
     CascadePermission getPermission();
 
     default String getDescriptionPath() {
+        if (this instanceof ICommandMain) {
+            ICommandMain commandMain = (ICommandMain) this;
+            if (commandMain.getSubCommands().size() > 0) {
+                return "command_descriptions." + command() + ".main_command";
+            }
+        }
         return "command_descriptions." + command();
     }
 
