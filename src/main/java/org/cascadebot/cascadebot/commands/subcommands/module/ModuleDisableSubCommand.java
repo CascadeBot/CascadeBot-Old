@@ -12,12 +12,13 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;
 
-public class ModuleDisableSubCommand implements ICommandExecutable {
+public class ModuleDisableSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -49,6 +50,11 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
     @Override
     public String command() {
         return "disable";
+    }
+
+    @Override
+    public String parent() {
+        return "module";
     }
 
     @Override
