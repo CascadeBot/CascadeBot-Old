@@ -150,6 +150,9 @@ responses:
   not_enough_arguments: "Not enough arguments!"
   empty_result: "Empty result!"
   cannot_find_argument: "I can't find that argument!"
+  no_specified_user: "Not enough arguments (no specified member)"
+  cannot_find_user: "I cannot find that user!"
+  cannot_find_user_matching: "Cannot find a user matching: {user_search}"
 
 statuses:
   streaming: "Streaming"
