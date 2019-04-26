@@ -95,7 +95,7 @@ commands:
   # Moderation
   ban:
     cannot_find_user: "We can't find that user!"
-    forcefully_ban?: "**We couldn't find that user in this guild!** \n If you would like to forcefully ban them, please react to this message!"
+    forcefully_ban: "**We couldn't find that user in this guild!** \n If you would like to forcefully ban them, please react to this message!"
   kick:
     cannot_find_user: "Could not find that user!"
   softban:
