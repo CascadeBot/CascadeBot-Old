@@ -35,7 +35,7 @@ command_descriptions:
     enable: "Enables the specified module."
     list: "Lists all modules."
 
-  commands:
+commands:
   # Core
   support:
     cascade_support_server: "Cascade Support Server: {invite_link}"
