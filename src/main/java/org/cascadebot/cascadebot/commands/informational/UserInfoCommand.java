@@ -17,11 +17,13 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.Table;
+import org.cascadebot.cascadebot.utils.language.LanguageUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 
@@ -49,7 +51,7 @@ public class UserInfoCommand implements ICommandMain {
         String statusName = "";
 
         if (member != null) {
-            statusName = FormatUtils.formatEnum(member.getOnlineStatus());
+            statusName = LanguageUtils.getEnumI18n(context.getData().getLocale(), "statuses", member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
                 statusName = context.i18n("statuses.streaming");
@@ -79,15 +81,7 @@ public class UserInfoCommand implements ICommandMain {
             Game game = member.getGame();
             if (game != null) {
                 String gameStatus;
-                String gameType = FormatUtils.formatEnum(game.getType());
-                switch (game.getType()) {
-                    case LISTENING:
-                        gameType += " to";
-                        break;
-                    case DEFAULT:
-                        gameType = "Playing";
-                        break;
-                }
+                String gameType = LanguageUtils.getEnumI18n(context.getData().getLocale(), "game_types", game.getType());
                 if (game.isRich()) {
                     RichPresence presence = game.asRichPresence();
                     gameStatus = String.format("%s **%s**\n*%s*\n*%s*", gameType, presence.getName(), presence.getDetails(), presence.getState());
