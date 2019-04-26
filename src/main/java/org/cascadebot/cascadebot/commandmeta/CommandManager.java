@@ -44,9 +44,20 @@ public class CommandManager {
         }
     }
 
+    public ICommandMain getCommand(String command) {
+        for (ICommandMain cmd : commands) {
+            if (cmd.command().equals(command)) {
+                return cmd;
+            } else if (cmd.getGlobalAliases().contains(command)) {
+                return cmd;
+            }
+        }
+        return null;
+    }
+
     public ICommandMain getCommand(String command, User user, GuildData data) {
         for (ICommandMain cmd : commands) {
-            if (data.getCommandName(cmd).equalsIgnoreCase(command)) {
+            if (data.getCommandName(cmd).equals(command)) {
                 return cmd;
             } else if (data.getCommandAliases(cmd).contains(command)) {
                 return cmd;
