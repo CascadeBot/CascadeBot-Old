@@ -99,7 +99,7 @@ public class ModerationManager {
         EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(String.format(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb())), submitter.getUser());
 
         if (!StringUtils.isBlank(reason)) {
-            builder.addField(context.i18n("moderation_manager.reason"), reason, false);
+            builder.addField(context.i18n("words.reason"), reason, false);
         }
 
         builder.setTitle(StringUtils.capitalize(action.getVerb()) + " user");

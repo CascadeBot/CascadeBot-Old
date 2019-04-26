@@ -55,14 +55,6 @@ command_descriptions:
   # Developer
   dump:
     not_enough_arguments: "Hmmm either pick: `threads`, `commands`, `permissions` or `guild`"
-    command: "Command"
-    module: "Module"
-    permission: "Permission"
-    subcommand: "Subcommand"
-    discord_perms: "Discord permissions"
-    default_permission: "Default permission"
-    no_permission: "No permission"
-    cannot_find_argument: "I can't seem to find that argument {thinking_emoji}"
   eval:
     contains_blacklisted_items: "You cannot run this code as it contains blacklisted items!"
     error_running_script: "Error running script: {stack_trace} \n**{class_name}** \n```swift\n{message}```"
@@ -157,6 +149,21 @@ responses:
   cannot_find_guild: "We cannot find that guild!"
   not_enough_arguments: "Not enough arguments!"
   empty_result: "Empty result!"
+  cannot_find_argument: "I can't find that argument!"
 
 statuses:
   streaming: "Streaming"
+  online: "Online"
+  offline: "Offline"
+  do_not_disturb: "Do Not Disturb"
+  idle: "Idle"
+
+words:
+  permission: "Permission"
+  subcommand: "Subcommand"
+  command: "Command"
+  module: "Module"
+  discord_perms: "Discord permissions"
+  default_permission: "Default permission"
+  no_permission: "No permission"
+  reason: "Reason"
