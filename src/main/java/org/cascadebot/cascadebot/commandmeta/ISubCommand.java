@@ -5,9 +5,15 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import org.cascadebot.cascadebot.CascadeBot;
+
 public interface ISubCommand extends ICommandExecutable {
 
     String parent();
+
+    default ICommandMain getParent() {
+        return CascadeBot.INS.getCommandManager().getCommand(parent());
+    }
 
     @Override
     default String getDescriptionPath() {
