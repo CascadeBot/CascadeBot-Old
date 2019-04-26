@@ -158,6 +158,12 @@ statuses:
   do_not_disturb: "Do Not Disturb"
   idle: "Idle"
 
+game_types:
+  default: "Playing"
+  streaming: "Streaming"
+  listening: "Listening to"
+  watching: "Watching"
+
 words:
   permission: "Permission"
   subcommand: "Subcommand"
