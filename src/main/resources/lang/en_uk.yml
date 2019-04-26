@@ -130,9 +130,6 @@ commands:
       enabled: "The module `{module}` has been enabled!"
       already_enabled: "The module `{module}` is already enabled!"
       cannot_find_module: "We couldn't find that module. Use `{prefix}module list` for a list of modules."
-    list:
-      enabled: "Enabled"
-      disabled: "Disabled"
 
 moderation_manager:
   failed_action: "Could not {action} the user {user} due to an exception!"
@@ -142,7 +139,6 @@ moderation_manager:
   cannot_action_owner: "Cannot {action} user {user} as they are the owner of the guild!"
   cannot_action_superior: "Cannot {action} user {user} the top role they have is higher than mine!"
   success: "{user} has been {action}!"
-  reason: "Reason"
 
 responses:
   invalid_user: "Invalid User!"
@@ -176,3 +172,5 @@ words:
   default_permission: "Default permission"
   no_permission: "No permission"
   reason: "Reason"
+  enabled: "Enabled"
+  disabled: "Disabled"
