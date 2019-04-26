@@ -7,7 +7,11 @@ command_descriptions:
   # Developer
   dump: "Dump command."
   eval: "Evaluates code."
-  guild: "Allows administrative actions to be run on guilds."
+  guild:
+    main_command: "Allows administrative actions to be run on guilds."
+    flag: "Toggles a flag for this guild [or a different guild]."
+    leave: "Instructs the bot to leave the current guild."
+    save: "Save the current guild's data."
   restart: "Restarts the bot."
   shutdown: "Shuts down the bot."
   # Fun
@@ -18,22 +22,17 @@ command_descriptions:
   serverinfo: "Returns information regarding the specified server."
   userinfo: "Returns information regarding the specified user."
   # Management
-  module: "Interacts with modules by enabling, disabling or listing them."
+  module:
+    main_command: "Interacts with modules by enabling, disabling or listing them."
+    disable: "Disables the specified module."
+    enable: "Enables the specified module."
+    list: "Lists all modules."
   settings: "Allows users to change settings for the guild."
   # Moderation
   ban: "Bans or forcebans the specified user."
   kick: "Kicks the specified user."
   softban: "Bans and then unbans a specified user in order to remove messages and kick the user."
   unban: "Unbans the specified user."
-  # Subcommands
-  guild:
-    flag: "Toggles a flag for this guild [or a different guild]."
-    leave: "Instructs the bot to leave the current guild."
-    save: "Save the current guild's data."
-  module:
-    disable: "Disables the specified module."
-    enable: "Enables the specified module."
-    list: "Lists all modules."
 
 commands:
   # Core
