@@ -24,8 +24,7 @@ public interface ICommandExecutable {
 
     default String getDescriptionPath() {
         if (this instanceof ICommandMain) {
-            ICommandMain commandMain = (ICommandMain) this;
-            if (commandMain.getSubCommands().size() > 0) {
+            if (((ICommandMain) this).getSubCommands().size() > 0) {
                 return "command_descriptions." + command() + ".main_command";
             }
         }
