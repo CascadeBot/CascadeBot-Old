@@ -15,7 +15,6 @@ import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
@@ -29,11 +28,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 
 public class CascadePlayer {
 
@@ -228,7 +225,6 @@ public class CascadePlayer {
         LoadPlaylistResult result = LoadPlaylistResult.DOESNT_EXISTS;
         long owner = 0;
         switch (scope) {
-
             case GUILD:
                 result = LoadPlaylistResult.LOADED_GUILD;
                 owner = sender.getGuild().getIdLong();
