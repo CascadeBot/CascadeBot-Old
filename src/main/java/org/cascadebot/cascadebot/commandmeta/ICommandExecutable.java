@@ -23,21 +23,18 @@ public interface ICommandExecutable {
     CascadePermission getPermission();
 
     default String getDescriptionPath() {
+        if (this instanceof ICommandMain) {
+            if (((ICommandMain) this).getSubCommands().size() > 0) {
+                return "command_descriptions." + command() + ".main_command";
+            }
+        }
         return "command_descriptions." + command();
     }
 
     default String getDescription(Locale locale) {
-        if (!CascadeBot.INS.getLanguage().hasLanguageEntry(locale, getDescriptionPath())) {
-            return description();
-        } else {
-            return CascadeBot.INS.getLanguage().get(locale, getDescriptionPath());
-        }
+        return CascadeBot.INS.getLanguage().get(locale, getDescriptionPath());
     }
 
-    @Deprecated(forRemoval = true)
-    default String description() {
-        return null;
-    }
 
     default boolean deleteMessages() {
         return true;

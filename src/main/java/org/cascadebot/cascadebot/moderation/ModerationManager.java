@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.messaging.MessagingObjects;
 public class ModerationManager {
 
     private static final FailureConsumer FAILURE_CONSUMER = ((context, throwable, target, action) -> {
-        context.getTypedMessaging().replyException("Could not %s the user %s due to an exception!", throwable, action, target.getAsTag());
+        context.getTypedMessaging().replyException(context.i18n("moderation_manager.failed_action", action, target.getAsTag()), throwable);
     });
 
     // This is keeping the mod-action parameter as it is used for force-ban, soft-ban and normal ban.
@@ -72,10 +72,10 @@ public class ModerationManager {
             // This should never really happen, this is here to make sure it definitely never happens
             return false;
         } else if (target.equals(submitter.getUser())) {
-            context.getTypedMessaging().replyWarning("You cannot %s yourself!", action);
+            context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_yourself", action));
             return false;
         } else if (target.equals(context.getSelfUser())) {
-            context.getTypedMessaging().replyWarning("You cannot %s a bot!", action);
+            context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_bot", action));
             return false;
         }
         return true;
@@ -85,23 +85,21 @@ public class ModerationManager {
         try {
             actionToRun.run();
         } catch (InsufficientPermissionException e) {
-            context.getTypedMessaging().replyDanger("Cannot %s user %s, missing `%s` permission!", action, target.getAsTag(), e.getPermission().getName());
+            context.getTypedMessaging().replyDanger(context.i18n("moderation_manager.missing_permission", action, target.getAsTag(), e.getPermission().getName()));
         } catch (HierarchyException e) {
             if (context.getGuild().getOwner().getUser().equals(target)) {
-                context.getTypedMessaging().replyDanger("Cannot %s user %s as they are the owner of the guild!", action, target.getAsTag());
+                context.getTypedMessaging().replyDanger(context.i18n("moderation_manager.cannot_action_owner", action, target.getAsTag()));
             } else {
-                context.getTypedMessaging().replyDanger("Cannot %s user %s the top role they have is higher than mine!", action, target.getAsTag());
+                context.getTypedMessaging().replyDanger(context.i18n("moderation_manager.cannot_action_superior", action, target.getAsTag()));
             }
         }
     }
 
     private void sendSuccess(CommandContext context, User target, Member submitter, ModAction action, String reason) {
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(String.format(
-                "%s has been %s!", target.getAsTag(), action.getVerb()
-        ), submitter.getUser());
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(String.format(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb())), submitter.getUser());
 
         if (!StringUtils.isBlank(reason)) {
-            builder.addField("Reason", reason, false);
+            builder.addField(context.i18n("words.reason"), reason, false);
         }
 
         builder.setTitle(StringUtils.capitalize(action.getVerb()) + " user");

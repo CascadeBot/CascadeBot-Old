@@ -20,7 +20,7 @@ public class RolesCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Table.TableBuilder builder = new Table.TableBuilder("Role ID", "Role Name");
+        Table.TableBuilder builder = new Table.TableBuilder(context.i18n("commands.roles.table_header_1"), context.i18n("commands.roles.table_header_2"));
 
         for (Role role : context.getGuild().getRoles()) {
             builder.addRow(role.getId(), role.getName());
@@ -42,11 +42,6 @@ public class RolesCommand implements ICommandMain {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("Roles command", "roles", false);
-    }
-
-    @Override
-    public String description() {
-        return "Returns the server's roles";
     }
 
     @Override

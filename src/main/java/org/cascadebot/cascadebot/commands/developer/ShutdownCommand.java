@@ -30,9 +30,7 @@ public class ShutdownCommand implements ICommandRestricted {
                         "shutdown_bot",
                         context.getChannel(),
                         MessageType.DANGER,
-                        "It looks like the bot is running in ***production*** mode, **do you _really_ want to do this?** \n" +
-                                "If so, simply repeat the command again. This confirmation will expire in one minute!",
-                        new ConfirmUtils.ConfirmRunnable() {
+                        context.i18n("commands.developer.shutdown.confirmation"), new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
                                 shutdown(context);
@@ -49,20 +47,15 @@ public class ShutdownCommand implements ICommandRestricted {
     private void shutdown(CommandContext context) {
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setFooter(context.getMember().getUser().getAsTag(), context.getMember().getUser().getEffectiveAvatarUrl());
-        builder.setDescription("Cascade is now shutting down!");
+        builder.setDescription(context.i18n("commands.developer.shutdown.shutting_down"));
         context.getTypedMessaging().replyInfo(builder);
-        CascadeBot.LOGGER.info("Shutting down via command! Issuer: " + context.getUser().getAsTag());
+        CascadeBot.LOGGER.info(context.i18n("commands.developer.shutdown.shutting_down_console", context.getUser().getAsTag()));
         ShutdownHandler.stop();
     }
 
     @Override
     public String command() {
         return "shutdown";
-    }
-
-    @Override
-    public String description() {
-        return "Stops the bot";
     }
 
     @Override

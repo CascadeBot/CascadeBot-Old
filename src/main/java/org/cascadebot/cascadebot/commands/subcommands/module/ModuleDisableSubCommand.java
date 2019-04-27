@@ -12,12 +12,13 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;
 
-public class ModuleDisableSubCommand implements ICommandExecutable {
+public class ModuleDisableSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -32,16 +33,16 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
             try {
                 if (context.getData().disableModule(module)) {
                     // If module wasn't already disabled
-                    context.getTypedMessaging().replySuccess("The module `%s` has been disabled!", module.toString());
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", module.toString()));
                 } else {
                     // If module was already disabled
-                    context.getTypedMessaging().replyInfo("The module `%s` is already disabled!", module.toString());
+                    context.getTypedMessaging().replyInfo(context.i18n("commands.module.disable.already_disabled", module.toString()));
                 }
             } catch (IllegalArgumentException ex) {
                 context.getTypedMessaging().replyDanger(ex.getMessage());
             }
         } else {
-            context.getTypedMessaging().replyDanger("We couldn't find that module. Use `" + "" + "module list` for a list of modules.");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.module.disable.cannot_find_module", context.getData().getPrefix()));
         }
 
     }
@@ -52,13 +53,13 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
     }
 
     @Override
-    public CascadePermission getPermission() {
-        return CascadePermission.of("Disable module subcommand", "module.disable", false, Permission.MANAGE_SERVER);
+    public String parent() {
+        return "module";
     }
 
     @Override
-    public String description() {
-        return "";
+    public CascadePermission getPermission() {
+        return CascadePermission.of("Disable module subcommand", "module.disable", false, Permission.MANAGE_SERVER);
     }
 
     @Override

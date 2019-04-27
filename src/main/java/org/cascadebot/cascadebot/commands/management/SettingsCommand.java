@@ -20,6 +20,7 @@ import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.cascadebot.utils.Table;
 
 import java.lang.reflect.Field;
+import java.text.Format;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
@@ -40,10 +41,7 @@ public class SettingsCommand implements ICommandMain {
                 FlagRequired flagsRequiredAnnotation = field.getAnnotation(FlagRequired.class);
                 if (flagsRequiredAnnotation != null) {
                     if (!context.getData().getEnabledFlags().contains(flagsRequiredAnnotation.value())) {
-                        context.getTypedMessaging().replyDanger(
-                                "You cannot edit this setting! You need the: %s flag to do this!",
-                                FormatUtils.formatEnum(flagsRequiredAnnotation.value())
-                        );
+                        context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_edit", FormatUtils.formatEnum(flagsRequiredAnnotation.value())));
                         return;
                     }
                 }
@@ -58,12 +56,12 @@ public class SettingsCommand implements ICommandMain {
                 } else {
                     return;
                 }
-                context.getTypedMessaging().replySuccess("Setting `%s` has been set to a value of `%s`", field.getName(), value);
+                context.getTypedMessaging().replySuccess(context.i18n("commands.settings.setting_set", field.getName(), value));
             } catch (IllegalAccessException e) {
-                context.getTypedMessaging().replyException("Could not access that setting!", e);
+                context.getTypedMessaging().replyException(context.i18n("commands.settings.cannot_access"), e);
             }
         } else if (context.getArg(0).equalsIgnoreCase("list")) {
-            Table.TableBuilder tableBuilder = new Table.TableBuilder("Setting", "Current value");
+            Table.TableBuilder tableBuilder = new Table.TableBuilder(context.i18n("commands.settings.setting"), context.i18n("commands.settings.current_value"));
             GuildSettings.VALUES
                     .entrySet()
                     .stream()
@@ -78,18 +76,13 @@ public class SettingsCommand implements ICommandMain {
                     });
             PasteUtils.pasteIfLong(tableBuilder.build().toString(), 2000, context::reply);
         } else {
-            context.getTypedMessaging().replyDanger("Cannot find that field!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_find_field"));
         }
     }
 
     @Override
     public String command() {
         return "settings";
-    }
-
-    @Override
-    public String description() {
-        return "Allows users to change settings for the guild";
     }
 
     @Override
