@@ -257,12 +257,13 @@ public class CascadePlayer {
                 playlist.removeTrack(url);
             }, exception -> {
                 playlist.removeTrack(url);
-            }, tracks::addAll);
+            }, loadedTracks -> {
+                tracks.addAll(loadedTracks);
+                if (tracks.size() == playlist.getTracks().size()) {
+                    loadedConsumer.accept(tracks);
+                }
+            });
         }
-        while (tracks.size() < playlist.getTracks().size()) {
-            //Wait for tracks to load
-        }
-        loadedConsumer.accept(tracks);
     }
 
     public SavePlaylistResult saveCurrentPlaylist(long owner, PlaylistType scope, String name, boolean overwrite) {
