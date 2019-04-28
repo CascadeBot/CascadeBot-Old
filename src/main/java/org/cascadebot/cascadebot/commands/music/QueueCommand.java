@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.commands.music;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -13,6 +14,7 @@ import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
 import java.util.List;
+import java.util.Set;
 
 public class QueueCommand implements ICommandMain {
 
@@ -30,10 +32,14 @@ public class QueueCommand implements ICommandMain {
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append("Current song: `").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`\n");
+        builder.append("**Current song**: `").append(player.getPlayer().getPlayingTrack().getInfo().title).append("` Requested by ")
+                .append(CascadeBot.INS.getShardManager().getUserById((Long) player.getPlayer().getPlayingTrack().getUserData()).getAsTag()).append("\n\n");
 
+        int i = 0;
         for (AudioTrack track : player.getQueue()) {
-            builder.append("`").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`\n");
+            i++;
+            builder.append(i).append(": `").append(track.getInfo().title).append("` Requested by ")
+                    .append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag()).append("\n");
         }
 
         List<Page> pages;
@@ -43,7 +49,6 @@ public class QueueCommand implements ICommandMain {
         } else {
             pages = PageUtils.splitStringToStringPages(builder.toString(), 1800, '\n');
         }
-        //builder.append("Requested by").append(sender.getUser().getName()).append("\n");
         context.getUIMessaging().sendPagedMessage(pages);
     }
 
@@ -52,6 +57,10 @@ public class QueueCommand implements ICommandMain {
         return Module.MUSIC;
     }
 
+    @Override
+    public Set<String> getGlobalAliases() {
+        return Set.of("playlist");
+    }
 
     @Override
     public String command() {
