@@ -33,23 +33,23 @@
   },
   "commands": {
     "support": {
-      "cascade_support_server": "Cascade Support Server: {invite_link}"
+      "cascade_support_server": "Cascade Support Server: {0}"
     },
     "prefix": {
-      "prefix_reset": "The prefix has been reset to: `{default_prefix}`",
+      "prefix_reset": "The prefix has been reset to: `{0}`",
       "prefix_too_long": "The requested prefix is too long!",
-      "new_prefix": "The new prefix is: `{new_prefix}`",
-      "current_prefix": "The current server prefix is `{current_prefix}`"
+      "new_prefix": "The new prefix is: `{0}`",
+      "current_prefix": "The current server prefix is `{0}`"
     },
     "usage": {
       "specify_usage": "Please specify command to get usage from!",
-      "command_not_found": "Command `{command}` not found!"
+      "command_not_found": "Command `{0}` not found!"
     },
     "cat": {
-      "error_loading": "Error loading cat picture! {frowning_emoji}"
+      "error_loading": "Error loading cat picture! {0}"
     },
     "dog": {
-      "error_loading": "Error loading dog picture! {frowning_emoji}"
+      "error_loading": "Error loading dog picture! {0}"
     },
     "dump": {
       "not_enough_arguments": "Hmmm either pick: `threads`, `commands`, `permissions` or `guild`"
@@ -64,7 +64,7 @@
       "guild_owner": "Owner",
       "guild_region": "Region",
       "guild_member_count": "Member Count",
-      "guild_id": "ID: {id}"
+      "guild_id": "ID: {0}"
     },
     "userinfo": {
       "user_created": "User Created",
@@ -77,8 +77,8 @@
       "role_name": "Role Name"
     },
     "settings": {
-      "cannot_edit": "You cannot edit this setting! You need the: {flag} flag to do this!",
-      "setting_set": "Setting {setting} has been set to a value of {value}.",
+      "cannot_edit": "You cannot edit this setting! You need the: {0} flag to do this!",
+      "setting_set": "Setting {0} has been set to a value of {1}.",
       "cannot_access": "Could not access that setting!",
       "setting": "Setting",
       "current_value": "Current value",
@@ -96,17 +96,17 @@
       "cannot_find_user": "Could not find that user!"
     },
     "unban": {
-      "cannot_unban": "Could not find a user to unban matching: {target}",
+      "cannot_unban": "Could not find a user to unban matching: {0}",
       "several_matches": "There is more than one user that matches this criteria! \n Please enter the ID or the user's full name!"
     },
     "guild": {
       "flag": {
         "flags": "Flags",
-        "invalid_flag": "Invalid flag! Possible values: {values}",
+        "invalid_flag": "Invalid flag! Possible values: {0}",
         "cannot_find_guild": "Cannot find that guild!",
         "invalid_guild_id": "Invalid guild ID!",
-        "disabled_flag": "Disabled flag `{flag}` for guild `{guild} ({id})`",
-        "enabled_flag": "Enabled flag `{flag}` for guild `{guild} ({id})`"
+        "disabled_flag": "Disabled flag `{0}` for guild `{1} ({2})`",
+        "enabled_flag": "Enabled flag `{0}` for guild `{1} ({2})`"
       },
       "leave": {
         "leave_message": "Goodbye!"
@@ -115,30 +115,30 @@
         "saved_guild_successfully": "Saved **this guild's** information successfully!",
         "saved_all_successfully": "Saved **all** guild information successfully!",
         "cannot_save": "Cannot find guild to save!",
-        "saved_other_successfully": "Saved guild information for guild **{id}**!"
+        "saved_other_successfully": "Saved guild information for guild **{0}**!"
       }
     },
     "module": {
       "disable": {
-        "disabled": "The module `{module}` has been disabled!",
-        "already_disabled": "The module `{module}` is already disabled!",
-        "cannot_find_module": "We couldn't find that module. Use `{prefix}module list` for a list of modules."
+        "disabled": "The module `{0}` has been disabled!",
+        "already_disabled": "The module `{0}` is already disabled!",
+        "cannot_find_module": "We couldn't find that module. Use `{0}module list` for a list of modules."
       },
       "enable": {
-        "enabled": "The module `{module}` has been enabled!",
-        "already_enabled": "The module `{module}` is already enabled!",
-        "cannot_find_module": "We couldn't find that module. Use `{prefix}module list` for a list of modules."
+        "enabled": "The module `{0}` has been enabled!",
+        "already_enabled": "The module `{0}` is already enabled!",
+        "cannot_find_module": "We couldn't find that module. Use `{0}module list` for a list of modules."
       }
     }
   },
   "moderation_manager": {
-    "failed_action": "Could not {action} the user {user} due to an exception!",
-    "cannot_action_yourself": "You cannot {action} yourself!",
-    "cannot_action_bot": "You cannot {action} a bot!",
-    "missing_permission": "Cannot {action} user {user}, missing `{permission}` permission!",
-    "cannot_action_owner": "Cannot {action} user {user} as they are the owner of the guild!",
-    "cannot_action_superior": "Cannot {action} user {user} the top role they have is higher than mine!",
-    "success": "{user} has been {action}!"
+    "failed_action": "Could not {0} the user {1} due to an exception!",
+    "cannot_action_yourself": "You cannot {0} yourself!",
+    "cannot_action_bot": "You cannot {0} a bot!",
+    "missing_permission": "Cannot {0} user {1}, missing `{2}` permission!",
+    "cannot_action_owner": "Cannot {0} user {1} as they are the owner of the guild!",
+    "cannot_action_superior": "Cannot {0} user {1} the top role they have is higher than mine!",
+    "success": "{0} has been {1}!"
   },
   "responses": {
     "invalid_user": "Invalid User!",
@@ -148,7 +148,7 @@
     "cannot_find_argument": "I can't find that argument!",
     "no_specified_user": "Not enough arguments (no specified member)",
     "cannot_find_user": "I cannot find that user!",
-    "cannot_find_user_matching": "Cannot find a user matching: {user_search}"
+    "cannot_find_user_matching": "Cannot find a user matching: {0}"
   },
   "statuses": {
     "streaming": "Streaming",
