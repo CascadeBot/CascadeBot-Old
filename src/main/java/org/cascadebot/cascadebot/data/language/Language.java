@@ -5,72 +5,61 @@
 
 package org.cascadebot.cascadebot.data.language;
 
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
+import com.ibm.icu.text.MessageFormat;
+import io.github.binaryoverload.JSONConfig;
+import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Language {
 
-    private static final Pattern PLACEHOLDER_REGEX = Pattern.compile("\\{.*\\}");
-
-    private Map<Locale, YamlConfiguration> languages = new HashMap<>();
+    private Map<Locale, JSONConfig> languages = new HashMap<>();
 
     public void initLanguage() {
         try {
-            loadLanguage(Locale.EN_UK);
-        } catch (InvalidConfigurationException | IOException e) {
+            loadLanguage(Locale.ENGLISH_UK);
+        } catch (Exception e) {
             CascadeBot.LOGGER.error("Could not load language!", e);
             ShutdownHandler.exitWithError();
         }
         CascadeBot.LOGGER.info("Loaded {} languages!", languages.size());
     }
 
-    private void loadLanguage(Locale locale) throws IOException, InvalidConfigurationException {
+    private void loadLanguage(Locale locale) {
         InputStream stream = locale.getLanguageFile();
         if (stream == null) {
             if (locale == Locale.getDefaultLocale()) {
-                CascadeBot.LOGGER.error("I couldn't load the default language file {}.yml from the JAR file, stopping the bot!", locale.getLanguageCode());
+                CascadeBot.LOGGER.error("I couldn't load the default language file {} from the JAR file, stopping the bot!", locale.getLanguageFileName());
                 ShutdownHandler.exitWithError();
             } else {
-                CascadeBot.LOGGER.warn("I couldn't load the language file {}.yml from the JAR file!", locale.getLanguageCode());
+                CascadeBot.LOGGER.warn("I couldn't load the language file {} from the JAR file!", locale.getLanguageFileName());
             }
         } else {
-            YamlConfiguration configuration = new YamlConfiguration();
-            configuration.load(new InputStreamReader(stream));
-            languages.put(locale, configuration);
+            languages.put(locale, new JSONConfig(stream));
         }
     }
 
-    public YamlConfiguration getLanguage(Locale locale) {
+    public JSONConfig getLanguage(Locale locale) {
         return languages.get(locale);
     }
 
     public boolean hasLanguageEntry(Locale locale, String path) {
-        return languages.containsKey(locale) && languages.get(locale).getString(path) != null;
+        return languages.containsKey(locale) && languages.get(locale).getString(path).isPresent();
     }
 
     public String get(Locale locale, String path, Object... args) {
+        Checks.notNull(locale, "locale");
         if (languages.containsKey(locale)) {
-            if (languages.get(locale).getString(path) != null) {
-                Matcher matcher = PLACEHOLDER_REGEX.matcher(languages.get(locale).getString(path));
-                AtomicInteger count = new AtomicInteger(0);
-                return matcher.replaceAll((matchResult -> {
-                    if (count.get() >= args.length) return matchResult.group();
-                    return String.valueOf(args[count.getAndIncrement()]);
-                }));
+            if (languages.get(locale).getString(path).isPresent()) {
+                MessageFormat format = new MessageFormat(languages.get(locale).getString(path).get(), locale.getULocale());
+                return format.format(args);
             } else {
                 CascadeBot.LOGGER.warn("Cannot find a language string matching the path '{}'", path);
-                return "No language string for " + path;
+                return languages.get(Locale.getDefaultLocale()).getString(path).isPresent() ? get(Locale.getDefaultLocale(), path, args) : "No language string for " + path;
             }
         } else {
             throw new IllegalStateException("The language file matching locale '" + locale.getLanguageCode()
