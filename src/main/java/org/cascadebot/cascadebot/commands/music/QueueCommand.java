@@ -48,7 +48,7 @@ public class QueueCommand implements ICommandMain {
         } else {
             pages = PageUtils.splitStringToStringPages(builder.toString(), 1800, '\n');
         }
-        //builder.append("Requested by").append(sender.getUser().getName()).append("\n");
+
         context.getUIMessaging().sendPagedMessage(pages);
     }
 
