@@ -14,6 +14,7 @@ import lavalink.client.io.jda.JdaLink;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
@@ -28,6 +29,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class CascadePlayer {
@@ -201,19 +203,66 @@ public class CascadePlayer {
         });
     }
 
-    public void loadPlaylist(Playlist playlist, long reqUser) {
+    public void loadPlaylist(String name, Member sender, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
+        Playlist guild = PlaylistManager.getPlaylistByName(sender.getGuild().getIdLong(), PlaylistType.GUILD, name);
+        Playlist user = PlaylistManager.getPlaylistByName(sender.getUser().getIdLong(), PlaylistType.USER, name);
+        if (guild != null && user != null) {
+            consumer.accept(LoadPlaylistResult.EXISTS_IN_ALL_SCOPES, null);
+        } else if (guild != null) {
+            loadLoadedPlaylist(guild, sender.getUser().getIdLong(), tracks -> {
+                consumer.accept(LoadPlaylistResult.LOADED_GUILD, tracks);
+            });
+        } else if (user != null) {
+            loadLoadedPlaylist(user, sender.getUser().getIdLong(), tracks -> {
+                consumer.accept(LoadPlaylistResult.LOADED_USER, tracks);
+            });
+        } else {
+            consumer.accept(LoadPlaylistResult.DOESNT_EXISTS, null);
+        }
+    }
+
+    public void loadPlaylist(String name, Member sender, PlaylistType scope, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
+        LoadPlaylistResult result = LoadPlaylistResult.DOESNT_EXISTS;
+        long owner = 0;
+        switch (scope) {
+            case GUILD:
+                result = LoadPlaylistResult.LOADED_GUILD;
+                owner = sender.getGuild().getIdLong();
+                break;
+            case USER:
+                result = LoadPlaylistResult.LOADED_USER;
+                owner = sender.getUser().getIdLong();
+                break;
+        }
+        Playlist playlist = PlaylistManager.getPlaylistByName(owner, scope, name);
+        if (playlist == null) {
+            consumer.accept(LoadPlaylistResult.DOESNT_EXISTS, null);
+            return;
+        }
+
+        LoadPlaylistResult loadPlaylistResult = result;
+        loadLoadedPlaylist(playlist, sender.getUser().getIdLong(), tracks -> {
+            consumer.accept(loadPlaylistResult, tracks);
+        });
+    }
+
+    private void loadLoadedPlaylist(Playlist playlist, long reqUser, Consumer<List<AudioTrack>> loadedConsumer) {
+        List<AudioTrack> tracks = new ArrayList<>();
         for (String url : playlist.getTracks()) {
             loadLink(url, reqUser, noMatch -> {
                 playlist.removeTrack(url);
             }, exception -> {
                 playlist.removeTrack(url);
-            }, tracks -> {
-                //TODO add consumer
+            }, loadedTracks -> {
+                tracks.addAll(loadedTracks);
+                if (tracks.size() == playlist.getTracks().size()) {
+                    loadedConsumer.accept(tracks);
+                }
             });
         }
     }
 
-    public void saveCurrentPlaylist(long owner, PlaylistType scope, String name) {
+    public SavePlaylistResult saveCurrentPlaylist(long owner, PlaylistType scope, String name, boolean overwrite) {
         List<AudioTrack> tracks = new ArrayList<>();
         tracks.add(player.getPlayingTrack());
         tracks.addAll(this.tracks);
@@ -225,17 +274,41 @@ public class CascadePlayer {
 
         Playlist search = PlaylistManager.getPlaylistByName(owner, scope, name);
         if (search != null) {
-            search.setTracks(ids);
-            PlaylistManager.replacePlaylist(search);
+            if (overwrite) {
+                search.setTracks(ids);
+                PlaylistManager.replacePlaylist(search);
+                return SavePlaylistResult.OVERWRITE;
+            } else {
+                return SavePlaylistResult.ALREADY_EXISTS;
+            }
         } else {
             PlaylistManager.savePlaylist(new Playlist(owner, name, scope, ids));
+            return SavePlaylistResult.NEW;
         }
     }
 
     public enum LoopMode {
+
         DISABLED,
         PLAYLIST,
         SONG
+    }
+
+    public enum SavePlaylistResult {
+
+        ALREADY_EXISTS,
+        OVERWRITE,
+        NEW
+
+    }
+
+    public enum LoadPlaylistResult {
+
+        LOADED_GUILD,
+        LOADED_USER,
+        EXISTS_IN_ALL_SCOPES,
+        DOESNT_EXISTS
+
     }
 
 }
