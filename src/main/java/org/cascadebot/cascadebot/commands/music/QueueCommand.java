@@ -38,7 +38,7 @@ public class QueueCommand implements ICommandMain {
         builder.append("Current song: `").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`\n");
 
         for (AudioTrack track : player.getQueue()) {
-            builder.append("`").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`\n");
+            builder.append("`").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`\n\n");
         }
 
         List<Page> pages;
