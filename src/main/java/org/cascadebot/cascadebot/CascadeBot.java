@@ -5,6 +5,11 @@
 
 package org.cascadebot.cascadebot;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.contrib.jackson.JacksonJsonFormatter;
+import ch.qos.logback.contrib.json.classic.JsonLayout;
+import ch.qos.logback.core.ConsoleAppender;
+import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.sentry.Sentry;
@@ -28,6 +33,7 @@ import org.cascadebot.cascadebot.events.GeneralEvents;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
+import org.cascadebot.cascadebot.utils.LogbackUtils;
 import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,11 +59,20 @@ public class CascadeBot {
     private OkHttpClient httpClient;
 
     public static void main(String[] args) {
-        if (System.getenv("SENTRY_DSN") == null) {
-            LOGGER.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
-        }
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
             version = Version.parseVer(scanner.next());
+        }
+        if (Environment.isProduction()) {
+            LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<>();
+            JsonLayout jsonLayout = new JsonLayout();
+            jsonLayout.setAppendLineSeparator(true);
+            jsonLayout.setTimestampFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            jsonLayout.setJsonFormatter(new JacksonJsonFormatter());
+            encoder.setLayout(jsonLayout);
+            ((ConsoleAppender<ILoggingEvent>) LogbackUtils.getRootLogger().getAppender("STDOUT")).setEncoder(encoder);
+        }
+        if (System.getenv("SENTRY_DSN") == null) {
+            LOGGER.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
         }
         INS.init();
     }
