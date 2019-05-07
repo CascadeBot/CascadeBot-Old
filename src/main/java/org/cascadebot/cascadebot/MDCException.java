@@ -3,17 +3,29 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commandmeta;
+package org.cascadebot.cascadebot;
 
 import net.dv8tion.jda.core.entities.Guild;
+import org.slf4j.MDC;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class CommandException extends RuntimeException {
+public class MDCException extends RuntimeException {
 
-    public CommandException(Throwable cause, Guild guild, String trigger) {
-        super("Error while processing command!\nGuild ID: " + guild.getId() + (trigger.isBlank() ? "" : " Trigger: " + trigger), cause);
+    private MDCException(Throwable cause) {
+        super(MDC.getCopyOfContextMap().entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + ": " + entry.getValue())
+                .collect(Collectors.joining("\n")),
+                cause);
+
+    }
+
+    public static MDCException from(Throwable cause) {
+        return new MDCException(cause);
     }
 
     /*
@@ -26,12 +38,14 @@ public class CommandException extends RuntimeException {
     @Override
     public void printStackTrace(PrintWriter s) {
         s.println(getMessage());
+        s.println();
         getCause().printStackTrace(s);
     }
 
     @Override
     public void printStackTrace(PrintStream s) {
         s.println(getMessage());
+        s.println();
         getCause().printStackTrace(s);
     }
 
