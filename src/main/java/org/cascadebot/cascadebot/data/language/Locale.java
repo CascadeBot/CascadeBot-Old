@@ -22,7 +22,12 @@ public enum Locale {
     }
 
     public String getDisplayName() {
-        return locale.getDisplayName(locale);
+        return getDisplayName(false);
+    }
+
+    public String getDisplayName(boolean localised) {
+        if (localised) return locale.getDisplayName(locale);
+        return locale.getDisplayName();
     }
 
     public String getLanguageCode() {
