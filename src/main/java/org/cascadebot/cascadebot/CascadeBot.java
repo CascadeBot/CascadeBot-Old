@@ -37,6 +37,7 @@ import org.cascadebot.cascadebot.utils.LogbackUtils;
 import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
@@ -89,6 +90,18 @@ public class CascadeBot {
     public static String getInvite() {
         return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
                 CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
+    }
+
+
+    /**
+     * Clears all MDC keys that have the prefix "cascade."
+     */
+    public static void clearCascadeMDC() {
+        for (String key : MDC.getCopyOfContextMap().keySet()) {
+            if (key.startsWith("cascade.")) {
+                MDC.remove(key);
+            }
+        }
     }
 
     /**

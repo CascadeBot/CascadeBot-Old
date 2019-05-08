@@ -47,10 +47,10 @@ public class CommandListener extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
 
-        MDC.put("Guild", event.getGuild().toString());
-        MDC.put("Sender", event.getAuthor().toString());
-        MDC.put("Shard", event.getJDA().getShardInfo().getShardString());
-        MDC.put("Channel", event.getChannel().toString());
+        MDC.put("cascade.guild", event.getGuild().toString());
+        MDC.put("cascade.sender", event.getAuthor().toString());
+        MDC.put("cascade.shard_info", event.getJDA().getShardInfo().getShardString());
+        MDC.put("cascade.channel", event.getChannel().toString());
 
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         message = MULTIQUOTE_REGEX.matcher(message).replaceAll("");
@@ -85,15 +85,15 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        MDC.put("Prefix", prefix);
-        MDC.put("Mention tag enabled", String.valueOf(isMention));
+        MDC.put("cascade.prefix", prefix);
+        MDC.put("cascade.mention_prefix", String.valueOf(isMention));
 
         trigger = commandWithArgs.split(" ")[0];
         commandWithArgs = commandWithArgs.substring(trigger.length()).trim();
         args = splitArgs(commandWithArgs);
 
-        MDC.put("Trigger", trigger);
-        MDC.put("Args", Arrays.toString(args));
+        MDC.put("cascade.trigger", trigger);
+        MDC.put("cascade.args", Arrays.toString(args));
 
         try {
             processCommands(event, guildData, trigger, args, isMention);
@@ -104,7 +104,7 @@ public class CommandListener extends ListenerAdapter {
                     e);
             return;
         } finally {
-            MDC.clear();
+            CascadeBot.clearCascadeMDC();
         }
     }
 
@@ -209,10 +209,12 @@ public class CommandListener extends ListenerAdapter {
 
     private boolean dispatchCommand(final ICommandExecutable command, final CommandContext context) {
         COMMAND_POOL.submit(() -> {
-            MDC.put("Sender", context.getMember().toString());
-            MDC.put("Guild", context.getGuild().toString());
-            MDC.put("Channel", context.getChannel().toString());
-            MDC.put("Shard", context.getJDA().getShardInfo().getShardString());
+            MDC.put("cascade.sender", context.getMember().toString());
+            MDC.put("cascade.guild", context.getGuild().toString());
+            MDC.put("cascade.channel", context.getChannel().toString());
+            MDC.put("cascade.shard_info", context.getJDA().getShardInfo().getShardString());
+            MDC.put("cascade.command", command.command() + (command instanceof ICommandMain ? "" : " (Sub-command)"));
+            MDC.put("cascade.args", Arrays.toString(context.getArgs()));
 
             CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}",
                     (command instanceof ICommandMain ? "" : "Sub"),
@@ -226,7 +228,7 @@ public class CommandListener extends ListenerAdapter {
                 context.getTypedMessaging().replyException("There was an error running the command!", e);
                 CascadeBot.LOGGER.error("Error while running a command!", MDCException.from(e));
             } finally {
-                MDC.clear();
+                CascadeBot.clearCascadeMDC();
             }
         });
         deleteMessages(command, context);
