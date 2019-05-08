@@ -41,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class CascadeBot {
@@ -62,7 +63,7 @@ public class CascadeBot {
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
             version = Version.parseVer(scanner.next());
         }
-        if (Environment.isProduction()) {
+        if (Environment.isProduction() || Arrays.stream(args).anyMatch("--json-logging"::equalsIgnoreCase)) {
             LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<>();
             JsonLayout jsonLayout = new JsonLayout();
             jsonLayout.setAppendLineSeparator(true);
