@@ -64,6 +64,7 @@ public class CascadeBot {
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
             version = Version.parseVer(scanner.next());
         }
+
         if (Environment.isProduction() || Arrays.stream(args).anyMatch("--json-logging"::equalsIgnoreCase)) {
             LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<>();
             JsonLayout jsonLayout = new JsonLayout();
@@ -73,6 +74,7 @@ public class CascadeBot {
             encoder.setLayout(jsonLayout);
             ((ConsoleAppender<ILoggingEvent>) LogbackUtils.getRootLogger().getAppender("STDOUT")).setEncoder(encoder);
         }
+
         if (System.getenv("SENTRY_DSN") == null) {
             LOGGER.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
         }
@@ -186,12 +188,12 @@ public class CascadeBot {
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
 
-        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
+        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
-                .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
+                .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
 
         RestAction.DEFAULT_FAILURE = throwable -> {
-            LOGGER.error("Uncaught exception in rest action", throwable);
+            LOGGER.error("Uncaught exception in rest action", MDCException.from(throwable));
         };
 
     }

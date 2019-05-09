@@ -5,12 +5,10 @@
 
 package org.cascadebot.cascadebot;
 
-import net.dv8tion.jda.core.entities.Guild;
 import org.slf4j.MDC;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MDCException extends RuntimeException {
