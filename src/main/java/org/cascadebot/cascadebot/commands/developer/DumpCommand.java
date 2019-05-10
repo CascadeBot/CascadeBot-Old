@@ -36,10 +36,10 @@ public class DumpCommand implements ICommandRestricted {
             Table.TableBuilder builder = new Table.TableBuilder("Command", "Module", "Permission", "Subcommands");
             for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
                 builder.addRow(
-                    command.command(),
-                    command.getModule().toString(),
-                    command.getPermission() == null ? "No permission" : command.getPermission().toString(),
-                    command.getSubCommands().stream().map(ICommandExecutable::command).collect(Collectors.toSet()).toString()
+                        command.command(),
+                        command.getModule().toString(),
+                        command.getPermission() == null ? "No permission" : command.getPermission().toString(),
+                        command.getSubCommands().stream().map(ICommandExecutable::command).collect(Collectors.toSet()).toString()
                 );
             }
             PasteUtils.pasteIfLong(builder.build().toString(), 2048, context::reply);

@@ -9,7 +9,6 @@ import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.data.Config;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class PrefixCommand implements ICommandCore {
 

@@ -10,7 +10,6 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.permissions.PermissionNode;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.shared.SecurityLevel;
@@ -58,7 +57,7 @@ public class EvalCommand implements ICommandRestricted {
     );
 
     @Override
-    public void onCommand (Member sender, CommandContext context) {
+    public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
             context.getTypedMessaging().replyWarning("Not enough arguments!");
             return;
