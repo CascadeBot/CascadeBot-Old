@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot;
 public final class UnicodeConstants {
 
     public static final String ZERO_WIDTH_SPACE = "\u200B";
+    public static final String INFINITY_SYMBOL = "\u221e"; // ∞
 
     public static final String INFORMATION = "\u2139"; // ℹ
     public static final String TICK = "\u2705"; // ✅

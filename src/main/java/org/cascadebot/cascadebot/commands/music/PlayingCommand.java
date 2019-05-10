@@ -119,14 +119,14 @@ public class PlayingCommand implements ICommandMain {
         if (player.getArtwork() != null) {
             embedBuilder.setThumbnail(player.getArtwork());
         }
-        embedBuilder.addField("Status", player.getPlayer().isPaused() ? "\u23F8 Paused" /* ⏸ Paused */ : "\u25B6 Playing" /* ▶ Playing */, true);
+        embedBuilder.addField("Status", player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " Paused" : UnicodeConstants.PLAY + " Playing", true);
 
         if (!track.getInfo().isStream) {
             embedBuilder.addField("Progress", player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getSettings().useEmbedForMessages()), false);
         }
 
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(track.getPosition()) + " / " +
-                (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : "\u221e" /* Infinity Symbol */), true);
+                (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
         embedBuilder.addField("Volume", player.getPlayer().getVolume() + "%", true);
         embedBuilder.addField("Loop mode", FormatUtils.formatEnum(player.getLoopMode()), true);
 
