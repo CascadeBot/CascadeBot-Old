@@ -12,8 +12,8 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
+import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.CommandException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
@@ -25,6 +25,7 @@ import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
+import org.slf4j.MDC;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -46,6 +47,11 @@ public class CommandListener extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
 
+        MDC.put("cascade.guild", event.getGuild().toString());
+        MDC.put("cascade.sender", event.getAuthor().toString());
+        MDC.put("cascade.shard_info", event.getJDA().getShardInfo().getShardString());
+        MDC.put("cascade.channel", event.getChannel().toString());
+
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         message = MULTIQUOTE_REGEX.matcher(message).replaceAll("");
 
@@ -57,7 +63,7 @@ public class CommandListener extends ListenerAdapter {
                 throw new IllegalStateException(String.format("Guild data for guild ID: %s is null!", event.getGuild().getId()));
             }
         } catch (Exception e) {
-            Messaging.sendExceptionMessage(event.getChannel(), "We have failed to process your guild data!", new CommandException(e, event.getGuild(), ""));
+            Messaging.sendExceptionMessage(event.getChannel(), "We have failed to process your guild data!", e);
             return;
         }
 
@@ -79,9 +85,15 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
+        MDC.put("cascade.prefix", prefix);
+        MDC.put("cascade.mention_prefix", String.valueOf(isMention));
+
         trigger = commandWithArgs.split(" ")[0];
         commandWithArgs = commandWithArgs.substring(trigger.length()).trim();
         args = splitArgs(commandWithArgs);
+
+        MDC.put("cascade.trigger", trigger);
+        MDC.put("cascade.args", Arrays.toString(args));
 
         try {
             processCommands(event, guildData, trigger, args, isMention);
@@ -89,8 +101,10 @@ public class CommandListener extends ListenerAdapter {
             Messaging.sendExceptionMessage(
                     event.getChannel(),
                     "There was an error while processing your command!",
-                    new CommandException(e, event.getGuild(), trigger));
+                    e);
             return;
+        } finally {
+            CascadeBot.clearCascadeMDC();
         }
     }
 
@@ -195,6 +209,13 @@ public class CommandListener extends ListenerAdapter {
 
     private boolean dispatchCommand(final ICommandExecutable command, final CommandContext context) {
         COMMAND_POOL.submit(() -> {
+            MDC.put("cascade.sender", context.getMember().toString());
+            MDC.put("cascade.guild", context.getGuild().toString());
+            MDC.put("cascade.channel", context.getChannel().toString());
+            MDC.put("cascade.shard_info", context.getJDA().getShardInfo().getShardString());
+            MDC.put("cascade.command", command.command() + (command instanceof ICommandMain ? "" : " (Sub-command)"));
+            MDC.put("cascade.args", Arrays.toString(context.getArgs()));
+
             CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}",
                     (command instanceof ICommandMain ? "" : "Sub"),
                     command.command(),
@@ -205,10 +226,9 @@ public class CommandListener extends ListenerAdapter {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
                 context.getTypedMessaging().replyException("There was an error running the command!", e);
-                CascadeBot.LOGGER.error(String.format(
-                        "Error in command %s Guild ID: %s User: %s",
-                        command.command(), context.getGuild().getId(), context.getMember().getEffectiveName()
-                ), e);
+                CascadeBot.LOGGER.error("Error while running a command!", MDCException.from(e));
+            } finally {
+                CascadeBot.clearCascadeMDC();
             }
         });
         deleteMessages(command, context);
