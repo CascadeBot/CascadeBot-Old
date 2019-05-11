@@ -45,15 +45,15 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
             if (player.getLoopMode().equals(CascadePlayer.LoopMode.DISABLED) || player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
                 if (player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
                     // Add the track to the end of the queue to be repeated
-                    player.getTracks().add(track.makeClone());
+                    player.getQueue().add(track.makeClone());
                     if (player.isShuffleEnabled()) {
-                        if (songPlayCount % player.getTracks().size() == 0) {
+                        if (songPlayCount % player.getQueue().size() == 0) {
                             player.shuffle(); //Shuffle when the tracks start over.
                         }
                     }
                 }
                 // Take the next track in the queue, remove it from the queue and play it
-                AudioTrack audioTrack = player.getTracks().remove();
+                AudioTrack audioTrack = player.getQueue().remove();
                 player.getPlayer().playTrack(audioTrack);
             } else if (player.getLoopMode().equals(CascadePlayer.LoopMode.SONG)) {
                 // Take the song that just finished and repeat it

@@ -58,7 +58,7 @@ public class CascadePlayer {
         return player;
     }
 
-    public Queue<AudioTrack> getTracks() {
+    public Queue<AudioTrack> getQueue() {
         return tracks;
     }
 
@@ -117,7 +117,7 @@ public class CascadePlayer {
     }
 
     public void shuffle() {
-        List<AudioTrack> tracks = new ArrayList<>(getTracks());
+        List<AudioTrack> tracks = new ArrayList<>(getQueue());
         Collections.shuffle(tracks);
         this.tracks = new LinkedList<>();
         this.tracks.addAll(tracks);
