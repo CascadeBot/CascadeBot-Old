@@ -39,7 +39,7 @@ public interface ICommandExecutable {
     CascadePermission getPermission();
 
     default String getDescriptionPath() {
-        if (this.getClass().isAssignableFrom(ICommandMain.class)) {
+        if (this instanceof ICommandMain) {
             if (((ICommandMain) this).getSubCommands().size() > 0) {
                 return "command_descriptions." + command() + ".main_command";
             }
