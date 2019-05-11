@@ -31,8 +31,16 @@ public interface ICommandExecutable {
         return "command_descriptions." + command();
     }
 
+    default String description() {
+        return null;
+    }
+
     default String getDescription(Locale locale) {
-        return CascadeBot.INS.getLanguage().get(locale, getDescriptionPath());
+        if (CascadeBot.INS.getLanguage().hasLanguageEntry(locale, getDescriptionPath()) || description() == null) {
+            return CascadeBot.INS.getLanguage().get(locale, getDescriptionPath());
+        } else {
+            return description();
+        }
     }
 
 

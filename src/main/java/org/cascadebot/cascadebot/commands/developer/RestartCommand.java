@@ -28,6 +28,11 @@ public class RestartCommand implements ICommandRestricted {
     }
 
     @Override
+    public String description() {
+        return "Restarts the bot via the wrapper.";
+    }
+
+    @Override
     public SecurityLevel getCommandLevel() {
         return SecurityLevel.OWNER;
     }

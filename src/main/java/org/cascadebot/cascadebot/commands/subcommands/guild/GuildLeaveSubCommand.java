@@ -16,7 +16,7 @@ public class GuildLeaveSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Messaging.sendSuccessMessage(context.getChannel(), context.i18n("commands.guild.leave.leave_message"))
+        Messaging.sendSuccessMessage(context.getChannel(), "Goodbye!")
                 .thenAccept(message -> context.getGuild().leave().queue());
     }
 
@@ -28,6 +28,11 @@ public class GuildLeaveSubCommand implements ISubCommand {
     @Override
     public String parent() {
         return "guild";
+    }
+
+    @Override
+    public String description() {
+        return "Instructs the bot to leave the current guild.";
     }
 
     @Override

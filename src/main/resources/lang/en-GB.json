@@ -4,16 +4,6 @@
     "prefix": "Gets and sets the current guild prefix.",
     "support": "Returns a link to the Discord support server.",
     "usage": "Gets the usage for a command.",
-    "dump": "Dump command.",
-    "eval": "Evaluates code.",
-    "guild": {
-      "main_command": "Allows administrative actions to be run on guilds.",
-      "flag": "Toggles a flag for this guild [or a different guild].",
-      "leave": "Instructs the bot to leave the current guild.",
-      "save": "Save the current guild's data."
-    },
-    "restart": "Restarts the bot.",
-    "shutdown": "Shuts down the bot.",
     "cat": "Returns a random picture of a cat.",
     "dog": "Returns a random picture of a dog.",
     "roles": "Returns the server's roles.",
@@ -50,9 +40,6 @@
     },
     "dog": {
       "error_loading": "Error loading dog picture! {0}"
-    },
-    "dump": {
-      "not_enough_arguments": "Hmmm either pick: `threads`, `commands`, `permissions` or `guild`"
     },
     "roles": {
       "table_header_1": "Role ID",
@@ -98,25 +85,6 @@
     "unban": {
       "cannot_unban": "Could not find a user to unban matching: {0}",
       "several_matches": "There is more than one user that matches this criteria! \n Please enter the ID or the user's full name!"
-    },
-    "guild": {
-      "flag": {
-        "flags": "Flags",
-        "invalid_flag": "Invalid flag! Possible values: {0}",
-        "cannot_find_guild": "Cannot find that guild!",
-        "invalid_guild_id": "Invalid guild ID!",
-        "disabled_flag": "Disabled flag `{0}` for guild `{1} ({2})`",
-        "enabled_flag": "Enabled flag `{0}` for guild `{1} ({2})`"
-      },
-      "leave": {
-        "leave_message": "Goodbye!"
-      },
-      "save": {
-        "saved_guild_successfully": "Saved **this guild's** information successfully!",
-        "saved_all_successfully": "Saved **all** guild information successfully!",
-        "cannot_save": "Cannot find guild to save!",
-        "saved_other_successfully": "Saved guild information for guild **{0}**!"
-      }
     },
     "module": {
       "disable": {

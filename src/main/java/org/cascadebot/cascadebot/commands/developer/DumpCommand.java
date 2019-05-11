@@ -26,25 +26,25 @@ public class DumpCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.developer.dump.not_enough_arguments"));
+            context.getTypedMessaging().replyDanger("Hmmm either pick: `threads`, `commands`, `permissions` or `guild`");
             return;
         }
         if (context.getArg(0).equalsIgnoreCase("threads")) {
             String threads = "```\n" + Thread.getAllStackTraces().keySet().stream().map(Thread::getName).sorted().collect(Collectors.joining("\n")) + "```";
             PasteUtils.pasteIfLong(threads, 2048, context::reply);
         } else if (context.getArg(0).equalsIgnoreCase("commands")) {
-            Table.TableBuilder builder = new Table.TableBuilder(context.i18n("words.command"), context.i18n("words.module"), context.i18n("words.permission"), context.i18n("words.subcommand"));
+            Table.TableBuilder builder = new Table.TableBuilder("Command", "Module", "Permission", "Subcommands");
             for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
                 builder.addRow(
                     command.command(),
                     command.getModule().toString(),
-                    command.getPermission() == null ? context.i18n("words.no_permission") : command.getPermission().toString(),
+                    command.getPermission() == null ? "No permission" : command.getPermission().toString(),
                     command.getSubCommands().stream().map(ICommandExecutable::command).collect(Collectors.toSet()).toString()
                 );
             }
             PasteUtils.pasteIfLong(builder.build().toString(), 2048, context::reply);
         } else if (context.getArg(0).equalsIgnoreCase("permissions")) {
-            Table.TableBuilder builder = new Table.TableBuilder(context.i18n("words.permission"), context.i18n("words.discord_perms"), context.i18n("words.default_permission"));
+            Table.TableBuilder builder = new Table.TableBuilder("Permission", "Discord permissions", "Default permission");
             for (CascadePermission permission : CascadeBot.INS.getPermissionsManager().getPermissions()) {
                 builder.addRow(permission.getPermissionNode(), permission.getDiscordPerms().toString(), String.valueOf(permission.isDefaultPerm()));
             }
@@ -52,13 +52,18 @@ public class DumpCommand implements ICommandRestricted {
         } else if (context.getArg(0).equalsIgnoreCase("guild")) {
             PasteUtils.pasteIfLong("```json\n" + new GsonBuilder().setPrettyPrinting().create().toJson(context.getData()) + "```", 2048, context::reply);
         } else {
-            context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_argument"));
+            context.getTypedMessaging().replyDanger("I can't find that argument!");
         }
     }
 
     @Override
     public String command() {
         return "dump";
+    }
+
+    @Override
+    public String description() {
+        return "Dumps various pieces of guild data.";
     }
 
     @Override
