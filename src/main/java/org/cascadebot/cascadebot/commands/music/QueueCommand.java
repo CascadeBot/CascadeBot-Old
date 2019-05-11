@@ -16,8 +16,10 @@ import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.pagination.Page;
+import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class QueueCommand implements ICommandMain {
@@ -36,21 +38,21 @@ public class QueueCommand implements ICommandMain {
 
         StringBuilder builder = new StringBuilder();
 
-        builder.append("**Current song:** `").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`- Request By ").append(CascadeBot.INS.getShardManager().getUserById((Long)player.getPlayer().getPlayingTrack().getUserData()).getAsTag()).append("\n\n");
+        List<Page> pages = new ArrayList<>();
+
+        //builder.append("**Current song:** `").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`- Request By ").append(CascadeBot.INS.getShardManager().getUserById((Long)player.getPlayer().getPlayingTrack().getUserData()).getAsTag()).append("\n\n\n");
 
         int i = 1;
         for (AudioTrack track : player.getQueue()) {
-            builder.append(i).append(": `").append(track.getInfo().title).append("` - Request By ").append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag()).append("\n");
+            builder.append(i).append(". **").append(track.getInfo().title).append("**\n Request by ").append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag()).append("\n\n");
+            if(i % 10 == 0) {
+                pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString())));
+                builder = new StringBuilder();
+            }
             i++;
         }
 
-        List<Page> pages;
-
-        if (context.getSettings().useEmbedForMessages()) {
-            pages = PageUtils.splitStringToEmbedPages(builder.toString(), 1800, '\n');
-        } else {
-            pages = PageUtils.splitStringToStringPages(builder.toString(), 1800, '\n');
-        }
+        pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString())));
 
         context.getUIMessaging().sendPagedMessage(pages);
     }
