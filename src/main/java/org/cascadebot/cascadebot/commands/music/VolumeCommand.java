@@ -34,7 +34,7 @@ public class VolumeCommand implements ICommandMain {
         }
 
         if (volume < 0) {
-            context.getTypedMessaging().replyWarning("Volume needs to be greater than 0");
+            context.getTypedMessaging().replyWarning("Volume needs to be greater than 0%");
             return;
         } else if (volume > 100 && volume <= 200) {
             if (context.hasPermission("volume.extreme")) {
@@ -58,7 +58,7 @@ public class VolumeCommand implements ICommandMain {
                 return;
             }
         } else if (volume > 200) {
-            context.getTypedMessaging().replyWarning("Volume needs to be between 0 and 200");
+            context.getTypedMessaging().replyWarning("Volume needs to be between 0% and 200%");
             return;
         }
 

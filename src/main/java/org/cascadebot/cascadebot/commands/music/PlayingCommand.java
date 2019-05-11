@@ -83,6 +83,9 @@ public class PlayingCommand implements ICommandMain {
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
                 context.getMusicPlayer().skip(); //TODO make this run skip command
                 message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
+                if (player.getPlayer().getPlayingTrack() == null) {
+                    message.clearReactions().queue();
+                }
             }));
 
             switch (player.getLoopMode()) {
@@ -116,15 +119,16 @@ public class PlayingCommand implements ICommandMain {
         if (player.getArtwork() != null) {
             embedBuilder.setThumbnail(player.getArtwork());
         }
-        embedBuilder.addField("Status", player.getPlayer().isPaused() ? "\u23F8 Paused" /* ⏸ Paused */ : "\u25B6 Playing" /* ▶ Playing */, true);
+        embedBuilder.addField("Status", player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " Paused" : UnicodeConstants.PLAY + " Playing", true);
 
         if (!track.getInfo().isStream) {
             embedBuilder.addField("Progress", player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getSettings().useEmbedForMessages()), false);
         }
 
-        embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(track.getPosition()) + "/" +
-                (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : "\u221e" /* Infinity Symbol */), true);
+        embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(track.getPosition()) + " / " +
+                (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
         embedBuilder.addField("Volume", player.getPlayer().getVolume() + "%", true);
+        embedBuilder.addField("Loop mode", FormatUtils.formatEnum(player.getLoopMode()), true);
 
         return embedBuilder.build();
     }

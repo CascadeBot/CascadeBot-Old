@@ -270,6 +270,10 @@ public class Config {
         return prettyJson;
     }
 
+    public boolean isDebug() {
+        return debug;
+    }
+
     public String getDefaultPrefix() {
         return defaultPrefix;
     }

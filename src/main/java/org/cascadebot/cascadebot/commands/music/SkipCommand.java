@@ -37,11 +37,6 @@ public class SkipCommand implements ICommandMain {
             return;
         }
 
-        if (context.getMusicPlayer().getQueue().peek() == null) {
-            context.getTypedMessaging().replyDanger("No song to skip to!");
-            return;
-        }
-
         if (context.getArgs().length > 0) {
             if (context.getArg(0).equalsIgnoreCase("force")) {
                 if (context.hasPermission("skip.force")) {

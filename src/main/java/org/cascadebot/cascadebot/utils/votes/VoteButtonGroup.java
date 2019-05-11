@@ -108,11 +108,11 @@ public class VoteButtonGroup extends ButtonGroup {
     }
 
     public boolean allowUser(long userId) {
-        return getAllowedUsers().add(userId);
+        return allowedUsers.add(userId);
     }
 
     public boolean denyUser(long userId) {
-        return getAllowedUsers().remove(userId);
+        return allowedUsers.remove(userId);
     }
 
     public void stopVote() {
