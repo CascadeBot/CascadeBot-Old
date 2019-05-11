@@ -18,15 +18,35 @@ public interface ICommandExecutable {
 
     void onCommand(Member sender, CommandContext context);
 
+    default String getCommandPath() {
+        if (this instanceof ISubCommand) {
+            ICommandMain parent = ((ISubCommand) this).getParent();
+            return "commands." + parent.command() + "." + command() + ".command";
+        }
+        return "commands." + command() + ".command";
+    }
+
     String command();
+
+    default String command(Locale locale) {
+        if (CascadeBot.INS.getLanguage().hasLanguageEntry(locale, getCommandPath())) {
+            return CascadeBot.INS.getLanguage().get(locale, getCommandPath());
+        } else {
+            return command();
+        }
+    }
 
     CascadePermission getPermission();
 
     default String getDescriptionPath() {
-        if (this instanceof ICommandMain) {
+        if (this.getClass().isAssignableFrom(ICommandMain.class)) {
             if (((ICommandMain) this).getSubCommands().size() > 0) {
                 return "command_descriptions." + command() + ".main_command";
             }
+        }
+        if (this instanceof ISubCommand) {
+            ICommandMain parent = ((ISubCommand) this).getParent();
+            return "command_descriptions." + parent.command() + "." + command();
         }
         return "command_descriptions." + command();
     }

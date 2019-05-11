@@ -24,7 +24,7 @@ public class UsageCommand implements ICommandCore {
             return;
         }
 
-        ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(context.getArg(0), sender.getUser(), context.getData());
+        ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(context.getArg(0), context.getData());
         if (command == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.usage.command_not_found", context.getArg(0)));
             return;
