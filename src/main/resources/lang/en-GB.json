@@ -1,0 +1,146 @@
+{
+  "command_descriptions": {
+    "invite": "Returns the bot invite link, to invite the bot to other Discord guilds.",
+    "prefix": "Gets and sets the current guild prefix.",
+    "support": "Returns a link to the Discord support server.",
+    "usage": "Gets the usage for a command.",
+    "cat": "Returns a random picture of a cat.",
+    "dog": "Returns a random picture of a dog.",
+    "roles": "Returns the server's roles.",
+    "serverinfo": "Returns information regarding the specified server.",
+    "userinfo": "Returns information regarding the specified user.",
+    "module": {
+      "main_command": "Interacts with modules by enabling, disabling or listing them.",
+      "disable": "Disables the specified module.",
+      "enable": "Enables the specified module.",
+      "list": "Lists all modules."
+    },
+    "settings": "Allows users to change settings for the guild.",
+    "ban": "Bans or forcebans the specified user.",
+    "kick": "Kicks the specified user.",
+    "softban": "Bans and then unbans a specified user in order to remove messages and kick the user.",
+    "unban": "Unbans the specified user."
+  },
+  "commands": {
+    "support": {
+      "cascade_support_server": "Cascade Support Server: {0}"
+    },
+    "prefix": {
+      "prefix_reset": "The prefix has been reset to: `{0}`",
+      "prefix_too_long": "The requested prefix is too long!",
+      "new_prefix": "The new prefix is: `{0}`",
+      "current_prefix": "The current server prefix is `{0}`"
+    },
+    "usage": {
+      "specify_usage": "Please specify command to get usage from!",
+      "command_not_found": "Command `{0}` not found!"
+    },
+    "cat": {
+      "error_loading": "Error loading cat picture! {0}"
+    },
+    "dog": {
+      "error_loading": "Error loading dog picture! {0}"
+    },
+    "roles": {
+      "table_header_1": "Role ID",
+      "table_header_2": "Role Name"
+    },
+    "serverinfo": {
+      "guild_creation_date": "Creation Date",
+      "guild_name": "Guild Name",
+      "guild_owner": "Owner",
+      "guild_region": "Region",
+      "guild_member_count": "Member Count",
+      "guild_id": "ID: {0}"
+    },
+    "userinfo": {
+      "user_created": "User Created",
+      "user_join_date": "Join Date",
+      "user_id": "User ID",
+      "user_mutual_servers": "Mutual Servers",
+      "status": "Status",
+      "activity": "Activity",
+      "role_id": "Role ID",
+      "role_name": "Role Name"
+    },
+    "settings": {
+      "cannot_edit": "You cannot edit this setting! You need the: {0} flag to do this!",
+      "setting_set": "Setting {0} has been set to a value of {1}.",
+      "cannot_access": "Could not access that setting!",
+      "setting": "Setting",
+      "current_value": "Current value",
+      "cannot_find_field": "Cannot find that field!"
+    },
+    "ban": {
+      "cannot_find_user": "We can't find that user!",
+      "forcefully_ban": "**We couldn't find that user in this guild!** \n If you would like to forcefully ban them, please react to this message!"
+    },
+    "kick": {
+      "cannot_find_user": "Could not find that user!"
+    },
+    "softban": {
+      "no_specified_user": "Not enough arguments (No specified member)",
+      "cannot_find_user": "Could not find that user!"
+    },
+    "unban": {
+      "cannot_unban": "Could not find a user to unban matching: {0}",
+      "several_matches": "There is more than one user that matches this criteria! \n Please enter the ID or the user's full name!"
+    },
+    "module": {
+      "disable": {
+        "disabled": "The module `{0}` has been disabled!",
+        "already_disabled": "The module `{0}` is already disabled!",
+        "cannot_find_module": "We couldn't find that module. Use `{0}module list` for a list of modules."
+      },
+      "enable": {
+        "enabled": "The module `{0}` has been enabled!",
+        "already_enabled": "The module `{0}` is already enabled!",
+        "cannot_find_module": "We couldn't find that module. Use `{0}module list` for a list of modules."
+      }
+    }
+  },
+  "moderation_manager": {
+    "failed_action": "Could not {0} the user {1} due to an exception!",
+    "cannot_action_yourself": "You cannot {0} yourself!",
+    "cannot_action_bot": "You cannot {0} a bot!",
+    "missing_permission": "Cannot {0} user {1}, missing `{2}` permission!",
+    "cannot_action_owner": "Cannot {0} user {1} as they are the owner of the guild!",
+    "cannot_action_superior": "Cannot {0} user {1} the top role they have is higher than mine!",
+    "success": "{0} has been {1}!"
+  },
+  "responses": {
+    "invalid_user": "Invalid User!",
+    "cannot_find_guild": "We cannot find that guild!",
+    "not_enough_arguments": "Not enough arguments!",
+    "empty_result": "Empty result!",
+    "cannot_find_argument": "I can't find that argument!",
+    "no_specified_user": "Not enough arguments (no specified member)",
+    "cannot_find_user": "I cannot find that user!",
+    "cannot_find_user_matching": "Cannot find a user matching: {0}"
+  },
+  "statuses": {
+    "streaming": "Streaming",
+    "online": "Online",
+    "offline": "Offline",
+    "do_not_disturb": "Do Not Disturb",
+    "idle": "Idle"
+  },
+  "game_types": {
+    "default": "Playing",
+    "streaming": "Streaming",
+    "listening": "Listening to",
+    "watching": "Watching"
+  },
+  "words": {
+    "permission": "Permission",
+    "subcommand": "Subcommand",
+    "command": "Command",
+    "module": "Module",
+    "discord_perms": "Discord permissions",
+    "default_permission": "Default permission",
+    "no_permission": "No permission",
+    "reason": "Reason",
+    "enabled": "Enabled",
+    "disabled": "Disabled"
+  }
+}

@@ -17,14 +17,19 @@ public class RestartCommand implements ICommandRestricted {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.reply(context.i18n("commands.developer.restart.restarting"));
-        CascadeBot.LOGGER.info(context.i18n("commands.developer.restart.restarting_console", context.getUser().getAsTag()));
+        context.reply("Bot is restarting!");
+        CascadeBot.LOGGER.info("Restarting via command! Issuer: {issuer}");
         ShutdownHandler.restart();
     }
 
     @Override
     public String command() {
         return "restart";
+    }
+
+    @Override
+    public String description() {
+        return "Restarts the bot via the wrapper.";
     }
 
     @Override

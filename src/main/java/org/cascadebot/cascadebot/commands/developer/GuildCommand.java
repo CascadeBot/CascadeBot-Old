@@ -30,6 +30,11 @@ public class GuildCommand implements ICommandRestricted {
     }
 
     @Override
+    public String description() {
+        return "Allows administrative actions to be run on guilds.";
+    }
+
+    @Override
     public SecurityLevel getCommandLevel() {
         return SecurityLevel.DEVELOPER;
     }

@@ -23,18 +23,18 @@ public class GuildSaveSubCommand implements ISubCommand {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
             GuildDataManager.replace(context.getGuild().getIdLong(), context.getData());
-            context.getTypedMessaging().replySuccess(context.i18n("commands.guild.save.saved_guild_successfully"));
+            context.getTypedMessaging().replySuccess("Saved **this guild's** information successfully!");
         } else if (context.getArg(0).equals("all")) {
             GuildDataManager.getGuilds().asMap().forEach(GuildDataManager::replace);
-            context.getTypedMessaging().replySuccess(context.i18n("commands.guild.save.saved_all_successfully"));
+            context.getTypedMessaging().replySuccess("Saved **all** guild information successfully!");
         } else {
             GuildData guildData = GuildDataManager.getGuilds().asMap().get(Long.parseLong(context.getArg(0)));
             if (guildData == null) {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.guild.save.cannot_save"));
+                context.getTypedMessaging().replyDanger("Cannot find a guild to save!");
                 return;
             }
             GuildDataManager.replace(guildData.getGuildID(), guildData);
-            context.getTypedMessaging().replySuccess(context.i18n("commands.guild.save.saved_other_successfully", context.getArg(0)));
+            context.getTypedMessaging().replySuccess("Saved guild information for guild **%s**!", context.getArg(0));
         }
     }
 
@@ -46,6 +46,11 @@ public class GuildSaveSubCommand implements ISubCommand {
     @Override
     public String parent() {
         return "guild";
+    }
+
+    @Override
+    public String description() {
+        return "Save the current guild's data.";
     }
 
     @Override

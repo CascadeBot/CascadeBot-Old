@@ -60,7 +60,7 @@ public class EvalCommand implements ICommandRestricted {
     @Override
     public void onCommand (Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getTypedMessaging().replyWarning(context.i18n("responses.not_enough_arguments"));
+            context.getTypedMessaging().replyWarning("Not enough arguments!");
             return;
         }
 
@@ -72,7 +72,7 @@ public class EvalCommand implements ICommandRestricted {
 
         for (String blacklistedItem : BLACKLIST) {
             if (new PermissionNode(blacklistedItem).test(code)) {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.developer.eval.contains_blacklisted_items"));
+                context.getTypedMessaging().replyDanger("You cannot run this code as it contains blacklisted items!");
                 return;
             }
         }
@@ -88,11 +88,10 @@ public class EvalCommand implements ICommandRestricted {
 
                 String codeToRun = imports + " " + code;
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
-                if (results.isBlank()) results = context.i18n("responses.empty_result");
+                if (results.isBlank()) results = "Empty result!";
                 PasteUtils.pasteIfLong(results, 2048, context::reply);
             } catch (ScriptException e) {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.developer.eval.error_running_script", PasteUtils.paste(PasteUtils.getStackTrace(e)), e.getClass().getName(), e.getMessage())
-                );
+                context.getTypedMessaging().replyDanger("Error running script: %s \n**%s** \n```swift\n%s```" ,PasteUtils.paste(PasteUtils.getStackTrace(e)), e.getClass().getName(), e.getMessage());
             }
         });
     }
@@ -105,6 +104,11 @@ public class EvalCommand implements ICommandRestricted {
     @Override
     public Module getModule() {
         return Module.DEVELOPER;
+    }
+
+    @Override
+    public String description() {
+        return "Evaluates code for the owners.";
     }
 
     @Override

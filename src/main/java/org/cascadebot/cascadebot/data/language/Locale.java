@@ -5,35 +5,48 @@
 
 package org.cascadebot.cascadebot.data.language;
 
+import com.ibm.icu.util.ULocale;
 import org.cascadebot.cascadebot.CascadeBot;
 
 import java.io.InputStream;
 
 public enum Locale {
 
-    EN_UK("English (UK)"),
-    EN_US("English (US)");
+    ENGLISH_UK(ULocale.UK),
+    ENGLISH_US(ULocale.US);
 
-    private String displayName;
+    private ULocale locale;
 
-    Locale(String displayName) {
-        this.displayName = displayName;
+    Locale(ULocale locale) {
+        this.locale = locale;
     }
 
     public String getDisplayName() {
-        return displayName;
+        return getDisplayName(false);
+    }
+
+    public String getDisplayName(boolean localised) {
+        if (localised) return locale.getDisplayName(locale);
+        return locale.getDisplayName();
     }
 
     public String getLanguageCode() {
-        return name().toLowerCase();
+        return locale.toLanguageTag();
+    }
+
+    public String getLanguageFileName() {
+        return getLanguageCode() + ".json";
     }
 
     public InputStream getLanguageFile() {
-        return CascadeBot.class.getClassLoader().getResourceAsStream("lang/" + getLanguageCode() + ".yml");
+        return CascadeBot.class.getClassLoader().getResourceAsStream("lang/" + getLanguageFileName());
     }
 
     public static Locale getDefaultLocale() {
-        return EN_UK;
+        return ENGLISH_UK;
     }
 
+    public ULocale getULocale() {
+        return locale;
+    }
 }
