@@ -1,7 +1,7 @@
 /*
 
-  * Copyright (c) 2019 CascadeBot. All rights reserved.
-  * Licensed under the MIT license.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
 
  */
 
@@ -21,7 +21,7 @@ public class TagCreateSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 2) {
+        if (context.getArgs().length < 2) {
             context.getUIMessaging().replyUsage(this, "tag");
             return;
         }
@@ -48,4 +48,5 @@ public class TagCreateSubCommand implements ICommandExecutable {
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of("name", null, ArgumentType.REQUIRED, Set.of(Argument.of("tag", "Creates a tag with a giving name", ArgumentType.REQUIRED))));
     }
+
 }

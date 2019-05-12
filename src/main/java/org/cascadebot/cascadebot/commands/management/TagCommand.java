@@ -12,9 +12,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commands.subcommands.module.ModuleDisableSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.module.ModuleEnableSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.module.ModuleListSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagCreateSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagDeleteSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagListSubCommand;
@@ -29,13 +26,13 @@ public class TagCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 1) {
+        if (context.getArgs().length < 1) {
             context.getUIMessaging().replyUsage(this);
             return;
         }
 
         Map<String, Tag> tags = context.getData().getTagInfo();
-        if(!tags.containsKey(context.getArg(0))) {
+        if (!tags.containsKey(context.getArg(0))) {
             context.getTypedMessaging().replyDanger("Couldn't find tag with name `" + context.getArg(0) + "`");
             return;
         }
@@ -73,4 +70,5 @@ public class TagCommand implements ICommandMain {
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of("name", "Display the given tag", ArgumentType.REQUIRED));
     }
+
 }

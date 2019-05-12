@@ -19,15 +19,16 @@ import java.util.Map;
 import java.util.Set;
 
 public class TagRawSubCommand implements ICommandExecutable {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 1) {
+        if (context.getArgs().length < 1) {
             context.getUIMessaging().replyUsage(this, "tag");
             return;
         }
 
         Map<String, Tag> tags = context.getData().getTagInfo();
-        if(!tags.containsKey(context.getArg(0))) {
+        if (!tags.containsKey(context.getArg(0))) {
             context.getTypedMessaging().replyDanger("Couldn't find tag with name `" + context.getArg(0) + "`");
             return;
         }
@@ -60,4 +61,5 @@ public class TagRawSubCommand implements ICommandExecutable {
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of("name", "Views the raw tag data for a given tag", ArgumentType.REQUIRED));
     }
+
 }

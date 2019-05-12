@@ -1,7 +1,7 @@
 /*
 
-  * Copyright (c) 2019 CascadeBot. All rights reserved.
-  * Licensed under the MIT license.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
 
  */
 
@@ -20,7 +20,7 @@ public class TagDeleteSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getData().removeTag(context.getArg(0))) {
+        if (context.getData().removeTag(context.getArg(0))) {
             context.getTypedMessaging().replySuccess("Successfully deleted tag!");
         } else {
             context.getTypedMessaging().replyDanger("Tag `" + context.getArg(0) + "` doesn't exist!");
@@ -46,4 +46,5 @@ public class TagDeleteSubCommand implements ICommandExecutable {
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of("name", "Deletes tag with the giving name", ArgumentType.REQUIRED));
     }
+
 }

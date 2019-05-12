@@ -1,7 +1,7 @@
 /*
 
-  * Copyright (c) 2019 CascadeBot. All rights reserved.
-  * Licensed under the MIT license.
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
 
  */
 
@@ -21,7 +21,7 @@ public class TagListSubCommand implements ICommandExecutable {
     public void onCommand(Member sender, CommandContext context) {
         Map<String, Tag> tags = context.getData().getTagInfo();
         StringBuilder builder = new StringBuilder();
-        for(Map.Entry<String, Tag> tagEntry : tags.entrySet()) {
+        for (Map.Entry<String, Tag> tagEntry : tags.entrySet()) {
             builder.append(tagEntry.getKey()).append('\n');
         }
         context.reply(builder.toString());
