@@ -6,6 +6,8 @@
 package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.commandmeta.Argument;
+import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -16,6 +18,7 @@ import org.cascadebot.cascadebot.commands.subcommands.module.ModuleListSubComman
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagCreateSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagDeleteSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagListSubCommand;
+import org.cascadebot.cascadebot.commands.subcommands.tag.TagRawSubCommand;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
@@ -53,7 +56,7 @@ public class TagCommand implements ICommandMain {
 
     @Override
     public Set<ICommandExecutable> getSubCommands() {
-        return Set.of(new TagCreateSubCommand(), new TagDeleteSubCommand(), new TagListSubCommand());
+        return Set.of(new TagCreateSubCommand(), new TagDeleteSubCommand(), new TagListSubCommand(), new TagRawSubCommand());
     }
 
     @Override
@@ -66,4 +69,8 @@ public class TagCommand implements ICommandMain {
         return "Tag command";
     }
 
+    @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.of("name", "Display the given tag", ArgumentType.REQUIRED));
+    }
 }
