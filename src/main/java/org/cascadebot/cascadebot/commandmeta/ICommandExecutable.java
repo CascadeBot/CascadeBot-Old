@@ -20,7 +20,7 @@ public interface ICommandExecutable {
 
     default String getCommandPath() {
         if (this instanceof ISubCommand) {
-            return "commands." +((ISubCommand) this).parent() + "." + command() + ".command";
+            return "commands." + ((ISubCommand) this).parent() + "." + command() + ".command";
         }
         return "commands." + command() + ".command";
     }
@@ -42,8 +42,7 @@ public interface ICommandExecutable {
             if (((ICommandMain) this).getSubCommands().size() > 0) {
                 return "command_descriptions." + command() + ".main_command";
             }
-        }
-        if (this instanceof ISubCommand) {
+        } else if (this instanceof ISubCommand) {
             return "command_descriptions." + ((ISubCommand) this).parent() + "." + command();
         }
         return "command_descriptions." + command();
