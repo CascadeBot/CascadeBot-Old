@@ -167,8 +167,12 @@ public class GuildData {
         tags.put(key, tag);
     }
 
-    public void removeTag(String key) {
-        tags.remove(key);
+    public boolean removeTag(String key) {
+        if(tags.containsKey(key)) {
+            tags.remove(key);
+            return true;
+        }
+        return false;
     }
     //endregion
 

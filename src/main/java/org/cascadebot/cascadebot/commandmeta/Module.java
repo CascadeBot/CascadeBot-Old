@@ -33,10 +33,6 @@ public enum Module {
     /**
      * All our special commands :D
      */
-    TAGS,
-    /**
-     * This is a temporary module for housing tags whilst in development.
-     */
     DEVELOPER(ModuleFlag.PRIVATE);
 
     private EnumSet<ModuleFlag> flags;

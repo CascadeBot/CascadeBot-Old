@@ -12,7 +12,7 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import java.time.OffsetDateTime;
 import java.util.function.BiFunction;
 
-public enum Tags {
+public enum Placeholder {
 
     //region Server
     SERVER_REGION(((context, args) -> context.getGuild().getRegion().getName())),
@@ -43,7 +43,7 @@ public enum Tags {
 
     private BiFunction<CommandContext, String[], String> function;
 
-    Tags(BiFunction<CommandContext, String[], String> function) {
+    Placeholder(BiFunction<CommandContext, String[], String> function) {
         this.function = function;
     }
 

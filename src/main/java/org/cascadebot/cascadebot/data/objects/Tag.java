@@ -5,16 +5,9 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
-import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.utils.FormatUtils;
 
-import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,12 +44,19 @@ public class Tag {
 
     public String formatTag(CommandContext commandContext) {
         String message = content;
-        Tags.class.getEnumConstants();
+        Placeholder.class.getEnumConstants();
         Matcher matcher = TAG_PATTERN.matcher(content);
         while (matcher.find()) {
-            Tags tag = EnumUtils.getEnum(Tags.class, matcher.group(1).toUpperCase());
-            if (tag != null) {
-                message = message.replace(matcher.group(), tag.getFunction().apply(commandContext, matcher.group(2).split(",")));
+            Placeholder placeholder = EnumUtils.getEnum(Placeholder.class, matcher.group(1).toUpperCase());
+            if (placeholder != null) {
+                String[] args;
+                if(matcher.group(2) != null) {
+                    args = matcher.group(2).split(",");
+                } else {
+                    args = new String[0];
+                }
+
+                message = message.replace(matcher.group(), placeholder.getFunction().apply(commandContext, args));
             }
         }
         return message;

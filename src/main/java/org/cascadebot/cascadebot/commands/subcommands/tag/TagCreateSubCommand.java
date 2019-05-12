@@ -8,26 +8,35 @@
 package org.cascadebot.cascadebot.commands.subcommands.tag;
 
 import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.commandmeta.Argument;
+import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+
+import java.util.Set;
 
 public class TagCreateSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.getData().addTag(context.getArg(0), tag);
-        context.getTypedMessaging().replySuccess("Successfully created tag with name %s", context.getArg(0));
+        if(context.getArgs().length < 2) {
+            context.getUIMessaging().replyUsage(this, "tag");
+            return;
+        }
+        context.getData().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag")); //TODO handle category
+        context.getTypedMessaging().replySuccess("Successfully created tag with name `%s`", context.getArg(0));
     }
 
     @Override
     public String command() {
-        return null;
+        return "create";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return null;
+        return CascadePermission.of("Tag create sub command", "tag.create", false);
     }
 
     @Override
@@ -35,4 +44,8 @@ public class TagCreateSubCommand implements ICommandExecutable {
         return null;
     }
 
+    @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.of("name", null, ArgumentType.REQUIRED, Set.of(Argument.of("tag", "Creates a tag with a giving name", ArgumentType.REQUIRED))));
+    }
 }
