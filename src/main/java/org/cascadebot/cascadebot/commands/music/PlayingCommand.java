@@ -129,6 +129,12 @@ public class PlayingCommand implements ICommandMain {
                 (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
         embedBuilder.addField("Volume", player.getPlayer().getVolume() + "%", true);
         embedBuilder.addField("Loop mode", FormatUtils.formatEnum(player.getLoopMode()), true);
+        embedBuilder.addField("Requested By", CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
+        AudioTrack next = player.getQueue().peek();
+        if (next != null) {
+            embedBuilder.addField("On Deck", "**" + next.getInfo().title + "**\nRequested by " +
+                    CascadeBot.INS.getShardManager().getUserById((Long) next.getUserData()).getAsTag(), false);
+        }
 
         return embedBuilder.build();
     }
