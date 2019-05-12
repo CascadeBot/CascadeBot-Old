@@ -26,7 +26,7 @@ public class QueueLoadSubCommand implements ICommandExecutable {
             return;
         }
 
-        PlaylistType scope = queueResult.getScope();
+        PlaylistType scope = queueResult.getScope(); //TODO not default to guild scope on loading
 
         context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, scope, (result, tracks) -> {
             switch (result) {
@@ -36,6 +36,7 @@ public class QueueLoadSubCommand implements ICommandExecutable {
                     context.getUIMessaging().sendTracksFound(tracks);
                     break;
                 case EXISTS_IN_ALL_SCOPES:
+                    context.getTypedMessaging().replyWarning("Track exists in all scopes");
                     //TODO edit confirm utils to allow multiple options
                     break;
                 case DOESNT_EXISTS:
