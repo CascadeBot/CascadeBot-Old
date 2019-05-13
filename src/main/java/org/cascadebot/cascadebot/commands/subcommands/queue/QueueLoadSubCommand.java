@@ -22,6 +22,11 @@ public class QueueLoadSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        if (context.getArgs().length < 1) {
+            context.getUIMessaging().replyUsage(this, "queue");
+            return;
+        }
+
         context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, (result, tracks) -> {
             switch (result) {
                 case LOADED_GUILD:

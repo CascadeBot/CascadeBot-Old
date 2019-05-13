@@ -40,7 +40,6 @@ public class QueueSaveSubCommand implements ICommandExecutable {
 
         long owner = 0;
         switch (scope) {
-
             case GUILD:
                 owner = context.getGuild().getIdLong();
                 break;
@@ -53,7 +52,6 @@ public class QueueSaveSubCommand implements ICommandExecutable {
         PlaylistType lambdaScope = scope;
         CascadePlayer.SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
         switch (result) {
-
             case ALREADY_EXISTS:
                 if (lambdaScope.equals(PlaylistType.GUILD)) {
                     if (!context.hasPermission("queue.save.overwrite")) {
@@ -66,12 +64,12 @@ public class QueueSaveSubCommand implements ICommandExecutable {
                             @Override
                             public void execute() {
                                 context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
-                                context.getTypedMessaging().replySuccess("Saved playlist `" + context.getArg(0) + "`");
+                                context.getTypedMessaging().replySuccess("Saved playlist `" + context.getArg(0) + "` in scope `" + lambdaScope.name().toLowerCase() + "`");
                             }
                         });
                 break;
             case NEW:
-                context.getTypedMessaging().replySuccess("Saved playlist `" + context.getArg(0) + "`");
+                context.getTypedMessaging().replySuccess("Saved playlist `" + context.getArg(0) + "` in scope `" + lambdaScope.name().toLowerCase() + "`");
                 break;
         }
     }
