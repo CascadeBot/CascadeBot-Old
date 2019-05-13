@@ -13,8 +13,6 @@ import org.cascadebot.shared.ExitCodes;
 import org.cascadebot.shared.SharedConstants;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class ShutdownHandler {
 

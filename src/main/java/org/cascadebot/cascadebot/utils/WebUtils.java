@@ -35,4 +35,5 @@ public class WebUtils {
             throw new IllegalArgumentException("Response didn't return json!");
         }
     }
+
 }

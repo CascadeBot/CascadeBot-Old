@@ -154,9 +154,9 @@ public class VoteButtonGroupBuilder {
     /**
      * Builds the {@link VoteButtonGroup}
      *
-     * @param owner The owner/initiator of the vote.
+     * @param owner     The owner/initiator of the vote.
      * @param channelId The channel in witch the vote takes place.
-     * @param guild The guild in witch the vote is taking place.
+     * @param guild     The guild in witch the vote is taking place.
      * @return a {@link VoteButtonGroup}.
      */
     public VoteButtonGroup build(long owner, long channelId, long guild) {

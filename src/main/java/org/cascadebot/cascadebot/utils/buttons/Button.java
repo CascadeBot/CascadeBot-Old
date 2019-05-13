@@ -25,7 +25,8 @@ public abstract class Button {
         public EmoteButton(Long emoteId, IButtonRunnable runnable) {
             super(runnable);
             this.emoteId = emoteId;
-            if (emoteId == null || emoteId <= 0) CascadeBot.LOGGER.warn("An emote button has been registered with an invalid ID!");
+            if (emoteId == null || emoteId <= 0)
+                CascadeBot.LOGGER.warn("An emote button has been registered with an invalid ID!");
         }
 
         @Override

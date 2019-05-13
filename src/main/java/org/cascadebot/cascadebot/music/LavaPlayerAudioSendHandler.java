@@ -9,6 +9,7 @@ import net.dv8tion.jda.core.audio.AudioSendHandler;
  * Taken from https://git.io/fjkTK
  */
 public class LavaPlayerAudioSendHandler implements AudioSendHandler {
+
     private final AudioPlayer audioPlayer;
     private AudioFrame lastFrame;
 
@@ -41,4 +42,5 @@ public class LavaPlayerAudioSendHandler implements AudioSendHandler {
     public boolean isOpus() {
         return true;
     }
+
 }

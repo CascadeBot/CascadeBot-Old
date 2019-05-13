@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.commands.music;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.PermissionException;
-import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.Argument;
@@ -21,12 +20,10 @@ import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.EventWaiter;
-import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -137,4 +134,5 @@ public class SearchCommand implements ICommandMain {
     public Set<String> getGlobalAliases() {
         return Set.of("find");
     }
+
 }

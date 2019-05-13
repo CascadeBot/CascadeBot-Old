@@ -13,7 +13,6 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;

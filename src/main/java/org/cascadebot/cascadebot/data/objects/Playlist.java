@@ -61,4 +61,5 @@ public class Playlist {
     public void setTracks(List<String> tracks) {
         this.tracks = tracks;
     }
+
 }

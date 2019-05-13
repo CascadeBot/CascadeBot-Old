@@ -16,14 +16,12 @@ import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.shared.SecurityLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;

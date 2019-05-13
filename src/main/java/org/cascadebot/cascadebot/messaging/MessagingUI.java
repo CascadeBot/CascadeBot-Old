@@ -15,7 +15,6 @@ import net.dv8tion.jda.core.requests.RequestFuture;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.EventWaiter;
