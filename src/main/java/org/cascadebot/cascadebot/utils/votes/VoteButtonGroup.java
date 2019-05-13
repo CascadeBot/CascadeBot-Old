@@ -108,10 +108,16 @@ public class VoteButtonGroup extends ButtonGroup {
     }
 
     public boolean allowUser(long userId) {
+        if (allowedUsers == null) {
+            allowedUsers = Sets.newConcurrentHashSet();
+        }
         return allowedUsers.add(userId);
     }
 
     public boolean denyUser(long userId) {
+        if (allowedUsers == null) {
+            return false;
+        }
         return allowedUsers.remove(userId);
     }
 

@@ -49,7 +49,7 @@ public class SkipCommand implements ICommandMain {
             }
         }
 
-        if (!sender.getVoiceState().inVoiceChannel() && !sender.getVoiceState().getChannel().equals(context.getGuild().getSelfMember().getVoiceState().getChannel())) {
+        if (!sender.getVoiceState().inVoiceChannel() || !sender.getVoiceState().getChannel().equals(context.getGuild().getSelfMember().getVoiceState().getChannel())) {
             context.getTypedMessaging().replyDanger("Can't skip if you aren't listening to music!");
             return;
         }
@@ -135,7 +135,7 @@ public class SkipCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Skip", "skip", Module.MUSIC);
+        return CascadePermission.of("Skip", "skip", true, Module.MUSIC);
     }
 
     @Override
