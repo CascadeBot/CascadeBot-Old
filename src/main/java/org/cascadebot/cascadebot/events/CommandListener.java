@@ -21,6 +21,7 @@ import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.shared.Regex;
@@ -146,6 +147,18 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
+        CommandContext context = new CommandContext(
+                event.getJDA(),
+                event.getChannel(),
+                event.getMessage(),
+                event.getGuild(),
+                guildData,
+                args,
+                event.getMember(),
+                trigger,
+                isMention
+        );
+
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
         if (cmd != null) {
             if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
@@ -160,17 +173,6 @@ public class CommandListener extends ListenerAdapter {
                 // TODO: Modlog?
                 return;
             }
-            CommandContext context = new CommandContext(
-                    event.getJDA(),
-                    event.getChannel(),
-                    event.getMessage(),
-                    event.getGuild(),
-                    guildData,
-                    args,
-                    event.getMember(),
-                    trigger,
-                    isMention
-            );
             // We need to check before we process sub-commands so users can't run sub-commands with a null permission
             if (!isAuthorised(cmd, context)) {
                 return;
@@ -181,6 +183,13 @@ public class CommandListener extends ListenerAdapter {
                 }
             }
             dispatchCommand(cmd, context);
+        }
+
+        //TODO maybe add setting for this?
+        if (guildData.getTagInfo().containsKey(trigger)) {
+            Tag tag = guildData.getTag(trigger);
+
+            context.reply(tag.formatTag(context)); //Are we adding perms to tags? If so i need to implement that. - Ryan
         }
     }
 
