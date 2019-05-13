@@ -31,7 +31,7 @@ public class QueueLoadSubCommand implements ICommandExecutable {
                 case EXISTS_IN_ALL_SCOPES:
                     ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
                     buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ONE, ((runner, channel, message) -> {
-                        if(!runner.equals(buttonGroup.getOwner())) {
+                        if (!runner.equals(buttonGroup.getOwner())) {
                             return;
                         }
                         message.delete().queue();
@@ -40,7 +40,7 @@ public class QueueLoadSubCommand implements ICommandExecutable {
                         }));
                     })));
                     buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TWO, ((runner, channel, message) -> {
-                        if(!runner.equals(buttonGroup.getOwner())) {
+                        if (!runner.equals(buttonGroup.getOwner())) {
                             return;
                         }
                         message.delete().queue();
