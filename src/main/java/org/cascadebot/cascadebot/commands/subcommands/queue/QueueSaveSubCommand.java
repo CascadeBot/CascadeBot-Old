@@ -84,6 +84,7 @@ public class QueueSaveSubCommand implements ICommandExecutable {
         return CascadePermission.of("Queue save sub command", "queue.save", true);
     }
 
+    @Deprecated(forRemoval=true)
     @Override
     public String description() {
         return null;

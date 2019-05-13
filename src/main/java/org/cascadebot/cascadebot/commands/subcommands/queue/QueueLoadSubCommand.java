@@ -56,7 +56,7 @@ public class QueueLoadSubCommand implements ICommandExecutable {
                     context.getUIMessaging().sendButtonedMessage("Where you like to load this track from\n" + UnicodeConstants.ONE +
                             " User\n" + UnicodeConstants.TWO + " Guild", buttonGroup);
                     break;
-                case DOESNT_EXISTS:
+                case DOESNT_EXIST:
                     context.getTypedMessaging().replyDanger("Couldn't find playlist `" + context.getArg(0) + "`");
                     break;
             }
@@ -73,6 +73,7 @@ public class QueueLoadSubCommand implements ICommandExecutable {
         return CascadePermission.of("Queue load sub command", "queue.load", true);
     }
 
+    @Deprecated(forRemoval=true)
     @Override
     public String description() {
         return null;
