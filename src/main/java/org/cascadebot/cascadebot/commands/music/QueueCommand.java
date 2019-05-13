@@ -55,7 +55,7 @@ public class QueueCommand implements ICommandMain {
             i++;
         }
 
-        if(builder.toString().length() > 0) {
+        if (builder.toString().length() > 0) {
             pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString())));
         }
 
