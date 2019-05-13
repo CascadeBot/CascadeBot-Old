@@ -185,7 +185,7 @@ public class CommandListener extends ListenerAdapter {
             dispatchCommand(cmd, context);
         }
 
-        if(guildData.getSettings().willAllowTagCommands()) {
+        if (guildData.getSettings().willAllowTagCommands()) {
             if (guildData.getTagInfo().containsKey(trigger)) {
                 Tag tag = guildData.getTag(trigger);
 
