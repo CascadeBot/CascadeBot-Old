@@ -6,13 +6,15 @@
 package org.cascadebot.cascadebot.commands.subcommands.queue;
 
 import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
-import org.cascadebot.cascadebot.commands.music.QueueCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.buttons.Button;
+import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
 import java.util.Set;
 
@@ -20,24 +22,34 @@ public class QueueLoadSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        QueueCommand.QueueResult queueResult = QueueCommand.getScopeAndOwner(this, sender, context);
-
-        if (queueResult == null) {
-            return;
-        }
-
-        PlaylistType scope = queueResult.getScope(); //TODO not default to guild scope on loading
-
-        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, scope, (result, tracks) -> {
+        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, (result, tracks) -> {
             switch (result) {
-
                 case LOADED_GUILD:
                 case LOADED_USER:
                     context.getUIMessaging().sendTracksFound(tracks);
                     break;
                 case EXISTS_IN_ALL_SCOPES:
-                    context.getTypedMessaging().replyWarning("Track exists in all scopes");
-                    //TODO edit confirm utils to allow multiple options
+                    ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+                    buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ONE, ((runner, channel, message) -> {
+                        if(!runner.equals(buttonGroup.getOwner())) {
+                            return;
+                        }
+                        message.delete().queue();
+                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.USER, ((loadPlaylistResult, newTracks) -> {
+                            context.getUIMessaging().sendTracksFound(newTracks);
+                        }));
+                    })));
+                    buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TWO, ((runner, channel, message) -> {
+                        if(!runner.equals(buttonGroup.getOwner())) {
+                            return;
+                        }
+                        message.delete().queue();
+                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
+                            context.getUIMessaging().sendTracksFound(newTracks);
+                        }));
+                    })));
+                    context.getUIMessaging().sendButtonedMessage("Where you like to load this track from\n" + UnicodeConstants.ONE +
+                            " User\n" + UnicodeConstants.TWO + " Guild", buttonGroup);
                     break;
                 case DOESNT_EXISTS:
                     context.getTypedMessaging().replyDanger("Couldn't find playlist `" + context.getArg(0) + "`");

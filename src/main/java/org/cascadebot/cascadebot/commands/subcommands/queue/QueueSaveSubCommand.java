@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
-import org.cascadebot.cascadebot.commands.music.QueueCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
@@ -25,19 +24,38 @@ public class QueueSaveSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        QueueCommand.QueueResult queueResult = QueueCommand.getScopeAndOwner(this, sender, context);
-
-        if (queueResult == null) {
+        if (context.getArgs().length < 1) {
+            context.getUIMessaging().replyUsage(this, "queue");
             return;
         }
 
-        long owner = queueResult.getOwner();
-        PlaylistType scope = queueResult.getScope();
-        CascadePlayer.SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(owner, scope, context.getArg(0), false);
+        PlaylistType scope = PlaylistType.GUILD;
+        if (context.getArgs().length > 1) {
+            scope = EnumUtils.getEnum(PlaylistType.class, context.getArg(1).toUpperCase());
+            if (scope == null) {
+                context.getTypedMessaging().replyDanger("Scope `" + context.getArg(1) + "` not found");
+                return;
+            }
+        }
+
+        long owner = 0;
+        switch (scope) {
+
+            case GUILD:
+                owner = context.getGuild().getIdLong();
+                break;
+            case USER:
+                owner = sender.getUser().getIdLong();
+                break;
+        }
+
+        long lambdaOwner = owner;
+        PlaylistType lambdaScope = scope;
+        CascadePlayer.SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
         switch (result) {
 
             case ALREADY_EXISTS:
-                if (scope.equals(PlaylistType.GUILD)) {
+                if (lambdaScope.equals(PlaylistType.GUILD)) {
                     if (!context.hasPermission("queue.save.overwrite")) {
                         context.getTypedMessaging().replyWarning("Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it."); //TODO actually get the perm
                         return;
@@ -47,7 +65,7 @@ public class QueueSaveSubCommand implements ICommandExecutable {
                         "Playlist already exists. Would you like to overwrite it?", TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(10), new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
-                                context.getMusicPlayer().saveCurrentPlaylist(owner, scope, context.getArg(0), false);
+                                context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
                                 context.getTypedMessaging().replySuccess("Saved playlist `" + context.getArg(0) + "`");
                             }
                         });

@@ -34,4 +34,7 @@ public final class UnicodeConstants {
     public static final String FROWNING = "\uD83D\uDE26"; // 😦
     public static final String THINKING = "\uD83E\uDD14"; // 🤔
 
+    public static final String ONE = "\uD83C\udde6";
+    public static final String TWO = "\uD83C\udde7";
+
 }
