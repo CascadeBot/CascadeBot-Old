@@ -139,7 +139,9 @@ public class PlayingCommand implements ICommandMain {
                 (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
         embedBuilder.addField("Volume", player.getPlayer().getVolume() + "%", true);
         embedBuilder.addField("Loop mode", FormatUtils.formatEnum(player.getLoopMode()), true);
-        embedBuilder.addField("Requested By", CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
+        if (track.getUserData() instanceof Long) { //TODO find out why user data sometimes gets set to null.
+            embedBuilder.addField("Requested By", CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
+        }
         AudioTrack next = player.getQueue().peek();
         if (next != null) {
             embedBuilder.addField("Up next", "**" + next.getInfo().title + "**\nRequested by " +

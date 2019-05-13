@@ -47,7 +47,11 @@ public class QueueCommand implements ICommandMain {
 
         int i = 1;
         for (AudioTrack track : player.getQueue()) {
-            builder.append(i).append(". **").append(track.getInfo().title).append("**\n Request by ").append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag()).append("\n\n");
+            builder.append(i).append(". **").append(track.getInfo().title).append("**");
+            if(track.getUserData() instanceof Long) {
+                builder.append("\n Request by ").append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag());
+            }
+            builder.append("\n\n");
             if (i % 10 == 0) {
                 pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString())));
                 builder = new StringBuilder();
