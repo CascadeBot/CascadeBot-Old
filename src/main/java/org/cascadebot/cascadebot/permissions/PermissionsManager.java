@@ -72,6 +72,7 @@ public class PermissionsManager {
 
         registerPermission(CascadePermission.of("Raise volume above 100%", "volume.extreme", false, Permission.MANAGE_SERVER));
         registerPermission(CascadePermission.of("Force skip a song", "skip.force", false, Permission.MANAGE_CHANNEL));
+        registerPermission(CascadePermission.of("Overwrite guild playlist", "queue.save.overwrite", false));
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 

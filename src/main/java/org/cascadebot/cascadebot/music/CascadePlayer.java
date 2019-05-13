@@ -217,12 +217,12 @@ public class CascadePlayer {
                 consumer.accept(LoadPlaylistResult.LOADED_USER, tracks);
             });
         } else {
-            consumer.accept(LoadPlaylistResult.DOESNT_EXISTS, null);
+            consumer.accept(LoadPlaylistResult.DOESNT_EXIST, null);
         }
     }
 
     public void loadPlaylist(String name, Member sender, PlaylistType scope, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
-        LoadPlaylistResult result = LoadPlaylistResult.DOESNT_EXISTS;
+        LoadPlaylistResult result = LoadPlaylistResult.DOESNT_EXIST;
         long owner = 0;
         switch (scope) {
             case GUILD:
@@ -236,7 +236,7 @@ public class CascadePlayer {
         }
         Playlist playlist = PlaylistManager.getPlaylistByName(owner, scope, name);
         if (playlist == null) {
-            consumer.accept(LoadPlaylistResult.DOESNT_EXISTS, null);
+            consumer.accept(LoadPlaylistResult.DOESNT_EXIST, null);
             return;
         }
 
@@ -307,7 +307,7 @@ public class CascadePlayer {
         LOADED_GUILD,
         LOADED_USER,
         EXISTS_IN_ALL_SCOPES,
-        DOESNT_EXISTS
+        DOESNT_EXIST
 
     }
 
