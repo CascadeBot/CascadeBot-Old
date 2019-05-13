@@ -5,6 +5,11 @@
 
 package org.cascadebot.cascadebot;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.contrib.jackson.JacksonJsonFormatter;
+import ch.qos.logback.contrib.json.classic.JsonLayout;
+import ch.qos.logback.core.ConsoleAppender;
+import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
@@ -31,13 +36,16 @@ import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.cascadebot.cascadebot.utils.EventWaiter;
+import org.cascadebot.cascadebot.utils.LogbackUtils;
 import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -59,11 +67,22 @@ public class CascadeBot {
     private EventWaiter eventWaiter;
 
     public static void main(String[] args) {
-        if (System.getenv("SENTRY_DSN") == null) {
-            LOGGER.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
-        }
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
             version = Version.parseVer(scanner.next());
+        }
+
+        if (Environment.isProduction() || Arrays.stream(args).anyMatch("--json-logging"::equalsIgnoreCase)) {
+            LayoutWrappingEncoder<ILoggingEvent> encoder = new LayoutWrappingEncoder<>();
+            JsonLayout jsonLayout = new JsonLayout();
+            jsonLayout.setAppendLineSeparator(true);
+            jsonLayout.setTimestampFormat("yyyy-MM-dd HH:mm:ss.SSS");
+            jsonLayout.setJsonFormatter(new JacksonJsonFormatter());
+            encoder.setLayout(jsonLayout);
+            ((ConsoleAppender<ILoggingEvent>) LogbackUtils.getRootLogger().getAppender("STDOUT")).setEncoder(encoder);
+        }
+
+        if (System.getenv("SENTRY_DSN") == null) {
+            LOGGER.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
         }
         INS.init();
     }
@@ -79,6 +98,18 @@ public class CascadeBot {
     public static String getInvite() {
         return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
                 CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
+    }
+
+
+    /**
+     * Clears all MDC keys that have the prefix "cascade."
+     */
+    public static void clearCascadeMDC() {
+        for (String key : MDC.getCopyOfContextMap().keySet()) {
+            if (key.startsWith("cascade.")) {
+                MDC.remove(key);
+            }
+        }
     }
 
     /**
@@ -173,12 +204,12 @@ public class CascadeBot {
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
 
-        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
+        Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
-                .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, e)));
+                .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
 
         RestAction.DEFAULT_FAILURE = throwable -> {
-            LOGGER.error("Uncaught exception in rest action", throwable);
+            LOGGER.error("Uncaught exception in rest action", MDCException.from(throwable));
         };
 
         setupTasks();

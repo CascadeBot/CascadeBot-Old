@@ -5,11 +5,10 @@
 
 package org.cascadebot.cascadebot.messaging;
 
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.CommandException;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.utils.Checks;
+import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
 public class MessagingTyped {
 
@@ -219,7 +218,7 @@ public class MessagingTyped {
      * @param throwable The Exception that your sending.
      */
     public void replyException(String message, Throwable throwable) {
-        Messaging.sendExceptionMessage(context.getChannel(), message, new CommandException(throwable, context.getGuild(), context.getTrigger()));
+        Messaging.sendExceptionMessage(context.getChannel(), message, throwable);
     }
 
     /**
@@ -233,7 +232,7 @@ public class MessagingTyped {
      * @param objects   The objects to use with the formatting.
      */
     public void replyException(String message, Throwable throwable, Object... objects) {
-        Messaging.sendExceptionMessage(context.getChannel(), String.format(message, objects), new CommandException(throwable, context.getGuild(), context.getTrigger()));
+        Messaging.sendExceptionMessage(context.getChannel(), String.format(message, objects), throwable);
     }
 
 }

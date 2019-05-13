@@ -10,13 +10,13 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 
 import java.util.Set;
 
 public class UsageCommand implements ICommandCore {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
@@ -47,4 +47,5 @@ public class UsageCommand implements ICommandCore {
     public Set<Argument> getArguments() {
         return Set.of(Argument.of("command", "Gets the usage for a command", ArgumentType.REQUIRED));
     }
+
 }
