@@ -185,11 +185,13 @@ public class CommandListener extends ListenerAdapter {
             dispatchCommand(cmd, context);
         }
 
-        //TODO maybe add setting for this?
-        if (guildData.getTagInfo().containsKey(trigger)) {
-            Tag tag = guildData.getTag(trigger);
+        if(guildData.getSettings().willAllowTagCommands()) {
+            if (guildData.getTagInfo().containsKey(trigger)) {
+                Tag tag = guildData.getTag(trigger);
 
-            context.reply(tag.formatTag(context)); //Are we adding perms to tags? If so i need to implement that. - Ryan
+                context.reply(tag.formatTag(context)); //Are we adding perms to tags? If so i need to implement that. - Ryan
+                CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", trigger, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
+            }
         }
     }
 
