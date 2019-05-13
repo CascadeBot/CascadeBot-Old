@@ -157,22 +157,26 @@ public class GuildData {
         return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command));
     }
 
-    public ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
-        return commandInfo;
+    public Map<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
+        return Collections.unmodifiableMap(commandInfo);
     }
 
-    public ConcurrentHashMap<String, Tag> getTagInfo() { return tags; }
+    public Map<String, Tag> getTagInfo() { return Collections.unmodifiableMap(tags); }
+
+    public Tag getTag(String key) {
+        return tags.get(key);
+    }
+
+    public boolean hasTag(String key) {
+        return tags.containsKey(key);
+    }
 
     public void addTag(String key, Tag tag) {
         tags.put(key, tag);
     }
 
     public boolean removeTag(String key) {
-        if(tags.containsKey(key)) {
-            tags.remove(key);
-            return true;
-        }
-        return false;
+        return tags.remove(key) != null;
     }
     //endregion
 

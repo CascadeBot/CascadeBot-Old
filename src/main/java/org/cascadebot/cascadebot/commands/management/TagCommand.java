@@ -31,13 +31,12 @@ public class TagCommand implements ICommandMain {
             return;
         }
 
-        Map<String, Tag> tags = context.getData().getTagInfo();
-        if (!tags.containsKey(context.getArg(0))) {
+        if (!context.getData().hasTag(context.getArg(0))) {
             context.getTypedMessaging().replyDanger("Couldn't find tag with name `" + context.getArg(0) + "`");
             return;
         }
 
-        Tag tag = tags.get(context.getArg(0));
+        Tag tag = context.getData().getTag(context.getArg(0));
         context.reply(tag.formatTag(context));
     }
 
