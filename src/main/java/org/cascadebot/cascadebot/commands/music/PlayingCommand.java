@@ -81,7 +81,17 @@ public class PlayingCommand implements ICommandMain {
                 message.delete().queue();
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
-                context.getMusicPlayer().skip(); //TODO make this run skip command
+                CascadeBot.INS.getCommandManager().getCommandByDefault("skip").onCommand(runner, new CommandContext(
+                        CascadeBot.INS.getClient(),
+                        context.getChannel(),
+                        message,
+                        context.getGuild(),
+                        context.getData(),
+                        new String[0],
+                        runner,
+                        "skip",
+                        false
+                ));
                 message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                 if (player.getPlayer().getPlayingTrack() == null) {
                     message.clearReactions().queue();
@@ -132,7 +142,7 @@ public class PlayingCommand implements ICommandMain {
         embedBuilder.addField("Requested By", CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
         AudioTrack next = player.getQueue().peek();
         if (next != null) {
-            embedBuilder.addField("On Deck", "**" + next.getInfo().title + "**\nRequested by " +
+            embedBuilder.addField("Up next", "**" + next.getInfo().title + "**\nRequested by " +
                     CascadeBot.INS.getShardManager().getUserById((Long) next.getUserData()).getAsTag(), false);
         }
 
