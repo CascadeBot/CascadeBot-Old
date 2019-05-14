@@ -265,7 +265,7 @@ public class CommandContext {
         if (hasPermission(commandMain.getPermission())) {
             commandMain.onCommand(member, context);
         } else {
-            context.getUIMessaging().sendPermissionError(commandMain.getPermission().getPermissionNode());
+            context.getUIMessaging().sendPermissionError(commandMain.getPermission());
         }
     }
 

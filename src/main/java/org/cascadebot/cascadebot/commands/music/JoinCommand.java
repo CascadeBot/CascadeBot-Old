@@ -43,10 +43,10 @@ public class JoinCommand implements ICommandMain {
         }
 
         if (!context.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT)) {
-            context.getUIMessaging().sendBotPermissionError(Permission.VOICE_CONNECT);
+            context.getUIMessaging().sendBotDiscordPermError(Permission.VOICE_CONNECT);
             return;
         } else if (!context.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_SPEAK)) {
-            context.getUIMessaging().sendBotPermissionError(Permission.VOICE_SPEAK);
+            context.getUIMessaging().sendBotDiscordPermError(Permission.VOICE_SPEAK);
             return;
         }
 

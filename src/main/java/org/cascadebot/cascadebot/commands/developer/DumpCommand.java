@@ -46,7 +46,7 @@ public class DumpCommand implements ICommandRestricted {
         } else if (context.getArg(0).equalsIgnoreCase("permissions")) {
             Table.TableBuilder builder = new Table.TableBuilder("Permission", "Discord Perms", "Default permission");
             for (CascadePermission permission : CascadeBot.INS.getPermissionsManager().getPermissions()) {
-                builder.addRow(permission.getPermissionNode(), permission.getDiscordPerms().toString(), String.valueOf(permission.isDefaultPerm()));
+                builder.addRow(permission.getPermission(), permission.getDiscordPerms().toString(), String.valueOf(permission.isDefaultPerm()));
             }
             PasteUtils.pasteIfLong(builder.build().toString(), 2048, context::reply);
         } else if (context.getArg(0).equalsIgnoreCase("guild")) {

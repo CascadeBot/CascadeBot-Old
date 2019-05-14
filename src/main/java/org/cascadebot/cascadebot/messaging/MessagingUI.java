@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.requests.RequestFuture;
+import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -119,15 +120,21 @@ public class MessagingUI {
      */
     public void sendPermissionError(String stringPermission) {
         CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
+        Checks.notNull(permission, "permission");
+        sendPermissionError(permission);
+    }
+
+    public void sendPermissionError(CascadePermission permission) {
+        Checks.notNull(permission, "permission");
         if (!CollectionUtils.isEmpty(permission.getDiscordPerms())) {
             EnumSet<Permission> permissions = permission.getDiscordPerms();
             String discordPerms = permissions.stream()
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermissionNode(), discordPerms);
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermission(), discordPerms);
         } else {
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermissionNode());
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermission());
         }
     }
 
@@ -136,11 +143,11 @@ public class MessagingUI {
      *
      * @param permission The Discord Permission that the user doesn't have.
      */
-    public void sendUserPermissionError(Permission permission) {
+    public void sendUserDiscordPermError(Permission permission) {
         context.getTypedMessaging().replyDanger("You don't have the Discord permission `%s` that you need to do this!", permission.getName());
     }
 
-    public void sendBotPermissionError(Permission permission) {
+    public void sendBotDiscordPermError(Permission permission) {
         context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` that I need to do this!", permission.getName());
     }
 

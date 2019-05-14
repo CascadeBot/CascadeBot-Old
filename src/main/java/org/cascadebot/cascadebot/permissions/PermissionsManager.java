@@ -82,11 +82,13 @@ public class PermissionsManager {
     }
 
     private void registerPermission(CascadePermission permission) {
-        permissions.put(permission.getPermissionNode(), permission);
+        permissions.put(permission.getPermission(), permission);
     }
 
     public CascadePermission getPermission(String permission) {
-        return permissions.get(PERMISSION_PREFIX + permission);
+        CascadePermission perm = permissions.get(permission);
+        if (perm == null) perm = permissions.get(PERMISSION_PREFIX + permission);
+        return perm;
     }
 
     public CascadePermission getPermissionFromModule(Module module) {
@@ -108,7 +110,7 @@ public class PermissionsManager {
             PermissionNode node = new PermissionNode(permission);
             for (CascadePermission perm : permissions) {
                 if (perm != CascadePermission.ALL_PERMISSIONS) {
-                    if (node.test(perm.getPermissionNode())) return true;
+                    if (node.test(perm.getPermission())) return true;
                 }
             }
         }
