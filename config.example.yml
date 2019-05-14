@@ -69,6 +69,10 @@ musickeys:
   #key for youtube searching
   youtube: ''
 
+nodes:
+  - address: 'http://some-address:port'
+    password: 'password'
+
 # Config the security levels for the bot
 # Each security level can have role IDs and user IDs assigned to it
 # The available security levels are: staff, developer and owner

@@ -153,7 +153,11 @@ public class CascadePlayer {
 
     public VoiceChannel getConnectedChannel() {
         if (MusicHandler.isLavalinkEnabled()) {
-            return CascadeBot.INS.getShardManager().getVoiceChannelById(getLink().getChannel());
+            if (getLink().getChannel() != null) {
+                return CascadeBot.INS.getShardManager().getVoiceChannelById(getLink().getChannel());
+            } else {
+                return null;
+            }
         } else {
             return getGuild().getAudioManager().getConnectedChannel();
         }
