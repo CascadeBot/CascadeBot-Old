@@ -11,7 +11,9 @@ import net.dv8tion.jda.core.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commands.music.SkipCommand;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup;
 
 public class VoiceEventListener extends ListenerAdapter {
@@ -28,12 +30,16 @@ public class VoiceEventListener extends ListenerAdapter {
         if (event instanceof GuildVoiceJoinEvent) {
             GuildVoiceJoinEvent joinEvent = (GuildVoiceJoinEvent) event;
             if (joinEvent.getChannelJoined().equals(botCurrentChannel) && voteButtonGroup != null) {
-                voteButtonGroup.allowUser(userId);
+                if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("skip"), GuildDataManager.getGuildData(joinEvent.getChannelJoined().getGuild().getIdLong()), joinEvent.getMember())) {
+                    voteButtonGroup.allowUser(userId);
+                }
             }
         } else if (event instanceof GuildVoiceMoveEvent) {
             GuildVoiceMoveEvent moveEvent = (GuildVoiceMoveEvent) event;
             if (moveEvent.getChannelJoined().equals(botCurrentChannel) && voteButtonGroup != null) {
-                voteButtonGroup.allowUser(userId);
+                if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("skip"), GuildDataManager.getGuildData(moveEvent.getChannelJoined().getGuild().getIdLong()), moveEvent.getMember())) {
+                    voteButtonGroup.allowUser(userId);
+                }
             } else if (moveEvent.getChannelLeft().equals(botCurrentChannel) && voteButtonGroup != null) {
                 voteButtonGroup.denyUser(userId);
             }
