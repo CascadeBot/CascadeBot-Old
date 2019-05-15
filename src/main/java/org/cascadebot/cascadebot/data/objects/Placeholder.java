@@ -38,7 +38,7 @@ public enum Placeholder {
         int arg = NumberUtils.toInt(args[0], -1);
         if (arg == -1 || arg > context.getArgs().length - 1) return "";
         else return context.getArg(arg);
-    }, "Injects an argument");
+    }, "Injects a specified argument (zero indexed)");
     //endregion
 
     private BiFunction<CommandContext, String[], String> function;

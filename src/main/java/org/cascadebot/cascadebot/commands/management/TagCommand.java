@@ -15,6 +15,7 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagCreateSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagDeleteSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagListSubCommand;
+import org.cascadebot.cascadebot.commands.subcommands.tag.TagPlaceholdersSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.tag.TagRawSubCommand;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -52,7 +53,7 @@ public class TagCommand implements ICommandMain {
 
     @Override
     public Set<ICommandExecutable> getSubCommands() {
-        return Set.of(new TagCreateSubCommand(), new TagDeleteSubCommand(), new TagListSubCommand(), new TagRawSubCommand());
+        return Set.of(new TagCreateSubCommand(), new TagDeleteSubCommand(), new TagListSubCommand(), new TagRawSubCommand(), new TagPlaceholdersSubCommand());
     }
 
     @Override
