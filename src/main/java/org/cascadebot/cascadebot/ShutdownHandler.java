@@ -16,31 +16,31 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ShutdownHandler {
 
-    public static final AtomicBoolean SHUTDOWN_LOCK = new AtomicBoolean();
+    public static final AtomicBoolean SHUTDOWN_LOCK = new AtomicBoolean(false);
 
     static {
         Runtime.getRuntime().addShutdownHook(new Thread(ShutdownHandler::shutdown));
     }
 
     public static void stopWrapper() {
-        if (!SHUTDOWN_LOCK.getAndSet(true)) return;
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
         System.exit(ExitCodes.STOP_WRAPPER);
     }
 
     public static void stopByWrapper() {
-        if (!SHUTDOWN_LOCK.getAndSet(true)) return;
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
         System.exit(ExitCodes.STOPPED_BY_WRAPPER);
     }
 
     public static void stop() {
-        if (!SHUTDOWN_LOCK.getAndSet(true)) return;
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
         System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " STOP");
         System.out.flush();
         System.exit(ExitCodes.STOP);
     }
 
     public static void restart() {
-        if (!SHUTDOWN_LOCK.getAndSet(true)) return;
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
         System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " RESTART");
         System.out.flush();
         System.exit(ExitCodes.RESTART);
