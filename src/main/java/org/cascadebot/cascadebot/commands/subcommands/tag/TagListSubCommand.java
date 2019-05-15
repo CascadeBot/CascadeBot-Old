@@ -20,6 +20,12 @@ public class TagListSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Map<String, Tag> tags = context.getData().getTagInfo();
+
+        if(tags.size() == 0) {
+            context.getTypedMessaging().replyWarning("Server has no tags!");
+            return;
+        }
+
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, Tag> tagEntry : tags.entrySet()) {
             builder.append(tagEntry.getKey()).append('\n');

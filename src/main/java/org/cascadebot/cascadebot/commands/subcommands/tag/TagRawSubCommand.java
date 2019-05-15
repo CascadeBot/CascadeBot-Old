@@ -27,7 +27,7 @@ public class TagRawSubCommand implements ICommandExecutable {
             return;
         }
 
-        if (context.getData().hasTag(context.getArg(0))) {
+        if (!context.getData().hasTag(context.getArg(0))) {
             context.getTypedMessaging().replyDanger("Couldn't find tag with name `" + context.getArg(0) + "`");
             return;
         }
