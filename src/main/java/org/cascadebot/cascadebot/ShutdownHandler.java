@@ -47,7 +47,7 @@ public class ShutdownHandler {
     }
 
     public static void exitWithError() {
-        if (!SHUTDOWN_LOCK.getAndSet(true)) return;
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
         System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
     }
 
