@@ -53,7 +53,6 @@ public class GuildData {
     private String prefix = Config.INS.getDefaultPrefix();
 
 
-
     //region Guild data containers
 
     private GuildSettings guildSettings = new GuildSettings();
@@ -73,6 +72,7 @@ public class GuildData {
 
     @Transient
     private PageCache pageCache = new PageCache();
+
     //endregion
 
     private GuildData() {} // This is for mongodb object serialisation

@@ -48,4 +48,5 @@ public interface ICommandExecutable {
         }
         return Set.copyOf(arguments);
     }
+
 }

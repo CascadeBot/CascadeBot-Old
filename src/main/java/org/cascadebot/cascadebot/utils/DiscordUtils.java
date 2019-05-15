@@ -52,10 +52,10 @@ public class DiscordUtils {
      * This first checks the guilds the bot is in and
      * then attempts to retrieve the user from Discord
      * if initially unsuccessful.
-     *
+     * <p>
      * The string can be their id or a mention.
      *
-     * @param search The string to find the {@link User} with.
+     * @param search   The string to find the {@link User} with.
      * @param retrieve Whether to request the user from discord if none of our guilds has them in.
      *                 This causes an extra request to be sent off so it will be slower if this is enabled!
      * @return The {@link User} found or null if no user was found with the search.
