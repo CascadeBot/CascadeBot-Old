@@ -173,18 +173,6 @@ public class CommandListener extends ListenerAdapter {
                 // TODO: Modlog?
                 return;
             }
-            // TODO: Flag checking for binary :)
-            CommandContext context = new CommandContext(
-                    event.getJDA(),
-                    event.getChannel(),
-                    event.getMessage(),
-                    event.getGuild(),
-                    guildData,
-                    args,
-                    event.getMember(),
-                    trigger,
-                    isMention
-            );
             // We need to check before we process sub-commands so users can't run sub-commands with a null permission
             if (!isAuthorised(cmd, context)) {
                 return;
