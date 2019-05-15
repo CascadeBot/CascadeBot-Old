@@ -12,9 +12,9 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
-import lavalink.client.io.jda.JdaLavalink;
 import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDA;
@@ -29,10 +29,13 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
-import org.cascadebot.cascadebot.events.GeneralEvents;
+import org.cascadebot.cascadebot.events.GeneralEventListener;
+import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
+import org.cascadebot.cascadebot.tasks.Task;
+import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
 import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
@@ -44,6 +47,7 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class CascadeBot {
 
@@ -59,6 +63,8 @@ public class CascadeBot {
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
     private OkHttpClient httpClient;
+    private MusicHandler musicHandler;
+    private EventWaiter eventWaiter;
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
@@ -155,17 +161,20 @@ public class CascadeBot {
             );
         }
 
-        JdaLavalink lavalink = new MusicHandler(this).buildMusic();
+        musicHandler = new MusicHandler(this);
+        musicHandler.buildMusic();
 
+        eventWaiter = new EventWaiter();
         gson = builder.create();
+
         try {
-            shardManager = new DefaultShardManagerBuilder()
+            DefaultShardManagerBuilder defaultShardManagerBuilder = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
-                    .addEventListeners(new GeneralEvents())
+                    .addEventListeners(new GeneralEventListener())
                     .addEventListeners(new ButtonEventListener())
-                    .addEventListeners(lavalink)
+                    .addEventListeners(new VoiceEventListener())
+                    .addEventListeners(eventWaiter)
                     .setToken(Config.INS.getBotToken())
-                    //.setAudioSendFactory(new NativeAudioSendFactory())
                     .setShardsTotal(-1)
                     .setGameProvider(shardId -> {
                         if (Environment.isDevelopment()) {
@@ -175,8 +184,15 @@ public class CascadeBot {
                         }
                     })
                     .setBulkDeleteSplittingEnabled(false)
-                    .setEnableShutdownHook(false)
-                    .build();
+                    .setEnableShutdownHook(false);
+
+            if (MusicHandler.isLavalinkEnabled()) {
+                defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
+            } else {
+                defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
+            }
+
+            shardManager = defaultShardManagerBuilder.build();
         } catch (LoginException e) {
             LOGGER.error("Error building JDA", e);
             ShutdownHandler.exitWithError();
@@ -196,7 +212,19 @@ public class CascadeBot {
             LOGGER.error("Uncaught exception in rest action", MDCException.from(throwable));
         };
 
+        setupTasks();
+
     }
+
+    private void setupTasks() {
+        new Task("prune-players") {
+            @Override
+            protected void execute() {
+                musicHandler.purgeDisconnectedPlayers();
+            }
+        }.start(TimeUnit.MINUTES.toMillis(5), TimeUnit.MINUTES.toMillis(15));
+    }
+
 
     /**
      * This  will return the first connected JDA shard.
@@ -249,6 +277,14 @@ public class CascadeBot {
 
     public OkHttpClient getHttpClient() {
         return httpClient;
+    }
+
+    public MusicHandler getMusicHandler() {
+        return musicHandler;
+    }
+
+    public EventWaiter getEventWaiter() {
+        return eventWaiter;
     }
 
 }

@@ -25,7 +25,7 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        ButtonGroup catButtons = new ButtonGroup(context.getUser().getIdLong(), context.getGuild().getIdLong());
+        ButtonGroup catButtons = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
         catButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
             if (member.getUser().getIdLong() != catButtons.getOwner().getUser().getIdLong()) {
                 return;

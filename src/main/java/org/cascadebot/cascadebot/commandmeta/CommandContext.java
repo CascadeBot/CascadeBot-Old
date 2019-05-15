@@ -28,6 +28,17 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.GuildSettings;
+import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
+import org.cascadebot.cascadebot.messaging.MessagingTimed;
+import org.cascadebot.cascadebot.messaging.MessagingTyped;
+import org.cascadebot.cascadebot.messaging.MessagingUI;
+import org.cascadebot.cascadebot.music.CascadePlayer;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.shared.Regex;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -78,6 +89,10 @@ public class CommandContext {
 
     public JDA getJDA() {
         return jda;
+    }
+
+    public CascadePlayer getMusicPlayer() {
+        return CascadeBot.INS.getMusicHandler().getPlayer(guild.getIdLong());
     }
 
     public TextChannel getChannel() {
@@ -255,6 +270,15 @@ public class CommandContext {
         return this.member.hasPermission(this.channel, permissions);
     }
 
+    public void runOtherCommand(String command, Member sender, CommandContext context) {
+        ICommandMain commandMain = CascadeBot.INS.getCommandManager().getCommandByDefault(command);
+        if (hasPermission(commandMain.getPermission())) {
+            commandMain.onCommand(member, context);
+        } else {
+            context.getUIMessaging().sendPermissionError(commandMain.getPermission());
+        }
+    }
+
     /**
      * Get's the bot's {@link SelfUser}
      *
@@ -302,6 +326,10 @@ public class CommandContext {
             return false;
         }
         return data.getPermissions().hasPermission(member, channel, cascadePermission, data.getSettings());
+    }
+
+    public boolean hasPermission(CascadePermission permission) {
+        return permission != null; // TODO: Check actual perms
     }
 
     //endregion

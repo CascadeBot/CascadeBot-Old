@@ -173,6 +173,18 @@ public class CommandListener extends ListenerAdapter {
                 // TODO: Modlog?
                 return;
             }
+            // TODO: Flag checking for binary :)
+            CommandContext context = new CommandContext(
+                    event.getJDA(),
+                    event.getChannel(),
+                    event.getMessage(),
+                    event.getGuild(),
+                    guildData,
+                    args,
+                    event.getMember(),
+                    trigger,
+                    isMention
+            );
             // We need to check before we process sub-commands so users can't run sub-commands with a null permission
             if (!isAuthorised(cmd, context)) {
                 return;
@@ -250,7 +262,7 @@ public class CommandListener extends ListenerAdapter {
         if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
             if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
                 if (context.getSettings().willShowPermErrors()) {
-                    context.getTypedMessaging().replyDanger("You don't have the permission `%s` to run this command!", command.getPermission().getPermissionNode());
+                    context.getUIMessaging().sendPermissionError(command.getPermission());
                 }
             }
             return false;

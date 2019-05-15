@@ -20,13 +20,13 @@ public class PageUtils {
      *
      * @param string The string to split
      * @param length The length you want the final pages. Always splits to a length that is <= the length you provide. Cannot be > 1800 as that's the discord limit (including page numbers)
-     * @param c The character you want to split it at (this should be something like a space or a new line character)
+     * @param c      The character you want to split it at (this should be something like a space or a new line character)
      * @return A list of String pages
      */
     public static List<Page> splitStringToStringPages(String string, int length, char c) {
         List<String> strings = splitString(string, length, c);
         List<Page> pages = new ArrayList<>();
-        for(String pageString : strings) {
+        for (String pageString : strings) {
             pages.add(new PageObjects.StringPage(pageString));
         }
 
@@ -39,13 +39,13 @@ public class PageUtils {
      *
      * @param string The string to split
      * @param length The length you want the final pages. Always splits to a length that is <= the length you provide. Cannot be > 1800 as that's the discord limit (including page numbers)
-     * @param c The character you want to split it at (this should be something like a space or a new line character)
+     * @param c      The character you want to split it at (this should be something like a space or a new line character)
      * @return A list of Embed pages
      */
     public static List<Page> splitStringToEmbedPages(String string, int length, char c) {
         List<String> strings = splitString(string, length, c);
         List<Page> pages = new ArrayList<>();
-        for(String pageString : strings) {
+        for (String pageString : strings) {
             pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(pageString)));
         }
 
@@ -58,7 +58,7 @@ public class PageUtils {
      *
      * @param string The string to split
      * @param length The length you want the final pages. Always splits to a length that is <= the length you provide. Cannot be > 1800 as that's the discord limit (including page numbers)
-     * @param c The character you want to split it at (this should be something like a space or a new line character)
+     * @param c      The character you want to split it at (this should be something like a space or a new line character)
      * @return A list of the split strings (you need to put into pages yourself)
      */
     public static List<String> splitString(String string, int length, char c) {
@@ -66,18 +66,18 @@ public class PageUtils {
         Checks.check(length <= 1800, "length");
         Checks.notEmpty(string, "string");
 
-        int amount = (int) ((double)string.length() / (double) length);
+        int amount = (int) ((double) string.length() / (double) length);
 
         List<String> strings = new ArrayList<>();
         String toAdd = "";
 
-        for(int i = 0; i <= amount; i++) {
+        for (int i = 0; i <= amount; i++) {
             int start = length * i;
             int end = Math.min(start + (length - 1), string.length());
 
             String temp = toAdd + string.substring(start, end == string.length() ? end : end - toAdd.length());
             int last;
-            if(end != string.length()) {
+            if (end != string.length()) {
                 last = temp.lastIndexOf(c);
 
                 toAdd = temp.substring(last + 1);
@@ -96,18 +96,18 @@ public class PageUtils {
      * I don't suggest using this as you can possibly exceed the discord message limit
      *
      * @param table The table to use
-     * @param rows The amount of rows to split to
+     * @param rows  The amount of rows to split to
      * @return A list of pages
      */
     public static List<Page> splitTableDataToPages(Table table, int rows) {
         int i = 0;
         List<Page> pages = new ArrayList<>();
         List<List<String>> pageContent = new ArrayList<>();
-        for(List<String> row : table.getBody()) {
+        for (List<String> row : table.getBody()) {
             i++;
             pageContent.add(row);
 
-            if(i == rows) {
+            if (i == rows) {
                 pages.add(new PageObjects.TablePage(table));
                 pageContent = new ArrayList<>();
                 i = 0;
@@ -120,20 +120,20 @@ public class PageUtils {
     /**
      * Splits table data out into a pages with content length less then the length provides
      *
-     * @param table The table to split.
+     * @param table  The table to split.
      * @param length The max content length you're trying to achieve.
      * @return A list of pages
      */
     public static List<Page> splitTableDataToPagesWithCharLength(Table table, int length) {
         int maxLength = 0;
-        for(List<String> row : table.getBody()) {
+        for (List<String> row : table.getBody()) {
             StringBuilder stringBuilder = new StringBuilder("| ");
-            for(String content : row) {
+            for (String content : row) {
                 stringBuilder.append(content).append(" | ");
             }
             stringBuilder.append(" |");
             String rowContent = stringBuilder.toString();
-            if(rowContent.length() > maxLength) {
+            if (rowContent.length() > maxLength) {
                 maxLength = rowContent.length();
             }
         }

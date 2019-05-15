@@ -65,6 +65,15 @@ pretty_json: false
 # The default prefix that the bot should use.
 default_prefix: ';'
 
+music_keys:
+  #key for youtube searching
+  youtube: ''
+
+# Nodes to use for music. if you don't include this the default lavaplayer music stuff will be used
+nodes:
+  - address: 'http://some-address:port'
+    password: 'password'
+
 # Config the security levels for the bot
 # Each security level can have role IDs and user IDs assigned to it
 # The available security levels are: staff, developer and owner
@@ -89,6 +98,7 @@ global_emotes:
   muted:
   deafened:
   mobile:
+  norepeat:
 
 
 # The haste server to use for "hasting" messages.
