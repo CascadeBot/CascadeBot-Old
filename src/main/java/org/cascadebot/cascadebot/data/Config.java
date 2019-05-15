@@ -234,7 +234,7 @@ public class Config {
             CascadeBot.LOGGER.warn("Auth failed to initiate. this might cause errors if working with he wrapper or website if the bot is working with those.", e);
         }
 
-        youtubeKey = config.getString("musickeys.youtube");
+        youtubeKey = config.getString("music_keys.youtube");
 
         LOG.info("Finished loading configuration!");
 

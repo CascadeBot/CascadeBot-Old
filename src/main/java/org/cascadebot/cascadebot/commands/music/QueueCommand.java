@@ -43,8 +43,6 @@ public class QueueCommand implements ICommandMain {
 
         List<Page> pages = new ArrayList<>();
 
-        //builder.append("**Current song:** `").append(player.getPlayer().getPlayingTrack().getInfo().title).append("`- Request By ").append(CascadeBot.INS.getShardManager().getUserById((Long)player.getPlayer().getPlayingTrack().getUserData()).getAsTag()).append("\n\n\n");
-
         int i = 1;
         for (AudioTrack track : player.getQueue()) {
             builder.append(i).append(". **").append(track.getInfo().title).append("**");

@@ -65,7 +65,7 @@ pretty_json: false
 # The default prefix that the bot should use.
 default_prefix: ';'
 
-musickeys:
+music_keys:
   #key for youtube searching
   youtube: ''
 
