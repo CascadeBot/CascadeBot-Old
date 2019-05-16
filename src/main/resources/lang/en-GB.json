@@ -23,29 +23,39 @@
   },
   "commands": {
     "support": {
+      "command": "support",
       "cascade_support_server": "Cascade Support Server: {0}"
     },
     "prefix": {
+      "command": "prefix",
       "prefix_reset": "The prefix has been reset to: `{0}`",
       "prefix_too_long": "The requested prefix is too long!",
       "new_prefix": "The new prefix is: `{0}`",
-      "current_prefix": "The current server prefix is `{0}`"
+      "current_prefix": "The current server prefix is `{0}`",
+      "args": {
+        "reset": "reset"
+      }
     },
     "usage": {
+      "command": "usage",
       "specify_usage": "Please specify command to get usage from!",
       "command_not_found": "Command `{0}` not found!"
     },
     "cat": {
+      "command": "cat",
       "error_loading": "Error loading cat picture! {0}"
     },
     "dog": {
+      "command": "dog",
       "error_loading": "Error loading dog picture! {0}"
     },
     "roles": {
+      "command": "roles",
       "table_header_1": "Role ID",
       "table_header_2": "Role Name"
     },
     "serverinfo": {
+      "command": "serverinfo",
       "guild_creation_date": "Creation Date",
       "guild_name": "Guild Name",
       "guild_owner": "Owner",
@@ -54,6 +64,7 @@
       "guild_id": "ID: {0}"
     },
     "userinfo": {
+      "command": "userinfo",
       "user_created": "User Created",
       "user_join_date": "Join Date",
       "user_id": "User ID",
@@ -64,6 +75,7 @@
       "role_name": "Role Name"
     },
     "settings": {
+      "command": "settings",
       "cannot_edit": "You cannot edit this setting! You need the: {0} flag to do this!",
       "setting_set": "Setting {0} has been set to a value of {1}.",
       "cannot_access": "Could not access that setting!",
@@ -72,30 +84,40 @@
       "cannot_find_field": "Cannot find that field!"
     },
     "ban": {
+      "command": "ban",
       "cannot_find_user": "We can't find that user!",
       "forcefully_ban": "**We couldn't find that user in this guild!** \n If you would like to forcefully ban them, please react to this message!"
     },
     "kick": {
+      "command": "kick",
       "cannot_find_user": "Could not find that user!"
     },
     "softban": {
+      "softban": "softban",
       "no_specified_user": "Not enough arguments (No specified member)",
       "cannot_find_user": "Could not find that user!"
     },
     "unban": {
+      "command": "unban",
       "cannot_unban": "Could not find a user to unban matching: {0}",
       "several_matches": "There is more than one user that matches this criteria! \n Please enter the ID or the user's full name!"
     },
     "module": {
+      "command": "module",
       "disable": {
+        "command": "disable",
         "disabled": "The module `{0}` has been disabled!",
         "already_disabled": "The module `{0}` is already disabled!",
         "cannot_find_module": "We couldn't find that module. Use `{0}module list` for a list of modules."
       },
       "enable": {
+        "command": "enable",
         "enabled": "The module `{0}` has been enabled!",
         "already_enabled": "The module `{0}` is already enabled!",
         "cannot_find_module": "We couldn't find that module. Use `{0}module list` for a list of modules."
+      },
+      "list": {
+        "command": "list"
       }
     }
   },

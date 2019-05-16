@@ -105,7 +105,7 @@ public class GuildData {
 
     public void disableCommand(ICommandMain command) {
         if (command.getModule().isFlagEnabled(ModuleFlag.PRIVATE)) return;
-        commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command)).setEnabled(false);
+        commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale)).setEnabled(false);
     }
 
     public void disableCommandByModule(Module module) {
@@ -160,7 +160,7 @@ public class GuildData {
 
     @BsonIgnore
     private GuildCommandInfo getGuildCommandInfo(ICommandMain command) {
-        return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command));
+        return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale));
     }
 
     public ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
