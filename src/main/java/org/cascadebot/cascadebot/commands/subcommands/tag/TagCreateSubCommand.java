@@ -7,6 +7,7 @@
 
 package org.cascadebot.cascadebot.commands.subcommands.tag;
 
+import java.util.Set;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
@@ -14,8 +15,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-
-import java.util.Set;
 
 public class TagCreateSubCommand implements ICommandExecutable {
 
@@ -25,7 +24,7 @@ public class TagCreateSubCommand implements ICommandExecutable {
             context.getUIMessaging().replyUsage(this, "tag");
             return;
         }
-        context.getData().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag")); //TODO handle category
+        context.getData().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));
         context.getTypedMessaging().replySuccess("Successfully created tag with name `%s`", context.getArg(0));
     }
 

@@ -18,13 +18,13 @@ public class TagEditSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 2) {
+        if (context.getArgs().length < 2) {
             context.getUIMessaging().replyUsage(this, "tag");
             return;
         }
 
         Tag tag = context.getData().getTag(context.getArg(0));
-        if(tag == null) {
+        if (tag == null) {
             context.getTypedMessaging().replyDanger("Tag `" + context.getArg(0) + "` not found");
             return;
         }

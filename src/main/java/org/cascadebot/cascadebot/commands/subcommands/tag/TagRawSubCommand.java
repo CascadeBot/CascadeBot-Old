@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.subcommands.tag;
 
+import java.util.Set;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.Argument;
@@ -14,9 +15,6 @@ import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-
-import java.util.Map;
-import java.util.Set;
 
 public class TagRawSubCommand implements ICommandExecutable {
 

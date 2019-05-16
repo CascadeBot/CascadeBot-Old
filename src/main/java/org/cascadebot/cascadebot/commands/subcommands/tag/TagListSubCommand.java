@@ -7,13 +7,12 @@
 
 package org.cascadebot.cascadebot.commands.subcommands.tag;
 
+import java.util.Map;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-
-import java.util.Map;
 
 public class TagListSubCommand implements ICommandExecutable {
 
@@ -21,7 +20,7 @@ public class TagListSubCommand implements ICommandExecutable {
     public void onCommand(Member sender, CommandContext context) {
         Map<String, Tag> tags = context.getData().getTagInfo();
 
-        if(tags.size() == 0) {
+        if (tags.size() == 0) {
             context.getTypedMessaging().replyWarning("Server has no tags!");
             return;
         }
