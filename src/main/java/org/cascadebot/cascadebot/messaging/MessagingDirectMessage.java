@@ -5,10 +5,10 @@
 
 package org.cascadebot.cascadebot.messaging;
 
-import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.utils.Checks;
+import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
 public class MessagingDirectMessage { //TODO come up with better name
 
@@ -96,4 +96,5 @@ public class MessagingDirectMessage { //TODO come up with better name
             }
         });
     }
+
 }

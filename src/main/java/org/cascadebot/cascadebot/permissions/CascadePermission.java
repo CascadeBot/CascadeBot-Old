@@ -63,7 +63,7 @@ public class CascadePermission {
         return label;
     }
 
-    public String getPermissionNode() {
+    public String getPermission() {
         return permission;
     }
 
@@ -81,7 +81,7 @@ public class CascadePermission {
 
     @Override
     public String toString() {
-        return getPermissionNode();
+        return getPermission();
     }
 
     @Override

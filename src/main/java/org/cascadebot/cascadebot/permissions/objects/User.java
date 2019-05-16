@@ -29,4 +29,5 @@ public class User extends PermissionHolder {
     HolderType getType() {
         return HolderType.USER;
     }
+
 }

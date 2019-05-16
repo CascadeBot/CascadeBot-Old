@@ -7,6 +7,8 @@ package org.cascadebot.cascadebot.data.objects;
 
 public enum Flag {
 
-    BETA
+    BETA,
+    SPOTIFY,
+    MUSIC_SERVICES
 
 }
