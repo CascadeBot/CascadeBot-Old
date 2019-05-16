@@ -20,7 +20,7 @@ public interface ICommandExecutable {
 
     default String getCommandPath() {
         if (this instanceof ISubCommand) {
-            return "commands." +((ISubCommand) this).parent() + "." + command() + ".command";
+            return "commands." + ((ISubCommand) this).parent() + "." + command() + ".command";
         }
         return "commands." + command() + ".command";
     }
