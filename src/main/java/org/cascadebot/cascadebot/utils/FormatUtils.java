@@ -15,6 +15,7 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class FormatUtils {
 
@@ -92,7 +93,9 @@ public class FormatUtils {
     //region Embed methods
     public static String formatEmbed(MessageEmbed embed) {
         StringBuilder sb = new StringBuilder();
-        sb.append("__**").append(embed.getTitle()).append("**__\n");
+        if (embed.getTitle() != null) {
+            sb.append("__**").append(embed.getTitle()).append("**__\n");
+        }
         if (embed.getDescription() != null) {
             sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
         }
@@ -120,7 +123,9 @@ public class FormatUtils {
                 sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(field.getValue()))).append("\n\n");
             }
         }
-        sb.append(getFormattedInlineFields(inline)).append("\n\n");
+        if (inline != null) {
+            sb.append(getFormattedInlineFields(inline)).append("\n\n");
+        }
         sb.append("_").append(embed.getFooter().getText()).append("_");
 
         return sb.toString();
@@ -176,6 +181,13 @@ public class FormatUtils {
      */
     public static double round(double number, int dp) {
         return Math.round(number * Math.pow(10, dp)) / Math.pow(10, dp);
+    }
+
+    public static String formatLongTimeMills(long time) {
+        long hours = TimeUnit.MILLISECONDS.toHours(time);
+        long mins = TimeUnit.MILLISECONDS.toMinutes(time) - (hours * 60);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(time) - (TimeUnit.MILLISECONDS.toMinutes(time) * 60);
+        return String.format("%02d:%02d:%02d", hours, mins, seconds);
     }
 
 }

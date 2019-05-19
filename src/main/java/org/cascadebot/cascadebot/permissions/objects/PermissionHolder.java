@@ -26,7 +26,7 @@ public abstract class PermissionHolder {
 
     public Result evaluatePermission(CascadePermission permission) {
         for (String perm : getPermissions()) {
-            if (new PermissionNode(perm.substring(perm.startsWith("-") ? 1 : 0)).test(permission.getPermissionNode())) {
+            if (new PermissionNode(perm.substring(perm.startsWith("-") ? 1 : 0)).test(permission.getPermission())) {
                 if (perm.startsWith("-"))
                     return Result.of(PermissionAction.DENY, this);
                 return Result.of(PermissionAction.ALLOW, this);

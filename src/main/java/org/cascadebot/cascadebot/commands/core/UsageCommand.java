@@ -10,22 +10,22 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 
 import java.util.Set;
 
 public class UsageCommand implements ICommandCore {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 1) {
+        if (context.getArgs().length < 1) {
             context.getTypedMessaging().replyDanger("Please specify command to get usage from");
             return;
         }
 
         ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(context.getArg(0), sender.getUser(), context.getData());
-        if(command == null) {
+        if (command == null) {
             context.getTypedMessaging().replyDanger("Command `%s` not found!", context.getArg(0));
             return;
         }
@@ -47,4 +47,5 @@ public class UsageCommand implements ICommandCore {
     public Set<Argument> getArguments() {
         return Set.of(Argument.of("command", "Gets the usage for a command", ArgumentType.REQUIRED));
     }
+
 }

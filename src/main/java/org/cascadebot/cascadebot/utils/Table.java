@@ -34,7 +34,7 @@ public final class Table {
      * Creates a new table with the provided column headings and body with no footer.
      *
      * @param headings The column headings for this table.
-     * @param body A list of rows for the table.
+     * @param body     A list of rows for the table.
      * @return An immutable Table with the respective column headings and body.
      */
     public Table of(List<String> headings, List<List<String>> body) {
@@ -45,8 +45,8 @@ public final class Table {
      * Creates a new table with the provided column headings and body with a supplied footer.
      *
      * @param headings The column headings for this table.
-     * @param body A list of rows for the table.
-     * @param footer The footer to display.
+     * @param body     A list of rows for the table.
+     * @param footer   The footer to display.
      * @return An immutable Table with the respective column headings, body and footer.
      */
     public Table of(List<String> headings, List<List<String>> body, String footer) {
@@ -124,8 +124,8 @@ public final class Table {
          * Adds a column heading to the table. Can only be done before a body has been added to the table.
          *
          * @param heading The column heading to add to the table
-         * @throws IllegalStateException If the body is not empty.
          * @return TableBuilder for chaining.
+         * @throws IllegalStateException If the body is not empty.
          */
         public TableBuilder addHeading(String heading) {
             if (!this.body.isEmpty()) throw new IllegalStateException("Cannot add headings with a non-empty body!");
@@ -138,8 +138,8 @@ public final class Table {
          * the number of column headings.
          *
          * @param row The row elements to add to the table.
-         * @throws IllegalArgumentException If the number of row elements does not equal the number of column headings.
          * @return TableBuilder for chaining.
+         * @throws IllegalArgumentException If the number of row elements does not equal the number of column headings.
          */
         public TableBuilder addRow(String... row) {
             if (row.length != this.headings.size()) {

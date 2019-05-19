@@ -15,9 +15,9 @@ public class MDCException extends RuntimeException {
 
     private MDCException(Throwable cause) {
         super(MDC.getCopyOfContextMap().entrySet()
-                .stream()
-                .map(entry -> entry.getKey() + ": " + entry.getValue())
-                .collect(Collectors.joining("\n")),
+                        .stream()
+                        .map(entry -> entry.getKey() + ": " + entry.getValue())
+                        .collect(Collectors.joining("\n")),
                 cause);
 
     }
