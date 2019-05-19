@@ -5,11 +5,10 @@
 
 package org.cascadebot.cascadebot.messaging;
 
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.CommandException;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.utils.Checks;
+import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
 public class MessagingTyped {
 
@@ -22,7 +21,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as an info message.
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#INFO},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#INFO} at the top of the message
      *
      * @param message The String message to send.
@@ -35,7 +34,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as an info message. After formatting the string using {@link String#format(String, Object...)}
      * When embeds for the guild are on, it replies with an embed with embed bar color being the color defined in {@link MessageType#INFO},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#INFO} at the top of the message
      *
      * @param message The String message to send.
@@ -60,7 +59,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as a warning message.
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#WARNING},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#WARNING} at the top of the message
      *
      * @param message The String message to send.
@@ -73,7 +72,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as a warning message. After formatting the string using {@link String#format(String, Object...)}
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#INFO},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#INFO} at the top of the message
      *
      * @param message The String message to send.
@@ -98,7 +97,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as a success message.
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#WARNING},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#WARNING} at the top of the message
      *
      * @param message The String message to send.
@@ -111,7 +110,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as a success message. After formatting the string using {@link String#format(String, Object...)}
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#WARNING},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#WARNING} at the top of the message
      *
      * @param message The String message to send.
@@ -136,7 +135,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as a moderation message.
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#MODERATION},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#MODERATION} at the top of the message
      *
      * @param message The String message to send.
@@ -149,7 +148,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as a moderation message. After formatting the string using {@link String#format(String, Object...)}
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#MODERATION},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#MODERATION} at the top of the message
      *
      * @param message The String message to send.
@@ -174,7 +173,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as a danger message.
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#DANGER},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#DANGER} at the top of the message
      *
      * @param message The String message to send.
@@ -187,7 +186,7 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as a danger message. After formatting the string using {@link String#format(String, Object...)}
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#DANGER},
-     *     and with the message being in the description of the embed
+     * and with the message being in the description of the embed
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#DANGER} at the top of the message
      *
      * @param message The String message to send.
@@ -212,20 +211,20 @@ public class MessagingTyped {
     /**
      * Replies to the channel in the command context as a danger message.
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#DANGER},
-     *     and with the message being in the description of the embed, and the stack trance as a link below it.
+     * and with the message being in the description of the embed, and the stack trance as a link below it.
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#DANGER} at the top of the message, and the stack trance as a link below it.
      *
      * @param message   The String message to send.
      * @param throwable The Exception that your sending.
      */
     public void replyException(String message, Throwable throwable) {
-        Messaging.sendExceptionMessage(context.getChannel(), message, new CommandException(throwable, context.getGuild(), context.getTrigger()));
+        Messaging.sendExceptionMessage(context.getChannel(), message, throwable);
     }
 
     /**
      * Replies to the channel in the command context as a danger message. After formatting the string using {@link String#format(String, Object...)}
      * When embeds for the guild are on, it replies with an embed with the embed color being the color defined in {@link MessageType#DANGER},
-     *     and with the message being in the description of the embed, and the stack trance as a hastebin link below it.
+     * and with the message being in the description of the embed, and the stack trance as a hastebin link below it.
      * If embeds are turned off, it replies with a normal message with the Unicode character defined in {@link MessageType#DANGER} at the top of the message, and the stack trance as a hastebin link below it.
      *
      * @param message   The String message to send.
@@ -233,6 +232,7 @@ public class MessagingTyped {
      * @param objects   The objects to use with the formatting.
      */
     public void replyException(String message, Throwable throwable, Object... objects) {
-        Messaging.sendExceptionMessage(context.getChannel(), String.format(message, objects), new CommandException(throwable, context.getGuild(), context.getTrigger()));
+        Messaging.sendExceptionMessage(context.getChannel(), String.format(message, objects), throwable);
     }
+
 }

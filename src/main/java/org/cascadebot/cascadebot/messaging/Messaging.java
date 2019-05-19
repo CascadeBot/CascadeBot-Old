@@ -19,6 +19,7 @@ import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.Environment;
+import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -132,9 +133,9 @@ public final class Messaging {
         return sendMessageTypeEmbedMessage(channel, MessageType.DANGER, builder, embed);
     }
 
-    public static RequestFuture<Message> sendExceptionMessage(MessageChannel channel, String s, Exception e) {
+    public static RequestFuture<Message> sendExceptionMessage(MessageChannel channel, String s, Throwable e) {
         String message = "**" + s + "**" +
-                "\nStack trace: " + PasteUtils.paste(PasteUtils.getStackTrace(e)) +
+                "\nStack trace: " + PasteUtils.paste(PasteUtils.getStackTrace(MDCException.from(e))) +
                 (Environment.isDevelopment() ? "" : "\nPlease report the stack trace and the error to the developers here: " + Constants.serverInvite);
         return sendDangerMessage(channel, message);
     }
