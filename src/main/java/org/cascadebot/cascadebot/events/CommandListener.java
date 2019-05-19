@@ -132,7 +132,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
-        ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
+        ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         if (cmd != null) {
             if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
                     !guildData.isModuleEnabled(cmd.getModule())) {

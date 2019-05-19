@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
-import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -55,7 +54,7 @@ public class CommandManager {
         return null;
     }
 
-    public ICommandMain getCommand(String command, User user, GuildData data) {
+    public ICommandMain getCommand(String command, GuildData data) {
         for (ICommandMain cmd : commands) {
             if (data.getCommandName(cmd).equals(command)) {
                 return cmd;

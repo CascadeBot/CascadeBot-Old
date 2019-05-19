@@ -33,20 +33,20 @@ public class GuildFlagSubCommand implements ISubCommand {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
             Flag flag;
-            if (!EnumUtils.isValidEnumIgnoreCase(Flag.class, context.getArg(0))) {
+            if (EnumUtils.isValidEnumIgnoreCase(Flag.class, context.getArg(0))) {
+                flag = EnumUtils.getEnum(Flag.class, context.getArg(0).toUpperCase());
+            } else {
                 if (context.getArg(0).equalsIgnoreCase("list")) {
                     EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-                    embedBuilder.setTitle(context.i18n("commands.guild.flag.flags"));
+                    embedBuilder.setTitle("Flags");
                     embedBuilder.setDescription(Arrays.stream(Flag.values())
                             .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e)))
                             .collect(Collectors.joining("\n")));
                     context.getTypedMessaging().replyInfo(embedBuilder);
                     return;
                 }
-                context.getTypedMessaging().replyDanger(context.i18n("commands.guild.flag.invalid_flag", Arrays.toString(Flag.values())));
+                context.getTypedMessaging().replyDanger("Invalid flag! Possible values: %s", Arrays.toString(Flag.values()));
                 return;
-            } else {
-                flag = EnumUtils.getEnum(Flag.class, context.getArg(0).toUpperCase());
             }
 
             Guild guild = context.getGuild();
@@ -54,11 +54,11 @@ public class GuildFlagSubCommand implements ISubCommand {
                 if (Regex.ID.matcher(context.getArg(1)).matches()) {
                     guild = CascadeBot.INS.getShardManager().getGuildById(context.getArg(1));
                     if (guild == null) {
-                        context.getTypedMessaging().replyDanger(context.i18n("commands.guild.flag.cannot_find_guild"));
+                        context.getTypedMessaging().replyDanger("Cannot find that guild!");
                         return;
                     }
                 } else {
-                    context.getTypedMessaging().replyDanger(context.i18n("commands.guild.flag.invalid_guild_id"));
+                    context.getTypedMessaging().replyDanger("Invalid guild ID!");
                     return;
                 }
             }
@@ -67,10 +67,10 @@ public class GuildFlagSubCommand implements ISubCommand {
 
             if (guildData.isFlagEnabled(flag)) {
                 guildData.disableFlag(flag);
-                context.getTypedMessaging().replySuccess(context.i18n("commands.guild.flag.disabled_flag", FormatUtils.formatEnum(flag), guild.getName(), guild.getId()));
+                context.getTypedMessaging().replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
             } else {
                 guildData.enableFlag(flag);
-                context.getTypedMessaging().replySuccess(context.i18n("commands.guild.flag.enabled_flag", FormatUtils.formatEnum(flag), guild.getName(), guild.getId()));
+                context.getTypedMessaging().replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
             }
 
         }
@@ -84,6 +84,11 @@ public class GuildFlagSubCommand implements ISubCommand {
     @Override
     public String parent() {
         return "guild";
+    }
+
+    @Override
+    public String description() {
+        return "Toggles a flag for this guild [or a different guild].";
     }
 
     @Override

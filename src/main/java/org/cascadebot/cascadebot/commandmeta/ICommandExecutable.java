@@ -18,7 +18,22 @@ public interface ICommandExecutable {
 
     void onCommand(Member sender, CommandContext context);
 
+    default String getCommandPath() {
+        if (this instanceof ISubCommand) {
+            return "commands." + ((ISubCommand) this).parent() + "." + command() + ".command";
+        }
+        return "commands." + command() + ".command";
+    }
+
     String command();
+
+    default String command(Locale locale) {
+        if (CascadeBot.INS.getLanguage().hasLanguageEntry(locale, getCommandPath())) {
+            return CascadeBot.INS.getLanguage().get(locale, getCommandPath());
+        } else {
+            return command();
+        }
+    }
 
     CascadePermission getPermission();
 
@@ -28,11 +43,22 @@ public interface ICommandExecutable {
                 return "command_descriptions." + command() + ".main_command";
             }
         }
+        if (this instanceof ISubCommand) {
+            return "command_descriptions." + ((ISubCommand) this).parent() + "." + command();
+        }
         return "command_descriptions." + command();
     }
 
+    default String description() {
+        return null;
+    }
+
     default String getDescription(Locale locale) {
-        return CascadeBot.INS.getLanguage().get(locale, getDescriptionPath());
+        if (CascadeBot.INS.getLanguage().hasLanguageEntry(locale, getDescriptionPath()) || description() == null) {
+            return CascadeBot.INS.getLanguage().get(locale, getDescriptionPath());
+        } else {
+            return description();
+        }
     }
 
 
