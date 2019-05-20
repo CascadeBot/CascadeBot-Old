@@ -149,9 +149,9 @@
     },
     "playing": {
       "command": "playing",
-      "no_music_playing": "No music playing!",
-      "no_song_playing": "No song playing!"
-      // TODO Finish this, had issues with the embedBuilder https://i.thedudeinthecorner.xyz/files/cp7kS.png
+      "no_music_playing": "There is no music playing!",
+      "loop_mode": "Loop mode",
+      "up_next": "Up next"
     },
     "queue": {
       "command": "queue",
@@ -195,7 +195,11 @@
     "volume": {
       "command": "volume",
       "current_volume": "Current volume is {0}%",
-      "greater_than_zero":
+      "greater_than_zero": "Volume needs to be greater than 0%",
+      "extreme_volume": "Are you sure you want to exceed 100% volume?",
+      "volume_set": "Volume set to {0}%",
+      "volume_already_set": "Volume is already {0}%",
+      "volume_range": "Volume needs to be between 0% and 200%"
     }
   },
   "moderation_manager": {
@@ -246,6 +250,11 @@
     "disabled": "Disabled",
     "status": "Status",
     "queue": "Queue",
-    "requested_by": "\n Requested by "
+    "requested_by": "Requested by ",
+    "playing": "Playing",
+    "paused": "Paused",
+    "progress": "Progress",
+    "volume": "Volume"
+
   }
 }

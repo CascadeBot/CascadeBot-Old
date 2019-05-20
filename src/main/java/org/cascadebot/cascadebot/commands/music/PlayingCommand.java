@@ -5,13 +5,13 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
-import org.bukkit.command.Command;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
@@ -141,8 +141,9 @@ public class PlayingCommand implements ICommandMain {
     private MessageEmbed getSongEmbed(CascadePlayer player, long guildID) {
         AudioTrack track = player.getPlayer().getPlayingTrack();
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+        Language lang = CascadeBot.INS.getLanguage();
         if (track == null) {
-            embedBuilder.setDescription("No song playing!");
+            embedBuilder.setDescription(lang.get(guildID, "commands.playing.no_music_playing"));
             return embedBuilder.build();
         }
         embedBuilder.setAuthor(track.getInfo().author);
@@ -150,22 +151,22 @@ public class PlayingCommand implements ICommandMain {
         if (player.getArtwork() != null) {
             embedBuilder.setThumbnail(player.getArtwork());
         }
-        embedBuilder.addField("Status", player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " Paused" : UnicodeConstants.PLAY + " Playing", true);
+        embedBuilder.addField(lang.get(guildID, "words.status"), player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " " + lang.get(guildID, "words.paused") : UnicodeConstants.PLAY + " " + lang.get(guildID, "words.playing"), true);
 
         if (!track.getInfo().isStream) {
-            embedBuilder.addField("Progress", player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getSettings().useEmbedForMessages()), false);
+            embedBuilder.addField(lang.get(guildID, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getSettings().useEmbedForMessages()), false);
         }
 
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getPlayer().getTrackPosition()) + " / " +
                 (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
-        embedBuilder.addField("Volume", player.getPlayer().getVolume() + "%", true);
-        embedBuilder.addField("Loop mode", FormatUtils.formatEnum(player.getLoopMode()), true);
+        embedBuilder.addField(lang.get(guildID, "words.volume"), player.getPlayer().getVolume() + "%", true);
+        embedBuilder.addField(lang.get(guildID, "commands.playing.loop_mode"), FormatUtils.formatEnum(player.getLoopMode()), true);
         if (track.getUserData() instanceof Long) { //TODO find out why user data sometimes gets set to null.
-            embedBuilder.addField("Requested By", CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
+            embedBuilder.addField(lang.get(guildID, "words.requested_by"), CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
         }
         AudioTrack next = player.getQueue().peek();
         if (next != null) {
-            embedBuilder.addField("Up next", "**" + next.getInfo().title + "**\nRequested by " +
+            embedBuilder.addField(lang.get(guildID, "commands.playing.up_next"), "**" + next.getInfo().title + "**\n" + lang.get(guildID, "words.requested_by") +
                     CascadeBot.INS.getShardManager().getUserById((Long) next.getUserData()).getAsTag(), false);
         }
 

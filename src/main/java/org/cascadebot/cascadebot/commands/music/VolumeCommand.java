@@ -34,7 +34,7 @@ public class VolumeCommand implements ICommandMain {
         }
 
         if (volume < 0) {
-            context.getTypedMessaging().replyWarning("Volume needs to be greater than 0%");
+            context.getTypedMessaging().replyWarning(context.i18n("commands.volume.greater_than_zero"));
             return;
         } else if (volume > 100 && volume <= 200) {
             if (context.hasPermission("volume.extreme")) {
@@ -42,14 +42,14 @@ public class VolumeCommand implements ICommandMain {
                         "volume-extreme",
                         context.getChannel(),
                         MessageType.WARNING,
-                        "Are you sure you want to exceed 100% volume?",
+                        context.i18n("commands.volume.extreme_volume"),
                         0,
                         TimeUnit.SECONDS.toMillis(30),
                         new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
                                 player.getPlayer().setVolume(volume);
-                                context.getTypedMessaging().replyInfo("Volume set to %d%%", player.getPlayer().getVolume());
+                                context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getPlayer().getVolume()));
                             }
                         });
                 return;
@@ -58,15 +58,15 @@ public class VolumeCommand implements ICommandMain {
                 return;
             }
         } else if (volume > 200) {
-            context.getTypedMessaging().replyWarning("Volume needs to be between 0% and 200%");
+            context.getTypedMessaging().replyWarning(context.i18n("commands.volume.volume_range"));
             return;
         }
 
         if (volume == context.getMusicPlayer().getPlayer().getVolume()) {
-            context.getTypedMessaging().replyInfo("Volume is already %d%%", player.getPlayer().getVolume());
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set"));
         } else {
             player.getPlayer().setVolume(volume);
-            context.getTypedMessaging().replyInfo("Volume set to %d%%", player.getPlayer().getVolume());
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getPlayer().getVolume()));
         }
 
     }

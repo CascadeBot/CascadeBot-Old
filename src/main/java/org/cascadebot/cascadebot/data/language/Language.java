@@ -10,6 +10,7 @@ import io.github.binaryoverload.JSONConfig;
 import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -49,6 +50,10 @@ public class Language {
 
     public boolean hasLanguageEntry(Locale locale, String path) {
         return languages.containsKey(locale) && languages.get(locale).getString(path).isPresent();
+    }
+
+    public String get(long guildId, String path, Object... args) {
+        return get(GuildDataManager.getGuildData(guildId).getLocale(), path, args);
     }
 
     public String get(Locale locale, String path, Object... args) {
