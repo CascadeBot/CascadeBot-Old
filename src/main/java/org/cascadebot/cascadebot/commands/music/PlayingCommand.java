@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import org.bukkit.command.Command;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -64,7 +65,7 @@ public class PlayingCommand implements ICommandMain {
         CascadePlayer player = context.getMusicPlayer();
 
         if (player.getPlayer().getPlayingTrack() == null) {
-            context.getTypedMessaging().replyWarning("No music playing!");
+            context.getTypedMessaging().replyWarning(context.i18n("commands.playing.no_music_playing"));
         } else {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
@@ -141,7 +142,7 @@ public class PlayingCommand implements ICommandMain {
         AudioTrack track = player.getPlayer().getPlayingTrack();
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         if (track == null) {
-            embedBuilder.setDescription("No song playing");
+            embedBuilder.setDescription("No song playing!");
             return embedBuilder.build();
         }
         embedBuilder.setAuthor(track.getInfo().author);

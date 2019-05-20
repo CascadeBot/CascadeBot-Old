@@ -19,7 +19,8 @@
     "ban": "Bans or forcebans the specified user.",
     "kick": "Kicks the specified user.",
     "softban": "Bans and then unbans a specified user in order to remove messages and kick the user.",
-    "unban": "Unbans the specified user."
+    "unban": "Unbans the specified user.",
+    "join": "Joins the bot to a voice channel"
   },
   "commands": {
     "support": {
@@ -119,6 +120,82 @@
       "list": {
         "command": "list"
       }
+    },
+    "join": {
+      "command": "join",
+      "user_not_connected": "You are not connected to a voice channel!",
+      "already_connected": "I am already connected to your channel!",
+      "successfully_joined": "I have successfully joined the voice channel `#{0}`"
+    },
+    "leave": {
+      "command": "leave",
+      "successfully_left": "I have successfully left the channel `#{0}`"
+    },
+    "loop": {
+      "command": "loop",
+      "looping_disabled": "Looping has been disabled!",
+      "looping_set": "Set to loop the current **{0}**",
+      "not_valid_mode": "`{0}` is not a valid loop mode! Valid modes are: {0}"
+    },
+    "pause": {
+      "command": "pause",
+      "already_paused": "Music has already been paused! Use **{0}resume** to resume.",
+      "successfully_paused": "Paused! Use **{0}resume** to resume."
+    },
+    "play": {
+      "command": "play",
+      "could_not_find_matches": "We could not find music that matches: `{0}`",
+      "encountered_error": "We encountered an error processing that! {0}"
+    },
+    "playing": {
+      "command": "playing",
+      "no_music_playing": "No music playing!",
+      "no_song_playing": "No song playing!"
+      // TODO Finish this, had issues with the embedBuilder https://i.thedudeinthecorner.xyz/files/cp7kS.png
+    },
+    "queue": {
+      "command": "queue",
+      "no_tracks_playing": "There are no tracks playing!"
+    },
+    "resume": {
+      "command": "resume",
+      "successfully_resumed": "Music has been resumed!",
+      "already_resumed": "Music is already playing! Use **{0}pause** to pause it."
+    },
+    "search": {
+      "command": "search",
+      "cannot_find_video": "Couldn't find video!",
+      "error_loading_track": "Error loading track",
+      "multiple_results": "We found multiple results for this search!",
+      "search_timed_out": "The search for `{0}` has timed out!"
+    },
+    "shuffle": {
+      "command": "shuffle",
+      "enabled": "Shuffling has been enabled!",
+      "disabled": "Shuffling has been disabled!"
+    },
+    "skip": {
+      "command": "skip",
+      "not_playing": "I'm not playing anything!",
+      "forcefully_skipped": "Forcefully skipped the song",
+      "cannot_skip": {
+        "no_music": "Can't skip if you aren't listening to music!",
+        "no_vote": "Cannot vote if you aren't listening!"
+      },
+      "added_vote": "A skip vote is already running, but we added your vote automatically",
+      "skipped_user_queued": "Skipped currently playing song because you queued it",
+      "skipping": "Skipping song!",
+      "not_skipping": "Not skipping song!"
+    },
+    "stop": {
+      "command": "stop",
+      "stopped": "Music has been stopped!",
+      "not_stopped": "Music isn't playing, nothing to stop!"
+    },
+    "volume": {
+      "command": "volume",
+      "current_volume": "Current volume is {0}%",
+      "greater_than_zero":
     }
   },
   "moderation_manager": {
@@ -138,7 +215,10 @@
     "cannot_find_argument": "I can't find that argument!",
     "no_specified_user": "Not enough arguments (no specified member)",
     "cannot_find_user": "I cannot find that user!",
-    "cannot_find_user_matching": "Cannot find a user matching: {0}"
+    "cannot_find_user_matching": "Cannot find a user matching: {0}",
+    "cannot_find_voice_channel": "Could not find that voice channel to connect to!",
+    "voice_not_connected": "I am not connected to a voice channel!",
+    "type_one_of": "Please type one of: "
   },
   "statuses": {
     "streaming": "Streaming",
@@ -163,6 +243,9 @@
     "no_permission": "No permission",
     "reason": "Reason",
     "enabled": "Enabled",
-    "disabled": "Disabled"
+    "disabled": "Disabled",
+    "status": "Status",
+    "queue": "Queue",
+    "requested_by": "\n Requested by "
   }
 }

@@ -17,9 +17,9 @@ public class StopCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getMusicPlayer().getPlayer().getPlayingTrack() != null) { // If the playing track isn't null, and the bot isn't paused
             context.getMusicPlayer().stop();
-            context.getTypedMessaging().replySuccess("Music has been stopped!");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.stop.stopped"));
         } else {
-            context.getTypedMessaging().replyDanger("Music isn't playing, nothing to stop!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.stop.not_stopped"));
         }
     }
 
