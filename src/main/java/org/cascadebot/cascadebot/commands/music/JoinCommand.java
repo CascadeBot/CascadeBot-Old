@@ -34,11 +34,11 @@ public class JoinCommand implements ICommandMain {
                 voiceChannel = voiceChannels.isEmpty() ? null : voiceChannels.get(0);
             }
             if (voiceChannel == null) {
-                context.getTypedMessaging().replyDanger("Could not find that voice channel to connect to!");
+                context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_voice_channel"));
                 return;
             }
         } else if (voiceChannel == null) {
-            context.getTypedMessaging().replyDanger("You are not connected to a voice channel!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.join.user_not_connected"));
             return;
         }
 
@@ -52,7 +52,7 @@ public class JoinCommand implements ICommandMain {
 
         if (context.getMusicPlayer().getConnectedChannel() != null) {
             if (context.getMusicPlayer().getConnectedChannel().equals(voiceChannel)) {
-                context.getTypedMessaging().replyWarning("I am already connected to your channel!");
+                context.getTypedMessaging().replyWarning(context.i18n("commands.join.already_connected"));
                 return;
             } else {
                 if (!context.hasPermission("join.other")) {
@@ -62,7 +62,7 @@ public class JoinCommand implements ICommandMain {
             }
         }
         context.getMusicPlayer().join(voiceChannel);
-        context.getTypedMessaging().replySuccess("I have successfully joined the voice channel `#%s`", voiceChannel.getName());
+        context.getTypedMessaging().replySuccess(context.i18n("commands.join.successfully_connected", voiceChannel.getName()));
     }
 
     @Override

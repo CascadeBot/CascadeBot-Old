@@ -21,7 +21,7 @@ public class VolumeCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         CascadePlayer player = context.getMusicPlayer();
         if (context.getArgs().length == 0) {
-            context.getTypedMessaging().replyInfo("Current volume is %d%%", player.getPlayer().getVolume());
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.current_volume", player.getPlayer().getVolume()));
             return;
         }
 

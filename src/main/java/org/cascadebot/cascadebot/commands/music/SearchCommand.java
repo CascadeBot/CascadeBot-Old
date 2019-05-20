@@ -49,9 +49,9 @@ public class SearchCommand implements ICommandMain {
                     }
                     message.delete().queue();
                     context.getMusicPlayer().loadLink(result.getUrl(), sender.getUser().getIdLong(), nothing -> {
-                        context.getTypedMessaging().replyWarning("Couldn't find video!");
+                        context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                     }, exception -> {
-                        context.getTypedMessaging().replyException("Error loading track", exception);
+                        context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);
                     }, audioTracks -> {
                         context.getMusicPlayer().addTracks(audioTracks);
                         context.getUIMessaging().sendTracksFound(audioTracks);
@@ -70,13 +70,13 @@ public class SearchCommand implements ICommandMain {
             }
 
             EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO);
-            embedBuilder.setTitle("We found multiple results for this search!");
+            embedBuilder.setTitle(context.i18n("commands.search.multiple_results"));
             embedBuilder.setDescription(messageBuilder.toString());
 
             try {
                 context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
             } catch (PermissionException e) {
-                embedBuilder.appendDescription("\n\n" + "Please type one of: ");
+                embedBuilder.appendDescription("\n\n" + context.i18n("responses.type_one_of"));
                 for (int index = 1; index <= searchResults.size(); index++) {
                     embedBuilder.appendDescription("`").appendDescription(String.valueOf(index)).appendDescription("` ");
                 }
@@ -88,9 +88,9 @@ public class SearchCommand implements ICommandMain {
                     MusicHandler.SearchResult result = searchResults.get(index);
                     responses[index] = new EventWaiter.TextResponse(event -> {
                         context.getMusicPlayer().loadLink(result.getUrl(), sender.getUser().getIdLong(), nothing -> {
-                            context.getTypedMessaging().replyWarning("Couldn't find video!");
+                            context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                         }, exception -> {
-                            context.getTypedMessaging().replyException("Error loading track", exception);
+                            context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);
                         }, audioTracks -> {
                             context.getMusicPlayer().addTracks(audioTracks);
                             context.getUIMessaging().sendTracksFound(audioTracks);
@@ -98,7 +98,7 @@ public class SearchCommand implements ICommandMain {
                     }, String.valueOf(index + 1));
                 }
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(), 30, TimeUnit.SECONDS, () -> {
-                    context.getTypedMessaging().replyWarning("The search for `%s` has timed out!", context.getMessage(0));
+                    context.getTypedMessaging().replyWarning(context.i18n("commands.search.search_timed_out", context.getMessage(0 )));
                 }, responses);
             }
 

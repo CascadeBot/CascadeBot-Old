@@ -33,7 +33,7 @@ public class SkipCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         AudioTrack track = context.getMusicPlayer().getPlayer().getPlayingTrack();
         if (track == null) {
-            context.getTypedMessaging().replyDanger("I'm not playing anything!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.skip.not_playing"));
             return;
         }
 
@@ -41,7 +41,7 @@ public class SkipCommand implements ICommandMain {
             if (context.getArg(0).equalsIgnoreCase("force")) {
                 if (context.hasPermission("skip.force")) {
                     context.getMusicPlayer().skip();
-                    context.getTypedMessaging().replySuccess("Forcefully skipped the song");
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.skip.forcefully_skipped"));
                 } else {
                     context.getUIMessaging().sendPermissionError("skip.force");
                 }
@@ -50,7 +50,7 @@ public class SkipCommand implements ICommandMain {
         }
 
         if (!sender.getVoiceState().inVoiceChannel() || !sender.getVoiceState().getChannel().equals(context.getGuild().getSelfMember().getVoiceState().getChannel())) {
-            context.getTypedMessaging().replyDanger("Can't skip if you aren't listening to music!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.skip.cannot_skip.no_music"));
             return;
         }
 
@@ -61,26 +61,26 @@ public class SkipCommand implements ICommandMain {
                     if (voteButtonGroup.isUserAllowed(context.getGuild().getIdLong())) {
                         voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
                     } else {
-                        context.getTypedMessaging().replyDanger("Cannot vote if you aren't listening!");
+                        context.getTypedMessaging().replyDanger(context.i18n("commands.skip.cannot_skip.no_vote"));
                     }
                     return;
                 } else if (context.getArg(0).equalsIgnoreCase("no")) {
                     if (voteButtonGroup.isUserAllowed(context.getGuild().getIdLong())) {
                         voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.RED_CROSS);
                     } else {
-                        context.getTypedMessaging().replyDanger("Cannot vote if you aren't listening!");
+                        context.getTypedMessaging().replyDanger(context.i18n("commands.skip.cannot_skip.no_vote"));
                     }
                     return;
                 }
             }
             voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
-            context.getTypedMessaging().replyWarning("A skip vote is already running, but we added your vote automatically");
+            context.getTypedMessaging().replyWarning(context.i18n("commands.skip.added_vote"));
             return;
         }
 
         if (Objects.equals(track.getUserData(), sender.getUser().getIdLong())) {
             context.getMusicPlayer().skip();
-            context.getTypedMessaging().replySuccess("Skipped currently playing song because you queued it");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.skip.skipped_user_queued"));
             return;
         }
 
@@ -91,7 +91,7 @@ public class SkipCommand implements ICommandMain {
                 voteButtonGroup.stopVote();
                 voteMap.remove(context.getGuild().getIdLong());
                 context.getMusicPlayer().skip();
-                context.getTypedMessaging().replySuccess("Forcefully skipped the song");
+                context.getTypedMessaging().replySuccess(context.i18n("commands.skip.forcefully_skipped"));
             } else {
                 // TODO: Make permission errors auto delete
                 context.getUIMessaging().sendPermissionError("skip.force");
@@ -106,12 +106,12 @@ public class SkipCommand implements ICommandMain {
         });
         buttonGroupBuilder.setVoteFinishConsumer(voteResults -> {
             if (voteResults.get(0).getVote().equals(UnicodeConstants.TICK)) {
-                context.getTypedMessaging().replyInfo("Skipping song!");
+                context.getTypedMessaging().replyInfo(context.i18n("commands.skip.skipping"));
                 context.getMusicPlayer().skip();
                 voteMap.remove(context.getGuild().getIdLong());
             } else {
                 voteMap.remove(context.getGuild().getIdLong());
-                context.getTypedMessaging().replyInfo("Not skipping the song!");
+                context.getTypedMessaging().replyInfo(context.i18n("commands.skip.not_skipping"));
             }
         });
         VoteButtonGroup buttonGroup = buttonGroupBuilder.build(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());

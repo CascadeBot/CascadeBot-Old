@@ -32,10 +32,10 @@ public class QueueCommand implements ICommandMain {
         CascadePlayer player = context.getMusicPlayer();
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
 
-        embedBuilder.setTitle("Queue");
+        embedBuilder.setTitle(context.i18n("words.queue"));
 
         if (player.getQueue().isEmpty() && player.getPlayer().getPlayingTrack() == null) {
-            context.getTypedMessaging().replyInfo("There are no tracks playing!");
+            context.getTypedMessaging().replyInfo(context.i18n("commands.queue.no_tracks_playing"));
             return;
         }
 
@@ -47,7 +47,7 @@ public class QueueCommand implements ICommandMain {
         for (AudioTrack track : player.getQueue()) {
             builder.append(i).append(". **").append(track.getInfo().title).append("**");
             if (track.getUserData() instanceof Long) {
-                builder.append("\n Requested by ").append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag());
+                builder.append(context.i18n("words.requested_by")).append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag());
             }
             builder.append("\n\n");
             if (i % 10 == 0) {
