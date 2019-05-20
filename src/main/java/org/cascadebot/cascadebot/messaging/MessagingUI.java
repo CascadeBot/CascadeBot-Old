@@ -203,18 +203,16 @@ public class MessagingUI {
                 context.getUIMessaging().sendTracksFound(tracks);
             }));
 
-            String message = String.format(UnicodeConstants.SONG + " - Load as track `%s`\n" +
-                            UnicodeConstants.PLAYLIST + " - Load as playlist `%s`",
-                    selectedTrack.getInfo().title, tracks.size() + " tracks");
+            String message = context.i18n("music_misc.load_options",selectedTrack.getInfo().title, context.i18n("music_misc.num_tracks", tracks.size()));
 
             EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
-            embedBuilder.setTitle("Load as a single track or as a playlist?");
+            embedBuilder.setTitle(context.i18n("music_misc.load_options_title"));
             embedBuilder.setDescription(message);
 
             try {
                 context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
             } catch (PermissionException e) {
-                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription("\n\n" + "Please type either `track` or `playlist`!"));
+                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription(context.i18n("music_misc.load_options_typed")));
 
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
                         new EventWaiter.TextResponse(event -> {
@@ -231,7 +229,7 @@ public class MessagingUI {
             context.getMusicPlayer().addTracks(tracks);
             context.getUIMessaging().sendTracksFound(tracks);
         } else {
-            context.getTypedMessaging().replyDanger("We couldn't find any tracks to load!");
+            context.getTypedMessaging().replyDanger(context.i18n("music_misc.cannot_find_tracks"));
         }
     }
 

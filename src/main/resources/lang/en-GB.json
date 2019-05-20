@@ -223,6 +223,13 @@
     "cannot_action_superior": "Cannot {0} user {1} the top role they have is higher than mine!",
     "success": "{0} has been {1}!"
   },
+  "music_misc": {
+    "load_options": "@musical_note@ - Load as track `{0}`\n@notes@ - Load as playlist `{1}`",
+    "load_options_title": "Load as a single track or as a playlist?",
+    "load_options_typed": "\n\nPlease type either `track` or `playlist`!",
+    "cannot_find_tracks": "We couldn't find any tracks to load!",
+    "num_tracks": "{0} tracks"
+  },
   "responses": {
     "invalid_user": "Invalid User!",
     "cannot_find_guild": "We cannot find that guild!",

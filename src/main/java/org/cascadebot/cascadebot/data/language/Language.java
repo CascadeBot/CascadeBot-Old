@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -61,7 +62,7 @@ public class Language {
         if (languages.containsKey(locale)) {
             if (languages.get(locale).getString(path).isPresent()) {
                 MessageFormat format = new MessageFormat(languages.get(locale).getString(path).get(), locale.getULocale());
-                return format.format(args);
+                return FormatUtils.formatUnicode(format.format(args));
             } else {
                 CascadeBot.LOGGER.warn("Cannot find a language string matching the path '{}'", path);
                 return languages.get(Locale.getDefaultLocale()).getString(path).isPresent() ? get(Locale.getDefaultLocale(), path, args) : "No language string for " + path;
