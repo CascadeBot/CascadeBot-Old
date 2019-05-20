@@ -20,10 +20,16 @@ public class RolesCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Table.TableBuilder builder = new Table.TableBuilder("Role ID", "Role Name");
+        Table.TableBuilder builder = new Table.TableBuilder("Role ID", "Name", "No. Users", "Colour");
+
 
         for (Role role : context.getGuild().getRoles()) {
-            builder.addRow(role.getId(), role.getName());
+            if (role.getName().equals("@everyone")) continue;
+            builder.addRow(
+                    role.getId(),
+                    role.getName(),
+                    String.valueOf(context.getGuild().getMembers().stream().filter(member -> member.getRoles().contains(role)).count()), role.getColor() == null ?  "Default" : "#" + Integer.toHexString(role.getColor().getRGB())
+            );
         }
 
         context.getUIMessaging().sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
