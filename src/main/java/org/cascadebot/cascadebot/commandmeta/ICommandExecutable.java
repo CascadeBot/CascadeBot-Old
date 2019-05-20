@@ -42,8 +42,7 @@ public interface ICommandExecutable {
             if (((ICommandMain) this).getSubCommands().size() > 0) {
                 return "command_descriptions." + command() + ".main_command";
             }
-        }
-        if (this instanceof ISubCommand) {
+        } else if (this instanceof ISubCommand) {
             return "command_descriptions." + ((ISubCommand) this).parent() + "." + command();
         }
         return "command_descriptions." + command();

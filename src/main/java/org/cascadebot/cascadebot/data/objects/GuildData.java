@@ -26,6 +26,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageCache;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,7 +55,7 @@ public class GuildData {
     private String prefix = Config.INS.getDefaultPrefix();
     private Locale locale = Locale.getDefaultLocale();
 
-
+    private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
     //region Guild data containers
 
@@ -75,6 +76,7 @@ public class GuildData {
 
     @Transient
     private PageCache pageCache = new PageCache();
+
     //endregion
 
     private GuildData() {} // This is for mongodb object serialisation
@@ -163,8 +165,26 @@ public class GuildData {
         return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale));
     }
 
-    public ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
-        return commandInfo;
+    public Map<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
+        return Collections.unmodifiableMap(commandInfo);
+    }
+
+    public Map<String, Tag> getTagInfo() { return Collections.unmodifiableMap(tags); }
+
+    public Tag getTag(String key) {
+        return tags.get(key);
+    }
+
+    public boolean hasTag(String key) {
+        return tags.containsKey(key);
+    }
+
+    public void addTag(String key, Tag tag) {
+        tags.put(key, tag);
+    }
+
+    public boolean removeTag(String key) {
+        return tags.remove(key) != null;
     }
     //endregion
 

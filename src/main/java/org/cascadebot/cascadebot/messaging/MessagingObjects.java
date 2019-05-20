@@ -31,6 +31,11 @@ public final class MessagingObjects {
                 .setImage(null);
     }
 
+    public static EmbedBuilder getClearThreadLocalEmbedBuilder(User requestedBy) {
+        return getClearThreadLocalEmbedBuilder().setFooter("Requested by " + requestedBy.getAsTag(), requestedBy.getEffectiveAvatarUrl());
+    }
+
+
     public static EmbedBuilder getStandardMessageEmbed(String message, User requestedBy) {
         return getClearThreadLocalEmbedBuilder()
                 .setDescription(message)
@@ -39,6 +44,12 @@ public final class MessagingObjects {
 
     public static EmbedBuilder getMessageTypeEmbedBuilder(MessageType messageType) {
         return getClearThreadLocalEmbedBuilder().setColor(messageType.getColor());
+    }
+
+    public static EmbedBuilder getMessageTypeEmbedBuilder(MessageType messageType, User requestedBy) {
+        return getClearThreadLocalEmbedBuilder()
+                .setColor(messageType.getColor())
+                .setFooter("Requested by " + requestedBy.getAsTag(), requestedBy.getEffectiveAvatarUrl());
     }
 
     public static MessageBuilder getMessageTypeMessageBuilder(MessageType messageType) {

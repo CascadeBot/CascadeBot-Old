@@ -13,15 +13,16 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.Environment;
+import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.exceptions.DiscordPermissionException;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -132,9 +133,9 @@ public final class Messaging {
         return sendMessageTypeEmbedMessage(channel, MessageType.DANGER, builder, embed);
     }
 
-    public static RequestFuture<Message> sendExceptionMessage(MessageChannel channel, String s, Exception e) {
+    public static RequestFuture<Message> sendExceptionMessage(MessageChannel channel, String s, Throwable e) {
         String message = "**" + s + "**" +
-                "\nStack trace: " + PasteUtils.paste(PasteUtils.getStackTrace(e)) +
+                "\nStack trace: " + PasteUtils.paste(PasteUtils.getStackTrace(MDCException.from(e))) +
                 (Environment.isDevelopment() ? "" : "\nPlease report the stack trace and the error to the developers here: " + Constants.serverInvite);
         return sendDangerMessage(channel, message);
     }
@@ -166,13 +167,12 @@ public final class Messaging {
         Checks.notNull(buttonGroup, "button group");
 
         if (!channel.getGuild().getMember(CascadeBot.INS.getSelfUser()).hasPermission(channel, Permission.MESSAGE_ADD_REACTION)) {
-            throw new PermissionException("Cannot perform action due to a lack of Permission. Missing permission: " + Permission.MESSAGE_ADD_REACTION);
+            throw new DiscordPermissionException(Permission.MESSAGE_ADD_REACTION);
         }
 
         RequestFuture<Message> future = channel.sendMessage(message).submit();
         future.thenAccept((sentMessage -> {
             buttonGroup.addButtonsToMessage(sentMessage);
-            buttonGroup.setMessage(sentMessage.getIdLong());
             GuildDataManager.getGuildData(sentMessage.getGuild().getIdLong()).addButtonGroup(channel, sentMessage, buttonGroup);
         }));
         return future;
@@ -189,7 +189,7 @@ public final class Messaging {
     }
 
     public static RequestFuture<Message> sendPagedMessage(TextChannel channel, Member owner, List<Page> pages) {
-        ButtonGroup group = new ButtonGroup(owner.getUser().getIdLong(), channel.getGuild().getIdLong());
+        ButtonGroup group = new ButtonGroup(owner.getUser().getIdLong(), channel.getIdLong(), channel.getGuild().getIdLong());
         group.addButton(new Button.UnicodeButton(UnicodeConstants.REWIND, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());

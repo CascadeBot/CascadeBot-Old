@@ -25,7 +25,7 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-            ButtonGroup catButtons = new ButtonGroup(context.getUser().getIdLong(), context.getGuild().getIdLong());
+        ButtonGroup catButtons = new ButtonGroup(sender.getUser().getIdLong(), context.getUser().getIdLong(), context.getGuild().getIdLong());
             catButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
                 if(member.getUser().getIdLong() != catButtons.getOwner().getUser().getIdLong()) {
                     return;
@@ -47,15 +47,15 @@ public class CatCommand implements ICommandMain {
                     message.editMessage(context.i18n("commands.cat.error_loading", UnicodeConstants.FROWNING)).queue();
                 }
             }));
-            try {
-                context.getUIMessaging().replyImage(getCatUrl()).thenAccept(message -> {
-                    catButtons.addButtonsToMessage(message);
-                    catButtons.setMessage(message.getIdLong());
-                    context.getData().addButtonGroup(context.getChannel(), message, catButtons);
-                });
-            } catch (IOException e) {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.cat.error_loading", UnicodeConstants.FROWNING));
-            }
+        try {
+            context.getUIMessaging().replyImage(getCatUrl()).thenAccept(message -> {
+                catButtons.addButtonsToMessage(message);
+                catButtons.setMessage(message.getIdLong());
+                context.getData().addButtonGroup(context.getChannel(), message, catButtons);
+            });
+        } catch (IOException e) {
+            context.getTypedMessaging().replyDanger("Error loading cat picture " + UnicodeConstants.FROWNING);
+        }
     }
 
     private String getCatUrl() throws IOException {
