@@ -45,7 +45,7 @@ public class DogCommand implements ICommandMain {
                     message.delete().queue();
                 }
             } catch (IOException e) {
-                message.editMessage(context.i18n("commands.dog.error_loading", UnicodeConstants.FROWNING)).queue();
+                message.editMessage(context.i18n("commands.dog.error_loading")).queue();
             }
         }));
         try {
@@ -55,7 +55,7 @@ public class DogCommand implements ICommandMain {
                 context.getData().addButtonGroup(context.getChannel(), message, dogButtons);
             });
         } catch (IOException e) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.dog.error_loading", UnicodeConstants.FROWNING));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.dog.error_loading"));
         }
     }
 

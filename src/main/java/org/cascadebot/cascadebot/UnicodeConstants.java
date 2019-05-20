@@ -31,9 +31,6 @@ public final class UnicodeConstants {
     public static final String SONG = "\uD83C\uDFB5"; // 🎵
     public static final String PLAYLIST = "\uD83C\uDFB6"; // 🎶
 
-    public static final String FROWNING = "\uD83D\uDE26"; // 😦
-    public static final String THINKING = "\uD83E\uDD14"; // 🤔
-
     public static final String ONE = "\u0031\u20E3"; // 1️⃣
     public static final String TWO = "\u0032\u20E3";// 2️⃣
     public static final String THREE = "\u0033\u20E3"; // 3️⃣

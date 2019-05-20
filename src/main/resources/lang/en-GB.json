@@ -44,11 +44,11 @@
     },
     "cat": {
       "command": "cat",
-      "error_loading": "Error loading cat picture! {0}"
+      "error_loading": "Error loading cat picture! @frowning@"
     },
     "dog": {
       "command": "dog",
-      "error_loading": "Error loading dog picture! {0}"
+      "error_loading": "Error loading dog picture! @frowning@"
     },
     "roles": {
       "command": "roles",
@@ -159,7 +159,7 @@
       "load": {
         "command": "load",
         "cannot_find_playlist": "Couldn't find playlist `{0}`",
-        "load_track": "Where would you like to load this track from\n{0} User\n{1} Guild"
+        "load_track": "Where would you like to load this track from\n@one@ User\n@two@ Guild"
       },
       "save": {
         "command": "save",

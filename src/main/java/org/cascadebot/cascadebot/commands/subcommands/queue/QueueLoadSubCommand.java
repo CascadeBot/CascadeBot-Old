@@ -53,7 +53,7 @@ public class QueueLoadSubCommand implements ICommandExecutable {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }));
                     })));
-                    context.getUIMessaging().sendButtonedMessage(context.i18n("commands.queue.load.load_track", UnicodeConstants.ONE, UnicodeConstants.TWO), buttonGroup);
+                    context.getUIMessaging().sendButtonedMessage(context.i18n("commands.queue.load.load_track"), buttonGroup);
                     break;
                 case DOESNT_EXIST:
                     context.getTypedMessaging().replyDanger(context.i18n("commands.queue.load.cannot_find_playlist", context.getArg(0)));
