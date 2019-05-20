@@ -11,7 +11,6 @@ import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -22,7 +21,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 1) {
+        if (context.getArgs().length < 1) {
             context.getUIMessaging().replyUsage(this, "module");
             return;
         }

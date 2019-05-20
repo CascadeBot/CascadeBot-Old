@@ -61,4 +61,5 @@ public class NoOpWebhookClient extends WebhookClient {
     public CompletableFuture<ReadonlyMessage> send(@NotNull String content) {
         return CompletableFuture.completedFuture(null);
     }
+
 }

@@ -19,6 +19,10 @@ public enum Module {
      */
     MANAGEMENT(ModuleFlag.REQUIRED),
     /**
+     * This is music, what do you think this is?
+     */
+    MUSIC,
+    /**
      * The commands in this module display various pieces of information about discord entities.
      */
     INFORMATIONAL,

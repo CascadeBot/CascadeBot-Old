@@ -13,7 +13,6 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
@@ -94,7 +93,7 @@ public class GuildFlagSubCommand implements ISubCommand {
     @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(
-                Argument.of("flag", "", ArgumentType.OPTIONAL,
+                Argument.of("flag", "", ArgumentType.REQUIRED,
                         Set.of(
                                 Argument.of("guild_id", "Toggles a flag for this guild [or a different guild].", ArgumentType.OPTIONAL)
                         )

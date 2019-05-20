@@ -26,7 +26,7 @@ public class WebUtils {
                 .build();
 
         Response response = client.newCall(request).execute();
-        if(response.body() == null) {
+        if (response.body() == null) {
             throw new IllegalArgumentException("Response returned no content");
         }
         try {
@@ -35,4 +35,5 @@ public class WebUtils {
             throw new IllegalArgumentException("Response didn't return json!");
         }
     }
+
 }

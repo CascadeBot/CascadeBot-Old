@@ -76,6 +76,8 @@ public class Config {
 
     private long officialServerId;
 
+    private String youtubeKey;
+
     private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
 
     private Config(String file) throws IOException {
@@ -232,6 +234,8 @@ public class Config {
             CascadeBot.LOGGER.warn("Auth failed to initiate. this might cause errors if working with he wrapper or website if the bot is working with those.", e);
         }
 
+        youtubeKey = config.getString("music_keys.youtube");
+
         LOG.info("Finished loading configuration!");
 
     }
@@ -264,6 +268,10 @@ public class Config {
 
     public boolean isPrettyJson() {
         return prettyJson;
+    }
+
+    public boolean isDebug() {
+        return debug;
     }
 
     public String getDefaultPrefix() {
@@ -332,6 +340,10 @@ public class Config {
 
     public Auth getAuth() {
         return auth;
+    }
+
+    public String getYoutubeKey() {
+        return youtubeKey;
     }
 
 }

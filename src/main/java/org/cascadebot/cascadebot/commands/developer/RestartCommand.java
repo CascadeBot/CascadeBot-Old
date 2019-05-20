@@ -17,6 +17,10 @@ public class RestartCommand implements ICommandRestricted {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        if (ShutdownHandler.SHUTDOWN_LOCK.get()) {
+            context.getTypedMessaging().replyDanger("The bot is already shutting down!");
+            return;
+        }
         context.reply("Bot is restarting!");
         CascadeBot.LOGGER.info("Restarting via command! Issuer: {issuer}");
         ShutdownHandler.restart();

@@ -61,6 +61,14 @@ public class PageObjects {
             message.editMessage(content + "\n\nPage " + page + "/" + total).override(true).queue();
         }
 
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
+
     }
 
     public static class TablePage implements Page {
