@@ -155,7 +155,19 @@
     },
     "queue": {
       "command": "queue",
-      "no_tracks_playing": "There are no tracks playing!"
+      "no_tracks_playing": "There are no tracks playing!",
+      "load": {
+        "command": "load",
+        "cannot_find_playlist": "Couldn't find playlist `{0}`",
+        "load_track": "Where would you like to load this track from\n{0} User\n{1} Guild"
+      },
+      "save": {
+        "command": "save",
+        "scope_not_found": "Scope `{0}` not found!",
+        "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it.",
+        "playlist_overwrite": "Playlist already exists. Would you like to overwrite it?",
+        "saved_playlist": "Saved playlist `{0}` in scope `{1}`"
+      }
     },
     "resume": {
       "command": "resume",
