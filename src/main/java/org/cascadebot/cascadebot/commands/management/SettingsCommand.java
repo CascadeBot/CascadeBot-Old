@@ -12,7 +12,7 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.objects.FlagRequired;
+import org.cascadebot.cascadebot.data.objects.Setting;
 import org.cascadebot.cascadebot.data.objects.GuildSettings;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
@@ -20,6 +20,7 @@ import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.cascadebot.utils.Table;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
@@ -37,12 +38,13 @@ public class SettingsCommand implements ICommandMain {
 
         if (field != null) {
             try {
-                FlagRequired flagsRequiredAnnotation = field.getAnnotation(FlagRequired.class);
-                if (flagsRequiredAnnotation != null) {
-                    if (!context.getData().getEnabledFlags().contains(flagsRequiredAnnotation.value())) {
+                Setting settingAnnotation = field.getAnnotation(Setting.class);
+                if (settingAnnotation != null) {
+                    if (!context.getData().getEnabledFlags().containsAll(Arrays.asList(settingAnnotation.flagRequired()))) {
+                        settingAnnotation.niceName();
                         context.getTypedMessaging().replyDanger(
                                 "You cannot edit this setting! You need the: %s flag to do this!",
-                                FormatUtils.formatEnum(flagsRequiredAnnotation.value())
+                                settingAnnotation.niceName()
                         );
                         return;
                     }

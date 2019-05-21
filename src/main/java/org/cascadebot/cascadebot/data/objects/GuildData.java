@@ -41,17 +41,7 @@ public class GuildData {
     //endregion
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
-    private Set<Module> enabledModules = Sets.newConcurrentHashSet(
-            Sets.newHashSet(
-                    Module.CORE,
-                    Module.MANAGEMENT,
-                    Module.INFORMATIONAL
-            )
-    );
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
-
-    private String prefix = Config.INS.getDefaultPrefix();
-
     private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
     //region Guild data containers
@@ -185,33 +175,6 @@ public class GuildData {
     }
     //endregion
 
-    //region Modules
-    public boolean enableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
-            throw new IllegalArgumentException("This module is not available to be enabled!");
-        }
-        return this.enabledModules.add(module);
-    }
-
-    public boolean disableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
-            throw new IllegalArgumentException("This module is not available to be disabled!");
-        } else if (module.isFlagEnabled(ModuleFlag.REQUIRED)) {
-            throw new IllegalArgumentException(String.format("Cannot disable the %s module!", module.toString().toLowerCase()));
-        }
-        return this.enabledModules.remove(module);
-    }
-
-    public boolean isModuleEnabled(Module module) {
-        boolean isEnabled = this.enabledModules.contains(module);
-        if (!isEnabled && module.isFlagEnabled(ModuleFlag.REQUIRED)) {
-            this.enabledModules.add(module);
-            return true;
-        }
-        return isEnabled;
-    }
-    //endregion
-
     public boolean enableFlag(Flag flag) {
         return this.enabledFlags.add(flag);
     }
@@ -258,24 +221,12 @@ public class GuildData {
         return Collections.unmodifiableCollection(commandInfo.values());
     }
 
-    public Set<Module> getEnabledModules() {
-        return Collections.unmodifiableSet(enabledModules);
-    }
-
     public PageCache getPageCache() {
         return pageCache;
     }
 
     public Date getCreationDate() {
         return creationDate;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
     }
 
     //endregion

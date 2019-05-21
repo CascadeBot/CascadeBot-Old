@@ -227,7 +227,7 @@ public class CommandContext {
             }
         }
 
-        String commandString = data.getPrefix() + (parent == null ? "" : parent + " ");
+        String commandString = data.getSettings().getPrefix() + (parent == null ? "" : parent + " ");
         return parentArg.getUsageString(commandString);
     }
 

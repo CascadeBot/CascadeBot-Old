@@ -30,7 +30,7 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
 
         if (module != null) {
             try {
-                if (context.getData().disableModule(module)) {
+                if (context.getData().getSettings().disableModule(module)) {
                     // If module wasn't already disabled
                     context.getTypedMessaging().replySuccess("The module `%s` has been disabled!", module.toString());
                 } else {

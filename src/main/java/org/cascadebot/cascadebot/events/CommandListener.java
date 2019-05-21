@@ -68,7 +68,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String prefix = guildData.getPrefix();
+        String prefix = guildData.getSettings().getPrefix();
         boolean isMention = false;
 
         String commandWithArgs;
@@ -80,7 +80,7 @@ public class CommandListener extends ListenerAdapter {
         } else if (guildData.getSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
             commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
             isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getSettings().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
         } else {
             return;
@@ -162,7 +162,7 @@ public class CommandListener extends ListenerAdapter {
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
         if (cmd != null) {
             if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
-                    !guildData.isModuleEnabled(cmd.getModule())) {
+                    !guildData.getSettings().isModuleEnabled(cmd.getModule())) {
                 if (guildData.getSettings().willDisplayModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     builder.setDescription(String.format("The module `%s` for command `%s` is disabled!", cmd.getModule().toString(), trigger));

@@ -30,7 +30,7 @@ public class ModuleEnableSubCommand implements ICommandExecutable {
 
         if (module != null) {
             try {
-                if (context.getData().enableModule(module)) {
+                if (context.getSettings().enableModule(module)) {
                     // If the module wasn't enabled
                     context.getTypedMessaging().replySuccess("The module `%s` has been enabled!", module.toString());
                 } else {
