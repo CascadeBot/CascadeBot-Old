@@ -26,12 +26,12 @@ public class TagCategorySubCommand implements ICommandExecutable {
 
         Tag tag = context.getData().getTag(context.getArg(0));
         if (tag == null) {
-            context.getTypedMessaging().replyDanger("Tag `" + context.getArg(0) + "` not found");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
             return;
         }
 
         tag.setCategory(context.getArg(1));
-        context.getTypedMessaging().replySuccess("Set tag `" + context.getArg(0) + "` category to `" + context.getArg(1) + "`");
+        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.category.successfully_set_tag", context.getArg(0), context.getArg(1)));
     }
 
     @Override

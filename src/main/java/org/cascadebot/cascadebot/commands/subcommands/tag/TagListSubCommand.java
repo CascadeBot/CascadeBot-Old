@@ -22,7 +22,7 @@ public class TagListSubCommand implements ICommandExecutable {
         Map<String, Tag> tags = context.getData().getTagInfo();
 
         if (tags.size() == 0) {
-            context.getTypedMessaging().replyWarning("Server has no tags!");
+            context.getTypedMessaging().replyWarning(context.i18n("commands.tag.list.no_tags_found"));
             return;
         }
 

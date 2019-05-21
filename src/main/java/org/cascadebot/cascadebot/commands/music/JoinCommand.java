@@ -85,9 +85,4 @@ public class JoinCommand implements ICommandMain {
         return CascadePermission.of("Join command", "join", true);
     }
 
-    @Override
-    public String description() {
-        return "Joins the bot to a voice channel";
-    }
-
 }
