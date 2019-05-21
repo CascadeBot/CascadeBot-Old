@@ -7,6 +7,8 @@ package org.cascadebot.cascadebot.utils;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.vdurmont.emoji.Emoji;
+import com.vdurmont.emoji.EmojiManager;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -16,8 +18,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FormatUtils {
+
+    private static final Pattern UNICODE_REGEX = Pattern.compile("@([A-Za-z_]+)@");
 
     //region Table methods
     public static String makeAsciiTable(java.util.List<String> headers, java.util.List<java.util.List<String>> table, String footer) {
@@ -170,6 +176,20 @@ public class FormatUtils {
 
     public static <T extends Enum> String formatEnum(T theEnum) {
         return StringUtils.capitalize(theEnum.name().toLowerCase().replace("_", " "));
+    }
+
+    public static String formatUnicode(String stringToFormat) {
+        Matcher matcher = UNICODE_REGEX.matcher(stringToFormat);
+        String formatted = stringToFormat;
+        while (matcher.find()) {
+            Emoji emoji = EmojiManager.getForAlias(matcher.group(1).toLowerCase());
+            if (emoji != null) {
+                formatted = formatted.replace(matcher.group(), emoji.getUnicode());
+            }
+        }
+        formatted = formatted.replace("@infinity@", "\u221e");
+        formatted = formatted.replace("@zero_width_space@", "\u200B");
+        return formatted;
     }
 
     /**
