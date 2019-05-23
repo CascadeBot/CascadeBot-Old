@@ -93,11 +93,6 @@ public class VolumeCommand implements ICommandMain {
     }
 
     @Override
-    public String description() {
-        return "Returns the current volume";
-    }
-
-    @Override
     public Set<Flag> getFlags() {
         return Set.of(Flag.MUSIC_SERVICES);
     }

@@ -90,9 +90,4 @@ public class QueueCommand implements ICommandMain {
         return Set.of(new QueueSaveSubCommand(), new QueueLoadSubCommand());
     }
 
-    @Override
-    public String description() {
-        return "Display the current queue";
-    }
-
 }

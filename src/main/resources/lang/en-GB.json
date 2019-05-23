@@ -20,7 +20,22 @@
     "kick": "Kicks the specified user.",
     "softban": "Bans and then unbans a specified user in order to remove messages and kick the user.",
     "unban": "Unbans the specified user.",
-    "join": "Joins the bot to a voice channel"
+    "tag": {
+      "main_command": "Tag command",
+    },
+    "join": "Joins the bot to a voice channel",
+    "leave": "Tells the bot to leave a voice channel",
+    "loop": "Changes between loop modes",
+    "pause": "Pauses the currently playing track",
+    "play": "Plays moosic",
+    "playing": "Get playing music",
+    "queue": "Display the current queue",
+    "resume": "Resumes music",
+    "search": "Searches for a song",
+    "shuffle": "Shuffles music in a queue",
+    "skip": "Skips the current song",
+    "stop": "Stops music when playing",
+    "volume": "Returns the current volume"
   },
   "commands": {
     "support": {
@@ -212,6 +227,38 @@
       "volume_set": "Volume set to {0}%",
       "volume_already_set": "Volume is already {0}%",
       "volume_range": "Volume needs to be between 0% and 200%"
+    },
+    "tag": {
+      "command": "tag",
+      "cannot_find_tag": "Couldn't find tag with name `{0}`",
+      "category": {
+        "command": "category",
+        "successfully_set_tag": "Set tag `{0}` category to `{1}`"
+      },
+      "create": {
+        "command": "create",
+        "successfully_created_tag": "Successfully created tag with name `{0}`"
+      },
+      "delete": {
+        "command": "delete",
+        "successfully_deleted_tag": "Successfully deleted tag!"
+      },
+      "edit": {
+        "command": "edit",
+        "successfully_edited_tag": "Successfully updated tag `{0}`"
+      },
+      "list": {
+        "command": "list",
+        "no_tags_found": "Server has no tags!"
+      },
+      "placeholders": {
+        "command": "placeholders",
+        "header": "To use placeholders in tags you wrap the placeholder in `{}` (example: `{server_name}`). If a place holder requires more options (like args) you use this format `{placeholder:option1,option2}` (example: `{args:0}`)."
+      },
+      "raw": {
+        "command": "raw",
+        "cannot_find_tag": "Couldn't find tag with name `{0}`"
+      }
     }
   },
   "moderation_manager": {
@@ -273,7 +320,9 @@
     "playing": "Playing",
     "paused": "Paused",
     "progress": "Progress",
-    "volume": "Volume"
+    "volume": "Volume",
+    "category": "Category",
+    "tag": "Tag"
 
   }
 }

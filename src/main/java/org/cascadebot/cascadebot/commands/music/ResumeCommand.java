@@ -40,9 +40,4 @@ public class ResumeCommand implements ICommandMain {
         return CascadePermission.of("Resume command", "resume", true);
     }
 
-    @Override
-    public String description() {
-        return "Resumes music";
-    }
-
 }

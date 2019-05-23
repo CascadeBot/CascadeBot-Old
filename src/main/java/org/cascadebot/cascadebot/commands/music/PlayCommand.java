@@ -58,9 +58,4 @@ public class PlayCommand implements ICommandMain {
         return CascadePermission.of("Play command", "play", true);
     }
 
-    @Override
-    public String description() {
-        return "Plays music";
-    }
-
 }

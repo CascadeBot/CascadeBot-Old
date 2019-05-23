@@ -40,9 +40,4 @@ public class PauseCommand implements ICommandMain {
         return CascadePermission.of("Pause command", "pause", true);
     }
 
-    @Override
-    public String description() {
-        return "Pauses the currently playing track";
-    }
-
 }

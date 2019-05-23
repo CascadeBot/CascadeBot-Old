@@ -38,9 +38,4 @@ public class ShuffleCommand implements ICommandMain {
         return CascadePermission.of("Shuffle command", "shuffle", true);
     }
 
-    @Override
-    public String description() {
-        return "Shuffles music in a queue";
-    }
-
 }

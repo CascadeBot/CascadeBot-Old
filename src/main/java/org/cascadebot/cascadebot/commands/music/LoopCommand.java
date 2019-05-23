@@ -74,9 +74,4 @@ public class LoopCommand implements ICommandMain {
         return Set.of(Argument.of("mode", "Sets the looping mode to the specified mode", ArgumentType.OPTIONAL));
     }
 
-    @Override
-    public String description() {
-        return "Changes between loop modes";
-    }
-
 }
