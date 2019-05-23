@@ -34,7 +34,7 @@ public class TagCommand implements ICommandMain {
         }
 
         if (!context.getData().hasTag(context.getArg(0))) {
-            context.getTypedMessaging().replyDanger("Couldn't find tag with name `" + context.getArg(0) + "`");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
             return;
         }
 

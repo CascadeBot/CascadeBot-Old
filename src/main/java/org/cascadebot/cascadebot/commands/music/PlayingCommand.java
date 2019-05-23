@@ -227,9 +227,4 @@ public class PlayingCommand implements ICommandMain {
         return CascadePermission.of("Playing Command", "playing", true);
     }
 
-    @Override
-    public String description() {
-        return "get playing music";
-    }
-
 }

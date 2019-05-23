@@ -26,12 +26,12 @@ public class TagEditSubCommand implements ICommandExecutable {
 
         Tag tag = context.getData().getTag(context.getArg(0));
         if (tag == null) {
-            context.getTypedMessaging().replyDanger("Tag `" + context.getArg(0) + "` not found");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
             return;
         }
 
         tag.setContent(context.getMessage(1));
-        context.getTypedMessaging().replySuccess("Updated tag `" + context.getArg(0) + "`");
+        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", context.getArg(0)));
     }
 
     @Override

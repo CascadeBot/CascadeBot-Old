@@ -26,9 +26,9 @@ public class TagDeleteSubCommand implements ICommandExecutable {
         }
 
         if (context.getData().removeTag(context.getArg(0))) {
-            context.getTypedMessaging().replySuccess("Successfully deleted tag!");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.tag.delete.successfully_deleted_tag"));
         } else {
-            context.getTypedMessaging().replyDanger("Tag `" + context.getArg(0) + "` doesn't exist!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
         }
     }
 

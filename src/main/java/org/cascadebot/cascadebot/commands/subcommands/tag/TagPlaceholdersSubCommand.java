@@ -25,7 +25,7 @@ public class TagPlaceholdersSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        String header = "To use placeholders in tags you wrap the placeholder in `{}` (example: `{server_name}`). If a place holder requires more options (like args) you use this format `{placeholder:option1,option2}` (example: `{args:0}`).";
+        String header = context.i18n("commands.tag.placeholders.header");
         Map<String, List<Placeholder>> placeholderGroupsMap = new HashMap<>();
         StringBuilder placeholderBuilder = new StringBuilder();
         for (Placeholder placeholder : Placeholder.values()) {

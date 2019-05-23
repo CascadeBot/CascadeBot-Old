@@ -54,9 +54,4 @@ public class LeaveCommand implements ICommandMain {
         return CascadePermission.of("Leave command", "leave", true);
     }
 
-    @Override
-    public String description() {
-        return "Tells the bot to leave a voice channel";
-    }
-
 }
