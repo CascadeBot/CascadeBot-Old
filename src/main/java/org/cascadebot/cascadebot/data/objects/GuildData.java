@@ -9,6 +9,13 @@ import com.google.common.collect.Sets;
 import de.bild.codec.annotations.Id;
 import de.bild.codec.annotations.PreSave;
 import de.bild.codec.annotations.Transient;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -21,13 +28,6 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @BsonDiscriminator
 public class GuildData {
@@ -52,6 +52,7 @@ public class GuildData {
 
     private String prefix = Config.INS.getDefaultPrefix();
 
+    private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
     //region Guild data containers
 
@@ -161,8 +162,26 @@ public class GuildData {
         return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command));
     }
 
-    public ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
-        return commandInfo;
+    public Map<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
+        return Collections.unmodifiableMap(commandInfo);
+    }
+
+    public Map<String, Tag> getTagInfo() { return Collections.unmodifiableMap(tags); }
+
+    public Tag getTag(String key) {
+        return tags.get(key);
+    }
+
+    public boolean hasTag(String key) {
+        return tags.containsKey(key);
+    }
+
+    public void addTag(String key, Tag tag) {
+        tags.put(key, tag);
+    }
+
+    public boolean removeTag(String key) {
+        return tags.remove(key) != null;
     }
     //endregion
 
