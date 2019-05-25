@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import com.google.common.collect.Sets;
+import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.data.Config;
@@ -15,13 +16,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class GuildSettings {
+public class GuildSettingsCore {
 
     public static Map<String, Field> VALUES = new HashMap<>();
 
     static {
-        for (Field field : GuildSettings.class.getDeclaredFields()) {
+        for (Field field : GuildSettingsCore.class.getDeclaredFields()) {
             if (field.getName().equals("VALUES")) continue;
             if (field.getAnnotation(Setting.class) != null && !field.getAnnotation(Setting.class).directlyEditable()) continue;
             field.setAccessible(true);
@@ -64,7 +66,8 @@ public class GuildSettings {
     @Setting(niceName = "Prefix", directlyEditable = false)
     private String prefix = Config.INS.getDefaultPrefix();
 
-
+    @Setting(niceName = "Tags", directlyEditable = false)
+    private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
     public boolean isMentionPrefix() {
         return mentionPrefix;
@@ -155,6 +158,24 @@ public class GuildSettings {
 
     public void setPrefix(String prefix) {
         this.prefix = prefix;
+    }
+
+    public Map<String, Tag> getTagInfo() { return Collections.unmodifiableMap(tags); }
+
+    public Tag getTag(String key) {
+        return tags.get(key);
+    }
+
+    public boolean hasTag(String key) {
+        return tags.containsKey(key);
+    }
+
+    public void addTag(String key, Tag tag) {
+        tags.put(key, tag);
+    }
+
+    public boolean removeTag(String key) {
+        return tags.remove(key) != null;
     }
 
 }

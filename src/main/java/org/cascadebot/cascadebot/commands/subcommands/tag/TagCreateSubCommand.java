@@ -24,7 +24,7 @@ public class TagCreateSubCommand implements ICommandExecutable {
             context.getUIMessaging().replyUsage(this, "tag");
             return;
         }
-        context.getData().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));
+        context.getSettings().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));
         context.getTypedMessaging().replySuccess("Successfully created tag with name `%s`", context.getArg(0));
     }
 

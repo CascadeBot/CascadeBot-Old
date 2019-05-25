@@ -24,7 +24,6 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
-import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
@@ -42,11 +41,10 @@ public class GuildData {
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
-    private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
     //region Guild data containers
 
-    private GuildSettings guildSettings = new GuildSettings();
+    private GuildSettingsCore guildSettings = new GuildSettingsCore();
     private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now
@@ -156,23 +154,6 @@ public class GuildData {
         return Collections.unmodifiableMap(commandInfo);
     }
 
-    public Map<String, Tag> getTagInfo() { return Collections.unmodifiableMap(tags); }
-
-    public Tag getTag(String key) {
-        return tags.get(key);
-    }
-
-    public boolean hasTag(String key) {
-        return tags.containsKey(key);
-    }
-
-    public void addTag(String key, Tag tag) {
-        tags.put(key, tag);
-    }
-
-    public boolean removeTag(String key) {
-        return tags.remove(key) != null;
-    }
     //endregion
 
     public boolean enableFlag(Flag flag) {
@@ -205,7 +186,7 @@ public class GuildData {
         return stateLock;
     }
 
-    public GuildSettings getSettings() {
+    public GuildSettingsCore getSettings() {
         return guildSettings;
     }
 

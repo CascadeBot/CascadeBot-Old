@@ -32,12 +32,12 @@ public class TagCommand implements ICommandMain {
             return;
         }
 
-        if (!context.getData().hasTag(context.getArg(0))) {
+        if (!context.getSettings().hasTag(context.getArg(0))) {
             context.getTypedMessaging().replyDanger("Couldn't find tag with name `" + context.getArg(0) + "`");
             return;
         }
 
-        Tag tag = context.getData().getTag(context.getArg(0));
+        Tag tag = context.getSettings().getTag(context.getArg(0));
         context.reply(tag.formatTag(context));
     }
 

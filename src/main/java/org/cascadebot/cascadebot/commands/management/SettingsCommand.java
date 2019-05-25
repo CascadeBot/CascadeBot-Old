@@ -12,7 +12,7 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.objects.GuildSettings;
+import org.cascadebot.cascadebot.data.objects.GuildSettingsCore;
 import org.cascadebot.cascadebot.data.objects.Setting;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PasteUtils;
@@ -31,7 +31,7 @@ public class SettingsCommand implements ICommandMain {
         Field field;
         if (context.getArgs().length == 0 || context.getArg(0).equalsIgnoreCase("list")) {
             Table.TableBuilder tableBuilder = new Table.TableBuilder("Setting", "Current value");
-            GuildSettings.VALUES
+            GuildSettingsCore.VALUES
                     .entrySet()
                     .stream()
                     .sorted(Comparator.comparing(Map.Entry::getKey))
@@ -44,7 +44,7 @@ public class SettingsCommand implements ICommandMain {
                         }
                     });
             PasteUtils.pasteIfLong(tableBuilder.build().toString(), 2000, context::reply);
-        } else if ((field = GuildSettings.VALUES.get(context.getArg(0).toLowerCase())) != null) {
+        } else if ((field = GuildSettingsCore.VALUES.get(context.getArg(0).toLowerCase())) != null) {
             try {
                 Setting settingAnnotation = field.getAnnotation(Setting.class);
                 if (settingAnnotation != null) {

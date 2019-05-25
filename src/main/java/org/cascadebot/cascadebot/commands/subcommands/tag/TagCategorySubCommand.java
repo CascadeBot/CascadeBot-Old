@@ -23,7 +23,7 @@ public class TagCategorySubCommand implements ICommandExecutable {
             return;
         }
 
-        Tag tag = context.getData().getTag(context.getArg(0));
+        Tag tag = context.getSettings().getTag(context.getArg(0));
         if (tag == null) {
             context.getTypedMessaging().replyDanger("Tag `" + context.getArg(0) + "` not found");
             return;
