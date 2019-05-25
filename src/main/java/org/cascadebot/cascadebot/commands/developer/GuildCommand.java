@@ -11,8 +11,8 @@ import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commands.subcommands.guild.GuildFlagSubCommand;
+import org.cascadebot.cascadebot.commands.subcommands.guild.GuildInfoSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.guild.GuildLeaveSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.guild.GuildListSubCommand;
 import org.cascadebot.cascadebot.commands.subcommands.guild.GuildSaveSubCommand;
 import org.cascadebot.shared.SecurityLevel;
 
@@ -37,7 +37,7 @@ public class GuildCommand implements ICommandRestricted {
 
     @Override
     public Set<ICommandExecutable> getSubCommands() {
-        return Set.of(new GuildSaveSubCommand(), new GuildLeaveSubCommand(), new GuildFlagSubCommand(), new GuildListSubCommand());
+        return Set.of(new GuildSaveSubCommand(), new GuildLeaveSubCommand(), new GuildFlagSubCommand(), new GuildInfoSubCommand());
     }
 
     @Override
