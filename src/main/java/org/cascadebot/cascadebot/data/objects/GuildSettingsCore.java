@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SettingsContainer(module = Module.CORE)
 public class GuildSettingsCore {
 
     public static Map<String, Field> VALUES = new HashMap<>();
