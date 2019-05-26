@@ -6,10 +6,14 @@
 package org.cascadebot.cascadebot.permissions.objects;
 
 import com.google.common.collect.Sets;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Set;
 
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class Group extends PermissionHolder {
 
     // Base 55 with 5 chars gives 503284375 combinations, we should be ok for uniqueness
@@ -49,11 +53,6 @@ public class Group extends PermissionHolder {
     @Override
     HolderType getType() {
         return HolderType.GROUP;
-    }
-
-    @Override
-    public String toString() {
-        return "Group[id:" + id + "](" + name + ")";
     }
 
 }
