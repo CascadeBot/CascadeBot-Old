@@ -74,7 +74,7 @@ public class SettingsCommand implements ICommandMain {
                               .append(tableBuilder.build().toString())
                               .append("\n\n");
             }
-            PasteUtils.pasteIfLong(StringUtils.repeat(messageBuilder.toString(), 6), 2000, context.getTypedMessaging()::replyInfo);
+            PasteUtils.pasteIfLong(messageBuilder.toString(), 2000, context.getTypedMessaging()::replyInfo);
         } else if ((field = getAllSettings(settingsClasses).get(context.getArg(0).toLowerCase())) != null) {
             try {
                 Setting settingAnnotation = field.getAnnotation(Setting.class);
