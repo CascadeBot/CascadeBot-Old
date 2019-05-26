@@ -106,7 +106,7 @@ public class SettingsCommand implements ICommandMain {
                 context.getTypedMessaging().replyException("Could not access that setting!", e);
             }
         } else {
-            context.getTypedMessaging().replyDanger("Cannot find that field!");
+            context.getTypedMessaging().replyDanger("Cannot find that setting!");
         }
     }
 
