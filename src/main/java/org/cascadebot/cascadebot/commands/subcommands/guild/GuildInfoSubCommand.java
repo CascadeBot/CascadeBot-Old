@@ -7,6 +7,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -26,7 +27,7 @@ public class GuildInfoSubCommand implements ICommandExecutable {
 
         if (context.getArgs().length > 0) {
             guildForList = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
-            dataForList = GuildDataManager.getGuildData(Long.valueOf(context.getArg(0)));
+            dataForList = GuildDataManager.getGuildData(guildForList.getIdLong());
         }
 
         if (dataForList == null || guildForList == null) {
@@ -45,7 +46,14 @@ public class GuildInfoSubCommand implements ICommandExecutable {
                                      (finalDataForList.isFlagEnabled(flag) ? UnicodeConstants.TICK : UnicodeConstants.RED_CROSS))
                              .collect(Collectors.joining("\n"));
 
+        String modules = Arrays.stream(Module.values())
+                             .map(module -> FormatUtils.formatEnum(module) + " - " +
+                                     (finalDataForList.isModuleEnabled(module) ? UnicodeConstants.TICK : UnicodeConstants.RED_CROSS))
+                             .collect(Collectors.joining("\n"));
+
+
         builder.addField("Flags", flags, false);
+        builder.addField("Modules", modules, false);
         builder.addField("Join Date", FormatUtils.formatDateTime(context.getSelfMember().getJoinDate()), false);
 
         context.getTypedMessaging().replyInfo(builder);
