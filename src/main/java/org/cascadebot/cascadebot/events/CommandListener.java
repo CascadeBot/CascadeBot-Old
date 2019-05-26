@@ -39,7 +39,7 @@ public class CommandListener extends ListenerAdapter {
 
     private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
     private static final AtomicInteger threadCounter = new AtomicInteger(0);
-    private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newFixedThreadPool(5, r ->
+    private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r ->
             new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
 
     private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
