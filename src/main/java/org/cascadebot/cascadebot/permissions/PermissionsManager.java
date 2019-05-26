@@ -155,5 +155,10 @@ public class PermissionsManager {
         return securityLevelCache.get(userId);
     }
 
+    public void clearCacheForUser(long userId) {
+        officialGuildRoleIDCache.refresh(userId);
+        securityLevelCache.refresh(userId);
+    }
+
 
 }
