@@ -45,6 +45,8 @@ public class Config {
     private File config;
 
     private boolean debug;
+    private boolean prometheusServerEnabled;
+    private int prometheusPort;
 
     private WebhookClient eventWebhook;
 
@@ -161,6 +163,9 @@ public class Config {
             }
             this.ssl = warnOnDefault(config, "database.ssl", false);
         }
+
+        this.prometheusServerEnabled = warnOnDefault(config, "stats_enabled", false);
+        this.prometheusPort = config.getInt("stats_port", 6060);
 
         shardNum = warnOnDefault(config, "shard_num", -1);
 
@@ -344,6 +349,14 @@ public class Config {
 
     public String getYoutubeKey() {
         return youtubeKey;
+    }
+
+    public boolean isPrometheusServerEnabled() {
+        return prometheusServerEnabled;
+    }
+
+    public int getPrometheusPort() {
+        return prometheusPort;
     }
 
 }

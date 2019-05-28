@@ -19,6 +19,10 @@
 # Whether to output DEBUG messages to STDOUT
 debug: false
 
+# Whether to enable prometheus HTTP Server
+stats_enabled: false
+stats_port: 6060
+
 # The webhook to send important bot update events to
 event_webhook:
 
