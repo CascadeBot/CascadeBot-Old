@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.events;
 
+import io.prometheus.client.Summary;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
@@ -24,6 +25,7 @@ import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.slf4j.MDC;
@@ -161,6 +163,7 @@ public class CommandListener extends ListenerAdapter {
 
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
         if (cmd != null) {
+            CascadeBot.INS.getMetrics().commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
                     !guildData.isModuleEnabled(cmd.getModule())) {
                 if (guildData.getSettings().willDisplayModuleErrors() || Environment.isDevelopment()) {
@@ -233,6 +236,9 @@ public class CommandListener extends ListenerAdapter {
                     (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"),
                     context.getUser().getAsTag(),
                     Arrays.toString(context.getArgs()));
+
+            CascadeBot.INS.getMetrics().commandsExecuted.labels(command.getClass().getSimpleName()).inc();
+            Summary.Timer commandTimer = CascadeBot.INS.getMetrics().commandExecutionTime.labels(command.getClass().getSimpleName()).startTimer();
             try {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
@@ -240,6 +246,7 @@ public class CommandListener extends ListenerAdapter {
                 CascadeBot.LOGGER.error("Error while running a command!", MDCException.from(e));
             } finally {
                 CascadeBot.clearCascadeMDC();
+                commandTimer.observeDuration();
             }
         });
         deleteMessages(command, context);
