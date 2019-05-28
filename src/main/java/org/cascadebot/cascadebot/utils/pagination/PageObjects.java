@@ -35,7 +35,7 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            if (GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong()).getSettings().useEmbedForMessages()) {
+            if (GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong()).getSettings().isUseEmbedForMessages()) {
                 if (numbersInEmbed) {
                     embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
                     message.editMessage(embed.build()).override(true).queue();
