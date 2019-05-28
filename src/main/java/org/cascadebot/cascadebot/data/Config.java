@@ -9,6 +9,7 @@ import ch.qos.logback.classic.Level;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import com.google.common.collect.HashMultimap;
+import lombok.Getter;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class Config {
 
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);
@@ -249,101 +251,6 @@ public class Config {
         } else {
             return object;
         }
-    }
-
-    public WebhookClient getEventWebhook() {
-        if (eventWebhook == null) {
-            return new NoOpWebhookClient();
-        }
-        return eventWebhook;
-    }
-
-    public String getBotToken() {
-        return botToken;
-    }
-
-    public Long getBotID() {
-        return botID;
-    }
-
-    public boolean isPrettyJson() {
-        return prettyJson;
-    }
-
-    public boolean isDebug() {
-        return debug;
-    }
-
-    public String getDefaultPrefix() {
-        return defaultPrefix;
-    }
-
-    public HashMultimap<SecurityLevel, Long> getSecurityLevels() {
-        return securityLevels;
-    }
-
-    public Map<String, Long> getGlobalEmotes() {
-        return globalEmotes;
-    }
-
-    public String getHasteServer() {
-        return hasteServer;
-    }
-
-    public String getHasteLink() {
-        return hasteLink;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public char[] getPassword() {
-        return password;
-    }
-
-    public String getDatabase() {
-        return database;
-    }
-
-    public List<String> getHosts() {
-        return hosts;
-    }
-
-    public boolean isSsl() {
-        return ssl;
-    }
-
-    public String getConnectionString() {
-        return connectionString;
-    }
-
-    public int getShardNum() {
-        return shardNum;
-    }
-
-    public List<MusicHandler.MusicNode> getMusicNodes() {
-        return musicNodes;
-    }
-
-    public long getOfficialServerId() {
-        return officialServerId;
-    }
-
-    public String getGuildWelcomeMessage() {
-        return guildWelcomeMessage;
-    }
-
-    public String getGuildGoodbyeMessage() {
-        return guildGoodbyeMessage;
-    }
-
-    public Auth getAuth() {
-        return auth;
-    }
-
-    public String getYoutubeKey() {
-        return youtubeKey;
     }
 
 }

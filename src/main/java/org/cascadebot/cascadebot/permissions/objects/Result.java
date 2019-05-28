@@ -11,15 +11,11 @@ import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
+@Getter
 public class Result {
 
-    @Getter
     private PermissionAction action;
-
-    @Getter
     private ResultCause cause;
-
-    @Getter
     private Object causeObject;
 
     private Result(PermissionAction action) {

@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.tasks;
 
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,13 +30,13 @@ public abstract class Task implements Runnable {
         return thread;
     });
 
+    @Getter
     private static final Map<String, ScheduledFuture<?>> tasks = new HashMap<>();
 
 
     public static ScheduledExecutorService getScheduler() {
         return AGENTS;
     }
-
 
     //only one of each agent, non-static is fine
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -62,10 +63,6 @@ public abstract class Task implements Runnable {
 
     public static void shutdownTaskPool() {
         AGENTS.shutdown();
-    }
-
-    public static Map<String, ScheduledFuture<?>> getTasks() {
-        return tasks;
     }
 
     @Override

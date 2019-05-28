@@ -5,11 +5,15 @@
 
 package org.cascadebot.cascadebot.messaging;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.shared.SharedConstants;
 
 import java.awt.Color;
 
+@Getter
+@RequiredArgsConstructor
 public enum MessageType {
 
     INFO(Color.CYAN, UnicodeConstants.INFORMATION),
@@ -21,18 +25,5 @@ public enum MessageType {
 
     private final Color color;
     private final String emoji;
-
-    MessageType(Color color, String emoji) {
-        this.color = color;
-        this.emoji = emoji;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public String getEmoji() {
-        return emoji;
-    }
 
 }

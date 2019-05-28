@@ -6,12 +6,14 @@
 package org.cascadebot.cascadebot.utils;
 
 import com.google.common.reflect.ClassPath;
+import lombok.experimental.UtilityClass;
 import org.cascadebot.cascadebot.CascadeBot;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class ReflectionUtils {
 
     /**

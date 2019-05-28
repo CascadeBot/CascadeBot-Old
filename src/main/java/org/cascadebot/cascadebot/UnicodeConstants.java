@@ -5,7 +5,10 @@
 
 package org.cascadebot.cascadebot;
 
-public final class UnicodeConstants {
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class UnicodeConstants {
 
     public static final String ZERO_WIDTH_SPACE = "\u200B";
     public static final String INFINITY_SYMBOL = "\u221e"; // ∞
