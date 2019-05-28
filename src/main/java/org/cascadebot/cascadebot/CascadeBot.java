@@ -27,10 +27,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
 import org.cascadebot.cascadebot.events.VoiceEventListener;
+import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
@@ -63,6 +65,7 @@ public class CascadeBot {
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
     private OkHttpClient httpClient;
+    private Metrics metrics;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
 
@@ -204,6 +207,11 @@ public class CascadeBot {
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
 
+        if (Config.INS.isPrometheusServerEnabled()) {
+            metrics = new Metrics();
+            metrics.cacheMetrics.addCache("guild", GuildDataManager.getGuilds());
+        }
+
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
@@ -285,6 +293,10 @@ public class CascadeBot {
 
     public EventWaiter getEventWaiter() {
         return eventWaiter;
+    }
+
+    public Metrics getMetrics() {
+        return metrics;
     }
 
 }
