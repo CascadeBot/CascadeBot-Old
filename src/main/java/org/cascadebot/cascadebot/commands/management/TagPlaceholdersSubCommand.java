@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.tag;
+package org.cascadebot.cascadebot.commands.management;
 
 import java.util.ArrayList;
 import java.util.HashMap;
