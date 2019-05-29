@@ -41,17 +41,13 @@ public class BotMetricsCollector extends Collector {
             entities.addMetric(List.of("all", "voice_channels"), shardManager.getVoiceChannelCache().size());
             entities.addMetric(List.of("all", "categories"), shardManager.getCategoryCache().size());
             metricFamilySamples.add(entities);
-
-            if (MusicHandler.isLavalinkEnabled()) {
-                GaugeMetricFamily lavalinkInfo = new GaugeMetricFamily("cascade_lavalink_info", "Information about Lavalink", List.of("info"));
-                lavalinkInfo.addMetric(List.of("links"), MusicHandler.getLavalink().getLinks().size());
-                lavalinkInfo.addMetric(List.of("connected_voice_channels"), MusicHandler.getLavalink().getLinks().stream().filter(link -> link.getState() == Link.State.CONNECTED).count());
-            } else {
-                
-            }
-
         }
-        return null;
+
+        GaugeMetricFamily uptime = new GaugeMetricFamily("cascade_uptime", "", List.of());
+        uptime.addMetric(List.of(), CascadeBot.INS.getUptime());
+        metricFamilySamples.add(uptime);
+
+        return metricFamilySamples;
     }
 
 }

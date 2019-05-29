@@ -163,7 +163,7 @@ public class CommandListener extends ListenerAdapter {
 
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
         if (cmd != null) {
-            CascadeBot.INS.getMetrics().commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
+            Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
                     !guildData.isModuleEnabled(cmd.getModule())) {
                 if (guildData.getSettings().willDisplayModuleErrors() || Environment.isDevelopment()) {
@@ -237,8 +237,8 @@ public class CommandListener extends ListenerAdapter {
                     context.getUser().getAsTag(),
                     Arrays.toString(context.getArgs()));
 
-            CascadeBot.INS.getMetrics().commandsExecuted.labels(command.getClass().getSimpleName()).inc();
-            Summary.Timer commandTimer = CascadeBot.INS.getMetrics().commandExecutionTime.labels(command.getClass().getSimpleName()).startTimer();
+            Metrics.INS.commandsExecuted.labels(command.getClass().getSimpleName()).inc();
+            Summary.Timer commandTimer = Metrics.INS.commandExecutionTime.labels(command.getClass().getSimpleName()).startTimer();
             try {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {

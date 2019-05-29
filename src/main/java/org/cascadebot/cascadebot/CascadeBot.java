@@ -59,13 +59,13 @@ public class CascadeBot {
     private static Version version;
     private static Gson gson;
 
+    private long startupTime;
     private ShardManager shardManager;
     private CommandManager commandManager;
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
     private OkHttpClient httpClient;
-    private Metrics metrics;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
 
@@ -121,6 +121,7 @@ public class CascadeBot {
     public void run() {
         LOGGER.info("All shards successfully logged in!");
         LOGGER.info("Cascade Bot version {} successfully booted up!", version);
+        startupTime = System.currentTimeMillis();
     }
 
 
@@ -207,10 +208,7 @@ public class CascadeBot {
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
 
-        if (Config.INS.isPrometheusServerEnabled()) {
-            metrics = new Metrics();
-            metrics.cacheMetrics.addCache("guild", GuildDataManager.getGuilds());
-        }
+        Metrics.INS.cacheMetrics.addCache("guild", GuildDataManager.getGuilds());
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
@@ -295,8 +293,12 @@ public class CascadeBot {
         return eventWaiter;
     }
 
-    public Metrics getMetrics() {
-        return metrics;
+    public long getStartupTime() {
+        return startupTime;
+    }
+
+    public long getUptime() {
+        return System.currentTimeMillis() - startupTime;
     }
 
 }
