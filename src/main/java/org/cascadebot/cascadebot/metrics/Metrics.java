@@ -45,7 +45,11 @@ public class Metrics {
             .help("The number of buttons pressed in this session")
             .labelNames("button")
             .register();
-
+    public Counter messagesSent = Counter.build()
+            .name("cascade_messages_sent_total")
+            .help("The numbers of messages sent in this session")
+            .labelNames("type")
+            .register();
 
     public Counter tracksPlayed = Counter.build()
             .name("cascade_tracks_played_total")
