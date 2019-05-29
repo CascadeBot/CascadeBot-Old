@@ -242,8 +242,10 @@ public class CommandListener extends ListenerAdapter {
             try {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
+                Metrics.INS.commandsErrored.labels(command.getClass().getSimpleName()).inc();
                 context.getTypedMessaging().replyException("There was an error running the command!", e);
                 CascadeBot.LOGGER.error("Error while running a command!", MDCException.from(e));
+
             } finally {
                 CascadeBot.clearCascadeMDC();
                 commandTimer.observeDuration();

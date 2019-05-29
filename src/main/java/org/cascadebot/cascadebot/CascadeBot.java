@@ -21,6 +21,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.SelfUser;
+import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
@@ -217,6 +218,10 @@ public class CascadeBot {
                 .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
 
         RestAction.DEFAULT_FAILURE = throwable -> {
+            if (throwable instanceof ErrorResponseException) {
+                ErrorResponseException exception = (ErrorResponseException) throwable;
+                Metrics.INS.failedRestActions.labels(exception.getErrorResponse().name()).inc();
+            }
             LOGGER.error("Uncaught exception in rest action", MDCException.from(throwable));
         };
 
