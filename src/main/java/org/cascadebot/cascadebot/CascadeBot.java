@@ -31,6 +31,7 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
+import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
 import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
@@ -177,6 +178,7 @@ public class CascadeBot {
                     .addEventListeners(new GeneralEventListener())
                     .addEventListeners(new ButtonEventListener())
                     .addEventListeners(new VoiceEventListener())
+                    .addEventListeners(new JDAEventMetricsListener())
                     .addEventListeners(eventWaiter)
                     .setToken(Config.INS.getBotToken())
                     .setShardsTotal(-1)
