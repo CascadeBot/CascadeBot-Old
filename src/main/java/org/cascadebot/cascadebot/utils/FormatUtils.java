@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
@@ -180,6 +181,14 @@ public class FormatUtils {
 
     public static <T extends Enum> String formatEnum(T theEnum) {
         return StringUtils.capitalize(theEnum.name().toLowerCase().replace("_", " "));
+    }
+
+    public static <T extends Enum> String formatEnum(T theEnum, Locale locale) {
+        String localised = CascadeBot.INS.getLanguage().get(locale, "enums." + theEnum.getClass().getSimpleName().toLowerCase() + "." + theEnum.name().toLowerCase());
+        if (StringUtils.isBlank(localised)) {
+            return formatEnum(theEnum);
+        }
+        return localised;
     }
 
     public static String formatUnicode(String stringToFormat) {
