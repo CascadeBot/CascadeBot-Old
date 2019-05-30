@@ -297,6 +297,18 @@
     "do_not_disturb": "Do Not Disturb",
     "idle": "Idle"
   },
+  "enums": {
+    "flag": {
+      "beta": "beta",
+      "spotify": "spotify",
+      "music_services": "music services"
+    },
+    "loop_mode": {
+      "disabled": "disabled",
+      "playlist": "playlist",
+      "song": "song"
+    }
+  },
   "game_types": {
     "default": "Playing",
     "streaming": "Streaming",
