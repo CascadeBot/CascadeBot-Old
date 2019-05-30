@@ -41,7 +41,7 @@ public class SettingsCommand implements ICommandMain {
                 FlagRequired flagsRequiredAnnotation = field.getAnnotation(FlagRequired.class);
                 if (flagsRequiredAnnotation != null) {
                     if (!context.getData().getEnabledFlags().contains(flagsRequiredAnnotation.value())) {
-                        context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_edit", FormatUtils.formatEnum(flagsRequiredAnnotation.value())));
+                        context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_edit", FormatUtils.formatEnum(flagsRequiredAnnotation.value(), context.getData().getLocale())));
                         return;
                     }
                 }
