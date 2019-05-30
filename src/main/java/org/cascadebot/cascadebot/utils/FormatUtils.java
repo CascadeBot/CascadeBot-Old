@@ -9,21 +9,25 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
+import org.cascadebot.cascadebot.data.Config;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FormatUtils {
 
-    private static final Pattern UNICODE_REGEX = Pattern.compile("@([A-Za-z_]+)@");
+    private static final Pattern UNICODE_REGEX = Pattern.compile("@(g:)?([A-Za-z_]+)@");
 
     //region Table methods
     public static String makeAsciiTable(java.util.List<String> headers, java.util.List<java.util.List<String>> table, String footer) {
@@ -182,9 +186,19 @@ public class FormatUtils {
         Matcher matcher = UNICODE_REGEX.matcher(stringToFormat);
         String formatted = stringToFormat;
         while (matcher.find()) {
-            Emoji emoji = EmojiManager.getForAlias(matcher.group(1).toLowerCase());
-            if (emoji != null) {
-                formatted = formatted.replace(matcher.group(), emoji.getUnicode());
+            // If matching a normal @<emoji>@ otherwise it's a
+            // global emote @g:<emote>@
+            if (matcher.group(1) == null) {
+                Emoji emoji = EmojiManager.getForAlias(matcher.group(2).toLowerCase());
+                if (emoji != null) {
+                    formatted = formatted.replace(matcher.group(), emoji.getUnicode());
+                }
+            } else {
+                Long emoteId = Config.INS.getGlobalEmotes().get(matcher.group(2));
+                Emote emote = CascadeBot.INS.getShardManager().getEmoteById(Optional.ofNullable(emoteId).orElse(0L));
+                if (emote != null) {
+                    formatted = formatted.replace(matcher.group(), emote.getAsMention());
+                }
             }
         }
         formatted = formatted.replace("@infinity@", "\u221e");
