@@ -32,10 +32,13 @@
         </encoder>
     </appender>
 
+    <appender name="METRICS" class="io.prometheus.client.logback.InstrumentedAppender" />
+
     <logger name="org.mongodb.driver.cluster" level="ERROR"/>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="METRICS"/>
         <appender-ref ref="LOG"/>
         <appender-ref ref="DEBUG-LOG"/>
         <appender-ref ref="Sentry"/>

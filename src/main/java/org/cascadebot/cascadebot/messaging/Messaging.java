@@ -24,6 +24,7 @@ import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.exceptions.DiscordPermissionException;
+import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -39,6 +40,7 @@ public final class Messaging {
 
     public static RequestFuture<Message> sendMessageTypeMessage(MessageChannel channel, MessageType type, String message, boolean embed) {
         Checks.notNull(channel, "channel");
+        Metrics.INS.messagesSent.labels(type.name()).inc();
         if (embed) {
             return channel.sendMessage(MessagingObjects.getMessageTypeEmbedBuilder(type).setDescription(message).build()).submit();
         } else {
