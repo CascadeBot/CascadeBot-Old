@@ -5,6 +5,13 @@
 
 package org.cascadebot.cascadebot.permissions.objects;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
+@ToString
+@EqualsAndHashCode
+@Getter
 public class Result {
 
     private PermissionAction action;
@@ -50,18 +57,6 @@ public class Result {
         return new Result(action, container);
     }
 
-    public PermissionAction getAction() {
-        return action;
-    }
-
-    public Object getCauseObject() {
-        return causeObject;
-    }
-
-    public ResultCause getCause() {
-        return cause;
-    }
-
     public boolean isDenied() {
         return action == PermissionAction.DENY;
     }
@@ -72,11 +67,6 @@ public class Result {
 
     public boolean isNeutral() {
         return action == PermissionAction.NEUTRAL;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Result{action=%s, cause=%s, object=%s}", action.name(), cause.name(), causeObject.toString());
     }
 
     public enum ResultCause {

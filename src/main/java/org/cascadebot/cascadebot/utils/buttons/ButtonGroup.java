@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.utils.buttons;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageReaction;
@@ -14,23 +16,18 @@ import org.cascadebot.cascadebot.CascadeBot;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@RequiredArgsConstructor
 public class ButtonGroup {
 
-    private List<Button> buttons;
-    private long ownerId;
-    private long channelId;
-    private long guildId;
+    private List<Button> buttons = new ArrayList<>();
+    private final long ownerId;
+    private final long channelId;
+    private final long guildId;
 
     private long messageId = 0;
 
     private Runnable messageSentAction;
-
-    public ButtonGroup(long ownerId, long channelId, long guildId) {
-        buttons = new ArrayList<>();
-        this.ownerId = ownerId;
-        this.channelId = channelId;
-        this.guildId = guildId;
-    }
 
     public void addButton(Button button) {
         buttons.add(button);
@@ -79,14 +76,6 @@ public class ButtonGroup {
         }
     }
 
-    public long getMessageId() {
-        return messageId;
-    }
-
-    public List<Button> getButtons() {
-        return buttons;
-    }
-
     public void handleButton(Member clicker, TextChannel channel, Message buttonMessage, MessageReaction.ReactionEmote emote) {
         for (Button button : buttons) {
             if (button instanceof Button.EmoteButton && emote.isEmote()) {
@@ -103,20 +92,12 @@ public class ButtonGroup {
         }
     }
 
-    public long getGuildId() {
-        return guildId;
-    }
-
     public void addButtonsToMessage(Message message) {
         if (buttons == null) return;
         for (Button button : buttons) {
             button.addReaction(message);
         }
         setMessage(message.getIdLong());
-    }
-
-    public long getChannelId() {
-        return channelId;
     }
 
 

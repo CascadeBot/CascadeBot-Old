@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.utils.pagination;
 
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.utils.Table;
@@ -12,6 +13,7 @@ import org.cascadebot.cascadebot.utils.Table;
 import java.util.ArrayList;
 import java.util.List;
 
+@UtilityClass
 public class PageUtils {
 
     /**

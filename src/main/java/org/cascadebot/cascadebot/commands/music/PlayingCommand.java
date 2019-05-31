@@ -153,7 +153,7 @@ public class PlayingCommand implements ICommandMain {
         embedBuilder.addField("Status", player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " Paused" : UnicodeConstants.PLAY + " Playing", true);
 
         if (!track.getInfo().isStream) {
-            embedBuilder.addField("Progress", player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getSettings().useEmbedForMessages()), false);
+            embedBuilder.addField("Progress", player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getSettings().isUseEmbedForMessages()), false);
         }
 
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getPlayer().getTrackPosition()) + " / " +

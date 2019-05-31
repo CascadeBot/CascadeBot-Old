@@ -5,12 +5,21 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Setter
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class Tag {
 
     // https://regex101.com/r/hlsgVW/1
@@ -18,29 +27,6 @@ public class Tag {
 
     private String content;
     private String category;
-
-    public Tag(String content, String category) {
-        this.content = content;
-        this.category = category;
-    }
-
-    private Tag() {} // For MongoDB :D
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
     public String formatTag(CommandContext commandContext) {
         String message = content;

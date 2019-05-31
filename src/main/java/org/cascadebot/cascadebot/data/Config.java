@@ -9,6 +9,7 @@ import ch.qos.logback.classic.Level;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import com.google.common.collect.HashMultimap;
+import lombok.Getter;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class Config {
 
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);
