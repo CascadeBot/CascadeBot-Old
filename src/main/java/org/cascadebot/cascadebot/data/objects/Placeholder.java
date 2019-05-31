@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.apache.commons.lang.math.NumberUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.utils.FormatUtils;
@@ -12,6 +14,8 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import java.time.OffsetDateTime;
 import java.util.function.BiFunction;
 
+@AllArgsConstructor
+@Getter
 public enum Placeholder {
 
     //region Server
@@ -44,16 +48,4 @@ public enum Placeholder {
     private BiFunction<CommandContext, String[], String> function;
     private String description;
 
-    Placeholder(BiFunction<CommandContext, String[], String> function, String description) {
-        this.function = function;
-        this.description = description;
-    }
-
-    public BiFunction<CommandContext, String[], String> getFunction() {
-        return function;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }

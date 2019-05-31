@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.messaging;
 
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.Permission;
@@ -34,6 +35,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageCache;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@UtilityClass
 public final class Messaging {
 
     public static RequestFuture<Message> sendMessageTypeMessage(MessageChannel channel, MessageType type, String message, boolean embed) {

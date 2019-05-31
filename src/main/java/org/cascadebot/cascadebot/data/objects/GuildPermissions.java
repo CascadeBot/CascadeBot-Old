@@ -62,7 +62,7 @@ public class GuildPermissions {
         // If the user is owner then they have all perms, obsv..
         if (member.isOwner()) return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         // By default all members with the administrator perm have access to all perms; this can be turned off
-        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.doAdminsHaveAllPerms()) {
+        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.isAdminsHaveAllPerms()) {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         }
 

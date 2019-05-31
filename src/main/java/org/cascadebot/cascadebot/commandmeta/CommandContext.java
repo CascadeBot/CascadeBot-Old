@@ -5,6 +5,9 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -43,8 +46,8 @@ import org.cascadebot.shared.Regex;
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
 public class CommandContext {
-
 
     private final GuildData data;
 
@@ -58,9 +61,16 @@ public class CommandContext {
     private final String trigger;
     private final boolean isMention;
 
+    @Getter(AccessLevel.NONE)
     private final MessagingTyped messagingTyped = new MessagingTyped(this);
+
+    @Getter(AccessLevel.NONE)
     private final MessagingDirectMessage messagingDirectMessage = new MessagingDirectMessage(this);
+
+    @Getter(AccessLevel.NONE)
     private final MessagingUI messagingUI = new MessagingUI(this);
+
+    @Getter(AccessLevel.NONE)
     private final MessagingTimed messagingTimed = new MessagingTimed(this);
 
     public CommandContext(JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
@@ -79,52 +89,16 @@ public class CommandContext {
 
     //region Raw data getters
 
-    public GuildData getData() {
-        return data;
-    }
-
     public GuildSettings getSettings() {
         return data.getSettings();
-    }
-
-    public JDA getJDA() {
-        return jda;
     }
 
     public CascadePlayer getMusicPlayer() {
         return CascadeBot.INS.getMusicHandler().getPlayer(guild.getIdLong());
     }
 
-    public TextChannel getChannel() {
-        return channel;
-    }
-
-    public Message getMessage() {
-        return message;
-    }
-
-    public Guild getGuild() {
-        return guild;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
     public User getUser() {
         return member.getUser();
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
-
-    public String getTrigger() {
-        return trigger;
-    }
-
-    public boolean isMention() {
-        return isMention;
     }
 
     //endregion

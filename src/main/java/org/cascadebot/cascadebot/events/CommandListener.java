@@ -166,12 +166,12 @@ public class CommandListener extends ListenerAdapter {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
                     !guildData.isModuleEnabled(cmd.getModule())) {
-                if (guildData.getSettings().willDisplayModuleErrors() || Environment.isDevelopment()) {
+                if (guildData.getSettings().isShowModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     builder.setDescription(String.format("The module `%s` for command `%s` is disabled!", cmd.getModule().toString(), trigger));
                     builder.setTimestamp(Instant.now());
                     builder.setFooter("Requested by " + event.getAuthor().getAsTag(), event.getAuthor().getEffectiveAvatarUrl());
-                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getSettings().useEmbedForMessages());
+                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getSettings().isUseEmbedForMessages());
                 }
                 // TODO: Modlog?
                 return;
@@ -188,7 +188,7 @@ public class CommandListener extends ListenerAdapter {
             dispatchCommand(cmd, context);
         }
 
-        if (guildData.getSettings().willAllowTagCommands()) {
+        if (guildData.getSettings().isAllowTagCommands()) {
             if (guildData.getTagInfo().containsKey(trigger)) {
                 Tag tag = guildData.getTag(trigger);
 
@@ -202,7 +202,7 @@ public class CommandListener extends ListenerAdapter {
         for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(
-                        parentCommandContext.getJDA(),
+                        parentCommandContext.getJda(),
                         parentCommandContext.getChannel(),
                         parentCommandContext.getMessage(),
                         parentCommandContext.getGuild(),
@@ -226,7 +226,7 @@ public class CommandListener extends ListenerAdapter {
             MDC.put("cascade.sender", context.getMember().toString());
             MDC.put("cascade.guild", context.getGuild().toString());
             MDC.put("cascade.channel", context.getChannel().toString());
-            MDC.put("cascade.shard_info", context.getJDA().getShardInfo().getShardString());
+            MDC.put("cascade.shard_info", context.getJda().getShardInfo().getShardString());
             MDC.put("cascade.command", command.command() + (command instanceof ICommandMain ? "" : " (Sub-command)"));
             MDC.put("cascade.args", Arrays.toString(context.getArgs()));
 
@@ -258,7 +258,7 @@ public class CommandListener extends ListenerAdapter {
     private boolean isAuthorised(ICommandExecutable command, CommandContext context) {
         if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
             if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
-                if (context.getSettings().willShowPermErrors()) {
+                if (context.getSettings().isShowPermErrors()) {
                     context.getUIMessaging().sendPermissionError(command.getPermission());
                 }
             }
@@ -268,7 +268,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void deleteMessages(ICommandExecutable command, CommandContext context) {
-        if (context.getSettings().willDeleteCommand() && command.deleteMessages()) {
+        if (context.getSettings().isDeleteCommand() && command.deleteMessages()) {
             if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
                 context.getMessage().delete().queue();
             } else {

@@ -1,11 +1,15 @@
 package org.cascadebot.cascadebot.permissions.objects;
 
 import com.google.common.collect.Sets;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.PermissionNode;
 
 import java.util.Set;
 
+@ToString
+@EqualsAndHashCode
 public abstract class PermissionHolder {
 
     private Set<String> permissions = Sets.newConcurrentHashSet();
