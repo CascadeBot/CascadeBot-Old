@@ -5,6 +5,10 @@
 
 package org.cascadebot.cascadebot.utils.pagination;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
@@ -31,7 +35,7 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            if (GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong()).getSettings().useEmbedForMessages()) {
+            if (GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong()).getSettings().isUseEmbedForMessages()) {
                 if (numbersInEmbed) {
                     embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
                     message.editMessage(embed.build()).override(true).queue();
@@ -48,42 +52,26 @@ public class PageObjects {
 
     }
 
+    @AllArgsConstructor
+    @Getter
+    @Setter
     public static class StringPage implements Page {
 
         String content;
-
-        public StringPage(String context) {
-            this.content = context;
-        }
 
         @Override
         public void pageShow(Message message, int page, int total) {
             message.editMessage(content + "\n\nPage " + page + "/" + total).override(true).queue();
         }
 
-        public String getContent() {
-            return content;
-        }
-
-        public void setContent(String content) {
-            this.content = content;
-        }
-
     }
 
+    @RequiredArgsConstructor
+    @AllArgsConstructor
     public static class TablePage implements Page {
 
-        private Table table;
-        boolean numbersInTable;
-
-        public TablePage(Table table) {
-            this(table, false);
-        }
-
-        public TablePage(Table table, boolean numbersInTable) {
-            this.table = table;
-            this.numbersInTable = numbersInTable;
-        }
+        private final Table table;
+        boolean numbersInTable = true;
 
         @Override
         public void pageShow(Message message, int page, int total) {

@@ -16,6 +16,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -24,10 +29,13 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
+import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @BsonDiscriminator
 public class GuildData {
 
@@ -41,6 +49,11 @@ public class GuildData {
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
+
+    @Setter
+    private String prefix = Config.INS.getDefaultPrefix();
+
+    private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
     //region Guild data containers
 
@@ -63,8 +76,6 @@ public class GuildData {
     private PageCache pageCache = new PageCache();
 
     //endregion
-
-    private GuildData() {} // This is for mongodb object serialisation
 
     @PreSave
     public void preSave() {
@@ -168,22 +179,9 @@ public class GuildData {
         return this.enabledFlags.contains(flag);
     }
 
-    public Set<Flag> getEnabledFlags() {
-        return Set.copyOf(this.enabledFlags);
-    }
-
     public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
         buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
-    }
-
-    //region Getters and setters
-    public long getGuildID() {
-        return guildID;
-    }
-
-    public UUID getStateLock() {
-        return stateLock;
     }
 
     public GuildSettingsCore getSettings() {
@@ -194,20 +192,8 @@ public class GuildData {
         return guildPermissions;
     }
 
-    public ButtonsCache getButtonsCache() {
-        return buttonsCache;
-    }
-
     public Collection<GuildCommandInfo> getGuildCommandInfos() {
         return Collections.unmodifiableCollection(commandInfo.values());
-    }
-
-    public PageCache getPageCache() {
-        return pageCache;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
     }
 
     //endregion

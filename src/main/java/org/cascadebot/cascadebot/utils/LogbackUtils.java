@@ -14,6 +14,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.joran.spi.JoranException;
+import lombok.experimental.UtilityClass;
 import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
@@ -21,6 +22,7 @@ import java.io.InputStream;
 /**
  * Provides utility methods for interfacing with Logback
  */
+@UtilityClass
 public class LogbackUtils {
 
     /**

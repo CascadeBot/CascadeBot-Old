@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.module;
+package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;
 
-public class ModuleDisableSubCommand implements ICommandExecutable {
+public class ModuleEnableSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -30,12 +30,12 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
 
         if (module != null) {
             try {
-                if (context.getData().getSettings().disableModule(module)) {
-                    // If module wasn't already disabled
-                    context.getTypedMessaging().replySuccess("The module `%s` has been disabled!", module.toString());
+                if (context.getSettings().enableModule(module)) {
+                    // If the module wasn't enabled
+                    context.getTypedMessaging().replySuccess("The module `%s` has been enabled!", module.toString());
                 } else {
-                    // If module was already disabled
-                    context.getTypedMessaging().replyInfo("The module `%s` is already disabled!", module.toString());
+                    // If the module was enabled
+                    context.getTypedMessaging().replyInfo("The module `%s` is already enabled!", module.toString());
                 }
             } catch (IllegalArgumentException ex) {
                 context.getTypedMessaging().replyDanger(ex.getMessage());
@@ -48,12 +48,12 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
 
     @Override
     public String command() {
-        return "disable";
+        return "enable";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Disable module subcommand", "module.disable", false, Permission.MANAGE_SERVER);
+        return CascadePermission.of("Enable module subcommand", "module.enable", false, Permission.MANAGE_SERVER);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ModuleDisableSubCommand implements ICommandExecutable {
 
     @Override
     public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("module", "Disables a module", ArgumentType.REQUIRED));
+        return Set.of(Argument.of("module", "Enables a module", ArgumentType.REQUIRED));
     }
 
 }

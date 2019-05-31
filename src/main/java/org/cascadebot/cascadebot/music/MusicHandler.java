@@ -18,6 +18,8 @@ import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceM
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import lavalink.client.io.jda.JdaLavalink;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.TextChannel;
 import okhttp3.Call;
@@ -49,7 +51,8 @@ import java.util.regex.Pattern;
 
 public class MusicHandler {
 
-    protected static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+    @Getter
+    private static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
     private Pattern typePattern = Pattern.compile("youtube#([A-z]+)");
 
@@ -196,44 +199,24 @@ public class MusicHandler {
         return lavalink;
     }
 
+    @AllArgsConstructor
+    @Getter
     public static class MusicNode {
 
         URI uri;
-
         String password;
 
         //TODO maybe add port option?
 
-        public MusicNode(URI uri, String password) {
-            this.uri = uri;
-            this.password = password;
-        }
-
     }
 
+    @AllArgsConstructor
+    @Getter
     public static class SearchResult {
 
         private SearchResultType type;
         private String url;
         private String title;
-
-        public SearchResult(SearchResultType type, String url, String title) {
-            this.type = type;
-            this.url = url;
-            this.title = title;
-        }
-
-        public SearchResultType getType() {
-            return type;
-        }
-
-        public String getUrl() {
-            return url;
-        }
-
-        public String getTitle() {
-            return title;
-        }
 
     }
 

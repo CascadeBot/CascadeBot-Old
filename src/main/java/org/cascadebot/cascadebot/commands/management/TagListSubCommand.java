@@ -1,11 +1,9 @@
 /*
-
  * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
-
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.tag;
+package org.cascadebot.cascadebot.commands.management;
 
 import java.util.Map;
 import net.dv8tion.jda.core.entities.Member;
@@ -18,7 +16,7 @@ public class TagListSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Map<String, Tag> tags = context.getSettings().getTagInfo();
+        Map<String, Tag> tags = context.getSettings().getTags();
 
         if (tags.size() == 0) {
             context.getTypedMessaging().replyWarning("Server has no tags!");

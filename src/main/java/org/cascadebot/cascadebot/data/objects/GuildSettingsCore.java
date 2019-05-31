@@ -6,6 +6,8 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import com.google.common.collect.Sets;
+import lombok.Getter;
+import lombok.Setter;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
@@ -19,6 +21,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SettingsContainer(module = Module.CORE)
+@Getter
+@Setter
 public class GuildSettingsCore {
 
     public static Map<String, Field> VALUES = new HashMap<>();
@@ -70,58 +74,6 @@ public class GuildSettingsCore {
     @Setting(niceName = "Tags", directlyEditable = false)
     private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
-    public boolean isMentionPrefix() {
-        return mentionPrefix;
-    }
-
-    public void setMentionPrefix(boolean mentionPrefix) {
-        this.mentionPrefix = mentionPrefix;
-    }
-
-    public boolean willDeleteCommand() {
-        return deleteCommand;
-    }
-
-    public void setDeleteCommand(boolean deleteCommand) {
-        this.deleteCommand = deleteCommand;
-    }
-
-    public boolean useEmbedForMessages() {
-        return useEmbedForMessages;
-    }
-
-    public void setUseEmbedForMessages(boolean useEmbedForMessages) {
-        this.useEmbedForMessages = useEmbedForMessages;
-    }
-
-    public boolean willShowPermErrors() {
-        return showPermErrors;
-    }
-
-    public void setShowPermErrors(boolean showPermErrors) {
-        this.showPermErrors = showPermErrors;
-    }
-
-    public boolean willDisplayModuleErrors() {
-        return showModuleErrors;
-    }
-
-    public void setShowModuleErrors(boolean showModuleErrors) {
-        this.showModuleErrors = showModuleErrors;
-    }
-
-    public boolean doAdminsHaveAllPerms() {
-        return adminsHaveAllPerms;
-    }
-
-    public void setAdminsHaveAllPerms(boolean adminsHaveAllPerms) {
-        this.adminsHaveAllPerms = adminsHaveAllPerms;
-    }
-
-    public boolean willAllowTagCommands() { return allowTagCommands; }
-
-    public void setAllowTagCommands(boolean allowTagCommands) { this.allowTagCommands = allowTagCommands; }
-
     //region Modules
     public boolean enableModule(Module module) {
         if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
@@ -148,20 +100,9 @@ public class GuildSettingsCore {
         return isEnabled;
     }
 
-    public Set<Module> getEnabledModules() {
-        return Collections.unmodifiableSet(enabledModules);
-    }
     //endregion
 
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public Map<String, Tag> getTagInfo() { return Collections.unmodifiableMap(tags); }
+    public Map<String, Tag> getTags() { return Collections.unmodifiableMap(tags); }
 
     public Tag getTag(String key) {
         return tags.get(key);

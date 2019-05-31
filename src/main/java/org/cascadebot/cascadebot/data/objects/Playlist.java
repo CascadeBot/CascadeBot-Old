@@ -6,10 +6,16 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import de.bild.codec.annotations.Id;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.bson.types.ObjectId;
 
 import java.util.List;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Playlist {
 
     @Id
@@ -19,9 +25,8 @@ public class Playlist {
     private long ownerID;
     private PlaylistType scope;
 
+    @Setter
     private List<String> tracks;
-
-    private Playlist() {} // Used for mongodb
 
     public Playlist(long ownerId, String name, PlaylistType scope, List<String> tracks) {
         this.ownerID = ownerId;
@@ -30,36 +35,12 @@ public class Playlist {
         this.tracks = tracks;
     }
 
-    public ObjectId getPlaylistID() {
-        return playlistID;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public long getOwnerID() {
-        return ownerID;
-    }
-
-    public PlaylistType getScope() {
-        return scope;
-    }
-
-    public List<String> getTracks() {
-        return tracks;
-    }
-
     public void addTrack(String url) {
         tracks.add(url);
     }
 
     public void removeTrack(String url) {
         tracks.remove(url);
-    }
-
-    public void setTracks(List<String> tracks) {
-        this.tracks = tracks;
     }
 
 }

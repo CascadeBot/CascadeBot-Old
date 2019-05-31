@@ -49,7 +49,7 @@ public class PlayCommand implements ICommandMain {
 
     @Override
     public String command() {
-        return "Play";
+        return "play";
     }
 
     @Override

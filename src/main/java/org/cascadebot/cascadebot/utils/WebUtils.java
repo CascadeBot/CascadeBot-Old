@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import lombok.experimental.UtilityClass;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -15,6 +16,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 
 import java.io.IOException;
 
+@UtilityClass
 public class WebUtils {
 
     private static JsonParser parser = new JsonParser();
