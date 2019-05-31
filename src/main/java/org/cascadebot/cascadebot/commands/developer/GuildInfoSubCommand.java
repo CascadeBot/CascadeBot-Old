@@ -1,4 +1,9 @@
-package org.cascadebot.cascadebot.commands.subcommands.guild;
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
+package org.cascadebot.cascadebot.commands.developer;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;

@@ -45,6 +45,7 @@ public class Config {
     private File config;
 
     private boolean debug;
+    private int prometheusPort;
 
     private WebhookClient eventWebhook;
 
@@ -161,6 +162,8 @@ public class Config {
             }
             this.ssl = warnOnDefault(config, "database.ssl", false);
         }
+
+        this.prometheusPort = config.getInt("stats_port", 6060);
 
         shardNum = warnOnDefault(config, "shard_num", -1);
 
@@ -344,6 +347,10 @@ public class Config {
 
     public String getYoutubeKey() {
         return youtubeKey;
+    }
+
+    public int getPrometheusPort() {
+        return prometheusPort;
     }
 
 }

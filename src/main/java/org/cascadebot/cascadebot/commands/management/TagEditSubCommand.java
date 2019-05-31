@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.tag;
+package org.cascadebot.cascadebot.commands.management;
 
 import java.util.Set;
 import net.dv8tion.jda.core.entities.Member;
@@ -14,7 +14,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-public class TagCategorySubCommand implements ICommandExecutable {
+public class TagEditSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -29,24 +29,24 @@ public class TagCategorySubCommand implements ICommandExecutable {
             return;
         }
 
-        tag.setCategory(context.getArg(1));
-        context.getTypedMessaging().replySuccess("Set tag `" + context.getArg(0) + "` category to `" + context.getArg(1) + "`");
+        tag.setContent(context.getMessage(1));
+        context.getTypedMessaging().replySuccess("Updated tag `" + context.getArg(0) + "`");
     }
 
     @Override
     public String command() {
-        return "category";
+        return "edit";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Tag category sub command", "tag.category", false);
+        return CascadePermission.of("Tag edit sub command", "tag.edit", false);
     }
 
     @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of("tag", null, ArgumentType.REQUIRED,
-                Set.of(Argument.of("category", "Sets the category for the tag to go into", ArgumentType.REQUIRED))));
+                Set.of(Argument.of("content", "Edits the specified tag", ArgumentType.REQUIRED))));
     }
 
     @Override

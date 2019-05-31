@@ -10,10 +10,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commands.subcommands.guild.GuildFlagSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.guild.GuildInfoSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.guild.GuildLeaveSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.guild.GuildSaveSubCommand;
 import org.cascadebot.shared.SecurityLevel;
 
 import java.util.Set;
