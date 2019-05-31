@@ -147,7 +147,7 @@ public class GuildPermissions {
         Group group;
         int iterations = 0;
         do {
-            group = new Group(name);
+            group = new Group(name); //TODO maybe not allow groups with the same name
             if (++iterations == 7) {
                 // If this happens then... run?
                 CascadeBot.LOGGER.error("Somehow we couldn't manage to create a unique group ID :(");
@@ -160,6 +160,30 @@ public class GuildPermissions {
 
     public boolean deleteGroup(String id) {
         return groups.removeIf(group -> group.getId().equals(id));
+    }
+
+    public List<Group> getGroupsByName(String name) {
+        List<Group> groups = new ArrayList<>();
+        for (Group group : this.groups) {
+            if (group.getName().equals(name)) {
+                groups.add(group);
+            }
+        }
+        return groups;
+    }
+
+    public Group getGroupById(String id) {
+        for (Group group : this.groups) {
+            if (group.getId().equals(id)) {
+                return group;
+            }
+        }
+
+        return null;
+    }
+
+    public User getPermissionUser(Member member) {
+        return users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
     }
 
     public List<Group> getUserGroups(Member member) {

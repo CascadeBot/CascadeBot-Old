@@ -43,7 +43,7 @@ public class PermissionCommandUtils { //TODO move to different package
             EmbedBuilder groupsEmbed = new EmbedBuilder();
 
             ButtonGroup buttonGroup = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            
+
             int i = 1;
 
             StringBuilder groupsBuilder = new StringBuilder();
