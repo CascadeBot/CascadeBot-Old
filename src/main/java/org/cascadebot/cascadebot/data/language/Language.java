@@ -54,7 +54,11 @@ public class Language {
     }
 
     public String get(long guildId, String path, Object... args) {
-        return get(GuildDataManager.getGuildData(guildId).getLocale(), path, args);
+        return get(getGuildLocale(guildId), path, args);
+    }
+
+    public Locale getGuildLocale(long guildId) {
+        return GuildDataManager.getGuildData(guildId).getLocale();
     }
 
     public String get(Locale locale, String path, Object... args) {

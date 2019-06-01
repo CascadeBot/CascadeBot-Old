@@ -160,7 +160,7 @@ public class PlayingCommand implements ICommandMain {
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getPlayer().getTrackPosition()) + " / " +
                 (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
         embedBuilder.addField(lang.get(guildID, "words.volume"), player.getPlayer().getVolume() + "%", true);
-        embedBuilder.addField(lang.get(guildID, "commands.playing.loop_mode"), FormatUtils.formatEnum(player.getLoopMode()), true);
+        embedBuilder.addField(lang.get(guildID, "commands.playing.loop_mode"), FormatUtils.formatEnum(player.getLoopMode(), lang.getGuildLocale(guildID)), true);
         if (track.getUserData() instanceof Long) { //TODO find out why user data sometimes gets set to null.
             embedBuilder.addField(lang.get(guildID, "words.requested_by"), CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
         }

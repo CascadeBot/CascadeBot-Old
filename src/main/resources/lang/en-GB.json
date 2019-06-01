@@ -21,7 +21,7 @@
     "softban": "Bans and then unbans a specified user in order to remove messages and kick the user.",
     "unban": "Unbans the specified user.",
     "tag": {
-      "main_command": "Tag command",
+      "main_command": "Tag command"
     },
     "join": "Joins the bot to a voice channel",
     "leave": "Tells the bot to leave a voice channel",
@@ -296,6 +296,18 @@
     "offline": "Offline",
     "do_not_disturb": "Do Not Disturb",
     "idle": "Idle"
+  },
+  "enums": {
+    "flag": {
+      "beta": "beta",
+      "spotify": "spotify",
+      "music_services": "music services"
+    },
+    "loop_mode": {
+      "disabled": "disabled",
+      "playlist": "playlist",
+      "song": "song"
+    }
   },
   "game_types": {
     "default": "Playing",

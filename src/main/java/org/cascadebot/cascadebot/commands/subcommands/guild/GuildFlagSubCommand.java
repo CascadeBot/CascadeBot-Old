@@ -39,7 +39,7 @@ public class GuildFlagSubCommand implements ISubCommand {
                     EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     embedBuilder.setTitle("Flags");
                     embedBuilder.setDescription(Arrays.stream(Flag.values())
-                            .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e)))
+                            .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e, context.getData().getLocale())))
                             .collect(Collectors.joining("\n")));
                     context.getTypedMessaging().replyInfo(embedBuilder);
                     return;
@@ -66,10 +66,10 @@ public class GuildFlagSubCommand implements ISubCommand {
 
             if (guildData.isFlagEnabled(flag)) {
                 guildData.disableFlag(flag);
-                context.getTypedMessaging().replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
+                context.getTypedMessaging().replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag, guildData.getLocale()), guild.getName(), guild.getId());
             } else {
                 guildData.enableFlag(flag);
-                context.getTypedMessaging().replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
+                context.getTypedMessaging().replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag, guildData.getLocale()), guild.getName(), guild.getId());
             }
 
         }
