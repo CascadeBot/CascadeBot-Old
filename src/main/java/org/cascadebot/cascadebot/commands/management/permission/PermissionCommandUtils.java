@@ -19,108 +19,109 @@ import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
-public class PermissionCommandUtils { //TODO move to different package
+public class PermissionCommandUtils { //TODO move to different package?
 
     public static void tryGetGroupFromString(CommandContext context, String s, Consumer<Group> groupConsumer, long sender) {
         Group groupById = context.getData().getPermissions().getGroupById(s);
-        if(groupById != null) {
+        if (groupById != null) {
             groupConsumer.accept(groupById);
             return;
         }
 
         List<Group> groupList = context.getData().getPermissions().getGroupsByName(s);
-        if(groupList.size() == 1) {
+        if (groupList.size() == 1) {
             groupConsumer.accept(groupList.get(0));
             return;
         }
 
-        if(groupList.size() > 1) {
-            if(groupList.size() > 5) {
-                context.getTypedMessaging().replyDanger("Too many groups with the same name! Use these groups ids instead.");
-                return;
-            }
+        if (groupList.isEmpty()) {
+            context.getTypedMessaging().replyDanger("No group found with name or id " + s);
+            return;
+        }
 
-            EmbedBuilder groupsEmbed = new EmbedBuilder();
+        if (groupList.size() > 5) {
+            context.getTypedMessaging().replyDanger("Too many groups with the same name! Use these groups ids instead.");
+            return;
+        }
 
-            ButtonGroup buttonGroup = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
+        EmbedBuilder groupsEmbed = new EmbedBuilder();
 
-            int i = 1;
+        ButtonGroup buttonGroup = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
 
-            StringBuilder groupsBuilder = new StringBuilder();
-            groupsBuilder.append("Multiple Groups With the same name found. Select a group to view more info on it, and then use said group\n\n");
+        int i = 1;
 
-            for (Group group : groupList) {
-                char unicode = (char) (0x0030 + i);
+        StringBuilder groupsBuilder = new StringBuilder();
+        groupsBuilder.append("Multiple Groups With the same name found. Select a group to view more info on it, and then use said group\n\n");
 
-                groupsBuilder.append(i).append(": ").append(group.getName()).append(" (id: `").append(group.getId()).append("`)\n");
+        for (Group group : groupList) {
+            char unicode = (char) (0x0030 + i);
 
-                EmbedBuilder groupEmbed = new EmbedBuilder();
-                groupEmbed.setTitle(group.getName() + " (" + group.getId() + ")");
+            groupsBuilder.append(i).append(": ").append(group.getName()).append(" (id: `").append(group.getId()).append("`)\n");
 
-                if(group.getPermissions().isEmpty()) {
-                    groupEmbed.addField("Permissions", "No permissions", false);
-                } else {
-                    Table.TableBuilder tableBuilder = new Table.TableBuilder();
-                    tableBuilder.addHeading("Permission");
+            EmbedBuilder groupEmbed = new EmbedBuilder();
+            groupEmbed.setTitle(group.getName() + " (" + group.getId() + ")");
 
-                    int pi = 0;
-                    for (String perm : group.getPermissions()) {
-                        tableBuilder.addRow(perm);
-                        if (pi >= 5) {
-                            break;
-                        }
-                        pi++;
+            if (group.getPermissions().isEmpty()) {
+                groupEmbed.addField("Permissions", "No permissions", false);
+            } else {
+                Table.TableBuilder tableBuilder = new Table.TableBuilder();
+                tableBuilder.addHeading("Permission");
+
+                int pi = 0;
+                for (String perm : group.getPermissions()) {
+                    tableBuilder.addRow(perm);
+                    if (pi >= 5) {
+                        break;
                     }
-
-                    groupEmbed.addField("Permissions", tableBuilder.build().toString(), false);
+                    pi++;
                 }
 
+                groupEmbed.addField("Permissions", tableBuilder.build().toString(), false);
+            }
+
+            if (group.getRoleIds().isEmpty()) {
+                groupEmbed.addField("Linked Roles", "No linked roles", false);
+            } else {
                 StringBuilder rolesBuilder = new StringBuilder();
-                if(group.getRoleIds().isEmpty()) {
-                    rolesBuilder.append("Group isn't linked to any roles");
-                } else {
-                    int ri = 0;
-                    for (Long roleId : group.getRoleIds()) {
-                        Role role = context.getGuild().getRoleById(roleId);
-                        rolesBuilder.append(role.getName()).append(" (").append(role.getId()).append(")\n");
-                        if (ri >= 5) {
-                            break;
-                        }
-                        ri++;
+                int ri = 0;
+                for (Long roleId : group.getRoleIds()) {
+                    Role role = context.getGuild().getRoleById(roleId);
+                    rolesBuilder.append(role.getName()).append(" (").append(role.getId()).append(")\n");
+                    if (ri >= 5) {
+                        break;
                     }
+                    ri++;
                 }
 
                 groupEmbed.addField("Linked Roles", "```" + rolesBuilder.toString() + "```", false);
-
-                ButtonGroup groupButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
-                groupButtons.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                    if(runner.getUser().getIdLong() != groupButtons.getOwner().getUser().getIdLong()) {
-                        return;
-                    }
-                    message.delete().queue();
-                    groupConsumer.accept(group);
-                }));
-
-                groupButtons.addButton(new Button.UnicodeButton(UnicodeConstants.LEFT_ARROW, (runner, channel, message) -> {
-                    hanldeSwitchButtons(runner, message, groupsEmbed.build(), buttonGroup, context);
-                }));
-
-                buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
-                    hanldeSwitchButtons(runner, message, groupEmbed.build(), groupButtons, context);
-                }));
-
-                i++;
             }
 
-            groupsEmbed.setDescription(groupsBuilder.toString());
-            context.getUIMessaging().sendButtonedMessage(groupsEmbed.build(), buttonGroup);
-        } else {
-            context.getTypedMessaging().replyDanger("No group found with name or id " + s);
+            ButtonGroup groupButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
+            groupButtons.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
+                if (runner.getUser().getIdLong() != groupButtons.getOwner().getUser().getIdLong()) {
+                    return;
+                }
+                message.delete().queue();
+                groupConsumer.accept(group);
+            }));
+
+            groupButtons.addButton(new Button.UnicodeButton(UnicodeConstants.LEFT_ARROW, (runner, channel, message) -> {
+                handleSwitchButtons(runner, message, groupsEmbed.build(), buttonGroup, context);
+            }));
+
+            buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
+                handleSwitchButtons(runner, message, groupEmbed.build(), groupButtons, context);
+            }));
+
+            i++;
         }
+
+        groupsEmbed.setDescription(groupsBuilder.toString());
+        context.getUIMessaging().sendButtonedMessage(groupsEmbed.build(), buttonGroup);
     }
 
-    private static void hanldeSwitchButtons(Member member, Message message, MessageEmbed embedToSwitchTo, ButtonGroup buttonsToSwitchTo, CommandContext context) {
-        if(member.getUser().getIdLong() != buttonsToSwitchTo.getOwner().getUser().getIdLong()) {
+    private static void handleSwitchButtons(Member member, Message message, MessageEmbed embedToSwitchTo, ButtonGroup buttonsToSwitchTo, CommandContext context) {
+        if (member.getUser().getIdLong() != buttonsToSwitchTo.getOwner().getUser().getIdLong()) {
             return;
         }
         message.editMessage(embedToSwitchTo).override(true).queue();

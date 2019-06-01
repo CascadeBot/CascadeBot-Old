@@ -20,7 +20,7 @@ public class UnicodeConstants {
     public static final String ROBOT = "\uD83E\uDD16"; // 🤖
     public static final String RED_CROSS = "\u274C"; // ❌
 
-    public static final String LEFT_ARROW = "\u2B05";
+    public static final String LEFT_ARROW = "\u2B05"; // ⬅
 
     public static final String PLAY = "\u25B6"; // ▶
     public static final String PAUSE = "\u23F8"; // ⏸

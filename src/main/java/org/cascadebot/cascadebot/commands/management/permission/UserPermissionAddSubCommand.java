@@ -42,7 +42,7 @@ public class UserPermissionAddSubCommand implements ICommandExecutable {
         if(user.addPermission(context.getArg(1))) {
             context.getTypedMessaging().replySuccess("Successfully added permission `%s` to user `%s`", context.getArg(1), member.getUser().getAsTag());
         } else {
-            context.getTypedMessaging().replyDanger("Couldn't add permission `%s` to user `%s` as they already have the permission", context.getArg(1), member.getUser().getAsTag());
+            context.getTypedMessaging().replyWarning("Couldn't add permission `%s` to user `%s` as they already have the permission", context.getArg(1), member.getUser().getAsTag());
         }
     }
 

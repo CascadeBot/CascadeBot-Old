@@ -43,13 +43,13 @@ public class UserPermissionGroupSubCommand implements ICommandExecutable {
                 if (user.addGroup(group)) {
                     context.getTypedMessaging().replySuccess("Put user `%s` in group `%s`", member.getUser().getAsTag(), group.getName());
                 } else {
-                    context.getTypedMessaging().replyDanger("Couldn't add user `%s` to group `%s` because they're already in the group");
+                    context.getTypedMessaging().replyWarning("Couldn't add user `%s` to group `%s` because they're already in the group");
                 }
             } else if (context.getArg(0).equalsIgnoreCase("remove")) {
                 if (user.removeGroup(group)) {
                     context.getTypedMessaging().replySuccess("Removed user `%s` from group `%s`", member.getUser().getAsTag(), group.getName());
                 } else {
-                    context.getTypedMessaging().replyDanger("Couldn't remove user `%s` from group %s` because they're not in the group");
+                    context.getTypedMessaging().replyWarning("Couldn't remove user `%s` from group %s` because they're not in the group");
                 }
             }
         }, sender.getUser().getIdLong());
