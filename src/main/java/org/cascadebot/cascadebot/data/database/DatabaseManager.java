@@ -14,6 +14,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.connection.netty.NettyStreamFactory;
 import de.bild.codec.PojoCodecProvider;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
@@ -39,6 +40,7 @@ public class DatabaseManager {
             ).build())
     );
 
+    @Getter
     private String databaseName;
 
     public DatabaseManager(String username, char[] password, String databaseName, List<String> hosts, boolean ssl) {
@@ -89,10 +91,6 @@ public class DatabaseManager {
 
     public com.mongodb.async.client.MongoClient getAsyncClient() {
         return ASYNC_CLIENT;
-    }
-
-    public String getDatabaseName() {
-        return databaseName;
     }
 
     public MongoDatabase getDatabase() {

@@ -16,7 +16,7 @@ public class TagListSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Map<String, Tag> tags = context.getData().getTagInfo();
+        Map<String, Tag> tags = context.getSettings().getTags();
 
         if (tags.size() == 0) {
             context.getTypedMessaging().replyWarning("Server has no tags!");

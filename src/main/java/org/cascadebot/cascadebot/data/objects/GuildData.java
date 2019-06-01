@@ -16,6 +16,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -29,6 +34,8 @@ import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @BsonDiscriminator
 public class GuildData {
 
@@ -41,22 +48,16 @@ public class GuildData {
     //endregion
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
-    private Set<Module> enabledModules = Sets.newConcurrentHashSet(
-            Sets.newHashSet(
-                    Module.CORE,
-                    Module.MANAGEMENT,
-                    Module.INFORMATIONAL
-            )
-    );
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
+    @Setter
     private String prefix = Config.INS.getDefaultPrefix();
 
     private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
     //region Guild data containers
 
-    private GuildSettings guildSettings = new GuildSettings();
+    private GuildSettingsCore guildSettings = new GuildSettingsCore();
     private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now
@@ -75,8 +76,6 @@ public class GuildData {
     private PageCache pageCache = new PageCache();
 
     //endregion
-
-    private GuildData() {} // This is for mongodb object serialisation
 
     @PreSave
     public void preSave() {
@@ -166,50 +165,6 @@ public class GuildData {
         return Collections.unmodifiableMap(commandInfo);
     }
 
-    public Map<String, Tag> getTagInfo() { return Collections.unmodifiableMap(tags); }
-
-    public Tag getTag(String key) {
-        return tags.get(key);
-    }
-
-    public boolean hasTag(String key) {
-        return tags.containsKey(key);
-    }
-
-    public void addTag(String key, Tag tag) {
-        tags.put(key, tag);
-    }
-
-    public boolean removeTag(String key) {
-        return tags.remove(key) != null;
-    }
-    //endregion
-
-    //region Modules
-    public boolean enableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
-            throw new IllegalArgumentException("This module is not available to be enabled!");
-        }
-        return this.enabledModules.add(module);
-    }
-
-    public boolean disableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
-            throw new IllegalArgumentException("This module is not available to be disabled!");
-        } else if (module.isFlagEnabled(ModuleFlag.REQUIRED)) {
-            throw new IllegalArgumentException(String.format("Cannot disable the %s module!", module.toString().toLowerCase()));
-        }
-        return this.enabledModules.remove(module);
-    }
-
-    public boolean isModuleEnabled(Module module) {
-        boolean isEnabled = this.enabledModules.contains(module);
-        if (!isEnabled && module.isFlagEnabled(ModuleFlag.REQUIRED)) {
-            this.enabledModules.add(module);
-            return true;
-        }
-        return isEnabled;
-    }
     //endregion
 
     public boolean enableFlag(Flag flag) {
@@ -224,25 +179,12 @@ public class GuildData {
         return this.enabledFlags.contains(flag);
     }
 
-    public Set<Flag> getEnabledFlags() {
-        return Set.copyOf(this.enabledFlags);
-    }
-
     public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
         buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
     }
 
-    //region Getters and setters
-    public long getGuildID() {
-        return guildID;
-    }
-
-    public UUID getStateLock() {
-        return stateLock;
-    }
-
-    public GuildSettings getSettings() {
+    public GuildSettingsCore getSettings() {
         return guildSettings;
     }
 
@@ -250,32 +192,8 @@ public class GuildData {
         return guildPermissions;
     }
 
-    public ButtonsCache getButtonsCache() {
-        return buttonsCache;
-    }
-
     public Collection<GuildCommandInfo> getGuildCommandInfos() {
         return Collections.unmodifiableCollection(commandInfo.values());
-    }
-
-    public Set<Module> getEnabledModules() {
-        return Collections.unmodifiableSet(enabledModules);
-    }
-
-    public PageCache getPageCache() {
-        return pageCache;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
     }
 
     //endregion

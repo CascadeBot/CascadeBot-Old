@@ -13,6 +13,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.io.jda.JdaLink;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
+import lombok.Getter;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.VoiceChannel;
@@ -32,15 +33,16 @@ import java.util.Queue;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
+@Getter
 public class CascadePlayer {
 
-    private Queue<AudioTrack> tracks = new LinkedList<>();
+    private Queue<AudioTrack> queue = new LinkedList<>();
 
     private long guildId;
     private IPlayer player;
 
     private LoopMode loopMode = LoopMode.DISABLED;
-    private boolean shuffle = false;
+    private boolean shuffleEnabled = false;
 
     public CascadePlayer(Guild guild) {
         if (MusicHandler.isLavalinkEnabled()) {
@@ -54,17 +56,9 @@ public class CascadePlayer {
         guildId = guild.getIdLong();
     }
 
-    public IPlayer getPlayer() {
-        return player;
-    }
-
-    public Queue<AudioTrack> getQueue() {
-        return tracks;
-    }
-
     public double getQueueLength() {
         double queueLength = player.getPlayingTrack().getDuration();
-        for (AudioTrack track : tracks) {
+        for (AudioTrack track : queue) {
             queueLength += track.getDuration();
         }
         return queueLength;
@@ -97,7 +91,7 @@ public class CascadePlayer {
 
     public void addTrack(AudioTrack track) {
         if (player.getPlayingTrack() != null) {
-            tracks.add(track);
+            queue.add(track);
         } else {
             player.playTrack(track);
         }
@@ -113,22 +107,14 @@ public class CascadePlayer {
 
     //Don't know if this will eb uses at all, but it's here if we want to.
     public boolean toggleShuffleOnRepeat() {
-        return (shuffle = !shuffle);
+        return (shuffleEnabled = !shuffleEnabled);
     }
 
     public void shuffle() {
         List<AudioTrack> tracks = new ArrayList<>(getQueue());
         Collections.shuffle(tracks);
-        this.tracks = new LinkedList<>();
-        this.tracks.addAll(tracks);
-    }
-
-    public LoopMode getLoopMode() {
-        return this.loopMode;
-    }
-
-    public boolean isShuffleEnabled() {
-        return shuffle;
+        this.queue = new LinkedList<>();
+        this.queue.addAll(tracks);
     }
 
     public void skip() {
@@ -172,13 +158,13 @@ public class CascadePlayer {
     }
 
     public void stop() {
-        tracks.clear();
+        queue.clear();
         loopMode = LoopMode.DISABLED;
         player.stopTrack();
     }
 
     public void loadLink(String input, long requestUser, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
-        MusicHandler.playerManager.loadItem(input, new AudioLoadResultHandler() {
+        MusicHandler.getPlayerManager().loadItem(input, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
                 audioTrack.setUserData(requestUser);
@@ -269,7 +255,7 @@ public class CascadePlayer {
     public SavePlaylistResult saveCurrentPlaylist(long owner, PlaylistType scope, String name, boolean overwrite) {
         List<AudioTrack> tracks = new ArrayList<>();
         tracks.add(player.getPlayingTrack());
-        tracks.addAll(this.tracks);
+        tracks.addAll(this.queue);
 
         List<String> ids = new ArrayList<>();
         for (AudioTrack track : tracks) {

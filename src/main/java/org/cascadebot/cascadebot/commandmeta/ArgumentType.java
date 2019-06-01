@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.commandmeta;
 
 public enum ArgumentType {
+
     /**
      * Represents an optional parameter.
      */
@@ -18,4 +19,5 @@ public enum ArgumentType {
      * Represents that this is just part of the command and isn't a parameter.
      */
     COMMAND
+
 }

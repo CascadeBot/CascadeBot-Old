@@ -25,12 +25,12 @@ public class TagRawSubCommand implements ICommandExecutable {
             return;
         }
 
-        if (!context.getData().hasTag(context.getArg(0))) {
+        if (!context.getSettings().hasTag(context.getArg(0))) {
             context.getTypedMessaging().replyDanger("Couldn't find tag with name `" + context.getArg(0) + "`");
             return;
         }
 
-        Tag tag = context.getData().getTag(context.getArg(0));
+        Tag tag = context.getSettings().getTag(context.getArg(0));
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle("Tag: " + context.getArg(0));
         builder.setDescription("```" + tag.getContent() + "```");

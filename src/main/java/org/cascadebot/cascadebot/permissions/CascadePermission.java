@@ -5,12 +5,16 @@
 
 package org.cascadebot.cascadebot.permissions;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import net.dv8tion.jda.core.Permission;
 import org.cascadebot.cascadebot.commandmeta.Module;
 
 import java.util.Arrays;
 import java.util.EnumSet;
 
+@EqualsAndHashCode
+@Getter
 public class CascadePermission {
 
     public static final CascadePermission ALL_PERMISSIONS = CascadePermission.of("All permissions", "*");
@@ -59,22 +63,6 @@ public class CascadePermission {
         return new CascadePermission(label, permission, defaultPerm, module, discordPerm);
     }
 
-    public String getLabel() {
-        return label;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public boolean isDefaultPerm() {
-        return defaultPerm;
-    }
-
-    public Module getModule() {
-        return module;
-    }
-
     public EnumSet<Permission> getDiscordPerms() {
         return discordPerm;
     }
@@ -82,17 +70,6 @@ public class CascadePermission {
     @Override
     public String toString() {
         return getPermission();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof CascadePermission)) return false;
-        CascadePermission otherPerm = (CascadePermission) obj;
-        return this.label.equals(otherPerm.label) &&
-                this.defaultPerm == otherPerm.defaultPerm &&
-                this.module == otherPerm.module &&
-                this.permission.equals(otherPerm.permission) &&
-                this.discordPerm.equals(otherPerm.discordPerm);
     }
 
 }

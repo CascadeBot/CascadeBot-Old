@@ -5,11 +5,13 @@
 
 package org.cascadebot.cascadebot.messaging;
 
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.User;
 
-public final class MessagingObjects {
+@UtilityClass
+public class MessagingObjects {
 
     private static ThreadLocal<MessageBuilder> threadLocalMessageBuilder = ThreadLocal.withInitial(MessageBuilder::new);
     private static ThreadLocal<EmbedBuilder> threadLocalEmbedBuilder = ThreadLocal.withInitial(EmbedBuilder::new);
