@@ -70,7 +70,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String prefix = guildData.getPrefix();
+        String prefix = guildData.getSettings().getPrefix();
         boolean isMention = false;
 
         String commandWithArgs;
@@ -82,7 +82,7 @@ public class CommandListener extends ListenerAdapter {
         } else if (guildData.getSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
             commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
             isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getSettings().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
         } else {
             return;
@@ -165,7 +165,7 @@ public class CommandListener extends ListenerAdapter {
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
-                    !guildData.isModuleEnabled(cmd.getModule())) {
+                    !guildData.getSettings().isModuleEnabled(cmd.getModule())) {
                 if (guildData.getSettings().isShowModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     builder.setDescription(String.format("The module `%s` for command `%s` is disabled!", cmd.getModule().toString(), trigger));
@@ -189,8 +189,8 @@ public class CommandListener extends ListenerAdapter {
         }
 
         if (guildData.getSettings().isAllowTagCommands()) {
-            if (guildData.getTagInfo().containsKey(trigger)) {
-                Tag tag = guildData.getTag(trigger);
+            if (guildData.getSettings().getTags().containsKey(trigger)) {
+                Tag tag = guildData.getSettings().getTag(trigger);
 
                 context.reply(tag.formatTag(context)); //TODO perms for tags
                 CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", trigger, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));

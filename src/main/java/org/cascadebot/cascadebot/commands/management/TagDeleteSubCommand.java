@@ -22,7 +22,7 @@ public class TagDeleteSubCommand implements ICommandExecutable {
             return;
         }
 
-        if (context.getData().removeTag(context.getArg(0))) {
+        if (context.getSettings().removeTag(context.getArg(0))) {
             context.getTypedMessaging().replySuccess("Successfully deleted tag!");
         } else {
             context.getTypedMessaging().replyDanger("Tag `" + context.getArg(0) + "` doesn't exist!");
