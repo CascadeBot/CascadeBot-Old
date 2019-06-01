@@ -5,15 +5,17 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
+import org.cascadebot.cascadebot.commandmeta.Module;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.FIELD})
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface FlagRequired {
+public @interface SettingsContainer {
 
-    Flag value();
+    Module module();
 
 }

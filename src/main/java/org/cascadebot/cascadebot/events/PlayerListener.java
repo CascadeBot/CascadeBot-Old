@@ -11,6 +11,8 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.event.IPlayerEventListener;
 import lavalink.client.player.event.PlayerEvent;
 import lavalink.client.player.event.TrackEndEvent;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 
 import java.util.NoSuchElementException;
@@ -41,6 +43,7 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
 
     private void onEnd(AudioTrack track) {
         songPlayCount++;
+        Metrics.INS.tracksPlayed.inc();
         try {
             if (player.getLoopMode().equals(CascadePlayer.LoopMode.DISABLED) || player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
                 if (player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {

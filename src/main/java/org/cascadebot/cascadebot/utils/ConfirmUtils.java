@@ -7,6 +7,7 @@ package org.cascadebot.cascadebot.utils;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+@UtilityClass
 public class ConfirmUtils {
 
     // Holds the users that have confirmed an action
@@ -33,7 +35,7 @@ public class ConfirmUtils {
     //region Confirm Action
     public static boolean confirmAction(long userId, String actionKey, TextChannel channel, MessageType type, String message, long buttonDelay, long expiry, ConfirmRunnable action) {
         GuildData guildData = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
-        boolean useEmbed = guildData.getSettings().useEmbedForMessages();
+        boolean useEmbed = guildData.getSettings().isUseEmbedForMessages();
         Message sentMessage;
         try {
             sentMessage = Messaging.sendMessageTypeMessage(channel, type, message, useEmbed).get();

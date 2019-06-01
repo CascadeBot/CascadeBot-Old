@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.guild;
+package org.cascadebot.cascadebot.commands.developer;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;

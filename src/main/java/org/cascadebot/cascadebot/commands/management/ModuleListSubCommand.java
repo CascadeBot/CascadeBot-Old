@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.module;
+package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
@@ -24,7 +24,7 @@ public class ModuleListSubCommand implements ICommandExecutable {
                 .filter(module -> !module.isFlagEnabled(ModuleFlag.PRIVATE))
                 .map(module -> module.toString().toLowerCase() +
                         " - " +
-                        (context.getData().isModuleEnabled(module) ? "Enabled" : "Disabled"))
+                        (context.getSettings().isModuleEnabled(module) ? "Enabled" : "Disabled"))
                 .collect(Collectors.joining("\n")));
     }
 

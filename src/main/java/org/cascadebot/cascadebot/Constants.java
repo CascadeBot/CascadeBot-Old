@@ -5,7 +5,10 @@
 
 package org.cascadebot.cascadebot;
 
-public final class Constants {
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
+public class Constants {
 
     // Changeable constants if needed
     public static final String serverInvite = "https://discord.gg/P23GZFB";

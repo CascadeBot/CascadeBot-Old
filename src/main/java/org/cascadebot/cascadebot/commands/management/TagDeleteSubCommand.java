@@ -1,11 +1,9 @@
 /*
-
  * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
-
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.tag;
+package org.cascadebot.cascadebot.commands.management;
 
 import java.util.Set;
 import net.dv8tion.jda.core.entities.Member;
@@ -24,7 +22,7 @@ public class TagDeleteSubCommand implements ICommandExecutable {
             return;
         }
 
-        if (context.getData().removeTag(context.getArg(0))) {
+        if (context.getSettings().removeTag(context.getArg(0))) {
             context.getTypedMessaging().replySuccess("Successfully deleted tag!");
         } else {
             context.getTypedMessaging().replyDanger("Tag `" + context.getArg(0) + "` doesn't exist!");

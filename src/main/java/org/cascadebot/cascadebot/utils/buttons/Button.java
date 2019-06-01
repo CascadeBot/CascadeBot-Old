@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.utils.buttons;
 
+import lombok.Getter;
 import net.dv8tion.jda.core.entities.Message;
 import org.cascadebot.cascadebot.CascadeBot;
 
@@ -20,6 +21,7 @@ public abstract class Button {
 
     public static class EmoteButton extends Button {
 
+        @Getter
         private Long emoteId;
 
         public EmoteButton(Long emoteId, IButtonRunnable runnable) {
@@ -38,14 +40,11 @@ public abstract class Button {
             }
         }
 
-        public Long getEmoteId() {
-            return emoteId;
-        }
-
     }
 
     public static class UnicodeButton extends Button {
 
+        @Getter
         private String unicode;
 
         public UnicodeButton(String unicode, IButtonRunnable runnable) {
@@ -56,10 +55,6 @@ public abstract class Button {
         @Override
         public void addReaction(Message message) {
             message.addReaction(unicode).queue(null, error -> CascadeBot.LOGGER.debug("Failed to add reaction!", error));
-        }
-
-        public String getUnicode() {
-            return unicode;
         }
 
     }

@@ -7,6 +7,7 @@ package org.cascadebot.cascadebot.utils;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@UtilityClass
 public class FormatUtils {
 
     //region Table methods
