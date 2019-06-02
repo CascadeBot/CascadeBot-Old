@@ -62,6 +62,10 @@
                         <phase>install</phase>
                         <goals>
                             <goal>build</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <goals>
                             <goal>push</goal>
                         </goals>
                     </execution>
