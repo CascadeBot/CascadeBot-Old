@@ -55,6 +55,7 @@
                     <buildArgs>
                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
                     </buildArgs>
+                    <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
                 </configuration>
                 <executions>
                     <execution>
@@ -124,6 +125,13 @@
                             <mainClass>org.cascadebot.cascadebot.CascadeBot</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <!--  We don't actually want to deploy, it's used for pushing the docker image -->
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
