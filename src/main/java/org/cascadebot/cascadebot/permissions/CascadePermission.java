@@ -6,7 +6,9 @@
 package org.cascadebot.cascadebot.permissions;
 
 import net.dv8tion.jda.core.Permission;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -16,15 +18,15 @@ public class CascadePermission {
     public static final CascadePermission ALL_PERMISSIONS = CascadePermission.of("All permissions", "*");
 
     private final String label;
-    private final String permission;
+    private final String permissionRaw;
     private final boolean defaultPerm;
     private final EnumSet<Permission> discordPerm;
     private final Module module;
 
 
-    private CascadePermission(String label, String permission, boolean defaultPerm, Module module, Permission... discordPerm) {
+    private CascadePermission(String label, String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
         this.label = label;
-        this.permission = PermissionsManager.PERMISSION_PREFIX + permission;
+        this.permissionRaw = permissionRaw;
         this.defaultPerm = defaultPerm;
         this.module = module;
         this.discordPerm = EnumSet.noneOf(Permission.class);
@@ -59,12 +61,16 @@ public class CascadePermission {
         return new CascadePermission(label, permission, defaultPerm, module, discordPerm);
     }
 
-    public String getLabel() {
-        return label;
+    public String getPermissionRaw() {
+        return permissionRaw;
     }
 
-    public String getPermission() {
-        return permission;
+    public String getPermission(Locale locale) {
+        return CascadeBot.INS.getLanguage().get(locale, "permissions." + permissionRaw + ".name");
+    }
+
+    public String getLabel(Locale locale) {
+        return CascadeBot.INS.getLanguage().get(locale, "permissions." + permissionRaw + ".label");
     }
 
     public boolean isDefaultPerm() {
@@ -81,7 +87,7 @@ public class CascadePermission {
 
     @Override
     public String toString() {
-        return getPermission();
+        return getPermissionRaw();
     }
 
     @Override
@@ -91,7 +97,7 @@ public class CascadePermission {
         return this.label.equals(otherPerm.label) &&
                 this.defaultPerm == otherPerm.defaultPerm &&
                 this.module == otherPerm.module &&
-                this.permission.equals(otherPerm.permission) &&
+                this.permissionRaw.equals(otherPerm.permissionRaw) &&
                 this.discordPerm.equals(otherPerm.discordPerm);
     }
 
