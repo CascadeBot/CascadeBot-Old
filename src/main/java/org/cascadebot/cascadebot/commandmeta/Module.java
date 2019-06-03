@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.EnumSet;
 
@@ -39,6 +41,7 @@ public enum Module {
      */
     DEVELOPER(ModuleFlag.PRIVATE);
 
+    @Getter
     private EnumSet<ModuleFlag> flags;
 
     Module() {
@@ -48,10 +51,6 @@ public enum Module {
     Module(ModuleFlag... flags) {
         this.flags = EnumSet.noneOf(ModuleFlag.class);
         this.flags.addAll(Arrays.asList(flags));
-    }
-
-    public EnumSet<ModuleFlag> getFlags() {
-        return flags;
     }
 
     public boolean isFlagEnabled(ModuleFlag flag) {

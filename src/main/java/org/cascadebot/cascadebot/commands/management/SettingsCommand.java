@@ -7,41 +7,83 @@ package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
+import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.objects.FlagRequired;
-import org.cascadebot.cascadebot.data.objects.GuildSettings;
+import org.cascadebot.cascadebot.data.objects.Setting;
+import org.cascadebot.cascadebot.data.objects.SettingsContainer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.PasteUtils;
+import org.cascadebot.cascadebot.utils.ReflectionUtils;
 import org.cascadebot.cascadebot.utils.Table;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
-import java.text.Format;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SettingsCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length == 0) {
-            context.getUIMessaging().replyUsage(this);
+
+        List<Class<?>> settingsClasses = new ArrayList<>();
+
+        try {
+            ReflectionUtils.getClasses("org.cascadebot.cascadebot.data.objects")
+                    .stream()
+                    .filter(classToFilter -> classToFilter.getAnnotation(SettingsContainer.class) != null)
+                    .forEach(settingsClasses::add);
+        } catch (ClassNotFoundException | IOException e) {
+            context.getTypedMessaging().replyException("Could not process settings!", e);
             return;
         }
 
-        Field field = GuildSettings.VALUES.get(context.getArg(0).toLowerCase());
-
-        if (field != null) {
+        Field field;
+        if (context.getArgs().length == 0 || context.getArg(0).equalsIgnoreCase("list")) {
+            StringBuilder messageBuilder = new StringBuilder();
+            for (Class<?> settingsClass : settingsClasses) {
+                Table.TableBuilder tableBuilder = new Table.TableBuilder("Setting", "Current value");
+                getSettingsFromClass(settingsClass).entrySet()
+                        .stream()
+                        .sorted(Comparator.comparing(Map.Entry::getKey))
+                        .map(Map.Entry::getValue)
+                        .forEach((f) -> {
+                            try {
+                                tableBuilder.addRow(f.getName(), String.valueOf(f.get(context.getSettings())));
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            }
+                        });
+                messageBuilder.append(StringUtils.repeat("-", 5))
+                        .append(" ")
+                        .append(FormatUtils.formatEnum(settingsClass.getAnnotation(SettingsContainer.class).module()))
+                        .append(" module ")
+                        .append(StringUtils.repeat("-", 5))
+                        .append(tableBuilder.build().toString())
+                        .append("\n\n");
+            }
+            PasteUtils.pasteIfLong(messageBuilder.toString(), 2000, context.getTypedMessaging()::replyInfo);
+        } else if ((field = getAllSettings(settingsClasses).get(context.getArg(0).toLowerCase())) != null) {
             try {
-                FlagRequired flagsRequiredAnnotation = field.getAnnotation(FlagRequired.class);
-                if (flagsRequiredAnnotation != null) {
-                    if (!context.getData().getEnabledFlags().contains(flagsRequiredAnnotation.value())) {
-                        context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_edit", FormatUtils.formatEnum(flagsRequiredAnnotation.value(), context.getData().getLocale())));
+                Setting settingAnnotation = field.getAnnotation(Setting.class);
+                if (settingAnnotation != null) {
+                    if (!context.getData()
+                            .getEnabledFlags()
+                            .containsAll(Arrays.asList(settingAnnotation.flagRequired()))) {
+                        settingAnnotation.niceName();
+                        context.getTypedMessaging()
+                                .replyDanger(context.i18n("commands.settings.cannot_edit", settingAnnotation.niceName()));
                         return;
                     }
                 }
@@ -56,25 +98,11 @@ public class SettingsCommand implements ICommandMain {
                 } else {
                     return;
                 }
-                context.getTypedMessaging().replySuccess(context.i18n("commands.settings.setting_set", field.getName(), value));
+                context.getTypedMessaging()
+                        .replySuccess(context.i18n("commands.settings.setting_set", field.getName(), value));
             } catch (IllegalAccessException e) {
                 context.getTypedMessaging().replyException(context.i18n("commands.settings.cannot_access"), e);
             }
-        } else if (context.getArg(0).equalsIgnoreCase("list")) {
-            Table.TableBuilder tableBuilder = new Table.TableBuilder(context.i18n("commands.settings.setting"), context.i18n("commands.settings.current_value"));
-            GuildSettings.VALUES
-                    .entrySet()
-                    .stream()
-                    .sorted(Comparator.comparing(Map.Entry::getKey))
-                    .map(Map.Entry::getValue)
-                    .forEach((f) -> {
-                        try {
-                            tableBuilder.addRow(f.getName(), String.valueOf(f.get(context.getSettings())));
-                        } catch (IllegalAccessException e) {
-                            e.printStackTrace();
-                        }
-                    });
-            PasteUtils.pasteIfLong(tableBuilder.build().toString(), 2000, context::reply);
         } else {
             context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_find_field"));
         }
@@ -87,11 +115,8 @@ public class SettingsCommand implements ICommandMain {
 
     @Override
     public Set<Argument> getUndefinedArguments() {
-        return Set.of(
-                Argument.of("list", "Lists the current settings for the guild", ArgumentType.COMMAND),
-                Argument.of("setting", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("value", "The value for the setting", ArgumentType.REQUIRED)
-                )));
+        return Set.of(Argument.of("list", "Lists the current settings for the guild", ArgumentType.COMMAND), Argument.of("setting", "", ArgumentType.REQUIRED, Set
+                .of(Argument.of("value", "The value for the setting", ArgumentType.REQUIRED))));
     }
 
     @Override
@@ -102,6 +127,33 @@ public class SettingsCommand implements ICommandMain {
     @Override
     public Module getModule() {
         return Module.MANAGEMENT;
+    }
+
+    // This is theoretically safe because we will always create the values field to match this
+    @SuppressWarnings("unchecked")
+    private Map<String, Field> getSettingsFromClass(Class<?> classForScanning) {
+        try {
+            Field values = classForScanning.getField("VALUES");
+            values.setAccessible(true);
+            if (values.getType().isAssignableFrom(Map.class)) {
+                return (Map<String, Field>) values.get(null);
+            }
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+            // If we can't get the values field, we'll loop through manually
+        }
+        Map<String, Field> settings = new HashMap<>();
+        Arrays.stream(classForScanning.getFields())
+                .filter(field -> field.getAnnotation(Setting.class) != null &&
+                        field.getAnnotation(Setting.class).directlyEditable())
+                .forEach(setting -> settings.put(setting.getName(), setting));
+        return settings;
+    }
+
+    private Map<String, Field> getAllSettings(List<Class<?>> settingClasses) {
+        return settingClasses.stream()
+                .map(this::getSettingsFromClass)
+                .flatMap(map -> map.entrySet().stream())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
 }

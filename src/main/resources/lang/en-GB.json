@@ -67,8 +67,10 @@
     },
     "roles": {
       "command": "roles",
-      "table_header_1": "Role ID",
-      "table_header_2": "Role Name"
+      "header_id": "Role ID",
+      "header_name": "Role Name",
+      "header_members": "No. Users",
+      "header_color": "Colour"
     },
     "serverinfo": {
       "command": "serverinfo",
@@ -241,7 +243,8 @@
       },
       "delete": {
         "command": "delete",
-        "successfully_deleted_tag": "Successfully deleted tag!"
+        "successfully_deleted_tag": "Successfully deleted tag!",
+        "tag_doesnt_exist": "Tag `{0}` doesn't exist!"
       },
       "edit": {
         "command": "edit",
@@ -256,8 +259,7 @@
         "header": "To use placeholders in tags you wrap the placeholder in `{}` (example: `{server_name}`). If a place holder requires more options (like args) you use this format `{placeholder:option1,option2}` (example: `{args:0}`)."
       },
       "raw": {
-        "command": "raw",
-        "cannot_find_tag": "Couldn't find tag with name `{0}`"
+        "command": "raw"
       }
     }
   },

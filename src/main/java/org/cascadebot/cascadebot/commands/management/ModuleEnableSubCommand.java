@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.module;
+package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
@@ -30,7 +30,7 @@ public class ModuleEnableSubCommand implements ISubCommand {
 
         if (module != null) {
             try {
-                if (context.getData().enableModule(module)) {
+                if (context.getSettings().enableModule(module)) {
                     // If the module wasn't enabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.enable.enabled", module.toString()));
                 } else {

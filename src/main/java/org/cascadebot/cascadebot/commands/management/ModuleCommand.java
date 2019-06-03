@@ -11,9 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commands.subcommands.module.ModuleDisableSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.module.ModuleEnableSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.module.ModuleListSubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;

@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.tag;
+package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
@@ -26,12 +26,12 @@ public class TagRawSubCommand implements ICommandExecutable {
             return;
         }
 
-        if (!context.getData().hasTag(context.getArg(0))) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag"));
+        if (!context.getSettings().hasTag(context.getArg(0))) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
             return;
         }
 
-        Tag tag = context.getData().getTag(context.getArg(0));
+        Tag tag = context.getSettings().getTag(context.getArg(0));
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(context.i18n("words.tag") + ": " + context.getArg(0));
         builder.setDescription("```" + tag.getContent() + "```");

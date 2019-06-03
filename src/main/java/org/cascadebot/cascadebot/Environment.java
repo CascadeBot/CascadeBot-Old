@@ -5,9 +5,12 @@
 
 package org.cascadebot.cascadebot;
 
+import lombok.experimental.UtilityClass;
+
 // I've created a new class because we may want extra
 // logic here in the future such as a Patreon bot
-public final class Environment {
+@UtilityClass
+public class Environment {
 
     public static boolean isDevelopment() {
         return CascadeBot.getVersion().getBuild().equalsIgnoreCase("dev");

@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.utils;
 
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
@@ -22,6 +23,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@UtilityClass
 public class DiscordUtils {
 
     //region Members and Users

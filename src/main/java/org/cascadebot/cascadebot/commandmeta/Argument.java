@@ -5,11 +5,15 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.Set;
 
+@Getter
 public class Argument {
 
     private final String arg;
@@ -115,18 +119,6 @@ public class Argument {
             }
         }
         return true;
-    }
-
-    public String getArg() {
-        return arg;
-    }
-
-    public Set<Argument> getSubArgs() {
-        return subArgs;
-    }
-
-    public ArgumentType getType() {
-        return type;
     }
 
     @Override

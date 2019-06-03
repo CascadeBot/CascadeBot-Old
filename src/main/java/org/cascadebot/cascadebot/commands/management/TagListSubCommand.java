@@ -1,11 +1,9 @@
 /*
-
  * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
-
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.tag;
+package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -19,7 +17,7 @@ public class TagListSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Map<String, Tag> tags = context.getData().getTagInfo();
+        Map<String, Tag> tags = context.getSettings().getTags();
 
         if (tags.size() == 0) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.tag.list.no_tags_found"));

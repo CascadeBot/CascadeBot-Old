@@ -143,7 +143,6 @@ public class PermissionsManager {
         }
     }
 
-
     public boolean isAuthorised(ICommandExecutable command, GuildData guildData, Member member) {
         if (command instanceof ICommandRestricted) {
             SecurityLevel userLevel = getUserSecurityLevel(member.getUser().getIdLong());
@@ -160,6 +159,5 @@ public class PermissionsManager {
     public SecurityLevel getUserSecurityLevel(long userId) {
         return Security.getLevelById(userId, DiscordUtils.getAllOfficialRoleIds(userId));
     }
-
 
 }

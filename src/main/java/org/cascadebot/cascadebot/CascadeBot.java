@@ -21,17 +21,21 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.SelfUser;
+import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
+import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
 import org.cascadebot.cascadebot.events.VoiceEventListener;
+import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
@@ -58,6 +62,7 @@ public class CascadeBot {
     private static Version version;
     private static Gson gson;
 
+    private long startupTime;
     private ShardManager shardManager;
     private CommandManager commandManager;
     private DatabaseManager databaseManager;
@@ -120,6 +125,7 @@ public class CascadeBot {
     public void run() {
         LOGGER.info("All shards successfully logged in!");
         LOGGER.info("Cascade Bot version {} successfully booted up!", version);
+        startupTime = System.currentTimeMillis();
     }
 
 
@@ -178,6 +184,7 @@ public class CascadeBot {
                     .addEventListeners(new GeneralEventListener())
                     .addEventListeners(new ButtonEventListener())
                     .addEventListeners(new VoiceEventListener())
+                    .addEventListeners(new JDAEventMetricsListener())
                     .addEventListeners(eventWaiter)
                     .setToken(Config.INS.getBotToken())
                     .setShardsTotal(-1)
@@ -209,11 +216,17 @@ public class CascadeBot {
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
 
+        Metrics.INS.cacheMetrics.addCache("guild", GuildDataManager.getGuilds());
+
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
 
         RestAction.DEFAULT_FAILURE = throwable -> {
+            if (throwable instanceof ErrorResponseException) {
+                ErrorResponseException exception = (ErrorResponseException) throwable;
+                Metrics.INS.failedRestActions.labels(exception.getErrorResponse().name()).inc();
+            }
             LOGGER.error("Uncaught exception in rest action", MDCException.from(throwable));
         };
 
@@ -294,6 +307,14 @@ public class CascadeBot {
 
     public EventWaiter getEventWaiter() {
         return eventWaiter;
+    }
+
+    public long getStartupTime() {
+        return startupTime;
+    }
+
+    public long getUptime() {
+        return System.currentTimeMillis() - startupTime;
     }
 
 }
