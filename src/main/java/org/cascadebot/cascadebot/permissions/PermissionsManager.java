@@ -61,10 +61,11 @@ public class PermissionsManager {
             }
         }
 
-        registerPermission(CascadePermission.of("Core Category", "module.core", true, Module.CORE));
-        registerPermission(CascadePermission.of("Info Category", "module.info", true, Module.INFORMATIONAL));
-        registerPermission(CascadePermission.of("Fun Category", "module.fun", true, Module.FUN));
-        registerPermission(CascadePermission.of("Music Category", "module.music", true, Module.MUSIC));
+        registerPermission(CascadePermission.of("Info Category", "module.info", false, Module.INFORMATIONAL));
+        registerPermission(CascadePermission.of("Fun Category", "module.fun", false, Module.FUN));
+        registerPermission(CascadePermission.of("Music Category", "module.music", false, Module.MUSIC));
+        registerPermission(CascadePermission.of("Moderation Category", "module.moderation", false, Module.MODERATION));
+        registerPermission(CascadePermission.of("Management Category", "module.management", false, Module.MANAGEMENT));
 
         registerPermission(CascadePermission.of("Reset command prefix", "prefix.reset", false, Permission.MANAGE_SERVER));
         registerPermission(CascadePermission.of("Set command prefix", "prefix.set", false, Permission.MANAGE_SERVER));

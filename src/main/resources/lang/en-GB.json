@@ -264,6 +264,28 @@
     }
   },
   "permissions": {
+    "module": {
+      "info": {
+        "name": "module.info",
+        "label": "Information module"
+      },
+      "fun": {
+        "name": "module.fun",
+        "label": "Fun module"
+      },
+      "music": {
+        "name": "module.music",
+        "label": "Music module"
+      },
+      "moderation": {
+        "name": "module.moderation",
+        "label": "Moderation module"
+      },
+      "management": {
+        "name": "module.management",
+        "label": "Management module"
+      }
+    },
     "prefix": {
       "reset": {
         "name": "prefix.reset",
