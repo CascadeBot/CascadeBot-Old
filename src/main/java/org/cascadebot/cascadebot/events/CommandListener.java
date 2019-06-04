@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.events;
 import io.prometheus.client.Summary;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.MessageType;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
@@ -49,6 +50,7 @@ public class CommandListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
+        if (event.getMessage().getType() != MessageType.DEFAULT) return;
 
         MDC.put("cascade.guild", event.getGuild().toString());
         MDC.put("cascade.sender", event.getAuthor().toString());
