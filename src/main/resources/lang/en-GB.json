@@ -264,6 +264,16 @@
     }
   },
   "permissions": {
+    "prefix": {
+      "reset": {
+        "name": "prefix.reset",
+        "label": "Reset command prefix"
+      },
+      "set": {
+        "name": "prefix.set",
+        "label": "Set command prefix"
+      }
+    },
     "cat": {
       "name": "cat",
       "label": "Cat command"
@@ -351,6 +361,86 @@
     "unban": {
       "name": "unban",
       "label": "Unban command"
+    },
+    "join": {
+      "name": "join",
+      "label": "Join command",
+      "other": {
+        "name": "join.other",
+        "label": "Make Cascade join a different channel"
+      }
+    },
+    "leave": {
+      "name": "leave",
+      "label": "Leave command",
+      "other": {
+        "name": "leave.other",
+        "label": "Make Cascade leave another channel"
+      }
+    },
+    "loop": {
+      "name": "loop",
+      "label": "Loop command"
+    },
+    "pause": {
+      "name": "pause",
+      "label": "Pause command"
+    },
+    "play": {
+      "name": "play",
+      "label": "Play command"
+    },
+    "playing": {
+      "name": "playing",
+      "label": "Playing command"
+    },
+    "queue": {
+      "name": "queue",
+      "label": "Queue command",
+      "load": {
+        "name": "queue.load",
+        "label": "Queue load sub-command"
+      },
+      "save": {
+        "name": "queue.save",
+        "label": "Queue save sub-command",
+        "overwrite": {
+          "name": "queue.save.overwrite",
+          "label": "Overwrite guild playlist"
+        }
+      }
+    },
+    "resume": {
+      "name": "resume",
+      "label": "Resume command"
+    },
+    "search": {
+      "name": "search",
+      "label": "Search command"
+    },
+    "shuffle": {
+      "name": "shuffle",
+      "label": "Shuffle command"
+    },
+    "skip": {
+      "name": "skip",
+      "label": "Skip command",
+      "force": {
+        "name": "skip.force",
+        "label": "Force skip a song"
+      }
+    },
+    "stop": {
+      "name": "stop",
+      "label": "Stop command"
+    },
+    "volume": {
+      "name": "volume",
+      "label": "Volume command",
+      "extreme": {
+        "name": "volume.extreme",
+        "label": "Raise volume above 100%"
+      }
     }
   },
   "moderation_manager": {
