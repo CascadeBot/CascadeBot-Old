@@ -80,7 +80,7 @@ public class QueueCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Queue", "queue", getModule());
+        return CascadePermission.of("queue", false);
     }
 
     @Override

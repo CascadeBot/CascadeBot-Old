@@ -112,7 +112,7 @@ public class SearchCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Search", "search", getModule());
+        return CascadePermission.of("search", false);
     }
 
     @Override

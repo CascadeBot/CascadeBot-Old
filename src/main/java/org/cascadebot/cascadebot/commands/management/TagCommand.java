@@ -53,7 +53,7 @@ public class TagCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Tag command", "tag", false);
+        return CascadePermission.of("tag", false);
     }
 
     @Override

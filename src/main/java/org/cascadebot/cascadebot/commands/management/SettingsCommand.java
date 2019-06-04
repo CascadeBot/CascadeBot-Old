@@ -121,7 +121,7 @@ public class SettingsCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Settings command", "settings", false, Permission.MANAGE_SERVER);
+        return CascadePermission.of("settings", false, Permission.MANAGE_SERVER);
     }
 
     @Override

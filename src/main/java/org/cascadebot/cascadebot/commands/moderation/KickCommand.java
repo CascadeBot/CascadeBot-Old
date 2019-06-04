@@ -55,7 +55,7 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Kick Command", "kick", false, Permission.KICK_MEMBERS);
+        return CascadePermission.of("kick", false, Permission.KICK_MEMBERS);
     }
 
     @Override

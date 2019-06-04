@@ -53,7 +53,7 @@ public class RolesCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Roles command", "roles", false);
+        return CascadePermission.of("roles", false);
     }
 
     @Override

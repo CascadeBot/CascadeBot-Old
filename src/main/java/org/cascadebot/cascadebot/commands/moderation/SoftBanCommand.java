@@ -57,7 +57,7 @@ public class SoftBanCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Soft-ban Command", "softban",
+        return CascadePermission.of("softban",
                 false, Permission.BAN_MEMBERS);
     }
 

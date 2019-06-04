@@ -137,7 +137,7 @@ public class SkipCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Skip", "skip", true, Module.MUSIC);
+        return CascadePermission.of("skip", true);
     }
 
     @Override

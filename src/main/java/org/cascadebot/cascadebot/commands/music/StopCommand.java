@@ -35,7 +35,7 @@ public class StopCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Stop music command", "stop", false);
+        return CascadePermission.of("stop", false);
     }
 
 }

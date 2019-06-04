@@ -66,7 +66,7 @@ public class LoopCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Loop command", "loop", true);
+        return CascadePermission.of("loop", true);
     }
 
     @Override

@@ -107,7 +107,7 @@ public class BanCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Ban command", "ban", false, Permission.BAN_MEMBERS);
+        return CascadePermission.of("ban", false, Permission.BAN_MEMBERS);
     }
 
 }

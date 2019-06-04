@@ -76,7 +76,7 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Cat command", "cat", true);
+        return CascadePermission.of("cat", true);
     }
 
 }

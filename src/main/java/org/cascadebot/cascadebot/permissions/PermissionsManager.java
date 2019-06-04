@@ -61,21 +61,21 @@ public class PermissionsManager {
             }
         }
 
-        registerPermission(CascadePermission.of("Info Category", "module.info", false, Module.INFORMATIONAL));
-        registerPermission(CascadePermission.of("Fun Category", "module.fun", false, Module.FUN));
-        registerPermission(CascadePermission.of("Music Category", "module.music", false, Module.MUSIC));
-        registerPermission(CascadePermission.of("Moderation Category", "module.moderation", false, Module.MODERATION));
-        registerPermission(CascadePermission.of("Management Category", "module.management", false, Module.MANAGEMENT));
+        registerPermission(CascadePermission.of("module.info", false, Module.INFORMATIONAL));
+        registerPermission(CascadePermission.of("module.fun", false, Module.FUN));
+        registerPermission(CascadePermission.of("module.music", false, Module.MUSIC));
+        registerPermission(CascadePermission.of("module.moderation", false, Module.MODERATION));
+        registerPermission(CascadePermission.of("module.management", false, Module.MANAGEMENT));
 
-        registerPermission(CascadePermission.of("Reset command prefix", "prefix.reset", false, Permission.MANAGE_SERVER));
-        registerPermission(CascadePermission.of("Set command prefix", "prefix.set", false, Permission.MANAGE_SERVER));
+        registerPermission(CascadePermission.of("prefix.reset", false, Permission.MANAGE_SERVER));
+        registerPermission(CascadePermission.of("prefix.set", false, Permission.MANAGE_SERVER));
 
-        registerPermission(CascadePermission.of("Join other voice channel", "join.other", false, Permission.VOICE_MOVE_OTHERS));
-        registerPermission(CascadePermission.of("Leave other voice channel", "leave.other", false, Permission.VOICE_MOVE_OTHERS));
+        registerPermission(CascadePermission.of("join.other", false, Permission.VOICE_MOVE_OTHERS));
+        registerPermission(CascadePermission.of("leave.other", false, Permission.VOICE_MOVE_OTHERS));
 
-        registerPermission(CascadePermission.of("Raise volume above 100%", "volume.extreme", false, Permission.MANAGE_SERVER));
-        registerPermission(CascadePermission.of("Force skip a song", "skip.force", false, Permission.MANAGE_CHANNEL));
-        registerPermission(CascadePermission.of("Overwrite guild playlist", "queue.save.overwrite", false));
+        registerPermission(CascadePermission.of("volume.extreme", false, Permission.MANAGE_SERVER));
+        registerPermission(CascadePermission.of("skip.force", false, Permission.MANAGE_CHANNEL));
+        registerPermission(CascadePermission.of("queue.save.overwrite", false));
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 

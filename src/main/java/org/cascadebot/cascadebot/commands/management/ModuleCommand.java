@@ -44,7 +44,7 @@ public class ModuleCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Module command", "module", false, Permission.MANAGE_SERVER);
+        return CascadePermission.of("module", false, Permission.MANAGE_SERVER);
     }
 
 }

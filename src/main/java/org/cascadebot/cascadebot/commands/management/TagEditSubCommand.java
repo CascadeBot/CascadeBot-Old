@@ -41,7 +41,7 @@ public class TagEditSubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Tag edit sub command", "tag.edit", false);
+        return CascadePermission.of("tag.edit", false);
     }
 
     @Override

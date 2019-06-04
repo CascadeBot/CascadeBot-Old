@@ -37,7 +37,7 @@ public class ResumeCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Resume command", "resume", true);
+        return CascadePermission.of("resume", true);
     }
 
 }

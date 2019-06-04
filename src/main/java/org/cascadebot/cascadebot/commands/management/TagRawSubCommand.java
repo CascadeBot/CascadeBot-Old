@@ -47,7 +47,7 @@ public class TagRawSubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Tag raw sub command", "tag.raw", false);
+        return CascadePermission.of("tag.raw", false);
     }
 
     @Override

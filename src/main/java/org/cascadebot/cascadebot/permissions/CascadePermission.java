@@ -19,17 +19,15 @@ import java.util.EnumSet;
 @Getter
 public class CascadePermission {
 
-    public static final CascadePermission ALL_PERMISSIONS = CascadePermission.of("All permissions", "*");
+    public static final CascadePermission ALL_PERMISSIONS = CascadePermission.of("*", false);
 
-    private final String label;
     private final String permissionRaw;
     private final boolean defaultPerm;
     private final EnumSet<Permission> discordPerm;
     private final Module module;
 
 
-    private CascadePermission(String label, String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
-        this.label = label;
+    private CascadePermission(String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
         this.permissionRaw = permissionRaw;
         this.defaultPerm = defaultPerm;
         this.module = module;
@@ -37,32 +35,20 @@ public class CascadePermission {
         this.discordPerm.addAll(Arrays.asList(discordPerm));
     }
 
-    public static CascadePermission of(String permission) {
-        return new CascadePermission(null, permission, false, null);
+    public static CascadePermission of(String permission, boolean defaultPerm) {
+        return new CascadePermission(permission, defaultPerm, null);
     }
 
-    public static CascadePermission of(String label, String permission) {
-        return new CascadePermission(label, permission, false, null);
+    public static CascadePermission of(String permission, boolean defaultPerm, Module module) {
+        return new CascadePermission(permission, defaultPerm, module);
     }
 
-    public static CascadePermission of(String label, String permission, boolean defaultPerm) {
-        return new CascadePermission(label, permission, defaultPerm, null);
+    public static CascadePermission of(String permission, boolean defaultPerm, Permission... discordPerm) {
+        return new CascadePermission(permission, defaultPerm, null, discordPerm);
     }
 
-    public static CascadePermission of(String label, String permission, Module module) {
-        return new CascadePermission(label, permission, false, module);
-    }
-
-    public static CascadePermission of(String label, String permission, boolean defaultPerm, Module module) {
-        return new CascadePermission(label, permission, defaultPerm, module);
-    }
-
-    public static CascadePermission of(String label, String permission, boolean defaultPerm, Permission... discordPerm) {
-        return new CascadePermission(label, permission, defaultPerm, null, discordPerm);
-    }
-
-    public static CascadePermission of(String label, String permission, boolean defaultPerm, Module module, Permission... discordPerm) {
-        return new CascadePermission(label, permission, defaultPerm, module, discordPerm);
+    public static CascadePermission of(String permission, boolean defaultPerm, Module module, Permission... discordPerm) {
+        return new CascadePermission(permission, defaultPerm, module, discordPerm);
     }
 
     public String getPermissionRaw() {

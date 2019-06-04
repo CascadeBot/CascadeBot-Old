@@ -68,7 +68,7 @@ public class TagPlaceholdersSubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Tag placeholders sub command", "tag.placeholders", false);
+        return CascadePermission.of("tag.placeholders", false);
     }
 
     @Override

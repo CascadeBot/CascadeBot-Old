@@ -89,7 +89,7 @@ public class VolumeCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Volume", "volume", getModule());
+        return CascadePermission.of("volume", false);
     }
 
     @Override

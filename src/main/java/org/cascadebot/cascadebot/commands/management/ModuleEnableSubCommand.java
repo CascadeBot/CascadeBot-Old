@@ -58,7 +58,7 @@ public class ModuleEnableSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Enable module subcommand", "module.enable", false, Permission.MANAGE_SERVER);
+        return CascadePermission.of("module.enable", false, Permission.MANAGE_SERVER);
     }
 
     @Override

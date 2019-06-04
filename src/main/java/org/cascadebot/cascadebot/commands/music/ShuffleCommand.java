@@ -35,7 +35,7 @@ public class ShuffleCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Shuffle command", "shuffle", true);
+        return CascadePermission.of("shuffle", true);
     }
 
 }

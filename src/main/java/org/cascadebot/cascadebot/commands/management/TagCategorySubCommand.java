@@ -41,7 +41,7 @@ public class TagCategorySubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Tag category sub command", "tag.category", false);
+        return CascadePermission.of("tag.category", false);
     }
 
     @Override

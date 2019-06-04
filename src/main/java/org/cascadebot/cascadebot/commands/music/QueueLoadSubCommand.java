@@ -69,7 +69,7 @@ public class QueueLoadSubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Queue load sub command", "queue.load", true);
+        return CascadePermission.of("queue.load", true);
     }
 
     @Deprecated(forRemoval = true)

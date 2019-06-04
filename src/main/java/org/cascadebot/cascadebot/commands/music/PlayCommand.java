@@ -55,7 +55,7 @@ public class PlayCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Play command", "play", true);
+        return CascadePermission.of("play", true);
     }
 
 }

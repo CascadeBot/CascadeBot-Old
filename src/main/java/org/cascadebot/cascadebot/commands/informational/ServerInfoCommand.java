@@ -57,7 +57,7 @@ public class ServerInfoCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Server info command", "serverinfo", true);
+        return CascadePermission.of("serverinfo", true);
     }
 
     @Override

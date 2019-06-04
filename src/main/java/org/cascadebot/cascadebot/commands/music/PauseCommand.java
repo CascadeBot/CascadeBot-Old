@@ -37,7 +37,7 @@ public class PauseCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Pause command", "pause", true);
+        return CascadePermission.of("pause", true);
     }
 
 }

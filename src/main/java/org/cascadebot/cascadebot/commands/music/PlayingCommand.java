@@ -224,7 +224,7 @@ public class PlayingCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Playing Command", "playing", true);
+        return CascadePermission.of("playing", true);
     }
 
 }
