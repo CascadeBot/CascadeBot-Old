@@ -263,6 +263,96 @@
       }
     }
   },
+  "permissions": {
+    "cat": {
+      "name": "cat",
+      "label": "Cat command"
+    },
+    "dog" : {
+      "name": "dog",
+      "label": "Dog command"
+    },
+    "roles": {
+      "name": "roles",
+      "label": "Roles command"
+    },
+    "serverinfo": {
+      "name": "serverinfo",
+      "label": "Server info command"
+    },
+    "userinfo": {
+      "name": "userinfo",
+      "label": "User info command"
+    },
+    "module": {
+      "name": "module",
+      "label": "Module command",
+      "disable": {
+        "name": "module.disable",
+        "label": "Disable module sub-command"
+      },
+      "enable": {
+        "name": "module.enable",
+        "label": "Enable module sub-command"
+      },
+      "list": {
+        "name": "module.list",
+        "label": "List modules sub-command"
+      }
+    },
+    "settings": {
+      "name": "settings",
+      "label": "Settings command"
+    },
+    "tag": {
+      "name": "tag",
+      "label": "Tag command",
+      "category": {
+        "name": "tag.category",
+        "label": "Tag category sub-command"
+      },
+      "create": {
+        "name": "tag.create",
+        "label": "Tag create sub-command"
+      },
+      "delete": {
+        "name": "tag.delete",
+        "label": "Tag delete sub-command"
+      },
+      "edit": {
+        "name": "tag.edit",
+        "label": "Tag edit sub-command"
+      },
+      "list": {
+        "name": "tag.list",
+        "label": "Tag list sub-command"
+      },
+      "placeholder": {
+        "name": "tag.placeholder",
+        "label": "Tag placeholder sub-command"
+      },
+      "raw": {
+        "name": "tag.raw",
+        "label": "Tag raw sub-command"
+      }
+    },
+    "ban": {
+      "name": "ban",
+      "label": "Ban command"
+    },
+    "kick": {
+      "name": "kick",
+      "label": "Kick command"
+    },
+    "softban": {
+      "name": "softban",
+      "label": "Soft-ban command"
+    },
+    "unban": {
+      "name": "unban",
+      "label": "Unban command"
+    }
+  },
   "moderation_manager": {
     "failed_action": "Could not {0} the user {1} due to an exception!",
     "cannot_action_yourself": "You cannot {0} yourself!",
