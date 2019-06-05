@@ -99,8 +99,8 @@ public class GuildData {
     //region Commands
     public void enableCommand(ICommandMain command) {
         if (command.getModule().isPrivate()) return;
-        if (commandInfo.contains(command.getClass())) {
-            commandInfo.get(command.getClass()).setEnabled(true);
+        if (commandInfo.contains(command.getClass()) || !command.getModule().isDefault()) {
+            getGuildCommandInfo(command).setEnabled(true);
         }
     }
 
@@ -113,7 +113,7 @@ public class GuildData {
 
     public void disableCommand(ICommandMain command) {
         if (command.getModule().isPrivate()) return;
-        commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale)).setEnabled(false);
+        getGuildCommandInfo(command).setEnabled(false);
     }
 
     public void disableCommandByModule(Module module) {
@@ -151,24 +151,22 @@ public class GuildData {
 
     public Set<String> getCommandAliases(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
-            return getGuildCommandInfo(command).getAliases();
+            return commandInfo.get(command.getClass()).getAliases();
         }
         return command.getGlobalAliases();
     }
 
     public boolean addAlias(ICommandMain command, String alias) {
-        boolean success = getGuildCommandInfo(command).addAlias(alias);
-        return success;
+        return getGuildCommandInfo(command).addAlias(alias);
     }
 
     public boolean removeAlias(ICommandMain command, String alias) {
-        boolean success = getGuildCommandInfo(command).removeAlias(alias);
-        return success;
+        return getGuildCommandInfo(command).removeAlias(alias);
     }
 
     @BsonIgnore
     private GuildCommandInfo getGuildCommandInfo(ICommandMain command) {
-        return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale));
+        return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command));
     }
 
     public Map<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
