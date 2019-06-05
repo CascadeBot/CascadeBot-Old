@@ -142,7 +142,7 @@ public class GuildData {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getCommand();
         }
-        return command.command();
+        return command.command(locale);
     }
 
     public void setCommandName(ICommandMain command, String commandName) {
@@ -166,7 +166,7 @@ public class GuildData {
 
     @BsonIgnore
     private GuildCommandInfo getGuildCommandInfo(ICommandMain command) {
-        return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command));
+        return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale));
     }
 
     public Map<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {

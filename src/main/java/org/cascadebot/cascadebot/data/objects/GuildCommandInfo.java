@@ -25,8 +25,8 @@ public class GuildCommandInfo {
     private String defaultCommand;
     private Set<String> aliases;
 
-    public GuildCommandInfo(ICommandMain command) {
-        this.command = command.command();
+    public GuildCommandInfo(ICommandMain command, Locale locale) {
+        this.command = command.command(locale);
         this.defaultCommand = command.command();
         this.forceDefault = command.forceDefault();
         this.aliases = command.getGlobalAliases();
