@@ -21,7 +21,7 @@ public class ModuleListSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         context.reply("**Modules**\n" + Arrays.stream(Module.values())
-                .filter(module -> !module.isFlagEnabled(ModuleFlag.PRIVATE))
+                .filter(module -> !module.isPrivate())
                 .map(module -> module.toString().toLowerCase() +
                         " - " +
                         (context.getSettings().isModuleEnabled(module) ? "Enabled" : "Disabled"))

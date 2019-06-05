@@ -164,7 +164,7 @@ public class CommandListener extends ListenerAdapter {
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
-            if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
+            if (!cmd.getModule().isPrivate() &&
                     !guildData.getSettings().isModuleEnabled(cmd.getModule())) {
                 if (guildData.getSettings().isShowModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();

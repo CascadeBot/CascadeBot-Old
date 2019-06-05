@@ -98,26 +98,26 @@ public class GuildData {
 
     //region Commands
     public void enableCommand(ICommandMain command) {
-        if (command.getModule().isFlagEnabled(ModuleFlag.PRIVATE)) return;
+        if (command.getModule().isPrivate()) return;
         if (commandInfo.contains(command.getClass())) {
             commandInfo.get(command.getClass()).setEnabled(true);
         }
     }
 
     public void enableCommandByModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
+        if (module.isPrivate()) return;
         for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             enableCommand(command);
         }
     }
 
     public void disableCommand(ICommandMain command) {
-        if (command.getModule().isFlagEnabled(ModuleFlag.PRIVATE)) return;
+        if (command.getModule().isPrivate()) return;
         commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale)).setEnabled(false);
     }
 
     public void disableCommandByModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
+        if (module.isPrivate()) return;
         for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             disableCommand(command);
         }

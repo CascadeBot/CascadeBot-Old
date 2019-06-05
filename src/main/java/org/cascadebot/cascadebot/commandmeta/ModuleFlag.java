@@ -16,6 +16,10 @@ public enum ModuleFlag {
      * Indicates that this module cannot be used by general users of the bot and
      * so is unable to be disabled
      */
-    PRIVATE
+    PRIVATE,
+    /**
+     * Indicates that the module will be enabled by default
+     */
+    DEFAULT
 
 }

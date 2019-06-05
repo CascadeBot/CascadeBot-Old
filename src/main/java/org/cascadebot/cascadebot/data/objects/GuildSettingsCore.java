@@ -60,13 +60,7 @@ public class GuildSettingsCore {
     //endregion
 
     @Setting(niceName = "Enabled modules", directlyEditable = false)
-    private Set<Module> enabledModules = Sets.newConcurrentHashSet(
-            Sets.newHashSet(
-                    Module.CORE,
-                    Module.MANAGEMENT,
-                    Module.INFORMATIONAL
-            )
-    );
+    private Set<Module> enabledModules = Sets.newConcurrentHashSet(Module.getModules(ModuleFlag.DEFAULT));
 
     @Setting(niceName = "Prefix", directlyEditable = false)
     private String prefix = Config.INS.getDefaultPrefix();
@@ -76,16 +70,16 @@ public class GuildSettingsCore {
 
     //region Modules
     public boolean enableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
+        if (module.isPrivate()) {
             throw new IllegalArgumentException("This module is not available to be enabled!");
         }
         return this.enabledModules.add(module);
     }
 
     public boolean disableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
+        if (module.isPrivate()) {
             throw new IllegalArgumentException("This module is not available to be disabled!");
-        } else if (module.isFlagEnabled(ModuleFlag.REQUIRED)) {
+        } else if (module.isRequired()) {
             throw new IllegalArgumentException(String.format("Cannot disable the %s module!", module.toString().toLowerCase()));
         }
         return this.enabledModules.remove(module);
@@ -93,7 +87,7 @@ public class GuildSettingsCore {
 
     public boolean isModuleEnabled(Module module) {
         boolean isEnabled = this.enabledModules.contains(module);
-        if (!isEnabled && module.isFlagEnabled(ModuleFlag.REQUIRED)) {
+        if (!isEnabled && module.isRequired()) {
             this.enabledModules.add(module);
             return true;
         }
