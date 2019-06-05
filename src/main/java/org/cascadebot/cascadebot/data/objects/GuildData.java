@@ -127,12 +127,12 @@ public class GuildData {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).isEnabled();
         }
-        return true;
+        return command.getModule().isDefault();
     }
 
-    public boolean isTypeEnabled(Module type) {
-        boolean enabled = true;
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(type)) {
+    public boolean isModuleEnabled(Module module) {
+        boolean enabled = module.isDefault();
+        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             enabled &= commandInfo.get(command.getClass()).isEnabled();
         }
         return enabled;
