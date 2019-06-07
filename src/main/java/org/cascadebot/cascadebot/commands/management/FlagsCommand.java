@@ -49,12 +49,12 @@ public class FlagsCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return null;
+        return CascadePermission.of("Flag Command", "flags", false);
     }
 
     @Override
     public String description() {
-        return null;
+        return "Command to get a list of guild flags, and see if they're enabled or disabled.";
     }
 
 }
