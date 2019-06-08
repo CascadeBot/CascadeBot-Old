@@ -49,7 +49,8 @@ public class FlagsCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Flag Command", "flags", false);
+        // TODO: Add label to lang
+        return CascadePermission.of("flags", false);
     }
 
     @Override
