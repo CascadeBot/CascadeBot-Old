@@ -53,7 +53,7 @@ public class GuildInfoSubCommand implements ICommandExecutable {
 
         String modules = Arrays.stream(Module.values())
                              .map(module -> FormatUtils.formatEnum(module) + " - " +
-                                     (finalDataForList.isModuleEnabled(module) ? UnicodeConstants.TICK : UnicodeConstants.RED_CROSS))
+                                     (finalDataForList.getSettings().isModuleEnabled(module) ? UnicodeConstants.TICK : UnicodeConstants.RED_CROSS))
                              .collect(Collectors.joining("\n"));
 
 
