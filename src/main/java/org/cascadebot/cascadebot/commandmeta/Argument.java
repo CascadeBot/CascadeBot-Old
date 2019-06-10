@@ -8,26 +8,30 @@ package org.cascadebot.cascadebot.commandmeta;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Collections;
 import java.util.Set;
 
 @Getter
 public class Argument {
 
-    private final String arg;
+    private final String id;
     private final Set<Argument> subArgs;
     private final ArgumentType type;
     private final Set<String> aliases;
 
-    private Argument(String arg, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
-        this.arg = arg;
+    private Argument(String id, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
+        this.id = id;
         this.subArgs = subArgs;
         this.type = type;
         this.aliases = aliases;
     }
 
-    public static Argument of(String arg, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
-        return new Argument(arg, Set.copyOf(subArgs), type, Set.copyOf(aliases));
+    public static Argument of(String id, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
+        return new Argument(id, Set.copyOf(subArgs), type, Set.copyOf(aliases));
+    }
+
+    public String getName() {
+        // TODO: Implement this into locale
+        return "";
     }
 
     public String getDescription() {
@@ -51,7 +55,7 @@ public class Argument {
         if (subArgs.size() > 0) {
             String field = this.toString();
             if (!StringUtils.isBlank(getDescription()) && (subArgs.isEmpty() || subArgs.stream().allMatch(argument -> argument.getType() == ArgumentType.OPTIONAL))) {
-                usageBuilder.append("`").append(base).append(arg).append("` - ").append(getDescription()).append('\n');
+                usageBuilder.append("`").append(base).append(getName()).append("` - ").append(getDescription()).append('\n');
             }
             for (Argument subArg : subArgs) {
                 usageBuilder.append(subArg.getUsageString(base + field + " "));
@@ -81,7 +85,7 @@ public class Argument {
         if (type.equals(ArgumentType.REQUIRED)) {
             return true;
         }
-        if (!args[pos].equalsIgnoreCase(arg) && !this.type.equals(ArgumentType.OPTIONAL)) {
+        if (!args[pos].equalsIgnoreCase(getName()) && !this.type.equals(ArgumentType.OPTIONAL)) {
             for (String alias : aliases) {
                 if (!args[pos].equalsIgnoreCase(alias)) {
                     return false;
@@ -100,7 +104,7 @@ public class Argument {
 
     @Override
     public String toString() {
-        String argument = arg;
+        String argument = getName();
         if (aliases.size() > 0) {
             StringBuilder paramBuilder = new StringBuilder();
             paramBuilder.append(argument);
@@ -120,12 +124,12 @@ public class Argument {
         return argument;
     }
 
-    public boolean argEquals(String arg) {
-        return this.arg.equalsIgnoreCase(arg);
+    public boolean argEquals(String id) {
+        return this.id.equalsIgnoreCase(id);
     }
 
     public boolean argStartsWith(String start) {
-        return this.arg.startsWith(start.toLowerCase());
+        return this.id.startsWith(start.toLowerCase());
     }
 
     //TODO implement utils for checking arguments in the command. we have a class here why not use it.
