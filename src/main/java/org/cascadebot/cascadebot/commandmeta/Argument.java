@@ -5,8 +5,6 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,45 +15,24 @@ import java.util.Set;
 public class Argument {
 
     private final String arg;
-    private final String description;
     private final Set<Argument> subArgs;
     private final ArgumentType type;
     private final Set<String> aliases;
 
-    private Argument(String arg, String description, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
-        this.arg = arg.toLowerCase(); //This probably isn't needed but megh
-        this.description = description;
-        this.subArgs = Collections.unmodifiableSet(subArgs);
+    private Argument(String arg, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
+        this.arg = arg;
+        this.subArgs = subArgs;
         this.type = type;
-        this.aliases = Collections.unmodifiableSet(aliases);
+        this.aliases = aliases;
     }
 
-    public static Argument of(String arg, String description) {
-        return new Argument(arg, description, Set.of(), ArgumentType.COMMAND, Set.of());
+    public static Argument of(String arg, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
+        return new Argument(arg, Set.copyOf(subArgs), type, Set.copyOf(aliases));
     }
 
-    public static Argument ofA(String arg, String description, Set<String> aliases) {
-        return new Argument(arg, description, Set.of(), ArgumentType.COMMAND, aliases);
-    }
-
-    public static Argument of(String arg, String description, ArgumentType type) {
-        return new Argument(arg, description, Set.of(), type, Set.of());
-    }
-
-    public static Argument ofA(String arg, String description, ArgumentType type, Set<String> aliases) {
-        return new Argument(arg, description, Set.of(), type, aliases);
-    }
-
-    public static Argument of(String arg, String description, Set<Argument> subArgs) {
-        return new Argument(arg, description, subArgs, ArgumentType.COMMAND, Set.of());
-    }
-
-    public static Argument ofA(String arg, String description, Set<Argument> subArgs, Set<String> aliases) {
-        return new Argument(arg, description, subArgs, ArgumentType.COMMAND, aliases);
-    }
-
-    public static Argument of(String arg, String description, ArgumentType type, Set<Argument> subArgs) {
-        return new Argument(arg, description, subArgs, type, Set.of());
+    public String getDescription() {
+        // TODO: Implement this into locale
+        return "";
     }
 
     /**
@@ -73,16 +50,16 @@ public class Argument {
         StringBuilder usageBuilder = new StringBuilder();
         if (subArgs.size() > 0) {
             String field = this.toString();
-            if (!StringUtils.isBlank(description) && (subArgs.isEmpty() || subArgs.stream().allMatch(argument -> argument.getType() == ArgumentType.OPTIONAL))) {
-                usageBuilder.append("`").append(base).append(arg).append("` - ").append(description).append('\n');
+            if (!StringUtils.isBlank(getDescription()) && (subArgs.isEmpty() || subArgs.stream().allMatch(argument -> argument.getType() == ArgumentType.OPTIONAL))) {
+                usageBuilder.append("`").append(base).append(arg).append("` - ").append(getDescription()).append('\n');
             }
             for (Argument subArg : subArgs) {
                 usageBuilder.append(subArg.getUsageString(base + field + " "));
             }
         } else {
             usageBuilder.append("`").append(base).append(this.toString()).append("`");
-            if (!StringUtils.isBlank(description)) {
-                usageBuilder.append(" - ").append(description);
+            if (!StringUtils.isBlank(getDescription())) {
+                usageBuilder.append(" - ").append(getDescription());
             }
             usageBuilder.append('\n');
         }
@@ -111,7 +88,7 @@ public class Argument {
                 }
             }
         }
-        if (this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.description.isEmpty()) {
+        if (this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.getDescription().isEmpty()) {
             for (Argument sub : this.subArgs) {
                 if (sub.type.equals(ArgumentType.REQUIRED) || sub.type.equals(ArgumentType.COMMAND)) {
                     return sub.argExists(args, pos + 1);
