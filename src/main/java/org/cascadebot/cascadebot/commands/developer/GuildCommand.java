@@ -33,7 +33,7 @@ public class GuildCommand implements ICommandRestricted {
 
     @Override
     public Set<ICommandExecutable> getSubCommands() {
-        return Set.of(new GuildSaveSubCommand(), new GuildLeaveSubCommand(), new GuildFlagSubCommand());
+        return Set.of(new GuildSaveSubCommand(), new GuildLeaveSubCommand(), new GuildFlagSubCommand(), new GuildInfoSubCommand());
     }
 
     @Override
