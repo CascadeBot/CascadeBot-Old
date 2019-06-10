@@ -19,10 +19,7 @@ public interface ICommandExecutable {
     void onCommand(Member sender, CommandContext context);
 
     default String getCommandPath() {
-        if (this instanceof ISubCommand) {
-            return "commands." + ((ISubCommand) this).parent() + "." + command() + ".command";
-        }
-        return "commands." + command() + ".command";
+        return "commands." + getAbsoluteCommand() + ".command";
     }
 
     String command();
@@ -35,6 +32,13 @@ public interface ICommandExecutable {
         }
     }
 
+    default String getAbsoluteCommand() {
+        if (this instanceof ISubCommand) {
+            return ((ISubCommand) this).parent() + "." + command();
+        }
+        return command();
+    }
+
     CascadePermission getPermission();
 
     default String getDescriptionPath() {
@@ -42,10 +46,8 @@ public interface ICommandExecutable {
             if (((ICommandMain) this).getSubCommands().size() > 0) {
                 return "command_descriptions." + command() + ".main_command";
             }
-        } else if (this instanceof ISubCommand) {
-            return "command_descriptions." + ((ISubCommand) this).parent() + "." + command();
         }
-        return "command_descriptions." + command();
+        return "command_descriptions." + getAbsoluteCommand();
     }
 
     default String description() {
@@ -83,7 +85,8 @@ public interface ICommandExecutable {
         if (this instanceof ICommandMain) {
             for (ICommandExecutable subCommand : ((ICommandMain) this).getSubCommands()) {
                 // TODO: find a way to get the guild's locale in here
-                arguments.add(Argument.of(subCommand.command(), subCommand.getDescription(Locale.getDefaultLocale()), subCommand.getUndefinedArguments()));
+                arguments.add(Argument.of(subCommand.command(), subCommand.getDescription(Locale.getDefaultLocale()), subCommand
+                        .getUndefinedArguments()));
             }
         }
         return Set.copyOf(arguments);
