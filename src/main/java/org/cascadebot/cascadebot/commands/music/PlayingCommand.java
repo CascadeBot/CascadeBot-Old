@@ -101,7 +101,9 @@ public class PlayingCommand implements ICommandMain {
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
                 if (context.hasPermission(runner, "skip")) {
-                    CascadeBot.INS.getCommandManager().getCommandByDefault("skip").onCommand(runner, new CommandContext(
+                    ICommandMain skip = CascadeBot.INS.getCommandManager().getCommandByDefault("skip");
+                    skip.onCommand(runner, new CommandContext(
+                            skip,
                             CascadeBot.INS.getClient(),
                             context.getChannel(),
                             message,

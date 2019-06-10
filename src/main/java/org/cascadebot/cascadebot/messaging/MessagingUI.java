@@ -151,6 +151,10 @@ public class MessagingUI {
         context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` that I need to do this!", permission.getName());
     }
 
+    public void replyUsage() {
+        replyUsage(context.getCommand(), null);
+    }
+
     public void replyUsage(ICommandExecutable command) {
         replyUsage(command, null);
     }

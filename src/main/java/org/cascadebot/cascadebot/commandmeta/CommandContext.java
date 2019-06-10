@@ -40,6 +40,7 @@ import java.util.Set;
 public class CommandContext {
 
     private final GuildData data;
+    private final ICommandExecutable command;
 
     private final JDA jda;
     private final TextChannel channel;
@@ -63,8 +64,9 @@ public class CommandContext {
     @Getter(AccessLevel.NONE)
     private final MessagingTimed messagingTimed = new MessagingTimed(this);
 
-    public CommandContext(JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
+    public CommandContext(ICommandExecutable command, JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
+        this.command = command;
         this.jda = jda;
         this.channel = channel;
         this.message = message;
@@ -170,6 +172,10 @@ public class CommandContext {
 
     public String i18n(String path, Object... args) {
         return CascadeBot.INS.getLanguage().get(data.getLocale(), path, args);
+    }
+
+    public String getUsage() {
+        return getUsage(getCommand(), null);
     }
 
     public String getUsage(ICommandExecutable command) {

@@ -151,7 +151,9 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
+        ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         CommandContext context = new CommandContext(
+                cmd,
                 event.getJDA(),
                 event.getChannel(),
                 event.getMessage(),
@@ -162,8 +164,6 @@ public class CommandListener extends ListenerAdapter {
                 trigger,
                 isMention
         );
-
-        ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.getModule().isPrivate() &&
@@ -204,6 +204,7 @@ public class CommandListener extends ListenerAdapter {
         for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(
+                        subCommand,
                         parentCommandContext.getJda(),
                         parentCommandContext.getChannel(),
                         parentCommandContext.getMessage(),
