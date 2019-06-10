@@ -1,0 +1,15 @@
+{
+  "tag": {
+    "name": {
+      "_type": "required"
+    },
+    "create": {
+      "name": {
+        "_type": "required",
+        "content": {
+          "_type": "required"
+        }
+      }
+    }
+  }
+}
