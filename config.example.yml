@@ -6,14 +6,14 @@
 # | |___| (_| \__ \ (_| (_| | (_| |  __/ | |_) | (_) | |_  #
 #  \_____\__,_|___/\___\__,_|\__,_|\___| |____/ \___/ \__| #
 #                                                          #
-# This is the config for Cascade Bot. Each field is        #
-# commented with its usage.                                #
+# This is the config for Cascade. Each field is commented  #
+# with its usage.                                          #
 #                                                          #
 # Fields marked with "# REQUIRED" need to be entered for   #
 # the bot to start. Default values are filled out in the   #
 # relevant fields                                          #
 #                                                          #
-# If you have any questions ask the Cascade Bot Dev team!  #
+# If you have any questions ask the Cascade Dev team!      #
 ############################################################
 
 # Whether to output DEBUG messages to STDOUT
