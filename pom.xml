@@ -41,7 +41,7 @@
                     <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifest>
-                            <mainClass>org.cascadebot.cascadebot.Cascade</mainClass>
+                            <mainClass>org.cascadebot.cascade.Cascade</mainClass>
                         </manifest>
                     </archive>
 

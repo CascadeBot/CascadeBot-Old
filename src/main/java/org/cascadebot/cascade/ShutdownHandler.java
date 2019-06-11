@@ -1,0 +1,67 @@
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
+package org.cascadebot.cascade;
+
+import lombok.experimental.UtilityClass;
+import org.cascadebot.cascade.commands.developer.EvalCommand;
+import org.cascadebot.cascade.data.managers.GuildDataManager;
+import org.cascadebot.cascade.events.CommandListener;
+import org.cascadebot.cascade.tasks.Task;
+import org.cascadebot.shared.ExitCodes;
+import org.cascadebot.shared.SharedConstants;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+@UtilityClass
+public class ShutdownHandler {
+
+    public static final AtomicBoolean SHUTDOWN_LOCK = new AtomicBoolean(false);
+
+    static {
+        Runtime.getRuntime().addShutdownHook(new Thread(ShutdownHandler::shutdown));
+    }
+
+    public static void stopWrapper() {
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
+        System.exit(ExitCodes.STOP_WRAPPER);
+    }
+
+    public static void stopByWrapper() {
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
+        System.exit(ExitCodes.STOPPED_BY_WRAPPER);
+    }
+
+    public static void stop() {
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
+        System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " STOP");
+        System.out.flush();
+        System.exit(ExitCodes.STOP);
+    }
+
+    public static void restart() {
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
+        System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " RESTART");
+        System.out.flush();
+        System.exit(ExitCodes.RESTART);
+    }
+
+    public static void exitWithError() {
+        if (SHUTDOWN_LOCK.getAndSet(true)) return;
+        System.exit(ExitCodes.ERROR_STOP_NO_RESTART);
+    }
+
+    private static void shutdown() {
+        Cascade.LOGGER.info("Bot shutting down gracefully!");
+        long startTime = System.currentTimeMillis(); // Ensures all data is saved before exiting
+        GuildDataManager.getGuilds().asMap().forEach(GuildDataManager::replaceSync);
+        Cascade.LOGGER.info("Took " + (System.currentTimeMillis() - startTime) + "ms to save!");
+        EvalCommand.shutdownEvalPool();
+        CommandListener.shutdownCommandPool();
+        Task.shutdownTaskPool();
+        Cascade.INS.getShardManager().shutdown();
+    }
+
+}
