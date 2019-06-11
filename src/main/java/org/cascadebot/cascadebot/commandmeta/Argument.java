@@ -18,15 +18,15 @@ public class Argument {
     private final ArgumentType type;
     private final Set<String> aliases;
 
-    private Argument(String id, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
+    private Argument(String id, ArgumentType type, Set<Argument> subArgs, Set<String> aliases) {
         this.id = id;
         this.subArgs = subArgs;
         this.type = type;
         this.aliases = aliases;
     }
 
-    public static Argument of(String id, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
-        return new Argument(id, Set.copyOf(subArgs), type, Set.copyOf(aliases));
+    public static Argument of(String id, ArgumentType type, Set<Argument> subArgs, Set<String> aliases) {
+        return new Argument(id, type, Set.copyOf(subArgs), Set.copyOf(aliases));
     }
 
     public String getName() {
