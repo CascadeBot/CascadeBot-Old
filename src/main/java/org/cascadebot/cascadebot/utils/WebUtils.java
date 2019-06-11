@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ public class WebUtils {
     private static JsonParser parser = new JsonParser();
 
     public static JsonElement getJsonFromURL(String url) throws IOException, IllegalArgumentException {
-        OkHttpClient client = CascadeBot.INS.getHttpClient();
+        OkHttpClient client = Cascade.INS.getHttpClient();
         Request request = new Request.Builder()
                 .url(url)
                 .build();

@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.permissions;
 
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.shared.SecurityLevel;
 
@@ -35,7 +35,7 @@ public class Security {
      * @return where level >= comparing level.
      */
     public static boolean isAuthorised(long userId, SecurityLevel comparingLevel) {
-        SecurityLevel level = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
+        SecurityLevel level = Cascade.INS.getPermissionsManager().getUserSecurityLevel(userId);
         if (level == null) return false;
         return level.isAuthorised(comparingLevel);
     }

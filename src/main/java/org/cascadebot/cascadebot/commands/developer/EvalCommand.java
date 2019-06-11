@@ -6,7 +6,7 @@
 package org.cascadebot.cascadebot.commands.developer;
 
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -29,7 +29,7 @@ public class EvalCommand implements ICommandRestricted {
 
     private static final ThreadGroup EVAL_THREADS = new ThreadGroup("EvalCommand Thread Pool");
     private static final ExecutorService EVAL_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r -> new Thread(EVAL_THREADS, r,
-            EVAL_THREADS.getName() + EVAL_THREADS.activeCount()), CascadeBot.LOGGER);
+            EVAL_THREADS.getName() + EVAL_THREADS.activeCount()), Cascade.LOGGER);
 
     private static final List<String> IMPORTS = List.of(
             "org.cascadebot.cascadebot",

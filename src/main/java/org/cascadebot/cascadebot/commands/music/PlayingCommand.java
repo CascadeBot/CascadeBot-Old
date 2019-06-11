@@ -5,7 +5,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -16,7 +16,6 @@ import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -26,27 +25,27 @@ import java.util.Set;
 public class PlayingCommand implements ICommandMain {
 
     private Button.UnicodeButton playButton = new Button.UnicodeButton(UnicodeConstants.PLAY, (runner, channel, message) -> {
-        if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("resume"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
+        if (Cascade.INS.getPermissionsManager().isAuthorised(Cascade.INS.getCommandManager().getCommandByDefault("resume"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             handlePlayPause(GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong()), message);
         }
     });
 
     private Button.UnicodeButton pauseButton = new Button.UnicodeButton(UnicodeConstants.PAUSE, (runner, channel, message) -> {
-        if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("pause"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
+        if (Cascade.INS.getPermissionsManager().isAuthorised(Cascade.INS.getCommandManager().getCommandByDefault("pause"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             handlePlayPause(GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong()), message);
         }
     });
 
     private Button.UnicodeButton repeat = new Button.UnicodeButton(UnicodeConstants.REPEAT, (runner, channel, message) -> {
 
-        if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
+        if (Cascade.INS.getPermissionsManager().isAuthorised(Cascade.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
             handleRepeat(buttonGroup, CascadePlayer.LoopMode.PLAYLIST, message);
         }
     });
 
     private Button.UnicodeButton repeatOne = new Button.UnicodeButton(UnicodeConstants.REPEAT_ONCE, (runner, channel, message) -> {
-        if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
+        if (Cascade.INS.getPermissionsManager().isAuthorised(Cascade.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
             handleRepeat(buttonGroup, CascadePlayer.LoopMode.SONG, message);
         }
@@ -54,7 +53,7 @@ public class PlayingCommand implements ICommandMain {
 
     private Button.EmoteButton noRepeat = new Button.EmoteButton(Config.INS.getGlobalEmotes().get("norepeat"), (runner, channel, message) -> {
 
-        if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
+        if (Cascade.INS.getPermissionsManager().isAuthorised(Cascade.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
             handleRepeat(buttonGroup, CascadePlayer.LoopMode.DISABLED, message);
         }
@@ -101,8 +100,8 @@ public class PlayingCommand implements ICommandMain {
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
                 if (context.hasPermission(runner, "skip")) {
-                    CascadeBot.INS.getCommandManager().getCommandByDefault("skip").onCommand(runner, new CommandContext(
-                            CascadeBot.INS.getClient(),
+                    Cascade.INS.getCommandManager().getCommandByDefault("skip").onCommand(runner, new CommandContext(
+                            Cascade.INS.getClient(),
                             context.getChannel(),
                             message,
                             context.getGuild(),
@@ -161,19 +160,19 @@ public class PlayingCommand implements ICommandMain {
         embedBuilder.addField("Volume", player.getPlayer().getVolume() + "%", true);
         embedBuilder.addField("Loop mode", FormatUtils.formatEnum(player.getLoopMode()), true);
         if (track.getUserData() instanceof Long) { //TODO find out why user data sometimes gets set to null.
-            embedBuilder.addField("Requested By", CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
+            embedBuilder.addField("Requested By", Cascade.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
         }
         AudioTrack next = player.getQueue().peek();
         if (next != null) {
             embedBuilder.addField("Up next", "**" + next.getInfo().title + "**\nRequested by " +
-                    CascadeBot.INS.getShardManager().getUserById((Long) next.getUserData()).getAsTag(), false);
+                    Cascade.INS.getShardManager().getUserById((Long) next.getUserData()).getAsTag(), false);
         }
 
         return embedBuilder.build();
     }
 
     public void handlePlayPause(ButtonGroup buttonGroup, Message buttonMessage) {
-        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
+        CascadePlayer player = Cascade.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
         if (player.getPlayer().isPaused()) {
             player.getPlayer().setPaused(false);
             buttonGroup.removeButton(playButton);
@@ -187,7 +186,7 @@ public class PlayingCommand implements ICommandMain {
     }
 
     public void handleRepeat(ButtonGroup buttonGroup, CascadePlayer.LoopMode mode, Message buttonMessage) {
-        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
+        CascadePlayer player = Cascade.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
         switch (mode) {
             case DISABLED:
                 buttonGroup.removeButton(noRepeat);

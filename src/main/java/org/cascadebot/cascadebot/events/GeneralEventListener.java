@@ -16,12 +16,11 @@ import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.core.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.messaging.MessageType;
-import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
@@ -29,9 +28,9 @@ public class GeneralEventListener extends ListenerAdapter {
 
     @Override
     public void onReady(ReadyEvent event) {
-        ShardManager shardManager = CascadeBot.INS.getShardManager();
+        ShardManager shardManager = Cascade.INS.getShardManager();
         if (shardManager.getShards().size() == shardManager.getShardsTotal()) {
-            CascadeBot.INS.run();
+            Cascade.INS.run();
             Config.INS.getEventWebhook().send(
                     MessageType.SUCCESS.getEmoji() + " All shards ready!"
             );
@@ -69,7 +68,7 @@ public class GeneralEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(GuildLeaveEvent event) {
-        CascadeBot.INS.getMusicHandler().removePlayer(event.getGuild().getIdLong());
+        Cascade.INS.getMusicHandler().removePlayer(event.getGuild().getIdLong());
 
         if (!StringUtils.isBlank(Config.INS.getGuildGoodbyeMessage())) {
             event.getGuild().getOwner().getUser().openPrivateChannel().queue(privateChannel -> {
@@ -88,14 +87,14 @@ public class GeneralEventListener extends ListenerAdapter {
     @Override
     public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
         if (event.getGuild().getIdLong() == Config.INS.getOfficialServerId()) {
-            CascadeBot.INS.getPermissionsManager().clearCacheForUser(event.getUser().getIdLong());
+            Cascade.INS.getPermissionsManager().clearCacheForUser(event.getUser().getIdLong());
         }
     }
 
     @Override
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
         if (event.getGuild().getIdLong() == Config.INS.getOfficialServerId()) {
-            CascadeBot.INS.getPermissionsManager().clearCacheForUser(event.getUser().getIdLong());
+            Cascade.INS.getPermissionsManager().clearCacheForUser(event.getUser().getIdLong());
         }
     }
 

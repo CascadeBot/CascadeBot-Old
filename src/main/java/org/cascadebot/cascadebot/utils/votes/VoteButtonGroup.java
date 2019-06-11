@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.utils.votes;
 import com.google.common.collect.Sets;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.User;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
 import java.util.Collections;
@@ -46,7 +46,7 @@ public class VoteButtonGroup extends ButtonGroup {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).getMessageById(getMessageId()).queue(message -> {
+                Cascade.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).getMessageById(getMessageId()).queue(message -> {
                     periodicConsumer.accept(getOrderedVoteResults(), message);
                 });
             }

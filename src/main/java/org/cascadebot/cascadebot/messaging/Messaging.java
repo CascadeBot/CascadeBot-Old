@@ -16,7 +16,7 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import net.dv8tion.jda.core.utils.Checks;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.MDCException;
@@ -170,7 +170,7 @@ public final class Messaging {
         Checks.notNull(channel, "channel");
         Checks.notNull(buttonGroup, "button group");
 
-        if (!channel.getGuild().getMember(CascadeBot.INS.getSelfUser()).hasPermission(channel, Permission.MESSAGE_ADD_REACTION)) {
+        if (!channel.getGuild().getMember(Cascade.INS.getSelfUser()).hasPermission(channel, Permission.MESSAGE_ADD_REACTION)) {
             throw new DiscordPermissionException(Permission.MESSAGE_ADD_REACTION);
         }
 

@@ -11,7 +11,7 @@ import com.google.common.collect.ImmutableSet;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
@@ -49,7 +49,7 @@ public class PermissionsManager {
 
         long startTime = System.currentTimeMillis();
 
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
+        for (ICommandMain command : Cascade.INS.getCommandManager().getCommands()) {
             if (command.getPermission() == null || command instanceof ICommandRestricted) continue;
             registerPermission(command.getPermission());
             for (ICommandExecutable subCommand : command.getSubCommands()) {

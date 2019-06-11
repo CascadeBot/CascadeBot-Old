@@ -16,7 +16,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.messaging.NoOpWebhookClient;
 import org.cascadebot.cascadebot.music.MusicHandler;
@@ -236,7 +236,7 @@ public class Config {
         try {
             auth = new Auth(secret);
         } catch (NoSuchAlgorithmException | InvalidKeyException | IllegalArgumentException e) {
-            CascadeBot.LOGGER.warn("Auth failed to initiate. this might cause errors if working with he wrapper or website if the bot is working with those.", e);
+            Cascade.LOGGER.warn("Auth failed to initiate. this might cause errors if working with he wrapper or website if the bot is working with those.", e);
         }
 
         youtubeKey = config.getString("music_keys.youtube");

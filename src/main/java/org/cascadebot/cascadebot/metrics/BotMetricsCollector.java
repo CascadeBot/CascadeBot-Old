@@ -7,14 +7,11 @@ package org.cascadebot.cascadebot.metrics;
 
 import io.prometheus.client.Collector;
 import io.prometheus.client.GaugeMetricFamily;
-import lavalink.client.io.Link;
 import net.dv8tion.jda.bot.sharding.ShardManager;
 import net.dv8tion.jda.core.JDA;
-import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.music.MusicHandler;
+import org.cascadebot.cascadebot.Cascade;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BotMetricsCollector extends Collector {
@@ -24,7 +21,7 @@ public class BotMetricsCollector extends Collector {
 
         List<MetricFamilySamples> metricFamilySamples = new ArrayList<>();
 
-        ShardManager shardManager = CascadeBot.INS.getShardManager();
+        ShardManager shardManager = Cascade.INS.getShardManager();
         if (shardManager != null) {
             if (shardManager.getShards().size() == shardManager.getShardsTotal()) {
                 GaugeMetricFamily entities = new GaugeMetricFamily("cascade_jda_entities", "The number of JDA entities registered", List
@@ -46,7 +43,7 @@ public class BotMetricsCollector extends Collector {
             }
 
             GaugeMetricFamily uptime = new GaugeMetricFamily("cascade_uptime", "", List.of());
-            uptime.addMetric(List.of(), CascadeBot.INS.getUptime());
+            uptime.addMetric(List.of(), Cascade.INS.getUptime());
             metricFamilySamples.add(uptime);
         }
 

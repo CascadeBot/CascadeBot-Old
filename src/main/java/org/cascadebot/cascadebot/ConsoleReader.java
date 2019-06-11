@@ -19,7 +19,7 @@ public class ConsoleReader implements Runnable {
 
     @Override
     public void run() {
-        CascadeBot.LOGGER.info("Console reading up and running!");
+        Cascade.LOGGER.info("Console reading up and running!");
         boolean stop = false;
         while (!stop && !Thread.interrupted()) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -47,7 +47,7 @@ public class ConsoleReader implements Runnable {
                                 System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " not_authorized " + args[1]);
                             } else {
                                 // This should never be called and if it is something is very wrong
-                                CascadeBot.LOGGER.error("Received authorization request from bot with no user id and/or hmac");
+                                Cascade.LOGGER.error("Received authorization request from bot with no user id and/or hmac");
                             }
                         } else {
 

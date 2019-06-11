@@ -6,7 +6,7 @@
 package org.cascadebot.cascadebot.commands.developer;
 
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
@@ -22,7 +22,7 @@ public class RestartCommand implements ICommandRestricted {
             return;
         }
         context.reply("Bot is restarting!");
-        CascadeBot.LOGGER.info("Restarting via command! Issuer: " + context.getUser().getAsTag());
+        Cascade.LOGGER.info("Restarting via command! Issuer: " + context.getUser().getAsTag());
         ShutdownHandler.restart();
     }
 

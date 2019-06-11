@@ -13,7 +13,7 @@ import net.dv8tion.jda.core.entities.MessageEmbed;
 import net.dv8tion.jda.core.exceptions.PermissionException;
 import net.dv8tion.jda.core.requests.RequestFuture;
 import net.dv8tion.jda.core.utils.Checks;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
@@ -119,7 +119,7 @@ public class MessagingUI {
      * @param stringPermission The Cascade permission that the user doesn't have.
      */
     public void sendPermissionError(String stringPermission) {
-        CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
+        CascadePermission permission = Cascade.INS.getPermissionsManager().getPermission(stringPermission);
         Checks.notNull(permission, "permission");
         sendPermissionError(permission);
     }
@@ -216,7 +216,7 @@ public class MessagingUI {
             } catch (PermissionException e) {
                 context.getTypedMessaging().replyInfo(embedBuilder.appendDescription("\n\n" + "Please type either `track` or `playlist`!"));
 
-                CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
+                Cascade.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
                         new EventWaiter.TextResponse(event -> {
                             context.getMusicPlayer().addTrack(selectedTrack);
                             context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));

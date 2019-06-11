@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.commands.music;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.exceptions.PermissionException;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
@@ -36,7 +36,7 @@ public class SearchCommand implements ICommandMain {
             return;
         }
 
-        CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
+        Cascade.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             int i = 0;
             StringBuilder messageBuilder = new StringBuilder();
@@ -97,7 +97,7 @@ public class SearchCommand implements ICommandMain {
                         });
                     }, String.valueOf(index + 1));
                 }
-                CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(), 30, TimeUnit.SECONDS, () -> {
+                Cascade.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(), 30, TimeUnit.SECONDS, () -> {
                     context.getTypedMessaging().replyWarning("The search for `%s` has timed out!", context.getMessage(0));
                 }, responses);
             }

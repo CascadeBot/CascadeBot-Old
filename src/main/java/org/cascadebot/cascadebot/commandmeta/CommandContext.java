@@ -7,8 +7,7 @@ package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.GuildSettingsCore;
@@ -84,7 +83,7 @@ public class CommandContext {
     }
 
     public CascadePlayer getMusicPlayer() {
-        return CascadeBot.INS.getMusicHandler().getPlayer(guild.getIdLong());
+        return Cascade.INS.getMusicHandler().getPlayer(guild.getIdLong());
     }
 
     public User getUser() {
@@ -235,7 +234,7 @@ public class CommandContext {
     }
 
     public void runOtherCommand(String command, Member sender, CommandContext context) {
-        ICommandMain commandMain = CascadeBot.INS.getCommandManager().getCommandByDefault(command);
+        ICommandMain commandMain = Cascade.INS.getCommandManager().getCommandByDefault(command);
         if (hasPermission(commandMain.getPermission())) {
             commandMain.onCommand(member, context);
         } else {
@@ -268,9 +267,9 @@ public class CommandContext {
     public Emote getGlobalEmote(String key) {
         Long emoteId = Config.INS.getGlobalEmotes().get(key);
         if (emoteId != null) {
-            return CascadeBot.INS.getShardManager().getEmoteById(emoteId);
+            return Cascade.INS.getShardManager().getEmoteById(emoteId);
         }
-        CascadeBot.LOGGER.warn("Tried to get global emote that doesn't exist! Key: {}", key);
+        Cascade.LOGGER.warn("Tried to get global emote that doesn't exist! Key: {}", key);
         return null;
     }
 
@@ -284,9 +283,9 @@ public class CommandContext {
     }
 
     public boolean hasPermission(Member member, String permission) {
-        CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
+        CascadePermission cascadePermission = Cascade.INS.getPermissionsManager().getPermission(permission);
         if (cascadePermission == null) {
-            CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission);
+            Cascade.LOGGER.warn("Could not check permission {} as it does not exist!!", permission);
             return false;
         }
         return data.getPermissions().hasPermission(member, channel, cascadePermission, data.getSettings());

@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.entities.MessageType;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -43,7 +43,7 @@ public class CommandListener extends ListenerAdapter {
     private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
     private static final AtomicInteger threadCounter = new AtomicInteger(0);
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r ->
-            new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
+            new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), Cascade.LOGGER);
 
     private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
 
@@ -109,7 +109,7 @@ public class CommandListener extends ListenerAdapter {
                     e);
             return;
         } finally {
-            CascadeBot.clearCascadeMDC();
+            Cascade.clearCascadeMDC();
         }
     }
 
@@ -163,7 +163,7 @@ public class CommandListener extends ListenerAdapter {
                 isMention
         );
 
-        ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
+        ICommandMain cmd = Cascade.INS.getCommandManager().getCommand(trigger, event.getAuthor(), guildData);
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
@@ -195,7 +195,7 @@ public class CommandListener extends ListenerAdapter {
                 Tag tag = guildData.getSettings().getTag(trigger);
 
                 context.reply(tag.formatTag(context)); //TODO perms for tags
-                CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", trigger, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
+                Cascade.LOGGER.info("Tag {} executed by {} with args {}", trigger, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
             }
         }
     }
@@ -232,7 +232,7 @@ public class CommandListener extends ListenerAdapter {
             MDC.put("cascade.command", command.command() + (command instanceof ICommandMain ? "" : " (Sub-command)"));
             MDC.put("cascade.args", Arrays.toString(context.getArgs()));
 
-            CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}",
+            Cascade.LOGGER.info("{}Command {}{} executed by {} with args: {}",
                     (command instanceof ICommandMain ? "" : "Sub"),
                     command.command(),
                     (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"),
@@ -246,10 +246,10 @@ public class CommandListener extends ListenerAdapter {
             } catch (Exception e) {
                 Metrics.INS.commandsErrored.labels(command.getClass().getSimpleName()).inc();
                 context.getTypedMessaging().replyException("There was an error running the command!", e);
-                CascadeBot.LOGGER.error("Error while running a command!", MDCException.from(e));
+                Cascade.LOGGER.error("Error while running a command!", MDCException.from(e));
 
             } finally {
-                CascadeBot.clearCascadeMDC();
+                Cascade.clearCascadeMDC();
                 commandTimer.observeDuration();
             }
         });
@@ -258,7 +258,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private boolean isAuthorised(ICommandExecutable command, CommandContext context) {
-        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
+        if (!Cascade.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
             if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
                 if (context.getSettings().isShowPermErrors()) {
                     context.getUIMessaging().sendPermissionError(command.getPermission());

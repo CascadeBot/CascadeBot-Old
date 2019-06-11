@@ -54,14 +54,14 @@ public class ShutdownHandler {
     }
 
     private static void shutdown() {
-        CascadeBot.LOGGER.info("Bot shutting down gracefully!");
+        Cascade.LOGGER.info("Bot shutting down gracefully!");
         long startTime = System.currentTimeMillis(); // Ensures all data is saved before exiting
         GuildDataManager.getGuilds().asMap().forEach(GuildDataManager::replaceSync);
-        CascadeBot.LOGGER.info("Took " + (System.currentTimeMillis() - startTime) + "ms to save!");
+        Cascade.LOGGER.info("Took " + (System.currentTimeMillis() - startTime) + "ms to save!");
         EvalCommand.shutdownEvalPool();
         CommandListener.shutdownCommandPool();
         Task.shutdownTaskPool();
-        CascadeBot.INS.getShardManager().shutdown();
+        Cascade.INS.getShardManager().shutdown();
     }
 
 }

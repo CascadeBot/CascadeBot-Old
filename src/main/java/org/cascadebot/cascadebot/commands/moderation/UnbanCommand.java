@@ -9,7 +9,7 @@ import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -41,7 +41,7 @@ public class UnbanCommand implements ICommandMain {
         if (bannedUsers.size() == 0) {
             context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find a user to unban matching: " + target, context.getUser()));
         } else if (bannedUsers.size() == 1) {
-            CascadeBot.INS.getModerationManager().unban(
+            Cascade.INS.getModerationManager().unban(
                     context,
                     bannedUsers.get(0),
                     sender,

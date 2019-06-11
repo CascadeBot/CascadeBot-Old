@@ -25,7 +25,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
 import org.bson.codecs.pojo.annotations.BsonIgnore;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
@@ -96,7 +96,7 @@ public class GuildData {
 
     public void enableCommandByModule(Module module) {
         if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
+        for (ICommandMain command : Cascade.INS.getCommandManager().getCommandsByModule(module)) {
             enableCommand(command);
         }
     }
@@ -108,7 +108,7 @@ public class GuildData {
 
     public void disableCommandByModule(Module module) {
         if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
+        for (ICommandMain command : Cascade.INS.getCommandManager().getCommandsByModule(module)) {
             disableCommand(command);
         }
     }
@@ -122,7 +122,7 @@ public class GuildData {
 
     public boolean isTypeEnabled(Module type) {
         boolean enabled = true;
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(type)) {
+        for (ICommandMain command : Cascade.INS.getCommandManager().getCommandsByModule(type)) {
             enabled &= commandInfo.get(command.getClass()).isEnabled();
         }
         return enabled;

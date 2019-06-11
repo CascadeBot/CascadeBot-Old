@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.data.managers;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.bson.conversions.Bson;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.events.GuildSaveListener;
@@ -26,39 +26,39 @@ public final class GuildDataManager {
             .removalListener(new GuildSaveListener())
             .recordStats()
             .build(id -> {
-                GuildData dbData = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("_id", id)).first();
+                GuildData dbData = Cascade.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("_id", id)).first();
                 if (dbData == null) {
-                    CascadeBot.LOGGER.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
+                    Cascade.LOGGER.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
                     GuildData data = new GuildData(id);
                     GuildDataManager.insert(id, data);
                     return data;
                 }
 
-                CascadeBot.LOGGER.debug("Loaded data from database for guild ID: " + id);
+                Cascade.LOGGER.debug("Loaded data from database for guild ID: " + id);
                 return dbData;
             });
 
 
     public static void update(long id, Bson update) {
-        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
+        Cascade.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).updateOne(eq("_id", id), update, new DebugLogCallback<>("Updated Guild ID " + id + ":", update));
         });
     }
 
     public static void insert(long id, GuildData data) {
-        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
+        Cascade.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).insertOne(data, new DebugLogCallback<>("Inserted Guild ID " + id));
         });
     }
 
     public static void replace(long id, GuildData data) {
-        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
+        Cascade.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).replaceOne(eq("_id", id), data, new DebugLogCallback<>("Replaced Guild ID " + id));
         });
     }
 
     public static void replaceSync(long id, GuildData data) {
-        CascadeBot.INS.getDatabaseManager().runTask(database -> {
+        Cascade.INS.getDatabaseManager().runTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).replaceOne(eq("_id", id), data);
         });
     }

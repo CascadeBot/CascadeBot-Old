@@ -6,7 +6,7 @@
 package org.cascadebot.cascadebot.data.managers;
 
 import com.mongodb.client.MongoIterable;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
 import org.cascadebot.cascadebot.data.objects.Playlist;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
@@ -19,7 +19,7 @@ public final class PlaylistManager {
     private static final String COLLECTION = "playlists";
 
     public static MongoIterable<Playlist> getPlaylists(long ownerID, PlaylistType scope) {
-        return CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, Playlist.class)
+        return Cascade.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, Playlist.class)
                 .find(
                         combine(
                                 eq("ownerID", ownerID),
@@ -38,7 +38,7 @@ public final class PlaylistManager {
     }
 
     public static void savePlaylist(Playlist playlist) {
-        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
+        Cascade.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, Playlist.class).insertOne(
                     playlist,
                     new DebugLogCallback<>("Inserted new playlist with ID: " + playlist.getPlaylistID())
@@ -47,7 +47,7 @@ public final class PlaylistManager {
     }
 
     public static void replacePlaylist(Playlist playlist) {
-        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
+        Cascade.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, Playlist.class).replaceOne(
                     eq("_id", playlist.getPlaylistID()),
                     playlist,

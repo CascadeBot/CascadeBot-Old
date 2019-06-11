@@ -17,7 +17,7 @@ import lombok.Getter;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.VoiceChannel;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
 import org.cascadebot.cascadebot.data.objects.Playlist;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
@@ -140,7 +140,7 @@ public class CascadePlayer {
     public VoiceChannel getConnectedChannel() {
         if (MusicHandler.isLavalinkEnabled()) {
             if (getLink().getChannel() != null) {
-                return CascadeBot.INS.getShardManager().getVoiceChannelById(getLink().getChannel());
+                return Cascade.INS.getShardManager().getVoiceChannelById(getLink().getChannel());
             } else {
                 return null;
             }
@@ -150,7 +150,7 @@ public class CascadePlayer {
     }
 
     private Guild getGuild() {
-        return CascadeBot.INS.getShardManager().getGuildById(guildId);
+        return Cascade.INS.getShardManager().getGuildById(guildId);
     }
 
     public JdaLink getLink() {

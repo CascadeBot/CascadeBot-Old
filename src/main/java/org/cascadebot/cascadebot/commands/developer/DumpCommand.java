@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.commands.developer;
 
 import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
@@ -34,7 +34,7 @@ public class DumpCommand implements ICommandRestricted {
             PasteUtils.pasteIfLong(threads, 2048, context::reply);
         } else if (context.getArg(0).equalsIgnoreCase("commands")) {
             Table.TableBuilder builder = new Table.TableBuilder("Command", "Module", "Permission", "Subcommands");
-            for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
+            for (ICommandMain command : Cascade.INS.getCommandManager().getCommands()) {
                 builder.addRow(
                         command.command(),
                         command.getModule().toString(),
@@ -45,7 +45,7 @@ public class DumpCommand implements ICommandRestricted {
             PasteUtils.pasteIfLong(builder.build().toString(), 2048, context::reply);
         } else if (context.getArg(0).equalsIgnoreCase("permissions")) {
             Table.TableBuilder builder = new Table.TableBuilder("Permission", "Discord Perms", "Default permission");
-            for (CascadePermission permission : CascadeBot.INS.getPermissionsManager().getPermissions()) {
+            for (CascadePermission permission : Cascade.INS.getPermissionsManager().getPermissions()) {
                 builder.addRow(permission.getPermission(), permission.getDiscordPerms().toString(), String.valueOf(permission.isDefaultPerm()));
             }
             PasteUtils.pasteIfLong(builder.build().toString(), 2048, context::reply);

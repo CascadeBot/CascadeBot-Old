@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.commands.music;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -45,7 +45,7 @@ public class QueueCommand implements ICommandMain {
         for (AudioTrack track : player.getQueue()) {
             builder.append(i).append(". **").append(track.getInfo().title).append("**");
             if(track.getUserData() instanceof Long) {
-                builder.append("\n Requested by ").append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag());
+                builder.append("\n Requested by ").append(Cascade.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag());
             }
             builder.append("\n\n");
             if (i % 10 == 0) {

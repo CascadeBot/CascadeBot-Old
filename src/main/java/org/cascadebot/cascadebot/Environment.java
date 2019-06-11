@@ -13,7 +13,7 @@ import lombok.experimental.UtilityClass;
 public class Environment {
 
     public static boolean isDevelopment() {
-        return CascadeBot.getVersion().getBuild().equalsIgnoreCase("dev");
+        return Cascade.getVersion().getBuild().equalsIgnoreCase("dev");
     }
 
     public static boolean isProduction() {

@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.utils.votes;
 
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 
@@ -233,7 +233,7 @@ public class VoteButtonGroupBuilder {
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        CascadeBot.INS.getShardManager().getGuildById(buttonGroup.getGuildId()).getTextChannelById(buttonGroup.getChannelId()).getMessageById(buttonGroup.getMessageId()).queue(message -> {
+                        Cascade.INS.getShardManager().getGuildById(buttonGroup.getGuildId()).getTextChannelById(buttonGroup.getChannelId()).getMessageById(buttonGroup.getMessageId()).queue(message -> {
                             message.delete().queue(null, ignoredFailure -> {});
                         }, ignoredFailure -> {});
                         buttonGroup.voteFinished();

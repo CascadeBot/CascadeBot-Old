@@ -13,7 +13,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.shared.Regex;
 
@@ -72,22 +72,22 @@ public class DiscordUtils {
         }
         User user = users.size() != 1 ? null : users.get(0);
         if (user == null && Regex.ID.matcher(search).matches() && retrieve) {
-            user = CascadeBot.INS.getShardManager().retrieveUserById(Long.valueOf(search)).complete();
+            user = Cascade.INS.getShardManager().retrieveUserById(Long.valueOf(search)).complete();
         }
         return user;
     }
 
     private static User getUserById(Long userId) {
-        return CascadeBot.INS.getShardManager().getUserById(userId);
+        return Cascade.INS.getShardManager().getUserById(userId);
     }
     //endregion
 
     private static Guild getGuildById(Long guildId) {
-        return CascadeBot.INS.getShardManager().getGuildById(guildId);
+        return Cascade.INS.getShardManager().getGuildById(guildId);
     }
 
     public static MessageChannel getTextChannelById(Long channelId) {
-        return CascadeBot.INS.getShardManager().getTextChannelById(channelId);
+        return Cascade.INS.getShardManager().getTextChannelById(channelId);
     }
 
     //region Roles

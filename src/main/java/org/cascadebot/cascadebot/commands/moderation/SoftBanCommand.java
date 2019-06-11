@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.commands.moderation;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -40,7 +40,7 @@ public class SoftBanCommand implements ICommandMain {
             reason = context.getMessage(1);
         }
 
-        CascadeBot.INS.getModerationManager().softBan(
+        Cascade.INS.getModerationManager().softBan(
                 context,
                 targetMember.getUser(),
                 sender,

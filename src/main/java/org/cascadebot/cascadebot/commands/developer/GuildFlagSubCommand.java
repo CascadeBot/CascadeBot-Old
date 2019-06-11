@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -51,7 +51,7 @@ public class GuildFlagSubCommand implements ICommandExecutable {
             Guild guild = context.getGuild();
             if (context.getArgs().length == 2) {
                 if (Regex.ID.matcher(context.getArg(1)).matches()) {
-                    guild = CascadeBot.INS.getShardManager().getGuildById(context.getArg(1));
+                    guild = Cascade.INS.getShardManager().getGuildById(context.getArg(1));
                     if (guild == null) {
                         context.getTypedMessaging().replyDanger("Cannot find that guild!");
                         return;

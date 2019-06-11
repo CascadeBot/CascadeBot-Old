@@ -6,7 +6,7 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -27,7 +27,7 @@ public class PlayCommand implements ICommandMain {
                 context.getUIMessaging().checkPlaylistOrSong(context.getArg(0), tracks, context);
             });
         } else {
-            CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
+            Cascade.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
                 if (searchResults.isEmpty()) {
                     context.getTypedMessaging().replyDanger("We could not find music that matches: `%s`", context.getArg(0));
                 } else {

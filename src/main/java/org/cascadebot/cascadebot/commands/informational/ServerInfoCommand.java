@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.commands.informational;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -25,7 +25,7 @@ public class ServerInfoCommand implements ICommandMain {
         Guild guildForInfo = context.getGuild();
 
         if (context.getArgs().length > 0) {
-            guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
+            guildForInfo = Cascade.INS.getShardManager().getGuildById(context.getArg(0));
         }
         if (guildForInfo == null) {
             context.getTypedMessaging().replyDanger("We couldn't find that guild!");

@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.utils;
 
 import com.google.common.reflect.ClassPath;
 import lombok.experimental.UtilityClass;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +25,7 @@ public class ReflectionUtils {
      * @throws IOException            If something goes badly.
      */
     public static List<Class<?>> getClasses(String packageName) throws ClassNotFoundException, IOException {
-        List<ClassPath.ClassInfo> classInfos = ClassPath.from(CascadeBot.class.getClassLoader()).getTopLevelClassesRecursive(packageName).asList();
+        List<ClassPath.ClassInfo> classInfos = ClassPath.from(Cascade.class.getClassLoader()).getTopLevelClassesRecursive(packageName).asList();
         return classInfos.stream().map(ClassPath.ClassInfo::load).collect(Collectors.toList());
     }
 

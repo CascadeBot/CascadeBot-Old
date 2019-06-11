@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.commands.developer;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -56,7 +56,7 @@ public class ShutdownCommand implements ICommandRestricted {
         builder.setFooter(context.getMember().getUser().getAsTag(), context.getMember().getUser().getEffectiveAvatarUrl());
         builder.setDescription("Cascade is now shutting down!");
         context.getTypedMessaging().replyInfo(builder);
-        CascadeBot.LOGGER.info("Shutting down via command! Issuer: " + context.getUser().getAsTag());
+        Cascade.LOGGER.info("Shutting down via command! Issuer: " + context.getUser().getAsTag());
         ShutdownHandler.stop();
     }
 

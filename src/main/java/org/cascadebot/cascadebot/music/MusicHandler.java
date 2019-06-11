@@ -29,7 +29,7 @@ import okhttp3.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
@@ -56,11 +56,11 @@ public class MusicHandler {
 
     private Pattern typePattern = Pattern.compile("youtube#([A-z]+)");
 
-    private CascadeBot instance;
+    private Cascade instance;
 
     private static Map<Long, CascadePlayer> players = new HashMap<>();
 
-    public MusicHandler(CascadeBot instance) {
+    public MusicHandler(Cascade instance) {
         this.instance = instance;
     }
 
@@ -98,7 +98,7 @@ public class MusicHandler {
 
     public CascadePlayer getPlayer(long guildId) {
         return players.computeIfAbsent(guildId, id -> {
-            Guild guild = CascadeBot.INS.getShardManager().getGuildById(id);
+            Guild guild = Cascade.INS.getShardManager().getGuildById(id);
             if (guild != null) {
                 return new CascadePlayer(guild);
             } else {
@@ -129,7 +129,7 @@ public class MusicHandler {
             return;
         }
         Request request = new Request.Builder().url("https://www.googleapis.com/youtube/v3/search?part=snippet&q=" + URLEncoder.encode(search, StandardCharsets.UTF_8) + "&key=" + URLEncoder.encode(Config.INS.getYoutubeKey(), StandardCharsets.UTF_8) + "&maxResults=5&type=video,playlist").build();
-        CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {
+        Cascade.INS.getHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Messaging.sendExceptionMessage(channel, "Error searching from YouTube!", e);
@@ -154,7 +154,7 @@ public class MusicHandler {
                     for (JsonElement elm : items) {
                         i++;
                         if (i > 5) {
-                            CascadeBot.LOGGER.warn("YouTube returned more then 5 results! A check of the YouTube api is recommended");
+                            Cascade.LOGGER.warn("YouTube returned more then 5 results! A check of the YouTube api is recommended");
                             break;
                         }
                         JsonObject item = elm.getAsJsonObject();

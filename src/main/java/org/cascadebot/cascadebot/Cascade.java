@@ -53,10 +53,10 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class CascadeBot {
+public class Cascade {
 
-    public static final CascadeBot INS = new CascadeBot();
-    public static final Logger LOGGER = LoggerFactory.getLogger(CascadeBot.class);
+    public static final Cascade INS = new Cascade();
+    public static final Logger LOGGER = LoggerFactory.getLogger(Cascade.class);
 
     private static Version version;
     private static Gson gson;
@@ -72,7 +72,7 @@ public class CascadeBot {
     private EventWaiter eventWaiter;
 
     public static void main(String[] args) {
-        try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
+        try (Scanner scanner = new Scanner(Cascade.class.getResourceAsStream("/version.txt"))) {
             version = Version.parseVer(scanner.next());
         }
 
@@ -102,7 +102,7 @@ public class CascadeBot {
 
     public static String getInvite() {
         return String.format("https://discordapp.com/oauth2/authorize?client_id=%s&scope=bot&permissions=%s",
-                CascadeBot.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
+                Cascade.INS.getSelfUser().getId(), Permission.ALL_GUILD_PERMISSIONS);
     }
 
 

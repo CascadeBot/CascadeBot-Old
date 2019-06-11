@@ -6,7 +6,7 @@
 package org.cascadebot.cascadebot.commands.core;
 
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -24,7 +24,7 @@ public class UsageCommand implements ICommandCore {
             return;
         }
 
-        ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(context.getArg(0), sender.getUser(), context.getData());
+        ICommandMain command = Cascade.INS.getCommandManager().getCommand(context.getArg(0), sender.getUser(), context.getData());
         if (command == null) {
             context.getTypedMessaging().replyDanger("Command `%s` not found!", context.getArg(0));
             return;

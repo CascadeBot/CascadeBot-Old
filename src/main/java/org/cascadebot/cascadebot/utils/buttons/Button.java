@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.utils.buttons;
 
 import lombok.Getter;
 import net.dv8tion.jda.core.entities.Message;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 
 public abstract class Button {
 
@@ -28,15 +28,15 @@ public abstract class Button {
             super(runnable);
             this.emoteId = emoteId;
             if (emoteId == null || emoteId <= 0)
-                CascadeBot.LOGGER.warn("An emote button has been registered with an invalid ID!");
+                Cascade.LOGGER.warn("An emote button has been registered with an invalid ID!");
         }
 
         @Override
         public void addReaction(Message message) {
-            if (emoteId != null && CascadeBot.INS.getShardManager().getEmoteById(emoteId) != null) {
-                message.addReaction(CascadeBot.INS.getShardManager().getEmoteById(emoteId)).queue();
+            if (emoteId != null && Cascade.INS.getShardManager().getEmoteById(emoteId) != null) {
+                message.addReaction(Cascade.INS.getShardManager().getEmoteById(emoteId)).queue();
             } else {
-                CascadeBot.LOGGER.warn("An emote button has an invalid emote ID, please update it! ID: {}", emoteId);
+                Cascade.LOGGER.warn("An emote button has an invalid emote ID, please update it! ID: {}", emoteId);
             }
         }
 
@@ -54,7 +54,7 @@ public abstract class Button {
 
         @Override
         public void addReaction(Message message) {
-            message.addReaction(unicode).queue(null, error -> CascadeBot.LOGGER.debug("Failed to add reaction!", error));
+            message.addReaction(unicode).queue(null, error -> Cascade.LOGGER.debug("Failed to add reaction!", error));
         }
 
     }

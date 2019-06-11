@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.commands.developer;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
@@ -31,7 +31,7 @@ public class GuildInfoSubCommand implements ICommandExecutable {
         Guild guildForList = context.getGuild();
 
         if (context.getArgs().length > 0) {
-            guildForList = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
+            guildForList = Cascade.INS.getShardManager().getGuildById(context.getArg(0));
             dataForList = GuildDataManager.getGuildData(guildForList.getIdLong());
         }
 

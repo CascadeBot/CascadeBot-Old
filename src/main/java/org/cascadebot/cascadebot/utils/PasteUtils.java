@@ -12,7 +12,7 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.data.Config;
 import org.slf4j.MarkerFactory;
 
@@ -31,14 +31,14 @@ public class PasteUtils {
                 .build();
 
         try {
-            Response response = CascadeBot.INS.getHttpClient().newCall(request).execute();
+            Response response = Cascade.INS.getHttpClient().newCall(request).execute();
             JsonParser parser = new JsonParser();
             if (response.body() != null) {
                 JsonObject object = parser.parse(response.body().string()).getAsJsonObject();
                 return Config.INS.getHasteLink() + object.get("key").getAsString();
             }
         } catch (IOException e) {
-            CascadeBot.LOGGER.error(MarkerFactory.getMarker("HASTEBIN"), "Error while trying to post!", e);
+            Cascade.LOGGER.error(MarkerFactory.getMarker("HASTEBIN"), "Error while trying to post!", e);
         }
         return "";
     }

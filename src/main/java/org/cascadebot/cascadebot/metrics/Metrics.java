@@ -6,12 +6,11 @@
 package org.cascadebot.cascadebot.metrics;
 
 import io.prometheus.client.Counter;
-import io.prometheus.client.SimpleCollector;
 import io.prometheus.client.Summary;
 import io.prometheus.client.cache.caffeine.CacheMetricsCollector;
 import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.hotspot.DefaultExports;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.data.Config;
 
 import java.io.IOException;
@@ -78,7 +77,7 @@ public class Metrics {
         try {
             prometheusServer = new HTTPServer(Config.INS.getPrometheusPort());
         } catch (IOException e) {
-            CascadeBot.LOGGER.error("Error starting the prometheus server!", e);
+            Cascade.LOGGER.error("Error starting the prometheus server!", e);
         }
 
         DefaultExports.initialize();

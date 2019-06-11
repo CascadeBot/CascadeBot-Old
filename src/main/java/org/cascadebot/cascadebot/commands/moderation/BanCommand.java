@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.commands.moderation;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.Cascade;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -61,7 +61,7 @@ public class BanCommand implements ICommandMain {
                     new ConfirmUtils.ConfirmRunnable() {
                         @Override
                         public void execute() {
-                            CascadeBot.INS.getModerationManager().ban(
+                            Cascade.INS.getModerationManager().ban(
                                     context,
                                     ModAction.FORCE_BAN,
                                     targetUser,
@@ -77,7 +77,7 @@ public class BanCommand implements ICommandMain {
             targetUser = targetMember.getUser();
         }
 
-        CascadeBot.INS.getModerationManager().ban(
+        Cascade.INS.getModerationManager().ban(
                 context,
                 ModAction.BAN,
                 targetUser,
