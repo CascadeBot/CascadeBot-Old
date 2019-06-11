@@ -1,6 +1,6 @@
-# CascadeBot
+# Cascade
 
-CascadeBot runs on JDK 11 to have the latest features available to provide the best user experience.
+Cascade runs on JDK 11 to have the latest features available to provide the best user experience.
 
 ### Project Owners
 
