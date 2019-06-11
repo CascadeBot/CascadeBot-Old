@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.gson.JsonArray;
 import io.github.binaryoverload.JSONConfig;
 import lombok.Getter;
@@ -16,11 +18,24 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class ArgumentManager {
 
     @Getter
     private JSONConfig argumentsFile;
+
+    /*
+        Alright so maybe caching this isn't the most useful thing but this is potentially something that will get
+        requested a lot, this might reduce command time by avoiding the computation to make all the arguments.
+
+        We will see 👀
+    */
+    @Getter
+    private LoadingCache<String, Set<Argument>> cache = Caffeine.newBuilder()
+            .expireAfterAccess(1, TimeUnit.HOURS)
+            .recordStats()
+            .build(this::getArguments);
 
     public void initArguments() {
         try {
@@ -61,7 +76,7 @@ public class ArgumentManager {
 
             Set<Argument> subArgs = getArguments(id);
 
-            arguments.add(new Argument(id, type, subArgs, aliases));
+            arguments.add(Argument.of(id, type, subArgs, aliases));
         }
         return arguments;
     }
