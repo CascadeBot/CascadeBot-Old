@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.cascadebot</groupId>
-    <artifactId>cascadebot</artifactId>
+    <artifactId>cascade</artifactId>
     <version>1.0</version>
 
     <properties>
@@ -16,7 +16,7 @@
     </properties>
 
     <build>
-        <finalName>CascadeBot</finalName>
+        <finalName>Cascade</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
         <plugins>
             <plugin>
@@ -41,7 +41,7 @@
                     <!-- MainClass in mainfest make a executable jar -->
                     <archive>
                         <manifest>
-                            <mainClass>org.cascadebot.cascadebot.CascadeBot</mainClass>
+                            <mainClass>org.cascadebot.cascadebot.Cascade</mainClass>
                         </manifest>
                     </archive>
 
