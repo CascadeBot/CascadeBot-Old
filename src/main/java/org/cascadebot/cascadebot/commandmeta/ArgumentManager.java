@@ -64,35 +64,28 @@ public class ArgumentManager {
                     tag.raw._type - "_type" starts with a "_" so the loop for this key will be skipped
             */
             if (key.charAt(key.lastIndexOf(".") + 1) == '_') continue;
-            Optional<JSONConfig> subConfig = argumentsConfig.get().getSubConfig(key);
-            // Don't bother if it's not an actual object
-            if (subConfig.isEmpty()) continue;
 
             String id = (parent.isBlank() ? "" : parent + ".") + key;
-
-            String typeRaw = subConfig.get().getString("_type").orElse("command");
-            ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
-
-            JsonArray aliasesRaw = subConfig.get().getArray("_aliases").orElse(new JsonArray());
-            Set<String> aliases = new HashSet<>();
-            aliasesRaw.iterator().forEachRemaining(element -> aliases.add(element.getAsString()));
-
-            Set<Argument> subArgs = getArguments(id);
-
-            arguments.add(Argument.of(id, type, subArgs, aliases));
+            arguments.add(getArgumentById(id));
         }
         return arguments;
     }
 
     public Argument getArgumentById(String id) {
-        // Empty parent to get all args
-        Set<Argument> arguments = getArguments("");
-        for (Argument argument : arguments) {
-            if (argument.getId().equalsIgnoreCase(id)) {
-                return argument;
-            }
-        }
-        return null;
+        Optional<JSONConfig> subConfig = argumentsFile.getSubConfig(id);
+        // Don't bother if it's not an actual object
+        if (subConfig.isEmpty()) return null;
+
+        String typeRaw = subConfig.get().getString("_type").orElse("command");
+        ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
+
+        JsonArray aliasesRaw = subConfig.get().getArray("_aliases").orElse(new JsonArray());
+        Set<String> aliases = new HashSet<>();
+        aliasesRaw.iterator().forEachRemaining(element -> aliases.add(element.getAsString()));
+
+        Set<Argument> subArgs = getArguments(id);
+
+        return Argument.of(id, type, subArgs, aliases);
     }
 
 }
