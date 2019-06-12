@@ -12,6 +12,7 @@
       "_type": "required"
     }
   },
+
   "guild": {
     "flag": {
       "flag": {
@@ -35,6 +36,18 @@
       "all": {
         "_type": "command"}
     }
-  }
+  },
+
+  "serverinfo": {
+    "guild_id": {
+      "_type": "optional"
+    }
+  },
+  "userinfo": {
+    "guild_id": {
+      "_type": "optional"
+    }
+  },
+
 
 }

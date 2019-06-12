@@ -32,12 +32,10 @@ import java.util.Set;
 
 public class UserInfoCommand implements ICommandMain {
 
-    Argument userArg = Argument.of("user", "Gets a specific users info", ArgumentType.OPTIONAL);
-
     @Override
     public void onCommand(Member sender, CommandContext context) {
         User userForInfo = sender.getUser();
-        if (userArg.argExists(context.getArgs(), 0)) {
+        if (context.getArgs().length > 0) {
             userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         }
         if (userForInfo == null) {
@@ -116,11 +114,6 @@ public class UserInfoCommand implements ICommandMain {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("userinfo", true);
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(userArg);
     }
 
 }
