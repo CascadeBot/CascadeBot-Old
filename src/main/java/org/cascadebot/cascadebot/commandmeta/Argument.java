@@ -104,7 +104,8 @@ public class Argument {
 
     @Override
     public String toString() {
-        String argument = getName();
+        String[] idSplit = getId().split("\\.");
+        String argument = getName().isBlank() ? idSplit[idSplit.length - 1] : getName();
         if (aliases.size() > 0) {
             StringBuilder paramBuilder = new StringBuilder();
             paramBuilder.append(argument);
