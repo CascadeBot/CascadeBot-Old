@@ -231,6 +231,7 @@ public class CommandListener extends ListenerAdapter {
             MDC.put("cascade.channel", context.getChannel().toString());
             MDC.put("cascade.shard_info", context.getJda().getShardInfo().getShardString());
             MDC.put("cascade.command", command.command() + (command instanceof ICommandMain ? "" : " (Sub-command)"));
+            MDC.put("cascade.trigger", context.getTrigger());
             MDC.put("cascade.args", Arrays.toString(context.getArgs()));
 
             CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}",
