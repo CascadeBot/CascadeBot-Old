@@ -61,9 +61,4 @@ public class TagCommand implements ICommandMain {
         return "Tag command";
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", "Display the given tag", ArgumentType.REQUIRED));
-    }
-
 }

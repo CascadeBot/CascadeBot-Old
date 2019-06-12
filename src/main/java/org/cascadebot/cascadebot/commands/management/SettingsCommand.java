@@ -114,12 +114,6 @@ public class SettingsCommand implements ICommandMain {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("list", "Lists the current settings for the guild", ArgumentType.COMMAND), Argument.of("setting", "", ArgumentType.REQUIRED, Set
-                .of(Argument.of("value", "The value for the setting", ArgumentType.REQUIRED))));
-    }
-
-    @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("settings", false, Permission.MANAGE_SERVER);
     }

@@ -45,12 +45,6 @@ public class TagCategorySubCommand implements ICommandExecutable {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("tag", null, ArgumentType.REQUIRED,
-                Set.of(Argument.of("category", "Sets the category for the tag to go into", ArgumentType.REQUIRED))));
-    }
-
-    @Override
     public String description() {
         return null;
     }

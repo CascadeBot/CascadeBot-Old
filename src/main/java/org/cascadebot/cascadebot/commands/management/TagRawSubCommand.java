@@ -55,9 +55,4 @@ public class TagRawSubCommand implements ICommandExecutable {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", "Views the raw tag data for a given tag", ArgumentType.REQUIRED));
-    }
-
 }

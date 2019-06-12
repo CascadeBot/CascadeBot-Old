@@ -61,9 +61,4 @@ public class ModuleDisableSubCommand implements ISubCommand {
         return CascadePermission.of("module.disable", false, Permission.MANAGE_SERVER);
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("module", "Disables a module", ArgumentType.REQUIRED));
-    }
-
 }

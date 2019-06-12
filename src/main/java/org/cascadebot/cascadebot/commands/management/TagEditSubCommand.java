@@ -45,12 +45,6 @@ public class TagEditSubCommand implements ICommandExecutable {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("tag", null, ArgumentType.REQUIRED,
-                Set.of(Argument.of("content", "Edits the specified tag", ArgumentType.REQUIRED))));
-    }
-
-    @Override
     public String description() {
         return null;
     }

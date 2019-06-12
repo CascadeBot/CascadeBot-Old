@@ -44,9 +44,4 @@ public class TagDeleteSubCommand implements ICommandExecutable {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", "Deletes tag with the giving name", ArgumentType.REQUIRED));
-    }
-
 }

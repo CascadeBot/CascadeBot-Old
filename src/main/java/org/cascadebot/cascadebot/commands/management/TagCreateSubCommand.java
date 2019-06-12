@@ -41,9 +41,4 @@ public class TagCreateSubCommand implements ICommandExecutable {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", null, ArgumentType.REQUIRED, Set.of(Argument.of("tag", "Creates a tag with a giving name", ArgumentType.REQUIRED))));
-    }
-
 }

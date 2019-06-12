@@ -34,7 +34,8 @@
         "_type": "required"
       },
       "all": {
-        "_type": "command"}
+        "_type": "command",
+      }
     }
   },
 
@@ -49,5 +50,68 @@
     }
   },
 
+  "module": {
+    "disable": {
+      "module": {
+        "_type": "required"
+      }
+    },
+    "enable": {
+      "module": {
+        "_type": "required"
+      }
+    }
+  },
+  "settings": {
+    "list": {
+      "_type": "command"
+    },
+    "settings": {
+      "_type": "required",
+      "value": {
+        "_type": "required"
+      }
+    }
+  },
+
+  "tag": {
+    "tag": {
+      "_type": "required"
+    },
+    "category": {
+      "tag": {
+        "_type": "required",
+        "category": {
+          "_type": "required"
+        }
+      }
+    },
+    "create": {
+      "name": {
+        "_type": "required",
+        "content": {
+          "_type": "required"
+        }
+      }
+    },
+    "delete": {
+      "name": {
+        "_type": "required"
+      }
+    },
+    "edit": {
+      "tag": {
+        "_type": "required",
+        "content": {
+          "_type": "required"
+        }
+      }
+    },
+    "raw": {
+      "name": {
+        "_type": "required"
+      }
+    }
+  }
 
 }
