@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
+import lombok.Getter;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Member;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 
 public class GuildPermissions {
 
+    @Getter
     private PermissionMode mode = PermissionMode.MOST_RESTRICTIVE;
 
     private List<Group> groups = Collections.synchronizedList(new ArrayList<>());

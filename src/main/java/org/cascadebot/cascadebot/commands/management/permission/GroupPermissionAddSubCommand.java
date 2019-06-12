@@ -54,4 +54,5 @@ public class GroupPermissionAddSubCommand implements ICommandExecutable {
     public String description() {
         return null;
     }
+
 }

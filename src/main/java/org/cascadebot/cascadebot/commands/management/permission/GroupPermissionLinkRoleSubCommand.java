@@ -14,6 +14,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
 public class GroupPermissionLinkRoleSubCommand implements ICommandExecutable {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
@@ -50,4 +51,5 @@ public class GroupPermissionLinkRoleSubCommand implements ICommandExecutable {
     public String description() {
         return null;
     }
+
 }

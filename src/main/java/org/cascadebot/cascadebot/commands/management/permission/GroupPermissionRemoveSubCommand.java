@@ -49,4 +49,5 @@ public class GroupPermissionRemoveSubCommand implements ICommandExecutable {
     public String description() {
         return null;
     }
+
 }

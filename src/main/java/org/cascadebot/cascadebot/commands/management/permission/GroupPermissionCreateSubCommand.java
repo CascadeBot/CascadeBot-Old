@@ -13,6 +13,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 
 public class GroupPermissionCreateSubCommand implements ICommandExecutable {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
@@ -38,4 +39,5 @@ public class GroupPermissionCreateSubCommand implements ICommandExecutable {
     public String description() {
         return null;
     }
+
 }
