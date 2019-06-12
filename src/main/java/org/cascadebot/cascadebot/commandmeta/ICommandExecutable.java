@@ -71,25 +71,8 @@ public interface ICommandExecutable {
         return Set.of();
     }
 
-    /**
-     * Not when overriding this. the system automatically handles sub command arguments so you only need to define arguments here that are not defined their.
-     *
-     * @return A set of arguments not being defined else where
-     */
-    default Set<Argument> getUndefinedArguments() {
-        return Set.of();
-    }
-
     default Set<Argument> getArguments() {
-        Set<Argument> arguments = new HashSet<>(this.getUndefinedArguments());
-        if (this instanceof ICommandMain) {
-            for (ICommandExecutable subCommand : ((ICommandMain) this).getSubCommands()) {
-                // TODO: find a way to get the guild's locale in here
-                arguments.add(Argument.of(subCommand.command(), subCommand.getDescription(Locale.getDefaultLocale()), subCommand
-                        .getUndefinedArguments()));
-            }
-        }
-        return Set.copyOf(arguments);
+        return CascadeBot.INS.getArgumentManager().getCommandArguments(this);
     }
 
 }

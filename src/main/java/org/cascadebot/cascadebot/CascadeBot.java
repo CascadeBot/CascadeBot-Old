@@ -282,6 +282,10 @@ public class CascadeBot {
         return shardManager;
     }
 
+    public ArgumentManager getArgumentManager() {
+        return argumentManager;
+    }
+
     public CommandManager getCommandManager() {
         return commandManager;
     }
