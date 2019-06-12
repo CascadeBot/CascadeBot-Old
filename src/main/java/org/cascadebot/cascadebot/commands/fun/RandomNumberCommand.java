@@ -18,6 +18,7 @@ import java.io.IOException;mport java.util.Random;
 
 public class RandCommand extends ICommandMain
 {
+
     @Override
     public void onCommand(Member sender, CommandContext context)
         Message message = event.getMessage();
@@ -26,6 +27,7 @@ public class RandCommand extends ICommandMain
         int random_number = random_obj.nextInt(999);
         MessageChannel channel = event.getChannel();
         channel.sendMessage(random_number).queue();
+
     @Override
     public String command() {
         return "rand";
