@@ -68,7 +68,7 @@ public class ArgumentManager {
             // Don't bother if it's not an actual object
             if (subConfig.isEmpty()) continue;
 
-            String id = parent + "." + key;
+            String id = (parent.isBlank() ? "" : parent + ".") + key;
 
             String typeRaw = subConfig.get().getString("_type").orElse("command");
             ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
@@ -82,6 +82,17 @@ public class ArgumentManager {
             arguments.add(Argument.of(id, type, subArgs, aliases));
         }
         return arguments;
+    }
+
+    public Argument getArgumentById(String id) {
+        // Empty parent to get all args
+        Set<Argument> arguments = getArguments("");
+        for (Argument argument : arguments) {
+            if (argument.getId().equalsIgnoreCase(id)) {
+                return argument;
+            }
+        }
+        return null;
     }
 
 }
