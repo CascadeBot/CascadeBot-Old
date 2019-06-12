@@ -140,11 +140,4 @@ public class SkipCommand implements ICommandMain {
         return CascadePermission.of("skip", true);
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("force", "force skips a track", ArgumentType.OPTIONAL),
-                Argument.of("yes", "votes yes for skipping the song", ArgumentType.COMMAND),
-                Argument.of("no", "votes no for skipping the song", ArgumentType.COMMAND));
-    }
-
 }

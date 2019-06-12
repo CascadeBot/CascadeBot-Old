@@ -78,10 +78,4 @@ public class QueueLoadSubCommand implements ICommandExecutable {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", "Loads the playlist with the given name", ArgumentType.REQUIRED,
-                Set.of(Argument.of("scope", "Loads the playlist with given name for ether you or this guild", ArgumentType.OPTIONAL))));
-    }
-
 }

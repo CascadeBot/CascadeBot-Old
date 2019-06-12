@@ -116,11 +116,6 @@ public class SearchCommand implements ICommandMain {
     }
 
     @Override
-    public Set<Argument> getArguments() {
-        return Set.of(Argument.of("search", "search for a specific song", ArgumentType.REQUIRED));
-    }
-
-    @Override
     public Module getModule() {
         return Module.MUSIC;
     }

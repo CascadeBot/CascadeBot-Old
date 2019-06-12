@@ -71,7 +71,6 @@ public class VolumeCommand implements ICommandMain {
 
     }
 
-
     @Override
     public Module getModule() {
         return Module.MUSIC;
@@ -80,11 +79,6 @@ public class VolumeCommand implements ICommandMain {
     @Override
     public String command() {
         return "volume";
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("volume", "Sets the volume to this value", ArgumentType.OPTIONAL));
     }
 
     @Override

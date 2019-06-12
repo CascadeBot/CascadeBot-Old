@@ -145,6 +145,62 @@
         "_type": "optional"
       }
     }
+  },
+
+  "join": {
+    "channel": {
+      "_type": "optional"
+    }
+  },
+  "loop": {
+    "mode": {
+      "_type": "optional"
+    }
+  },
+  "play": {
+    "url": {
+      "_type": "optional",
+      "_aliases": ["query"]
+    }
+  },
+  "queue": {
+    "load": {
+      "name": {
+        "_type": "required",
+        "scope": {
+          "_type": "optional"
+        }
+      }
+    },
+    "save": {
+      "name": {
+        "_type": "required",
+        "scope": {
+          "_type": "optional"
+        }
+      }
+    }
+  },
+  "search": {
+    "query": {
+      "_type": "required"
+    }
+  },
+  "skio": {
+    "force": {
+      "_type": "optional"
+    },
+    "yes": {
+      "_type": "command"
+    },
+    "no": {
+      "_type": "command"
+    }
+  },
+  "volume": {
+    "volume": {
+      "_type": "optional"
+    }
   }
 
 }

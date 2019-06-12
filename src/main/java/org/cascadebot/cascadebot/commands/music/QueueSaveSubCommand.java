@@ -90,10 +90,4 @@ public class QueueSaveSubCommand implements ICommandExecutable {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", "Saves the current queue with the given name", ArgumentType.REQUIRED,
-                Set.of(Argument.of("scope", "Saves the current queue with given name for ether you or this guild", ArgumentType.OPTIONAL))));
-    }
-
 }
