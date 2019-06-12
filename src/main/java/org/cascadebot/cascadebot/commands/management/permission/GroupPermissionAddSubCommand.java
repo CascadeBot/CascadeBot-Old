@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
-public class GroupPermissionAddPermissionSubCommand implements ICommandExecutable {
+public class GroupPermissionAddSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -42,12 +42,12 @@ public class GroupPermissionAddPermissionSubCommand implements ICommandExecutabl
 
     @Override
     public String command() {
-        return "addpermission";
+        return "add";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions add sub command", "permissions.group.addpermission", false, Module.MANAGEMENT);
+        return CascadePermission.of("Group permissions add sub command", "permissions.group.add", false, Module.MANAGEMENT);
     }
 
     @Override

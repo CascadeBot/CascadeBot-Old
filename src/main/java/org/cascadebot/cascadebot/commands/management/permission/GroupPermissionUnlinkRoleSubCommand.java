@@ -6,43 +6,44 @@
 package org.cascadebot.cascadebot.commands.management.permission;
 
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import net.dv8tion.jda.core.entities.Role;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 
-public class GroupPermissionRemovePermissionSubCommand implements ICommandExecutable {
-
+public class GroupPermissionUnlinkRoleSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 2) {
+        if (context.getArgs().length < 2) {
             context.getUIMessaging().replyUsage(this, "groupperms");
             return;
         }
 
-        if(!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getGuild(), context.getArg(1))) {
-            context.getTypedMessaging().replyDanger("`%s` isn't a valid permission", context.getArg(1));
+        Role role = DiscordUtils.getRole(context.getArg(1), context.getGuild());
+        if (role == null) {
+            context.getTypedMessaging().replyDanger("Could not find role " + context.getArg(1));
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
-            if(group.removePermission(context.getArg(1))) {
-                context.getTypedMessaging().replySuccess("Successfully removed permission `%s` from group `%s`", context.getArg(1), group.getName() + "(" + group.getId() + ")");
+            if (group.unlinkRole(role.getIdLong())) {
+                context.getTypedMessaging().replySuccess("Unlinked group `" + group.getName() + "` to role `" + role.getName() + "`");
             } else {
-                context.getTypedMessaging().replyWarning("Couldn't removed permission `%s` from group `%s` as they already have the permission", context.getArg(1), group.getName() + "(" + group.getId() + ")");
+                context.getTypedMessaging().replyWarning("Couldn't unlink group `" + group.getName() + "` to role `" + role.getName() + "`");
             }
         }, sender.getUser().getIdLong());
     }
 
     @Override
     public String command() {
-        return "removepermission";
+        return "unlink";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions add sub command", "permissions.group.removepermission", false, Module.MANAGEMENT);
+        return CascadePermission.of("Group permissions unlink sub command", "permissions.group.unlink", false, Module.MANAGEMENT);
     }
 
     @Override
