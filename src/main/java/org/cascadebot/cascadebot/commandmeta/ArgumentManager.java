@@ -64,13 +64,16 @@ public class ArgumentManager {
                     tag.raw._type - "_type" starts with a "_" so the loop for this key will be skipped
             */
             if (key.charAt(key.lastIndexOf(".") + 1) == '_') continue;
+            Optional<JSONConfig> subConfig = argumentsConfig.get().getSubConfig(key);
+            // Don't bother if it's not an actual object
+            if (subConfig.isEmpty()) continue;
 
             String id = parent + "." + key;
 
-            String typeRaw = argumentsConfig.get().getString("_type").orElse("command");
+            String typeRaw = subConfig.get().getString("_type").orElse("command");
             ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
 
-            JsonArray aliasesRaw = argumentsConfig.get().getArray("_aliases").orElse(new JsonArray());
+            JsonArray aliasesRaw = subConfig.get().getArray("_aliases").orElse(new JsonArray());
             Set<String> aliases = new HashSet<>();
             aliasesRaw.iterator().forEachRemaining(element -> aliases.add(element.getAsString()));
 
