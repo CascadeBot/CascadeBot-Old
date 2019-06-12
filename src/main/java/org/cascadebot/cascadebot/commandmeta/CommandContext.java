@@ -175,43 +175,19 @@ public class CommandContext {
     }
 
     public String getUsage() {
-        return getUsage(getCommand(), null);
+        return getUsage(getCommand());
     }
 
     public String getUsage(ICommandExecutable command) {
-        return getUsage(command, null);
-    }
+        Argument parentArg = CascadeBot.INS.getArgumentManager().getArgumentById(command.getAbsoluteCommand());
 
-    public String getUsage(ICommandExecutable command, String parent) {
-        Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
-        if (command instanceof ICommandMain) {
-            for (ICommandExecutable subCommand : ((ICommandMain) command).getSubCommands()) {
-                arguments.add(Argument.of(subCommand.command(), subCommand.getDescription(data.getLocale()), subCommand.getUndefinedArguments()));
-            }
-        }
-
-        Argument parentArg = Argument.of(command.command(), command.getDescription(data.getLocale()), arguments);
-
-        int levels = 0;
-        for (String arg : args) {
-            levels++;
-            Argument argument = getArgFromSet(parentArg.getSubArgs(), arg);
-            if (argument != null) {
-                parentArg = argument;
-            }
+        String parent = null;
+        if (command instanceof ISubCommand) {
+            parent = ((ISubCommand) command).parent();
         }
 
         String commandString = data.getSettings().getPrefix() + (parent == null ? "" : parent + " ");
         return parentArg.getUsageString(commandString);
-    }
-
-    private Argument getArgFromSet(Set<Argument> arguments, String arg) {
-        for (Argument argument : arguments) {
-            if (argument.argStartsWith(arg)) {
-                return argument;
-            }
-        }
-        return null;
     }
 
     /**

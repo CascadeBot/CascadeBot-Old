@@ -22,7 +22,7 @@ public class TagRawSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "tag");
+            context.getUIMessaging().replyUsage();
             return;
         }
 

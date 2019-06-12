@@ -18,7 +18,7 @@ public class TagDeleteSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "tags");
+            context.getUIMessaging().replyUsage();
             return;
         }
 

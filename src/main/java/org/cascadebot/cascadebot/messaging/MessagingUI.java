@@ -152,15 +152,11 @@ public class MessagingUI {
     }
 
     public void replyUsage() {
-        replyUsage(context.getCommand(), null);
+        replyUsage(context.getCommand());
     }
 
     public void replyUsage(ICommandExecutable command) {
-        replyUsage(command, null);
-    }
-
-    public void replyUsage(ICommandExecutable command, String parent) {
-        context.getTypedMessaging().replyWarning("Incorrect usage. Proper usage:\n" + context.getUsage(command, parent));
+        context.getTypedMessaging().replyWarning("Incorrect usage. Proper usage:\n" + context.getUsage(command));
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {

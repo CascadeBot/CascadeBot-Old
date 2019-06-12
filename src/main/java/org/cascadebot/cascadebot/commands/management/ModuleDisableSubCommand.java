@@ -22,7 +22,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "module");
+            context.getUIMessaging().replyUsage();
             return;
         }
         String selectedModule = context.getArg(0).toUpperCase();

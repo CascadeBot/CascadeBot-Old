@@ -19,7 +19,7 @@ public class TagCreateSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage(this, "tag");
+            context.getUIMessaging().replyUsage();
             return;
         }
         context.getSettings().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));

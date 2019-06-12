@@ -18,7 +18,7 @@ public class Argument {
     private final ArgumentType type;
     private final Set<String> aliases;
 
-    private Argument(String id, ArgumentType type, Set<Argument> subArgs, Set<String> aliases) {
+    Argument(String id, ArgumentType type, Set<Argument> subArgs, Set<String> aliases) {
         this.id = id;
         this.subArgs = subArgs;
         this.type = type;
