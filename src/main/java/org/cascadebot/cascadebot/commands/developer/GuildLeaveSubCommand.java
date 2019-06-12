@@ -16,6 +16,7 @@ public class GuildLeaveSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        // TODO: Leave other guilds
         Messaging.sendSuccessMessage(context.getChannel(), "Goodbye!")
                 .thenAccept(message -> context.getGuild().leave().queue());
     }

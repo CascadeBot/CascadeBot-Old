@@ -58,10 +58,4 @@ public class GuildSaveSubCommand implements ISubCommand {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.ofA("guild_id", "Saves a specific guild", ArgumentType.REQUIRED, Set.of("all")));
-    }
-
-
 }

@@ -91,18 +91,6 @@ public class GuildFlagSubCommand implements ISubCommand {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(
-                Argument.of("flag", "", ArgumentType.REQUIRED,
-                        Set.of(
-                                Argument.of("guild_id", "Toggles a flag for this guild [or a different guild].", ArgumentType.OPTIONAL)
-                        )
-                ),
-                Argument.of("list", "Lists the flags available to toggle.")
-        );
-    }
-
-    @Override
     public CascadePermission getPermission() {
         return null;
     }

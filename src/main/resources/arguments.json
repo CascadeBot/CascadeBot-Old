@@ -1,15 +1,40 @@
 {
-  "tag": {
-    "name": {
-      "_type": "required"
+  "prefix": {
+    "reset": {
+      "_type": "command"
     },
-    "create": {
-      "name": {
+    "prefix": {
+      "_type": "required"
+    }
+  },
+  "usage": {
+    "command": {
+      "_type": "required"
+    }
+  },
+  "guild": {
+    "flag": {
+      "flag": {
         "_type": "required",
-        "content": {
-          "_type": "required"
+        "guild_id": {
+          "_type": "optional"
         }
+      },
+      "list": {
+        "_type": "command"}
+    },
+    "info": {
+      "guild_id": {
+        "_type": "optional"
       }
+    },
+    "save": {
+      "guild_id": {
+        "_type": "required"
+      },
+      "all": {
+        "_type": "command"}
     }
   }
+
 }
