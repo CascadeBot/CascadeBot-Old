@@ -59,17 +59,6 @@ public class UnbanCommand implements ICommandMain {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "user",
-                "",
-                ArgumentType.REQUIRED,
-                Set.of(
-                        Argument.of("reason", "Unbans a user", ArgumentType.OPTIONAL)
-                )));
-    }
-
-    @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("ban",
                 false, Permission.BAN_MEMBERS);

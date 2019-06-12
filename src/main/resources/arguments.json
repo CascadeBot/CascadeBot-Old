@@ -34,7 +34,7 @@
         "_type": "required"
       },
       "all": {
-        "_type": "command",
+        "_type": "command"
       }
     }
   },
@@ -110,6 +110,39 @@
     "raw": {
       "name": {
         "_type": "required"
+      }
+    }
+  },
+
+  "ban": {
+    "member": {
+      "_type": "required",
+      "reason": {
+        "_type": "optional"
+      }
+    }
+  },
+  "kick": {
+    "member": {
+      "_type": "required",
+      "reason": {
+        "_type": "optional"
+      }
+    }
+  },
+  "softban": {
+    "member": {
+      "_type": "required",
+      "reason": {
+        "_type": "optional"
+      }
+    }
+  },
+  "unban": {
+    "user": {
+      "_type": "required",
+      "reason": {
+        "_type": "optional"
       }
     }
   }

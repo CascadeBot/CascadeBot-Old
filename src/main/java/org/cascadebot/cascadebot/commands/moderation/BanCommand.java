@@ -97,15 +97,6 @@ public class BanCommand implements ICommandMain {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Bans a member and can optionally forcefully ban a user", ArgumentType.OPTIONAL)
-                )
-        ));
-    }
-
-    @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("ban", false, Permission.BAN_MEMBERS);
     }

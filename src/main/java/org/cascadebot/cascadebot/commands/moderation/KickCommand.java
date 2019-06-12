@@ -59,15 +59,6 @@ public class KickCommand implements ICommandMain {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Kicks a member", ArgumentType.OPTIONAL)
-                )
-        ));
-    }
-
-    @Override
     public Module getModule() {
         return Module.MODERATION;
     }
