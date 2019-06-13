@@ -25,7 +25,7 @@ public class RandomNumberCommand implements ICommandMain {
         Random randomObj = new Random();
         if (context.getArgs().length > 0) {
             String argRaw = context.getArg(0);
-            if (argRaw.matches("[0-9]+") == false) {
+            if (context.isArgInteger(0) == false) {
                 context.getTypedMessaging().replyInfo("Please provide numbers only");
             }
 
@@ -35,10 +35,8 @@ public class RandomNumberCommand implements ICommandMain {
                 String randomNumber = Integer.toString(randomNumberInt);
                 context.getTypedMessaging().replyInfo("Random number is " + randomNumber);
             }
-        }
-
-        else {
-            context.getTypedMessaging().replyInfo("No arguments given");
+        } else {
+            context.getTypedMessaging().replyDanger("No arguments given");
         }
     }
 
