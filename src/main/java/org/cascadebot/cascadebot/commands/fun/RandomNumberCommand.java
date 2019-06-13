@@ -22,43 +22,44 @@ public class RandomNumberCommand implements ICommandMain {
 
 	@Override
 	public void onCommand(Member sender, CommandContext context) {
-	    Random randomObj = new Random();
-		try {
-		    String argRaw = context.getArg(0);   
-		    if (argRaw.matches("[0-9]+") == false) {	
-		        context.getTypedMessaging().replyInfo("Please provide numbers only");
-		    }
-		    
-		    else {
-		        int argOne = Integer.parseInt(argRaw);
-		        int randomNumberInt = randomObj.nextInt(argOne);
-		        String randomNumber = Integer.toString(randomNumberInt);
-		        context.getTypedMessaging().replyInfo("Random number is " + randomNumber);
-		    }
-		    
-		} catch(Exception ArrayIndexOutOfBoundsException) {
-		      context.getTypedMessaging().replyInfo("No arguments given");
-	      }
+		Random randomObj = new Random();
+		if (context.getArgs().length > 0) {
+			String argRaw = context.getArg(0);
+			if (argRaw.matches("[0-9]+") == false) {
+				context.getTypedMessaging().replyInfo("Please provide numbers only");
+			}
+
+			else {
+				int argOne = Integer.parseInt(argRaw);
+				int randomNumberInt = randomObj.nextInt(argOne);
+				String randomNumber = Integer.toString(randomNumberInt);
+				context.getTypedMessaging().replyInfo("Random number is " + randomNumber);
+			}
+		}
+
+		else {
+			context.getTypedMessaging().replyInfo("No arguments given");
+		}
 	}
-	      
+
 	@Override
 	public String command() {
-        return "randnum";
+		return "randnum";
 	}
 
 	@Override
 	public Module getModule() {
-	    return Module.FUN;
+		return Module.FUN;
 	}
 
 	@Override
 	public CascadePermission getPermission() {
-	    return CascadePermission.of("Random number command", "randnum", true);
+		return CascadePermission.of("Random number command", "randnum", true);
 	}
 
 	@Override
 	public String description() {
-	    return "Returns a random number";
+		return "Returns a random number";
 	}
 
 }
