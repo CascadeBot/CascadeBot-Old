@@ -21,7 +21,7 @@ public class RestartCommand implements ICommandRestricted {
             context.getTypedMessaging().replyDanger("The bot is already shutting down!");
             return;
         }
-        context.reply("Bot is restarting!");
+        context.getTypedMessaging().replyInfo("Bot is restarting!");
         CascadeBot.LOGGER.info("Restarting via command! Issuer: " + context.getUser().getAsTag());
         ShutdownHandler.restart();
     }
