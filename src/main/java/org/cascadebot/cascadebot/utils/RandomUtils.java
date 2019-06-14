@@ -15,14 +15,14 @@ public class RandomUtils {
     
     @Getter
     private static final Random random = new Random();
-    
+
     public static int randomNumber(int Args) {
         return(random.nextInt(Args));
     }
     
     public static String randomChoice(String... choices) {
-        int randomLength = randomArray.length;
+        int randomLength = choices.length;
         int randomMax = random.nextInt(randomLength);
-        return (randomArray[randomMax]);
+        return (choices[randomMax]);
     }
 }
