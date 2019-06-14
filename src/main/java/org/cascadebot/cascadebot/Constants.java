@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot;
 import lombok.experimental.UtilityClass;
 import org.cascadebot.shared.SharedConstants;
 
-import java.awt.*;
+import java.awt.Color;
 
 @UtilityClass
 public class Constants {
