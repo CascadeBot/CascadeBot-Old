@@ -15,24 +15,23 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.RandomUtils;
 import java.io.IOException;
 import java.util.Random;
 
 public class RandomNumberCommand implements ICommandMain {
 
-    @Override
+   
     public void onCommand(Member sender, CommandContext context) {
         Random randomObj = new Random();
         if (context.getArgs().length > 0) {
-            String argRaw = context.getArg(0);
             if (context.isArgInteger(0) == false) {
                 context.getTypedMessaging().replyInfo("Please provide numbers only");
             }
-
             else {
-                int argOne = Integer.parseInt(argRaw);
-                int randomNumberInt = randomObj.nextInt(argOne);
-                String randomNumber = Integer.toString(randomNumberInt);
+                int argOne = context.getArgAsInteger(0);
+                int randomNumberRaw = RandomUtils.randomNumber(argOne);
+                String randomNumber = Integer.toString(randomNumberRaw);
                 context.getTypedMessaging().replyInfo("Random number is " + randomNumber);
             }
         } else {
