@@ -47,15 +47,13 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
             AtomicInteger currIndex = new AtomicInteger(context.getData().getPermissions().getGroups().indexOf(group));
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
-                context.getData().getPermissions().getGroups().remove(currIndex.get());
-                context.getData().getPermissions().getGroups().add(currIndex.get() + 1, group);
-                currIndex.addAndGet(1);
+                context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() - 1);
+                currIndex.addAndGet(-1);
                 message.editMessage(getGroupsList(group, context.getData().getPermissions().getGroups())).queue();
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
-                context.getData().getPermissions().getGroups().remove(currIndex.get());
-                context.getData().getPermissions().getGroups().add(currIndex.get() - 1, group);
-                currIndex.addAndGet(-1);
+                context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() + 1);
+                currIndex.addAndGet(1);
                 message.editMessage(getGroupsList(group, context.getData().getPermissions().getGroups())).queue();
             }));
 
@@ -78,7 +76,7 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
             max = groups.size() - 1;
         }
 
-        for (int i = 0; i < (max - min); i++) {
+        for (int i = 0; i <= (max - min); i++) {
             int num = i + min;
             stringBuilder.append(num).append(": ");
             Group group = groups.get(num);

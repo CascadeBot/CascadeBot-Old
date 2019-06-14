@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.Member;
@@ -32,6 +33,7 @@ import java.util.stream.Collectors;
 public class GuildPermissions {
 
     @Getter
+    @Setter
     private PermissionMode mode = PermissionMode.MOST_RESTRICTIVE;
 
     private List<Group> groups = Collections.synchronizedList(new ArrayList<>());
@@ -202,6 +204,11 @@ public class GuildPermissions {
 
     public List<Group> getGroups() {
         return List.copyOf(groups);
+    }
+
+    public void moveGroup(Group group, int position) throws IndexOutOfBoundsException {
+        groups.remove(group);
+        groups.add(position, group);
     }
 
     public enum PermissionMode {
