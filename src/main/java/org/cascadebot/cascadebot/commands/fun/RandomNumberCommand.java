@@ -23,7 +23,6 @@ public class RandomNumberCommand implements ICommandMain {
 
    
     public void onCommand(Member sender, CommandContext context) {
-        Random randomObj = new Random();
         if (context.getArgs().length > 0) {
             if (context.isArgInteger(0) == false) {
                 context.getTypedMessaging().replyDanger("Please provide numbers only");
