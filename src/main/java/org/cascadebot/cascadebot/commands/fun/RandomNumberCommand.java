@@ -21,19 +21,17 @@ import java.util.Random;
 
 public class RandomNumberCommand implements ICommandMain {
 
-   
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
             if (context.isArgInteger(0) == false) {
                 context.getTypedMessaging().replyDanger("Please provide numbers only");
             } else {
                 int argOne = context.getArgAsInteger(0);
-                String randomNumber = RandomUtils.randomNumber(argOne).Integer.toString();
+                int randomNumber = RandomUtils.randomNumber(argOne); 
                 context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
             }
         } else {
-             int randomNumberRaw = RandomUtils.randomNumber(10);
-             String randomNumber = Integer.toString(randomNumberRaw);
+             int randomNumberRaw = RandomUtils.randomNumber(10); String randomNumber = Integer.toString(randomNumberRaw);
              context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
         }
     }
@@ -57,5 +55,4 @@ public class RandomNumberCommand implements ICommandMain {
     public String description() {
         return "Returns a random number";
     }
-
 }
