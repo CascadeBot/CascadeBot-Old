@@ -14,7 +14,7 @@ import java.awt.*;
 public class Constants {
 
     // Changeable constants if needed
-    public static final String serverInvite = "https://discord.gg/P23GZFB";
+    public static String serverInvite = "https://discord.gg/P23GZFB";
 
     // Semantic colors used for embeds
     public static final Color COLOR_SUCCESS = new Color(132, 214, 162);
