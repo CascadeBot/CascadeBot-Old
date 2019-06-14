@@ -5,34 +5,27 @@
 
 package org.cascadebot.cascadebot.commands.fun;
 
-import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-
-import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.RandomUtils;
-import java.io.IOException;
-import java.util.Random;
 
 public class RandomNumberCommand implements ICommandMain {
 
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
-            if (context.isArgInteger(0) == false) {
+            if (!context.isArgInteger(0)) {
                 context.getTypedMessaging().replyDanger("Please provide numbers only");
             } else {
                 int range = context.getArgAsInteger(0);
-                int randomNumber = RandomUtils.randomNumber(range); 
+                int randomNumber = RandomUtils.randomNumber(range);
                 context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
             }
         } else {
-             int randomNumber = RandomUtils.randomNumber(10);
-             context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
+            int randomNumber = RandomUtils.randomNumber(10);
+            context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
         }
     }
 
@@ -48,11 +41,12 @@ public class RandomNumberCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Random number command", "randnum", true);
+        return CascadePermission.of("random", true);
     }
 
     @Override
     public String description() {
         return "Returns a random number";
     }
+
 }
