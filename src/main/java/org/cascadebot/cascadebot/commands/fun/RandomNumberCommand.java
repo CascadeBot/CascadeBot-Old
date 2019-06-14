@@ -31,7 +31,7 @@ public class RandomNumberCommand implements ICommandMain {
                 context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
             }
         } else {
-             int randomNumberRaw = RandomUtils.randomNumber(10); String randomNumber = Integer.toString(randomNumberRaw);
+             int randomNumber = RandomUtils.randomNumber(10);
              context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
         }
     }
