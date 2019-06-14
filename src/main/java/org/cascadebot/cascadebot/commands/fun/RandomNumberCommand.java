@@ -41,7 +41,7 @@ public class RandomNumberCommand implements ICommandMain {
 
     @Override
     public String command() {
-        return "randnum";
+        return "random";
     }
 
     @Override
