@@ -31,10 +31,12 @@ public class RandomNumberCommand implements ICommandMain {
                 int argOne = context.getArgAsInteger(0);
                 int randomNumberRaw = RandomUtils.randomNumber(argOne);
                 String randomNumber = Integer.toString(randomNumberRaw);
-                context.getTypedMessaging().replyInfo("Random number is " + randomNumber);
+                context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
             }
         } else {
-            context.getTypedMessaging().replyDanger("No arguments given");
+             int randomNumberRaw = RandomUtils.randomNumber(10);
+             String randomNumber = Integer.toString(randomNumberRaw);
+             context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
         }
     }
 
