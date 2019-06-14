@@ -15,6 +15,7 @@ public class RandomUtils {
     
     @Getter
     private static final Random random = new Random();
+    
     public static int randomNumber(int Args) {
         return(random.nextInt(Args));
     }
