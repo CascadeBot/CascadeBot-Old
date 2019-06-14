@@ -81,7 +81,9 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
             stringBuilder.append(num).append(": ");
             Group group = groups.get(num);
             if (group.getId().equals(targetGroup.getId())) {
-                stringBuilder.append(UnicodeConstants.WHITE_CIRCLE).append(" ");
+                stringBuilder.append(UnicodeConstants.WHITE_HALLOW_SQUARE).append(" ");
+            } else {
+                stringBuilder.append(UnicodeConstants.WHILE_SQUARE).append(" ");
             }
 
             stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
