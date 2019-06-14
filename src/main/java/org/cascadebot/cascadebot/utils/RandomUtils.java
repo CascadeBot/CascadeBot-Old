@@ -16,20 +16,12 @@ public class RandomUtils {
     @Getter
     private static final Random random = new Random();
     public static int randomNumber(int Args) {
-        int randomOutput = random.nextInt(Args);
-        return randomOutput;
+        return(random.nextInt(Args));
     }
     
-    @Getter
-    private static final Random random2 = new Random();
-    public static String randomChoice(String [] randomArray) {
+    public static String randomChoice(String ... randomArray) {
         int randomLength = randomArray.length;
-        if (randomLength <= 1) {
-            throw new ArrayIndexOutOfBoundsException("Too short");
-        }
-        else {
-            int randomMax = random2.nextInt(randomLength);
-            return (randomArray[randomMax]);
-        }
+        int randomMax = random.nextInt(randomLength);
+        return (randomArray[randomMax]);
     }
 }
