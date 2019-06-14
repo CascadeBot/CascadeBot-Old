@@ -19,7 +19,7 @@ public class RandomUtils {
         return(random.nextInt(Args));
     }
     
-    public static String randomChoice(String ... randomArray) {
+    public static String randomChoice(String... choices) {
         int randomLength = randomArray.length;
         int randomMax = random.nextInt(randomLength);
         return (randomArray[randomMax]);
