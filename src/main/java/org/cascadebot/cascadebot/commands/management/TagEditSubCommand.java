@@ -44,9 +44,4 @@ public class TagEditSubCommand implements ICommandExecutable {
         return CascadePermission.of("tag.edit", false);
     }
 
-    @Override
-    public String description() {
-        return null;
-    }
-
 }

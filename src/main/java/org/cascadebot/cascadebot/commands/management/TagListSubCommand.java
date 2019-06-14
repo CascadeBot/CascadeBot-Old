@@ -41,9 +41,4 @@ public class TagListSubCommand implements ICommandExecutable {
         return CascadePermission.of("tag.list", false);
     }
 
-    @Override
-    public String description() {
-        return "Lists all tags";
-    }
-
 }

@@ -36,9 +36,4 @@ public class TagCreateSubCommand implements ICommandExecutable {
         return CascadePermission.of("tag.create", false);
     }
 
-    @Override
-    public String description() {
-        return null;
-    }
-
 }
