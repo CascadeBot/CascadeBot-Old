@@ -27,7 +27,7 @@ public class RandomNumberCommand implements ICommandMain {
                 context.getTypedMessaging().replyDanger("Please provide numbers only");
             } else {
                 int range = context.getArgAsInteger(0);
-                int randomNumber = RandomUtils.randomNumber(argOne); 
+                int randomNumber = RandomUtils.randomNumber(range); 
                 context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
             }
         } else {
