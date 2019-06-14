@@ -35,19 +35,19 @@ public class GuildPermissions {
     private List<Group> groups = Collections.synchronizedList(new ArrayList<>());
     private Map<Long, User> users = new ConcurrentHashMap<>();
 
-    public boolean hasPermission(Member member, CascadePermission permission, GuildSettings settings) {
+    public boolean hasPermission(Member member, CascadePermission permission, GuildSettingsCore settings) {
         return hasPermission(member, null, permission, settings);
     }
 
-    public boolean hasPermission(Member sender, Channel channel, CascadePermission permission, GuildSettings settings) {
+    public boolean hasPermission(Member sender, Channel channel, CascadePermission permission, GuildSettingsCore settings) {
         return evalPermission(sender, channel, permission, settings).isAllowed();
     }
 
-    public Result evalPermission(Member member, CascadePermission permission, GuildSettings settings) {
+    public Result evalPermission(Member member, CascadePermission permission, GuildSettingsCore settings) {
         return evalPermission(member, null, permission, settings);
     }
 
-    public Result evalPermission(Member member, Channel channel, CascadePermission permission, GuildSettings settings) {
+    public Result evalPermission(Member member, Channel channel, CascadePermission permission, GuildSettingsCore settings) {
 
         Checks.notNull(member, "member");
         Checks.notNull(permission, "permission");
@@ -62,7 +62,7 @@ public class GuildPermissions {
         // If the user is owner then they have all perms, obsv..
         if (member.isOwner()) return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         // By default all members with the administrator perm have access to all perms; this can be turned off
-        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.doAdminsHaveAllPerms()) {
+        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.isAdminsHaveAllPerms()) {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         }
 

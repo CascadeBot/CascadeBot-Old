@@ -13,17 +13,21 @@ import java.util.stream.Collectors;
 
 public class MDCException extends RuntimeException {
 
-    private MDCException(Throwable cause) {
-        super(MDC.getCopyOfContextMap().entrySet()
-                        .stream()
-                        .map(entry -> entry.getKey() + ": " + entry.getValue())
-                        .collect(Collectors.joining("\n")),
-                cause);
+    private MDCException(String message, Throwable cause) {
+        super(message, cause);
 
     }
 
     public static MDCException from(Throwable cause) {
-        return new MDCException(cause);
+        String message = "";
+        if (MDC.getCopyOfContextMap() != null) {
+            message = MDC.getCopyOfContextMap()
+                         .entrySet()
+                         .stream()
+                         .map(entry -> entry.getKey() + ": " + entry.getValue())
+                         .collect(Collectors.joining("\n"));
+        }
+        return new MDCException(message, cause);
     }
 
     /*

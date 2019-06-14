@@ -13,8 +13,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commands.subcommands.queue.QueueLoadSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.queue.QueueSaveSubCommand;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -82,7 +80,7 @@ public class QueueCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Queue", "queue", getModule());
+        return CascadePermission.of("queue", false);
     }
 
     @Override

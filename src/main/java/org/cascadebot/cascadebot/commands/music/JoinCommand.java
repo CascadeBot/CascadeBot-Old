@@ -82,7 +82,7 @@ public class JoinCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Join command", "join", true);
+        return CascadePermission.of("join", true);
     }
 
 }

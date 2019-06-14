@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot;
 
+import lombok.experimental.UtilityClass;
 import org.cascadebot.cascadebot.commands.developer.EvalCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.events.CommandListener;
@@ -14,6 +15,7 @@ import org.cascadebot.shared.SharedConstants;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+@UtilityClass
 public class ShutdownHandler {
 
     public static final AtomicBoolean SHUTDOWN_LOCK = new AtomicBoolean(false);

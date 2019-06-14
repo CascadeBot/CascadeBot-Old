@@ -66,12 +66,7 @@ public class LoopCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Loop command", "loop", true);
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("mode", "Sets the looping mode to the specified mode", ArgumentType.OPTIONAL));
+        return CascadePermission.of("loop", true);
     }
 
 }

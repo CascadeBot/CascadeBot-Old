@@ -1,11 +1,9 @@
 /*
-
  * Copyright (c) 2019 CascadeBot. All rights reserved.
  * Licensed under the MIT license.
-
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.tag;
+package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.Argument;
@@ -17,36 +15,38 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;
 
-public class TagCreateSubCommand implements ICommandExecutable {
+public class TagCategorySubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage(this, "tag");
+            context.getUIMessaging().replyUsage();
             return;
         }
-        context.getData().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));
-        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.create.successfully_created_tag", context.getArg(0)));
+
+        Tag tag = context.getSettings().getTag(context.getArg(0));
+        if (tag == null) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
+            return;
+        }
+
+        tag.setCategory(context.getArg(1));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.category.successfully_set_tag", context.getArg(0), context.getArg(1)));
     }
 
     @Override
     public String command() {
-        return "create";
+        return "category";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Tag create sub command", "tag.create", false);
+        return CascadePermission.of("tag.category", false);
     }
 
     @Override
     public String description() {
         return null;
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", null, ArgumentType.REQUIRED, Set.of(Argument.of("tag", "Creates a tag with a giving name", ArgumentType.REQUIRED))));
     }
 
 }

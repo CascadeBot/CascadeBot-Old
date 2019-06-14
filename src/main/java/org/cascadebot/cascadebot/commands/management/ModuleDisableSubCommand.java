@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.module;
+package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
@@ -22,7 +22,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "module");
+            context.getUIMessaging().replyUsage();
             return;
         }
         String selectedModule = context.getArg(0).toUpperCase();
@@ -30,7 +30,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
 
         if (module != null) {
             try {
-                if (context.getData().disableModule(module)) {
+                if (context.getData().getSettings().disableModule(module)) {
                     // If module wasn't already disabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", module.toString()));
                 } else {
@@ -58,12 +58,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Disable module subcommand", "module.disable", false, Permission.MANAGE_SERVER);
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("module", "Disables a module", ArgumentType.REQUIRED));
+        return CascadePermission.of("module.disable", false, Permission.MANAGE_SERVER);
     }
 
 }

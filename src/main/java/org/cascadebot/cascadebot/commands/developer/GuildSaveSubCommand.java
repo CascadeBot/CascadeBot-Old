@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.guild;
+package org.cascadebot.cascadebot.commands.developer;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.Argument;
@@ -57,11 +57,5 @@ public class GuildSaveSubCommand implements ISubCommand {
     public CascadePermission getPermission() {
         return null;
     }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.ofA("guild_id", "Saves a specific guild", ArgumentType.REQUIRED, Set.of("all")));
-    }
-
 
 }

@@ -101,7 +101,9 @@ public class PlayingCommand implements ICommandMain {
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
                 if (context.hasPermission(runner, "skip")) {
-                    CascadeBot.INS.getCommandManager().getCommandByDefault("skip").onCommand(runner, new CommandContext(
+                    ICommandMain skip = CascadeBot.INS.getCommandManager().getCommandByDefault("skip");
+                    skip.onCommand(runner, new CommandContext(
+                            skip,
                             CascadeBot.INS.getClient(),
                             context.getChannel(),
                             message,
@@ -154,7 +156,7 @@ public class PlayingCommand implements ICommandMain {
         embedBuilder.addField(lang.get(guildID, "words.status"), player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " " + lang.get(guildID, "words.paused") : UnicodeConstants.PLAY + " " + lang.get(guildID, "words.playing"), true);
 
         if (!track.getInfo().isStream) {
-            embedBuilder.addField(lang.get(guildID, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getSettings().useEmbedForMessages()), false);
+            embedBuilder.addField(lang.get(guildID, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getSettings().isUseEmbedForMessages()), false);
         }
 
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getPlayer().getTrackPosition()) + " / " +
@@ -224,7 +226,7 @@ public class PlayingCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Playing Command", "playing", true);
+        return CascadePermission.of("playing", true);
     }
 
 }

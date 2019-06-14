@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.queue;
+package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -23,7 +23,7 @@ public class QueueLoadSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "queue");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
@@ -69,19 +69,13 @@ public class QueueLoadSubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Queue load sub command", "queue.load", true);
+        return CascadePermission.of("queue.load", true);
     }
 
     @Deprecated(forRemoval = true)
     @Override
     public String description() {
         return null;
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", "Loads the playlist with the given name", ArgumentType.REQUIRED,
-                Set.of(Argument.of("scope", "Loads the playlist with given name for ether you or this guild", ArgumentType.OPTIONAL))));
     }
 
 }

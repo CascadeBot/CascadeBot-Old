@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.guild;
+package org.cascadebot.cascadebot.commands.developer;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -16,6 +16,7 @@ public class GuildLeaveSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        // TODO: Leave other guilds
         Messaging.sendSuccessMessage(context.getChannel(), "Goodbye!")
                 .thenAccept(message -> context.getGuild().leave().queue());
     }

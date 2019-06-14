@@ -5,6 +5,19 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.GuildSettingsCore;
+import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
+import org.cascadebot.cascadebot.messaging.MessagingTimed;
+import org.cascadebot.cascadebot.messaging.MessagingTyped;
+import org.cascadebot.cascadebot.messaging.MessagingUI;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Emote;
@@ -18,25 +31,16 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.data.Config;
-import org.cascadebot.cascadebot.data.objects.GuildData;
-import org.cascadebot.cascadebot.data.objects.GuildSettings;
-import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
-import org.cascadebot.cascadebot.messaging.MessagingTimed;
-import org.cascadebot.cascadebot.messaging.MessagingTyped;
-import org.cascadebot.cascadebot.messaging.MessagingUI;
 import org.cascadebot.cascadebot.music.CascadePlayer;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.shared.Regex;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
 public class CommandContext {
 
-
     private final GuildData data;
+    private final ICommandExecutable command;
 
     private final JDA jda;
     private final TextChannel channel;
@@ -48,13 +52,21 @@ public class CommandContext {
     private final String trigger;
     private final boolean isMention;
 
+    @Getter(AccessLevel.NONE)
     private final MessagingTyped messagingTyped = new MessagingTyped(this);
+
+    @Getter(AccessLevel.NONE)
     private final MessagingDirectMessage messagingDirectMessage = new MessagingDirectMessage(this);
+
+    @Getter(AccessLevel.NONE)
     private final MessagingUI messagingUI = new MessagingUI(this);
+
+    @Getter(AccessLevel.NONE)
     private final MessagingTimed messagingTimed = new MessagingTimed(this);
 
-    public CommandContext(JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
+    public CommandContext(ICommandExecutable command, JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
+        this.command = command;
         this.jda = jda;
         this.channel = channel;
         this.message = message;
@@ -69,52 +81,16 @@ public class CommandContext {
 
     //region Raw data getters
 
-    public GuildData getData() {
-        return data;
-    }
-
-    public GuildSettings getSettings() {
+    public GuildSettingsCore getSettings() {
         return data.getSettings();
-    }
-
-    public JDA getJDA() {
-        return jda;
     }
 
     public CascadePlayer getMusicPlayer() {
         return CascadeBot.INS.getMusicHandler().getPlayer(guild.getIdLong());
     }
 
-    public TextChannel getChannel() {
-        return channel;
-    }
-
-    public Message getMessage() {
-        return message;
-    }
-
-    public Guild getGuild() {
-        return guild;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
     public User getUser() {
         return member.getUser();
-    }
-
-    public String[] getArgs() {
-        return args;
-    }
-
-    public String getTrigger() {
-        return trigger;
-    }
-
-    public boolean isMention() {
-        return isMention;
     }
 
     //endregion
@@ -198,40 +174,20 @@ public class CommandContext {
         return CascadeBot.INS.getLanguage().get(data.getLocale(), path, args);
     }
 
+    public String getUsage() {
+        return getUsage(getCommand());
+    }
+
     public String getUsage(ICommandExecutable command) {
-        return getUsage(command, null);
-    }
+        Argument parentArg = CascadeBot.INS.getArgumentManager().getArgumentById(command.getAbsoluteCommand());
 
-    public String getUsage(ICommandExecutable command, String parent) {
-        Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
-        if (command instanceof ICommandMain) {
-            for (ICommandExecutable subCommand : ((ICommandMain) command).getSubCommands()) {
-                arguments.add(Argument.of(subCommand.command(), subCommand.getDescription(data.getLocale()), subCommand.getUndefinedArguments()));
-            }
+        String parent = null;
+        if (command instanceof ISubCommand) {
+            parent = ((ISubCommand) command).parent();
         }
 
-        Argument parentArg = Argument.of(command.command(), command.getDescription(data.getLocale()), arguments);
-
-        int levels = 0;
-        for (String arg : args) {
-            levels++;
-            Argument argument = getArgFromSet(parentArg.getSubArgs(), arg);
-            if (argument != null) {
-                parentArg = argument;
-            }
-        }
-
-        String commandString = data.getPrefix() + (parent == null ? "" : parent + " ");
+        String commandString = data.getSettings().getPrefix() + (parent == null ? "" : parent + " ");
         return parentArg.getUsageString(commandString);
-    }
-
-    private Argument getArgFromSet(Set<Argument> arguments, String arg) {
-        for (Argument argument : arguments) {
-            if (argument.argStartsWith(arg)) {
-                return argument;
-            }
-        }
-        return null;
     }
 
     /**

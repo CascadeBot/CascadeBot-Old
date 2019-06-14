@@ -5,6 +5,11 @@
 
 package org.cascadebot.cascadebot.moderation;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum ModAction {
 
     BAN("banned"), // Bans a user
@@ -15,19 +20,10 @@ public enum ModAction {
     MUTE("muted"), // Mutes a user in a guild
     WARN("warned"); // Warns a user in a guild
 
-
     private String verb;
 
-    ModAction(String verb) {
-        this.verb = verb;
-    }
-
-    public String getVerb() {
-        return verb;
-    }
-
-    @Override
-    public String toString() {
+    public String getName() {
         return name().toLowerCase().replace("_", "-");
     }
+
 }

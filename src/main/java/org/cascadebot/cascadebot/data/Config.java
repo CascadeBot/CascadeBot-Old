@@ -9,6 +9,7 @@ import ch.qos.logback.classic.Level;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import com.google.common.collect.HashMultimap;
+import lombok.Getter;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.configuration.ConfigurationSection;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
 public class Config {
 
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);
@@ -45,6 +47,7 @@ public class Config {
     private File config;
 
     private boolean debug;
+    private int prometheusPort;
 
     private WebhookClient eventWebhook;
 
@@ -161,6 +164,8 @@ public class Config {
             }
             this.ssl = warnOnDefault(config, "database.ssl", false);
         }
+
+        this.prometheusPort = config.getInt("stats_port", 6060);
 
         shardNum = warnOnDefault(config, "shard_num", -1);
 
@@ -344,6 +349,10 @@ public class Config {
 
     public String getYoutubeKey() {
         return youtubeKey;
+    }
+
+    public int getPrometheusPort() {
+        return prometheusPort;
     }
 
 }

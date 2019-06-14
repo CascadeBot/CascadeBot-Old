@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.queue;
+package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
@@ -25,7 +25,7 @@ public class QueueSaveSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "queue");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
@@ -81,19 +81,13 @@ public class QueueSaveSubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Queue save sub command", "queue.save", true);
+        return CascadePermission.of("queue.save", true);
     }
 
     @Deprecated(forRemoval = true)
     @Override
     public String description() {
         return null;
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", "Saves the current queue with the given name", ArgumentType.REQUIRED,
-                Set.of(Argument.of("scope", "Saves the current queue with given name for ether you or this guild", ArgumentType.OPTIONAL))));
     }
 
 }

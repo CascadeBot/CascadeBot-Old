@@ -5,6 +5,9 @@
 
 package org.cascadebot.cascadebot.permissions;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -12,17 +15,11 @@ import java.util.stream.Collectors;
 
 // All credit to the FlareBot project for this file
 // https://github.com/FlareBot/FlareBot/blob/master/src/main/java/stream/flarebot/flarebot/permissions/PermissionNode.java
+@AllArgsConstructor
+@Getter
 public class PermissionNode implements Predicate<String> {
 
     private final String node;
-
-    public PermissionNode(String node) {
-        this.node = node;
-    }
-
-    public String getNode() {
-        return node;
-    }
 
     @Override
     public boolean test(String permission) {

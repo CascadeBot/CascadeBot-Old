@@ -5,8 +5,10 @@
 
 package org.cascadebot.cascadebot.events;
 
+import io.prometheus.client.Summary;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.MessageType;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang3.ArrayUtils;
@@ -24,6 +26,7 @@ import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.slf4j.MDC;
@@ -39,7 +42,7 @@ public class CommandListener extends ListenerAdapter {
 
     private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
     private static final AtomicInteger threadCounter = new AtomicInteger(0);
-    private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newFixedThreadPool(5, r ->
+    private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r ->
             new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
 
     private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
@@ -47,6 +50,7 @@ public class CommandListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
+        if (event.getMessage().getType() != MessageType.DEFAULT) return;
 
         MDC.put("cascade.guild", event.getGuild().toString());
         MDC.put("cascade.sender", event.getAuthor().toString());
@@ -68,7 +72,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String prefix = guildData.getPrefix();
+        String prefix = guildData.getSettings().getPrefix();
         boolean isMention = false;
 
         String commandWithArgs;
@@ -80,7 +84,7 @@ public class CommandListener extends ListenerAdapter {
         } else if (guildData.getSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
             commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
             isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getSettings().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
         } else {
             return;
@@ -147,7 +151,9 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
+        ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         CommandContext context = new CommandContext(
+                cmd,
                 event.getJDA(),
                 event.getChannel(),
                 event.getMessage(),
@@ -158,17 +164,16 @@ public class CommandListener extends ListenerAdapter {
                 trigger,
                 isMention
         );
-
-        ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         if (cmd != null) {
-            if (!cmd.getModule().isFlagEnabled(ModuleFlag.PRIVATE) &&
-                    !guildData.isModuleEnabled(cmd.getModule())) {
-                if (guildData.getSettings().willDisplayModuleErrors() || Environment.isDevelopment()) {
+            Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
+            if (!cmd.getModule().isPrivate() &&
+                    !guildData.getSettings().isModuleEnabled(cmd.getModule())) {
+                if (guildData.getSettings().isShowModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     builder.setDescription(String.format("The module `%s` for command `%s` is disabled!", cmd.getModule().toString(), trigger));
                     builder.setTimestamp(Instant.now());
                     builder.setFooter("Requested by " + event.getAuthor().getAsTag(), event.getAuthor().getEffectiveAvatarUrl());
-                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getSettings().useEmbedForMessages());
+                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getSettings().isUseEmbedForMessages());
                 }
                 // TODO: Modlog?
                 return;
@@ -185,9 +190,9 @@ public class CommandListener extends ListenerAdapter {
             dispatchCommand(cmd, context);
         }
 
-        if (guildData.getSettings().willAllowTagCommands()) {
-            if (guildData.getTagInfo().containsKey(trigger)) {
-                Tag tag = guildData.getTag(trigger);
+        if (guildData.getSettings().isAllowTagCommands()) {
+            if (guildData.getSettings().getTags().containsKey(trigger)) {
+                Tag tag = guildData.getSettings().getTag(trigger);
 
                 context.reply(tag.formatTag(context)); //TODO perms for tags
                 CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", trigger, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
@@ -199,7 +204,8 @@ public class CommandListener extends ListenerAdapter {
         for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(
-                        parentCommandContext.getJDA(),
+                        subCommand,
+                        parentCommandContext.getJda(),
                         parentCommandContext.getChannel(),
                         parentCommandContext.getMessage(),
                         parentCommandContext.getGuild(),
@@ -223,8 +229,9 @@ public class CommandListener extends ListenerAdapter {
             MDC.put("cascade.sender", context.getMember().toString());
             MDC.put("cascade.guild", context.getGuild().toString());
             MDC.put("cascade.channel", context.getChannel().toString());
-            MDC.put("cascade.shard_info", context.getJDA().getShardInfo().getShardString());
+            MDC.put("cascade.shard_info", context.getJda().getShardInfo().getShardString());
             MDC.put("cascade.command", command.command() + (command instanceof ICommandMain ? "" : " (Sub-command)"));
+            MDC.put("cascade.trigger", context.getTrigger());
             MDC.put("cascade.args", Arrays.toString(context.getArgs()));
 
             CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}",
@@ -233,13 +240,19 @@ public class CommandListener extends ListenerAdapter {
                     (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"),
                     context.getUser().getAsTag(),
                     Arrays.toString(context.getArgs()));
+
+            Metrics.INS.commandsExecuted.labels(command.getClass().getSimpleName()).inc();
+            Summary.Timer commandTimer = Metrics.INS.commandExecutionTime.labels(command.getClass().getSimpleName()).startTimer();
             try {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
+                Metrics.INS.commandsErrored.labels(command.getClass().getSimpleName()).inc();
                 context.getTypedMessaging().replyException("There was an error running the command!", e);
                 CascadeBot.LOGGER.error("Error while running a command!", MDCException.from(e));
+
             } finally {
                 CascadeBot.clearCascadeMDC();
+                commandTimer.observeDuration();
             }
         });
         deleteMessages(command, context);
@@ -249,7 +262,7 @@ public class CommandListener extends ListenerAdapter {
     private boolean isAuthorised(ICommandExecutable command, CommandContext context) {
         if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
             if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
-                if (context.getSettings().willShowPermErrors()) {
+                if (context.getSettings().isShowPermErrors()) {
                     context.getUIMessaging().sendPermissionError(command.getPermission());
                 }
             }
@@ -259,7 +272,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void deleteMessages(ICommandExecutable command, CommandContext context) {
-        if (context.getSettings().willDeleteCommand() && command.deleteMessages()) {
+        if (context.getSettings().isDeleteCommand() && command.deleteMessages()) {
             if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
                 context.getMessage().delete().queue();
             } else {

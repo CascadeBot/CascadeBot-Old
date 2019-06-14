@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import lombok.Getter;
+import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -20,6 +22,7 @@ public class CommandManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
 
+    @Getter
     private List<ICommandMain> commands;
 
     public CommandManager() {
@@ -63,10 +66,6 @@ public class CommandManager {
             }
         }
         return null;
-    }
-
-    public List<ICommandMain> getCommands() {
-        return commands;
     }
 
     public List<ICommandMain> getCommandsByModule(Module type) {

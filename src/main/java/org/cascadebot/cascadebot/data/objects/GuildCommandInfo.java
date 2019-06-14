@@ -5,11 +5,18 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.util.Set;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class GuildCommandInfo {
 
     private boolean enabled;
@@ -17,8 +24,6 @@ public class GuildCommandInfo {
     private String command;
     private String defaultCommand;
     private Set<String> aliases;
-
-    private GuildCommandInfo() {} // For mongodb object serialisation
 
     public GuildCommandInfo(ICommandMain command, Locale locale) {
         this.command = command.command(locale);
@@ -28,27 +33,11 @@ public class GuildCommandInfo {
         this.enabled = true;
     }
 
-    public GuildCommandInfo(String command, String defaultCommand, Set<String> aliases, boolean enabled, boolean forceDefault) {
-        this.command = command;
-        this.defaultCommand = defaultCommand;
-        this.aliases = aliases;
-        this.enabled = enabled;
-        this.forceDefault = forceDefault;
-    }
-
-    public String getCommand() {
-        return command;
-    }
-
     public GuildCommandInfo setCommand(String command) {
         if (this.forceDefault)
             throw new UnsupportedOperationException("This command's main command cannot be changed!");
         this.command = command;
         return this;
-    }
-
-    public Set<String> getAliases() {
-        return aliases;
     }
 
     public boolean addAlias(String alias) {
@@ -64,17 +53,9 @@ public class GuildCommandInfo {
         return this;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
     public GuildCommandInfo setEnabled(boolean enabled) {
         this.enabled = enabled;
         return this;
-    }
-
-    public String getDefaultCommand() {
-        return defaultCommand;
     }
 
 }

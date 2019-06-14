@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.guild;
+package org.cascadebot.cascadebot.commands.developer;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
@@ -88,18 +88,6 @@ public class GuildFlagSubCommand implements ISubCommand {
     @Override
     public String description() {
         return "Toggles a flag for this guild [or a different guild].";
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(
-                Argument.of("flag", "", ArgumentType.REQUIRED,
-                        Set.of(
-                                Argument.of("guild_id", "Toggles a flag for this guild [or a different guild].", ArgumentType.OPTIONAL)
-                        )
-                ),
-                Argument.of("list", "Lists the flags available to toggle.")
-        );
     }
 
     @Override

@@ -6,9 +6,13 @@
 package org.cascadebot.cascadebot.permissions.objects;
 
 import com.google.common.collect.Sets;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.Set;
 
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class User extends PermissionHolder {
 
     private final Set<String> groups = Sets.newConcurrentHashSet();

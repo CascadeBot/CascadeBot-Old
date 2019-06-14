@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+@UtilityClass
 public class CollectionUtils {
 
     public static <E> Set<E> hashSet(E... e) {

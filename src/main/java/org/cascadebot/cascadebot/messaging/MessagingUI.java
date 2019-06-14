@@ -54,7 +54,7 @@ public class MessagingUI {
      * @return A {@link RequestFuture<Message>} so you can interact with the message after it sends.
      */
     public RequestFuture<Message> replyImage(String url) {
-        if (context.getSettings().useEmbedForMessages()) {
+        if (context.getSettings().isUseEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setImage(url);
             return context.getChannel().sendMessage(embedBuilder.build()).submit();
@@ -132,9 +132,9 @@ public class MessagingUI {
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermission(), discordPerms);
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermissionRaw(), discordPerms);
         } else {
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermission());
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermissionRaw());
         }
     }
 
@@ -151,12 +151,12 @@ public class MessagingUI {
         context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` that I need to do this!", permission.getName());
     }
 
-    public void replyUsage(ICommandExecutable command) {
-        replyUsage(command, null);
+    public void replyUsage() {
+        replyUsage(context.getCommand());
     }
 
-    public void replyUsage(ICommandExecutable command, String parent) {
-        context.getTypedMessaging().replyWarning("Incorrect usage. Proper usage:\n" + context.getUsage(command, parent));
+    public void replyUsage(ICommandExecutable command) {
+        context.getTypedMessaging().replyWarning("Incorrect usage. Proper usage:\n" + context.getUsage(command));
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {

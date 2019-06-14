@@ -9,6 +9,18 @@ import com.google.common.collect.Sets;
 import de.bild.codec.annotations.Id;
 import de.bild.codec.annotations.PreSave;
 import de.bild.codec.annotations.Transient;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -31,6 +43,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @BsonDiscriminator
 public class GuildData {
 
@@ -43,15 +57,9 @@ public class GuildData {
     //endregion
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
-    private Set<Module> enabledModules = Sets.newConcurrentHashSet(
-            Sets.newHashSet(
-                    Module.CORE,
-                    Module.MANAGEMENT,
-                    Module.INFORMATIONAL
-            )
-    );
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
+    @Setter
     private String prefix = Config.INS.getDefaultPrefix();
     private Locale locale = Locale.getDefaultLocale();
 
@@ -59,7 +67,7 @@ public class GuildData {
 
     //region Guild data containers
 
-    private GuildSettings guildSettings = new GuildSettings();
+    private GuildSettingsCore guildSettings = new GuildSettingsCore();
     private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now
@@ -79,8 +87,6 @@ public class GuildData {
 
     //endregion
 
-    private GuildData() {} // This is for mongodb object serialisation
-
     @PreSave
     public void preSave() {
         this.stateLock = UUID.randomUUID();
@@ -92,26 +98,26 @@ public class GuildData {
 
     //region Commands
     public void enableCommand(ICommandMain command) {
-        if (command.getModule().isFlagEnabled(ModuleFlag.PRIVATE)) return;
-        if (commandInfo.contains(command.getClass())) {
-            commandInfo.get(command.getClass()).setEnabled(true);
+        if (command.getModule().isPrivate()) return;
+        if (commandInfo.contains(command.getClass()) || !command.getModule().isDefault()) {
+            getGuildCommandInfo(command).setEnabled(true);
         }
     }
 
     public void enableCommandByModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
+        if (module.isPrivate()) return;
         for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             enableCommand(command);
         }
     }
 
     public void disableCommand(ICommandMain command) {
-        if (command.getModule().isFlagEnabled(ModuleFlag.PRIVATE)) return;
-        commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale)).setEnabled(false);
+        if (command.getModule().isPrivate()) return;
+        getGuildCommandInfo(command).setEnabled(false);
     }
 
     public void disableCommandByModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
+        if (module.isPrivate()) return;
         for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             disableCommand(command);
         }
@@ -121,12 +127,12 @@ public class GuildData {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).isEnabled();
         }
-        return true;
+        return command.getModule().isDefault();
     }
 
-    public boolean isTypeEnabled(Module type) {
-        boolean enabled = true;
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(type)) {
+    public boolean isModuleEnabled(Module module) {
+        boolean enabled = module.isDefault();
+        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             enabled &= commandInfo.get(command.getClass()).isEnabled();
         }
         return enabled;
@@ -136,7 +142,7 @@ public class GuildData {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getCommand();
         }
-        return command.command();
+        return command.command(locale);
     }
 
     public void setCommandName(ICommandMain command, String commandName) {
@@ -145,19 +151,17 @@ public class GuildData {
 
     public Set<String> getCommandAliases(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
-            return getGuildCommandInfo(command).getAliases();
+            return commandInfo.get(command.getClass()).getAliases();
         }
         return command.getGlobalAliases();
     }
 
     public boolean addAlias(ICommandMain command, String alias) {
-        boolean success = getGuildCommandInfo(command).addAlias(alias);
-        return success;
+        return getGuildCommandInfo(command).addAlias(alias);
     }
 
     public boolean removeAlias(ICommandMain command, String alias) {
-        boolean success = getGuildCommandInfo(command).removeAlias(alias);
-        return success;
+        return getGuildCommandInfo(command).removeAlias(alias);
     }
 
     @BsonIgnore
@@ -169,50 +173,6 @@ public class GuildData {
         return Collections.unmodifiableMap(commandInfo);
     }
 
-    public Map<String, Tag> getTagInfo() { return Collections.unmodifiableMap(tags); }
-
-    public Tag getTag(String key) {
-        return tags.get(key);
-    }
-
-    public boolean hasTag(String key) {
-        return tags.containsKey(key);
-    }
-
-    public void addTag(String key, Tag tag) {
-        tags.put(key, tag);
-    }
-
-    public boolean removeTag(String key) {
-        return tags.remove(key) != null;
-    }
-    //endregion
-
-    //region Modules
-    public boolean enableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
-            throw new IllegalArgumentException("This module is not available to be enabled!");
-        }
-        return this.enabledModules.add(module);
-    }
-
-    public boolean disableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
-            throw new IllegalArgumentException("This module is not available to be disabled!");
-        } else if (module.isFlagEnabled(ModuleFlag.REQUIRED)) {
-            throw new IllegalArgumentException(String.format("Cannot disable the %s module!", module.toString().toLowerCase()));
-        }
-        return this.enabledModules.remove(module);
-    }
-
-    public boolean isModuleEnabled(Module module) {
-        boolean isEnabled = this.enabledModules.contains(module);
-        if (!isEnabled && module.isFlagEnabled(ModuleFlag.REQUIRED)) {
-            this.enabledModules.add(module);
-            return true;
-        }
-        return isEnabled;
-    }
     //endregion
 
     public boolean enableFlag(Flag flag) {
@@ -227,25 +187,12 @@ public class GuildData {
         return this.enabledFlags.contains(flag);
     }
 
-    public Set<Flag> getEnabledFlags() {
-        return Set.copyOf(this.enabledFlags);
-    }
-
     public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
         buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
     }
 
-    //region Getters and setters
-    public long getGuildID() {
-        return guildID;
-    }
-
-    public UUID getStateLock() {
-        return stateLock;
-    }
-
-    public GuildSettings getSettings() {
+    public GuildSettingsCore getSettings() {
         return guildSettings;
     }
 
@@ -253,40 +200,8 @@ public class GuildData {
         return guildPermissions;
     }
 
-    public ButtonsCache getButtonsCache() {
-        return buttonsCache;
-    }
-
     public Collection<GuildCommandInfo> getGuildCommandInfos() {
         return Collections.unmodifiableCollection(commandInfo.values());
-    }
-
-    public Set<Module> getEnabledModules() {
-        return Collections.unmodifiableSet(enabledModules);
-    }
-
-    public PageCache getPageCache() {
-        return pageCache;
-    }
-
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
-    }
-
-    public Locale getLocale() {
-        return locale;
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
     }
 
     //endregion

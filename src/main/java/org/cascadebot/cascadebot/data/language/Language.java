@@ -45,6 +45,10 @@ public class Language {
         }
     }
 
+    public Map<Locale, JSONConfig> getLanguages() {
+        return Map.copyOf(languages);
+    }
+
     public JSONConfig getLanguage(Locale locale) {
         return languages.get(locale);
     }

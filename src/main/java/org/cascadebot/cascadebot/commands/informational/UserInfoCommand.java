@@ -17,7 +17,6 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
@@ -33,12 +32,10 @@ import java.util.Set;
 
 public class UserInfoCommand implements ICommandMain {
 
-    Argument userArg = Argument.of("user", "Gets a specific users info", ArgumentType.OPTIONAL);
-
     @Override
     public void onCommand(Member sender, CommandContext context) {
         User userForInfo = sender.getUser();
-        if (userArg.argExists(context.getArgs(), 0)) {
+        if (context.getArgs().length > 0) {
             userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         }
         if (userForInfo == null) {
@@ -116,12 +113,7 @@ public class UserInfoCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User info command", "userinfo", true);
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(userArg);
+        return CascadePermission.of("userinfo", true);
     }
 
 }

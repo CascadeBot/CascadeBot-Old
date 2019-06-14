@@ -10,6 +10,7 @@ import com.google.common.base.Splitter;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import net.dv8tion.jda.core.entities.Emote;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
@@ -26,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@UtilityClass
 public class FormatUtils {
 
     private static final Pattern UNICODE_REGEX = Pattern.compile("@(g:)?([A-Za-z_]+)@");

@@ -77,7 +77,7 @@ public class DogCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Dog command", "dog", true);
+        return CascadePermission.of("dog", true);
     }
 
 }

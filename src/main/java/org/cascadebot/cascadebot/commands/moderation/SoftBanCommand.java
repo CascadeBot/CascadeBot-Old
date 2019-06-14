@@ -57,17 +57,8 @@ public class SoftBanCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Soft-ban Command", "softban",
+        return CascadePermission.of("softban",
                 false, Permission.BAN_MEMBERS);
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Soft-bans a member", ArgumentType.OPTIONAL)
-                )
-        ));
     }
 
     @Override

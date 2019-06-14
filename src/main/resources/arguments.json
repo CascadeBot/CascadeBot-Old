@@ -1,0 +1,206 @@
+{
+  "prefix": {
+    "reset": {
+      "_type": "command"
+    },
+    "prefix": {
+      "_type": "required"
+    }
+  },
+  "usage": {
+    "command": {
+      "_type": "required"
+    }
+  },
+
+  "guild": {
+    "flag": {
+      "flag": {
+        "_type": "required",
+        "guild_id": {
+          "_type": "optional"
+        }
+      },
+      "list": {
+        "_type": "command"}
+    },
+    "info": {
+      "guild_id": {
+        "_type": "optional"
+      }
+    },
+    "save": {
+      "guild_id": {
+        "_type": "required"
+      },
+      "all": {
+        "_type": "command"
+      }
+    }
+  },
+
+  "serverinfo": {
+    "guild_id": {
+      "_type": "optional"
+    }
+  },
+  "userinfo": {
+    "guild_id": {
+      "_type": "optional"
+    }
+  },
+
+  "module": {
+    "disable": {
+      "module": {
+        "_type": "required"
+      }
+    },
+    "enable": {
+      "module": {
+        "_type": "required"
+      }
+    }
+  },
+  "settings": {
+    "list": {
+      "_type": "command"
+    },
+    "settings": {
+      "_type": "required",
+      "value": {
+        "_type": "required"
+      }
+    }
+  },
+
+  "tag": {
+    "tag": {
+      "_type": "required"
+    },
+    "category": {
+      "tag": {
+        "_type": "required",
+        "category": {
+          "_type": "required"
+        }
+      }
+    },
+    "create": {
+      "name": {
+        "_type": "required",
+        "content": {
+          "_type": "required"
+        }
+      }
+    },
+    "delete": {
+      "name": {
+        "_type": "required"
+      }
+    },
+    "edit": {
+      "tag": {
+        "_type": "required",
+        "content": {
+          "_type": "required"
+        }
+      }
+    },
+    "raw": {
+      "name": {
+        "_type": "required"
+      }
+    }
+  },
+
+  "ban": {
+    "member": {
+      "_type": "required",
+      "reason": {
+        "_type": "optional"
+      }
+    }
+  },
+  "kick": {
+    "member": {
+      "_type": "required",
+      "reason": {
+        "_type": "optional"
+      }
+    }
+  },
+  "softban": {
+    "member": {
+      "_type": "required",
+      "reason": {
+        "_type": "optional"
+      }
+    }
+  },
+  "unban": {
+    "user": {
+      "_type": "required",
+      "reason": {
+        "_type": "optional"
+      }
+    }
+  },
+
+  "join": {
+    "channel": {
+      "_type": "optional"
+    }
+  },
+  "loop": {
+    "mode": {
+      "_type": "optional"
+    }
+  },
+  "play": {
+    "url": {
+      "_type": "optional",
+      "_aliases": ["query"]
+    }
+  },
+  "queue": {
+    "load": {
+      "name": {
+        "_type": "required",
+        "scope": {
+          "_type": "optional"
+        }
+      }
+    },
+    "save": {
+      "name": {
+        "_type": "required",
+        "scope": {
+          "_type": "optional"
+        }
+      }
+    }
+  },
+  "search": {
+    "query": {
+      "_type": "required"
+    }
+  },
+  "skio": {
+    "force": {
+      "_type": "optional"
+    },
+    "yes": {
+      "_type": "command"
+    },
+    "no": {
+      "_type": "command"
+    }
+  },
+  "volume": {
+    "volume": {
+      "_type": "optional"
+    }
+  }
+
+}

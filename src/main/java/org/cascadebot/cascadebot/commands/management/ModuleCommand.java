@@ -11,9 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commands.subcommands.module.ModuleDisableSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.module.ModuleEnableSubCommand;
-import org.cascadebot.cascadebot.commands.subcommands.module.ModuleListSubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;
@@ -47,7 +44,7 @@ public class ModuleCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Module command", "module", false, Permission.MANAGE_SERVER);
+        return CascadePermission.of("module", false, Permission.MANAGE_SERVER);
     }
 
 }

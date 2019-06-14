@@ -3,13 +3,12 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.subcommands.module;
+package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -17,15 +16,15 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class ModuleListSubCommand implements ISubCommand {
+public class ModuleListSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         context.reply("**Modules**\n" + Arrays.stream(Module.values())
-                .filter(module -> !module.isFlagEnabled(ModuleFlag.PRIVATE))
+                .filter(module -> !module.isPrivate())
                 .map(module -> module.toString().toLowerCase() +
                         " - " +
-                        (context.getData().isModuleEnabled(module) ? context.i18n("words.enabled") : context.i18n("words.disabled")))
+                        (context.getSettings().isModuleEnabled(module) ? "Enabled" : "Disabled"))
                 .collect(Collectors.joining("\n")));
     }
 
@@ -35,13 +34,13 @@ public class ModuleListSubCommand implements ISubCommand {
     }
 
     @Override
-    public String parent() {
-        return "module";
+    public CascadePermission getPermission() {
+        return CascadePermission.of("module.list", false, Permission.MANAGE_SERVER);
     }
 
     @Override
-    public CascadePermission getPermission() {
-        return CascadePermission.of("List modules subcommand", "module.list", false, Permission.MANAGE_SERVER);
+    public String description() {
+        return "Lists all modules";
     }
 
 }

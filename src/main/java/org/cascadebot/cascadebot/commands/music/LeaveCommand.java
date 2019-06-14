@@ -51,7 +51,7 @@ public class LeaveCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Leave command", "leave", true);
+        return CascadePermission.of("leave", true);
     }
 
 }

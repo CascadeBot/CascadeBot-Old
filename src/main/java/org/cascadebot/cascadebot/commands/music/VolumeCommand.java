@@ -71,7 +71,6 @@ public class VolumeCommand implements ICommandMain {
 
     }
 
-
     @Override
     public Module getModule() {
         return Module.MUSIC;
@@ -83,13 +82,8 @@ public class VolumeCommand implements ICommandMain {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("volume", "Sets the volume to this value", ArgumentType.OPTIONAL));
-    }
-
-    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Volume", "volume", getModule());
+        return CascadePermission.of("volume", false);
     }
 
     @Override

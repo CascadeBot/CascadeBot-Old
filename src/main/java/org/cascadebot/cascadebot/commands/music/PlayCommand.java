@@ -50,12 +50,12 @@ public class PlayCommand implements ICommandMain {
 
     @Override
     public String command() {
-        return "Play";
+        return "play";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Play command", "play", true);
+        return CascadePermission.of("play", true);
     }
 
 }

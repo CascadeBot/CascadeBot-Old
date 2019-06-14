@@ -5,74 +5,62 @@
 
 package org.cascadebot.cascadebot.permissions;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import net.dv8tion.jda.core.Permission;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.util.Arrays;
 import java.util.EnumSet;
 
+@EqualsAndHashCode
+@Getter
 public class CascadePermission {
 
-    public static final CascadePermission ALL_PERMISSIONS = CascadePermission.of("All permissions", "*");
+    public static final CascadePermission ALL_PERMISSIONS = CascadePermission.of("*", false);
 
-    private final String label;
-    private final String permission;
+    private final String permissionRaw;
     private final boolean defaultPerm;
     private final EnumSet<Permission> discordPerm;
     private final Module module;
 
 
-    private CascadePermission(String label, String permission, boolean defaultPerm, Module module, Permission... discordPerm) {
-        this.label = label;
-        this.permission = PermissionsManager.PERMISSION_PREFIX + permission;
+    private CascadePermission(String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
+        this.permissionRaw = permissionRaw;
         this.defaultPerm = defaultPerm;
         this.module = module;
         this.discordPerm = EnumSet.noneOf(Permission.class);
         this.discordPerm.addAll(Arrays.asList(discordPerm));
     }
 
-    public static CascadePermission of(String permission) {
-        return new CascadePermission(null, permission, false, null);
+    public static CascadePermission of(String permission, boolean defaultPerm) {
+        return new CascadePermission(permission, defaultPerm, null);
     }
 
-    public static CascadePermission of(String label, String permission) {
-        return new CascadePermission(label, permission, false, null);
+    public static CascadePermission of(String permission, boolean defaultPerm, Module module) {
+        return new CascadePermission(permission, defaultPerm, module);
     }
 
-    public static CascadePermission of(String label, String permission, boolean defaultPerm) {
-        return new CascadePermission(label, permission, defaultPerm, null);
+    public static CascadePermission of(String permission, boolean defaultPerm, Permission... discordPerm) {
+        return new CascadePermission(permission, defaultPerm, null, discordPerm);
     }
 
-    public static CascadePermission of(String label, String permission, Module module) {
-        return new CascadePermission(label, permission, false, module);
+    public static CascadePermission of(String permission, boolean defaultPerm, Module module, Permission... discordPerm) {
+        return new CascadePermission(permission, defaultPerm, module, discordPerm);
     }
 
-    public static CascadePermission of(String label, String permission, boolean defaultPerm, Module module) {
-        return new CascadePermission(label, permission, defaultPerm, module);
+    public String getPermissionRaw() {
+        return permissionRaw;
     }
 
-    public static CascadePermission of(String label, String permission, boolean defaultPerm, Permission... discordPerm) {
-        return new CascadePermission(label, permission, defaultPerm, null, discordPerm);
+    public String getPermission(Locale locale) {
+        return CascadeBot.INS.getLanguage().get(locale, "permissions." + permissionRaw + ".name");
     }
 
-    public static CascadePermission of(String label, String permission, boolean defaultPerm, Module module, Permission... discordPerm) {
-        return new CascadePermission(label, permission, defaultPerm, module, discordPerm);
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public boolean isDefaultPerm() {
-        return defaultPerm;
-    }
-
-    public Module getModule() {
-        return module;
+    public String getLabel(Locale locale) {
+        return CascadeBot.INS.getLanguage().get(locale, "permissions." + permissionRaw + ".label");
     }
 
     public EnumSet<Permission> getDiscordPerms() {
@@ -81,18 +69,7 @@ public class CascadePermission {
 
     @Override
     public String toString() {
-        return getPermission();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof CascadePermission)) return false;
-        CascadePermission otherPerm = (CascadePermission) obj;
-        return this.label.equals(otherPerm.label) &&
-                this.defaultPerm == otherPerm.defaultPerm &&
-                this.module == otherPerm.module &&
-                this.permission.equals(otherPerm.permission) &&
-                this.discordPerm.equals(otherPerm.discordPerm);
+        return getPermissionRaw();
     }
 
 }

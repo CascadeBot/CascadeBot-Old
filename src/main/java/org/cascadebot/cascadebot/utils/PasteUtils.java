@@ -7,7 +7,9 @@ package org.cascadebot.cascadebot.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import lombok.experimental.UtilityClass;
 import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -18,8 +20,10 @@ import org.slf4j.MarkerFactory;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+@UtilityClass
 public class PasteUtils {
 
     public static String paste(String paste) {
@@ -29,7 +33,11 @@ public class PasteUtils {
                 .build();
 
         try {
-            Response response = CascadeBot.INS.getHttpClient().newCall(request).execute();
+            Response response = new OkHttpClient.Builder()
+                    .connectTimeout(2, TimeUnit.SECONDS)
+                    .writeTimeout(2, TimeUnit.SECONDS)
+                    .readTimeout(2, TimeUnit.SECONDS)
+                    .build().newCall(request).execute();
             JsonParser parser = new JsonParser();
             if (response.body() != null) {
                 JsonObject object = parser.parse(response.body().string()).getAsJsonObject();
@@ -37,6 +45,7 @@ public class PasteUtils {
             }
         } catch (IOException e) {
             CascadeBot.LOGGER.error(MarkerFactory.getMarker("HASTEBIN"), "Error while trying to post!", e);
+            return "Could not post to hastebin :(";
         }
         return "";
     }

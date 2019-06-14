@@ -5,31 +5,35 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum Module {
 
     /**
      * A module that contains the bot's meta commands. These cannot be disabled!
      */
-    CORE(ModuleFlag.REQUIRED),
+    CORE(ModuleFlag.REQUIRED, ModuleFlag.DEFAULT),
     /**
      * This module contains commands that are used to manage the bot settings for the guild.
      */
-    MANAGEMENT(ModuleFlag.REQUIRED),
+    MANAGEMENT(ModuleFlag.REQUIRED, ModuleFlag.DEFAULT),
     /**
      * This is music, what do you think this is?
      */
-    MUSIC,
+    MUSIC(ModuleFlag.DEFAULT),
     /**
      * The commands in this module display various pieces of information about discord entities.
      */
-    INFORMATIONAL,
+    INFORMATIONAL(ModuleFlag.DEFAULT),
     /**
      * This module speaks for itself, it contains commands that allow the admins of a guild to moderate said guild
      */
-    MODERATION,
+    MODERATION(ModuleFlag.DEFAULT),
     /**
      * This is a bit of a random module containing smaller commands.
      */
@@ -39,6 +43,7 @@ public enum Module {
      */
     DEVELOPER(ModuleFlag.PRIVATE);
 
+    @Getter
     private EnumSet<ModuleFlag> flags;
 
     Module() {
@@ -50,12 +55,24 @@ public enum Module {
         this.flags.addAll(Arrays.asList(flags));
     }
 
-    public EnumSet<ModuleFlag> getFlags() {
-        return flags;
+    private boolean isFlagEnabled(ModuleFlag flag) {
+        return this.flags.contains(flag);
     }
 
-    public boolean isFlagEnabled(ModuleFlag flag) {
-        return this.flags.contains(flag);
+    public boolean isPrivate() {
+        return isFlagEnabled(ModuleFlag.PRIVATE);
+    }
+
+    public boolean isRequired() {
+        return isFlagEnabled(ModuleFlag.REQUIRED);
+    }
+
+    public boolean isDefault() {
+        return isFlagEnabled(ModuleFlag.DEFAULT);
+    }
+
+    public static Set<Module> getModules(ModuleFlag... flags) {
+        return Arrays.stream(Module.values()).filter(module -> module.getFlags().containsAll(Arrays.asList(flags))).collect(Collectors.toSet());
     }
 
 

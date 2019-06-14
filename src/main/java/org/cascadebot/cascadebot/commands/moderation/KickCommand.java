@@ -55,16 +55,7 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Kick Command", "kick", false, Permission.KICK_MEMBERS);
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Kicks a member", ArgumentType.OPTIONAL)
-                )
-        ));
+        return CascadePermission.of("kick", false, Permission.KICK_MEMBERS);
     }
 
     @Override

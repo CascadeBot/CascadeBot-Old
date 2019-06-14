@@ -38,9 +38,4 @@ public class UsageCommand implements ICommandCore {
         return "usage";
     }
 
-    @Override
-    public Set<Argument> getArguments() {
-        return Set.of(Argument.of("command", "Gets the usage for a command", ArgumentType.REQUIRED));
-    }
-
 }
