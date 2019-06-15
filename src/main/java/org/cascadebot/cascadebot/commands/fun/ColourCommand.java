@@ -6,10 +6,13 @@
 
 package org.cascadebot.cascadebot.commands.fun;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.messaging.MessageType;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.awt.*;
@@ -32,6 +35,7 @@ public class ColourCommand implements ICommandMain {
         Color color = null;
         Matcher matcher;
         String hex;
+
 
         try {
             color = (Color) Color.class.getField(text.toUpperCase()).get(null);
@@ -61,11 +65,16 @@ public class ColourCommand implements ICommandMain {
             }
             color = Color.decode('#' + hex);
         }
-
+        String RGBvalues = color.getRed() + "," + color.getGreen() + "," + color.getBlue();
         int unsignedInt = Integer.parseUnsignedInt(hex, 16);
         String binary = Integer.toBinaryString(unsignedInt);
-        context.getTypedMessaging().replyInfo("RGB " + color.getRed() + " " + color.getGreen() + " " + color.getBlue());
-        context.getTypedMessaging().replyInfo("Numbers " + String.format("Binary: %s\nDecimal: %d", Integer.toBinaryString(unsignedInt), unsignedInt), true);
+        EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
+        builder.setTitle("Values of #" + hex);
+        // TODO: Set a embed colour to the colour given
+        builder.addField("RGB", RGBvalues, true); // RGB Values
+        builder.addField("Decimal", String.valueOf(unsignedInt), true); // Decimal Values
+        builder.addField("Binary", Integer.toBinaryString(unsignedInt), true); // Binary Value
+        context.getTypedMessaging().replySuccess(builder);
 
     }
 
