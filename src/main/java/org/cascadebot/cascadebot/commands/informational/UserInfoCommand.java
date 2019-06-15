@@ -82,7 +82,7 @@ public class UserInfoCommand implements ICommandMain {
             long userId = Long.parseLong(userForInfo.getId());
             SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
             if (userSecurityLevel != null) {
-                builder.addField("Special role", FormatUtils.formatEnum(userSecurityLevel), true);
+                builder.addField("Cascade Official Role", FormatUtils.formatEnum(userSecurityLevel), true);
             }
         }
 
