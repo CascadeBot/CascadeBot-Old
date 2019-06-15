@@ -33,10 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import java.lang.NullPointerException;
-import java.io.*;
-
-import static java.lang.reflect.Array.getLength;
 
 public class UserInfoCommand implements ICommandMain {
 
@@ -83,11 +79,10 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
 
         if (member != null) {
-//            PermissionsManager permissionsManager = new PermissionsManager();
-            long ids = Long.parseLong(userForInfo.getId());
-            SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(ids);
+            long userId = Long.parseLong(userForInfo.getId());
+            SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
             if (userSecurityLevel != null) {
-                builder.addField("Official Role", FormatUtils.formatEnum(userSecurityLevel), true);
+                builder.addField("Special role", FormatUtils.formatEnum(userSecurityLevel), true);
             }
         }
 
