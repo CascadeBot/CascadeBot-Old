@@ -73,12 +73,11 @@ public class ColourCommand implements ICommandMain {
         }
         String RGBvalues = color.getRed() + "," + color.getGreen() + "," + color.getBlue();
         int unsignedInt = Integer.parseUnsignedInt(hex, 16);
-        String binary = Integer.toBinaryString(unsignedInt);
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
         builder.setTitle("Values of #" + hex);
         // TODO: Set a embed colour to the colour given
         builder.addField("RGB", RGBvalues, true); // RGB Values
-        builder.addField("Decimal", String.valueOf(unsignedInt), true); // Decimal Values
+        builder.addField("Decimal", String.valueOf(unsignedInt), true); // Decimal Value
         builder.addField("Binary", Integer.toBinaryString(unsignedInt), true); // Binary Value
         context.getTypedMessaging().replySuccess(builder);
 
@@ -103,7 +102,7 @@ public class ColourCommand implements ICommandMain {
     @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of(
-                "Value", "Name/RGB/HEX", ArgumentType.REQUIRED));
+                "Value", "Name/RGB/Hex", ArgumentType.REQUIRED));
     }
 
     @Override
