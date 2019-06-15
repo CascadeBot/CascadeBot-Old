@@ -62,7 +62,7 @@ public class JoinCommand implements ICommandMain {
             }
         }
         context.getMusicPlayer().join(voiceChannel);
-        context.getTypedMessaging().replySuccess(context.i18n("commands.join.successfully_connected", voiceChannel.getName()));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.join.successfully_joined", voiceChannel.getName()));
     }
 
     @Override

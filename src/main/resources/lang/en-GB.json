@@ -310,6 +310,10 @@
       "name": "dog",
       "label": "Dog command"
     },
+    "random": {
+      "name": "random",
+      "label": "Random number command"
+    },
     "roles": {
       "name": "roles",
       "label": "Roles command"
