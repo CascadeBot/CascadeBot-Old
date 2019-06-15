@@ -5,25 +5,21 @@
 
 package org.cascadebot.cascadebot.commands.fun;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
 
-import org.cascadebot.cascadebot.UnicodeConstants;
+import net.dv8tion.jda.core.entities.Member;
+
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.RandomUtils;
-import java.io.IOException;
-import java.util.Random;
+
 
 public class RandomNumberCommand implements ICommandMain {
 
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
-            if (context.isArgInteger(0) == false) {
+            if (!context.isArgInteger(0)) {
                 context.getTypedMessaging().replyDanger("Please provide numbers only");
             } else {
                 int range = context.getArgAsInteger(0);
