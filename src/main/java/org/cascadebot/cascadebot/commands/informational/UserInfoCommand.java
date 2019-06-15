@@ -19,15 +19,21 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
+import org.cascadebot.shared.SecurityLevel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.lang.NullPointerException;
+import java.io.*;
+
+import static java.lang.reflect.Array.getLength;
 
 public class UserInfoCommand implements ICommandMain {
 
@@ -44,7 +50,7 @@ public class UserInfoCommand implements ICommandMain {
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
-
+        
         String status = "";
         String statusName = "";
 
@@ -73,10 +79,19 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField("User ID", userForInfo.getId(), true);
         builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
 
-
+        if (member != null) {
+            PermissionsManager permissionsManager = new PermissionsManager();
+            long ids = Long.parseLong(userForInfo.getId());
+            SecurityLevel userSecurityLevel = permissionsManager.getUserSecurityLevel(ids);
+            if (userSecurityLevel != null) {
+                builder.addField("Official Roles", userSecurityLevel.name(), true);
+            }
+        }
+        
         if (member != null) {
             builder.addField("Status", status + statusName, true);
             Game game = member.getGame();
+            
             if (game != null) {
                 String gameStatus;
                 String gameType = FormatUtils.formatEnum(game.getType());
