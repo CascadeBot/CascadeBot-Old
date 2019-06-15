@@ -29,19 +29,19 @@
       "category": "Moves a tag to a specific category.",
       "create": "Creates a tag."
     },
-    "join": "Joins the bot to a voice channel",
-    "leave": "Tells the bot to leave a voice channel",
-    "loop": "Changes between loop modes",
-    "pause": "Pauses the currently playing track",
-    "play": "Plays moosic",
-    "playing": "Get playing music",
-    "queue": "Display the current queue",
-    "resume": "Resumes music",
-    "search": "Searches for a song",
-    "shuffle": "Shuffles music in a queue",
-    "skip": "Skips the current song",
-    "stop": "Stops music when playing",
-    "volume": "Returns the current volume"
+    "join": "Joins the bot to a voice channel.",
+    "leave": "Tells the bot to leave a voice channel.",
+    "loop": "Changes between loop modes.",
+    "pause": "Pauses the currently playing track.",
+    "play": "Plays music.",
+    "playing": "Get playing music.",
+    "queue": "Display the current queue.",
+    "resume": "Resumes music.",
+    "search": "Searches for a song.",
+    "shuffle": "Shuffles music in a queue.",
+    "skip": "Skips the current song.",
+    "stop": "Stops music when playing.",
+    "volume": "Returns the current volume."
   },
   "commands": {
     "support": {
@@ -157,7 +157,7 @@
     "loop": {
       "command": "loop",
       "looping_disabled": "Looping has been disabled!",
-      "looping_set": "Set to loop the current **{0}**",
+      "looping_set": "Set to loop the current **{0}**!",
       "not_valid_mode": "`{0}` is not a valid loop mode! Valid modes are: {0}"
     },
     "pause": {
@@ -181,7 +181,7 @@
       "no_tracks_playing": "There are no tracks playing!",
       "load": {
         "command": "load",
-        "cannot_find_playlist": "Couldn't find playlist `{0}`",
+        "cannot_find_playlist": "Couldn't find playlist `{0}`.",
         "load_track": "Where would you like to load this track from\n@one@ User\n@two@ Guild"
       },
       "save": {
@@ -189,7 +189,7 @@
         "scope_not_found": "Scope `{0}` not found!",
         "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it.",
         "playlist_overwrite": "Playlist already exists. Would you like to overwrite it?",
-        "saved_playlist": "Saved playlist `{0}` in scope `{1}`"
+        "saved_playlist": "Saved playlist `{0}` in scope `{1}`."
       }
     },
     "resume": {
@@ -212,13 +212,13 @@
     "skip": {
       "command": "skip",
       "not_playing": "I'm not playing anything!",
-      "forcefully_skipped": "Forcefully skipped the song",
+      "forcefully_skipped": "Forcefully skipped the song!",
       "cannot_skip": {
         "no_music": "Can't skip if you aren't listening to music!",
         "no_vote": "Cannot vote if you aren't listening!"
       },
-      "added_vote": "A skip vote is already running, but we added your vote automatically",
-      "skipped_user_queued": "Skipped currently playing song because you queued it",
+      "added_vote": "A skip vote is already running, but we added your vote automatically.",
+      "skipped_user_queued": "Skipped currently playing song because you queued it.",
       "skipping": "Skipping song!",
       "not_skipping": "Not skipping song!"
     },
@@ -229,23 +229,23 @@
     },
     "volume": {
       "command": "volume",
-      "current_volume": "Current volume is {0}%",
-      "greater_than_zero": "Volume needs to be greater than 0%",
+      "current_volume": "Current volume is {0}%.",
+      "greater_than_zero": "Volume needs to be greater than 0%.",
       "extreme_volume": "Are you sure you want to exceed 100% volume?",
-      "volume_set": "Volume set to {0}%",
-      "volume_already_set": "Volume is already {0}%",
-      "volume_range": "Volume needs to be between 0% and 200%"
+      "volume_set": "Volume set to {0}%.",
+      "volume_already_set": "Volume is already {0}%.",
+      "volume_range": "Volume needs to be between 0% and 200%."
     },
     "tag": {
       "command": "tag",
-      "cannot_find_tag": "Couldn't find tag with name `{0}`",
+      "cannot_find_tag": "Couldn't find tag with name `{0}`.",
       "category": {
         "command": "category",
-        "successfully_set_tag": "Set tag `{0}` category to `{1}`"
+        "successfully_set_tag": "Set tag `{0}` category to `{1}`."
       },
       "create": {
         "command": "create",
-        "successfully_created_tag": "Successfully created tag with name `{0}`"
+        "successfully_created_tag": "Successfully created tag with name `{0}`."
       },
       "delete": {
         "command": "delete",
@@ -254,7 +254,7 @@
       },
       "edit": {
         "command": "edit",
-        "successfully_edited_tag": "Successfully updated tag `{0}`"
+        "successfully_edited_tag": "Successfully updated tag `{0}`."
       },
       "list": {
         "command": "list",
@@ -549,6 +549,5 @@
     "volume": "Volume",
     "category": "Category",
     "tag": "Tag"
-
   }
 }
