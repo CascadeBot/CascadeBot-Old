@@ -75,11 +75,11 @@ public class ColourCommand implements ICommandMain {
         int unsignedInt = Integer.parseUnsignedInt(hex, 16);
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
         builder.setTitle("Values of #" + hex);
-        // TODO: Set a embed colour to the colour given
+        builder.setColor(color);
         builder.addField("RGB", RGBvalues, true); // RGB Values
         builder.addField("Decimal", String.valueOf(unsignedInt), true); // Decimal Value
         builder.addField("Binary", Integer.toBinaryString(unsignedInt), true); // Binary Value
-        context.getTypedMessaging().replySuccess(builder);
+        context.reply(builder.build());
 
     }
 
