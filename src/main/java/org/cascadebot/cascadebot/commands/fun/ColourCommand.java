@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public class ColourCommand implements ICommandMain {
 
-    private static final Pattern HEX_COLOR = Pattern.compile("#?([A-Fa-f0-9]+)");
+    private static final Pattern HEX_COLOR = Pattern.compile("#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
     private static final Pattern RGB = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
 
     private String getHex(int r, int g, int b) {
