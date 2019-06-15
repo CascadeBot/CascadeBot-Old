@@ -45,8 +45,7 @@ public class ColourCommand implements ICommandMain {
                     context.getTypedMessaging().replyWarning("Values should be between 0-255");
                     return;
                 }
-            }
-            else if ((matcher = HEX_COLOR.matcher(text)).find()) {
+            } else if ((matcher = HEX_COLOR.matcher(text)).find()) {
                 hex = matcher.group();
                 if (hex.charAt(0) == '#')
                     hex = hex.substring(1);
@@ -56,9 +55,7 @@ public class ColourCommand implements ICommandMain {
                     return;
                 }
 
-            }
-            else
-            {
+            } else {
                 context.getTypedMessaging().replyWarning("Could not recognise colour from the given value");
                 return;
             }
