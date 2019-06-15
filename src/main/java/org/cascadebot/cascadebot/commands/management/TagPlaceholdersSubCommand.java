@@ -77,9 +77,4 @@ public class TagPlaceholdersSubCommand implements ISubCommand {
         return CascadePermission.of("tag.placeholders", false);
     }
 
-    @Override
-    public String description() {
-        return "Gets the possible placeholders to use in tags.";
-    }
-
 }

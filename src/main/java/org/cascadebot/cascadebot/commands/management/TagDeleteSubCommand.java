@@ -45,9 +45,4 @@ public class TagDeleteSubCommand implements ISubCommand {
         return CascadePermission.of("tag.delete", false);
     }
 
-    @Override
-    public String description() {
-        return null;
-    }
-
 }

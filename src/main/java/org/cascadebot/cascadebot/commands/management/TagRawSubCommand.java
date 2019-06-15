@@ -56,9 +56,4 @@ public class TagRawSubCommand implements ISubCommand {
         return CascadePermission.of("tag.raw", false);
     }
 
-    @Override
-    public String description() {
-        return null;
-    }
-
 }

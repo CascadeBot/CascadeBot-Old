@@ -42,9 +42,4 @@ public class TagCreateSubCommand implements ISubCommand {
         return CascadePermission.of("tag.create", false);
     }
 
-    @Override
-    public String description() {
-        return null;
-    }
-
 }

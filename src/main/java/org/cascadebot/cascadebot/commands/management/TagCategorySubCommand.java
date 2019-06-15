@@ -50,9 +50,4 @@ public class TagCategorySubCommand implements ISubCommand {
         return CascadePermission.of("tag.category", false);
     }
 
-    @Override
-    public String description() {
-        return null;
-    }
-
 }

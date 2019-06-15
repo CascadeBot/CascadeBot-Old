@@ -50,9 +50,4 @@ public class TagEditSubCommand implements ISubCommand {
         return CascadePermission.of("tag.edit", false);
     }
 
-    @Override
-    public String description() {
-        return null;
-    }
-
 }

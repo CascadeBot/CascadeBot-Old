@@ -47,9 +47,4 @@ public class TagListSubCommand implements ISubCommand {
         return CascadePermission.of("tag.list", false);
     }
 
-    @Override
-    public String description() {
-        return "Lists all tags";
-    }
-
 }
