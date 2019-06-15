@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.RichPresence;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
@@ -31,6 +32,7 @@ import org.cascadebot.shared.SecurityLevel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
 import java.lang.NullPointerException;
 import java.io.*;
 
@@ -81,13 +83,14 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
 
         if (member != null) {
+//            PermissionsManager permissionsManager = new PermissionsManager();
             long ids = Long.parseLong(userForInfo.getId());
             SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(ids);
             if (userSecurityLevel != null) {
-                builder.addField("Official Roles", userSecurityLevel.name(), true);
+                builder.addField("Official Role", FormatUtils.formatEnum(userSecurityLevel), true);
             }
         }
-        
+
         if (member != null) {
             builder.addField("Status", status + statusName, true);
             Game game = member.getGame();
