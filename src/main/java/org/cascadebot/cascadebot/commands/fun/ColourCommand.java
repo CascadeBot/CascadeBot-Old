@@ -8,6 +8,8 @@ package org.cascadebot.cascadebot.commands.fun;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.commandmeta.Argument;
+import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -31,6 +33,10 @@ public class ColourCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        if (context.getArgs().length == 0) {
+            context.getUIMessaging().replyUsage(this);
+            return;
+        }
         String text = context.getArgs()[0];
         Color color = null;
         Matcher matcher;
@@ -92,6 +98,12 @@ public class ColourCommand implements ICommandMain {
     @Override
     public Set<String> getGlobalAliases() {
         return java.util.Set.of("color");
+    }
+
+    @Override
+    public Set<Argument> getUndefinedArguments() {
+        return Set.of(Argument.of(
+                "Value", "Name/RGB/HEX", ArgumentType.REQUIRED));
     }
 
     @Override
