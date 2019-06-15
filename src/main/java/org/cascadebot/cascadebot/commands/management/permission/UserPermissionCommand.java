@@ -38,7 +38,7 @@ public class UserPermissionCommand implements ICommandMain {
     @Override
     public Set<ICommandExecutable> getSubCommands() {
         return Set.of(new UserPermissionAddSubCommand(), new UserPermissionRemoveSubCommand(), new UserPermissionGroupSubCommand(),
-                new UserPermissionListSubCommand());
+                new UserPermissionListSubCommand(), new UserPermissionTestSubCommand());
     }
 
     @Override
