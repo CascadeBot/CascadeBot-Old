@@ -22,11 +22,11 @@
     "unban": "Unbans the specified user.",
     "tag": {
       "main_command": "Tag command",
-      "raw": "",
-      "placeholders": "",
+      "raw": "Displays a tag's content and category.",
+      "placeholders": "Lists all available placeholders.",
       "list": "Lists all a guild's tags.",
       "edit": "Edits a tag.",
-      "category": "",
+      "category": "Moves a tag to a specific category.",
       "create": "Creates a tag."
     },
     "join": "Joins the bot to a voice channel",
