@@ -17,14 +17,14 @@ import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ColourCommand implements ICommandMain {
 
-    private static final Pattern HEX_COLOR = Pattern.compile("#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
+    private static final Pattern HEX_COLOR = Pattern.compile("#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
     private static final Pattern RGB = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
 
     private String getHex(int r, int g, int b) {
@@ -55,7 +55,7 @@ public class ColourCommand implements ICommandMain {
                     context.getTypedMessaging().replyWarning("Values should be between 0-255");
                     return;
                 }
-            } else if ((matcher = HEX_COLOR.matcher(text)).find()) {
+            } else if ((matcher = HEX_COLOR.matcher(text)).matches()) {
                 hex = matcher.group();
                 if (hex.charAt(0) == '#')
                     hex = hex.substring(1);
