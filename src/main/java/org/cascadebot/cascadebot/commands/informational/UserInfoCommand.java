@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-
 public class UserInfoCommand implements ICommandMain {
 
     Argument userArg = Argument.of("user", "Gets a specific users info", ArgumentType.OPTIONAL);
