@@ -12,8 +12,8 @@
     <a href="https://discord.gg/P23GZFB"><img src="https://discordapp.com/api/guilds/488394590458478602/widget.png?style=banner2" alt="Discord Server"></a>
 </p>
 
-## This project is currently in closed Alpha!
-## If you would you like to be notified when we release our open beta, please enter your details [here](https://cascadebot.typeform.com/to/kjr91e)!
+<h2 align="center">This project is currently in closed Alpha!<br>
+If you would you like to be notified when we release our open beta, please enter your details <a href="https://cascadebot.typeform.com/to/kjr91e">here</a>!</h2>
 
 ---
 
