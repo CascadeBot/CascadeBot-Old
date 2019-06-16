@@ -13,9 +13,9 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
+import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
 public class UserPermissionGroupSubCommand implements ICommandExecutable {
 

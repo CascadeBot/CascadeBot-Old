@@ -94,7 +94,7 @@ public class UserPermissionListSubCommand implements ICommandExecutable {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User permissions list sub command", "permissions.user.group", false, Module.MANAGEMENT);
+        return CascadePermission.of("User permissions list sub command", "permissions.user.list", false, Module.MANAGEMENT);
     }
 
     @Override

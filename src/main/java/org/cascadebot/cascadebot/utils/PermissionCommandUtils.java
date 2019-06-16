@@ -3,10 +3,11 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.management.permission;
+package org.cascadebot.cascadebot.utils;
 
 import java.util.List;
 import java.util.function.Consumer;
+import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
@@ -19,7 +20,8 @@ import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
-public class PermissionCommandUtils { //TODO move to different package?
+@UtilityClass
+public class PermissionCommandUtils {
 
     public static void tryGetGroupFromString(CommandContext context, String s, Consumer<Group> groupConsumer, long sender) {
         Group groupById = context.getData().getPermissions().getGroupById(s);

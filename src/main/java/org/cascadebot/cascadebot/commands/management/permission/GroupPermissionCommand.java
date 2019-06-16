@@ -44,6 +44,6 @@ public class GroupPermissionCommand implements ICommandMain {
     public Set<ICommandExecutable> getSubCommands() {
         return Set.of(new GroupPermissionCreateSubCommand(), new GroupPermissionAddSubCommand(), new GroupPermissionRemoveSubCommand(),
                 new GroupPermissionLinkRoleSubCommand(), new GroupPermissionUnlinkRoleSubCommand(), new GroupPermissionMoveSubCommand(),
-                new GroupPermissionSwitchSubCommand(), new GroupPermissionListSubCommand());
+                new GroupPermissionSwitchSubCommand(), new GroupPermissionListSubCommand(), new GroupPermissionInfoSubCommand());
     }
 }

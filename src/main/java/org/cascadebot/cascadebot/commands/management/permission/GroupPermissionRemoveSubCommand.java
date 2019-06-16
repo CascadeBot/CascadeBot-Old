@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
 public class GroupPermissionRemoveSubCommand implements ICommandExecutable {
 

@@ -15,6 +15,7 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.GuildPermissions;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
+import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
