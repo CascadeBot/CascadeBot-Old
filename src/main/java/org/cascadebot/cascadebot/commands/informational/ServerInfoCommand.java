@@ -23,6 +23,10 @@ public class ServerInfoCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Guild guildForInfo = context.getGuild();
+        if (context.getArgs().length != 0 && !context.isArgInteger(0)) {
+            context.getUIMessaging().replyUsage();
+            return;
+        }
 
         if (context.getArgs().length > 0) {
             guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
@@ -44,6 +48,7 @@ public class ServerInfoCommand implements ICommandMain {
 
         context.getTypedMessaging().replyInfo(builder); // Send the embed
     }
+
 
     @Override
     public String command() {
