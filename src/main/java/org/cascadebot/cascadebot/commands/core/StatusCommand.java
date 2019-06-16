@@ -20,7 +20,6 @@ public class StatusCommand implements ICommandCore {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-        JDA jda = CascadeBot.INS.getShardManager().getShardById(context.getChannel().getJDA().getShardInfo().getShardId());
 
         builder.setTitle(context.getSelfUser().getName());
         builder.setThumbnail(context.getSelfUser().getAvatarUrl());
@@ -30,7 +29,7 @@ public class StatusCommand implements ICommandCore {
         builder.addField("Total Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsTotal()), true);
         builder.addField("Online Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsRunning()), true);
         builder.addField("Ping", String.valueOf(context.getChannel().getJDA().getPing()), true);
-        builder.addField("Shard Status", CascadeBot.INS.getShardManager().getStatus(context.getChannel().getJDA().getShardInfo().getShardId()).toString().toLowerCase(), true);
+        builder.addField("Shard Status", CascadeBot.INS.getShardManager().getStatus(context.getChannel().getJDA().getShardInfo().getShardId()).toString(), true);
         builder.addField("Shard ID", String.valueOf(context.getChannel().getJDA().getShardInfo().getShardId() + 1), true);
 
         context.getTypedMessaging().replyInfo(builder);
