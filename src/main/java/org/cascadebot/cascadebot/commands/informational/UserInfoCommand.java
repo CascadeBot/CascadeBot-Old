@@ -64,7 +64,6 @@ public class UserInfoCommand implements ICommandMain {
             } else if (member.getOnlineStatus() == OnlineStatus.IDLE) {
                 status = context.globalEmote("idle");
             }
-            builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
         }
 
         List<Page> pageList = new ArrayList<>();
@@ -84,6 +83,7 @@ public class UserInfoCommand implements ICommandMain {
         }
 
         if (member != null) {
+            builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
             builder.addField("Status", status + statusName, true);
             Game game = member.getGame();
             
