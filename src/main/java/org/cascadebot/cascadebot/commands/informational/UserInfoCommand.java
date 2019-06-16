@@ -39,7 +39,6 @@ public class UserInfoCommand implements ICommandMain {
         User userForInfo = sender.getUser();
         if (userArg.argExists(context.getArgs(), 0)) {
             userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
-            // userForInfo = CascadeBot.INS.getShardManager().getUserById(context.getMessage(0));
         }
         if (userForInfo == null) {
             context.getTypedMessaging().replyDanger("We couldn't find that user!");
@@ -49,7 +48,6 @@ public class UserInfoCommand implements ICommandMain {
 
         String status = "";
         String statusName = "";
-        List<Page> pageList = new ArrayList<>();
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
 
         if (member != null) {
@@ -68,6 +66,8 @@ public class UserInfoCommand implements ICommandMain {
                 status = context.globalEmote("idle");
             }
         }
+
+        List<Page> pageList = new ArrayList<>();
 
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
