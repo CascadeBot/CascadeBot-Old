@@ -28,7 +28,7 @@ public class ServerInfoCommand implements ICommandMain {
             try {
                 guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
             } catch (NumberFormatException e) {
-                context.getUIMessaging().replyUsage();
+                context.getTypedMessaging().replyDanger(context.i18n("responses.invalid_guild_id"));
                 return;
             }
         }
