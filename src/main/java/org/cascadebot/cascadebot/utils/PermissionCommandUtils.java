@@ -50,6 +50,7 @@ public class PermissionCommandUtils {
 
         ButtonGroup buttonGroup = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
 
+        // integer for creating buttons, and numbering the possible groups to select
         int i = 1;
 
         StringBuilder groupsBuilder = new StringBuilder();
@@ -69,7 +70,9 @@ public class PermissionCommandUtils {
                 Table.TableBuilder tableBuilder = new Table.TableBuilder();
                 tableBuilder.addHeading("Permission");
 
+                //integer for detecting when we hit 5 permissions so we can stop adding more.
                 int pi = 0;
+
                 for (String perm : group.getPermissions()) {
                     tableBuilder.addRow(perm);
                     if (pi >= 5) {
@@ -85,7 +88,10 @@ public class PermissionCommandUtils {
                 groupEmbed.addField("Linked Roles", "No linked roles", false);
             } else {
                 StringBuilder rolesBuilder = new StringBuilder();
+
+                //integer for detecting when we hit 5 roles so we can stop adding more.
                 int ri = 0;
+
                 for (Long roleId : group.getRoleIds()) {
                     Role role = context.getGuild().getRoleById(roleId);
                     rolesBuilder.append(role.getName()).append(" (").append(role.getId()).append(")\n");
