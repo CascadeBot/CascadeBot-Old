@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.RichPresence;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -38,17 +39,21 @@ public class UserInfoCommand implements ICommandMain {
         User userForInfo = sender.getUser();
         if (userArg.argExists(context.getArgs(), 0)) {
             userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
+            // userForInfo = CascadeBot.INS.getShardManager().getUserById(context.getMessage(0));
         }
         if (userForInfo == null) {
-            context.getTypedMessaging().replyDanger("Invalid User!");
+            context.getTypedMessaging().replyDanger("We couldn't find that user!");
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
 
         String status = "";
         String statusName = "";
+        List<Page> pageList = new ArrayList<>();
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
 
         if (member != null) {
+            builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
             statusName = FormatUtils.formatEnum(member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
@@ -64,12 +69,9 @@ public class UserInfoCommand implements ICommandMain {
             }
         }
 
-        List<Page> pageList = new ArrayList<>();
-        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
         builder.addField("User Created", FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
-        builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
         builder.addField("User ID", userForInfo.getId(), true);
         builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
 
