@@ -29,7 +29,12 @@ public class ServerInfoCommand implements ICommandMain {
         }
 
         if (context.getArgs().length > 0) {
-            guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
+            try {
+                guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
+            } catch (NumberFormatException e) {
+                context.getUIMessaging().replyUsage();
+                return;
+            }
         }
         if (guildForInfo == null) {
             context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_guild"));
