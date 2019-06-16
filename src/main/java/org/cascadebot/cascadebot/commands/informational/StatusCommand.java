@@ -1,6 +1,8 @@
 package org.cascadebot.cascadebot.commands.informational;
 
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.core.JDAInfo;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -14,14 +16,16 @@ public class StatusCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+        JDA jda = CascadeBot.INS.getShardManager().getShardById(context.getChannel().getJDA().getShardInfo().getShardId());
 
         builder.setTitle(context.getGuild().getName());
         builder.setThumbnail(context.getGuild().getIconUrl());
 
         builder.addField("Cascade Version", CascadeBot.getVersion().toString(), true);
+        builder.addField("JDA Version", JDAInfo.VERSION, true);
         builder.addField("Total Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsTotal()), true);
         builder.addField("Online Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsRunning()), true);
-        builder.addField("Average Ping", String.valueOf(CascadeBot.INS.getShardManager().getAveragePing()), true);
+        builder.addField("Ping", String.valueOf(context.getChannel().getJDA().getPing()), true);
         builder.addField("Shard Status", CascadeBot.INS.getShardManager().getStatus(context.getChannel().getJDA().getShardInfo().getShardId()).toString().toLowerCase(), true);
         builder.addField("Shard ID", String.valueOf(context.getChannel().getJDA().getShardInfo().getShardId()), true);
 
