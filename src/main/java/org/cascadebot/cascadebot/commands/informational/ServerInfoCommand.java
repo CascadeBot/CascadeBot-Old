@@ -50,7 +50,6 @@ public class ServerInfoCommand implements ICommandMain {
         context.getTypedMessaging().replyInfo(builder); // Send the embed
     }
 
-
     @Override
     public String command() {
         return "serverinfo";
