@@ -29,6 +29,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.cascadebot.shared.SecurityLevel;
 
 public class UserInfoCommand implements ICommandMain {
 
@@ -63,6 +64,7 @@ public class UserInfoCommand implements ICommandMain {
             } else if (member.getOnlineStatus() == OnlineStatus.IDLE) {
                 status = context.globalEmote("idle");
             }
+            builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
         }
 
         List<Page> pageList = new ArrayList<>();
@@ -70,7 +72,6 @@ public class UserInfoCommand implements ICommandMain {
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
         builder.addField("User Created", FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
-        builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
         builder.addField("User ID", userForInfo.getId(), true);
         builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
 
