@@ -78,7 +78,7 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
 
         if (member != null) {
-            long userId = Long.parseLong(userForInfo.getId());
+            long userId = userForInfo.getIdLong();
             SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
             if (userSecurityLevel != null) {
                 builder.addField("Cascade Official Role", FormatUtils.formatEnum(userSecurityLevel), true);
