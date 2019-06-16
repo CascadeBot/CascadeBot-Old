@@ -23,10 +23,6 @@ public class ServerInfoCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         Guild guildForInfo = context.getGuild();
-        if (context.getArgs().length != 0 && !context.isArgInteger(0)) {
-            context.getUIMessaging().replyUsage();
-            return;
-        }
 
         if (context.getArgs().length > 0) {
             try {
