@@ -89,7 +89,6 @@ security_levels:
   staff:
   contributor:
 
-
 # Global emotes the bot can use to display various information
 global_emotes:
   online:
@@ -103,7 +102,6 @@ global_emotes:
   deafened:
   mobile:
   norepeat:
-
 
 # The haste server to use for "hasting" messages.
 # Server is the place to submit requests, link is the prefix before the returned code.
