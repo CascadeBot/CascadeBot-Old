@@ -40,7 +40,7 @@ public class ServerInfoCommand implements ICommandMain {
         builder.addField(context.i18n("commands.serverinfo.guild_owner") + context.globalEmote("server_owner"), guildForInfo.getOwner().getUser().getAsTag(), true);
         builder.addField(context.i18n("commands.serverinfo.guild_region"), guildForInfo.getRegion().toString(), true);
         builder.addField(context.i18n("commands.serverinfo.guild_member_count"), String.valueOf(guildForInfo.getMemberCache().size()), true);
-        builder.setFooter(context.i18n("commands.serverinfo.guild_id", context.getGuild().getId()) + guildForInfo.getId(), guildForInfo.getIconUrl());
+        builder.setFooter(context.i18n("commands.serverinfo.guild_id", guildForInfo.getId()), guildForInfo.getIconUrl());
 
         context.getTypedMessaging().replyInfo(builder); // Send the embed
     }
