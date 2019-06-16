@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.commands.core;
 
+import lavalink.client.player.LavalinkPlayer;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDAInfo;
@@ -10,6 +11,8 @@ import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.music.LavaPlayerAudioSendHandler;
+import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class StatusCommand implements ICommandCore {
@@ -39,13 +42,8 @@ public class StatusCommand implements ICommandCore {
     }
 
     @Override
-    public Module getModule() {
-        return Module.CORE;
-    }
-
-    @Override
     public String description() {
-        return null;
+        return "Returns information regarding the Bot.";
     }
 
 }
