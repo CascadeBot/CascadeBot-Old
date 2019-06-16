@@ -73,13 +73,11 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField("User Created", FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
         builder.addField("User ID", userForInfo.getId(), true);
         builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
-
-        if (member != null) {
-            long userId = userForInfo.getIdLong();
-            SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
-            if (userSecurityLevel != null) {
-                builder.addField("Cascade Official Role", FormatUtils.formatEnum(userSecurityLevel), true);
-            }
+        
+        long userId = userForInfo.getIdLong();
+        SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
+        if (userSecurityLevel != null) {
+            builder.addField("Cascade Official Role", FormatUtils.formatEnum(userSecurityLevel), true);
         }
 
         if (member != null) {
