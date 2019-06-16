@@ -79,7 +79,7 @@ nodes:
 
 # Config the security levels for the bot
 # Each security level can have role IDs and user IDs assigned to it
-# The available security levels are: staff, developer and owner
+# The available security levels are: contributor, staff, developer and owner
 # If a user has a security level, they will be able to access all security levels below it
 # i.e. USER has OWNER level, can operate at level STAFF and DEVELOPER also
 # IDs can be assigned in an array [id, id] or on their own if there is only one
@@ -87,7 +87,7 @@ security_levels:
   owner:
   developer:
   staff:
-
+  contributor:
 
 # Global emotes the bot can use to display various information
 global_emotes:
@@ -102,7 +102,6 @@ global_emotes:
   deafened:
   mobile:
   norepeat:
-
 
 # The haste server to use for "hasting" messages.
 # Server is the place to submit requests, link is the prefix before the returned code.
