@@ -25,7 +25,12 @@ public class ServerInfoCommand implements ICommandMain {
         Guild guildForInfo = context.getGuild();
 
         if (context.getArgs().length > 0) {
-            guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
+            try {
+                guildForInfo = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
+            } catch (NumberFormatException e) {
+                context.getTypedMessaging().replyDanger(context.i18n("responses.invalid_guild_id"));
+                return;
+            }
         }
         if (guildForInfo == null) {
             context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_guild"));
@@ -40,7 +45,7 @@ public class ServerInfoCommand implements ICommandMain {
         builder.addField(context.i18n("commands.serverinfo.guild_owner") + context.globalEmote("server_owner"), guildForInfo.getOwner().getUser().getAsTag(), true);
         builder.addField(context.i18n("commands.serverinfo.guild_region"), guildForInfo.getRegion().toString(), true);
         builder.addField(context.i18n("commands.serverinfo.guild_member_count"), String.valueOf(guildForInfo.getMemberCache().size()), true);
-        builder.setFooter(context.i18n("commands.serverinfo.guild_id", context.getGuild().getId()) + guildForInfo.getId(), guildForInfo.getIconUrl());
+        builder.setFooter(context.i18n("commands.serverinfo.guild_id", guildForInfo.getId()), guildForInfo.getIconUrl());
 
         context.getTypedMessaging().replyInfo(builder); // Send the embed
     }

@@ -502,7 +502,8 @@
     "cannot_find_user_matching": "Cannot find a user matching: {0}",
     "cannot_find_voice_channel": "Could not find that voice channel to connect to!",
     "voice_not_connected": "I am not connected to a voice channel!",
-    "type_one_of": "Please type one of: "
+    "type_one_of": "Please type one of: ",
+    "invalid_guild_id" : "That isn't a valid guild ID!"
   },
   "statuses": {
     "streaming": "Streaming",
