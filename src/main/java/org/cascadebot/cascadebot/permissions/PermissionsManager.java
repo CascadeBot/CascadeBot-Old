@@ -109,7 +109,7 @@ public class PermissionsManager {
 
     public boolean isValidPermission(Guild guild, String permission) {
         Set<CascadePermission> permissions = getPermissions(guild);
-        if (permission.contains("*") && permission.contains(".")) {
+        if (permission.contains("*")) {
             PermissionNode node = new PermissionNode(permission);
             for (CascadePermission perm : permissions) {
                 if (perm != CascadePermission.ALL_PERMISSIONS) {

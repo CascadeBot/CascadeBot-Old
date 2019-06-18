@@ -7,8 +7,8 @@ package org.cascadebot.cascadebot.messaging;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.UnicodeConstants;
-import org.cascadebot.shared.SharedConstants;
 
 import java.awt.Color;
 
@@ -16,12 +16,12 @@ import java.awt.Color;
 @RequiredArgsConstructor
 public enum MessageType {
 
-    INFO(Color.CYAN, UnicodeConstants.INFORMATION),
-    SUCCESS(Color.GREEN, UnicodeConstants.TICK),
-    WARNING(Color.YELLOW, UnicodeConstants.WARNING),
-    MODERATION(Color.WHITE, UnicodeConstants.POLICE),
-    DANGER(Color.RED, UnicodeConstants.RED_CROSS),
-    NEUTRAL(SharedConstants.CASCADE_COLOR, "");
+    INFO(Constants.COLOR_INFO, UnicodeConstants.INFORMATION),
+    SUCCESS(Constants.COLOR_SUCCESS, UnicodeConstants.TICK),
+    WARNING(Constants.COLOR_WARNING, UnicodeConstants.WARNING),
+    MODERATION(Constants.COLOR_MODERATION, UnicodeConstants.POLICE),
+    DANGER(Constants.COLOR_DANGER, UnicodeConstants.RED_CROSS),
+    NEUTRAL(Constants.COLOR_NEUTRAL, "");
 
     private final Color color;
     private final String emoji;

@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.RichPresence;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -29,6 +30,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.cascadebot.shared.SecurityLevel;
 
 public class UserInfoCommand implements ICommandMain {
 
@@ -43,11 +45,13 @@ public class UserInfoCommand implements ICommandMain {
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
-
+        
         String status = "";
         String statusName = "";
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
 
         if (member != null) {
+            builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getJoinDate()), true);
             statusName = LanguageUtils.getEnumI18n(context.getLocale(), "statuses", member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
@@ -64,18 +68,23 @@ public class UserInfoCommand implements ICommandMain {
         }
 
         List<Page> pageList = new ArrayList<>();
-        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
         builder.addField(context.i18n("commands.userinfo.user_created"), FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
-        builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getJoinDate()), true);
         builder.addField(context.i18n("commands.userinfo.user_id"), userForInfo.getId(), true);
         builder.addField(context.i18n("commands.userinfo.user_mutual_servers"), String.valueOf(userForInfo.getMutualGuilds().size()), true);
 
+        long userId = userForInfo.getIdLong();
+        SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
+        if (userSecurityLevel != null) {
+            builder.addField(context.i18n("commands.userinfo.user_official_role"), FormatUtils.formatEnum(userSecurityLevel), true);
+        }
 
         if (member != null) {
-            builder.addField(context.i18n("commands.userinfo.status"), status + statusName, true);
+            builder.addField("Status", status + statusName, true);
             Game game = member.getGame();
+            
             if (game != null) {
                 String gameStatus;
                 String gameType = LanguageUtils.getEnumI18n(context.getLocale(), "game_types", game.getType());
