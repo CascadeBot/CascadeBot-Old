@@ -29,7 +29,7 @@ public class VolumeCommand implements ICommandMain {
         if (context.isArgInteger(0)) {
             volume = context.getArgAsInteger(0);
         } else {
-            context.getUIMessaging().replyUsage(this);
+            context.getUIMessaging().replyUsage();
             return;
         }
 

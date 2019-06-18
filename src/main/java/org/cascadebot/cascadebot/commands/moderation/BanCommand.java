@@ -27,7 +27,7 @@ public class BanCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.getUIMessaging().replyUsage(this);
+            context.getUIMessaging().replyUsage();
             return;
         }
 
