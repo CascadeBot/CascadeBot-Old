@@ -24,7 +24,7 @@ public class FlagsCommand implements ICommandMain {
         Guild guildForList = context.getGuild();
 
         String flags = Arrays.stream(Flag.values())
-                             .map(flag -> FormatUtils.formatEnum(flag) + " - " +
+                             .map(flag -> FormatUtils.formatEnum(flag, context.getLocale()) + " - " +
                                      (dataForList.isFlagEnabled(flag) ? UnicodeConstants.TICK : UnicodeConstants.RED_CROSS))
                              .collect(Collectors.joining("\n"));
 

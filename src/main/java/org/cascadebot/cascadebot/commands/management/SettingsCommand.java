@@ -67,7 +67,7 @@ public class SettingsCommand implements ICommandMain {
                         });
                 messageBuilder.append(StringUtils.repeat("-", 5))
                         .append(" ")
-                        .append(FormatUtils.formatEnum(settingsClass.getAnnotation(SettingsContainer.class).module()))
+                        .append(FormatUtils.formatEnum(settingsClass.getAnnotation(SettingsContainer.class).module(), context.getLocale()))
                         .append(" module ")
                         .append(StringUtils.repeat("-", 5))
                         .append(tableBuilder.build().toString())

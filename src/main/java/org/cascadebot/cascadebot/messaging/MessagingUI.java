@@ -132,9 +132,9 @@ public class MessagingUI {
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermissionRaw(), discordPerms);
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermission(context.getLocale()), discordPerms);
         } else {
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermissionRaw());
+            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermission(context.getLocale()));
         }
     }
 

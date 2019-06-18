@@ -39,7 +39,7 @@ public class GuildFlagSubCommand implements ISubCommand {
                     EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     embedBuilder.setTitle("Flags");
                     embedBuilder.setDescription(Arrays.stream(Flag.values())
-                            .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e, context.getData().getLocale())))
+                            .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e, context.getLocale())))
                             .collect(Collectors.joining("\n")));
                     context.getTypedMessaging().replyInfo(embedBuilder);
                     return;

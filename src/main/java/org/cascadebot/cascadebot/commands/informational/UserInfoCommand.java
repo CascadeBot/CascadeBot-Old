@@ -48,7 +48,7 @@ public class UserInfoCommand implements ICommandMain {
         String statusName = "";
 
         if (member != null) {
-            statusName = LanguageUtils.getEnumI18n(context.getData().getLocale(), "statuses", member.getOnlineStatus());
+            statusName = LanguageUtils.getEnumI18n(context.getLocale(), "statuses", member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
                 statusName = context.i18n("statuses.streaming");
@@ -78,7 +78,7 @@ public class UserInfoCommand implements ICommandMain {
             Game game = member.getGame();
             if (game != null) {
                 String gameStatus;
-                String gameType = LanguageUtils.getEnumI18n(context.getData().getLocale(), "game_types", game.getType());
+                String gameType = LanguageUtils.getEnumI18n(context.getLocale(), "game_types", game.getType());
                 if (game.isRich()) {
                     RichPresence presence = game.asRichPresence();
                     gameStatus = String.format("%s **%s**\n*%s*\n*%s*", gameType, presence.getName(), presence.getDetails(), presence.getState());

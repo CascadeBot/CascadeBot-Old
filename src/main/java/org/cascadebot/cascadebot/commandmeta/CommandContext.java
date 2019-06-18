@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.GuildSettingsCore;
 import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
@@ -83,6 +84,10 @@ public class CommandContext {
 
     public GuildSettingsCore getSettings() {
         return data.getSettings();
+    }
+
+    public Locale getLocale() {
+        return data.getLocale();
     }
 
     public CascadePlayer getMusicPlayer() {
