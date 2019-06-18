@@ -522,6 +522,15 @@
       "disabled": "disabled",
       "playlist": "playlist",
       "song": "song"
+    },
+    "module": {
+      "core": "core",
+      "management": "management",
+      "music": "music",
+      "informational": "informational",
+      "moderation": "moderation",
+      "fun": "fun",
+      "developer": "developer"
     }
   },
   "game_types": {
