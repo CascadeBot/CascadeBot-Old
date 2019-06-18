@@ -34,25 +34,26 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
-            if (context.getArgs().length > 1) {
-                context.getData().getPermissions().getGroups().remove(group);
-                try {
-                    context.getData().getPermissions().getGroups().add(context.getArgAsInteger(1), group);
-                    context.getTypedMessaging().replySuccess("Moved group " + group.getName() + " to position " + context.getArg(1));
-                } catch (IndexOutOfBoundsException e) {
-                    context.getTypedMessaging().replyWarning("Couldn't move group " + group.getName() + " to position " + context.getArg(1) + " as that is out of range");
-                }
+            if (context.getArgs().length > 1 && context.isArgInteger(1)) {
+                context.getData().getPermissions().moveGroup(group, context.getArgAsInteger(1));
+                context.getTypedMessaging().replySuccess("Moved group " + group.getName() + " to position " + context.getArg(1));
                 return;
             }
 
             AtomicInteger currIndex = new AtomicInteger(context.getData().getPermissions().getGroups().indexOf(group));
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
+                if (buttonGroup.getOwner().getUser().getIdLong() != runner.getUser().getIdLong()) {
+                    return;
+                }
                 context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() - 1);
                 currIndex.addAndGet(-1);
                 message.editMessage(getGroupsList(group, context.getData().getPermissions().getGroups())).queue();
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
+                if (buttonGroup.getOwner().getUser().getIdLong() != runner.getUser().getIdLong()) {
+                    return;
+                }
                 context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() + 1);
                 currIndex.addAndGet(1);
                 message.editMessage(getGroupsList(group, context.getData().getPermissions().getGroups())).queue();
@@ -79,14 +80,15 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
 
         for (int i = 0; i <= (max - min); i++) {
             int num = i + min;
-            stringBuilder.append(num).append(": ");
+
             Group group = groups.get(num);
+
             if (group.getId().equals(targetGroup.getId())) {
                 stringBuilder.append(UnicodeConstants.WHITE_HALLOW_SQUARE).append(" ");
             } else {
                 stringBuilder.append(UnicodeConstants.WHILE_SQUARE).append(" ");
             }
-
+            stringBuilder.append(num).append(": ");
             stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
         }
 
