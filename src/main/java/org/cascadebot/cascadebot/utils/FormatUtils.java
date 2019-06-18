@@ -187,7 +187,7 @@ public class FormatUtils {
 
     public static <T extends Enum> String formatEnum(T theEnum, Locale locale) {
         String path = "enums." + theEnum.getClass().getSimpleName().toLowerCase() + "." + theEnum.name().toLowerCase();
-        if (CascadeBot.INS.getLanguage().hasLanguageEntry(locale, path)) {
+        if (!CascadeBot.INS.getLanguage().hasLanguageEntry(locale, path)) {
             return formatEnum(theEnum);
         }
         return CascadeBot.INS.getLanguage().get(locale, path);
