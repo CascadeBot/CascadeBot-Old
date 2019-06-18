@@ -23,7 +23,8 @@ public enum ModAction {
 
     private String verb;
 
-    public String getVerb() {
+    // Only the localised version should be used
+    private String getVerb() {
         return verb;
     }
 
@@ -35,7 +36,8 @@ public enum ModAction {
         return CascadeBot.INS.getLanguage().get(locale, path);
     }
 
-    public String getName() {
+    // Only the localised version should be used
+    private String getName() {
         return name().toLowerCase().replace("_", "-");
     }
 
