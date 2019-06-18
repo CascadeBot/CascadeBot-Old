@@ -9,8 +9,8 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
-import net.dv8tion.jda.core.entities.Emote;
 import lombok.experimental.UtilityClass;
+import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
@@ -186,11 +186,11 @@ public class FormatUtils {
     }
 
     public static <T extends Enum> String formatEnum(T theEnum, Locale locale) {
-        String localised = CascadeBot.INS.getLanguage().get(locale, "enums." + theEnum.getClass().getSimpleName().toLowerCase() + "." + theEnum.name().toLowerCase());
-        if (StringUtils.isBlank(localised)) {
+        String path = "enums." + theEnum.getClass().getSimpleName().toLowerCase() + "." + theEnum.name().toLowerCase();
+        if (CascadeBot.INS.getLanguage().hasLanguageEntry(locale, path)) {
             return formatEnum(theEnum);
         }
-        return localised;
+        return CascadeBot.INS.getLanguage().get(locale, path);
     }
 
     public static String formatUnicode(String stringToFormat) {
