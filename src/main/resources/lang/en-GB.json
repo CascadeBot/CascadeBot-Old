@@ -539,6 +539,36 @@
     "listening": "Listening to",
     "watching": "Watching"
   },
+  "mod_actions": {
+    "ban": {
+      "name": "ban",
+      "verb": "banned"
+    },
+    "unban": {
+      "name": "unban",
+      "verb": "unbanned"
+    },
+    "soft_ban": {
+      "name": "soft ban",
+      "verb": "soft-banned"
+    },
+    "force_ban": {
+      "name": "force ban",
+      "verb": "forcefully banned"
+    },
+    "kick": {
+      "name": "kick",
+      "verb": "kicked"
+    },
+    "mute": {
+      "name": "mute",
+      "verb": "muted"
+    },
+    "warn": {
+      "name": "warn",
+      "verb": "warned"
+    }
+  },
   "words": {
     "permission": "Permission",
     "subcommand": "Subcommand",

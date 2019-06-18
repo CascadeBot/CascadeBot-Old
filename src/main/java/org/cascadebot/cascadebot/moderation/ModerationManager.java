@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.messaging.MessagingObjects;
 public class ModerationManager {
 
     private static final FailureConsumer FAILURE_CONSUMER = ((context, throwable, target, action) -> {
-        context.getTypedMessaging().replyException(context.i18n("moderation_manager.failed_action", action.getName(), target.getAsTag()), throwable);
+        context.getTypedMessaging().replyException(context.i18n("moderation_manager.failed_action", action.getName(context.getLocale()), target.getAsTag()), throwable);
     });
 
     // This is keeping the mod-action parameter as it is used for force-ban, soft-ban and normal ban.
@@ -72,10 +72,10 @@ public class ModerationManager {
             // This should never really happen, this is here to make sure it definitely never happens
             return false;
         } else if (target.equals(submitter.getUser())) {
-            context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_yourself", action.getName()));
+            context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_yourself", action.getName(context.getLocale())));
             return false;
         } else if (target.equals(context.getSelfUser())) {
-            context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_bot", action.getName()));
+            context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_bot", action.getName(context.getLocale())));
             return false;
         }
         return true;
@@ -85,24 +85,24 @@ public class ModerationManager {
         try {
             actionToRun.run();
         } catch (InsufficientPermissionException e) {
-            context.getTypedMessaging().replyDanger(context.i18n("moderation_manager.missing_permission", action.getName(), target.getAsTag(), e.getPermission().getName()));
+            context.getTypedMessaging().replyDanger(context.i18n("moderation_manager.missing_permission", action.getName(context.getLocale()), target.getAsTag(), e.getPermission().getName()));
         } catch (HierarchyException e) {
             if (context.getGuild().getOwner().getUser().equals(target)) {
-                context.getTypedMessaging().replyDanger(context.i18n("moderation_manager.cannot_action_owner", action.getName(), target.getAsTag()));
+                context.getTypedMessaging().replyDanger(context.i18n("moderation_manager.cannot_action_owner", action.getName(context.getLocale()), target.getAsTag()));
             } else {
-                context.getTypedMessaging().replyDanger(context.i18n("moderation_manager.cannot_action_superior", action.getName(), target.getAsTag()));
+                context.getTypedMessaging().replyDanger(context.i18n("moderation_manager.cannot_action_superior", action.getName(context.getLocale()), target.getAsTag()));
             }
         }
     }
 
     private void sendSuccess(CommandContext context, User target, Member submitter, ModAction action, String reason) {
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(String.format(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb())), submitter.getUser());
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb(context.getLocale())), submitter.getUser());
 
         if (!StringUtils.isBlank(reason)) {
             builder.addField(context.i18n("words.reason"), reason, false);
         }
 
-        builder.setTitle(StringUtils.capitalize(action.getVerb()) + " user");
+        builder.setTitle(StringUtils.capitalize(action.getVerb(context.getLocale())) + " user");
         context.getTypedMessaging().replySuccess(builder);
     }
 
