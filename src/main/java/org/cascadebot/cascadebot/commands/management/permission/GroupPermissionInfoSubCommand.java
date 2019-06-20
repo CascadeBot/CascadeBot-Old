@@ -40,6 +40,9 @@ public class GroupPermissionInfoSubCommand implements ICommandExecutable {
 
             for (Long roleId : group.getRoleIds()) {
                 Role role = context.getGuild().getRoleById(roleId);
+                if (role == null) {
+                    continue;
+                }
                 rolesBuilder.append(role.getName()).append(" (").append(roleId).append(")\n");
             }
 
