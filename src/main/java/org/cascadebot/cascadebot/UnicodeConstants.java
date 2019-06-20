@@ -52,7 +52,7 @@ public class UnicodeConstants {
     public static final String NINE = "\u0039\u20E3"; // 9️⃣
 
     public static final String WHITE_CIRCLE = "\u26AA"; //⚪
-    public static final String WHILE_SQUARE = "\uD83D\uDD33"; //⬜
+    public static final String WHITE_SQUARE = "\uD83D\uDD33"; //⬜
     public static final String WHITE_HALLOW_SQUARE = "\u2B1C"; //🔳
 
 }

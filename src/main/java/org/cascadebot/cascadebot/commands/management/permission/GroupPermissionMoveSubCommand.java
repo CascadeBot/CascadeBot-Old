@@ -24,7 +24,7 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getData().getPermissions().getMode() == GuildPermissions.PermissionMode.MOST_RESTRICTIVE) {
-            context.getTypedMessaging().replyDanger("Cannot move groups in most restrictive mode");
+            context.getTypedMessaging().replyDanger("Cannot move groups in most restrictive mode"); //TODO provide docs link
             return;
         }
 
@@ -67,16 +67,8 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
         StringBuilder stringBuilder = new StringBuilder();
 
         int index = groups.indexOf(targetGroup);
-        int min = index - 5;
-        int max = index + 5;
-
-        if (min < 0) {
-            min = 0;
-        }
-
-        if (max >= groups.size() - 1) {
-            max = groups.size() - 1;
-        }
+        int min = Math.max(index - 5, 0);
+        int max = Math.min(index + 5, groups.size() - 1);
 
         for (int i = 0; i <= (max - min); i++) {
             int num = i + min;
@@ -86,7 +78,7 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
             if (group.getId().equals(targetGroup.getId())) {
                 stringBuilder.append(UnicodeConstants.WHITE_HALLOW_SQUARE).append(" ");
             } else {
-                stringBuilder.append(UnicodeConstants.WHILE_SQUARE).append(" ");
+                stringBuilder.append(UnicodeConstants.WHITE_SQUARE).append(" ");
             }
             stringBuilder.append(num).append(": ");
             stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");

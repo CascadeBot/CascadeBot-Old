@@ -37,9 +37,9 @@ public class GroupPermissionListSubCommand implements ICommandExecutable {
             i++;
         }
 
-        List<String> stingPages = PageUtils.splitString(stringBuilder.toString(), 1000, '\n');
+        List<String> stringPages = PageUtils.splitString(stringBuilder.toString(), 1000, '\n');
         List<Page> pages = new ArrayList<>();
-        for (String pageContent : stingPages) {
+        for (String pageContent : stringPages) {
             pages.add(new PageObjects.StringPage(pageContent));
         }
 

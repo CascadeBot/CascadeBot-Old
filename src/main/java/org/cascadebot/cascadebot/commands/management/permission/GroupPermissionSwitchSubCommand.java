@@ -20,14 +20,13 @@ public class GroupPermissionSwitchSubCommand implements ICommandExecutable {
     public void onCommand(Member sender, CommandContext context) {
         GuildPermissions.PermissionMode mode = context.getData().getGuildPermissions().getMode();
         if (context.getArgs().length > 1) {
-            mode = EnumUtils.getEnum(GuildPermissions.PermissionMode.class, context.getArg(0));
+            mode = EnumUtils.getEnumIgnoreCase(GuildPermissions.PermissionMode.class, context.getArg(0));
             if (mode == null) {
                 context.getTypedMessaging().replyDanger("The permission mode %s isn't a valid permission mode!", context.getArg(0));
                 return;
             }
         } else {
             switch (mode) {
-
                 case HIERARCHICAL:
                     mode = GuildPermissions.PermissionMode.MOST_RESTRICTIVE;
                     break;
