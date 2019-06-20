@@ -199,7 +199,7 @@ public final class Messaging {
             pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());
             pageGroup.setCurrentPage(1);
         }));
-        group.addButton(new Button.UnicodeButton(UnicodeConstants.LEFT_ARROW, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton(UnicodeConstants.BACKWARD_ARROW, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() - 1;
             if (newPage < 1) {
@@ -208,7 +208,7 @@ public final class Messaging {
             pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.getPages());
             pageGroup.setCurrentPage(newPage);
         }));
-        group.addButton(new Button.UnicodeButton(UnicodeConstants.RIGHT_ARROW, (runner, textChannel, message) -> {
+        group.addButton(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             int newPage = pageGroup.getCurrentPage() + 1;
             if (newPage > pageGroup.getPages()) {
