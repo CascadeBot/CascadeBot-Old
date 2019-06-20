@@ -34,7 +34,6 @@ public class GroupPermissionListSubCommand implements ICommandExecutable {
                 stringBuilder.append(i).append(": ");
             }
             stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
-            i++;
         }
 
         List<String> stringPages = PageUtils.splitString(stringBuilder.toString(), 1000, '\n');
