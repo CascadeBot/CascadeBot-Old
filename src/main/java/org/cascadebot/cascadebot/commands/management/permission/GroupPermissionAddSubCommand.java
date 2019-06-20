@@ -17,18 +17,18 @@ public class GroupPermissionAddSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 2) {
+        if (context.getArgs().length < 2) {
             context.getUIMessaging().replyUsage(this, "groupperms");
             return;
         }
 
-        if(!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getGuild(), context.getArg(1))) {
+        if (!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getGuild(), context.getArg(1))) {
             context.getTypedMessaging().replyDanger("`%s` isn't a valid permission", context.getArg(1));
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
-            if(group.addPermission(context.getArg(1))) {
+            if (group.addPermission(context.getArg(1))) {
                 context.getTypedMessaging().replySuccess("Successfully added permission `%s` to group `%s`", context.getArg(1), group.getName() + "(" + group.getId() + ")");
             } else {
                 context.getTypedMessaging().replyWarning("Couldn't add permission `%s` to group `%s` as they already have the permission", context.getArg(1), group.getName() + "(" + group.getId() + ")");

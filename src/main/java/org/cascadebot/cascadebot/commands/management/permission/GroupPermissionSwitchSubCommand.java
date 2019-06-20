@@ -22,7 +22,7 @@ public class GroupPermissionSwitchSubCommand implements ICommandExecutable {
         if (context.getArgs().length > 1) {
             mode = EnumUtils.getEnum(GuildPermissions.PermissionMode.class, context.getArg(0));
             if (mode == null) {
-                context.getTypedMessaging().replyDanger("The permission mode " + context.getArg(0) + " isn't a valid permission mode!");
+                context.getTypedMessaging().replyDanger("The permission mode %s isn't a valid permission mode!", context.getArg(0));
                 return;
             }
         } else {
@@ -38,7 +38,7 @@ public class GroupPermissionSwitchSubCommand implements ICommandExecutable {
         }
 
         context.getData().getPermissions().setMode(mode);
-        context.getTypedMessaging().replySuccess("Switch the permission mode to `" + FormatUtils.formatEnum(mode) + "`");
+        context.getTypedMessaging().replySuccess("Switch the permission mode to `%s`", FormatUtils.formatEnum(mode));
     }
 
     @Override

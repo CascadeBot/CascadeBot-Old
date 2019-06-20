@@ -36,7 +36,7 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (context.getArgs().length > 1 && context.isArgInteger(1)) {
                 context.getData().getPermissions().moveGroup(group, context.getArgAsInteger(1));
-                context.getTypedMessaging().replySuccess("Moved group " + group.getName() + " to position " + context.getArg(1));
+                context.getTypedMessaging().replySuccess("Moved group %s to position %s", group.getName(), context.getArg(1));
                 return;
             }
 

@@ -31,9 +31,9 @@ public class GroupPermissionLinkRoleSubCommand implements ICommandExecutable {
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (group.linkRole(role.getIdLong())) {
-                context.getTypedMessaging().replySuccess("Linked group `" + group.getName() + "` to role `" + role.getName() + "`");
+                context.getTypedMessaging().replySuccess("Linked group `%s` to role `%s`", group.getName(), role.getName());
             } else {
-                context.getTypedMessaging().replyWarning("Couldn't link group `" + group.getName() + "` to role `" + role.getName() + "`");
+                context.getTypedMessaging().replyWarning("Couldn't link group `%s` to role `%s`", group.getName(), role.getName());
             }
         }, sender.getUser().getIdLong());
     }

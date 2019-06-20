@@ -33,7 +33,7 @@ public class UserPermissionGroupSubCommand implements ICommandExecutable {
 
         Member member = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
         if (member == null) {
-            context.getTypedMessaging().replyDanger("User `" + context.getArg(1) + "` not found");
+            context.getTypedMessaging().replyDanger("User `%s` not found", context.getArg(1));
             return;
         }
 

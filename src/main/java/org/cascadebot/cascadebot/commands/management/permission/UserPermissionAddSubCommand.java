@@ -21,25 +21,25 @@ public class UserPermissionAddSubCommand implements ICommandExecutable {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if(context.getArgs().length < 2) {
+        if (context.getArgs().length < 2) {
             context.getUIMessaging().replyUsage(this, "userperms");
             return;
         }
 
         Member member = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
-        if(member == null) {
+        if (member == null) {
             context.getTypedMessaging().replyDanger("User `" + context.getArg(0) + "` not found");
             return;
         }
 
         User user = context.getData().getPermissions().getPermissionUser(member);
 
-        if(!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getGuild(), context.getArg(1))) {
+        if (!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getGuild(), context.getArg(1))) {
             context.getTypedMessaging().replyDanger("`%s` isn't a valid permission", context.getArg(1));
             return;
         }
 
-        if(user.addPermission(context.getArg(1))) {
+        if (user.addPermission(context.getArg(1))) {
             context.getTypedMessaging().replySuccess("Successfully added permission `%s` to user `%s`", context.getArg(1), member.getUser().getAsTag());
         } else {
             context.getTypedMessaging().replyWarning("Couldn't add permission `%s` to user `%s` as they already have the permission", context.getArg(1), member.getUser().getAsTag());

@@ -25,15 +25,15 @@ public class GroupPermissionUnlinkRoleSubCommand implements ICommandExecutable {
 
         Role role = DiscordUtils.getRole(context.getArg(1), context.getGuild());
         if (role == null) {
-            context.getTypedMessaging().replyDanger("Could not find role " + context.getArg(1));
+            context.getTypedMessaging().replyDanger("Could not find role %s", context.getArg(1));
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (group.unlinkRole(role.getIdLong())) {
-                context.getTypedMessaging().replySuccess("Unlinked group `" + group.getName() + "` to role `" + role.getName() + "`");
+                context.getTypedMessaging().replySuccess("Unlinked group `%s` to role `%s`", group.getName(), role.getName());
             } else {
-                context.getTypedMessaging().replyWarning("Couldn't unlink group `" + group.getName() + "` to role `" + role.getName() + "`");
+                context.getTypedMessaging().replyWarning("Couldn't unlink group `%s` to role `%s`", group.getName(), role.getName());
             }
         }, sender.getUser().getIdLong());
     }

@@ -25,20 +25,20 @@ public class UserPermissionTestSubCommand implements ICommandExecutable {
 
         Member target = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         if (target == null) {
-            context.getTypedMessaging().replyDanger("User `" + context.getArg(0) + "` not found");
+            context.getTypedMessaging().replyDanger("User `%s` not found", context.getArg(0));
             return;
         }
 
         CascadePermission perm = CascadeBot.INS.getPermissionsManager().getPermission(context.getArg(1));
         if (perm == null) {
-            context.getTypedMessaging().replyDanger("Permission `" + context.getArg(1) + "` isn't a valid permission");
+            context.getTypedMessaging().replyDanger("Permission `%s` isn't a valid permission", context.getArg(1));
             return;
         }
 
         if (context.getData().getPermissions().hasPermission(target, context.getChannel(), perm, context.getSettings())) {
-            context.getTypedMessaging().replyInfo(UnicodeConstants.TICK + " User " + target.getUser().getAsTag() + " has the permission `" + perm.getPermission() + "`");
+            context.getTypedMessaging().replyInfo(UnicodeConstants.TICK + " User %s has the permission `%s`", target.getUser().getAsTag(), perm.getPermission());
         } else {
-            context.getTypedMessaging().replyInfo(UnicodeConstants.RED_CROSS + " User " + target.getUser().getAsTag() + " doesn't the permission `" + perm.getPermission() + "`");
+            context.getTypedMessaging().replyInfo(UnicodeConstants.RED_CROSS + " User %s doesn't the permission `%s`", target.getUser().getAsTag());
         }
     }
 

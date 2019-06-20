@@ -21,8 +21,8 @@ public class GroupPermissionCreateSubCommand implements ICommandExecutable {
             return;
         }
 
-        Group group = context.getData().getPermissions().createGroup(context.getMessage(0));
-        context.getTypedMessaging().replySuccess("Created group `" + context.getMessage(0) + "` with id `" + group.getId() + "`");
+        Group group = context.getData().getPermissions().createGroup(context.getArg(0));
+        context.getTypedMessaging().replySuccess("Created group `%s` with id `%s`", context.getArg(0), group.getId());
     }
 
     @Override
