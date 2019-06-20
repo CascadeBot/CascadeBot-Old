@@ -28,8 +28,8 @@ public class GroupPermissionListSubCommand implements ICommandExecutable {
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        int i = 0;
-        for (Group group : context.getData().getPermissions().getGroups()) {
+        for (int i = 0; i < context.getData().getPermissions().getGroups().size(); i++) {
+            Group group = context.getData().getPermissions().getGroups().get(i);
             if (context.getData().getPermissions().getMode().equals(GuildPermissions.PermissionMode.HIERARCHICAL)) {
                 stringBuilder.append(i).append(": ");
             }
