@@ -4,7 +4,7 @@ Firstly, thank you for you interest in contributing to this project! Our contrib
 
 First and foremost, we value our community and we would like to keep everything as pleasant as possible. This means that, if contributors do not abide by our [code of conduct](CODE_OF_CONDUCT.md), they will not be allowed to continue to work on the project. Please make sure you have read through the code of conduct and that you understand everything. If you have any questions, feel free to join our [Discord server](http://discord.cascadebot.org/)!
 
-We recommend you join our [Discord server](http://discord.cascadebot.org/) when contributing in order to receive any help or support you may need!
+We recommend you join our [Discord server](https://discord.cascadebot.org/) when contributing in order to receive any help or support you may need!
 
 ## 🤖 JDA
 This project uses the popular [JDA library](https://github.com/DV8FromTheWorld/JDA) as its base. Please make sure you are familiar with the library in order to make sure simple issues are ironed out before a PR is made! The [JDA documentation](https://ci.dv8tion.net/job/JDA/javadoc/index.html?overview-summary.html) and the [JDA Wiki](https://github.com/DV8FromTheWorld/JDA/wiki) are very helpful when it comes to learning about the ins and outs of the library.
