@@ -29,6 +29,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.cascadebot.shared.SecurityLevel;
 
 public class UserInfoCommand implements ICommandMain {
 
@@ -45,7 +46,7 @@ public class UserInfoCommand implements ICommandMain {
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
-
+        
         String status = "";
         String statusName = "";
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
@@ -74,11 +75,18 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField("User Created", FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
         builder.addField("User ID", userForInfo.getId(), true);
         builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
-
+        
+        long userId = userForInfo.getIdLong();
+        SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
+        if (userSecurityLevel != null) {
+            builder.addField("Cascade Official Role", FormatUtils.formatEnum(userSecurityLevel), true);
+        }
 
         if (member != null) {
+            builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
             builder.addField("Status", status + statusName, true);
             Game game = member.getGame();
+            
             if (game != null) {
                 String gameStatus;
                 String gameType = FormatUtils.formatEnum(game.getType());
