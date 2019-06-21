@@ -496,6 +496,7 @@
     "invalid_user": "Invalid User!",
     "cannot_find_guild": "We cannot find that guild!",
     "not_enough_arguments": "Not enough arguments!",
+    "no_arguments_for_command": "No arguments for command `{0}`!",
     "empty_result": "Empty result!",
     "cannot_find_argument": "I can't find that argument!",
     "no_specified_user": "Not enough arguments (no specified member)",
