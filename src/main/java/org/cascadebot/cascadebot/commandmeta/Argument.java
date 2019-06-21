@@ -16,17 +16,15 @@ public class Argument {
     private final String id;
     private final Set<Argument> subArgs;
     private final ArgumentType type;
+    private final boolean displayAlone;
     private final Set<String> aliases;
 
-    Argument(String id, ArgumentType type, Set<Argument> subArgs, Set<String> aliases) {
+    Argument(String id, ArgumentType type, boolean displayAlone, Set<Argument> subArgs, Set<String> aliases) {
         this.id = id;
-        this.subArgs = subArgs;
+        this.subArgs = Set.copyOf(subArgs);
         this.type = type;
-        this.aliases = aliases;
-    }
-
-    public static Argument of(String id, ArgumentType type, Set<Argument> subArgs, Set<String> aliases) {
-        return new Argument(id, type, Set.copyOf(subArgs), Set.copyOf(aliases));
+        this.displayAlone = displayAlone;
+        this.aliases = Set.copyOf(aliases);
     }
 
     public String getName() {
@@ -104,8 +102,7 @@ public class Argument {
 
     @Override
     public String toString() {
-        String[] idSplit = getId().split("\\.");
-        String argument = getName().isBlank() ? idSplit[idSplit.length - 1] : getName();
+        String argument = getName().isBlank() ? id.substring(id.lastIndexOf('.') + 1) : getName();
         if (aliases.size() > 0) {
             StringBuilder paramBuilder = new StringBuilder();
             paramBuilder.append(argument);

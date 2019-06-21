@@ -79,13 +79,15 @@ public class ArgumentManager {
         String typeRaw = subConfig.get().getString("_type").orElse("command");
         ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
 
+        boolean displayAlone = subConfig.get().getBoolean("_display_alone").orElse(true);
+
         JsonArray aliasesRaw = subConfig.get().getArray("_aliases").orElse(new JsonArray());
         Set<String> aliases = new HashSet<>();
         aliasesRaw.iterator().forEachRemaining(element -> aliases.add(element.getAsString()));
 
         Set<Argument> subArgs = getArguments(id);
 
-        return Argument.of(id, type, subArgs, aliases);
+        return new Argument(id, type, displayAlone, subArgs, aliases);
     }
 
 }
