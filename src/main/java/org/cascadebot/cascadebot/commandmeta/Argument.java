@@ -52,7 +52,7 @@ public class Argument {
         StringBuilder usageBuilder = new StringBuilder();
         String field = this.toString();
 
-        if (isDisplayAlone()) {
+        if (isDisplayAlone() || subArgs.size() == 0) {
             usageBuilder.append("`").append(base).append(field).append("`");
             if (!StringUtils.isBlank(getDescription())) {
                 usageBuilder.append(" - ").append(getDescription());
