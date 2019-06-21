@@ -59,7 +59,7 @@ public class UserPermissionAddSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User permissions add sub command", "permissions.user.add", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.user.add", false, Module.MANAGEMENT);
     }
 
     @Override
@@ -67,9 +67,4 @@ public class UserPermissionAddSubCommand implements ISubCommand {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("user", null, ArgumentType.REQUIRED,
-                Set.of(Argument.of("permission", "Adds the given permission to the user", ArgumentType.REQUIRED))));
-    }
 }

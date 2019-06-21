@@ -37,7 +37,7 @@ public class UserPermissionTestSubCommand implements ISubCommand {
         }
 
         if (context.getData().getPermissions().hasPermission(target, context.getChannel(), perm, context.getSettings())) {
-            context.getTypedMessaging().replyInfo(UnicodeConstants.TICK + " User %s has the permission `%s`", target.getUser().getAsTag(), perm.getPermission());
+            context.getTypedMessaging().replyInfo(UnicodeConstants.TICK + " User %s has the permission `%s`", target.getUser().getAsTag(), perm.getPermission(context.getLocale()));
         } else {
             context.getTypedMessaging().replyInfo(UnicodeConstants.RED_CROSS + " User %s doesn't the permission `%s`", target.getUser().getAsTag());
         }
@@ -55,7 +55,7 @@ public class UserPermissionTestSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User permissions test sub command", "permissions.user.test", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.user.test", false, Module.MANAGEMENT);
     }
 
     @Override

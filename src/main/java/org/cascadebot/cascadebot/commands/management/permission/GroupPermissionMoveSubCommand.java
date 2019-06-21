@@ -100,7 +100,7 @@ public class GroupPermissionMoveSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions move sub command", "permissions.group.move", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.move", false, Module.MANAGEMENT);
     }
 
     @Override

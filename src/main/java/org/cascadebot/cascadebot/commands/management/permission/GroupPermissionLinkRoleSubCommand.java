@@ -51,7 +51,7 @@ public class GroupPermissionLinkRoleSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions link sub command", "permissions.group.link", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.link", false, Module.MANAGEMENT);
     }
 
     @Override

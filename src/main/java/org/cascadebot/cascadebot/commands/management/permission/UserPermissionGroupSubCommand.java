@@ -70,18 +70,12 @@ public class UserPermissionGroupSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User permissions group sub command", "permissions.user.group", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.user.group", false, Module.MANAGEMENT);
     }
 
     @Override
     public String description() {
         return null;
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        Set<Argument> subArgs = Set.of(Argument.of("user", null, ArgumentType.REQUIRED, Set.of(Argument.of("group", "Add/Remove a user from a group", ArgumentType.REQUIRED))));
-        return Set.of(Argument.of("put", null, ArgumentType.COMMAND, subArgs), Argument.of("remove", null, ArgumentType.COMMAND, subArgs));
     }
 
 }

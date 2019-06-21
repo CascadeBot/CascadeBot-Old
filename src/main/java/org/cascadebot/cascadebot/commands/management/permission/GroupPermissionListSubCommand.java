@@ -58,7 +58,7 @@ public class GroupPermissionListSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions list sub command", "permissions.group.list", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.list", false, Module.MANAGEMENT);
     }
 
     @Override

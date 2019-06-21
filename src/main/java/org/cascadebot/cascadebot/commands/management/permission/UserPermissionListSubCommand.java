@@ -100,7 +100,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User permissions list sub command", "permissions.user.list", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.user.list", false, Module.MANAGEMENT);
     }
 
     @Override
@@ -108,10 +108,4 @@ public class UserPermissionListSubCommand implements ISubCommand {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("user", null, ArgumentType.REQUIRED,
-                Set.of(Argument.of("groups", "List the groups the user has", ArgumentType.COMMAND),
-                        Argument.of("permissions", "List the permissions the user has", ArgumentType.COMMAND))));
-    }
 }
