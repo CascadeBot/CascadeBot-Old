@@ -48,22 +48,19 @@ public class Argument {
      * @param base The base command/prefix to use. Example: ';help '.
      * @return A string representing the usage.
      */
-    protected String getUsageString(String base) {
+    public String getUsageString(String base) {
         StringBuilder usageBuilder = new StringBuilder();
-        if (subArgs.size() > 0) {
-            String field = this.toString();
-            if (!StringUtils.isBlank(getDescription()) && (subArgs.isEmpty() || subArgs.stream().allMatch(argument -> argument.getType() == ArgumentType.OPTIONAL))) {
-                usageBuilder.append("`").append(base).append(getName()).append("` - ").append(getDescription()).append('\n');
-            }
-            for (Argument subArg : subArgs) {
-                usageBuilder.append(subArg.getUsageString(base + field + " "));
-            }
-        } else {
-            usageBuilder.append("`").append(base).append(this.toString()).append("`");
+        String field = this.toString();
+
+        if (isDisplayAlone()) {
+            usageBuilder.append("`").append(base).append(field).append("`");
             if (!StringUtils.isBlank(getDescription())) {
                 usageBuilder.append(" - ").append(getDescription());
             }
             usageBuilder.append('\n');
+        }
+        for (Argument subArg : subArgs) {
+            usageBuilder.append(subArg.getUsageString(base + field + " "));
         }
 
         return usageBuilder.toString();
