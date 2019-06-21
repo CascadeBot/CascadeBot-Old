@@ -10,10 +10,12 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.gson.JsonArray;
 import io.github.binaryoverload.JSONConfig;
 import lombok.Getter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,6 +43,7 @@ public class ArgumentManager {
         try {
             argumentsFile = new JSONConfig(Objects.requireNonNull(CascadeBot.class.getClassLoader()
                     .getResourceAsStream("arguments.json")));
+            argumentsFile.setAllowedSpecialCharacters(ArrayUtils.add(argumentsFile.getAllowedSpecialCharacters(), '*'));
         } catch (Exception e) {
             CascadeBot.LOGGER.error("Cannot load arguments!", e);
             ShutdownHandler.exitWithError();
@@ -79,7 +82,12 @@ public class ArgumentManager {
         String typeRaw = subConfig.get().getString("_type").orElse("command");
         ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
 
-        boolean displayAlone = subConfig.get().getBoolean("_display_alone").orElse(true);
+        boolean displayAlone = true;
+        String newId = id;
+        if (id.endsWith("*")) {
+            displayAlone = false;
+            newId = id.substring(0, id.length() - 1);
+        }
 
         JsonArray aliasesRaw = subConfig.get().getArray("_aliases").orElse(new JsonArray());
         Set<String> aliases = new HashSet<>();
@@ -87,7 +95,7 @@ public class ArgumentManager {
 
         Set<Argument> subArgs = getArguments(id);
 
-        return new Argument(id, type, displayAlone, subArgs, aliases);
+        return new Argument(newId, type, displayAlone, subArgs, aliases);
     }
 
 }
