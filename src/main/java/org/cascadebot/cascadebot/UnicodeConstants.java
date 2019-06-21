@@ -20,14 +20,18 @@ public class UnicodeConstants {
     public static final String ROBOT = "\uD83E\uDD16"; // 🤖
     public static final String RED_CROSS = "\u274C"; // ❌
 
+    public static final String LEFT_ARROW = "\u2B05"; // ⬅
+
     public static final String PLAY = "\u25B6"; // ▶
     public static final String PAUSE = "\u23F8"; // ⏸
     public static final String STOP = "\u23F9"; // ⏹
     public static final String VOLUME_DOWN = "\uD83D\uDD09"; // 🔉
     public static final String VOLUME_UP = "\uD83D\uDD0A"; // 🔊
     public static final String REWIND = "\u23EE"; // ⏮
-    public static final String LEFT_ARROW = "\u25C0"; // ◀
-    public static final String RIGHT_ARROW = "\u25B6"; // ▶
+    public static final String BACKWARD_ARROW = "\u25C0"; // ◀
+    public static final String FORWARD_ARROW = "\u25B6"; // ▶
+    public static final String ARROW_UP = "\uD83D\uDD3C"; //🔼
+    public static final String ARROW_DOWN = "\uD83D\uDD3D"; //🔽
     public static final String FAST_FORWARD = "\u23ED";  // ⏭
     public static final String REPEAT = "\uD83D\uDD01"; // 🔁
     public static final String REPEAT_ONCE = "\uD83D\uDD02"; // 🔂
@@ -43,5 +47,9 @@ public class UnicodeConstants {
     public static final String SEVEN = "\u0037\u20E3"; // 7️⃣
     public static final String EIGHT = "\u0038\u20E3"; // 8️⃣
     public static final String NINE = "\u0039\u20E3"; // 9️⃣
+
+    public static final String WHITE_CIRCLE = "\u26AA"; //⚪
+    public static final String WHITE_SQUARE = "\uD83D\uDD33"; //⬜
+    public static final String WHITE_HALLOW_SQUARE = "\u2B1C"; //🔳
 
 }
