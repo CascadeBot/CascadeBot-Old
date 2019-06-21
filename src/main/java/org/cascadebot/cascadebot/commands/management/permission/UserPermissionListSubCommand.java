@@ -14,6 +14,7 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
@@ -23,17 +24,17 @@ import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
-public class UserPermissionListSubCommand implements ICommandExecutable {
+public class UserPermissionListSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage(this, "userperms");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
         if (!context.getArg(1).equalsIgnoreCase("permissions") && !context.getArg(1).equalsIgnoreCase("groups")) {
-            context.getUIMessaging().replyUsage(this, "userperms");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
@@ -90,6 +91,11 @@ public class UserPermissionListSubCommand implements ICommandExecutable {
     @Override
     public String command() {
         return "list";
+    }
+
+    @Override
+    public String parent() {
+        return "userperms";
     }
 
     @Override

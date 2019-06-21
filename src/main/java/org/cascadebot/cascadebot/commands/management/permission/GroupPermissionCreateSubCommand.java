@@ -8,16 +8,17 @@ package org.cascadebot.cascadebot.commands.management.permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 
-public class GroupPermissionCreateSubCommand implements ICommandExecutable {
+public class GroupPermissionCreateSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "groupperms");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
@@ -28,6 +29,11 @@ public class GroupPermissionCreateSubCommand implements ICommandExecutable {
     @Override
     public String command() {
         return "create";
+    }
+
+    @Override
+    public String parent() {
+        return "groupperms";
     }
 
     @Override

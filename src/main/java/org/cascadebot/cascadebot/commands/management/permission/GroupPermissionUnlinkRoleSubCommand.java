@@ -9,17 +9,18 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
-public class GroupPermissionUnlinkRoleSubCommand implements ICommandExecutable {
+public class GroupPermissionUnlinkRoleSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage(this, "groupperms");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
@@ -41,6 +42,11 @@ public class GroupPermissionUnlinkRoleSubCommand implements ICommandExecutable {
     @Override
     public String command() {
         return "unlink";
+    }
+
+    @Override
+    public String parent() {
+        return "groupperms";
     }
 
     @Override

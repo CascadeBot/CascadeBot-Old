@@ -12,17 +12,18 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
-public class UserPermissionAddSubCommand implements ICommandExecutable {
+public class UserPermissionAddSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage(this, "userperms");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
@@ -49,6 +50,11 @@ public class UserPermissionAddSubCommand implements ICommandExecutable {
     @Override
     public String command() {
         return "add";
+    }
+
+    @Override
+    public String parent() {
+        return "userperms";
     }
 
     @Override

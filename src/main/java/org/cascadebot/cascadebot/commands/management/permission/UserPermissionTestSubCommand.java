@@ -10,16 +10,17 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
-public class UserPermissionTestSubCommand implements ICommandExecutable {
+public class UserPermissionTestSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage(this, "userperms");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
@@ -45,6 +46,11 @@ public class UserPermissionTestSubCommand implements ICommandExecutable {
     @Override
     public String command() {
         return "test";
+    }
+
+    @Override
+    public String parent() {
+        return "userperms";
     }
 
     @Override

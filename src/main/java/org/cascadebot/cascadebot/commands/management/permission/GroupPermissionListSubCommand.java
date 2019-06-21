@@ -10,6 +10,7 @@ import java.util.List;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.GuildPermissions;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -18,7 +19,7 @@ import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
-public class GroupPermissionListSubCommand implements ICommandExecutable {
+public class GroupPermissionListSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -48,6 +49,11 @@ public class GroupPermissionListSubCommand implements ICommandExecutable {
     @Override
     public String command() {
         return "list";
+    }
+
+    @Override
+    public String parent() {
+        return "groupperms";
     }
 
     @Override
