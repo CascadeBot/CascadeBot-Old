@@ -22,7 +22,8 @@
         }
       },
       "list": {
-        "_type": "command"}
+        "_type": "command"
+      }
     },
     "info": {
       "guild_id": {
@@ -186,7 +187,7 @@
       "_type": "required"
     }
   },
-  "skio": {
+  "skip": {
     "force": {
       "_type": "optional"
     },
@@ -200,6 +201,121 @@
   "volume": {
     "volume": {
       "_type": "optional"
+    }
+  },
+  "groupperms": {
+    "add": {
+      "group": {
+        "_type": "required",
+        "permission": {
+          "_type": "required"
+        }
+      }
+    },
+    "remove": {
+      "group": {
+        "_type": "required",
+        "permission": {
+          "_type": "required"
+        }
+      }
+    },
+    "create": {
+      "name": {
+        "_type": "required"
+      }
+    },
+    "info": {
+      "group": {
+        "_type": "required"
+      }
+    },
+    "link": {
+      "group": {
+        "_type": "required",
+        "role": {
+          "_type": "required"
+        }
+      }
+    },
+    "unlink": {
+      "group": {
+        "_type": "required",
+        "role": {
+          "_type": "required"
+        }
+      }
+    },
+    "list": {
+      "_type": "command"
+    },
+    "move": {
+      "group": {
+        "_type": "required",
+        "position": {
+          "_type": "optional"
+        }
+      }
+    },
+    "switch": {
+      "mode": {
+        "_type": "optional"
+      }
+    }
+  },
+  "userperms": {
+    "add": {
+      "user": {
+        "_type": "required",
+        "permission": {
+          "_type": "required"
+        }
+      }
+    },
+    "remove": {
+      "user": {
+        "_type": "required",
+        "permission": {
+          "_type": "required"
+        }
+      }
+    },
+    "group": {
+      "put": {
+        "user": {
+          "_type": "required",
+          "group": {
+            "_type": "required"
+          }
+        }
+      },
+      "remove": {
+        "user": {
+          "_type": "required",
+          "group": {
+            "_type": "required"
+          }
+        }
+      }
+    },
+    "list": {
+      "user": {
+        "_type": "required",
+        "permissions": {
+          "_type": "command"
+        },
+        "groups": {
+          "_type": "command"
+        }
+      }
+    },
+    "test": {
+      "user": {
+        "_type": "required",
+        "permission": {
+          "_type": "required"
+        }
+      }
     }
   }
 
