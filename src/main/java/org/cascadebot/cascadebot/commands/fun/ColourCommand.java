@@ -24,8 +24,10 @@ import java.util.regex.Pattern;
 
 public class ColourCommand implements ICommandMain {
 
-    private static final Pattern HEX_COLOR = Pattern.compile("#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})");
-    private static final Pattern RGB = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
+    private static final Pattern HEX_COLOR = Pattern.compile("#([A-Fa-f0-9]+)");//|[A-Fa-f0-9]{3}
+    private static final Pattern DECIMAL_COLOR = Pattern.compile("([0-9]{1,8})");
+    private static final Pattern RGB_COLOR = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
+    private static final Pattern BINARY_COLOR = Pattern.compile("([0-1]+)");
 
     private String getHex(int r, int g, int b) {
         return String.format("%02x%02x%02x", r, g, b);
@@ -38,16 +40,18 @@ public class ColourCommand implements ICommandMain {
             return;
         }
         String text = context.getArgs()[0];
-        Color color = null;
+        Color color;
         Matcher matcher;
         String hex;
 
 
         try {
             color = (Color) Color.class.getField(text.toUpperCase()).get(null);
-            hex = getHex(color.getRed(), color.getBlue(), color.getGreen());
+            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 0);
+            hex = String.format("%06x", color.getRGB());
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
-            if ((matcher = RGB.matcher(text)).find()) {
+            //RGB_COLOR Values
+            if ((matcher = RGB_COLOR.matcher(text)).find()) {
                 hex = getHex(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)),
                         Integer.parseInt(matcher.group(3)));
 
@@ -55,21 +59,26 @@ public class ColourCommand implements ICommandMain {
                     context.getTypedMessaging().replyWarning("Values should be between 0-255");
                     return;
                 }
+                //Hex
             } else if ((matcher = HEX_COLOR.matcher(text)).matches()) {
-                hex = matcher.group();
-                if (hex.charAt(0) == '#')
-                    hex = hex.substring(1);
+                hex = matcher.group().substring(1);
 
                 if (hex.length() != 6) {
                     context.getTypedMessaging().replyWarning("Hex code has to be 6 digits. (" + hex.length() + ")");
                     return;
                 }
-
+                //Decimal
+            } else if ((matcher = DECIMAL_COLOR.matcher(text)).matches()) {
+                hex = String.format("%06x", Integer.valueOf(matcher.group()));
+                //Binary
+            } else if ((matcher = BINARY_COLOR.matcher(text)).matches()) {
+                hex = String.format("%06x", Integer.parseUnsignedInt(matcher.group(), 2));
             } else {
                 context.getTypedMessaging().replyWarning("Could not recognise colour from the given value");
                 return;
             }
             color = Color.decode('#' + hex);
+
         }
         String RGBvalues = color.getRed() + "," + color.getGreen() + "," + color.getBlue();
         int unsignedInt = Integer.parseUnsignedInt(hex, 16);
@@ -77,7 +86,7 @@ public class ColourCommand implements ICommandMain {
         builder.setTitle("Values of #" + hex);
         builder.setColor(color);
         builder.addField("RGB", RGBvalues, true); // RGB Values
-        builder.addField("Decimal", String.valueOf(unsignedInt), true); // Decimal Value
+        builder.addField("Decimal", Integer.toUnsignedString(unsignedInt), true); // Decimal Value
         builder.addField("Binary", Integer.toBinaryString(unsignedInt), true); // Binary Value
         context.reply(builder.build());
 
@@ -102,7 +111,7 @@ public class ColourCommand implements ICommandMain {
     @Override
     public Set<Argument> getUndefinedArguments() {
         return Set.of(Argument.of(
-                "Value", "Name/RGB/Hex", ArgumentType.REQUIRED));
+                "Value", "Colour name, decimal, binary, hex code or RGB value.", ArgumentType.REQUIRED));
     }
 
     @Override
