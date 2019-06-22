@@ -17,9 +17,11 @@ import org.cascadebot.cascadebot.ShutdownHandler;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class ArgumentManager {
@@ -27,23 +29,20 @@ public class ArgumentManager {
     @Getter
     private JSONConfig argumentsFile;
 
-    /*
-        Alright so maybe caching this isn't the most useful thing but this is potentially something that will get
-        requested a lot, this might reduce command time by avoiding the computation to make all the arguments.
-
-        We will see 👀
-    */
-    @Getter
-    private LoadingCache<String, Set<Argument>> cache = Caffeine.newBuilder()
-            .expireAfterAccess(1, TimeUnit.HOURS)
-            .recordStats()
-            .build(this::getArguments);
+    private Map<String, Argument> arguments = new ConcurrentHashMap<>();
 
     public void initArguments() {
         try {
             argumentsFile = new JSONConfig(Objects.requireNonNull(CascadeBot.class.getClassLoader()
                     .getResourceAsStream("arguments.json")));
             argumentsFile.setAllowedSpecialCharacters(ArrayUtils.add(argumentsFile.getAllowedSpecialCharacters(), '*'));
+            for (String key : argumentsFile.getKeys(true)) {
+                if (key.startsWith("_")) continue;
+                Argument argument = getArgumentById(key);
+                if (argument != null) {
+                    arguments.put(argument.getId(), argument);
+                }
+            }
         } catch (Exception e) {
             CascadeBot.LOGGER.error("Cannot load arguments!", e);
             ShutdownHandler.exitWithError();
@@ -74,20 +73,23 @@ public class ArgumentManager {
         return arguments;
     }
 
-    public Argument getArgumentById(String id) {
+    public Argument getArgument(String id) {
+        return arguments.get(id);
+    }
+
+    private Argument getArgumentById(String id) {
+        if (argumentsFile.getElement(id).isEmpty() || !argumentsFile.getElement(id).get().isJsonObject()) return null;
         Optional<JSONConfig> subConfig = argumentsFile.getSubConfig(id);
-        // Don't bother if it's not an actual object
         if (subConfig.isEmpty()) return null;
 
         String typeRaw = subConfig.get().getString("_type").orElse("command");
         ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
 
         boolean displayAlone = true;
-        String newId = id;
         if (id.endsWith("*")) {
             displayAlone = false;
-            newId = id.substring(0, id.length() - 1);
         }
+        String newId = id.replace("*", "");
 
         JsonArray aliasesRaw = subConfig.get().getArray("_aliases").orElse(new JsonArray());
         Set<String> aliases = new HashSet<>();
