@@ -69,10 +69,10 @@ public class ColourCommand implements ICommandMain {
                 }
                 //Decimal
             } else if ((matcher = DECIMAL_COLOR.matcher(text)).matches()) {
-                hex = String.format("%06x", Integer.valueOf(matcher.group()));
+                color = Color.decode(Integer.valueOf(matcher.group()));
                 //Binary
             } else if ((matcher = BINARY_COLOR.matcher(text)).matches()) {
-                hex = String.format("%06x", Integer.parseUnsignedInt(matcher.group(), 2));
+                color = Color.decode(Integer.parseUnsignedInt(matcher.group(), 2));
             } else {
                 context.getTypedMessaging().replyWarning("Could not recognise colour from the given value");
                 return;
