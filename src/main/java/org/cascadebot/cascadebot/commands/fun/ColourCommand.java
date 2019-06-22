@@ -52,7 +52,7 @@ public class ColourCommand implements ICommandMain {
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
             //RGB_COLOR Values
             if ((matcher = RGB_COLOR.matcher(text)).find()) {
-                hex = getHex(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)),
+                color = new Color(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)),
                         Integer.parseInt(matcher.group(3)));
 
                 if (hex.length() > 6) {
