@@ -25,7 +25,7 @@ public class DumpCommand implements ICommandRestricted {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getTypedMessaging().replyDanger("Hmmm either pick: `threads`, `commands`, `permissions` or `guild`");
+            context.getTypedMessaging().replyDanger("Hmmm either pick: `threads`, `commands`, `permissions`, `args` or `guild`");
             return;
         }
         if (context.getArg(0).equalsIgnoreCase("threads")) {
@@ -50,6 +50,12 @@ public class DumpCommand implements ICommandRestricted {
             PasteUtils.pasteIfLong(builder.build().toString(), 2048, context::reply);
         } else if (context.getArg(0).equalsIgnoreCase("guild")) {
             PasteUtils.pasteIfLong("```json\n" + new GsonBuilder().setPrettyPrinting().create().toJson(context.getData()) + "```", 2048, context::reply);
+        } else if (context.getArg(0).equalsIgnoreCase("args")) {
+            StringBuilder builder = new StringBuilder();
+            for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
+                builder.append("\n").append(context.getUsage(command)).append("\n");
+            }
+            context.getTypedMessaging().replyInfo("**Arguments**\n" + PasteUtils.paste(builder.toString()));
         } else {
             context.getTypedMessaging().replyDanger("I can't find that argument!");
         }
