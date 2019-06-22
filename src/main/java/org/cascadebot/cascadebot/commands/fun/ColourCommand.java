@@ -61,7 +61,7 @@ public class ColourCommand implements ICommandMain {
                 }
                 //Hex
             } else if ((matcher = HEX_COLOR.matcher(text)).matches()) {
-                hex = matcher.group().substring(1);
+                String hex = matcher.group();
 
                 if (hex.length() != 6) {
                     context.getTypedMessaging().replyWarning("Hex code has to be 6 digits. (" + hex.length() + ")");
