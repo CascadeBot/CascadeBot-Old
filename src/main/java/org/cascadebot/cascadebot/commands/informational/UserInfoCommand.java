@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.RichPresence;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -28,6 +29,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.cascadebot.shared.SecurityLevel;
 
 public class UserInfoCommand implements ICommandMain {
 
@@ -40,15 +42,17 @@ public class UserInfoCommand implements ICommandMain {
             userForInfo = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
         }
         if (userForInfo == null) {
-            context.getTypedMessaging().replyDanger("Invalid User!");
+            context.getTypedMessaging().replyDanger("We couldn't find that user!");
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
-
+        
         String status = "";
         String statusName = "";
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
 
         if (member != null) {
+            builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
             statusName = FormatUtils.formatEnum(member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
@@ -65,18 +69,24 @@ public class UserInfoCommand implements ICommandMain {
         }
 
         List<Page> pageList = new ArrayList<>();
-        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
         builder.addField("User Created", FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
-        builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
         builder.addField("User ID", userForInfo.getId(), true);
         builder.addField("Mutual Servers", String.valueOf(userForInfo.getMutualGuilds().size()), true);
-
+        
+        long userId = userForInfo.getIdLong();
+        SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
+        if (userSecurityLevel != null) {
+            builder.addField("Cascade Official Role", FormatUtils.formatEnum(userSecurityLevel), true);
+        }
 
         if (member != null) {
+            builder.addField("Join Date", FormatUtils.formatDateTime(member.getJoinDate()), true);
             builder.addField("Status", status + statusName, true);
             Game game = member.getGame();
+            
             if (game != null) {
                 String gameStatus;
                 String gameType = FormatUtils.formatEnum(game.getType());
