@@ -78,17 +78,33 @@ public class ArgumentManager {
     }
 
     private Argument getArgumentById(String id) {
+        // Don't bother if it's not an actual object
         if (argumentsFile.getElement(id).isEmpty() || !argumentsFile.getElement(id).get().isJsonObject()) return null;
         Optional<JSONConfig> subConfig = argumentsFile.getSubConfig(id);
         if (subConfig.isEmpty()) return null;
 
         String typeRaw = subConfig.get().getString("_type").orElse("command");
+        // If no valid argument type is given, this defaults to the "command" type
         ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
 
         boolean displayAlone = true;
         if (id.endsWith("*")) {
+            /*
+              This means that the argument itself won't be displayed by itself.
+              This is useful for nested permissions. This will always be treated as true
+              if the argument has no sub-arguments.
+
+              Example:
+              displayAlone = true for the "queue" argument
+              ;queue
+              ;queue save
+
+              displayAlone = false
+              ;queue save
+             */
             displayAlone = false;
         }
+        // Make sure there are no asterisks left in the path which would throw off getting by id
         String newId = id.replace("*", "");
 
         JsonArray aliasesRaw = subConfig.get().getArray("_aliases").orElse(new JsonArray());
