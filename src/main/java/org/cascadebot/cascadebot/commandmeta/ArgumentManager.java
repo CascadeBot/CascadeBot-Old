@@ -5,8 +5,6 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.gson.JsonArray;
 import io.github.binaryoverload.JSONConfig;
 import lombok.Getter;
@@ -15,14 +13,12 @@ import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 public class ArgumentManager {
 
@@ -38,7 +34,7 @@ public class ArgumentManager {
             argumentsFile.setAllowedSpecialCharacters(ArrayUtils.add(argumentsFile.getAllowedSpecialCharacters(), '*'));
             for (String key : argumentsFile.getKeys(true)) {
                 if (key.startsWith("_")) continue;
-                Argument argument = getArgumentById(key);
+                Argument argument = getArgumentFromObject(key);
                 if (argument != null) {
                     arguments.put(argument.getId(), argument);
                 }
@@ -68,7 +64,10 @@ public class ArgumentManager {
             if (key.charAt(key.lastIndexOf(".") + 1) == '_') continue;
 
             String id = (parent.isBlank() ? "" : parent + ".") + key;
-            arguments.add(getArgumentById(id));
+            Argument argument = getArgumentFromObject(id);
+            if (argument != null) {
+                arguments.add(argument);
+            }
         }
         return arguments;
     }
@@ -77,7 +76,7 @@ public class ArgumentManager {
         return arguments.get(id);
     }
 
-    private Argument getArgumentById(String id) {
+    private Argument getArgumentFromObject(String id) {
         // Don't bother if it's not an actual object
         if (argumentsFile.getElement(id).isEmpty() || !argumentsFile.getElement(id).get().isJsonObject()) return null;
         Optional<JSONConfig> subConfig = argumentsFile.getSubConfig(id);
