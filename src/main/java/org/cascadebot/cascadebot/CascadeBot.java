@@ -221,7 +221,6 @@ public class CascadeBot {
         moderationManager = new ModerationManager();
 
         Metrics.INS.cacheMetrics.addCache("guilds", GuildDataManager.getGuilds());
-        Metrics.INS.cacheMetrics.addCache("arguments", argumentManager.getCache());
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()

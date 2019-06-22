@@ -184,7 +184,7 @@ public class CommandContext {
     }
 
     public String getUsage(ICommandExecutable command) {
-        Argument parentArg = CascadeBot.INS.getArgumentManager().getArgumentById(command.getAbsoluteCommand());
+        Argument parentArg = CascadeBot.INS.getArgumentManager().getArgument(command.getAbsoluteCommand());
         if (parentArg == null) return i18n("responses.no_arguments_for_command", command.getAbsoluteCommand());
 
         String parent = null;

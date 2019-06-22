@@ -7,15 +7,15 @@
       "_type": "required"
     }
   },
-  "usage": {
+  "usage*": {
     "command": {
       "_type": "required"
     }
   },
 
   "guild": {
-    "flag": {
-      "flag": {
+    "flag*": {
+      "flag*": {
         "_type": "required",
         "guild_id": {
           "_type": "optional"
@@ -25,7 +25,7 @@
         "_type": "command"
       }
     },
-    "info": {
+    "info*": {
       "guild_id": {
         "_type": "optional"
       }
@@ -40,18 +40,18 @@
     }
   },
 
-  "serverinfo": {
+  "serverinfo*": {
     "guild_id": {
       "_type": "optional"
     }
   },
-  "userinfo": {
+  "userinfo*": {
     "guild_id": {
       "_type": "optional"
     }
   },
 
-  "module": {
+  "module*": {
     "disable": {
       "module": {
         "_type": "required"
@@ -63,11 +63,11 @@
       }
     }
   },
-  "settings": {
+  "settings*": {
     "list": {
       "_type": "command"
     },
-    "settings": {
+    "settings*": {
       "_type": "required",
       "value": {
         "_type": "required"
@@ -79,68 +79,68 @@
     "tag": {
       "_type": "required"
     },
-    "category": {
-      "tag": {
+    "category*": {
+      "tag*": {
         "_type": "required",
         "category": {
           "_type": "required"
         }
       }
     },
-    "create": {
-      "name": {
+    "create*": {
+      "name*": {
         "_type": "required",
         "content": {
           "_type": "required"
         }
       }
     },
-    "delete": {
+    "delete*": {
       "name": {
         "_type": "required"
       }
     },
-    "edit": {
-      "tag": {
+    "edit*": {
+      "tag*": {
         "_type": "required",
         "content": {
           "_type": "required"
         }
       }
     },
-    "raw": {
+    "raw*": {
       "name": {
         "_type": "required"
       }
     }
   },
 
-  "ban": {
-    "member": {
+  "ban*": {
+    "member*": {
       "_type": "required",
       "reason": {
         "_type": "optional"
       }
     }
   },
-  "kick": {
-    "member": {
+  "kick*": {
+    "member*": {
       "_type": "required",
       "reason": {
         "_type": "optional"
       }
     }
   },
-  "softban": {
-    "member": {
+  "softban*": {
+    "member*": {
       "_type": "required",
       "reason": {
         "_type": "optional"
       }
     }
   },
-  "unban": {
-    "user": {
+  "unban*": {
+    "user*": {
       "_type": "required",
       "reason": {
         "_type": "optional"
@@ -148,33 +148,33 @@
     }
   },
 
-  "join": {
+  "join*": {
     "channel": {
       "_type": "optional"
     }
   },
-  "loop": {
+  "loop*": {
     "mode": {
       "_type": "optional"
     }
   },
   "play": {
     "url": {
-      "_type": "optional",
+      "_type": "required",
       "_aliases": ["query"]
     }
   },
-  "queue": {
-    "load": {
-      "name": {
+  "queue*": {
+    "load*": {
+      "name*": {
         "_type": "required",
         "scope": {
           "_type": "optional"
         }
       }
     },
-    "save": {
-      "name": {
+    "save*": {
+      "name*": {
         "_type": "required",
         "scope": {
           "_type": "optional"
@@ -182,25 +182,23 @@
       }
     }
   },
-  "search": {
+  "search*": {
     "query": {
       "_type": "required"
     }
   },
-  "skip": {
+  "skip*": {
     "force": {
       "_type": "optional"
     },
     "yes": {
-      "_type": "command"
-    },
-    "no": {
-      "_type": "command"
+      "_type": "command",
+      "_aliases": ["no"]
     }
   },
   "volume": {
     "volume": {
-      "_type": "optional"
+      "_type": "required"
     }
   },
   "groupperms": {

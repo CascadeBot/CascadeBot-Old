@@ -5,8 +5,6 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.gson.JsonArray;
 import io.github.binaryoverload.JSONConfig;
 import lombok.Getter;
@@ -15,35 +13,32 @@ import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
 
-import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ArgumentManager {
 
     @Getter
     private JSONConfig argumentsFile;
 
-    /*
-        Alright so maybe caching this isn't the most useful thing but this is potentially something that will get
-        requested a lot, this might reduce command time by avoiding the computation to make all the arguments.
-
-        We will see 👀
-    */
-    @Getter
-    private LoadingCache<String, Set<Argument>> cache = Caffeine.newBuilder()
-            .expireAfterAccess(1, TimeUnit.HOURS)
-            .recordStats()
-            .build(this::getArguments);
+    private Map<String, Argument> arguments = new ConcurrentHashMap<>();
 
     public void initArguments() {
         try {
             argumentsFile = new JSONConfig(Objects.requireNonNull(CascadeBot.class.getClassLoader()
                     .getResourceAsStream("arguments.json")));
             argumentsFile.setAllowedSpecialCharacters(ArrayUtils.add(argumentsFile.getAllowedSpecialCharacters(), '*'));
+            for (String key : argumentsFile.getKeys(true)) {
+                if (key.startsWith("_")) continue;
+                Argument argument = getArgumentFromObject(key);
+                if (argument != null) {
+                    arguments.put(argument.getId(), argument);
+                }
+            }
         } catch (Exception e) {
             CascadeBot.LOGGER.error("Cannot load arguments!", e);
             ShutdownHandler.exitWithError();
@@ -69,25 +64,47 @@ public class ArgumentManager {
             if (key.charAt(key.lastIndexOf(".") + 1) == '_') continue;
 
             String id = (parent.isBlank() ? "" : parent + ".") + key;
-            arguments.add(getArgumentById(id));
+            Argument argument = getArgumentFromObject(id);
+            if (argument != null) {
+                arguments.add(argument);
+            }
         }
         return arguments;
     }
 
-    public Argument getArgumentById(String id) {
-        Optional<JSONConfig> subConfig = argumentsFile.getSubConfig(id);
+    public Argument getArgument(String id) {
+        return arguments.get(id);
+    }
+
+    private Argument getArgumentFromObject(String id) {
         // Don't bother if it's not an actual object
+        if (argumentsFile.getElement(id).isEmpty() || !argumentsFile.getElement(id).get().isJsonObject()) return null;
+        Optional<JSONConfig> subConfig = argumentsFile.getSubConfig(id);
         if (subConfig.isEmpty()) return null;
 
         String typeRaw = subConfig.get().getString("_type").orElse("command");
+        // If no valid argument type is given, this defaults to the "command" type
         ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
 
         boolean displayAlone = true;
-        String newId = id;
         if (id.endsWith("*")) {
+            /*
+              This means that the argument itself won't be displayed by itself.
+              This is useful for nested permissions. This will always be treated as true
+              if the argument has no sub-arguments.
+
+              Example:
+              displayAlone = true for the "queue" argument
+              ;queue
+              ;queue save
+
+              displayAlone = false
+              ;queue save
+             */
             displayAlone = false;
-            newId = id.substring(0, id.length() - 1);
         }
+        // Make sure there are no asterisks left in the path which would throw off getting by id
+        String newId = id.replace("*", "");
 
         JsonArray aliasesRaw = subConfig.get().getArray("_aliases").orElse(new JsonArray());
         Set<String> aliases = new HashSet<>();
