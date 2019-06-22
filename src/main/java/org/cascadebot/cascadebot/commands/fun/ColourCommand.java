@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 
 public class ColourCommand implements ICommandMain {
 
-    private static final Pattern HEX_COLOR = Pattern.compile("#([A-Fa-f0-9]+)");//|[A-Fa-f0-9]{3}
+    private static final Pattern HEX_COLOR = Pattern.compile("#([A-Fa-f0-9]+)");
     private static final Pattern DECIMAL_COLOR = Pattern.compile("([0-9]{1,8})");
     private static final Pattern RGB_COLOR = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
     private static final Pattern BINARY_COLOR = Pattern.compile("([0-1]+)");
@@ -35,59 +35,69 @@ public class ColourCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length == 0) {
+        if (context.getArgs().length != 1) {
             context.getUIMessaging().replyUsage(this);
             return;
         }
-        String text = context.getArgs()[0];
-        Color color;
-        Matcher matcher;
-        String hex;
 
+        String text = context.getArg(0);
+
+        Color color = null;
+        Matcher matcher;
 
         try {
             color = (Color) Color.class.getField(text.toUpperCase()).get(null);
-            color = new Color(color.getRed(), color.getGreen(), color.getBlue(), 0);
-            hex = String.format("%06x", color.getRGB());
         } catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException | SecurityException e) {
             //RGB_COLOR Values
             if ((matcher = RGB_COLOR.matcher(text)).find()) {
-                color = new Color(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)),
-                        Integer.parseInt(matcher.group(3)));
-
-                if (hex.length() > 6) {
-                    context.getTypedMessaging().replyWarning("Values should be between 0-255");
+                try {
+                    color = new Color(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)),
+                            Integer.parseInt(matcher.group(3)));
+                } catch (IllegalArgumentException e1) {
+                    context.getTypedMessaging().replyDanger("Values should be between 0-255");
                     return;
                 }
                 //Hex
             } else if ((matcher = HEX_COLOR.matcher(text)).matches()) {
-                String hex = matcher.group();
-
-                if (hex.length() != 6) {
-                    context.getTypedMessaging().replyWarning("Hex code has to be 6 digits. (" + hex.length() + ")");
+                try {
+                    color = Color.decode(matcher.group());
+                } catch (NumberFormatException e1) {
+                    context.getTypedMessaging().replyDanger("Please provide a valid hex value! #000000-#FFFFFF");
                     return;
                 }
                 //Decimal
             } else if ((matcher = DECIMAL_COLOR.matcher(text)).matches()) {
-                color = Color.decode(Integer.valueOf(matcher.group()));
+                try {
+                    color = Color.decode(matcher.group());
+                } catch (NumberFormatException e1) {
+                    context.getTypedMessaging().replyDanger("Please provide a valid decimal value! 0-16777215");
+                    return;
+                }
                 //Binary
             } else if ((matcher = BINARY_COLOR.matcher(text)).matches()) {
-                color = Color.decode(Integer.parseUnsignedInt(matcher.group(), 2));
-            } else {
-                context.getTypedMessaging().replyWarning("Could not recognise colour from the given value");
-                return;
+                try {
+                    color = Color.decode(String.valueOf(Integer.parseUnsignedInt(matcher.group(), 2)));
+                } catch (NumberFormatException e1) {
+                    context.getTypedMessaging().replyDanger("Please enter a valid binary value!\n0-111111111111111111111111");
+                }
             }
-            color = Color.decode('#' + hex);
-
         }
-        String RGBvalues = color.getRed() + "," + color.getGreen() + "," + color.getBlue();
-        int unsignedInt = Integer.parseUnsignedInt(hex, 16);
+
+        if (color == null) {
+            context.getTypedMessaging().replyDanger("Could not recognise colour from the given value!");
+            return;
+        }
+
+        String rgbValues = color.getRed() + "," + color.getGreen() + "," + color.getBlue();
+        String hex = getHex(color.getRed(), color.getGreen(), color.getBlue());
+        int decimalColor = Integer.parseUnsignedInt(hex, 16);
+
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
         builder.setTitle("Values of #" + hex);
         builder.setColor(color);
-        builder.addField("RGB", RGBvalues, true); // RGB Values
-        builder.addField("Decimal", Integer.toUnsignedString(unsignedInt), true); // Decimal Value
-        builder.addField("Binary", Integer.toBinaryString(unsignedInt), true); // Binary Value
+        builder.addField("RGB", rgbValues, true); // RGB Values
+        builder.addField("Decimal", Integer.toUnsignedString(decimalColor), true); // Decimal Value
+        builder.addField("Binary", Integer.toBinaryString(decimalColor), true); // Binary Value
         context.reply(builder.build());
 
     }
