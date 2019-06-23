@@ -21,6 +21,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.Tag;
@@ -84,7 +85,7 @@ public class CommandListener extends ListenerAdapter {
         } else if (guildData.getSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
             commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
             isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + "prefix") && !Config.INS.getDefaultPrefix().equals(guildData.getSettings().getPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getSettings().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
         } else {
             return;
@@ -105,7 +106,7 @@ public class CommandListener extends ListenerAdapter {
         } catch (Exception e) {
             Messaging.sendExceptionMessage(
                     event.getChannel(),
-                    "There was an error while processing your command!",
+                    Language.i18n(guildData.getLocale(), "responses.failed_to_process_command"),
                     e);
             return;
         } finally {
@@ -169,10 +170,7 @@ public class CommandListener extends ListenerAdapter {
             if (!cmd.getModule().isPrivate() &&
                     !guildData.getSettings().isModuleEnabled(cmd.getModule())) {
                 if (guildData.getSettings().isShowModuleErrors() || Environment.isDevelopment()) {
-                    EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-                    builder.setDescription(String.format("The module `%s` for command `%s` is disabled!", cmd.getModule().toString(), trigger));
-                    builder.setTimestamp(Instant.now());
-                    builder.setFooter("Requested by " + event.getAuthor().getAsTag(), event.getAuthor().getEffectiveAvatarUrl());
+                    EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n(cmd.getModule().toString(), trigger), event.getAuthor());
                     Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getSettings().isUseEmbedForMessages());
                 }
                 // TODO: Modlog?
@@ -247,7 +245,7 @@ public class CommandListener extends ListenerAdapter {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
                 Metrics.INS.commandsErrored.labels(command.getClass().getSimpleName()).inc();
-                context.getTypedMessaging().replyException("There was an error running the command!", e);
+                context.getTypedMessaging().replyException(context.i18n("responses.failed_to_run_command"), e);
                 CascadeBot.LOGGER.error("Error while running a command!", MDCException.from(e));
 
             } finally {
@@ -276,10 +274,7 @@ public class CommandListener extends ListenerAdapter {
             if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
                 context.getMessage().delete().queue();
             } else {
-                context.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(
-                        "We can't delete guild messages as we won't have the permission manage messages! Please either give me this " +
-                                "permission or turn off command message deletion!"
-                ).queue(), exception -> {
+                context.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(context.i18n("responses.cant_delete_guild_messages")).queue(), exception -> {
                     // Sad face :( We'll just let them suffer in silence.
                 });
             }

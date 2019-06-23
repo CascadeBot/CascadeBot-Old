@@ -511,7 +511,11 @@
     "no_cascade_perm": "You don't have the permission `{0}` that you need to do this!",
     "no_discord_perm": "You don't have the Discord permission `{0}` that you need to do this!",
     "no_discord_perm_bot": "I don't have the Discord permission `{0}` that I need to do this!",
-    "incorrect_usage": "Incorrect usage. Proper usage:\n{0}"
+    "incorrect_usage": "Incorrect usage. Proper usage:\n{0}",
+    "failed_to_process_command": "There was an error while processing your command!",
+    "failed_to_run_command": "There was an error while running the command!",
+    "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
+    "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!"
   },
   "statuses": {
     "streaming": "Streaming",
