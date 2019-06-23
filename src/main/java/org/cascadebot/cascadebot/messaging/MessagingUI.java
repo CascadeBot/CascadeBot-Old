@@ -132,9 +132,9 @@ public class MessagingUI {
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermission(context.getLocale()), discordPerms);
+            context.getTypedMessaging().replyDanger(context.i18n("responses.no_cascade_perm_discord", permission.getPermission(context.getLocale()), discordPerms));
         } else {
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermission(context.getLocale()));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.no_cascade_perm", permission.getPermission(context.getLocale())));
         }
     }
 
@@ -144,11 +144,11 @@ public class MessagingUI {
      * @param permission The Discord Permission that the user doesn't have.
      */
     public void sendUserDiscordPermError(Permission permission) {
-        context.getTypedMessaging().replyDanger("You don't have the Discord permission `%s` that you need to do this!", permission.getName());
+        context.getTypedMessaging().replyDanger(context.i18n("responses.no_discord_perm", permission.getName()));
     }
 
     public void sendBotDiscordPermError(Permission permission) {
-        context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` that I need to do this!", permission.getName());
+        context.getTypedMessaging().replyDanger(context.i18n("responses.no_discord_perm_bot", permission.getName()));
     }
 
     public void replyUsage() {
@@ -156,7 +156,7 @@ public class MessagingUI {
     }
 
     public void replyUsage(ICommandExecutable command) {
-        context.getTypedMessaging().replyWarning("Incorrect usage. Proper usage:\n" + context.getUsage(command));
+        context.getTypedMessaging().replyWarning(context.i18n("responses.incorrect_usage", context.getUsage(command)));
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {
@@ -165,7 +165,7 @@ public class MessagingUI {
             for (AudioTrack track : tracks) {
                 time += track.getDuration();
             }
-            context.getTypedMessaging().replySuccess("Loaded `%s` tracks with a total length of `%s`", tracks.size(), FormatUtils.formatLongTimeMills(time));
+            context.getTypedMessaging().replySuccess(context.i18n("music_misc.loaded_tracks", tracks.size(), FormatUtils.formatLongTimeMills(time)));
         } else {
             AudioTrack track = tracks.get(0);
             EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
