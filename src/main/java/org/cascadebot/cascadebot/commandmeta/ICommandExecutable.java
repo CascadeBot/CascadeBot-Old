@@ -7,11 +7,11 @@ package org.cascadebot.cascadebot.commandmeta;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public interface ICommandExecutable {
@@ -25,8 +25,8 @@ public interface ICommandExecutable {
     String command();
 
     default String command(Locale locale) {
-        if (CascadeBot.INS.getLanguage().hasLanguageEntry(locale, getCommandPath())) {
-            return CascadeBot.INS.getLanguage().get(locale, getCommandPath());
+        if (Language.hasLanguageEntry(locale, getCommandPath())) {
+            return Language.i18n(locale, getCommandPath());
         } else {
             return command();
         }
@@ -55,8 +55,8 @@ public interface ICommandExecutable {
     }
 
     default String getDescription(Locale locale) {
-        if (CascadeBot.INS.getLanguage().hasLanguageEntry(locale, getDescriptionPath()) || description() == null) {
-            return CascadeBot.INS.getLanguage().get(locale, getDescriptionPath());
+        if (Language.hasLanguageEntry(locale, getDescriptionPath()) || description() == null) {
+            return Language.i18n(locale, getDescriptionPath());
         } else {
             return description();
         }

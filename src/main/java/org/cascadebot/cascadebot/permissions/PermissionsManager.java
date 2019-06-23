@@ -15,6 +15,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
@@ -37,9 +38,9 @@ public class PermissionsManager {
     private Set<CascadePermission> defaultPermissions = Set.of();
 
     public PermissionsManager() {
-        for (Locale locale : CascadeBot.INS.getLanguage().getLanguages().keySet()) {
+        for (Locale locale : Language.getLanguages().keySet()) {
             if (locale == Locale.getDefaultLocale()) continue;
-            JSONConfig config = CascadeBot.INS.getLanguage().getLanguages().get(locale);
+            JSONConfig config = Language.getLanguages().get(locale);
             if (config.getElement("permissions").isEmpty()) continue;
             for (String permission : permissions.keySet()) {
                 if (config.getString("permissions." + permission + ".name").isEmpty()) continue;

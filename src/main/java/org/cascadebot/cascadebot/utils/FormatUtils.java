@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.time.OffsetDateTime;
@@ -187,10 +188,10 @@ public class FormatUtils {
 
     public static <T extends Enum> String formatEnum(T theEnum, Locale locale) {
         String path = "enums." + theEnum.getClass().getSimpleName().toLowerCase() + "." + theEnum.name().toLowerCase();
-        if (!CascadeBot.INS.getLanguage().hasLanguageEntry(locale, path)) {
+        if (!Language.hasLanguageEntry(locale, path)) {
             return formatEnum(theEnum);
         }
-        return CascadeBot.INS.getLanguage().get(locale, path);
+        return Language.i18n(locale, path);
     }
 
     public static String formatUnicode(String stringToFormat) {

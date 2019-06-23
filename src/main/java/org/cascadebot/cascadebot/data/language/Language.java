@@ -19,9 +19,11 @@ import java.util.Map;
 
 public class Language {
 
+    private static final Language INSTANCE = new Language();
+
     private Map<Locale, JSONConfig> languages = new HashMap<>();
 
-    public void initLanguage() {
+    private Language() {
         try {
             loadLanguage(Locale.ENGLISH_UK);
         } catch (Exception e) {
@@ -45,35 +47,35 @@ public class Language {
         }
     }
 
-    public Map<Locale, JSONConfig> getLanguages() {
-        return Map.copyOf(languages);
+    public static Map<Locale, JSONConfig> getLanguages() {
+        return Map.copyOf(INSTANCE.languages);
     }
 
-    public JSONConfig getLanguage(Locale locale) {
-        return languages.get(locale);
+    public static JSONConfig getLanguage(Locale locale) {
+        return INSTANCE.languages.get(locale);
     }
 
-    public boolean hasLanguageEntry(Locale locale, String path) {
-        return languages.containsKey(locale) && languages.get(locale).getString(path).isPresent();
+    public static boolean hasLanguageEntry(Locale locale, String path) {
+        return INSTANCE.languages.containsKey(locale) && INSTANCE.languages.get(locale).getString(path).isPresent();
     }
 
-    public String get(long guildId, String path, Object... args) {
-        return get(getGuildLocale(guildId), path, args);
+    public static String i18n(long guildId, String path, Object... args) {
+        return i18n(getGuildLocale(guildId), path, args);
     }
 
-    public Locale getGuildLocale(long guildId) {
+    public static Locale getGuildLocale(long guildId) {
         return GuildDataManager.getGuildData(guildId).getLocale();
     }
 
-    public String get(Locale locale, String path, Object... args) {
+    public static String i18n(Locale locale, String path, Object... args) {
         Checks.notNull(locale, "locale");
-        if (languages.containsKey(locale)) {
-            if (languages.get(locale).getString(path).isPresent()) {
-                MessageFormat format = new MessageFormat(languages.get(locale).getString(path).get(), locale.getULocale());
+        if (INSTANCE.languages.containsKey(locale)) {
+            if (INSTANCE.languages.get(locale).getString(path).isPresent()) {
+                MessageFormat format = new MessageFormat(INSTANCE.languages.get(locale).getString(path).get(), locale.getULocale());
                 return FormatUtils.formatUnicode(format.format(args));
             } else {
                 CascadeBot.LOGGER.warn("Cannot find a language string matching the path '{}'", path);
-                return languages.get(Locale.getDefaultLocale()).getString(path).isPresent() ? get(Locale.getDefaultLocale(), path, args) : "No language string for " + path;
+                return INSTANCE.languages.get(Locale.getDefaultLocale()).getString(path).isPresent() ? i18n(Locale.getDefaultLocale(), path, args) : "No language string for " + path;
             }
         } else {
             throw new IllegalStateException("The language file matching locale '" + locale.getLanguageCode()
