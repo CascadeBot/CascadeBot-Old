@@ -36,6 +36,7 @@ public class DatabaseManager {
             MongoClientSettings.getDefaultCodecRegistry(),
             CodecRegistries.fromProviders(PojoCodecProvider.builder().register(
                     "org.cascadebot.cascadebot.data.objects",
+                    "org.cascadebot.cascadebot.permissions.objects",
                     "org.cascadebot.shared"
             ).build())
     );
