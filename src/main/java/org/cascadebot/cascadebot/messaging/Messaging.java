@@ -21,6 +21,8 @@ import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.UnicodeConstants;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.exceptions.DiscordPermissionException;
@@ -138,9 +140,11 @@ public final class Messaging {
     }
 
     public static RequestFuture<Message> sendExceptionMessage(MessageChannel channel, String s, Throwable e) {
-        String message = "**" + s + "**" +
-                "\nStack trace: " + PasteUtils.paste(PasteUtils.getStackTrace(MDCException.from(e))) +
-                (Environment.isDevelopment() ? "" : "\nPlease report the stack trace and the error to the developers here: " + Constants.serverInvite);
+        Locale locale = channel instanceof TextChannel ? Language.getGuildLocale(((TextChannel) channel).getGuild().getIdLong()) : Locale.getDefaultLocale();
+        String message = Language.i18n(locale, "messaging.exception_message", s, PasteUtils.paste(PasteUtils.getStackTrace(MDCException.from(e))));
+        if (Environment.isProduction()) {
+            message += Language.i18n(locale, "messaging.report_error", Constants.serverInvite);
+        }
         return sendDangerMessage(channel, message);
     }
 
@@ -222,7 +226,7 @@ public final class Messaging {
             pageGroup.getPage(pageGroup.getPages()).pageShow(message, pageGroup.getPages(), pageGroup.getPages());
             pageGroup.setCurrentPage(pageGroup.getPages());
         }));
-        RequestFuture<Message> future = channel.sendMessage("Paged message loading...").submit();
+        RequestFuture<Message> future = channel.sendMessage(Language.i18n(channel.getGuild().getIdLong(), "messaging.loading_page")).submit();
         future.thenAccept(sentMessage -> {
             pages.get(0).pageShow(sentMessage, 1, pages.size());
             group.addButtonsToMessage(sentMessage);
