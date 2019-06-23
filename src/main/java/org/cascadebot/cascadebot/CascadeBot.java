@@ -30,7 +30,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
@@ -73,7 +72,6 @@ public class CascadeBot {
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
-    private Language language;
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
@@ -133,9 +131,6 @@ public class CascadeBot {
 
     private void init() {
         new Thread(new ConsoleReader()).start();
-
-        language = new Language();
-        language.initLanguage();
 
         GsonBuilder builder = new GsonBuilder();
         try {
@@ -303,10 +298,6 @@ public class CascadeBot {
 
     public OkHttpClient getHttpClient() {
         return httpClient;
-    }
-
-    public Language getLanguage() {
-        return language;
     }
 
     public MusicHandler getMusicHandler() {

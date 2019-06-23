@@ -490,7 +490,8 @@
     "load_options_title": "Load as a single track or as a playlist?",
     "load_options_typed": "\n\nPlease type either `track` or `playlist`!",
     "cannot_find_tracks": "We couldn't find any tracks to load!",
-    "num_tracks": "{0} tracks"
+    "num_tracks": "{0} tracks",
+    "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`"
   },
   "responses": {
     "invalid_user": "Invalid User!",
@@ -505,7 +506,16 @@
     "cannot_find_voice_channel": "Could not find that voice channel to connect to!",
     "voice_not_connected": "I am not connected to a voice channel!",
     "type_one_of": "Please type one of: ",
-    "invalid_guild_id" : "That isn't a valid guild ID!"
+    "invalid_guild_id" : "That isn't a valid guild ID!",
+    "no_cascade_perm_discord": "You don't have the permission `{0}` or the Discord permission(s) {1} that you need to do this!",
+    "no_cascade_perm": "You don't have the permission `{0}` that you need to do this!",
+    "no_discord_perm": "You don't have the Discord permission `{0}` that you need to do this!",
+    "no_discord_perm_bot": "I don't have the Discord permission `{0}` that I need to do this!",
+    "incorrect_usage": "Incorrect usage. Proper usage:\n{0}",
+    "failed_to_process_command": "There was an error while processing your command!",
+    "failed_to_run_command": "There was an error while running the command!",
+    "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
+    "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!"
   },
   "statuses": {
     "streaming": "Streaming",
@@ -591,5 +601,10 @@
     "volume": "Volume",
     "category": "Category",
     "tag": "Tag"
-  }
+  },
+  "messaging": {
+    "loading_page": "Paged message loading...",
+    "exception_message": "**{0}**\nStack trace: {1}",
+    "report_error": "Please report the stack trace and the error to the developers here: {0}"
+  },
 }

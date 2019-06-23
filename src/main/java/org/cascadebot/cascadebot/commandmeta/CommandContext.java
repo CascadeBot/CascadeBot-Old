@@ -7,18 +7,6 @@ package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.data.Config;
-import org.cascadebot.cascadebot.data.language.Locale;
-import org.cascadebot.cascadebot.data.objects.GuildData;
-import org.cascadebot.cascadebot.data.objects.GuildSettingsCore;
-import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
-import org.cascadebot.cascadebot.messaging.MessagingTimed;
-import org.cascadebot.cascadebot.messaging.MessagingTyped;
-import org.cascadebot.cascadebot.messaging.MessagingUI;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Emote;
@@ -32,10 +20,19 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
+import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.GuildSettingsCore;
+import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
+import org.cascadebot.cascadebot.messaging.MessagingTimed;
+import org.cascadebot.cascadebot.messaging.MessagingTyped;
+import org.cascadebot.cascadebot.messaging.MessagingUI;
 import org.cascadebot.cascadebot.music.CascadePlayer;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.shared.Regex;
 
 @Getter
 public class CommandContext {
@@ -176,7 +173,7 @@ public class CommandContext {
     }
 
     public String i18n(String path, Object... args) {
-        return CascadeBot.INS.getLanguage().get(data.getLocale(), path, args);
+        return Language.i18n(data.getLocale(), path, args);
     }
 
     public String getUsage() {

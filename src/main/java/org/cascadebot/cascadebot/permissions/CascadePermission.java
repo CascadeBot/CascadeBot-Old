@@ -8,8 +8,8 @@ package org.cascadebot.cascadebot.permissions;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.dv8tion.jda.core.Permission;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.util.Arrays;
@@ -56,11 +56,11 @@ public class CascadePermission {
     }
 
     public String getPermission(Locale locale) {
-        return CascadeBot.INS.getLanguage().get(locale, "permissions." + permissionRaw + ".name");
+        return Language.i18n(locale, "permissions." + permissionRaw + ".name");
     }
 
     public String getLabel(Locale locale) {
-        return CascadeBot.INS.getLanguage().get(locale, "permissions." + permissionRaw + ".label");
+        return Language.i18n(locale, "permissions." + permissionRaw + ".label");
     }
 
     public EnumSet<Permission> getDiscordPerms() {

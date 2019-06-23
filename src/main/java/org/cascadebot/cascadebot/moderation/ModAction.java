@@ -6,8 +6,7 @@
 package org.cascadebot.cascadebot.moderation;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
 @AllArgsConstructor
@@ -30,10 +29,10 @@ public enum ModAction {
 
     public String getVerb(Locale locale) {
         String path = "mod_actions." + name().toLowerCase() + ".verb";
-        if (!CascadeBot.INS.getLanguage().hasLanguageEntry(locale, path)) {
+        if (!Language.hasLanguageEntry(locale, path)) {
             return getVerb();
         }
-        return CascadeBot.INS.getLanguage().get(locale, path);
+        return Language.i18n(locale, path);
     }
 
     // Only the localised version should be used
@@ -43,10 +42,10 @@ public enum ModAction {
 
     public String getName(Locale locale) {
         String path = "mod_actions." + name().toLowerCase() + ".name";
-        if (!CascadeBot.INS.getLanguage().hasLanguageEntry(locale, path)) {
+        if (!Language.hasLanguageEntry(locale, path)) {
             return getName();
         }
-        return CascadeBot.INS.getLanguage().get(locale, path);
+        return Language.i18n(locale, path);
     }
 
 }
