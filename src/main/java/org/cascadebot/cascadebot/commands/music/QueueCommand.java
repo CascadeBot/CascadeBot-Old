@@ -32,8 +32,8 @@ public class QueueCommand implements ICommandMain {
 
         embedBuilder.setTitle("Queue");
 
-        if (player.getQueue().isEmpty() && player.getPlayer().getPlayingTrack() == null) {
-            context.getTypedMessaging().replyInfo("There are no tracks playing!");
+        if (player.getQueue().isEmpty()) {
+            context.getTypedMessaging().replyInfo("There are no tracks in the queue!");
             return;
         }
 
