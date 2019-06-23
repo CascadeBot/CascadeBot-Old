@@ -41,7 +41,19 @@
     "shuffle": "Shuffles music in a queue.",
     "skip": "Skips the current song.",
     "stop": "Stops music when playing.",
-    "volume": "Returns the current volume."
+    "volume": "Returns the current volume.",
+    "groupperms": {
+      "main_command": "Interact with permissions groups",
+      "add": "Adds a permission to a group",
+      "remove": "Removes a permission from the group",
+      "create": "Creates a group",
+      "link": "Links a group to a role",
+      "unlink": "Unlink a role from a group",
+      "move": "Moves groups around if in hierarchical mode",
+      "switch": "Switches the permissions modes",
+      "info": "Gets info on a group",
+      "list": "Lists all groups"
+    }
   },
   "commands": {
     "support": {
