@@ -12,7 +12,6 @@ import com.sun.management.OperatingSystemMXBean;
 import org.cascadebot.cascadebot.music.MusicHandler;
 
 import java.lang.management.ManagementFactory;
-import java.util.logging.Filter;
 
 public class StatsCommand implements ICommandCore {
 
