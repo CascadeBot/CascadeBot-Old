@@ -9,8 +9,10 @@ import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 
 import com.sun.management.OperatingSystemMXBean;
+import org.cascadebot.cascadebot.music.MusicHandler;
 
 import java.lang.management.ManagementFactory;
+import java.util.logging.Filter;
 
 public class StatsCommand implements ICommandCore {
 
@@ -24,7 +26,7 @@ public class StatsCommand implements ICommandCore {
 
         builder.addField("Total Guilds", String.valueOf(CascadeBot.INS.getShardManager().getGuilds().size()), true);
         builder.addField("Active Guilds", String.valueOf(CascadeBot.INS.getShardManager().getGuildCache().size()), true);
-        builder.addField("Active Voice Channels", String.valueOf(CascadeBot.INS.getShardManager().getVoiceChannels().size()), true);
+        builder.addField("Active Voice Channels", String.valueOf(MusicHandler.getPlayers().entrySet().stream().filter(entry -> entry.getValue().getConnectedChannel() != null).count()), true);
         builder.addField("RAM Usage", FileUtils.byteCountToDisplaySize(Runtime.getRuntime().totalMemory()), true);
         builder.addField("CPU Load", String.valueOf(osBean.getProcessCpuLoad()), true);
         builder.addField("Total Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsTotal()), true);
