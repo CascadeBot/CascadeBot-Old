@@ -24,7 +24,7 @@ Cascade Bot is a Discord bot that aims to be as customisable as possible as well
 ## 🤝🏻 Contributing
 Contributions, feedback and bug reports are welcome! Feel free to check out our [issues page](https://github.com/CascadeBot/CascadeBot/issues) and our [roadmap](https://github.com/orgs/CascadeBot/projects/3) to find out what you could do!
 
-Before contributing, we recommend you say hi over in our [Discord server](https://discord.gg/P23GZFB)! We can provide support with any issues you may have 🙂 Also, please make sure to read our [contribution guidelines](.github/CONTRIBUTING.md) in order to make sure submitting a PR is as slick as possible!
+Before contributing, we recommend you say hi over in our [Discord server](https://discord.cascadebot.org)! We can provide support with any issues you may have 🙂 Also, please make sure to read our [contribution guidelines](.github/CONTRIBUTING.md) in order to make sure submitting a PR is as slick as possible!
 
 A big thanks to all those who contribute to the project ❤
 
