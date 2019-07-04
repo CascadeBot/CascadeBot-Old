@@ -12,7 +12,10 @@ import lombok.Setter;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.Table;
 
@@ -35,16 +38,17 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            if (GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong()).getSettings().isUseEmbedForMessages()) {
+            GuildData data = GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong());
+            if (data.getSettings().isUseEmbedForMessages()) {
                 if (numbersInEmbed) {
-                    embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
+                    embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
                     message.editMessage(embed.build()).override(true).queue();
                 } else {
-                    message.editMessage(new MessageBuilder().setEmbed(embed.build()).append("Page ").append(String.valueOf(page)).append("/").append(String.valueOf(total)).build()).override(true).queue();
+                    message.editMessage(new MessageBuilder().setEmbed(embed.build()).append(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total)).build()).override(true).queue();
 
                 }
             } else {
-                embed.setFooter("Page " + page + "/" + total, message.getAuthor().getAvatarUrl());
+                embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
                 String content = FormatUtils.formatEmbed(embed.build());
                 message.editMessage(content).override(true).queue();
             }
@@ -61,7 +65,7 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            message.editMessage(content + "\n\nPage " + page + "/" + total).override(true).queue();
+            message.editMessage(content + "\n\n" + Language.i18n(message.getGuild().getIdLong(), "page_objects.page_footer", page, total)).override(true).queue();
         }
 
     }
@@ -77,11 +81,11 @@ public class PageObjects {
         public void pageShow(Message message, int page, int total) {
             if (numbersInTable) {
                 Table.TableBuilder builder = this.table.edit();
-                builder.setFooter("Page " + page + "/" + total);
+                builder.setFooter(Language.i18n(message.getGuild().getIdLong(), "page_objects.page_footer", page, total));
                 message.editMessage(builder.build().toString()).override(true).queue();
             } else {
                 String table = this.table.toString();
-                table += "\n\nPage " + page + "/" + total;
+                table += "\n\n" + Language.i18n(message.getGuild().getIdLong(), "page_objects.page_footer", page, total);
                 message.editMessage(table).override(true).queue();
             }
         }

@@ -606,5 +606,8 @@
     "loading_page": "Paged message loading...",
     "exception_message": "**{0}**\nStack trace: {1}",
     "report_error": "Please report the stack trace and the error to the developers here: {0}"
+  },
+  "page_objects": {
+    "page_footer": "Page {0}/{1}"
   }
 }
