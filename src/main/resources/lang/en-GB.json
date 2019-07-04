@@ -307,7 +307,7 @@
       "name": "cat",
       "label": "Cat command"
     },
-    "dog" : {
+    "dog": {
       "name": "dog",
       "label": "Dog command"
     },
@@ -485,13 +485,23 @@
     "cannot_action_superior": "Cannot {0} user {1} the top role they have is higher than mine!",
     "success": "{0} has been {1}!"
   },
-  "music_misc": {
-    "load_options": "@musical_note@ - Load as track `{0}`\n@notes@ - Load as playlist `{1}`",
-    "load_options_title": "Load as a single track or as a playlist?",
-    "load_options_typed": "\n\nPlease type either `track` or `playlist`!",
-    "cannot_find_tracks": "We couldn't find any tracks to load!",
-    "num_tracks": "{0} tracks",
-    "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`"
+  "music": {
+    "misc": {
+      "load_options": "@musical_note@ - Load as track `{0}`\n@notes@ - Load as playlist `{1}`",
+      "load_options_title": "Load as a single track or as a playlist?",
+      "load_options_typed": "\n\nPlease type either `track` or `playlist`!",
+      "cannot_find_tracks": "We couldn't find any tracks to load!",
+      "num_tracks": "{0} tracks",
+      "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`"
+    },
+    "handler": {
+      "error_searching": "Error searching from YouTube!",
+      "error_processing": "Error while processing search!",
+      "error_reading": "Error reading YouTube data!",
+      "no_data_returned": "YouTube didn't return any data!",
+      "query_unsuccessful": "The query was unsuccessful! Response: {0}",
+      "more_than_five": "YouTube returned more then 5 results! A check of the YouTube api is recommended"
+    }
   },
   "responses": {
     "invalid_user": "Invalid User!",
@@ -506,7 +516,7 @@
     "cannot_find_voice_channel": "Could not find that voice channel to connect to!",
     "voice_not_connected": "I am not connected to a voice channel!",
     "type_one_of": "Please type one of: ",
-    "invalid_guild_id" : "That isn't a valid guild ID!",
+    "invalid_guild_id": "That isn't a valid guild ID!",
     "no_cascade_perm_discord": "You don't have the permission `{0}` or the Discord permission(s) {1} that you need to do this!",
     "no_cascade_perm": "You don't have the permission `{0}` that you need to do this!",
     "no_discord_perm": "You don't have the Discord permission `{0}` that you need to do this!",
