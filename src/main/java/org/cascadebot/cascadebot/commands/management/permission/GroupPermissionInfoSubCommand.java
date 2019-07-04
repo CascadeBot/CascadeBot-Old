@@ -31,7 +31,7 @@ public class GroupPermissionInfoSubCommand implements ISubCommand {
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getMessage(0), group -> {
             if (group.getPermissions().isEmpty() && group.getRoleIds().isEmpty()) {
-                context.getTypedMessaging().replyWarning("Group has no permissions or roles");
+                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.info.empty_group"));
                 return;
             }
 
@@ -55,7 +55,7 @@ public class GroupPermissionInfoSubCommand implements ISubCommand {
                 List<String> rolesPageContent = PageUtils.splitString(rolesBuilder.toString(), 1000, '\n');
                 for (String roleContent : rolesPageContent) {
                     EmbedBuilder rolesEmbedBuilder = new EmbedBuilder();
-                    rolesEmbedBuilder.setTitle("Linked Roles");
+                    rolesEmbedBuilder.setTitle(context.i18n("commands.groupperms.info.roles_title"));
                     rolesEmbedBuilder.setDescription("```" + roleContent + "```");
                     pageList.add(new PageObjects.EmbedPage(rolesEmbedBuilder));
                 }
@@ -65,7 +65,7 @@ public class GroupPermissionInfoSubCommand implements ISubCommand {
                 List<String> permissionsPageContent = PageUtils.splitString(permissionBuilder.toString(), 1000, '\n');
                 for (String permsContent : permissionsPageContent) {
                     EmbedBuilder permissionsEmbedBuilder = new EmbedBuilder();
-                    permissionsEmbedBuilder.setTitle("Permissions");
+                    permissionsEmbedBuilder.setTitle(context.i18n("commands.groupperms.info.perms_title"));
                     permissionsEmbedBuilder.setDescription("```" + permsContent + "```");
                     pageList.add(new PageObjects.EmbedPage(permissionsEmbedBuilder));
                 }

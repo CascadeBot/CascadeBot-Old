@@ -24,15 +24,15 @@ public class GroupPermissionRemoveSubCommand implements ISubCommand {
         }
 
         if (!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getGuild(), context.getArg(1))) {
-            context.getTypedMessaging().replyDanger("`%s` isn't a valid permission", context.getArg(1));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (group.removePermission(context.getArg(1))) {
-                context.getTypedMessaging().replySuccess("Successfully removed permission `%s` from group `%s`", context.getArg(1), group.getName() + "(" + group.getId() + ")");
+                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.remove.success", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
             } else {
-                context.getTypedMessaging().replyWarning("Couldn't removed permission `%s` from group `%s` as they already have the permission", context.getArg(1), group.getName() + "(" + group.getId() + ")");
+                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.remove.fail", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
             }
         }, sender.getUser().getIdLong());
     }

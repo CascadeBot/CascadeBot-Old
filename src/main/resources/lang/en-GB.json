@@ -280,10 +280,48 @@
       "raw": {
         "command": "raw"
       }
+    },
+    "groupperms": {
+      "command": "grouperms",
+      "add": {
+        "success": "Successfully added permission `%s` to group `%s`",
+        "fail": "Couldn't add permission `%s` to group `%s` as they already have the permission"
+      },
+      "remove": {
+        "success": "Successfully removed permission `%s` from group `%s`",
+        "fail": "Couldn't removed permission `%s` from group `%s` as they already have the permission"
+      },
+      "create": "Created group `%s` with id `%s`",
+      "info": {
+        "empty_group": "Group has no permissions or roles",
+        "roles_title": "Linked Roles",
+        "perms_title": "Permissions"
+      },
+      "link": {
+        "success": "Linked group `%s` to role `%s`",
+        "fail": "Couldn't link group `%s` to role `%s`"
+      },
+      "unlink": {
+        "success": "Unlinked group `%s` to role `%s`",
+        "fail": "Couldn't unlink group `%s` from role `%s`"
+      },
+      "list": "You have no groups!",
+      "move": {
+        "wrong_mode": "Cannot move groups in most restrictive mode",
+        "moved": "Moved group %s to position %s"
+      },
+      "switch": {
+        "success": "Switched the permission mode to `%s`",
+        "fail": "The permission mode %s isn't a valid permission mode!"
+      }
+    },
+    "userperms": {
+
     }
   },
   "permissions": {
     "module": {
+      "_comment": "we have 2 module elements might want to fix that - Ryan",
       "info": {
         "name": "module.info",
         "label": "Information module"
@@ -527,7 +565,9 @@
     "failed_to_process_command": "There was an error while processing your command!",
     "failed_to_run_command": "There was an error while running the command!",
     "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
-    "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!"
+    "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!",
+    "permission_not_exist": "`%s` isn't a valid permission",
+    "cannot_find_role_matching": "Could not find role %s"
   },
   "statuses": {
     "streaming": "Streaming",
@@ -618,5 +658,5 @@
     "loading_page": "Paged message loading...",
     "exception_message": "**{0}**\nStack trace: {1}",
     "report_error": "Please report the stack trace and the error to the developers here: {0}"
-  },
+  }
 }
