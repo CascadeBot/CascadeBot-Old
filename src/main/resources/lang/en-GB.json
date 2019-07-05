@@ -41,7 +41,19 @@
     "shuffle": "Shuffles music in a queue.",
     "skip": "Skips the current song.",
     "stop": "Stops music when playing.",
-    "volume": "Returns the current volume."
+    "volume": "Returns the current volume.",
+    "groupperms": {
+      "main_command": "Interact with permissions groups",
+      "add": "Adds a permission to a group",
+      "remove": "Removes a permission from the group",
+      "create": "Creates a group",
+      "link": "Links a group to a role",
+      "unlink": "Unlink a role from a group",
+      "move": "Moves groups around if in hierarchical mode",
+      "switch": "Switches the permissions modes",
+      "info": "Gets info on a group",
+      "list": "Lists all groups"
+    }
   },
   "commands": {
     "support": {
@@ -268,10 +280,75 @@
       "raw": {
         "command": "raw"
       }
+    },
+    "groupperms": {
+      "command": "grouperms",
+      "add": {
+        "success": "Successfully added permission `%s` to group `%s`",
+        "fail": "Couldn't add permission `%s` to group `%s` as they already have the permission"
+      },
+      "remove": {
+        "success": "Successfully removed permission `%s` from group `%s`",
+        "fail": "Couldn't removed permission `%s` from group `%s` as they already have the permission"
+      },
+      "create": "Created group `%s` with id `%s`",
+      "info": {
+        "empty_group": "Group has no permissions or roles",
+        "roles_title": "Linked Roles",
+        "perms_title": "Permissions"
+      },
+      "link": {
+        "success": "Linked group `%s` to role `%s`",
+        "fail": "Couldn't link group `%s` to role `%s`"
+      },
+      "unlink": {
+        "success": "Unlinked group `%s` to role `%s`",
+        "fail": "Couldn't unlink group `%s` from role `%s`"
+      },
+      "list": "You have no groups!",
+      "move": {
+        "wrong_mode": "Cannot move groups in most restrictive mode",
+        "moved": "Moved group %s to position %s"
+      },
+      "switch": {
+        "success": "Switched the permission mode to `%s`",
+        "fail": "The permission mode %s isn't a valid permission mode!"
+      }
+    },
+    "userperms": {
+      "add": {
+        "success": "Successfully added permission `%s` to user `%s`",
+        "fail": "Couldn't add permission `%s` to user `%s` as they already have the permission"
+      },
+      "remove": {
+        "success": "Successfully removed permission `%s` from user `%s`",
+        "fail": "Couldn't remove permission `%s` from user `%s` as they don't have the permission"
+      },
+      "group": {
+        "put": {
+          "success": "Put user `%s` in group `%s`",
+          "fail": "Couldn't add user `%s` to group `%s` because they're already in the group"
+        },
+        "remove": {
+          "success": "Removed user `%s` from group `%s`",
+          "fail": "Couldn't remove user `%s` from group %s` because they're not in the group"
+        }
+      },
+      "list": {
+        "no_groups": "User has no groups!",
+        "group_title": "%s's groups",
+        "no_permissions": "User has no permissions!",
+        "perms_title": "%s's permissions"
+      },
+      "test": {
+        "has": " User %s has the permission `%s`",
+        "does_not_have": " User %s doesn't the permission `%s`"
+      }
     }
   },
   "permissions": {
     "module": {
+      "_comment": "we have 2 module elements might want to fix that - Ryan",
       "info": {
         "name": "module.info",
         "label": "Information module"
@@ -531,7 +608,9 @@
     "failed_to_process_command": "There was an error while processing your command!",
     "failed_to_run_command": "There was an error while running the command!",
     "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
-    "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!"
+    "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!",
+    "permission_not_exist": "`%s` isn't a valid permission",
+    "cannot_find_role_matching": "Could not find role %s"
   },
   "statuses": {
     "streaming": "Streaming",

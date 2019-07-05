@@ -26,15 +26,15 @@ public class GroupPermissionLinkRoleSubCommand implements ISubCommand {
 
         Role role = DiscordUtils.getRole(context.getArg(1), context.getGuild());
         if (role == null) {
-            context.getTypedMessaging().replyDanger("Could not find role " + context.getArg(1));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_role_matching", context.getArg(1)));
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (group.linkRole(role.getIdLong())) {
-                context.getTypedMessaging().replySuccess("Linked group `%s` to role `%s`", group.getName(), role.getName());
+                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.link.success", group.getName(), role.getName()));
             } else {
-                context.getTypedMessaging().replyWarning("Couldn't link group `%s` to role `%s`", group.getName(), role.getName());
+                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.link.fail", group.getName(), role.getName()));
             }
         }, sender.getUser().getIdLong());
     }
@@ -51,7 +51,7 @@ public class GroupPermissionLinkRoleSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions link sub command", "permissions.group.link", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.link", false, Module.MANAGEMENT);
     }
 
     @Override

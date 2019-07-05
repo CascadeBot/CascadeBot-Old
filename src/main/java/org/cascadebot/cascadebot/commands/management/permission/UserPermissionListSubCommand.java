@@ -40,7 +40,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
 
         Member member = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         if (member == null) {
-            context.getTypedMessaging().replyDanger("User `" + context.getArg(0) + "` not found");
+            context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_user_matching", context.getArg(0)));
             return;
         }
 
@@ -49,7 +49,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
         if (context.getArg(1).equalsIgnoreCase("groups")) {
             StringBuilder groupsBuilder = new StringBuilder();
             if (user.getGroupIds().isEmpty()) {
-                context.getTypedMessaging().replyWarning("User has no groups!");
+                context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.list.no_groups"));
                 return;
             }
 
@@ -61,14 +61,14 @@ public class UserPermissionListSubCommand implements ISubCommand {
             List<Page> pages = new ArrayList<>();
             for (String content : pageContent) {
                 EmbedBuilder builder = new EmbedBuilder();
-                builder.setTitle(member.getUser().getAsTag() + "'s groups");
+                builder.setTitle(context.i18n("commands.userperms.list.group_title", member.getUser().getAsTag()));
                 builder.setDescription("```\n" + content + "```");
                 pages.add(new PageObjects.EmbedPage(builder));
             }
             context.getUIMessaging().sendPagedMessage(pages);
         } else if (context.getArg(1).equalsIgnoreCase("permissions")) {
             if (user.getPermissions().isEmpty()) {
-                context.getTypedMessaging().replyWarning("User has no permissions!");
+                context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.list.no_permissions"));
                 return;
             }
 
@@ -80,7 +80,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
             List<Page> pages = new ArrayList<>();
             for (String content : pageContent) {
                 EmbedBuilder builder = new EmbedBuilder();
-                builder.setTitle(member.getUser().getAsTag() + "'s permissions");
+                builder.setTitle(context.i18n("commands.userperms.list.perms_title", member.getUser().getAsTag()));
                 builder.setDescription("```\n" + content + "```");
                 pages.add(new PageObjects.EmbedPage(builder));
             }
@@ -100,7 +100,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User permissions list sub command", "permissions.user.list", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.user.list", false, Module.MANAGEMENT);
     }
 
     @Override
@@ -108,10 +108,4 @@ public class UserPermissionListSubCommand implements ISubCommand {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("user", null, ArgumentType.REQUIRED,
-                Set.of(Argument.of("groups", "List the groups the user has", ArgumentType.COMMAND),
-                        Argument.of("permissions", "List the permissions the user has", ArgumentType.COMMAND))));
-    }
 }

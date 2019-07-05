@@ -29,21 +29,21 @@ public class UserPermissionAddSubCommand implements ISubCommand {
 
         Member member = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         if (member == null) {
-            context.getTypedMessaging().replyDanger("User `" + context.getArg(0) + "` not found");
+            context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_user_matching", context.getArg(0)));
             return;
         }
 
         User user = context.getData().getPermissions().getPermissionUser(member);
 
         if (!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getGuild(), context.getArg(1))) {
-            context.getTypedMessaging().replyDanger("`%s` isn't a valid permission", context.getArg(1));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
             return;
         }
 
         if (user.addPermission(context.getArg(1))) {
-            context.getTypedMessaging().replySuccess("Successfully added permission `%s` to user `%s`", context.getArg(1), member.getUser().getAsTag());
+            context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.add.success", context.getArg(1), member.getUser().getAsTag()));
         } else {
-            context.getTypedMessaging().replyWarning("Couldn't add permission `%s` to user `%s` as they already have the permission", context.getArg(1), member.getUser().getAsTag());
+            context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.add.fail", context.getArg(1), member.getUser().getAsTag()));
         }
     }
 
@@ -59,7 +59,7 @@ public class UserPermissionAddSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User permissions add sub command", "permissions.user.add", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.user.add", false, Module.MANAGEMENT);
     }
 
     @Override
@@ -67,9 +67,4 @@ public class UserPermissionAddSubCommand implements ISubCommand {
         return null;
     }
 
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("user", null, ArgumentType.REQUIRED,
-                Set.of(Argument.of("permission", "Adds the given permission to the user", ArgumentType.REQUIRED))));
-    }
 }

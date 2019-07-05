@@ -23,7 +23,7 @@ public class GroupPermissionSwitchSubCommand implements ISubCommand {
         if (context.getArgs().length > 1) {
             mode = EnumUtils.getEnumIgnoreCase(GuildPermissions.PermissionMode.class, context.getArg(0));
             if (mode == null) {
-                context.getTypedMessaging().replyDanger("The permission mode %s isn't a valid permission mode!", context.getArg(0));
+                context.getTypedMessaging().replyDanger("commands.groupperms.switch.fail", context.getArg(0));
                 return;
             }
         } else {
@@ -38,7 +38,7 @@ public class GroupPermissionSwitchSubCommand implements ISubCommand {
         }
 
         context.getData().getPermissions().setMode(mode);
-        context.getTypedMessaging().replySuccess("Switch the permission mode to `%s`", FormatUtils.formatEnum(mode));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.switch.success", FormatUtils.formatEnum(mode)));
     }
 
     @Override
@@ -53,7 +53,7 @@ public class GroupPermissionSwitchSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions switch sub command", "permissions.group.switch", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.switch", false, Module.MANAGEMENT);
     }
 
     @Override

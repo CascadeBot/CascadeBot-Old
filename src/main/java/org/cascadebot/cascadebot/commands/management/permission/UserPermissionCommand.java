@@ -32,7 +32,7 @@ public class UserPermissionCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User permissions command", "permissions.user", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.user", false, Module.MANAGEMENT);
     }
 
     @Override

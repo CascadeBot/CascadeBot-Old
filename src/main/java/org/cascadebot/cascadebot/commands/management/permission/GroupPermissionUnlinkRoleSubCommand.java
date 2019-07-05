@@ -26,15 +26,15 @@ public class GroupPermissionUnlinkRoleSubCommand implements ISubCommand {
 
         Role role = DiscordUtils.getRole(context.getArg(1), context.getGuild());
         if (role == null) {
-            context.getTypedMessaging().replyDanger("Could not find role %s", context.getArg(1));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_role_matching", context.getArg(1)));
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (group.unlinkRole(role.getIdLong())) {
-                context.getTypedMessaging().replySuccess("Unlinked group `%s` to role `%s`", group.getName(), role.getName());
+                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.unlink.success", group.getName(), role.getName()));
             } else {
-                context.getTypedMessaging().replyWarning("Couldn't unlink group `%s` to role `%s`", group.getName(), role.getName());
+                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.unlink.fail", group.getName(), role.getName()));
             }
         }, sender.getUser().getIdLong());
     }
@@ -51,7 +51,7 @@ public class GroupPermissionUnlinkRoleSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions unlink sub command", "permissions.group.unlink", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.unlink", false, Module.MANAGEMENT);
     }
 
     @Override
