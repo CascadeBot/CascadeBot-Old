@@ -63,7 +63,7 @@ public class MessagingUI {
             try {
                 return context.getChannel().sendFile(new URL(url).openStream(), split[split.length - 1]).submit();
             } catch (IOException e) {
-                return Messaging.sendExceptionMessage(context.getChannel(), "Error loading image", e);
+                return Messaging.sendExceptionMessage(context.getChannel(), context.i18n("responses.error_loading_image"), e);
             }
         }
     }
@@ -169,12 +169,12 @@ public class MessagingUI {
         } else {
             AudioTrack track = tracks.get(0);
             EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
-            builder.setTitle("Loaded Track");
+            builder.setTitle(context.i18n("music.misc.loaded_track"));
             builder.setDescription(track.getInfo().title);
             if (!track.getInfo().isStream) {
-                builder.addField("Length", FormatUtils.formatLongTimeMills(track.getDuration()), true);
+                builder.addField(context.i18n("words.length"), FormatUtils.formatLongTimeMills(track.getDuration()), true);
             }
-            builder.addField("Author", track.getInfo().author, true);
+            builder.addField(context.i18n("words.author"), track.getInfo().author, true);
             context.getTypedMessaging().replySuccess(builder);
         }
     }
@@ -212,17 +212,17 @@ public class MessagingUI {
             try {
                 context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
             } catch (PermissionException e) {
-                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription(context.i18n("music.misc.load_options_typed")));
+                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription(context.i18n("music.misc.load_options_typed", context.i18n("music.misc.load_option.track"), context.i18n("music.misc.load_option.playlist"))));
 
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
                         new EventWaiter.TextResponse(event -> {
                             context.getMusicPlayer().addTrack(selectedTrack);
                             context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
-                        }, "track"),
+                        }, context.i18n("music.misc.load_option.track")),
                         new EventWaiter.TextResponse(event -> {
                             context.getMusicPlayer().addTracks(tracks);
                             context.getUIMessaging().sendTracksFound(tracks);
-                        }, "playlist"));
+                        }, context.i18n("music.misc.load_option.playlist")));
             }
 
         } else if (tracks.size() == 1) {

@@ -489,10 +489,15 @@
     "misc": {
       "load_options": "@musical_note@ - Load as track `{0}`\n@notes@ - Load as playlist `{1}`",
       "load_options_title": "Load as a single track or as a playlist?",
-      "load_options_typed": "\n\nPlease type either `track` or `playlist`!",
+      "load_options_typed": "\n\nPlease type either `{0}` or `{1}`!",
+      "load_option": {
+        "track": "track",
+        "playlist": "playlist"
+      },
       "cannot_find_tracks": "We couldn't find any tracks to load!",
       "num_tracks": "{0} tracks",
-      "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`"
+      "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`",
+      "loaded_track": "Loaded track"
     },
     "handler": {
       "error_searching": "Error searching from YouTube!",
@@ -505,6 +510,7 @@
   },
   "responses": {
     "invalid_user": "Invalid User!",
+    "error_loading_image": "Error loading image",
     "cannot_find_guild": "We cannot find that guild!",
     "not_enough_arguments": "Not enough arguments!",
     "no_arguments_for_command": "No arguments for command `{0}`!",
@@ -610,7 +616,9 @@
     "progress": "Progress",
     "volume": "Volume",
     "category": "Category",
-    "tag": "Tag"
+    "tag": "Tag",
+    "author": "Author",
+    "length": "Length"
   },
   "messaging": {
     "loading_page": "Paged message loading...",
