@@ -26,20 +26,20 @@ public class UserPermissionTestSubCommand implements ISubCommand {
 
         Member target = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         if (target == null) {
-            context.getTypedMessaging().replyDanger("User `%s` not found", context.getArg(0));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_user_matching", context.getArg(0)));
             return;
         }
 
         CascadePermission perm = CascadeBot.INS.getPermissionsManager().getPermission(context.getArg(1));
         if (perm == null) {
-            context.getTypedMessaging().replyDanger("Permission `%s` isn't a valid permission", context.getArg(1));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
             return;
         }
 
         if (context.getData().getPermissions().hasPermission(target, context.getChannel(), perm, context.getSettings())) {
-            context.getTypedMessaging().replyInfo(UnicodeConstants.TICK + " User %s has the permission `%s`", target.getUser().getAsTag(), perm.getPermission(context.getLocale()));
+            context.getTypedMessaging().replyInfo(UnicodeConstants.TICK + context.i18n("commands.userperms.test.has", target.getUser().getAsTag(), perm.getPermission(context.getLocale())));
         } else {
-            context.getTypedMessaging().replyInfo(UnicodeConstants.RED_CROSS + " User %s doesn't the permission `%s`", target.getUser().getAsTag());
+            context.getTypedMessaging().replyInfo(UnicodeConstants.RED_CROSS + context.i18n("commands.userperms.test.does_not_have", target.getUser().getAsTag()));
         }
     }
 

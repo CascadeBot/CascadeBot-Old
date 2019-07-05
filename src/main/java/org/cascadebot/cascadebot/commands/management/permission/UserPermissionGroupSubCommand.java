@@ -34,7 +34,7 @@ public class UserPermissionGroupSubCommand implements ISubCommand {
 
         Member member = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
         if (member == null) {
-            context.getTypedMessaging().replyDanger("User `%s` not found", context.getArg(1));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
             return;
         }
 
@@ -42,15 +42,15 @@ public class UserPermissionGroupSubCommand implements ISubCommand {
             User user = context.getData().getPermissions().getPermissionUser(member);
             if (context.getArg(0).equalsIgnoreCase("put")) {
                 if (user.addGroup(group)) {
-                    context.getTypedMessaging().replySuccess("Put user `%s` in group `%s`", member.getUser().getAsTag(), group.getName());
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.put.success", member.getUser().getAsTag(), group.getName()));
                 } else {
-                    context.getTypedMessaging().replyWarning("Couldn't add user `%s` to group `%s` because they're already in the group");
+                    context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.put.fail", member.getUser().getAsTag(), group.getName()));
                 }
             } else if (context.getArg(0).equalsIgnoreCase("remove")) {
                 if (user.removeGroup(group)) {
-                    context.getTypedMessaging().replySuccess("Removed user `%s` from group `%s`", member.getUser().getAsTag(), group.getName());
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.remove.success", member.getUser().getAsTag(), group.getName()));
                 } else {
-                    context.getTypedMessaging().replyWarning("Couldn't remove user `%s` from group %s` because they're not in the group");
+                    context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.remove.fail", member.getUser().getAsTag(), group.getName()));
                 }
             }
         }, sender.getUser().getIdLong());

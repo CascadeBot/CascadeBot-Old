@@ -28,16 +28,16 @@ public class UserPermissionRemoveSubCommand implements ISubCommand {
 
         Member member = DiscordUtils.getMember(context.getGuild(), context.getArg(0)); //TODO Switch these of over to the error handler in language
         if (member == null) {
-            context.getTypedMessaging().replyDanger("User `%s` not found", context.getArg(0));
+            context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
             return;
         }
 
         User user = context.getData().getPermissions().getPermissionUser(member);
 
         if (user.removePermission(context.getArg(1))) {
-            context.getTypedMessaging().replySuccess("Successfully removed permission `%s` to user `%s`", context.getArg(1), member.getUser().getAsTag());
+            context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));
         } else {
-            context.getTypedMessaging().replyWarning("Couldn't remove permission `%s` to user `%s` as they don't have the permission", context.getArg(1), member.getUser().getAsTag());
+            context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.remove.fail", context.getArg(1), member.getUser().getAsTag()));
         }
     }
 
