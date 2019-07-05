@@ -13,7 +13,6 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.MessageBuilder;
 import net.dv8tion.jda.core.entities.Message;
 import org.cascadebot.cascadebot.data.language.Language;
-import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.FormatUtils;
@@ -39,7 +38,7 @@ public class PageObjects {
         @Override
         public void pageShow(Message message, int page, int total) {
             GuildData data = GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong());
-            if (data.getSettings().isUseEmbedForMessages()) {
+            if (data.getCoreSettings().isUseEmbedForMessages()) {
                 if (numbersInEmbed) {
                     embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
                     message.editMessage(embed.build()).override(true).queue();

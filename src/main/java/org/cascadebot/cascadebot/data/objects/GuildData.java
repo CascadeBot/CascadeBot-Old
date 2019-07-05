@@ -59,15 +59,11 @@ public class GuildData {
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
-    @Setter
-    private String prefix = Config.INS.getDefaultPrefix();
     private Locale locale = Locale.getDefaultLocale();
-
-    private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
 
     //region Guild data containers
 
-    private GuildSettingsCore guildSettings = new GuildSettingsCore(guildID);
+    private GuildSettingsCore coreSettings = new GuildSettingsCore(guildID);
     private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now
@@ -190,10 +186,6 @@ public class GuildData {
     public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
         buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
-    }
-
-    public GuildSettingsCore getSettings() {
-        return guildSettings;
     }
 
     public GuildPermissions getPermissions() {

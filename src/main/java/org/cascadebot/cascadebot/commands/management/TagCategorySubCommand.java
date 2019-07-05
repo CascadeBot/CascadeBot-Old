@@ -6,15 +6,10 @@
 package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-
-import java.util.Set;
 
 public class TagCategorySubCommand implements ISubCommand {
 
@@ -25,7 +20,7 @@ public class TagCategorySubCommand implements ISubCommand {
             return;
         }
 
-        Tag tag = context.getSettings().getTag(context.getArg(0));
+        Tag tag = context.getCoreSettings().getTag(context.getArg(0));
         if (tag == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
             return;

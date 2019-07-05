@@ -8,8 +8,6 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.StringUtils;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -30,7 +28,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SettingsCommand implements ICommandMain {
@@ -61,7 +58,7 @@ public class SettingsCommand implements ICommandMain {
                         .map(Map.Entry::getValue)
                         .forEach((f) -> {
                             try {
-                                tableBuilder.addRow(f.getName(), String.valueOf(f.get(context.getSettings())));
+                                tableBuilder.addRow(f.getName(), String.valueOf(f.get(context.getCoreSettings())));
                             } catch (IllegalAccessException e) {
                                 e.printStackTrace();
                             }
@@ -93,9 +90,9 @@ public class SettingsCommand implements ICommandMain {
                 if (field.getType() == boolean.class) {
                     boolean booleanValue = Boolean.valueOf(value);
                     value = String.valueOf(booleanValue);
-                    field.setBoolean(context.getSettings(), booleanValue);
+                    field.setBoolean(context.getCoreSettings(), booleanValue);
                 } else if (field.getType() == String.class) {
-                    field.set(context.getSettings(), value);
+                    field.set(context.getCoreSettings(), value);
                 } else {
                     return;
                 }

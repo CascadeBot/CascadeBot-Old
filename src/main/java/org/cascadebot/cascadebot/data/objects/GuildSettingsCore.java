@@ -6,7 +6,10 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import com.google.common.collect.Sets;
+import jdk.jfr.Name;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -23,12 +26,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @SettingsContainer(module = Module.CORE)
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GuildSettingsCore {
 
     public static Map<String, Field> VALUES = new HashMap<>();
 
-    private final long guildId;
+    private long guildId;
 
     static {
         for (Field field : GuildSettingsCore.class.getDeclaredFields()) {
@@ -70,6 +73,10 @@ public class GuildSettingsCore {
 
     @Setting(directlyEditable = false)
     private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
+
+    public GuildSettingsCore(long guildId) {
+        this.guildId = guildId;
+    }
 
     //region Modules
     public boolean enableModule(Module module) {

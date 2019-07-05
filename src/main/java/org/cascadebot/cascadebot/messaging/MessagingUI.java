@@ -54,7 +54,7 @@ public class MessagingUI {
      * @return A {@link RequestFuture<Message>} so you can interact with the message after it sends.
      */
     public RequestFuture<Message> replyImage(String url) {
-        if (context.getSettings().isUseEmbedForMessages()) {
+        if (context.getCoreSettings().isUseEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setImage(url);
             return context.getChannel().sendMessage(embedBuilder.build()).submit();

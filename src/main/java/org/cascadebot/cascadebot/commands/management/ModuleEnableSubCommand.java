@@ -8,14 +8,10 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-
-import java.util.Set;
 
 public class ModuleEnableSubCommand implements ISubCommand {
 
@@ -30,7 +26,7 @@ public class ModuleEnableSubCommand implements ISubCommand {
 
         if (module != null) {
             try {
-                if (context.getSettings().enableModule(module)) {
+                if (context.getCoreSettings().enableModule(module)) {
                     // If the module wasn't enabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.enable.enabled", module.toString()));
                 } else {

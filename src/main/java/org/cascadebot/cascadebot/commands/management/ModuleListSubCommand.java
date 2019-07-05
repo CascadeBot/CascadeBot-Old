@@ -8,10 +8,8 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Arrays;
@@ -25,7 +23,7 @@ public class ModuleListSubCommand implements ISubCommand {
                 .filter(module -> !module.isPrivate())
                 .map(module -> module.toString().toLowerCase() +
                         " - " +
-                        (context.getSettings().isModuleEnabled(module) ? "Enabled" : "Disabled"))
+                        (context.getCoreSettings().isModuleEnabled(module) ? "Enabled" : "Disabled"))
                 .collect(Collectors.joining("\n")));
     }
 
