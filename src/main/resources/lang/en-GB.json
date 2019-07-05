@@ -675,9 +675,7 @@
       "description": "Gets the user who executed the tag"
     },
     "channel": {
-      "name": {
-        "description": ""
-      }
+      "description": "Gets the channel that the tag was ran in"
     },
     "time": {
       "description": "Gets the current time"

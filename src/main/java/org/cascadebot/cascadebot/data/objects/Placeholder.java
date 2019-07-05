@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.lang.math.NumberUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.language.Language;
@@ -50,7 +51,13 @@ public enum Placeholder {
     //endregion
 
     //region channel
-    CHANNEL_NAME((context, args) -> context.getChannel().getName()),
+    CHANNEL((context, args) -> {
+        TextChannel channel = context.getChannel();
+        if (args.length == 1 && "id".equals(args[0].toLowerCase())) {
+            return channel.getId();
+        }
+        return channel.getName();
+    }),
     //endregion
 
     //region Other
