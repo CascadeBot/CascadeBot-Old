@@ -42,9 +42,4 @@ public class ModuleListSubCommand implements ISubCommand {
         return CascadePermission.of("module.list", false, Permission.MANAGE_SERVER);
     }
 
-    @Override
-    public String description() {
-        return "Lists all modules";
-    }
-
 }
