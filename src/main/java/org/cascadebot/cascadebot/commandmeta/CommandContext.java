@@ -79,8 +79,8 @@ public class CommandContext {
 
     //region Raw data getters
 
-    public GuildSettingsCore getSettings() {
-        return data.getSettings();
+    public GuildSettingsCore getCoreSettings() {
+        return data.getCoreSettings();
     }
 
     public Locale getLocale() {
@@ -189,7 +189,7 @@ public class CommandContext {
             parent = ((ISubCommand) command).parent();
         }
 
-        String commandString = data.getSettings().getPrefix() + (parent == null ? "" : parent + " ");
+        String commandString = getCoreSettings().getPrefix() + (parent == null ? "" : parent + " ");
         return parentArg.getUsageString(commandString);
     }
 
@@ -278,7 +278,7 @@ public class CommandContext {
             CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission);
             return false;
         }
-        return data.getPermissions().hasPermission(member, channel, cascadePermission, data.getSettings());
+        return data.getPermissions().hasPermission(member, channel, cascadePermission, getCoreSettings());
     }
 
     public boolean hasPermission(CascadePermission permission) {

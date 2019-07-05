@@ -384,7 +384,7 @@
       "name": "cat",
       "label": "Cat command"
     },
-    "dog" : {
+    "dog": {
       "name": "dog",
       "label": "Dog command"
     },
@@ -562,13 +562,23 @@
     "cannot_action_superior": "Cannot {0} user {1} the top role they have is higher than mine!",
     "success": "{0} has been {1}!"
   },
-  "music_misc": {
-    "load_options": "@musical_note@ - Load as track `{0}`\n@notes@ - Load as playlist `{1}`",
-    "load_options_title": "Load as a single track or as a playlist?",
-    "load_options_typed": "\n\nPlease type either `track` or `playlist`!",
-    "cannot_find_tracks": "We couldn't find any tracks to load!",
-    "num_tracks": "{0} tracks",
-    "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`"
+  "music": {
+    "misc": {
+      "load_options": "@musical_note@ - Load as track `{0}`\n@notes@ - Load as playlist `{1}`",
+      "load_options_title": "Load as a single track or as a playlist?",
+      "load_options_typed": "\n\nPlease type either `track` or `playlist`!",
+      "cannot_find_tracks": "We couldn't find any tracks to load!",
+      "num_tracks": "{0} tracks",
+      "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`"
+    },
+    "handler": {
+      "error_searching": "Error searching from YouTube!",
+      "error_processing": "Error while processing search!",
+      "error_reading": "Error reading YouTube data!",
+      "no_data_returned": "YouTube didn't return any data!",
+      "query_unsuccessful": "The query was unsuccessful! Response: {0}",
+      "more_than_five": "YouTube returned more then 5 results! A check of the YouTube api is recommended"
+    }
   },
   "responses": {
     "invalid_user": "Invalid User!",
@@ -583,7 +593,7 @@
     "cannot_find_voice_channel": "Could not find that voice channel to connect to!",
     "voice_not_connected": "I am not connected to a voice channel!",
     "type_one_of": "Please type one of: ",
-    "invalid_guild_id" : "That isn't a valid guild ID!",
+    "invalid_guild_id": "That isn't a valid guild ID!",
     "no_cascade_perm_discord": "You don't have the permission `{0}` or the Discord permission(s) {1} that you need to do this!",
     "no_cascade_perm": "You don't have the permission `{0}` that you need to do this!",
     "no_discord_perm": "You don't have the Discord permission `{0}` that you need to do this!",
@@ -685,5 +695,74 @@
     "loading_page": "Paged message loading...",
     "exception_message": "**{0}**\nStack trace: {1}",
     "report_error": "Please report the stack trace and the error to the developers here: {0}"
+  },
+  "page_objects": {
+    "page_footer": "Page {0}/{1}"
+  },
+  "settings": {
+    "core": {
+      "mentionPrefix": {
+        "nice_name": "Mention prefix",
+        "description": "Whether the bot will respond to a mention as a prefix."
+      },
+      "deleteCommand": {
+        "nice_name": "Delete command after execution",
+        "description": "Whether the original command messages should be deleted after running the command."
+      },
+      "useEmbedForMessages": {
+        "nice_name": "Use embeds for messages",
+        "description": "Whether to use embedded messages to display information."
+      },
+      "showPermErrors": {
+        "nice_name": "Show permission errors",
+        "description": "Whether to show an error if someone does not have permission to do an action."
+      },
+      "showModuleErrors": {
+        "nice_name": "Show module errors",
+        "description": "Whether to show an error when trying to run a command from a disabled module."
+      },
+      "adminsHaveAllPerms": {
+        "nice_name": "Admins have all permissions",
+        "description": "Whether users with the \"Administrator\" permission are able to run all actions on the bot."
+      },
+      "allowTagCommands": {
+        "nice_name": "Allow tags to be used as commands",
+        "description": "Whether tags can be executed using ;<tagname>."
+      },
+      "enabledModules": {
+        "nice_name": "Enabled modules",
+        "description": "The modules whose commands are allowed to be ran on the server."
+      },
+      "prefix": {
+        "nice_name": "Prefix",
+        "description": "The prefix for all commands directed at the bot. It is recommended to make sure that this doesn't conflict with other bots."
+      },
+      "tags": {
+        "nice_name": "Tags",
+        "description": "The tags saved on this server."
+      }
+    }
+  },
+  "placeholders": {
+    "server": {
+      "description": "Gets information about the current server"
+    },
+    "member_count": {
+      "description": "Gets the amount of people in this server"
+    },
+    "sender": {
+      "description": "Gets the user who executed the tag"
+    },
+    "channel": {
+      "name": {
+        "description": ""
+      }
+    },
+    "time": {
+      "description": "Gets the current time"
+    },
+    "args": {
+      "description": "Injects a specified argument (zero indexed)"
+    }
   }
 }

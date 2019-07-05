@@ -54,7 +54,7 @@ public class MessagingUI {
      * @return A {@link RequestFuture<Message>} so you can interact with the message after it sends.
      */
     public RequestFuture<Message> replyImage(String url) {
-        if (context.getSettings().isUseEmbedForMessages()) {
+        if (context.getCoreSettings().isUseEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setImage(url);
             return context.getChannel().sendMessage(embedBuilder.build()).submit();
@@ -165,7 +165,7 @@ public class MessagingUI {
             for (AudioTrack track : tracks) {
                 time += track.getDuration();
             }
-            context.getTypedMessaging().replySuccess(context.i18n("music_misc.loaded_tracks", tracks.size(), FormatUtils.formatLongTimeMills(time)));
+            context.getTypedMessaging().replySuccess(context.i18n("music.misc.loaded_tracks", tracks.size(), FormatUtils.formatLongTimeMills(time)));
         } else {
             AudioTrack track = tracks.get(0);
             EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
@@ -203,16 +203,16 @@ public class MessagingUI {
                 context.getUIMessaging().sendTracksFound(tracks);
             }));
 
-            String message = context.i18n("music_misc.load_options",selectedTrack.getInfo().title, context.i18n("music_misc.num_tracks", tracks.size()));
+            String message = context.i18n("music.misc.load_options",selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
 
             EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
-            embedBuilder.setTitle(context.i18n("music_misc.load_options_title"));
+            embedBuilder.setTitle(context.i18n("music.misc.load_options_title"));
             embedBuilder.setDescription(message);
 
             try {
                 context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
             } catch (PermissionException e) {
-                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription(context.i18n("music_misc.load_options_typed")));
+                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription(context.i18n("music.misc.load_options_typed")));
 
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
                         new EventWaiter.TextResponse(event -> {
@@ -229,7 +229,7 @@ public class MessagingUI {
             context.getMusicPlayer().addTracks(tracks);
             context.getUIMessaging().sendTracksFound(tracks);
         } else {
-            context.getTypedMessaging().replyDanger(context.i18n("music_misc.cannot_find_tracks"));
+            context.getTypedMessaging().replyDanger(context.i18n("music.misc.cannot_find_tracks"));
         }
     }
 

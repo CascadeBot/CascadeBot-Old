@@ -60,7 +60,22 @@ public class Language {
     }
 
     public static String i18n(long guildId, String path, Object... args) {
-        return i18n(getGuildLocale(guildId), path, args);
+        Locale locale = getGuildLocale(guildId);
+        if (INSTANCE.languages.containsKey(locale)) {
+            if (INSTANCE.languages.get(locale).getString(path).isPresent()) {
+                MessageFormat format = new MessageFormat(INSTANCE.languages.get(locale).getString(path).get(), locale.getULocale());
+                String message = format.format(args);
+                // Replace {%} with the prefix
+                message = message.replace("{%}", GuildDataManager.getGuildData(guildId).getCoreSettings().getPrefix());
+                return FormatUtils.formatUnicode(message);
+            } else {
+                CascadeBot.LOGGER.warn("Cannot find a language string matching the path '{}'", path);
+                return INSTANCE.languages.get(Locale.getDefaultLocale()).getString(path).isPresent() ? i18n(Locale.getDefaultLocale(), path, args) : "No language string for " + path;
+            }
+        } else {
+            throw new IllegalStateException("The language file matching locale '" + locale.getLanguageCode()
+                    + "' does not exist or is not loaded!");
+        }
     }
 
     public static Locale getGuildLocale(long guildId) {

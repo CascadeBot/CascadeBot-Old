@@ -8,14 +8,10 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-
-import java.util.Set;
 
 public class ModuleDisableSubCommand implements ISubCommand {
 
@@ -30,7 +26,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
 
         if (module != null) {
             try {
-                if (context.getData().getSettings().disableModule(module)) {
+                if (context.getData().getCoreSettings().disableModule(module)) {
                     // If module wasn't already disabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", module.toString()));
                 } else {
@@ -41,7 +37,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
                 context.getTypedMessaging().replyDanger(ex.getMessage());
             }
         } else {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.module.disable.cannot_find_module", context.getData().getPrefix()));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.module.disable.cannot_find_module", context.getData().getCoreSettings().getPrefix()));
         }
 
     }

@@ -5,12 +5,8 @@
 
 package org.cascadebot.cascadebot.commands.management;
 
-import java.util.Set;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -23,7 +19,7 @@ public class TagCreateSubCommand implements ISubCommand {
             context.getUIMessaging().replyUsage();
             return;
         }
-        context.getSettings().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));
+        context.getCoreSettings().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));
         context.getTypedMessaging().replySuccess(context.i18n("commands.tag.create.successfully_created_tag" ,context.getArg(0)));
     }
 
