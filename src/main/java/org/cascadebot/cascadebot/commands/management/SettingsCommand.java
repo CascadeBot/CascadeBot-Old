@@ -13,6 +13,7 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.objects.Setting;
 import org.cascadebot.cascadebot.data.objects.SettingsContainer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -81,9 +82,9 @@ public class SettingsCommand implements ICommandMain {
                     if (!context.getData()
                             .getEnabledFlags()
                             .containsAll(Arrays.asList(settingAnnotation.flagRequired()))) {
-                        settingAnnotation.niceName();
+                        String niceName = Language.i18n(context.getGuild().getIdLong(), "settings" + field.getDeclaringClass().getAnnotation(SettingsContainer.class).module().name().toLowerCase() + "." + field.getName());
                         context.getTypedMessaging()
-                                .replyDanger(context.i18n("commands.settings.cannot_edit", settingAnnotation.niceName()));
+                                .replyDanger(context.i18n("commands.settings.cannot_edit", niceName));
                         return;
                     }
                 }

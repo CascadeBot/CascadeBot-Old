@@ -18,20 +18,6 @@ public @interface Setting {
 
 
     /**
-     * This is the name that will be used on the web dashboard instead of the
-     * field name. TODO: This will need to be localised
-     */
-    String niceName();
-
-
-    /**
-     * The description of this setting to be displayed on the web dashboard.
-     * TODO: This will also need to be localised
-     */
-    String description() default "";
-
-
-    /**
      * The flag(s) required to have access to change this setting.
      */
     Flag[] flagRequired() default {};

@@ -619,5 +619,49 @@
   },
   "page_objects": {
     "page_footer": "Page {0}/{1}"
+  },
+  "settings": {
+    "core": {
+      "mentionPrefix": {
+        "nice_name": "Mention prefix",
+        "description": "Whether the bot will respond to a mention as a prefix."
+      },
+      "deleteCommand": {
+        "nice_name": "Delete command after execution",
+        "description": "Whether the original command messages should be deleted after running the command."
+      },
+      "useEmbedForMessages": {
+        "nice_name": "Use embeds for messages",
+        "description": "Whether to use embedded messages to display information."
+      },
+      "showPermErrors": {
+        "nice_name": "Show permission errors",
+        "description": "Whether to show an error if someone does not have permission to do an action."
+      },
+      "showModuleErrors": {
+        "nice_name": "Show module errors",
+        "description": "Whether to show an error when trying to run a command from a disabled module."
+      },
+      "adminsHaveAllPerms": {
+        "nice_name": "Admins have all permissions",
+        "description": "Whether users with the \"Administrator\" permission are able to run all actions on the bot."
+      },
+      "allowTagCommands": {
+        "nice_name": "Allow tags to be used as commands",
+        "description": "Whether tags can be executed using {%}<tagname>."
+      },
+      "enabledModules": {
+        "nice_name": "Enabled modules",
+        "description": "The modules whose commands are allowed to be ran on the server."
+      },
+      "prefix": {
+        "nice_name": "Prefix",
+        "description": "The prefix for all commands directed at the bot. It is recommended to make sure that this doesn't conflict with other bots."
+      },
+      "tags": {
+        "nice_name": "Tags",
+        "description": "The tags saved on this server."
+      }
+    }
   }
 }

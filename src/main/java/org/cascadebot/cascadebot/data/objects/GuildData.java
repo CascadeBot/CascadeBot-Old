@@ -67,7 +67,7 @@ public class GuildData {
 
     //region Guild data containers
 
-    private GuildSettingsCore guildSettings = new GuildSettingsCore();
+    private GuildSettingsCore guildSettings = new GuildSettingsCore(guildID);
     private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now
