@@ -20,7 +20,6 @@ public class RolesCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        // TODO: Add the extra headers
         Table.TableBuilder builder = new Table.TableBuilder(context.i18n("commands.roles.header_id"),
                 context.i18n("commands.roles.header_name"),
                 context.i18n("commands.roles.header_members"),
@@ -35,7 +34,7 @@ public class RolesCommand implements ICommandMain {
                             .stream()
                             .filter(member -> member.getRoles().contains(role))
                             .count()),
-                    role.getColor() == null ? "Default" : "#" + Integer.toHexString(role.getColor().getRGB()));
+                    role.getColor() == null ? context.i18n("words.default") : "#" + Integer.toHexString(role.getColor().getRGB()));
         }
 
         context.getUIMessaging().sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));

@@ -704,7 +704,8 @@
     "tag": "Tag",
     "author": "Author",
     "length": "Length",
-    "flags": "Flags"
+    "flags": "Flags",
+    "default": "Default"
   },
   "messaging": {
     "loading_page": "Paged message loading...",
