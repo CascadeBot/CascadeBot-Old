@@ -23,7 +23,7 @@ public class GroupPermissionCreateSubCommand implements ISubCommand {
         }
 
         Group group = context.getData().getPermissions().createGroup(context.getArg(0));
-        context.getTypedMessaging().replySuccess("Created group `%s` with id `%s`", context.getArg(0), group.getId());
+        context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create", context.getArg(0), group.getId()));
     }
 
     @Override
@@ -38,7 +38,7 @@ public class GroupPermissionCreateSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions create sub command", "permissions.group.create", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.create", false, Module.MANAGEMENT);
     }
 
     @Override

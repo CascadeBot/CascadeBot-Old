@@ -32,7 +32,7 @@ public class GroupPermissionCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions command", "permissions.group", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group", false, Module.MANAGEMENT);
     }
 
     @Override
