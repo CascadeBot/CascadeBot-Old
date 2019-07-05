@@ -6,6 +6,7 @@
     "usage": "Gets the usage for a command.",
     "cat": "Returns a random picture of a cat.",
     "dog": "Returns a random picture of a dog.",
+    "random": "Returns a random number",
     "roles": "Returns the server's roles.",
     "serverinfo": "Returns information regarding the specified server.",
     "userinfo": "Returns information regarding the specified user.",
@@ -82,6 +83,10 @@
     "dog": {
       "command": "dog",
       "error_loading": "Error loading dog picture! @frowning@"
+    },
+    "random": {
+      "numbers_only": "The range needs to be a integer value!",
+      "random_result": "Random number is `{0}`"
     },
     "roles": {
       "command": "roles",
