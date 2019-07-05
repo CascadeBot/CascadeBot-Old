@@ -93,7 +93,6 @@ public class SkipCommand implements ICommandMain {
                 context.getMusicPlayer().skip();
                 context.getTypedMessaging().replySuccess(context.i18n("commands.skip.forcefully_skipped"));
             } else {
-                // TODO: Make permission errors auto delete
                 context.getUIMessaging().sendPermissionError("skip.force");
             }
         }));

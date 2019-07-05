@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -132,9 +133,19 @@ public class MessagingUI {
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
-            context.getTypedMessaging().replyDanger(context.i18n("responses.no_cascade_perm_discord", permission.getPermission(context.getLocale()), discordPerms));
+            String message = context.i18n("responses.no_cascade_perm_discord", permission.getPermission(context.getLocale()), discordPerms);
+            Messaging.sendDangerMessage(
+                    context.getChannel(),
+                    MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
+                    context.getCoreSettings().isUseEmbedForMessages()
+            ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         } else {
-            context.getTypedMessaging().replyDanger(context.i18n("responses.no_cascade_perm", permission.getPermission(context.getLocale())));
+            String message = context.i18n("responses.no_cascade_perm", permission.getPermission(context.getLocale()));
+            Messaging.sendDangerMessage(
+                    context.getChannel(),
+                    MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
+                    context.getCoreSettings().isUseEmbedForMessages()
+            ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         }
     }
 
