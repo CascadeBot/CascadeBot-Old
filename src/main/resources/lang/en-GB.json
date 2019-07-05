@@ -663,5 +663,27 @@
         "description": "The tags saved on this server."
       }
     }
+  },
+  "placeholders": {
+    "server": {
+      "description": "Gets information about the current server"
+    },
+    "member_count": {
+      "description": "Gets the amount of people in this server"
+    },
+    "sender": {
+      "description": "Gets the user who executed the tag"
+    },
+    "channel": {
+      "name": {
+        "description": ""
+      }
+    },
+    "time": {
+      "description": "Gets the current time"
+    },
+    "args": {
+      "description": "Injects a specified argument (zero indexed)"
+    }
   }
 }

@@ -45,7 +45,7 @@ public class TagPlaceholdersSubCommand implements ISubCommand {
         for (Map.Entry<String, List<Placeholder>> entry : placeholderGroupsMap.entrySet()) {
             placeholderBuilder.append("**").append(entry.getKey()).append("**\n");
             for (Placeholder placeholder : entry.getValue()) {
-                placeholderBuilder.append('`').append(placeholder.name().toLowerCase()).append("` - ").append(placeholder.getDescription()).append('\n');
+                placeholderBuilder.append('`').append(placeholder.name().toLowerCase()).append("` - ").append(placeholder.getDescription(context.getLocale())).append('\n');
             }
             placeholderBuilder.append('\n');
         }
