@@ -648,7 +648,7 @@
       },
       "allowTagCommands": {
         "nice_name": "Allow tags to be used as commands",
-        "description": "Whether tags can be executed using {%}<tagname>."
+        "description": "Whether tags can be executed using ;<tagname>."
       },
       "enabledModules": {
         "nice_name": "Enabled modules",
