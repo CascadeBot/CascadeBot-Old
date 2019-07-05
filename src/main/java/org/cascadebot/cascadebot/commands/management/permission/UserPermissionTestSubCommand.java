@@ -36,7 +36,7 @@ public class UserPermissionTestSubCommand implements ISubCommand {
             return;
         }
 
-        if (context.getData().getPermissions().hasPermission(target, context.getChannel(), perm, context.getSettings())) {
+        if (context.getData().getPermissions().hasPermission(target, context.getChannel(), perm, context.getCoreSettings())) {
             context.getTypedMessaging().replyInfo(UnicodeConstants.TICK + context.i18n("commands.userperms.test.has", target.getUser().getAsTag(), perm.getPermission(context.getLocale())));
         } else {
             context.getTypedMessaging().replyInfo(UnicodeConstants.RED_CROSS + context.i18n("commands.userperms.test.does_not_have", target.getUser().getAsTag()));
