@@ -348,7 +348,20 @@
   },
   "permissions": {
     "module": {
-      "_comment": "we have 2 module elements might want to fix that - Ryan",
+      "name": "module",
+      "label": "Module command",
+      "disable": {
+        "name": "module.disable",
+        "label": "Disable module sub-command"
+      },
+      "enable": {
+        "name": "module.enable",
+        "label": "Enable module sub-command"
+      },
+      "list": {
+        "name": "module.list",
+        "label": "List modules sub-command"
+      },
       "info": {
         "name": "module.info",
         "label": "Information module"
@@ -403,22 +416,6 @@
     "userinfo": {
       "name": "userinfo",
       "label": "User info command"
-    },
-    "module": {
-      "name": "module",
-      "label": "Module command",
-      "disable": {
-        "name": "module.disable",
-        "label": "Disable module sub-command"
-      },
-      "enable": {
-        "name": "module.enable",
-        "label": "Enable module sub-command"
-      },
-      "list": {
-        "name": "module.list",
-        "label": "List modules sub-command"
-      }
     },
     "settings": {
       "name": "settings",
