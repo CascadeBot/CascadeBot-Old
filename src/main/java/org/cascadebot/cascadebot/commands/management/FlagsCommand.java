@@ -32,7 +32,7 @@ public class FlagsCommand implements ICommandMain {
         builder.setTitle(guildForList.getName());
         builder.setThumbnail(guildForList.getIconUrl());
 
-        builder.addField("Flags", flags, false);
+        builder.addField(context.i18n("words.flags"), flags, false);
 
         context.getTypedMessaging().replyInfo(builder);
     }
@@ -49,7 +49,6 @@ public class FlagsCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        // TODO: Add label to lang
         return CascadePermission.of("flags", false);
     }
 

@@ -548,6 +548,10 @@
         "name": "volume.extreme",
         "label": "Raise volume above 100%"
       }
+    },
+    "flags": {
+      "name": "flags",
+      "label": "Flags command"
     }
   },
   "moderation_manager": {
@@ -694,7 +698,8 @@
     "category": "Category",
     "tag": "Tag",
     "author": "Author",
-    "length": "Length"
+    "length": "Length",
+    "flags": "Flags"
   },
   "messaging": {
     "loading_page": "Paged message loading...",
