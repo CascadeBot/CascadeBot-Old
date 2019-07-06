@@ -45,6 +45,7 @@ public enum Placeholder {
             case "id": return sender.getUser().getId();
             case "nickname": return sender.getNickname() == null ? "No nickname!" : sender.getNickname();
             case "name": return sender.getUser().getName();
+            case "mention": return sender.getAsMention();
             default: return sender.getUser().getAsTag();
         }
     }),
@@ -53,10 +54,15 @@ public enum Placeholder {
     //region channel
     CHANNEL((context, args) -> {
         TextChannel channel = context.getChannel();
-        if (args.length == 1 && "id".equals(args[0].toLowerCase())) {
-            return channel.getId();
+        if (args.length < 1) return channel.getName();
+        switch (args[0].toLowerCase()) {
+            case "id": return channel.getId();
+            case "mention": return channel.getAsMention();
+            case "topic": return channel.getTopic();
+            case "creation": return FormatUtils.formatDateTime(channel.getCreationTime());
+            case "parent": return channel.getParent() == null ? "No channel parent" : channel.getParent().getName();
+            default: return channel.getName();
         }
-        return channel.getName();
     }),
     //endregion
 
