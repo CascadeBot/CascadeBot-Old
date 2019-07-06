@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.commands.moderation;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
@@ -42,14 +43,14 @@ public class BanCommand implements ICommandMain {
         if (targetMember == null) {
             // If the member is null, the user does not exist in the guild.
             // This attempts to retrieve the user from Discord.
-            targetUser = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
-
-            if (targetUser == null) {
+            try {
+                targetUser = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
+            } catch (ErrorResponseException | NumberFormatException e) {
                 // We couldn't find user from a member or from discord so just end here
                 context.getTypedMessaging().replyDanger("We could not find that user!");
                 return;
             }
-
+            
             String finalReason = reason;
             ConfirmUtils.confirmAction(
                     sender.getUser().getIdLong(),
