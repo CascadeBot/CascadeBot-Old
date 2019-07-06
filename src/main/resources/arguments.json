@@ -201,34 +201,34 @@
       "_type": "required"
     }
   },
-  "groupperms": {
-    "add": {
-      "group": {
+  "groupperms*": {
+    "add*": {
+      "group*": {
         "_type": "required",
         "permission": {
           "_type": "required"
         }
       }
     },
-    "remove": {
-      "group": {
+    "remove*": {
+      "group*": {
         "_type": "required",
         "permission": {
           "_type": "required"
         }
       }
     },
-    "create": {
+    "create*": {
       "name": {
         "_type": "required"
       }
     },
-    "info": {
+    "info*": {
       "group": {
         "_type": "required"
       }
     },
-    "link": {
+    "link*": {
       "group": {
         "_type": "required",
         "role": {
@@ -236,8 +236,8 @@
         }
       }
     },
-    "unlink": {
-      "group": {
+    "unlink*": {
+      "group*": {
         "_type": "required",
         "role": {
           "_type": "required"
@@ -247,48 +247,48 @@
     "list": {
       "_type": "command"
     },
-    "move": {
-      "group": {
+    "move*": {
+      "group*": {
         "_type": "required",
         "position": {
           "_type": "optional"
         }
       }
     },
-    "switch": {
+    "switch*": {
       "mode": {
         "_type": "optional"
       }
     }
   },
-  "userperms": {
-    "add": {
-      "user": {
+  "userperms*": {
+    "add*": {
+      "user*": {
         "_type": "required",
         "permission": {
           "_type": "required"
         }
       }
     },
-    "remove": {
-      "user": {
+    "remove*": {
+      "user*": {
         "_type": "required",
         "permission": {
           "_type": "required"
         }
       }
     },
-    "group": {
-      "put": {
-        "user": {
+    "group*": {
+      "put*": {
+        "user*": {
           "_type": "required",
           "group": {
             "_type": "required"
           }
         }
       },
-      "remove": {
-        "user": {
+      "remove*": {
+        "user*": {
           "_type": "required",
           "group": {
             "_type": "required"
@@ -296,8 +296,8 @@
         }
       }
     },
-    "list": {
-      "user": {
+    "list*": {
+      "user*": {
         "_type": "required",
         "permissions": {
           "_type": "command"
@@ -307,8 +307,8 @@
         }
       }
     },
-    "test": {
-      "user": {
+    "test*": {
+      "user*": {
         "_type": "required",
         "permission": {
           "_type": "required"
