@@ -42,19 +42,14 @@ public interface ICommandExecutable {
     CascadePermission getPermission();
 
     default String getDescriptionPath() {
-        if (this instanceof ICommandMain) {
-            if (((ICommandMain) this).getSubCommands().size() > 0) {
-                return "command_descriptions." + command() + ".main_command";
-            }
-        }
-        return "command_descriptions." + getAbsoluteCommand();
+        return "commands." + getAbsoluteCommand() + ".description";
     }
 
     default String description() {
         return null;
     }
 
-    default String getDescription(Locale locale) {
+    default String description(Locale locale) {
         if (Language.hasLanguageEntry(locale, getDescriptionPath()) || description() == null) {
             return Language.i18n(locale, getDescriptionPath());
         } else {

@@ -24,7 +24,7 @@ public class GroupPermissionListSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getData().getPermissions().getGroups().isEmpty()) {
-            context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.list"));
+            context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.list.no_groups"));
             return;
         }
 

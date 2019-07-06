@@ -1,68 +1,13 @@
 {
-  "command_descriptions": {
-    "invite": "Returns the bot invite link, to invite the bot to other Discord guilds.",
-    "prefix": "Gets and sets the current guild prefix.",
-    "support": "Returns a link to the Discord support server.",
-    "usage": "Gets the usage for a command.",
-    "cat": "Returns a random picture of a cat.",
-    "dog": "Returns a random picture of a dog.",
-    "random": "Returns a random number",
-    "roles": "Returns the server's roles.",
-    "serverinfo": "Returns information regarding the specified server.",
-    "userinfo": "Returns information regarding the specified user.",
-    "module": {
-      "main_command": "Interacts with modules by enabling, disabling or listing them.",
-      "disable": "Disables the specified module.",
-      "enable": "Enables the specified module.",
-      "list": "Lists all modules."
-    },
-    "settings": "Allows users to change settings for the guild.",
-    "ban": "Bans or forcebans the specified user.",
-    "kick": "Kicks the specified user.",
-    "softban": "Bans and then unbans a specified user in order to remove messages and kick the user.",
-    "unban": "Unbans the specified user.",
-    "tag": {
-      "main_command": "Tag command",
-      "raw": "Displays a tag's content and category.",
-      "placeholders": "Lists all available placeholders.",
-      "list": "Lists all a guild's tags.",
-      "edit": "Edits a tag.",
-      "category": "Moves a tag to a specific category.",
-      "create": "Creates a tag."
-    },
-    "join": "Joins the bot to a voice channel.",
-    "leave": "Tells the bot to leave a voice channel.",
-    "loop": "Changes between loop modes.",
-    "pause": "Pauses the currently playing track.",
-    "play": "Plays music.",
-    "playing": "Get playing music.",
-    "queue": "Display the current queue.",
-    "resume": "Resumes music.",
-    "search": "Searches for a song.",
-    "shuffle": "Shuffles music in a queue.",
-    "skip": "Skips the current song.",
-    "stop": "Stops music when playing.",
-    "volume": "Returns the current volume.",
-    "groupperms": {
-      "main_command": "Interact with permissions groups",
-      "add": "Adds a permission to a group",
-      "remove": "Removes a permission from the group",
-      "create": "Creates a group",
-      "link": "Links a group to a role",
-      "unlink": "Unlink a role from a group",
-      "move": "Moves groups around if in hierarchical mode",
-      "switch": "Switches the permissions modes",
-      "info": "Gets info on a group",
-      "list": "Lists all groups"
-    }
-  },
   "commands": {
     "support": {
       "command": "support",
+      "description": "Returns a link to the Discord support server.",
       "cascade_support_server": "Cascade Support Server: {0}"
     },
     "prefix": {
       "command": "prefix",
+      "description": "Gets and sets the current guild prefix.",
       "prefix_reset": "The prefix has been reset to: `{0}`",
       "prefix_too_long": "The requested prefix is too long!",
       "new_prefix": "The new prefix is: `{0}`",
@@ -73,23 +18,32 @@
     },
     "usage": {
       "command": "usage",
+      "description": "Gets the usage for a command.",
       "specify_usage": "Please specify command to get usage from!",
       "command_not_found": "Command `{0}` not found!"
     },
+    "invite": {
+      "description": "Returns the bot invite link, to invite the bot to other Discord guilds."
+    },
     "cat": {
       "command": "cat",
+      "description": "Returns a random picture of a cat.",
       "error_loading": "Error loading cat picture! @frowning@"
     },
     "dog": {
       "command": "dog",
+      "description": "Returns a random picture of a dog.",
       "error_loading": "Error loading dog picture! @frowning@"
     },
     "random": {
+      "command": "random",
+      "description": "Returns a random number",
       "numbers_only": "The range needs to be a integer value!",
       "random_result": "Random number is `{0}`"
     },
     "roles": {
       "command": "roles",
+      "description": "Returns the server's roles.",
       "header_id": "Role ID",
       "header_name": "Role Name",
       "header_members": "No. Users",
@@ -97,6 +51,7 @@
     },
     "serverinfo": {
       "command": "serverinfo",
+      "description": "Returns information regarding the specified server.",
       "guild_creation_date": "Creation Date",
       "guild_name": "Guild Name",
       "guild_owner": "Owner",
@@ -106,6 +61,7 @@
     },
     "userinfo": {
       "command": "userinfo",
+      "description": "Returns information regarding the specified user.",
       "user_created": "User Created",
       "user_join_date": "Join Date",
       "user_id": "User ID",
@@ -118,6 +74,7 @@
     },
     "settings": {
       "command": "settings",
+      "description": "Allows users to change settings for the guild.",
       "cannot_edit": "You cannot edit this setting! You need the: {0} flag to do this!",
       "setting_set": "Setting {0} has been set to a value of {1}.",
       "cannot_access": "Could not access that setting!",
@@ -127,83 +84,100 @@
     },
     "ban": {
       "command": "ban",
+      "description": "Bans or forcebans the specified user.",
       "cannot_find_user": "We can't find that user!",
       "forcefully_ban": "**We couldn't find that user in this guild!** \n If you would like to forcefully ban them, please react to this message!"
     },
     "kick": {
       "command": "kick",
+      "description": "Kicks the specified user.",
       "cannot_find_user": "Could not find that user!"
     },
     "softban": {
-      "softban": "softban",
+      "command": "softban",
+      "description": "Bans and then unbans a specified user in order to remove messages and kick the user.",
       "no_specified_user": "Not enough arguments (No specified member)",
       "cannot_find_user": "Could not find that user!"
     },
     "unban": {
       "command": "unban",
+      "description": "Unbans the specified user.",
       "cannot_unban": "Could not find a user to unban matching: {0}",
       "several_matches": "There is more than one user that matches this criteria! \n Please enter the ID or the user's full name!"
     },
     "module": {
       "command": "module",
+      "description": "Interacts with modules by enabling, disabling or listing them.",
       "disable": {
         "command": "disable",
+        "description": "Disables the specified module.",
         "disabled": "The module `{0}` has been disabled!",
         "already_disabled": "The module `{0}` is already disabled!",
         "cannot_find_module": "We couldn't find that module. Use `{0}module list` for a list of modules."
       },
       "enable": {
         "command": "enable",
+        "description": "Enables the specified module.",
         "enabled": "The module `{0}` has been enabled!",
         "already_enabled": "The module `{0}` is already enabled!",
         "cannot_find_module": "We couldn't find that module. Use `{0}module list` for a list of modules."
       },
       "list": {
-        "command": "list"
+        "command": "list",
+        "description": "Lists all modules."
       }
     },
     "join": {
       "command": "join",
+      "description": "Joins the bot to a voice channel.",
       "user_not_connected": "You are not connected to a voice channel!",
       "already_connected": "I am already connected to your channel!",
       "successfully_joined": "I have successfully joined the voice channel `#{0}`"
     },
     "leave": {
       "command": "leave",
+      "description": "Tells the bot to leave a voice channel.",
       "successfully_left": "I have successfully left the channel `#{0}`"
     },
     "loop": {
       "command": "loop",
+      "description": "Changes between loop modes.",
       "looping_disabled": "Looping has been disabled!",
       "looping_set": "Set to loop the current **{0}**!",
       "not_valid_mode": "`{0}` is not a valid loop mode! Valid modes are: {0}"
     },
     "pause": {
       "command": "pause",
+      "description": "Pauses the currently playing track.",
       "already_paused": "Music has already been paused! Use **{0}resume** to resume.",
       "successfully_paused": "Paused! Use **{0}resume** to resume."
     },
     "play": {
       "command": "play",
+      "description": "Plays music.",
       "could_not_find_matches": "We could not find music that matches: `{0}`",
       "encountered_error": "We encountered an error processing that! {0}"
     },
     "playing": {
       "command": "playing",
+      "description": "Get playing music.",
       "no_music_playing": "There is no music playing!",
       "loop_mode": "Loop mode",
       "up_next": "Up next"
     },
     "queue": {
       "command": "queue",
+      "description": "Displays the current queue.",
       "no_tracks_playing": "There are no tracks playing!",
       "load": {
         "command": "load",
+        "description": "Loads a playlist.",
         "cannot_find_playlist": "Couldn't find playlist `{0}`.",
         "load_track": "Where would you like to load this track from\n@one@ User\n@two@ Guild"
       },
       "save": {
         "command": "save",
+        "description": "Saves a playlist.",
         "scope_not_found": "Scope `{0}` not found!",
         "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it.",
         "playlist_overwrite": "Playlist already exists. Would you like to overwrite it?",
@@ -212,11 +186,13 @@
     },
     "resume": {
       "command": "resume",
+      "description": "Resumes music.",
       "successfully_resumed": "Music has been resumed!",
       "already_resumed": "Music is already playing! Use **{0}pause** to pause it."
     },
     "search": {
       "command": "search",
+      "description": "Searches for a song.",
       "cannot_find_video": "Couldn't find video!",
       "error_loading_track": "Error loading track",
       "multiple_results": "We found multiple results for this search!",
@@ -224,11 +200,13 @@
     },
     "shuffle": {
       "command": "shuffle",
+      "description": "Shuffles music in a queue.",
       "enabled": "Shuffling has been enabled!",
       "disabled": "Shuffling has been disabled!"
     },
     "skip": {
       "command": "skip",
+      "description": "Skips the current song.",
       "not_playing": "I'm not playing anything!",
       "forcefully_skipped": "Forcefully skipped the song!",
       "cannot_skip": {
@@ -242,11 +220,13 @@
     },
     "stop": {
       "command": "stop",
+      "description": "Stops music when playing.",
       "stopped": "Music has been stopped!",
       "not_stopped": "Music isn't playing, nothing to stop!"
     },
     "volume": {
       "command": "volume",
+      "description": "Returns the current volume.",
       "current_volume": "Current volume is {0}%.",
       "greater_than_zero": "Volume needs to be greater than 0%.",
       "extreme_volume": "Are you sure you want to exceed 100% volume?",
@@ -256,76 +236,113 @@
     },
     "tag": {
       "command": "tag",
+      "description": "Tag command",
       "cannot_find_tag": "Couldn't find tag with name `{0}`.",
       "category": {
         "command": "category",
+        "description": "Moves a tag to a specific category.",
         "successfully_set_tag": "Set tag `{0}` category to `{1}`."
       },
       "create": {
         "command": "create",
+        "description": "Creates a tag.",
         "successfully_created_tag": "Successfully created tag with name `{0}`."
       },
       "delete": {
         "command": "delete",
+        "description": "Deletes a tag.",
         "successfully_deleted_tag": "Successfully deleted tag!",
         "tag_doesnt_exist": "Tag `{0}` doesn't exist!"
       },
       "edit": {
         "command": "edit",
+        "description": "Edits a tag.",
         "successfully_edited_tag": "Successfully updated tag `{0}`."
       },
       "list": {
         "command": "list",
+        "description": "Lists all a guild's tags.",
         "no_tags_found": "Server has no tags!"
       },
       "placeholders": {
         "command": "placeholders",
+        "description": "Lists all available placeholders.",
         "header": "To use placeholders in tags you wrap the placeholder in `{}` (example: `{server_name}`). If a place holder requires more options (like args) you use this format `{placeholder:option1,option2}` (example: `{args:0}`)."
       },
       "raw": {
-        "command": "raw"
+        "command": "raw",
+        "description": "Displays a tag's content and category."
       }
     },
     "groupperms": {
-      "command": "grouperms",
+      "command": "groupperms",
+      "description": "Interact with permission groups.",
       "add": {
+        "command": "add",
+        "description": "Adds a permission to a group.",
         "success": "Successfully added permission `%s` to group `%s`",
         "fail": "Couldn't add permission `%s` to group `%s` as they already have the permission"
       },
       "remove": {
+        "command": "remove",
+        "description": "Removes a permission from the group.",
         "success": "Successfully removed permission `%s` from group `%s`",
         "fail": "Couldn't removed permission `%s` from group `%s` as they already have the permission"
       },
-      "create": "Created group `%s` with id `%s`",
+      "create": {
+        "command": "create",
+        "description": "Creates a group.",
+        "success": "Created group `%s` with id `%s`"
+      },
       "info": {
+        "command": "info",
+        "description": "Gets the information about a group.",
         "empty_group": "Group has no permissions or roles",
         "roles_title": "Linked Roles",
         "perms_title": "Permissions"
       },
       "link": {
+        "command": "link",
+        "description": "Links a group to a role.",
         "success": "Linked group `%s` to role `%s`",
         "fail": "Couldn't link group `%s` to role `%s`"
       },
       "unlink": {
+        "command": "unlink",
+        "description": "Unlink a role from a group.",
         "success": "Unlinked group `%s` to role `%s`",
         "fail": "Couldn't unlink group `%s` from role `%s`"
       },
-      "list": "You have no groups!",
+      "list": {
+        "command": "list",
+        "description": "Lists all groups.",
+        "no_groups": "You have no groups!"
+      },
       "move": {
+        "command": "move",
+        "description": "Moves groups around in the hierarchy",
         "wrong_mode": "Cannot move groups in most restrictive mode",
         "moved": "Moved group %s to position %s"
       },
       "switch": {
+        "command": "switch",
+        "description": "Changes the permission evaluation mode.",
         "success": "Switched the permission mode to `%s`",
         "fail": "The permission mode %s isn't a valid permission mode!"
       }
     },
     "userperms": {
+      "command": "userperms",
+      "description": "Interact with user permissions.",
       "add": {
+        "command": "add",
+        "description": "Adds a permission to a user.",
         "success": "Successfully added permission `%s` to user `%s`",
         "fail": "Couldn't add permission `%s` to user `%s` as they already have the permission"
       },
       "remove": {
+        "command": "remove",
+        "description": "Removes a permission to a user.",
         "success": "Successfully removed permission `%s` from user `%s`",
         "fail": "Couldn't remove permission `%s` from user `%s` as they don't have the permission"
       },
