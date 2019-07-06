@@ -190,7 +190,7 @@ public class CommandContext {
         }
 
         String commandString = getCoreSettings().getPrefix() + (parent == null ? "" : parent + " ");
-        return parentArg.getUsageString(commandString);
+        return parentArg.getUsageString(getLocale(), commandString);
     }
 
     /**

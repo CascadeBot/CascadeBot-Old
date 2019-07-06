@@ -7,6 +7,7 @@ package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.util.Set;
 
@@ -48,7 +49,7 @@ public class Argument {
      * @param base The base command/prefix to use. Example: ';help '.
      * @return A string representing the usage.
      */
-    public String getUsageString(String base) {
+    public String getUsageString(Locale locale, String base) {
         StringBuilder usageBuilder = new StringBuilder();
         String field = this.toString();
 
@@ -60,7 +61,7 @@ public class Argument {
             usageBuilder.append('\n');
         }
         for (Argument subArg : subArgs) {
-            usageBuilder.append(subArg.getUsageString(base + field + " "));
+            usageBuilder.append(subArg.getUsageString(locale, base + field + " "));
         }
 
         return usageBuilder.toString();
