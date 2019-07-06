@@ -76,6 +76,11 @@ public class ArgumentManager {
         return arguments.get(id);
     }
 
+    public Argument getParent(String argumentId) {
+        if (!argumentId.contains(".")) return null;
+        return arguments.get(argumentId.substring(0, argumentId.lastIndexOf('.')));
+    }
+
     private Argument getArgumentFromObject(String id) {
         // Don't bother if it's not an actual object
         if (argumentsFile.getElement(id).isEmpty() || !argumentsFile.getElement(id).get().isJsonObject()) return null;
