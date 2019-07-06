@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
@@ -67,12 +68,15 @@ public class DiscordUtils {
         Checks.notBlank(search, "user");
         List<User> users = FinderUtil.findUsers(search, guild.getJDA());
         if (users.size() > 1) {
-            /*context.replyDanger("There is more than one user that matches this criterion! Please enter the ID or the user's full name!");*/
             return null;
         }
         User user = users.size() != 1 ? null : users.get(0);
         if (user == null && Regex.ID.matcher(search).matches() && retrieve) {
-            user = CascadeBot.INS.getShardManager().retrieveUserById(Long.valueOf(search)).complete();
+            try {
+                user = CascadeBot.INS.getShardManager().retrieveUserById(Long.valueOf(search)).complete();
+            } catch (ErrorResponseException | NumberFormatException e) {
+                user = null;
+            }
         }
         return user;
     }
