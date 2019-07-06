@@ -280,19 +280,19 @@
       "add": {
         "command": "add",
         "description": "Adds a permission to a group.",
-        "success": "Successfully added permission `%s` to group `%s`",
-        "fail": "Couldn't add permission `%s` to group `%s` as they already have the permission"
+        "success": "Successfully added permission `{0}` to group `{1}`",
+        "fail": "Couldn't add permission `{0}` to group `{1}` as they already have the permission"
       },
       "remove": {
         "command": "remove",
         "description": "Removes a permission from the group.",
-        "success": "Successfully removed permission `%s` from group `%s`",
-        "fail": "Couldn't removed permission `%s` from group `%s` as they already have the permission"
+        "success": "Successfully removed permission `{0}` from group `{1}`",
+        "fail": "Couldn't removed permission `{0}` from group `{1}` as they already have the permission"
       },
       "create": {
         "command": "create",
         "description": "Creates a group.",
-        "success": "Created group `%s` with id `%s`"
+        "success": "Created group `{0}` with id `{1}`"
       },
       "info": {
         "command": "info",
@@ -304,14 +304,14 @@
       "link": {
         "command": "link",
         "description": "Links a group to a role.",
-        "success": "Linked group `%s` to role `%s`",
-        "fail": "Couldn't link group `%s` to role `%s`"
+        "success": "Linked group `{0}` to role `{1}`",
+        "fail": "Couldn't link group `{0}` to role `{1}`"
       },
       "unlink": {
         "command": "unlink",
         "description": "Unlink a role from a group.",
-        "success": "Unlinked group `%s` to role `%s`",
-        "fail": "Couldn't unlink group `%s` from role `%s`"
+        "success": "Unlinked group `{0}` to role `{1}`",
+        "fail": "Couldn't unlink group `{0}` from role `{1}`"
       },
       "list": {
         "command": "list",
@@ -322,13 +322,13 @@
         "command": "move",
         "description": "Moves groups around in the hierarchy",
         "wrong_mode": "Cannot move groups in most restrictive mode",
-        "moved": "Moved group %s to position %s"
+        "moved": "Moved group {0} to position {1}"
       },
       "switch": {
         "command": "switch",
         "description": "Changes the permission evaluation mode.",
-        "success": "Switched the permission mode to `%s`",
-        "fail": "The permission mode %s isn't a valid permission mode!"
+        "success": "Switched the permission mode to `{0}`",
+        "fail": "The permission mode {1} isn't a valid permission mode!"
       }
     },
     "userperms": {
@@ -337,34 +337,43 @@
       "add": {
         "command": "add",
         "description": "Adds a permission to a user.",
-        "success": "Successfully added permission `%s` to user `%s`",
-        "fail": "Couldn't add permission `%s` to user `%s` as they already have the permission"
+        "success": "Successfully added permission `{0}` to user `{1}`",
+        "fail": "Couldn't add permission `{0}` to user `{1}` as they already have the permission"
       },
       "remove": {
         "command": "remove",
         "description": "Removes a permission to a user.",
-        "success": "Successfully removed permission `%s` from user `%s`",
-        "fail": "Couldn't remove permission `%s` from user `%s` as they don't have the permission"
+        "success": "Successfully removed permission `{0}` from user `{1}`",
+        "fail": "Couldn't remove permission `{0}` from user `{1}` as they don't have the permission"
       },
       "group": {
+        "command": "group",
         "put": {
-          "success": "Put user `%s` in group `%s`",
-          "fail": "Couldn't add user `%s` to group `%s` because they're already in the group"
+          "command": "put",
+          "description": "Adds a group to a user.",
+          "success": "Put user `{0}` in group `{1}`",
+          "fail": "Couldn't add user `{0}` to group `{1}` because they're already in the group"
         },
         "remove": {
-          "success": "Removed user `%s` from group `%s`",
-          "fail": "Couldn't remove user `%s` from group %s` because they're not in the group"
+          "command": "remove",
+          "description": "Removes a group from a user.",
+          "success": "Removed user `{0}` from group `{1}`",
+          "fail": "Couldn't remove user `{0}` from group {1}` because they're not in the group"
         }
       },
       "list": {
+        "command": "list",
+        "description": "Lists the groups or permissions a user has.",
         "no_groups": "User has no groups!",
-        "group_title": "%s's groups",
+        "group_title": "{0}'s groups",
         "no_permissions": "User has no permissions!",
-        "perms_title": "%s's permissions"
+        "perms_title": "{0}'s permissions"
       },
       "test": {
-        "has": " User %s has the permission `%s`",
-        "does_not_have": " User %s doesn't the permission `%s`"
+        "command": "test",
+        "description": "Tests whether a user has a permission or not.",
+        "has": "@white_check_mark@ User {0} has the permission `{1}`",
+        "does_not_have": "@x@ User {0} doesn't the permission `{1}`"
       }
     }
   },
@@ -632,8 +641,8 @@
     "failed_to_run_command": "There was an error while running the command!",
     "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
     "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!",
-    "permission_not_exist": "`%s` isn't a valid permission",
-    "cannot_find_role_matching": "Could not find role %s"
+    "permission_not_exist": "`{0}` isn't a valid permission",
+    "cannot_find_role_matching": "Could not find role {0}"
   },
   "statuses": {
     "streaming": "Streaming",
