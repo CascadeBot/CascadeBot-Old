@@ -3,6 +3,7 @@
 <p align="center">
     <a href="https://github.com/CascadeBot/CascadeBot/blob/dev/LICENSE"><img src="https://img.shields.io/github/license/cascadebot/cascadebot.svg?style=flat-square" alt="GitHub License"></a>
     <a href="https://jenkins.cascadebot.org/job/Cascade%20Bot/lastBuild/"><img src="https://img.shields.io/jenkins/build/https/jenkins.cascadebot.org/cascade%20bot.svg?style=flat-square" alt="Jenkins"></a>
+<a href="https://app.fossa.io/projects/git%2Bgithub.com%2FCascadeBot%2FCascadeBot?ref=badge_shield" alt="FOSSA Status"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2FCascadeBot%2FCascadeBot.svg?type=shield"/></a>
     <a href="https://github.com/CascadeBot/CascadeBot/issues"><img src="https://img.shields.io/github/issues/cascadebot/cascadebot.svg?color=purple&style=flat-square" alt="GitHub Issues"></a>
     <a href="https://github.com/CascadeBot/CascadeBot/pulls"><img src="https://img.shields.io/github/issues-pr/cascadebot/cascadebot.svg?color=purple&style=flat-square" alt="GitHub Pull Requests"></a>
     <a href="https://github.com/CascadeBot/CascadeBot/network/members"><img src="https://img.shields.io/github/forks/cascadebot/cascadebot.svg?style=flat-square" alt="GitHub Forks"></a>
@@ -16,6 +17,9 @@
 If you would you like to be notified when we release our open beta, please enter your details <a href="https://cascadebot.typeform.com/to/kjr91e">here</a>!</h2>
 
 ---
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FCascadeBot%2FCascadeBot.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FCascadeBot%2FCascadeBot?ref=badge_large)
 
 ## 👋🏻 About
 
@@ -41,5 +45,3 @@ The projects listed in the `licences` folder have provided inspiration, and we t
 
  - FlareBot: https://github.com/FlareBot/FlareBot
  - FredBoat: https://github.com/Frederikam/FredBoat
-
-
