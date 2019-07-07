@@ -676,6 +676,10 @@
       "moderation": "moderation",
       "fun": "fun",
       "developer": "developer"
+    },
+    "permissionmode":{
+      "most_restrictive": "most restrictive",
+      "hierarchical": "hierarchical"
     }
   },
   "game_types": {

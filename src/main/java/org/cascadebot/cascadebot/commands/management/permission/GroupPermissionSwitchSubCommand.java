@@ -38,7 +38,7 @@ public class GroupPermissionSwitchSubCommand implements ISubCommand {
         }
 
         context.getData().getPermissions().setMode(mode);
-        context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.switch.success", FormatUtils.formatEnum(mode)));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.switch.success", FormatUtils.formatEnum(mode, context.getLocale())));
     }
 
     @Override
