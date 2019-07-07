@@ -7,6 +7,8 @@ package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.util.Set;
@@ -28,14 +30,53 @@ public class Argument {
         this.aliases = Set.copyOf(aliases);
     }
 
-    public String getName() {
-        // TODO: Implement this into locale
-        return "";
+    public String name(Locale locale) {
+        if (type != ArgumentType.COMMAND) {
+            return Language.i18n(locale, "arguments." + id.substring(id.lastIndexOf('.') + 1));
+        }
+        int sepCount = StringUtils.countMatches(id, '.');
+        if (sepCount > 1) {
+            if (Language.hasLanguageEntry(locale, "commands." + id + ".command"))  {
+                return Language.i18n(locale, "commands." + id + ".command");
+            }
+            return Language.i18n(locale, "arguments." + id.replace(".", "#") + ".name");
+        } else if (sepCount == 1) {
+            ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id.substring(0, id.lastIndexOf('.')));
+            if (command != null) {
+                var subCommand = command.getSubCommands().stream().filter(sub -> sub.command().equals(id.substring(id.lastIndexOf('.') + 1))).findFirst().orElse(null);
+                return subCommand != null ? subCommand.command(locale) : command.command(locale);
+            } else {
+                return "";
+            }
+        } else {
+            ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id);
+            return command != null ? command.command(locale) : "";
+        }
     }
 
-    public String getDescription() {
-        // TODO: Implement this into locale
-        return "";
+    public String description(Locale locale) {
+        if (type != ArgumentType.COMMAND) {
+            Argument parent = CascadeBot.INS.getArgumentManager().getParent(id);
+            return parent != null ? parent.description(locale) : "";
+        }
+        int sepCount = StringUtils.countMatches(id, '.');
+        if (sepCount > 1) {
+            if (Language.hasLanguageEntry(locale, "commands." + id + ".description"))  {
+                return Language.i18n(locale, "commands." + id + ".description");
+            }
+            return Language.i18n(locale, "arguments." + id.replace(".", "#") + ".description");
+        } else if (sepCount == 1) {
+            ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id.substring(0, id.lastIndexOf('.')));
+            if (command != null) {
+                var subCommand = command.getSubCommands().stream().filter(sub -> sub.command().equals(id.substring(id.lastIndexOf('.') + 1))).findFirst().orElse(null);
+                return subCommand != null ? subCommand.description(locale) : command.description(locale);
+            } else {
+                return "";
+            }
+        } else {
+            ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id);
+            return command != null ? command.description(locale) : "";
+        }
     }
 
     /**
@@ -51,12 +92,12 @@ public class Argument {
      */
     public String getUsageString(Locale locale, String base) {
         StringBuilder usageBuilder = new StringBuilder();
-        String field = this.toString();
+        String field = this.getArgument(locale);
 
         if (isDisplayAlone() || subArgs.size() == 0) {
             usageBuilder.append("`").append(base).append(field).append("`");
-            if (!StringUtils.isBlank(getDescription())) {
-                usageBuilder.append(" - ").append(getDescription());
+            if (!StringUtils.isBlank(description(locale))) {
+                usageBuilder.append(" - ").append(description(locale));
             }
             usageBuilder.append('\n');
         }
@@ -74,33 +115,32 @@ public class Argument {
      * @param pos  The position this argument should be in.
      * @return If the argument exists at that position.
      */
-    public boolean argExists(String[] args, int pos) {
+    public boolean argExists(Locale locale, String[] args, int pos) {
         if (args.length <= pos) {
             return false;
         }
         if (type.equals(ArgumentType.REQUIRED)) {
             return true;
         }
-        if (!args[pos].equalsIgnoreCase(getName()) && !this.type.equals(ArgumentType.OPTIONAL)) {
+        if (!args[pos].equalsIgnoreCase(name(locale)) && !this.type.equals(ArgumentType.OPTIONAL)) {
             for (String alias : aliases) {
                 if (!args[pos].equalsIgnoreCase(alias)) {
                     return false;
                 }
             }
         }
-        if (this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.getDescription().isEmpty()) {
+        if (this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.description(locale).isEmpty()) {
             for (Argument sub : this.subArgs) {
                 if (sub.type.equals(ArgumentType.REQUIRED) || sub.type.equals(ArgumentType.COMMAND)) {
-                    return sub.argExists(args, pos + 1);
+                    return sub.argExists(locale, args, pos + 1);
                 }
             }
         }
         return true;
     }
 
-    @Override
-    public String toString() {
-        String argument = getName().isBlank() ? id.substring(id.lastIndexOf('.') + 1) : getName();
+    public String getArgument(Locale locale) {
+        String argument = name(locale).isBlank() ? id.substring(id.lastIndexOf('.') + 1) : name(locale);
         if (aliases.size() > 0) {
             StringBuilder paramBuilder = new StringBuilder();
             paramBuilder.append(argument);

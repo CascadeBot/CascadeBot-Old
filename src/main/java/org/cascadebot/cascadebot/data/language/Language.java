@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.data.language;
 import com.ibm.icu.text.MessageFormat;
 import io.github.binaryoverload.JSONConfig;
 import net.dv8tion.jda.core.utils.Checks;
+import org.apache.commons.lang3.ArrayUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
@@ -43,7 +44,9 @@ public class Language {
                 CascadeBot.LOGGER.warn("I couldn't load the language file {} from the JAR file!", locale.getLanguageFileName());
             }
         } else {
-            languages.put(locale, new JSONConfig(stream));
+            JSONConfig config = new JSONConfig(stream);
+            config.setAllowedSpecialCharacters(ArrayUtils.add(config.getAllowedSpecialCharacters(), '#'));
+            languages.put(locale, config);
         }
     }
 

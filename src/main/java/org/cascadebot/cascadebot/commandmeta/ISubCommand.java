@@ -15,9 +15,4 @@ public interface ISubCommand extends ICommandExecutable {
         return CascadeBot.INS.getCommandManager().getCommand(parent());
     }
 
-    @Override
-    default String getDescriptionPath() {
-        return "command_descriptions." + parent() + "." + command();
-    }
-
 }

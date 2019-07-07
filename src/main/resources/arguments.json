@@ -52,12 +52,12 @@
   },
 
   "module*": {
-    "disable": {
+    "disable*": {
       "module": {
         "_type": "required"
       }
     },
-    "enable": {
+    "enable*": {
       "module": {
         "_type": "required"
       }

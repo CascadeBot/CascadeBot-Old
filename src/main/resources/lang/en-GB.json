@@ -804,5 +804,29 @@
     "args": {
       "description": "Injects a specified argument (zero indexed)"
     }
+  },
+  "arguments": {
+    "name": "name",
+    "user": "user",
+    "group": "group",
+    "permission": "permission",
+    "position": "position",
+    "role": "role",
+    "mode": "mode",
+    "tag": "tag",
+    "category": "category",
+    "content": "content",
+    "module": "module",
+    "member": "member",
+    "reason": "reason",
+    "guild_id": "guild_id",
+    "userperms#list#user#permissions": {
+      "name": "permissions",
+      "description": "Lists the permissions a user has."
+    },
+    "userperms#list#user#groups": {
+      "name": "groups",
+      "description": "Lists the groups a user has."
+    }
   }
 }
