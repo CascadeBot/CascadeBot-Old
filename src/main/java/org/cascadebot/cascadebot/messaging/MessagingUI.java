@@ -167,8 +167,9 @@ public class MessagingUI {
     }
 
     public void replyUsage(ICommandExecutable command) {
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed("Proper usage: \n" + context.getUsage(command), context.getUser());
-        builder.setTitle("Incorrect usage");
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.getUsage(command), context.getUser());
+        builder.setAuthor(context.i18n("responses.incorrect_usage_title_1"));
+        builder.setTitle(context.i18n("responses.incorrect_usage_title_2"));
         context.getTypedMessaging().replyWarning(builder);
     }
 

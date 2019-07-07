@@ -229,7 +229,7 @@
       }
     },
     "link*": {
-      "group": {
+      "group*": {
         "_type": "required",
         "role": {
           "_type": "required"
