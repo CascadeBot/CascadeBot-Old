@@ -173,7 +173,7 @@ public class CommandContext {
     }
 
     public String i18n(String path, Object... args) {
-        return Language.i18n(data.getLocale(), path, args);
+        return Language.i18n(guild.getIdLong(), path, args);
     }
 
     public String getUsage() {

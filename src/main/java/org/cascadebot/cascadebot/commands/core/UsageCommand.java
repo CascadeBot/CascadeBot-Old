@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.core;
 
+import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
@@ -12,6 +13,7 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 
 import java.util.Set;
 
@@ -30,7 +32,9 @@ public class UsageCommand implements ICommandCore {
             return;
         }
 
-        context.getTypedMessaging().replyInfo(context.getUsage(command));
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.getUsage(command), context.getUser());
+        builder.setTitle(context.i18n("commands.usage.title", command.command(context.getLocale())));
+        context.getTypedMessaging().replyInfo(builder);
     }
 
     @Override

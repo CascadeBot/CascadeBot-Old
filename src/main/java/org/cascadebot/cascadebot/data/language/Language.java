@@ -68,8 +68,7 @@ public class Language {
             if (INSTANCE.languages.get(locale).getString(path).isPresent()) {
                 MessageFormat format = new MessageFormat(INSTANCE.languages.get(locale).getString(path).get(), locale.getULocale());
                 String message = format.format(args);
-                // Replace {%} with the prefix
-                message = message.replace("{%}", GuildDataManager.getGuildData(guildId).getCoreSettings().getPrefix());
+                message = FormatUtils.formatPrefix(GuildDataManager.getGuildData(guildId).getCoreSettings().getPrefix(), message);
                 return FormatUtils.formatUnicode(message);
             } else {
                 CascadeBot.LOGGER.warn("Cannot find a language string matching the path '{}'", path);

@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class FormatUtils {
 
-    private static final Pattern UNICODE_REGEX = Pattern.compile("@(g:)?([A-Za-z_]+)@");
+    private static final Pattern UNICODE_REGEX = Pattern.compile("\\|(g:)?([A-Za-z_]+)\\|");
 
     //region Table methods
     public static String makeAsciiTable(java.util.List<String> headers, java.util.List<java.util.List<String>> table, String footer) {
@@ -230,7 +230,7 @@ public class FormatUtils {
     }
 
     public static String formatPrefix(String prefix, String string) {
-        return string.replace("{%}", prefix);
+        return string.replace("|%|", prefix);
     }
 
     public static String formatLongTimeMills(long time) {

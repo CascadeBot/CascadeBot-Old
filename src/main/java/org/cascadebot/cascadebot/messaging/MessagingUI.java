@@ -167,7 +167,9 @@ public class MessagingUI {
     }
 
     public void replyUsage(ICommandExecutable command) {
-        context.getTypedMessaging().replyWarning(context.i18n("responses.incorrect_usage", context.getUsage(command)));
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed("Proper usage: \n" + context.getUsage(command), context.getUser());
+        builder.setTitle("Incorrect usage");
+        context.getTypedMessaging().replyWarning(builder);
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {

@@ -19,6 +19,7 @@
     "usage": {
       "command": "usage",
       "description": "Gets the usage for a command.",
+      "title": "Usage for command |%|{0}",
       "specify_usage": "Please specify command to get usage from!",
       "command_not_found": "Command `{0}` not found!"
     },
@@ -28,12 +29,12 @@
     "cat": {
       "command": "cat",
       "description": "Returns a random picture of a cat.",
-      "error_loading": "Error loading cat picture! @frowning@"
+      "error_loading": "Error loading cat picture! |frowning|"
     },
     "dog": {
       "command": "dog",
       "description": "Returns a random picture of a dog.",
-      "error_loading": "Error loading dog picture! @frowning@"
+      "error_loading": "Error loading dog picture! |frowning|"
     },
     "random": {
       "command": "random",
@@ -173,7 +174,7 @@
         "command": "load",
         "description": "Loads a playlist.",
         "cannot_find_playlist": "Couldn't find playlist `{0}`.",
-        "load_track": "Where would you like to load this track from\n@one@ User\n@two@ Guild"
+        "load_track": "Where would you like to load this track from\n|one| User\n|two| Guild"
       },
       "save": {
         "command": "save",
@@ -342,7 +343,7 @@
       },
       "remove": {
         "command": "remove",
-        "description": "Removes a permission to a user.",
+        "description": "Removes a permission from a user.",
         "success": "Successfully removed permission `{0}` from user `{1}`",
         "fail": "Couldn't remove permission `{0}` from user `{1}` as they don't have the permission"
       },
@@ -372,8 +373,8 @@
       "test": {
         "command": "test",
         "description": "Tests whether a user has a permission or not.",
-        "has": "@white_check_mark@ User {0} has the permission `{1}`",
-        "does_not_have": "@x@ User {0} doesn't the permission `{1}`"
+        "has": "|white_check_mark| User {0} has the permission `{1}`",
+        "does_not_have": "|x| User {0} doesn't the permission `{1}`"
       }
     }
   },
@@ -596,7 +597,7 @@
   },
   "music": {
     "misc": {
-      "load_options": "@musical_note@ - Load as track `{0}`\n@notes@ - Load as playlist `{1}`",
+      "load_options": "|musical_note| - Load as track `{0}`\n|notes| - Load as playlist `{1}`",
       "load_options_title": "Load as a single track or as a playlist?",
       "load_options_typed": "\n\nPlease type either `{0}` or `{1}`!",
       "load_option": {
