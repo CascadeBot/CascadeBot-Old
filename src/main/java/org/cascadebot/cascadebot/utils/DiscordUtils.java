@@ -68,6 +68,8 @@ public class DiscordUtils {
         Checks.notBlank(search, "user");
         List<User> users = FinderUtil.findUsers(search, guild.getJDA());
         if (users.size() > 1) {
+            /*context.replyDanger("There is more than one user that matches this criterion! Please enter the ID or the user's full name!");
+            We don't have context passed through so we can't reply like this*/
             return null;
         }
         User user = users.size() != 1 ? null : users.get(0);
