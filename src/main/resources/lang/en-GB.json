@@ -36,6 +36,19 @@
       "description": "Returns a random picture of a dog.",
       "error_loading": "Error loading dog picture! |frowning|"
     },
+    "color": {
+      "command": "colour",
+      "description": "Gives information about a provided colour.",
+      "valid_rgb": "RGB values should be between 0 and 255!",
+      "valid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
+      "valid_decimal": "Please provide a valid decimal value! 0-16777215",
+      "valid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
+      "color_not_recognised": "Could not recognise colour from the given value!",
+      "embed_title": "Values for #{0}",
+      "rgb": "RGB",
+      "decimal": "Decimal value",
+      "binary": "Binary value"
+    },
     "random": {
       "command": "random",
       "description": "Returns a random number",
@@ -437,6 +450,10 @@
       "name": "dog",
       "label": "Dog command"
     },
+    "color": {
+      "name": "colour",
+      "label": "Colour command"
+    },
     "random": {
       "name": "random",
       "label": "Random number command"
@@ -830,6 +847,7 @@
     "member": "member",
     "reason": "reason",
     "guild_id": "guild_id",
+    "value": "value",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
