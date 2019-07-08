@@ -59,6 +59,7 @@ public class MusicHandler {
 
     private CascadeBot instance;
 
+    @Getter
     private static Map<Long, CascadePlayer> players = new HashMap<>();
 
     public MusicHandler(CascadeBot instance) {

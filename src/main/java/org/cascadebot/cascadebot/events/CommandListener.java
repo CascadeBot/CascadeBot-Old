@@ -41,15 +41,18 @@ public class CommandListener extends ListenerAdapter {
 
     private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
     private static final AtomicInteger threadCounter = new AtomicInteger(0);
-    private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r ->
-            new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
+    private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r -> new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
 
     private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) return;
-        if (event.getMessage().getType() != MessageType.DEFAULT) return;
+        if (event.getAuthor().isBot()) {
+            return;
+        }
+        if (event.getMessage().getType() != MessageType.DEFAULT) {
+            return;
+        }
 
         MDC.put("cascade.guild", event.getGuild().toString());
         MDC.put("cascade.sender", event.getAuthor().toString());
@@ -102,10 +105,7 @@ public class CommandListener extends ListenerAdapter {
         try {
             processCommands(event, guildData, trigger, args, isMention);
         } catch (Exception e) {
-            Messaging.sendExceptionMessage(
-                    event.getChannel(),
-                    Language.i18n(guildData.getLocale(), "responses.failed_to_process_command"),
-                    e);
+            Messaging.sendExceptionMessage(event.getChannel(), Language.i18n(guildData.getLocale(), "responses.failed_to_process_command"), e);
             return;
         } finally {
             CascadeBot.clearCascadeMDC();
@@ -151,22 +151,10 @@ public class CommandListener extends ListenerAdapter {
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
-        CommandContext context = new CommandContext(
-                cmd,
-                event.getJDA(),
-                event.getChannel(),
-                event.getMessage(),
-                event.getGuild(),
-                guildData,
-                args,
-                event.getMember(),
-                trigger,
-                isMention
-        );
+        CommandContext context = new CommandContext(cmd, event.getJDA(), event.getChannel(), event.getMessage(), event.getGuild(), guildData, args, event.getMember(), trigger, isMention);
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
-            if (!cmd.getModule().isPrivate() &&
-                    !guildData.getCoreSettings().isModuleEnabled(cmd.getModule())) {
+            if (!cmd.getModule().isPrivate() && !guildData.getCoreSettings().isModuleEnabled(cmd.getModule())) {
                 if (guildData.getCoreSettings().isShowModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n(cmd.getModule().toString(), trigger), event.getAuthor());
                     Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getCoreSettings().isUseEmbedForMessages());
@@ -184,14 +172,14 @@ public class CommandListener extends ListenerAdapter {
                 }
             }
             dispatchCommand(cmd, context);
-        }
+        } else {
+            if (guildData.getCoreSettings().isAllowTagCommands()) {
+                if (guildData.getCoreSettings().getTags().containsKey(trigger)) {
+                    Tag tag = guildData.getCoreSettings().getTag(trigger);
 
-        if (guildData.getCoreSettings().isAllowTagCommands()) {
-            if (guildData.getCoreSettings().getTags().containsKey(trigger)) {
-                Tag tag = guildData.getCoreSettings().getTag(trigger);
-
-                context.reply(tag.formatTag(context)); //TODO perms for tags
-                CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", trigger, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
+                    context.reply(tag.formatTag(context)); //TODO perms for tags
+                    CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", trigger, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
+                }
             }
         }
     }
@@ -199,18 +187,7 @@ public class CommandListener extends ListenerAdapter {
     private boolean processSubCommands(ICommandMain cmd, String[] args, CommandContext parentCommandContext) {
         for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
-                CommandContext subCommandContext = new CommandContext(
-                        subCommand,
-                        parentCommandContext.getJda(),
-                        parentCommandContext.getChannel(),
-                        parentCommandContext.getMessage(),
-                        parentCommandContext.getGuild(),
-                        parentCommandContext.getData(),
-                        ArrayUtils.remove(args, 0),
-                        parentCommandContext.getMember(),
-                        parentCommandContext.getTrigger() + " " + args[0],
-                        parentCommandContext.isMention()
-                );
+                CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.isMention());
                 if (!isAuthorised(cmd, subCommandContext)) {
                     return false;
                 }
@@ -230,12 +207,7 @@ public class CommandListener extends ListenerAdapter {
             MDC.put("cascade.trigger", context.getTrigger());
             MDC.put("cascade.args", Arrays.toString(context.getArgs()));
 
-            CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}",
-                    (command instanceof ICommandMain ? "" : "Sub"),
-                    command.command(),
-                    (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"),
-                    context.getUser().getAsTag(),
-                    Arrays.toString(context.getArgs()));
+            CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}", (command instanceof ICommandMain ? "" : "Sub"), command.command(), (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"), context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
 
             Metrics.INS.commandsExecuted.labels(command.getClass().getSimpleName()).inc();
             Summary.Timer commandTimer = Metrics.INS.commandExecutionTime.labels(command.getClass().getSimpleName()).startTimer();

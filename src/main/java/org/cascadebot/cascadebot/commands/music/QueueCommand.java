@@ -32,7 +32,7 @@ public class QueueCommand implements ICommandMain {
 
         embedBuilder.setTitle(context.i18n("words.queue"));
 
-        if (player.getQueue().isEmpty() && player.getPlayer().getPlayingTrack() == null) {
+        if (player.getQueue().isEmpty()) {
             context.getTypedMessaging().replyInfo(context.i18n("commands.queue.no_tracks_playing"));
             return;
         }
