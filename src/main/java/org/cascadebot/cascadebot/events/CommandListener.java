@@ -27,6 +27,7 @@ import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.slf4j.MDC;
@@ -156,7 +157,7 @@ public class CommandListener extends ListenerAdapter {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.getModule().isPrivate() && !guildData.getCoreSettings().isModuleEnabled(cmd.getModule())) {
                 if (guildData.getCoreSettings().isShowModuleErrors() || Environment.isDevelopment()) {
-                    EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n(cmd.getModule().toString(), trigger), event.getAuthor());
+                    EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.getModule(), context.getLocale()), trigger), event.getAuthor());
                     Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getCoreSettings().isUseEmbedForMessages());
                 }
                 // TODO: Modlog?
