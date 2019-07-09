@@ -65,9 +65,4 @@ public class ServerInfoCommand implements ICommandMain {
         return CascadePermission.of("serverinfo", true);
     }
 
-    @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("guildinfo");
-    }
-
 }

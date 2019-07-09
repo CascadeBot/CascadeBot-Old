@@ -214,11 +214,6 @@ public class PlayingCommand implements ICommandMain {
     }
 
     @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("song");
-    }
-
-    @Override
     public String command() {
         return "playing";
     }

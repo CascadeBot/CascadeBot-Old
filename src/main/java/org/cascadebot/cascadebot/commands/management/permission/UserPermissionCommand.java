@@ -26,11 +26,6 @@ public class UserPermissionCommand implements ICommandMain {
     }
 
     @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("userpermissions", "user_permissions");
-    }
-
-    @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("permissions.user", false, Module.MANAGEMENT);
     }

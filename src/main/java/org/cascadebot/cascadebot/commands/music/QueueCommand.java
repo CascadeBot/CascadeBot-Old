@@ -74,11 +74,6 @@ public class QueueCommand implements ICommandMain {
     }
 
     @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("playlist");
-    }
-
-    @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("queue", false);
     }

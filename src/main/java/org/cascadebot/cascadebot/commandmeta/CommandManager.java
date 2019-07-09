@@ -6,9 +6,9 @@
 package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.Getter;
-import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.cascadebot.cascadebot.ShutdownHandler;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.ReflectionUtils;
 import org.slf4j.Logger;
@@ -48,9 +48,16 @@ public class CommandManager {
 
     public ICommandMain getCommand(String command) {
         for (ICommandMain cmd : commands) {
-            if (cmd.command().equals(command)) {
+            if (cmd.command().equals(command)) return cmd;
+        }
+        return null;
+    }
+
+    public ICommandMain getCommand(String command, Locale locale) {
+        for (ICommandMain cmd : commands) {
+            if (cmd.command(locale).equals(command)) {
                 return cmd;
-            } else if (cmd.getGlobalAliases().contains(command)) {
+            } else if (cmd.getGlobalAliases(locale).contains(command)) {
                 return cmd;
             }
         }

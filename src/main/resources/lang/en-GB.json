@@ -39,6 +39,7 @@
     "color": {
       "command": "colour",
       "description": "Gives information about a provided colour.",
+      "aliases": ["color"],
       "valid_rgb": "RGB values should be between 0 and 255!",
       "valid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
       "valid_decimal": "Please provide a valid decimal value! 0-16777215",
@@ -58,6 +59,7 @@
     "roles": {
       "command": "roles",
       "description": "Returns the server's roles.",
+      "aliases": ["roleinfo"],
       "header_id": "Role ID",
       "header_name": "Role Name",
       "header_members": "No. Users",
@@ -66,6 +68,7 @@
     "serverinfo": {
       "command": "serverinfo",
       "description": "Returns information regarding the specified server.",
+      "aliases": ["guildinfo"],
       "guild_creation_date": "Creation Date",
       "guild_name": "Guild Name",
       "guild_owner": "Owner",
@@ -146,6 +149,7 @@
     "userperms": {
       "command": "userperms",
       "description": "Interact with user permissions.",
+      "aliases": ["userpermissions"],
       "add": {
         "command": "add",
         "description": "Adds a permission to a user.",
@@ -292,6 +296,7 @@
     "join": {
       "command": "join",
       "description": "Joins the bot to a voice channel.",
+      "aliases": ["summon", "connect", "getinhere"],
       "user_not_connected": "You are not connected to a voice channel!",
       "already_connected": "I am already connected to your channel!",
       "successfully_joined": "I have successfully joined the voice channel `#{0}`"
@@ -299,6 +304,7 @@
     "leave": {
       "command": "leave",
       "description": "Tells the bot to leave a voice channel.",
+      "aliases": ["gtfo"],
       "successfully_left": "I have successfully left the channel `#{0}`"
     },
     "loop": {
@@ -323,6 +329,7 @@
     "playing": {
       "command": "playing",
       "description": "Get playing music.",
+      "aliases": ["song"],
       "no_music_playing": "There is no music playing!",
       "loop_mode": "Loop mode",
       "up_next": "Up next"
@@ -330,6 +337,7 @@
     "queue": {
       "command": "queue",
       "description": "Displays the current queue.",
+      "aliases": ["playlist"],
       "no_tracks_playing": "There are no tracks playing!",
       "load": {
         "command": "load",
@@ -355,6 +363,7 @@
     "search": {
       "command": "search",
       "description": "Searches for a song.",
+      "aliases": ["find"],
       "cannot_find_video": "Couldn't find video!",
       "error_loading_track": "Error loading track",
       "multiple_results": "We found multiple results for this search!",

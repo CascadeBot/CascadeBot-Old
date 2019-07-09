@@ -55,9 +55,4 @@ public class RolesCommand implements ICommandMain {
         return CascadePermission.of("roles", false);
     }
 
-    @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("roleinfo");
-    }
-
 }

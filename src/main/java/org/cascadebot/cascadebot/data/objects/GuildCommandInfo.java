@@ -29,7 +29,7 @@ public class GuildCommandInfo {
         this.command = command.command(locale);
         this.defaultCommand = command.command();
         this.forceDefault = command.forceDefault();
-        this.aliases = command.getGlobalAliases();
+        this.aliases = command.getGlobalAliases(locale);
         this.enabled = true;
     }
 

@@ -114,11 +114,6 @@ public class ColorCommand implements ICommandMain {
     }
 
     @Override
-    public Set<String> getGlobalAliases() {
-        return java.util.Set.of("colour");
-    }
-
-    @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("color", true);
     }

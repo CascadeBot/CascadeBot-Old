@@ -149,7 +149,7 @@ public class GuildData {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getAliases();
         }
-        return command.getGlobalAliases();
+        return command.getGlobalAliases(locale);
     }
 
     public boolean addAlias(ICommandMain command, String alias) {

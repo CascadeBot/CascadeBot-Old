@@ -71,11 +71,6 @@ public class JoinCommand implements ICommandMain {
     }
 
     @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("summon", "connect", "getinhere");
-    }
-
-    @Override
     public String command() {
         return "join";
     }

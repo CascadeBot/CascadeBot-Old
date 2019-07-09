@@ -40,11 +40,6 @@ public class LeaveCommand implements ICommandMain {
     }
 
     @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("gtfo");
-    }
-
-    @Override
     public String command() {
         return "leave";
     }

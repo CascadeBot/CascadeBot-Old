@@ -120,9 +120,4 @@ public class SearchCommand implements ICommandMain {
         return Module.MUSIC;
     }
 
-    @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("find");
-    }
-
 }
