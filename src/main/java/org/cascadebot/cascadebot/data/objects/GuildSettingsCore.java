@@ -36,7 +36,7 @@ public class GuildSettingsCore {
     static {
         for (Field field : GuildSettingsCore.class.getDeclaredFields()) {
             if (field.getName().equals("VALUES")) continue;
-            if (field.getAnnotation(Setting.class) != null && !field.getAnnotation(Setting.class).directlyEditable()) continue;
+            if (field.getAnnotation(Setting.class) == null || !field.getAnnotation(Setting.class).directlyEditable()) continue;
             field.setAccessible(true);
             VALUES.put(field.getName().toLowerCase(), field);
         }
