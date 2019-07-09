@@ -63,7 +63,7 @@ public class SettingsCommand implements ICommandMain {
                                 e.printStackTrace();
                             }
                         });
-                messageBuilder.append(context.i18n("commands.settings.section_title", FormatUtils.formatEnum(settingsClass.getAnnotation(SettingsContainer.class).module(), context.getLocale())))
+                messageBuilder.append(context.i18n("commands.settings.section_title", StringUtils.capitalize(FormatUtils.formatEnum(settingsClass.getAnnotation(SettingsContainer.class).module(), context.getLocale()))))
                         .append(tableBuilder.build().toString())
                         .append("\n\n");
             }
