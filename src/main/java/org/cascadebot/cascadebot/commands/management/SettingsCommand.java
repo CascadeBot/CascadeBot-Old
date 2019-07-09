@@ -43,7 +43,7 @@ public class SettingsCommand implements ICommandMain {
                     .filter(classToFilter -> classToFilter.getAnnotation(SettingsContainer.class) != null)
                     .forEach(settingsClasses::add);
         } catch (ClassNotFoundException | IOException e) {
-            context.getTypedMessaging().replyException("Could not process settings!", e);
+            context.getTypedMessaging().replyException(context.i18n("commands.settings.couldnt_process"), e);
             return;
         }
 
@@ -51,7 +51,7 @@ public class SettingsCommand implements ICommandMain {
         if (context.getArgs().length == 0 || context.getArg(0).equalsIgnoreCase("list")) {
             StringBuilder messageBuilder = new StringBuilder();
             for (Class<?> settingsClass : settingsClasses) {
-                Table.TableBuilder tableBuilder = new Table.TableBuilder("Setting", "Current value");
+                Table.TableBuilder tableBuilder = new Table.TableBuilder(context.i18n("commands.settings.setting"), context.i18n("commands.settings.current_value"));
                 getSettingsFromClass(settingsClass).entrySet()
                         .stream()
                         .sorted(Comparator.comparing(Map.Entry::getKey))
@@ -63,11 +63,7 @@ public class SettingsCommand implements ICommandMain {
                                 e.printStackTrace();
                             }
                         });
-                messageBuilder.append(StringUtils.repeat("-", 5))
-                        .append(" ")
-                        .append(FormatUtils.formatEnum(settingsClass.getAnnotation(SettingsContainer.class).module(), context.getLocale()))
-                        .append(" module ")
-                        .append(StringUtils.repeat("-", 5))
+                messageBuilder.append(context.i18n("commands.settings.section_title", FormatUtils.formatEnum(settingsClass.getAnnotation(SettingsContainer.class).module(), context.getLocale())))
                         .append(tableBuilder.build().toString())
                         .append("\n\n");
             }

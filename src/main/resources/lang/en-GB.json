@@ -220,8 +220,10 @@
       "cannot_edit": "You cannot edit this setting! You need the: {0} flag to do this!",
       "setting_set": "Setting {0} has been set to a value of {1}.",
       "cannot_access": "Could not access that setting!",
+      "couldnt_process": "Could not process settings!",
       "setting": "Setting",
       "current_value": "Current value",
+      "section_title": "----- {0} module -----",
       "cannot_find_field": "Cannot find that field!"
     },
     "tag": {
