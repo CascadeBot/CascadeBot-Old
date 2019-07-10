@@ -58,6 +58,7 @@ public class PermissionsManager {
             if (command.getPermission() == null || command instanceof ICommandRestricted) continue;
             registerPermission(command.getPermission());
             for (ICommandExecutable subCommand : command.getSubCommands()) {
+                if (subCommand.getPermission() == null) continue;
                 registerPermission(subCommand.getPermission());
             }
         }
