@@ -67,7 +67,7 @@
     "list": {
       "_type": "command"
     },
-    "settings*": {
+    "setting*": {
       "_type": "required",
       "value": {
         "_type": "required"

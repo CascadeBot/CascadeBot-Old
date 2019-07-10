@@ -860,6 +860,8 @@
     "reason": "reason",
     "guild_id": "guild_id",
     "value": "value",
+    "setting": "setting",
+    "flag": "flag",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."

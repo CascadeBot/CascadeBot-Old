@@ -82,6 +82,10 @@ public class SettingsCommand implements ICommandMain {
                     }
                 }
 
+                if (context.getArgs().length != 2) {
+                    context.getUIMessaging().replyUsage();
+                    return;
+                }
                 String value = context.getArg(1);
                 if (field.getType() == boolean.class) {
                     boolean booleanValue = Boolean.valueOf(value);
