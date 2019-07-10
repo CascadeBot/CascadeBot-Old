@@ -107,7 +107,7 @@ public class EvalCommand implements ICommandRestricted {
 
     @Override
     public String description() {
-        return "Evaluates code for the owners.";
+        return "Evaluates code for the developers.";
     }
 
     @Override
