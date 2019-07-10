@@ -6,13 +6,14 @@
     "prefix": {
       "command": "prefix",
       "description": "Gets and sets the current guild prefix.",
+      "reset": {
+        "command": "reset",
+        "description": "Resets the prefix to default."
+      },
       "prefix_reset": "The prefix has been reset to: `{0}`",
       "prefix_too_long": "The requested prefix is too long!",
       "new_prefix": "The new prefix is: `{0}`",
-      "current_prefix": "The current server prefix is `{0}`",
-      "args": {
-        "reset": "reset"
-      }
+      "current_prefix": "The current server prefix is `{0}`"
     },
     "support": {
       "command": "support",
@@ -378,6 +379,14 @@
     "skip": {
       "command": "skip",
       "description": "Skips the current song.",
+      "yes": {
+        "command": "yes",
+        "description": "Votes to skip a track."
+      },
+      "no": {
+        "command": "no",
+        "description": "Votes to not skip a track."
+      },
       "not_playing": "I'm not playing anything!",
       "forcefully_skipped": "Forcefully skipped the song!",
       "cannot_skip": {
@@ -877,6 +886,14 @@
     "userperms#list#user#groups": {
       "name": "groups",
       "description": "Lists the groups a user has."
+    },
+    "guild#save#all": {
+      "name": "all",
+      "description": "Saves all guilds."
+    },
+    "guild#flag#list": {
+      "name": "list",
+      "description": "Lists all flags."
     }
   }
 }
