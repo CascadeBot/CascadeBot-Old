@@ -104,7 +104,7 @@ public class SkipCommand implements ICommandMain {
             message.editMessage("Skip Vote\n" + resultsBuilder.toString()).queue();
         });
         buttonGroupBuilder.setVoteFinishConsumer(voteResults -> {
-            if (voteResults.get(0).getVote().equals(UnicodeConstants.TICK)) {
+            if (voteResults.size() != 0 && voteResults.get(0).getVote().equals(UnicodeConstants.TICK)) {
                 context.getTypedMessaging().replyInfo(context.i18n("commands.skip.skipping"));
                 context.getMusicPlayer().skip();
                 voteMap.remove(context.getGuild().getIdLong());
