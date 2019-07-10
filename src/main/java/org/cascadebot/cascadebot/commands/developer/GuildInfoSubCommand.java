@@ -32,12 +32,11 @@ public class GuildInfoSubCommand implements ICommandExecutable {
 
         if (context.getArgs().length > 0) {
             guildForList = CascadeBot.INS.getShardManager().getGuildById(context.getArg(0));
+            if (guildForList == null) {
+                context.getTypedMessaging().replyDanger("We couldn't find that guild!");
+                return;
+            }
             dataForList = GuildDataManager.getGuildData(guildForList.getIdLong());
-        }
-
-        if (dataForList == null || guildForList == null) {
-            context.getTypedMessaging().replyDanger("We couldn't find that guild!");
-            return;
         }
 
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
