@@ -182,15 +182,16 @@ public class CommandContext {
 
     public String getUsage(ICommandExecutable command) {
         Argument parentArg = CascadeBot.INS.getArgumentManager().getArgument(command.getAbsoluteCommand());
-        if (parentArg == null) return i18n("responses.no_arguments_for_command", command.getAbsoluteCommand());
-
-        String parent = null;
-        if (command instanceof ISubCommand) {
-            parent = ((ISubCommand) command).parent();
+        if (parentArg != null) {
+            String parent = null;
+            if (command instanceof ISubCommand) {
+                parent = ((ISubCommand) command).parent();
+            }
+            String commandString = getCoreSettings().getPrefix() + (parent == null ? "" : parent + " ");
+            return parentArg.getUsageString(getLocale(), commandString);
+        } else {
+            return "`" + getCoreSettings().getPrefix() + command.command(getLocale()) + "` - " + command.description(getLocale());
         }
-
-        String commandString = getCoreSettings().getPrefix() + (parent == null ? "" : parent + " ");
-        return parentArg.getUsageString(getLocale(), commandString);
     }
 
     /**
