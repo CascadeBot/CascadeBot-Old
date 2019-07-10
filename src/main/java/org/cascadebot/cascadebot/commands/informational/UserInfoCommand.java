@@ -90,7 +90,9 @@ public class UserInfoCommand implements ICommandMain {
                 String gameType = LanguageUtils.getEnumI18n(context.getLocale(), "game_types", game.getType());
                 if (game.isRich()) {
                     RichPresence presence = game.asRichPresence();
-                    gameStatus = String.format("%s **%s**\n*%s*\n*%s*", gameType, presence.getName(), presence.getDetails(), presence.getState());
+                    gameStatus = String.format("%s **%s**", gameType, presence.getName());
+                    if (presence.getDetails() != null) gameStatus += "\n*" + presence.getDetails() + "*";
+                    if (presence.getState() != null) gameStatus += "\n*" + presence.getState() + "*";
                 } else {
                     gameStatus = String.format("%s **%s**", gameType, game.getName());
                 }
