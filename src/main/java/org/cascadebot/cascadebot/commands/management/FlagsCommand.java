@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -24,7 +25,7 @@ public class FlagsCommand implements ICommandMain {
         Guild guildForList = context.getGuild();
 
         String flags = Arrays.stream(Flag.values())
-                             .map(flag -> FormatUtils.formatEnum(flag, context.getLocale()) + " - " +
+                             .map(flag -> StringUtils.capitalize(FormatUtils.formatEnum(flag, context.getLocale())) + " - " +
                                      (dataForList.isFlagEnabled(flag) ? UnicodeConstants.TICK : UnicodeConstants.RED_CROSS))
                              .collect(Collectors.joining("\n"));
 

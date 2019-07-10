@@ -193,7 +193,7 @@
       }
     },
     "flags": {
-      "command": "flag",
+      "command": "flags",
       "description": "Shows what services and extra features this server has access to."
     },
     "module": {
