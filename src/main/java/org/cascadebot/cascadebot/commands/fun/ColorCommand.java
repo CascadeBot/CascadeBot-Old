@@ -93,7 +93,7 @@ public class ColorCommand implements ICommandMain {
         int decimalColor = Integer.parseUnsignedInt(hex, 16);
 
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
-        builder.setTitle(context.i18n("commands.color.embed_title"));
+        builder.setTitle(context.i18n("commands.color.embed_title", hex));
         builder.setColor(color);
         builder.addField(context.i18n("commands.color.rgb"), rgbValues, true); // RGB Values
         builder.addField(context.i18n("commands.color.decimal"), Integer.toUnsignedString(decimalColor), true); // Decimal Value
