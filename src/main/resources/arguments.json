@@ -12,7 +12,6 @@
       "_type": "required"
     }
   },
-
   "guild*": {
     "flag*": {
       "flag*": {
@@ -39,7 +38,11 @@
       }
     }
   },
-
+  "eval*": {
+    "content": {
+      "_type": "required"
+    }
+  },
   "serverinfo*": {
     "guild_id": {
       "_type": "optional"
@@ -50,7 +53,6 @@
       "_type": "optional"
     }
   },
-
   "module*": {
     "disable*": {
       "module": {
@@ -74,7 +76,6 @@
       }
     }
   },
-
   "tag": {
     "tag": {
       "_type": "required"
@@ -114,13 +115,11 @@
       }
     }
   },
-
   "color*": {
     "value": {
       "_type": "required"
     }
   },
-
   "ban*": {
     "user*": {
       "_type": "required",
@@ -153,8 +152,12 @@
       }
     }
   },
-
   "join*": {
+    "channel": {
+      "_type": "optional"
+    }
+  },
+  "leave*": {
     "channel": {
       "_type": "optional"
     }
@@ -167,7 +170,9 @@
   "play*": {
     "url": {
       "_type": "required",
-      "_aliases": ["query"]
+      "_aliases": [
+        "query"
+      ]
     }
   },
   "queue*": {
@@ -324,5 +329,4 @@
       }
     }
   }
-
 }
