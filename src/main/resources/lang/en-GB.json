@@ -860,8 +860,16 @@
     "reason": "reason",
     "guild_id": "guild_id",
     "value": "value",
+    "volume": "volume",
     "setting": "setting",
     "flag": "flag",
+    "query": "query",
+    "force": "force",
+    "scope": "scope",
+    "url": "url",
+    "channel": "channel",
+    "prefix": "prefix",
+    "command": "command",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
