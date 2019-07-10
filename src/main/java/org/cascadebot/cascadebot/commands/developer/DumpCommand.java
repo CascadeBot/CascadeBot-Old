@@ -30,8 +30,8 @@ public class DumpCommand implements ICommandRestricted {
             return;
         }
         if (context.getArg(0).equalsIgnoreCase("threads")) {
-            String threads = "```\n" + Thread.getAllStackTraces().keySet().stream().map(Thread::getName).sorted().collect(Collectors.joining("\n")) + "```";
-            PasteUtils.pasteIfLong(threads, 2048, context::reply);
+            String threads = Thread.getAllStackTraces().keySet().stream().map(Thread::getName).sorted().collect(Collectors.joining("\n"));
+            context.getTypedMessaging().replyInfo("**Threads**\n" + PasteUtils.paste(threads));
         } else if (context.getArg(0).equalsIgnoreCase("commands")) {
             Table.TableBuilder builder = new Table.TableBuilder("Command", "Module", "Permission", "Subcommands");
             for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
@@ -42,15 +42,15 @@ public class DumpCommand implements ICommandRestricted {
                         command.getSubCommands().stream().map(ICommandExecutable::command).collect(Collectors.toSet()).toString()
                 );
             }
-            PasteUtils.pasteIfLong(builder.build().toString(), 2048, context::reply);
+            context.getTypedMessaging().replyInfo("**Commands**\n" + PasteUtils.paste(builder.build().toString()));
         } else if (context.getArg(0).equalsIgnoreCase("permissions")) {
             Table.TableBuilder builder = new Table.TableBuilder("Permission", "Discord permissions", "Default permission");
             CascadeBot.INS.getPermissionsManager().getPermissions().stream().sorted(Comparator.comparing(CascadePermission::getPermissionRaw)).forEach(permission -> {
                 builder.addRow(permission.getPermissionRaw(), permission.getDiscordPerms().toString(), String.valueOf(permission.isDefaultPerm()));
             });
-            PasteUtils.pasteIfLong(builder.build().toString(), 2048, context::reply);
+            context.getTypedMessaging().replyInfo("**Permissions**\n" + PasteUtils.paste(builder.build().toString()));
         } else if (context.getArg(0).equalsIgnoreCase("guild")) {
-            PasteUtils.pasteIfLong("```json\n" + new GsonBuilder().setPrettyPrinting().create().toJson(context.getData()) + "```", 2048, context::reply);
+            context.getTypedMessaging().replyInfo("**Guild**\n" + PasteUtils.paste(new GsonBuilder().setPrettyPrinting().create().toJson(context.getData())));
         } else if (context.getArg(0).equalsIgnoreCase("args")) {
             StringBuilder builder = new StringBuilder();
             for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
