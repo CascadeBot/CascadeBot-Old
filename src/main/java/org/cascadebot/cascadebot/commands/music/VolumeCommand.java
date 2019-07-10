@@ -10,7 +10,9 @@ import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
+import org.cascadebot.shared.SecurityLevel;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -22,6 +24,13 @@ public class VolumeCommand implements ICommandMain {
         CascadePlayer player = context.getMusicPlayer();
         if (context.getArgs().length == 0) {
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.current_volume", player.getPlayer().getVolume()));
+            return;
+        }
+
+        // Limits the volume command to only guilds with the music services flag
+        // Allow developers to bypass the check to fix borked audio if need be.
+        if (!context.getData().isFlagEnabled(Flag.MUSIC_SERVICES) && !Security.isAuthorised(sender.getUser().getIdLong(), SecurityLevel.DEVELOPER)) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.volume.no_flag"));
             return;
         }
 
@@ -63,7 +72,7 @@ public class VolumeCommand implements ICommandMain {
         }
 
         if (volume == context.getMusicPlayer().getPlayer().getVolume()) {
-            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set"));
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getPlayer().getVolume()));
         } else {
             player.getPlayer().setVolume(volume);
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getPlayer().getVolume()));

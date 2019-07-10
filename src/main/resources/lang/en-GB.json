@@ -397,12 +397,13 @@
     },
     "volume": {
       "command": "volume",
-      "description": "Returns the current volume.",
+      "description": "Returns or sets the current music player volume.",
+      "no_flag": "Unfortunately you do not have the flag `Music Services` to run this command! This is a donator feature only |smile|",
       "current_volume": "Current volume is {0}%.",
       "greater_than_zero": "Volume needs to be greater than 0%.",
       "extreme_volume": "Are you sure you want to exceed 100% volume?",
       "volume_set": "Volume set to {0}%.",
-      "volume_already_set": "Volume is already {0}%.",
+      "volume_already_set": "Volume is already set to {0}%.",
       "volume_range": "Volume needs to be between 0% and 200%."
     }
   },
