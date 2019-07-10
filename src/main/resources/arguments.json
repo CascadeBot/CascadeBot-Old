@@ -13,7 +13,7 @@
     }
   },
 
-  "guild": {
+  "guild*": {
     "flag*": {
       "flag*": {
         "_type": "required",
@@ -164,7 +164,7 @@
       "_type": "optional"
     }
   },
-  "play": {
+  "play*": {
     "url": {
       "_type": "required",
       "_aliases": ["query"]
@@ -198,8 +198,10 @@
       "_type": "optional"
     },
     "yes": {
-      "_type": "command",
-      "_aliases": ["no"]
+      "_type": "command"
+    },
+    "no": {
+      "_type": "command"
     }
   },
   "volume": {
