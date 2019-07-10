@@ -37,7 +37,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
                 context.getTypedMessaging().replyDanger(ex.getMessage());
             }
         } else {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.module.disable.cannot_find_module", context.getData().getCoreSettings().getPrefix()));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.module.disable.cannot_find_module"));
         }
 
     }
