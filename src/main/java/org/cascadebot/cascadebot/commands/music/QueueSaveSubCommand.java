@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
@@ -20,7 +21,7 @@ import org.cascadebot.cascadebot.utils.ConfirmUtils;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class QueueSaveSubCommand implements ICommandExecutable {
+public class QueueSaveSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -77,6 +78,11 @@ public class QueueSaveSubCommand implements ICommandExecutable {
     @Override
     public String command() {
         return "save";
+    }
+
+    @Override
+    public String parent() {
+        return "queue";
     }
 
     @Override

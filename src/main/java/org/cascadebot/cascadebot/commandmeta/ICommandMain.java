@@ -35,6 +35,6 @@ public interface ICommandMain extends ICommandExecutable {
         return Set.copyOf(aliases);
     }
 
-    default Set<ICommandExecutable> getSubCommands() { return Set.of(); }
+    default Set<ISubCommand> getSubCommands() { return Set.of(); }
 
 }

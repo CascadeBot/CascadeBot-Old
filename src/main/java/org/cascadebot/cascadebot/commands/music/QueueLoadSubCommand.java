@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -18,7 +19,7 @@ import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
 import java.util.Set;
 
-public class QueueLoadSubCommand implements ICommandExecutable {
+public class QueueLoadSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -65,6 +66,11 @@ public class QueueLoadSubCommand implements ICommandExecutable {
     @Override
     public String command() {
         return "load";
+    }
+
+    @Override
+    public String parent() {
+        return "queue";
     }
 
     @Override
