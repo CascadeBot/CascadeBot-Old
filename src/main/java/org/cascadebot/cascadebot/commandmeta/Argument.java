@@ -35,23 +35,25 @@ public class Argument {
             return Language.i18n(locale, "arguments." + id.substring(id.lastIndexOf('.') + 1));
         }
         int sepCount = StringUtils.countMatches(id, '.');
-        if (sepCount > 1) {
-            if (Language.hasLanguageEntry(locale, "commands." + id + ".command"))  {
-                return Language.i18n(locale, "commands." + id + ".command");
-            }
-            return Language.i18n(locale, "arguments." + id.replace(".", "#") + ".name");
-        } else if (sepCount == 1) {
+        if (sepCount == 1) {
             ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id.substring(0, id.lastIndexOf('.')));
             if (command != null) {
                 var subCommand = command.getSubCommands().stream().filter(sub -> sub.command().equals(id.substring(id.lastIndexOf('.') + 1))).findFirst().orElse(null);
-                return subCommand != null ? subCommand.command(locale) : command.command(locale);
-            } else {
-                return "";
+                if (subCommand != null) {
+                    return subCommand.command(locale);
+                }
             }
-        } else {
+        } else if (sepCount == 0) {
             ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id);
-            return command != null ? command.command(locale) : "";
+            if (command != null) {
+                return command.command(locale);
+            }
         }
+
+        if (Language.getLanguage(locale).getElement("commands." + id).isPresent()) {
+            return Language.i18n(locale, "commands." + id + ".command");
+        }
+        return Language.i18n(locale, "arguments." + id.replace(".", "#") + ".name");
     }
 
     public String description(Locale locale) {
@@ -60,23 +62,26 @@ public class Argument {
             return parent != null ? parent.description(locale) : "";
         }
         int sepCount = StringUtils.countMatches(id, '.');
-        if (sepCount > 1) {
-            if (Language.hasLanguageEntry(locale, "commands." + id + ".description"))  {
-                return Language.i18n(locale, "commands." + id + ".description");
-            }
-            return Language.i18n(locale, "arguments." + id.replace(".", "#") + ".description");
-        } else if (sepCount == 1) {
+        if (sepCount == 1) {
             ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id.substring(0, id.lastIndexOf('.')));
             if (command != null) {
                 var subCommand = command.getSubCommands().stream().filter(sub -> sub.command().equals(id.substring(id.lastIndexOf('.') + 1))).findFirst().orElse(null);
-                return subCommand != null ? subCommand.description(locale) : command.description(locale);
-            } else {
-                return "";
+                if (subCommand != null) {
+                    return subCommand.description(locale);
+                }
             }
-        } else {
+        } else if (sepCount == 0) {
             ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id);
-            return command != null ? command.description(locale) : "";
+            if (command != null) {
+                return command.description(locale);
+            }
         }
+
+        if (Language.getLanguage(locale).getElement("commands." + id).isPresent()) {
+            return Language.i18n(locale, "commands." + id + ".description");
+        }
+        return Language.i18n(locale, "arguments." + id.replace(".", "#") + ".description");
+
     }
 
     /**
