@@ -393,7 +393,7 @@
         "no_music": "Can't skip if you aren't listening to music!",
         "no_vote": "Cannot vote if you aren't listening!"
       },
-      "added_vote": "A skip vote is already running, but we added your vote automatically.",
+      "added_vote": "A skip vote is already running but don't worry! We added your vote automatically!",
       "skipped_user_queued": "Skipped currently playing song because you queued it.",
       "skipping": "Skipping song!",
       "not_skipping": "Not skipping song!"

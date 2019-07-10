@@ -58,15 +58,17 @@ public class SkipCommand implements ICommandMain {
         if (voteMap.containsKey(context.getGuild().getIdLong())) {
             if (context.getArgs().length > 0) {
                 if (context.getArg(0).equalsIgnoreCase("yes")) {
-                    if (voteButtonGroup.isUserAllowed(context.getGuild().getIdLong())) {
+                    if (voteButtonGroup.isUserAllowed(sender.getUser().getIdLong())) {
                         voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
+                        context.getTypedMessaging().replyWarning(context.i18n("commands.skip.added_vote"));
                     } else {
                         context.getTypedMessaging().replyDanger(context.i18n("commands.skip.cannot_skip.no_vote"));
                     }
                     return;
                 } else if (context.getArg(0).equalsIgnoreCase("no")) {
-                    if (voteButtonGroup.isUserAllowed(context.getGuild().getIdLong())) {
+                    if (voteButtonGroup.isUserAllowed(sender.getUser().getIdLong())) {
                         voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.RED_CROSS);
+                        context.getTypedMessaging().replyWarning(context.i18n("commands.skip.added_vote"));
                     } else {
                         context.getTypedMessaging().replyDanger(context.i18n("commands.skip.cannot_skip.no_vote"));
                     }
@@ -122,6 +124,9 @@ public class SkipCommand implements ICommandMain {
         voteMap.put(context.getGuild().getIdLong(), buttonGroup);
         context.getUIMessaging().sendButtonedMessage("Skip Vote", buttonGroup);
         buttonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
+        for (Member member : context.getMusicPlayer().getConnectedChannel().getMembers()) {
+            buttonGroup.allowUser(member.getUser().getIdLong());
+        }
     }
 
     @Override
