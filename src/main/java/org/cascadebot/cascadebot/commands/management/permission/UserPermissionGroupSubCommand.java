@@ -5,12 +5,8 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.Set;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -27,7 +23,7 @@ public class UserPermissionGroupSubCommand implements ISubCommand {
             return;
         }
 
-        if (!context.getArg(0).equalsIgnoreCase("put") && !context.getArg(0).equalsIgnoreCase("remove")) {
+        if (!context.testForArg("put") && !context.testForArg("remove")) {
             context.getUIMessaging().replyUsage();
             return;
         }
@@ -40,13 +36,13 @@ public class UserPermissionGroupSubCommand implements ISubCommand {
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(2), group -> {
             User user = context.getData().getPermissions().getPermissionUser(member);
-            if (context.getArg(0).equalsIgnoreCase("put")) {
+            if (context.testForArg("put")) {
                 if (user.addGroup(group)) {
                     context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.put.success", member.getUser().getAsTag(), group.getName()));
                 } else {
                     context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.put.fail", member.getUser().getAsTag(), group.getName()));
                 }
-            } else if (context.getArg(0).equalsIgnoreCase("remove")) {
+            } else if (context.testForArg("remove")) {
                 if (user.removeGroup(group)) {
                     context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.remove.success", member.getUser().getAsTag(), group.getName()));
                 } else {

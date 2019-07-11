@@ -17,7 +17,7 @@ public class PrefixCommand implements ICommandCore {
         if (context.getArgs().length > 0) {
             String newPrefix = context.getArg(0);
 
-            if (newPrefix.equals(context.i18n("commands." + command() + ".args.reset"))) {
+            if (context.testForArg("reset")) {
                 if (context.hasPermission("prefix.reset")) {
                     context.getCoreSettings().setPrefix(Config.INS.getDefaultPrefix());
                     context.getTypedMessaging().replyInfo(context.i18n("commands.prefix.prefix_reset", Config.INS.getDefaultPrefix()));

@@ -147,6 +147,42 @@ public class CommandContext {
         return Double.parseDouble(StringUtils.replace(this.args[index], ",", "."));
     }
 
+    /**
+     * Tests for an argument of a particular id. This check it exists at the position and,
+     * if the argument is a command arg, whether the localised command matches the input.
+     *
+     * @param id The argument id relative to the command
+     * @return Whether the argument is present and correct in the arguments
+     */
+    public boolean testForArg(String id) {
+        int requiredArgsCount = StringUtils.countMatches(id, '.') + 1;
+        /*
+            Tests to make sure that we're not trying to get an argument out of range
+
+            For command of ;test <user> command
+            If id given is user.command and args.length is 1 or 0, then the number of separators + 1
+            (1 in this case) will be greater than to the number of args so we return false since
+            there could not physically be an arg at that position.
+
+            This guarantees there will always be an arg to check at the position.
+            It's a lazy check because it doesn't check arguments after, that is the role of the command
+            to check the arg length explicitly.
+         */
+        if (args.length < requiredArgsCount) return false;
+
+        String argId = command.getAbsoluteCommand() + "." + id;
+        Argument argument = CascadeBot.INS.getArgumentManager().getArgument(argId);
+        // If the argument doesn't exist, it can't be valid!
+        if (argument == null) return false;
+
+        if (argument.getType() != ArgumentType.COMMAND) {
+            // If it's not a command, we know that the arg exists so return true.
+            return true;
+        }
+
+        return args[requiredArgsCount - 1].equalsIgnoreCase(argument.name(getLocale()));
+    }
+
     //endregion
 
     //region Message Methods

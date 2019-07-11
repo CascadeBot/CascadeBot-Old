@@ -113,37 +113,6 @@ public class Argument {
         return usageBuilder.toString();
     }
 
-    /**
-     * Checks for this argument at a given position.
-     *
-     * @param args The arguments sent in from the command.
-     * @param pos  The position this argument should be in.
-     * @return If the argument exists at that position.
-     */
-    public boolean argExists(Locale locale, String[] args, int pos) {
-        if (args.length <= pos) {
-            return false;
-        }
-        if (type.equals(ArgumentType.REQUIRED)) {
-            return true;
-        }
-        if (!args[pos].equalsIgnoreCase(name(locale)) && !this.type.equals(ArgumentType.OPTIONAL)) {
-            for (String alias : aliases) {
-                if (!args[pos].equalsIgnoreCase(alias)) {
-                    return false;
-                }
-            }
-        }
-        if (this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.description(locale).isEmpty()) {
-            for (Argument sub : this.subArgs) {
-                if (sub.type.equals(ArgumentType.REQUIRED) || sub.type.equals(ArgumentType.COMMAND)) {
-                    return sub.argExists(locale, args, pos + 1);
-                }
-            }
-        }
-        return true;
-    }
-
     public String getArgument(Locale locale) {
         String argument = name(locale).isBlank() ? id.substring(id.lastIndexOf('.') + 1) : name(locale);
         if (aliases.size() > 0) {
@@ -163,14 +132,6 @@ public class Argument {
                 break;
         }
         return argument;
-    }
-
-    public boolean argEquals(String id) {
-        return this.id.equalsIgnoreCase(id);
-    }
-
-    public boolean argStartsWith(String start) {
-        return this.id.startsWith(start.toLowerCase());
     }
 
     //TODO implement utils for checking arguments in the command. we have a class here why not use it.
