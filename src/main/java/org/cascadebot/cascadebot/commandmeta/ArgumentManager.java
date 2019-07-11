@@ -45,11 +45,25 @@ public class ArgumentManager {
         }
     }
 
-    public Set<Argument> getCommandArguments(ICommandExecutable command) {
-        return getArguments(command.getAbsoluteCommand());
+    /**
+     * Gets the argument for a specific command. This argument contains all the arguments for the command.
+     * If this method returns null, it means a command doesn't have any arguments or the arguments haven't
+     * been specified in the argument.json.
+     *
+     * @param command The command to get the argument for
+     * @return The command argument containing all the sub arguments
+     */
+    public Argument getCommandArgument(ICommandExecutable command) {
+        return getArgument(command.getAbsoluteCommand());
     }
 
-    public Set<Argument> getArguments(String parent) {
+    /**
+     * Gets all the arguments under a parent path.
+     *
+     * @param parent The path to look for arguments under
+     * @return
+     */
+    private Set<Argument> getArguments(String parent) {
         Optional<JSONConfig> argumentsConfig = argumentsFile.getSubConfig(parent);
         if (argumentsConfig.isEmpty()) return Set.of();
         Set<Argument> arguments = new HashSet<>();
@@ -72,15 +86,42 @@ public class ArgumentManager {
         return arguments;
     }
 
+    /**
+     * Gets an argument by id. An id is '.' separated.
+     *
+     * @param id The id of the argument to get
+     * @return The argument if one exists, else null.
+     */
     public Argument getArgument(String id) {
         return arguments.get(id);
     }
 
+    /**
+     * Returns the parent for an argument; that is, the argument directly above in the tree.
+     *
+     * @param argumentId The id of the argument of which to get the parent
+     * @return The parent of the argument or null if argument has no parent (It's a root element)
+     */
     public Argument getParent(String argumentId) {
         if (!argumentId.contains(".")) return null;
         return arguments.get(argumentId.substring(0, argumentId.lastIndexOf('.')));
     }
 
+    /**
+     * Creates a argument object from JSON.
+     * The JSON should look something like this:
+     * <pre>
+     * "id": {
+     *     "_type": "command" or "required" or "optional"
+     *     "_aliases": [] <-- Optional
+     * }
+     * </pre>
+     *
+     * If the ID is suffixed by an asterisk, the display alone flag will be set to false.
+     *
+     * @param id The path at which to get the argument from.
+     * @return THe constructed argument if valid object else null.
+     */
     private Argument getArgumentFromObject(String id) {
         // Don't bother if it's not an actual object
         if (argumentsFile.getElement(id).isEmpty() || !argumentsFile.getElement(id).get().isJsonObject()) return null;

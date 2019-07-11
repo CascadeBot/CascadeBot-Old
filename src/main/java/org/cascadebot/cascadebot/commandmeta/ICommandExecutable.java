@@ -66,8 +66,4 @@ public interface ICommandExecutable {
         return Set.of();
     }
 
-    default Set<Argument> getArguments() {
-        return CascadeBot.INS.getArgumentManager().getCommandArguments(this);
-    }
-
 }
