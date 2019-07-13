@@ -47,7 +47,7 @@ public class SettingsCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length == 1) {
+        if (context.getArgs().length == 2) {
             Field field = (getAllSettings(settingsClasses).get(context.getArg(0).toLowerCase()));
             if (field != null) {
                 try {
