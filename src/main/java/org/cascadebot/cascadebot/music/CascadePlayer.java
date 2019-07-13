@@ -282,6 +282,7 @@ public class CascadePlayer {
         DISABLED,
         PLAYLIST,
         SONG
+
     }
 
     public enum SavePlaylistResult {

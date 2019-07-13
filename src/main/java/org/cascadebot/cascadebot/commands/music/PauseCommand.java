@@ -18,10 +18,10 @@ public class PauseCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getMusicPlayer().getPlayer().isPaused()) {
-            context.getTypedMessaging().replyDanger("Music has already been paused! Use **" + context.getSettings().getPrefix() + "resume** to resume.");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.pause.already_paused", context.getCoreSettings().getPrefix()));
         } else {
             context.getMusicPlayer().getPlayer().setPaused(true);
-            context.getTypedMessaging().replySuccess("Paused! Use **" + context.getSettings().getPrefix() + "resume** to resume.");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.pause.successfully_paused", context.getCoreSettings().getPrefix()));
         }
     }
 
@@ -37,12 +37,7 @@ public class PauseCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Pause command", "pause", true);
-    }
-
-    @Override
-    public String description() {
-        return "Pauses the currently playing track";
+        return CascadePermission.of("pause", true);
     }
 
 }

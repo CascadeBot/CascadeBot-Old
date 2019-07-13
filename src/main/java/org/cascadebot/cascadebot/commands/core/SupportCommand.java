@@ -14,17 +14,12 @@ public class SupportCommand implements ICommandCore {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.getTypedMessaging().replyInfo("Cascade Support Server: " + Constants.serverInvite);
+        context.getTypedMessaging().replyInfo(context.i18n("commands.support.cascade_support_server", Constants.serverInvite));
     }
 
     @Override
     public String command() {
         return "support";
-    }
-
-    @Override
-    public String description() {
-        return "Returns a link to the Discord support server";
     }
 
 }

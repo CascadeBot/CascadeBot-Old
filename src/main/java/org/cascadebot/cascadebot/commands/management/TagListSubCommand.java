@@ -5,21 +5,22 @@
 
 package org.cascadebot.cascadebot.commands.management;
 
-import java.util.Map;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-public class TagListSubCommand implements ICommandExecutable {
+import java.util.Map;
+
+public class TagListSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Map<String, Tag> tags = context.getSettings().getTags();
+        Map<String, Tag> tags = context.getCoreSettings().getTags();
 
         if (tags.size() == 0) {
-            context.getTypedMessaging().replyWarning("Server has no tags!");
+            context.getTypedMessaging().replyWarning(context.i18n("commands.tag.list.no_tags_found"));
             return;
         }
 
@@ -36,13 +37,13 @@ public class TagListSubCommand implements ICommandExecutable {
     }
 
     @Override
-    public CascadePermission getPermission() {
-        return CascadePermission.of("Tag list sub command", "tag.list", false);
+    public String parent() {
+        return "tag";
     }
 
     @Override
-    public String description() {
-        return "Lists all tags";
+    public CascadePermission getPermission() {
+        return CascadePermission.of("tag.list", false);
     }
 
 }

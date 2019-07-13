@@ -17,9 +17,9 @@ public class ShuffleCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getMusicPlayer().toggleShuffleOnRepeat()) {
             context.getMusicPlayer().shuffle();
-            context.getTypedMessaging().replySuccess("Shuffling has been enabled!");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.shuffle.enabled"));
         } else {
-            context.getTypedMessaging().replySuccess("Shuffling has been disabled!");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.shuffle.disabled"));
         }
     }
 
@@ -35,12 +35,7 @@ public class ShuffleCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Shuffle command", "shuffle", true);
-    }
-
-    @Override
-    public String description() {
-        return "Shuffles music in a queue";
+        return CascadePermission.of("shuffle", true);
     }
 
 }

@@ -33,7 +33,7 @@ public class RestartCommand implements ICommandRestricted {
 
     @Override
     public String description() {
-        return "Restarts the bot";
+        return "Restarts the bot via the wrapper.";
     }
 
     @Override

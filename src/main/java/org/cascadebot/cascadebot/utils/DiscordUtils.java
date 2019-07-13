@@ -127,7 +127,7 @@ public class DiscordUtils {
     }
 
     public static Set<Long> getAllOfficialRoleIds(long userID) {
-        if (Config.INS.getOfficialServerId() != -1 && getOfficialGuild() != null) {
+        if (Config.INS.getOfficialServerId() != -1 && getOfficialGuild() != null && getOfficialGuild().getMemberById(userID) != null) {
             return getAllRoleIds(getOfficialGuild().getMemberById(userID));
         } else {
             return Set.of();

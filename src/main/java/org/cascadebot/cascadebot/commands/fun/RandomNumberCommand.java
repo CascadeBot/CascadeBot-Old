@@ -18,15 +18,15 @@ public class RandomNumberCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
             if (!context.isArgInteger(0)) {
-                context.getTypedMessaging().replyDanger("Please provide numbers only");
+                context.getTypedMessaging().replyDanger(context.i18n("commands.random.numbers_only"));
             } else {
                 int range = context.getArgAsInteger(0);
-                int randomNumber = RandomUtils.randomNumber(range); 
-                context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
+                int randomNumber = RandomUtils.randomNumber(range);
+                context.getTypedMessaging().replyInfo(context.i18n("commands.random.random_result", randomNumber));
             }
         } else {
-             int randomNumber = RandomUtils.randomNumber(10);
-             context.getTypedMessaging().replyInfo("Random number is `" + randomNumber + "`");
+            int randomNumber = RandomUtils.randomNumber(10);
+            context.getTypedMessaging().replyInfo(context.i18n("commands.random.random_result", randomNumber));
         }
     }
 
@@ -42,11 +42,7 @@ public class RandomNumberCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Random number command", "randnum", true);
+        return CascadePermission.of("random", true);
     }
 
-    @Override
-    public String description() {
-        return "Returns a random number";
-    }
 }

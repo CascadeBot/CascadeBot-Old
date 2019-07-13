@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -54,7 +55,7 @@ public class MessagingUI {
      * @return A {@link RequestFuture<Message>} so you can interact with the message after it sends.
      */
     public RequestFuture<Message> replyImage(String url) {
-        if (context.getSettings().isUseEmbedForMessages()) {
+        if (context.getCoreSettings().isUseEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setImage(url);
             return context.getChannel().sendMessage(embedBuilder.build()).submit();
@@ -63,7 +64,7 @@ public class MessagingUI {
             try {
                 return context.getChannel().sendFile(new URL(url).openStream(), split[split.length - 1]).submit();
             } catch (IOException e) {
-                return Messaging.sendExceptionMessage(context.getChannel(), "Error loading image", e);
+                return Messaging.sendExceptionMessage(context.getChannel(), context.i18n("responses.error_loading_image"), e);
             }
         }
     }
@@ -132,9 +133,19 @@ public class MessagingUI {
                     .map(Permission::getName)
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` or the Discord permission(s) %s that you need to do this!", permission.getPermission(), discordPerms);
+            String message = context.i18n("responses.no_cascade_perm_discord", permission.getPermission(context.getLocale()), discordPerms);
+            Messaging.sendDangerMessage(
+                    context.getChannel(),
+                    MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
+                    context.getCoreSettings().isUseEmbedForMessages()
+            ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         } else {
-            context.getTypedMessaging().replyDanger("You don't have the permission `%s` that you need to do this!", permission.getPermission());
+            String message = context.i18n("responses.no_cascade_perm", permission.getPermission(context.getLocale()));
+            Messaging.sendDangerMessage(
+                    context.getChannel(),
+                    MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
+                    context.getCoreSettings().isUseEmbedForMessages()
+            ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         }
     }
 
@@ -144,19 +155,22 @@ public class MessagingUI {
      * @param permission The Discord Permission that the user doesn't have.
      */
     public void sendUserDiscordPermError(Permission permission) {
-        context.getTypedMessaging().replyDanger("You don't have the Discord permission `%s` that you need to do this!", permission.getName());
+        context.getTypedMessaging().replyDanger(context.i18n("responses.no_discord_perm", permission.getName()));
     }
 
     public void sendBotDiscordPermError(Permission permission) {
-        context.getTypedMessaging().replyDanger("I don't have the Discord permission `%s` that I need to do this!", permission.getName());
+        context.getTypedMessaging().replyDanger(context.i18n("responses.no_discord_perm_bot", permission.getName()));
+    }
+
+    public void replyUsage() {
+        replyUsage(context.getCommand());
     }
 
     public void replyUsage(ICommandExecutable command) {
-        replyUsage(command, null);
-    }
-
-    public void replyUsage(ICommandExecutable command, String parent) {
-        context.getTypedMessaging().replyWarning("Incorrect usage. Proper usage:\n" + context.getUsage(command, parent));
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.getUsage(command), context.getUser());
+        builder.setAuthor(context.i18n("responses.incorrect_usage_title_1"));
+        builder.setTitle(context.i18n("responses.incorrect_usage_title_2"));
+        context.getTypedMessaging().replyWarning(builder);
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {
@@ -165,16 +179,16 @@ public class MessagingUI {
             for (AudioTrack track : tracks) {
                 time += track.getDuration();
             }
-            context.getTypedMessaging().replySuccess("Loaded `%s` tracks with a total length of `%s`", tracks.size(), FormatUtils.formatLongTimeMills(time));
+            context.getTypedMessaging().replySuccess(context.i18n("music.misc.loaded_tracks", tracks.size(), FormatUtils.formatLongTimeMills(time)));
         } else {
             AudioTrack track = tracks.get(0);
             EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
-            builder.setTitle("Loaded Track");
+            builder.setTitle(context.i18n("music.misc.loaded_track"));
             builder.setDescription(track.getInfo().title);
             if (!track.getInfo().isStream) {
-                builder.addField("Length", FormatUtils.formatLongTimeMills(track.getDuration()), true);
+                builder.addField(context.i18n("words.length"), FormatUtils.formatLongTimeMills(track.getDuration()), true);
             }
-            builder.addField("Author", track.getInfo().author, true);
+            builder.addField(context.i18n("words.author"), track.getInfo().author, true);
             context.getTypedMessaging().replySuccess(builder);
         }
     }
@@ -203,35 +217,33 @@ public class MessagingUI {
                 context.getUIMessaging().sendTracksFound(tracks);
             }));
 
-            String message = String.format(UnicodeConstants.SONG + " - Load as track `%s`\n" +
-                            UnicodeConstants.PLAYLIST + " - Load as playlist `%s`",
-                    selectedTrack.getInfo().title, tracks.size() + " tracks");
+            String message = context.i18n("music.misc.load_options",selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
 
             EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
-            embedBuilder.setTitle("Load as a single track or as a playlist?");
+            embedBuilder.setTitle(context.i18n("music.misc.load_options_title"));
             embedBuilder.setDescription(message);
 
             try {
                 context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
             } catch (PermissionException e) {
-                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription("\n\n" + "Please type either `track` or `playlist`!"));
+                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription(context.i18n("music.misc.load_options_typed", context.i18n("music.misc.load_option.track"), context.i18n("music.misc.load_option.playlist"))));
 
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
                         new EventWaiter.TextResponse(event -> {
                             context.getMusicPlayer().addTrack(selectedTrack);
                             context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
-                        }, "track"),
+                        }, context.i18n("music.misc.load_option.track")),
                         new EventWaiter.TextResponse(event -> {
                             context.getMusicPlayer().addTracks(tracks);
                             context.getUIMessaging().sendTracksFound(tracks);
-                        }, "playlist"));
+                        }, context.i18n("music.misc.load_option.playlist")));
             }
 
         } else if (tracks.size() == 1) {
             context.getMusicPlayer().addTracks(tracks);
             context.getUIMessaging().sendTracksFound(tracks);
         } else {
-            context.getTypedMessaging().replyDanger("We couldn't find any tracks to load!");
+            context.getTypedMessaging().replyDanger(context.i18n("music.misc.cannot_find_tracks"));
         }
     }
 

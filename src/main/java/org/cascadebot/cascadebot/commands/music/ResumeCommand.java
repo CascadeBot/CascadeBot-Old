@@ -19,9 +19,9 @@ public class ResumeCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getMusicPlayer().getPlayer().isPaused()) {
             context.getMusicPlayer().getPlayer().setPaused(false);
-            context.getTypedMessaging().replySuccess("Music has been resumed!");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.resume.successfully_resumed"));
         } else {
-            context.getTypedMessaging().replyDanger("Music is already playing! Use **" + context.getSettings().getPrefix() + "pause** to pause it.");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.resume.already_resumed", context.getCoreSettings().getPrefix()));
         }
     }
 
@@ -37,12 +37,7 @@ public class ResumeCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Resume command", "resume", true);
-    }
-
-    @Override
-    public String description() {
-        return "Resumes music";
+        return CascadePermission.of("resume", true);
     }
 
 }

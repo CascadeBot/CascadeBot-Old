@@ -11,12 +11,12 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -65,7 +65,7 @@ public class PlayingCommand implements ICommandMain {
         CascadePlayer player = context.getMusicPlayer();
 
         if (player.getPlayer().getPlayingTrack() == null) {
-            context.getTypedMessaging().replyWarning("No music playing!");
+            context.getTypedMessaging().replyWarning(context.i18n("commands.playing.no_music_playing"));
         } else {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
@@ -101,7 +101,9 @@ public class PlayingCommand implements ICommandMain {
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
                 if (context.hasPermission(runner, "skip")) {
-                    CascadeBot.INS.getCommandManager().getCommandByDefault("skip").onCommand(runner, new CommandContext(
+                    ICommandMain skip = CascadeBot.INS.getCommandManager().getCommandByDefault("skip");
+                    skip.onCommand(runner, new CommandContext(
+                            skip,
                             CascadeBot.INS.getClient(),
                             context.getChannel(),
                             message,
@@ -142,7 +144,7 @@ public class PlayingCommand implements ICommandMain {
         AudioTrack track = player.getPlayer().getPlayingTrack();
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         if (track == null) {
-            embedBuilder.setDescription("No song playing");
+            embedBuilder.setDescription(Language.i18n(guildID, "commands.playing.no_music_playing"));
             return embedBuilder.build();
         }
         embedBuilder.setAuthor(track.getInfo().author);
@@ -150,22 +152,22 @@ public class PlayingCommand implements ICommandMain {
         if (player.getArtwork() != null) {
             embedBuilder.setThumbnail(player.getArtwork());
         }
-        embedBuilder.addField("Status", player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " Paused" : UnicodeConstants.PLAY + " Playing", true);
+        embedBuilder.addField(Language.i18n(guildID, "words.status"), player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " " + Language.i18n(guildID, "words.paused") : UnicodeConstants.PLAY + " " + Language.i18n(guildID, "words.playing"), true);
 
         if (!track.getInfo().isStream) {
-            embedBuilder.addField("Progress", player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getSettings().isUseEmbedForMessages()), false);
+            embedBuilder.addField(Language.i18n(guildID, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getCoreSettings().isUseEmbedForMessages()), false);
         }
 
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getPlayer().getTrackPosition()) + " / " +
                 (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
-        embedBuilder.addField("Volume", player.getPlayer().getVolume() + "%", true);
-        embedBuilder.addField("Loop mode", FormatUtils.formatEnum(player.getLoopMode()), true);
+        embedBuilder.addField(Language.i18n(guildID, "words.volume"), player.getPlayer().getVolume() + "%", true);
+        embedBuilder.addField(Language.i18n(guildID, "commands.playing.loop_mode"), FormatUtils.formatEnum(player.getLoopMode(), Language.getGuildLocale(guildID)), true);
         if (track.getUserData() instanceof Long) { //TODO find out why user data sometimes gets set to null.
-            embedBuilder.addField("Requested By", CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
+            embedBuilder.addField(Language.i18n(guildID, "words.requested_by"), CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
         }
         AudioTrack next = player.getQueue().peek();
         if (next != null) {
-            embedBuilder.addField("Up next", "**" + next.getInfo().title + "**\nRequested by " +
+            embedBuilder.addField(Language.i18n(guildID, "commands.playing.up_next"), "**" + next.getInfo().title + "**\n" + Language.i18n(guildID, "words.requested_by") +
                     CascadeBot.INS.getShardManager().getUserById((Long) next.getUserData()).getAsTag(), false);
         }
 
@@ -212,23 +214,13 @@ public class PlayingCommand implements ICommandMain {
     }
 
     @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("song");
-    }
-
-    @Override
     public String command() {
         return "playing";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Playing Command", "playing", true);
-    }
-
-    @Override
-    public String description() {
-        return "get playing music";
+        return CascadePermission.of("playing", true);
     }
 
 }

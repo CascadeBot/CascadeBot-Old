@@ -13,7 +13,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -26,26 +26,26 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GuildFlagSubCommand implements ICommandExecutable {
+public class GuildFlagSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
             Flag flag;
-            if (!EnumUtils.isValidEnumIgnoreCase(Flag.class, context.getArg(0))) {
+            if (EnumUtils.isValidEnumIgnoreCase(Flag.class, context.getArg(0))) {
+                flag = EnumUtils.getEnum(Flag.class, context.getArg(0).toUpperCase());
+            } else {
                 if (context.getArg(0).equalsIgnoreCase("list")) {
                     EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
                     embedBuilder.setTitle("Flags");
                     embedBuilder.setDescription(Arrays.stream(Flag.values())
-                            .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e)))
+                            .map(e -> String.format("- `%s`", FormatUtils.formatEnum(e, context.getLocale())))
                             .collect(Collectors.joining("\n")));
                     context.getTypedMessaging().replyInfo(embedBuilder);
                     return;
                 }
                 context.getTypedMessaging().replyDanger("Invalid flag! Possible values: %s", Arrays.toString(Flag.values()));
                 return;
-            } else {
-                flag = EnumUtils.getEnum(Flag.class, context.getArg(0).toUpperCase());
             }
 
             Guild guild = context.getGuild();
@@ -66,10 +66,10 @@ public class GuildFlagSubCommand implements ICommandExecutable {
 
             if (guildData.isFlagEnabled(flag)) {
                 guildData.disableFlag(flag);
-                context.getTypedMessaging().replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
+                context.getTypedMessaging().replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag, guildData.getLocale()), guild.getName(), guild.getId());
             } else {
                 guildData.enableFlag(flag);
-                context.getTypedMessaging().replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag), guild.getName(), guild.getId());
+                context.getTypedMessaging().replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag, guildData.getLocale()), guild.getName(), guild.getId());
             }
 
         }
@@ -81,24 +81,17 @@ public class GuildFlagSubCommand implements ICommandExecutable {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(
-                Argument.of("flag", "", ArgumentType.REQUIRED,
-                        Set.of(
-                                Argument.of("guild_id", "Toggles a flag for this guild [or a different guild].", ArgumentType.OPTIONAL)
-                        )
-                ),
-                Argument.of("list", "Lists the flags available to toggle.")
-        );
-    }
-
-    @Override
-    public CascadePermission getPermission() {
-        return null;
+    public String parent() {
+        return "guild";
     }
 
     @Override
     public String description() {
+        return "Toggles a flag for this guild [or a different guild].";
+    }
+
+    @Override
+    public CascadePermission getPermission() {
         return null;
     }
 

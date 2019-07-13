@@ -45,7 +45,7 @@ public class DogCommand implements ICommandMain {
                     message.delete().queue();
                 }
             } catch (IOException e) {
-                message.editMessage("Error loading dog picture " + UnicodeConstants.FROWNING).queue();
+                message.editMessage(context.i18n("commands.dog.error_loading")).queue();
             }
         }));
         try {
@@ -55,7 +55,7 @@ public class DogCommand implements ICommandMain {
                 context.getData().addButtonGroup(context.getChannel(), message, dogButtons);
             });
         } catch (IOException e) {
-            context.getTypedMessaging().replyDanger("Error loading dog picture " + UnicodeConstants.FROWNING);
+            context.getTypedMessaging().replyDanger(context.i18n("commands.dog.error_loading"));
         }
     }
 
@@ -77,12 +77,7 @@ public class DogCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Dog command", "dog", true);
-    }
-
-    @Override
-    public String description() {
-        return "Returns a random picture of a dog";
+        return CascadePermission.of("dog", true);
     }
 
 }

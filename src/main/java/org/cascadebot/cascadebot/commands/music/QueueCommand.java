@@ -10,8 +10,8 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
@@ -30,10 +30,10 @@ public class QueueCommand implements ICommandMain {
         CascadePlayer player = context.getMusicPlayer();
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
 
-        embedBuilder.setTitle("Queue");
+        embedBuilder.setTitle(context.i18n("words.queue"));
 
         if (player.getQueue().isEmpty()) {
-            context.getTypedMessaging().replyInfo("There are no tracks in the queue!");
+            context.getTypedMessaging().replyInfo(context.i18n("commands.queue.no_tracks_playing"));
             return;
         }
 
@@ -44,8 +44,8 @@ public class QueueCommand implements ICommandMain {
         int i = 1;
         for (AudioTrack track : player.getQueue()) {
             builder.append(i).append(". **").append(track.getInfo().title).append("**");
-            if(track.getUserData() instanceof Long) {
-                builder.append("\n Requested by ").append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag());
+            if (track.getUserData() instanceof Long) {
+                builder.append("\n").append(context.i18n("words.requested_by")).append(CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag());
             }
             builder.append("\n\n");
             if (i % 10 == 0) {
@@ -74,23 +74,13 @@ public class QueueCommand implements ICommandMain {
     }
 
     @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("playlist");
-    }
-
-    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Queue", "queue", getModule());
+        return CascadePermission.of("queue", false);
     }
 
     @Override
-    public Set<ICommandExecutable> getSubCommands() {
+    public Set<ISubCommand> getSubCommands() {
         return Set.of(new QueueSaveSubCommand(), new QueueLoadSubCommand());
-    }
-
-    @Override
-    public String description() {
-        return "Display the current queue";
     }
 
 }

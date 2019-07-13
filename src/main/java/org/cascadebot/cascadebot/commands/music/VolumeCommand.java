@@ -10,7 +10,9 @@ import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
+import org.cascadebot.shared.SecurityLevel;
 
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +23,14 @@ public class VolumeCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         CascadePlayer player = context.getMusicPlayer();
         if (context.getArgs().length == 0) {
-            context.getTypedMessaging().replyInfo("Current volume is %d%%", player.getPlayer().getVolume());
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.current_volume", player.getPlayer().getVolume()));
+            return;
+        }
+
+        // Limits the volume command to only guilds with the music services flag
+        // Allow developers to bypass the check to fix borked audio if need be.
+        if (!context.getData().isFlagEnabled(Flag.MUSIC_SERVICES) && !Security.isAuthorised(sender.getUser().getIdLong(), SecurityLevel.DEVELOPER)) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.volume.no_flag"));
             return;
         }
 
@@ -29,12 +38,12 @@ public class VolumeCommand implements ICommandMain {
         if (context.isArgInteger(0)) {
             volume = context.getArgAsInteger(0);
         } else {
-            context.getUIMessaging().replyUsage(this);
+            context.getUIMessaging().replyUsage();
             return;
         }
 
         if (volume < 0) {
-            context.getTypedMessaging().replyWarning("Volume needs to be greater than 0%");
+            context.getTypedMessaging().replyWarning(context.i18n("commands.volume.greater_than_zero"));
             return;
         } else if (volume > 100 && volume <= 200) {
             if (context.hasPermission("volume.extreme")) {
@@ -42,14 +51,14 @@ public class VolumeCommand implements ICommandMain {
                         "volume-extreme",
                         context.getChannel(),
                         MessageType.WARNING,
-                        "Are you sure you want to exceed 100% volume?",
+                        context.i18n("commands.volume.extreme_volume"),
                         0,
                         TimeUnit.SECONDS.toMillis(30),
                         new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
                                 player.getPlayer().setVolume(volume);
-                                context.getTypedMessaging().replyInfo("Volume set to %d%%", player.getPlayer().getVolume());
+                                context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getPlayer().getVolume()));
                             }
                         });
                 return;
@@ -58,19 +67,18 @@ public class VolumeCommand implements ICommandMain {
                 return;
             }
         } else if (volume > 200) {
-            context.getTypedMessaging().replyWarning("Volume needs to be between 0% and 200%");
+            context.getTypedMessaging().replyWarning(context.i18n("commands.volume.volume_range"));
             return;
         }
 
         if (volume == context.getMusicPlayer().getPlayer().getVolume()) {
-            context.getTypedMessaging().replyInfo("Volume is already %d%%", player.getPlayer().getVolume());
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getPlayer().getVolume()));
         } else {
             player.getPlayer().setVolume(volume);
-            context.getTypedMessaging().replyInfo("Volume set to %d%%", player.getPlayer().getVolume());
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getPlayer().getVolume()));
         }
 
     }
-
 
     @Override
     public Module getModule() {
@@ -83,18 +91,8 @@ public class VolumeCommand implements ICommandMain {
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("volume", "Sets the volume to this value", ArgumentType.OPTIONAL));
-    }
-
-    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Volume", "volume", getModule());
-    }
-
-    @Override
-    public String description() {
-        return "Returns the current volume";
+        return CascadePermission.of("volume", false);
     }
 
     @Override

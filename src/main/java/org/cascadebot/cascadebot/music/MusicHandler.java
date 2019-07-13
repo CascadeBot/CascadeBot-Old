@@ -31,6 +31,7 @@ import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.Messaging;
@@ -83,10 +84,7 @@ public class MusicHandler {
         playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
 
         if (Config.INS.getMusicNodes().size() > 0) {
-            lavalink = new JdaLavalink(
-                    Config.INS.getBotID().toString(),
-                    Config.INS.getShardNum(),
-                    shardId -> instance.getShardManager().getShardById(shardId));
+            lavalink = new JdaLavalink(Config.INS.getBotID().toString(), Config.INS.getShardNum(), shardId -> instance.getShardManager().getShardById(shardId));
             for (MusicNode musicNode : Config.INS.getMusicNodes()) {
                 lavalink.addNode(musicNode.uri, musicNode.password); //TODO give nodes a name
             }
@@ -133,19 +131,19 @@ public class MusicHandler {
         CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Messaging.sendExceptionMessage(channel, "Error searching from YouTube!", e);
+                Messaging.sendExceptionMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "music.handler.error_searching"), e);
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 if (response.body() == null) {
-                    Messaging.sendDangerMessage(channel, "YouTube didn't return any data!");
+                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "music.handler.no_data_returned"));
                     return;
                 }
 
                 try {
                     if (!response.isSuccessful()) {
-                        Messaging.sendDangerMessage(channel, String.format("The query was unsuccessful! Response: %s", PasteUtils.paste(response.body().string())));
+                        Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "music.handler.query_unsuccessful", PasteUtils.paste(response.body().string())));
                         return;
                     }
                     List<SearchResult> searchResults = new ArrayList<>();
@@ -155,7 +153,7 @@ public class MusicHandler {
                     for (JsonElement elm : items) {
                         i++;
                         if (i > 5) {
-                            CascadeBot.LOGGER.warn("YouTube returned more then 5 results! A check of the YouTube api is recommended");
+                            CascadeBot.LOGGER.warn(Language.i18n(channel.getGuild().getIdLong(), "music.handler.more_than_five"));
                             break;
                         }
                         JsonObject item = elm.getAsJsonObject();
@@ -184,9 +182,9 @@ public class MusicHandler {
                     }
                     searchResultConsumer.accept(searchResults);
                 } catch (IOException e) {
-                    Messaging.sendExceptionMessage(channel, "Error reading YouTube data!", e);
+                    Messaging.sendExceptionMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "music.handler.error_reading"), e);
                 } catch (Exception e) {
-                    Messaging.sendExceptionMessage(channel, "Error while processing search!", e);
+                    Messaging.sendExceptionMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "music.handler.error_processing"), e);
                 }
             }
         });
@@ -222,8 +220,7 @@ public class MusicHandler {
     }
 
     public enum SearchResultType {
-        VIDEO,
-        PLAYLIST
+        VIDEO, PLAYLIST
     }
 
     static JdaLavalink getLavaLink() {

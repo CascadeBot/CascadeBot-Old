@@ -8,21 +8,22 @@ package org.cascadebot.cascadebot.commands.management.permission;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 
-public class GroupPermissionCreateSubCommand implements ICommandExecutable {
+public class GroupPermissionCreateSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "groupperms");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
         Group group = context.getData().getPermissions().createGroup(context.getArg(0));
-        context.getTypedMessaging().replySuccess("Created group `%s` with id `%s`", context.getArg(0), group.getId());
+        context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create.success", context.getArg(0), group.getId()));
     }
 
     @Override
@@ -31,8 +32,13 @@ public class GroupPermissionCreateSubCommand implements ICommandExecutable {
     }
 
     @Override
+    public String parent() {
+        return "groupperms";
+    }
+
+    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions create sub command", "permissions.group.create", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.create", false, Module.MANAGEMENT);
     }
 
     @Override

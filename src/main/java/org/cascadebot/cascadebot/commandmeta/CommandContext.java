@@ -7,17 +7,6 @@ package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.data.Config;
-import org.cascadebot.cascadebot.data.objects.GuildData;
-import org.cascadebot.cascadebot.data.objects.GuildSettingsCore;
-import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
-import org.cascadebot.cascadebot.messaging.MessagingTimed;
-import org.cascadebot.cascadebot.messaging.MessagingTyped;
-import org.cascadebot.cascadebot.messaging.MessagingUI;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.shared.Regex;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Emote;
@@ -31,15 +20,25 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
+import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.GuildSettingsCore;
+import org.cascadebot.cascadebot.messaging.MessagingDirectMessage;
+import org.cascadebot.cascadebot.messaging.MessagingTimed;
+import org.cascadebot.cascadebot.messaging.MessagingTyped;
+import org.cascadebot.cascadebot.messaging.MessagingUI;
 import org.cascadebot.cascadebot.music.CascadePlayer;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.shared.Regex;
 
 @Getter
 public class CommandContext {
 
     private final GuildData data;
+    private final ICommandExecutable command;
 
     private final JDA jda;
     private final TextChannel channel;
@@ -63,8 +62,9 @@ public class CommandContext {
     @Getter(AccessLevel.NONE)
     private final MessagingTimed messagingTimed = new MessagingTimed(this);
 
-    public CommandContext(JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
+    public CommandContext(ICommandExecutable command, JDA jda, TextChannel channel, Message message, Guild guild, GuildData data, String[] args, Member invoker,
                           String trigger, boolean isMention) {
+        this.command = command;
         this.jda = jda;
         this.channel = channel;
         this.message = message;
@@ -79,8 +79,12 @@ public class CommandContext {
 
     //region Raw data getters
 
-    public GuildSettingsCore getSettings() {
-        return data.getSettings();
+    public GuildSettingsCore getCoreSettings() {
+        return data.getCoreSettings();
+    }
+
+    public Locale getLocale() {
+        return data.getLocale();
     }
 
     public CascadePlayer getMusicPlayer() {
@@ -143,6 +147,42 @@ public class CommandContext {
         return Double.parseDouble(StringUtils.replace(this.args[index], ",", "."));
     }
 
+    /**
+     * Tests for an argument of a particular id. This check it exists at the position and,
+     * if the argument is a command arg, whether the localised command matches the input.
+     *
+     * @param id The argument id relative to the command
+     * @return Whether the argument is present and correct in the arguments
+     */
+    public boolean testForArg(String id) {
+        int requiredArgsCount = StringUtils.countMatches(id, '.') + 1;
+        /*
+            Tests to make sure that we're not trying to get an argument out of range
+
+            For command of ;test <user> command
+            If id given is user.command and args.length is 1 or 0, then the number of separators + 1
+            (1 in this case) will be greater than to the number of args so we return false since
+            there could not physically be an arg at that position.
+
+            This guarantees there will always be an arg to check at the position.
+            It's a lazy check because it doesn't check arguments after, that is the role of the command
+            to check the arg length explicitly.
+         */
+        if (args.length < requiredArgsCount) return false;
+
+        String argId = command.getAbsoluteCommand() + "." + id;
+        Argument argument = CascadeBot.INS.getArgumentManager().getArgument(argId);
+        // If the argument doesn't exist, it can't be valid!
+        if (argument == null) return false;
+
+        if (argument.getType() != ArgumentType.COMMAND) {
+            // If it's not a command, we know that the arg exists so return true.
+            return true;
+        }
+
+        return args[requiredArgsCount - 1].equalsIgnoreCase(argument.name(getLocale()));
+    }
+
     //endregion
 
     //region Message Methods
@@ -168,40 +208,26 @@ public class CommandContext {
         channel.sendMessage(message).queue();
     }
 
+    public String i18n(String path, Object... args) {
+        return Language.i18n(guild.getIdLong(), path, args);
+    }
+
+    public String getUsage() {
+        return getUsage(getCommand());
+    }
+
     public String getUsage(ICommandExecutable command) {
-        return getUsage(command, null);
-    }
-
-    public String getUsage(ICommandExecutable command, String parent) {
-        Set<Argument> arguments = new HashSet<>(command.getUndefinedArguments());
-        if (command instanceof ICommandMain) {
-            for (ICommandExecutable subCommand : ((ICommandMain) command).getSubCommands()) {
-                arguments.add(Argument.of(subCommand.command(), subCommand.description(), subCommand.getUndefinedArguments()));
+        Argument parentArg = CascadeBot.INS.getArgumentManager().getArgument(command.getAbsoluteCommand());
+        if (parentArg != null) {
+            String parent = null;
+            if (command instanceof ISubCommand) {
+                parent = ((ISubCommand) command).parent();
             }
+            String commandString = getCoreSettings().getPrefix() + (parent == null ? "" : parent + " ");
+            return parentArg.getUsageString(getLocale(), commandString);
+        } else {
+            return "`" + getCoreSettings().getPrefix() + command.command(getLocale()) + "` - " + command.description(getLocale());
         }
-
-        Argument parentArg = Argument.of(command.command(), command.description(), arguments);
-
-        int levels = 0;
-        for (String arg : args) {
-            levels++;
-            Argument argument = getArgFromSet(parentArg.getSubArgs(), arg);
-            if (argument != null) {
-                parentArg = argument;
-            }
-        }
-
-        String commandString = data.getSettings().getPrefix() + (parent == null ? "" : parent + " ");
-        return parentArg.getUsageString(commandString);
-    }
-
-    private Argument getArgFromSet(Set<Argument> arguments, String arg) {
-        for (Argument argument : arguments) {
-            if (argument.argStartsWith(arg)) {
-                return argument;
-            }
-        }
-        return null;
     }
 
     /**
@@ -289,7 +315,7 @@ public class CommandContext {
             CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission);
             return false;
         }
-        return data.getPermissions().hasPermission(member, channel, cascadePermission, data.getSettings());
+        return data.getPermissions().hasPermission(member, channel, cascadePermission, getCoreSettings());
     }
 
     public boolean hasPermission(CascadePermission permission) {

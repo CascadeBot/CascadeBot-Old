@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.GuildPermissions;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -19,24 +20,24 @@ import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
-public class GroupPermissionMoveSubCommand implements ICommandExecutable {
+public class GroupPermissionMoveSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getData().getPermissions().getMode() == GuildPermissions.PermissionMode.MOST_RESTRICTIVE) {
-            context.getTypedMessaging().replyDanger("Cannot move groups in most restrictive mode"); //TODO provide docs link
+            context.getTypedMessaging().replyDanger(context.i18n("commands.groupperms.move.wrong_mode")); //TODO provide docs link
             return;
         }
 
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "groupperms");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (context.getArgs().length > 1 && context.isArgInteger(1)) {
                 context.getData().getPermissions().moveGroup(group, context.getArgAsInteger(1));
-                context.getTypedMessaging().replySuccess("Moved group %s to position %s", group.getName(), context.getArg(1));
+                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.move.moved", group.getName(), context.getArg(1)));
                 return;
             }
 
@@ -93,8 +94,13 @@ public class GroupPermissionMoveSubCommand implements ICommandExecutable {
     }
 
     @Override
+    public String parent() {
+        return "groupperms";
+    }
+
+    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions move sub command", "permissions.group.move", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.move", false, Module.MANAGEMENT);
     }
 
     @Override

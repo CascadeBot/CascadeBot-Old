@@ -5,9 +5,8 @@
 
 package org.cascadebot.cascadebot.permissions;
 
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableSet;
+import io.github.binaryoverload.JSONConfig;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
@@ -16,33 +15,39 @@ import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.shared.SecurityLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 public class PermissionsManager {
 
-    public static final String PERMISSION_PREFIX = "cascade.";
-
     private static final Logger LOGGER = LoggerFactory.getLogger(PermissionsManager.class);
 
-    private LoadingCache<Long, Set<Long>> officialGuildRoleIDCache = Caffeine.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
-            .refreshAfterWrite(5, TimeUnit.MINUTES)
-            .build(DiscordUtils::getAllOfficialRoleIds);
-    private LoadingCache<Long, SecurityLevel> securityLevelCache = Caffeine.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
-            .refreshAfterWrite(5, TimeUnit.MINUTES)
-            .build(userId -> Security.getLevelById(userId, officialGuildRoleIDCache.get(userId)));
+    // <Localised, English>
+    private HashMap<String, String> localisedPermissionsMapping = new HashMap<>();
 
-    private ConcurrentHashMap<String, CascadePermission> permissions = new ConcurrentHashMap<>();
+    private HashMap<String, CascadePermission> permissions = new HashMap<>();
     private Set<CascadePermission> defaultPermissions = Set.of();
+
+    public PermissionsManager() {
+        for (Locale locale : Language.getLanguages().keySet()) {
+            if (locale == Locale.getDefaultLocale()) continue;
+            JSONConfig config = Language.getLanguages().get(locale);
+            if (config.getElement("permissions").isEmpty()) continue;
+            for (String permission : permissions.keySet()) {
+                if (config.getString("permissions." + permission + ".name").isEmpty()) continue;
+                localisedPermissionsMapping.put(config.getString("permissions." + permission + ".name").get(), permission);
+            }
+        }
+    }
 
     public void registerPermissions() {
         if (!permissions.isEmpty()) throw new IllegalStateException("Permissions have already been registered!");
@@ -53,24 +58,26 @@ public class PermissionsManager {
             if (command.getPermission() == null || command instanceof ICommandRestricted) continue;
             registerPermission(command.getPermission());
             for (ICommandExecutable subCommand : command.getSubCommands()) {
+                if (subCommand.getPermission() == null) continue;
                 registerPermission(subCommand.getPermission());
             }
         }
 
-        registerPermission(CascadePermission.of("Core Category", "module.core", true, Module.CORE));
-        registerPermission(CascadePermission.of("Info Category", "module.info", true, Module.INFORMATIONAL));
-        registerPermission(CascadePermission.of("Fun Category", "module.fun", true, Module.FUN));
-        registerPermission(CascadePermission.of("Music Category", "module.music", true, Module.MUSIC));
+        registerPermission(CascadePermission.of("module.info", false, Module.INFORMATIONAL));
+        registerPermission(CascadePermission.of("module.fun", false, Module.FUN));
+        registerPermission(CascadePermission.of("module.music", false, Module.MUSIC));
+        registerPermission(CascadePermission.of("module.moderation", false, Module.MODERATION));
+        registerPermission(CascadePermission.of("module.management", false, Module.MANAGEMENT));
 
-        registerPermission(CascadePermission.of("Reset command prefix", "prefix.reset", false, Permission.MANAGE_SERVER));
-        registerPermission(CascadePermission.of("Set command prefix", "prefix.set", false, Permission.MANAGE_SERVER));
+        registerPermission(CascadePermission.of("prefix.reset", false, Permission.MANAGE_SERVER));
+        registerPermission(CascadePermission.of("prefix.set", false, Permission.MANAGE_SERVER));
 
-        registerPermission(CascadePermission.of("Join other voice channel", "join.other", false, Permission.VOICE_MOVE_OTHERS));
-        registerPermission(CascadePermission.of("Leave other voice channel", "leave.other", false, Permission.VOICE_MOVE_OTHERS));
+        registerPermission(CascadePermission.of("join.other", false, Permission.VOICE_MOVE_OTHERS));
+        registerPermission(CascadePermission.of("leave.other", false, Permission.VOICE_MOVE_OTHERS));
 
-        registerPermission(CascadePermission.of("Raise volume above 100%", "volume.extreme", false, Permission.MANAGE_SERVER));
-        registerPermission(CascadePermission.of("Force skip a song", "skip.force", false, Permission.MANAGE_CHANNEL));
-        registerPermission(CascadePermission.of("Overwrite guild playlist", "queue.save.overwrite", false));
+        registerPermission(CascadePermission.of("volume.extreme", false, Permission.MANAGE_SERVER));
+        registerPermission(CascadePermission.of("skip.force", false, Permission.MANAGE_CHANNEL));
+        registerPermission(CascadePermission.of("queue.save.overwrite", false));
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 
@@ -82,13 +89,11 @@ public class PermissionsManager {
     }
 
     private void registerPermission(CascadePermission permission) {
-        permissions.put(permission.getPermission(), permission);
+        permissions.put(permission.getPermissionRaw(), permission);
     }
 
     public CascadePermission getPermission(String permission) {
-        CascadePermission perm = permissions.get(permission);
-        if (perm == null) perm = permissions.get(PERMISSION_PREFIX + permission);
-        return perm;
+        return permissions.get(permission);
     }
 
     public CascadePermission getPermissionFromModule(Module module) {
@@ -110,7 +115,7 @@ public class PermissionsManager {
             PermissionNode node = new PermissionNode(permission);
             for (CascadePermission perm : permissions) {
                 if (perm != CascadePermission.ALL_PERMISSIONS) {
-                    if (node.test(perm.getPermission())) return true;
+                    if (node.test(perm.getPermissionRaw())) return true;
                 }
             }
         }
@@ -119,6 +124,10 @@ public class PermissionsManager {
 
     public Set<CascadePermission> getDefaultPermissions() {
         return defaultPermissions;
+    }
+
+    public Map<String, String> getLocalisedPermissionMapping() {
+        return Map.copyOf(localisedPermissionsMapping);
     }
 
     public Set<CascadePermission> getPermissions() {
@@ -137,28 +146,21 @@ public class PermissionsManager {
         }
     }
 
-
     public boolean isAuthorised(ICommandExecutable command, GuildData guildData, Member member) {
         if (command instanceof ICommandRestricted) {
-            SecurityLevel userLevel = securityLevelCache.get(member.getUser().getIdLong());
+            SecurityLevel userLevel = getUserSecurityLevel(member.getUser().getIdLong());
             if (userLevel == null) return false;
             SecurityLevel levelToCheck = ((ICommandRestricted) command).getCommandLevel();
             return userLevel.isAuthorised(levelToCheck);
         } else {
             if (command.getPermission() == null) return true;
-            return guildData.getPermissions().hasPermission(member, command.getPermission(), guildData.getSettings());
+            return guildData.getPermissions().hasPermission(member, command.getPermission(), guildData.getCoreSettings());
         }
         // return false;
     }
 
     public SecurityLevel getUserSecurityLevel(long userId) {
-        return securityLevelCache.get(userId);
+        return Security.getLevelById(userId, DiscordUtils.getAllOfficialRoleIds(userId));
     }
-
-    public void clearCacheForUser(long userId) {
-        officialGuildRoleIDCache.refresh(userId);
-        securityLevelCache.refresh(userId);
-    }
-
 
 }

@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.util.Set;
 
@@ -24,11 +25,11 @@ public class GuildCommandInfo {
     private String defaultCommand;
     private Set<String> aliases;
 
-    public GuildCommandInfo(ICommandMain command) {
-        this.command = command.command();
+    public GuildCommandInfo(ICommandMain command, Locale locale) {
+        this.command = command.command(locale);
         this.defaultCommand = command.command();
         this.forceDefault = command.forceDefault();
-        this.aliases = command.getGlobalAliases();
+        this.aliases = command.getGlobalAliases(locale);
         this.enabled = true;
     }
 
