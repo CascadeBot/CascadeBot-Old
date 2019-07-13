@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
+package org.cascadebot.cascadebot.commands.management.permission;
+
+import net.dv8tion.jda.core.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.commandmeta.CommandContext;
+import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
+
+public class GroupPermissionRemoveSubCommand implements ISubCommand {
+
+    @Override
+    public void onCommand(Member sender, CommandContext context) {
+        if (context.getArgs().length < 2) {
+            context.getUIMessaging().replyUsage();
+            return;
+        }
+
+        if (!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getGuild(), context.getArg(1))) {
+            context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
+            return;
+        }
+
+        PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
+            if (group.removePermission(context.getArg(1))) {
+                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.remove.success", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
+            } else {
+                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.remove.fail", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
+            }
+        }, sender.getUser().getIdLong());
+    }
+
+    @Override
+    public String command() {
+        return "remove";
+    }
+
+    @Override
+    public String parent() {
+        return "groupperms";
+    }
+
+    @Override
+    public CascadePermission getPermission() {
+        return CascadePermission.of("permissions.group.remove", false, Module.MANAGEMENT);
+    }
+
+    @Override
+    public String description() {
+        return null;
+    }
+
+}
