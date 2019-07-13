@@ -42,6 +42,10 @@ public class GuildSettingsCore {
         }
     }
 
+    private GuildSettingsCore() {
+        
+    }
+
     //region Boolean flags
     @Setting
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
