@@ -13,10 +13,10 @@ import net.dv8tion.jda.core.entities.RichPresence;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
@@ -44,8 +44,7 @@ public class UserInfoCommand implements ICommandMain {
         Member member = context.getGuild().getMember(userForInfo);
         String status = "";
         String statusName = "";
-        String footer = MessagingObjects.getMessageTypeEmbedBuilder()
-        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+        EmbedBuilder builder = new EmbedBuilder(MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser()));
 
         if (member != null) {
             builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getJoinDate()), true);
@@ -71,8 +70,6 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField(context.i18n("commands.userinfo.user_created"), FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
         builder.addField(context.i18n("commands.userinfo.user_id"), userForInfo.getId(), true);
         builder.addField(context.i18n("commands.userinfo.user_mutual_servers"), String.valueOf(userForInfo.getMutualGuilds().size()), true);
-        builder.setFooter(footer, sender.getUser().getEffectiveAvatarUrl());
-        builder.setColor(Constants.COLOR_INFO);
         pageList.add(new PageObjects.EmbedPage(builder, false));
         long userId = userForInfo.getIdLong();
         SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
@@ -100,12 +97,12 @@ public class UserInfoCommand implements ICommandMain {
 
             StringBuilder stringer = new StringBuilder();
             String author = "Roles for: " + sender.getUser().getAsTag();
-            EmbedBuilder embed = new EmbedBuilder().setAuthor(author).setFooter(footer, sender.getUser().getEffectiveAvatarUrl()).setColor(Constants.COLOR_INFO);
+            EmbedBuilder embed = new EmbedBuilder(MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser()).setAuthor(author));
             int i = 1;
             for (Role role : member.getRoles()) {
                 if (i % 20 == 0) {
                     pageList.add(new PageObjects.EmbedPage(
-                            new EmbedBuilder().setDescription(stringer.toString()).setColor(Constants.COLOR_INFO).setAuthor(author).setFooter(footer, sender.getUser().getEffectiveAvatarUrl()),
+                            new EmbedBuilder(MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser()).setAuthor(author).setAuthor(author)),
                             false));
                     stringer = new StringBuilder();
                 }
@@ -113,7 +110,6 @@ public class UserInfoCommand implements ICommandMain {
                 i = i + 1;
             }
             pageList.add(new PageObjects.EmbedPage(embed.setDescription(stringer.toString()), false));
-
         }
         context.getUIMessaging().sendPagedMessage(pageList);
     }
