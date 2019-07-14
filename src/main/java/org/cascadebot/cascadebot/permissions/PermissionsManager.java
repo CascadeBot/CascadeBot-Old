@@ -148,7 +148,7 @@ public class PermissionsManager {
 
     public boolean isAuthorised(ICommandExecutable command, GuildData guildData, Member member) {
         if (command instanceof ICommandRestricted) {
-            SecurityLevel userLevel = getUserSecurityLevel(member.getUser().getIdLong());
+            SecurityLevel userLevel = getUserSecurityLevel(member.getIdLong());
             if (userLevel == null) return false;
             SecurityLevel levelToCheck = ((ICommandRestricted) command).getCommandLevel();
             return userLevel.isAuthorised(levelToCheck);

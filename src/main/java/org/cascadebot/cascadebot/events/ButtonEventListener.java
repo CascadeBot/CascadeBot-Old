@@ -17,11 +17,13 @@ import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 
+import java.util.Objects;
+
 public class ButtonEventListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent e) {
-        if (e.getMember().equals(e.getGuild().getSelfMember())) {
+        if (Objects.equals(e.getMember(), e.getGuild().getSelfMember())) {
             return;
         }
         if (e.getChannel().getType().equals(ChannelType.TEXT)) {
@@ -32,7 +34,7 @@ public class ButtonEventListener extends ListenerAdapter {
                 if (cache.get(channel.getIdLong()).containsKey(e.getMessageIdLong())) {
                     ButtonGroup group = cache.get(channel.getIdLong()).get(e.getMessageIdLong());
                     Metrics.INS.buttonsPressed.labels(e.getReaction().getReactionEmote().getName()).inc();
-                    e.getChannel().getMessageById(e.getMessageId()).queue(message -> group.handleButton(e.getMember(), channel, message, e.getReactionEmote()));
+                    e.getChannel().retrieveMessageById(e.getMessageId()).queue(message -> group.handleButton(e.getMember(), channel, message, e.getReactionEmote()));
                     e.getReaction().removeReaction(e.getMember().getUser()).queue(); //Idk if we want to allow other reactions on the message
                     //TODO perms checking
                 }

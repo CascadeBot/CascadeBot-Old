@@ -49,7 +49,7 @@ public class UserPermissionGroupSubCommand implements ISubCommand {
                     context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.remove.fail", member.getUser().getAsTag(), group.getName()));
                 }
             }
-        }, sender.getUser().getIdLong());
+        }, sender.getIdLong());
 
 
     }

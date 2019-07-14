@@ -106,7 +106,7 @@ public class PermissionCommandUtils {
 
             ButtonGroup groupButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
             groupButtons.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                if (runner.getUser().getIdLong() != groupButtons.getOwner().getUser().getIdLong()) {
+                if (runner.getIdLong() != groupButtons.getOwner().getIdLong()) {
                     return;
                 }
                 message.delete().queue();
@@ -129,7 +129,7 @@ public class PermissionCommandUtils {
     }
 
     private static void handleSwitchButtons(Member member, Message message, MessageEmbed embedToSwitchTo, ButtonGroup buttonsToSwitchTo, CommandContext context) {
-        if (member.getUser().getIdLong() != buttonsToSwitchTo.getOwner().getUser().getIdLong()) {
+        if (member.getIdLong() != buttonsToSwitchTo.getOwner().getIdLong()) {
             return;
         }
         message.editMessage(embedToSwitchTo).override(true).queue();

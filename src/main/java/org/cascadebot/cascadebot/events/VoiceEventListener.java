@@ -25,7 +25,7 @@ public class VoiceEventListener extends ListenerAdapter {
 
         VoiceChannel botCurrentChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
         VoteButtonGroup voteButtonGroup = SkipCommand.voteMap.get(event.getGuild().getIdLong());
-        long userId = event.getMember().getUser().getIdLong();
+        long userId = event.getMember().getIdLong();
 
         if (event instanceof GuildVoiceJoinEvent) {
             GuildVoiceJoinEvent joinEvent = (GuildVoiceJoinEvent) event;

@@ -72,7 +72,7 @@ public class GroupPermissionInfoSubCommand implements ISubCommand {
             }
 
             context.getUIMessaging().sendPagedMessage(pageList);
-        }, sender.getUser().getIdLong());
+        }, sender.getIdLong());
     }
 
     @Override

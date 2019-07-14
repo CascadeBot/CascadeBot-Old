@@ -29,7 +29,7 @@ public class VolumeCommand implements ICommandMain {
 
         // Limits the volume command to only guilds with the music services flag
         // Allow developers to bypass the check to fix borked audio if need be.
-        if (!context.getData().isFlagEnabled(Flag.MUSIC_SERVICES) && !Security.isAuthorised(sender.getUser().getIdLong(), SecurityLevel.DEVELOPER)) {
+        if (!context.getData().isFlagEnabled(Flag.MUSIC_SERVICES) && !Security.isAuthorised(sender.getIdLong(), SecurityLevel.DEVELOPER)) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.volume.no_flag"));
             return;
         }
@@ -47,7 +47,7 @@ public class VolumeCommand implements ICommandMain {
             return;
         } else if (volume > 100 && volume <= 200) {
             if (context.hasPermission("volume.extreme")) {
-                ConfirmUtils.confirmAction(sender.getUser().getIdLong(),
+                ConfirmUtils.confirmAction(sender.getIdLong(),
                         "volume-extreme",
                         context.getChannel(),
                         MessageType.WARNING,

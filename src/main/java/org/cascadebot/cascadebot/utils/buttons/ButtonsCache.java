@@ -27,7 +27,7 @@ public class ButtonsCache extends HashMap<Long, LinkedHashMap<Long, ButtonGroup>
                 @Override
                 protected boolean removeEldestEntry(final Map.Entry<Long, ButtonGroup> eldest) {
                     if (size() > maxSize) {
-                        DiscordUtils.getTextChannelById(channelId).getMessageById(eldest.getKey()).queue(buttonedMessage -> buttonedMessage.clearReactions().queue());
+                        DiscordUtils.getTextChannelById(channelId).retrieveMessageById(eldest.getKey()).queue(buttonedMessage -> buttonedMessage.clearReactions().queue());
                         return true;
                     }
                     return false;

@@ -197,7 +197,7 @@ public final class Messaging {
     }
 
     public static CompletableFuture<Message> sendPagedMessage(TextChannel channel, Member owner, List<Page> pages) {
-        ButtonGroup group = new ButtonGroup(owner.getUser().getIdLong(), channel.getIdLong(), channel.getGuild().getIdLong());
+        ButtonGroup group = new ButtonGroup(owner.getIdLong(), channel.getIdLong(), channel.getGuild().getIdLong());
         group.addButton(new Button.UnicodeButton(UnicodeConstants.REWIND, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
             pageGroup.getPage(1).pageShow(message, 1, pageGroup.getPages());

@@ -36,7 +36,7 @@ public class GroupPermissionUnlinkRoleSubCommand implements ISubCommand {
             } else {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.unlink.fail", group.getName(), role.getName()));
             }
-        }, sender.getUser().getIdLong());
+        }, sender.getIdLong());
     }
 
     @Override

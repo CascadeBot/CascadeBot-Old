@@ -57,10 +57,10 @@ public class GuildPermissions {
         Checks.notNull(permission, "permission");
 
         // This allows developers and owners to go into guilds and fix problems
-        if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.DEVELOPER)) {
+        if (Security.isAuthorised(member.getIdLong(), SecurityLevel.DEVELOPER)) {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.OFFICIAL, SecurityLevel.DEVELOPER);
         }
-        if (Security.isAuthorised(member.getUser().getIdLong(), SecurityLevel.CONTRIBUTOR) && Environment.isDevelopment()) {
+        if (Security.isAuthorised(member.getIdLong(), SecurityLevel.CONTRIBUTOR) && Environment.isDevelopment()) {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.OFFICIAL, SecurityLevel.CONTRIBUTOR);
         }
         // If the user is owner then they have all perms, obsv..
@@ -70,7 +70,7 @@ public class GuildPermissions {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         }
 
-        User user = users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
+        User user = users.computeIfAbsent(member.getIdLong(), id -> new User());
         // Get all user groups that are directly assigned and the groups assigned through roles
         List<Group> userGroups = getUserGroups(member);
 
@@ -187,11 +187,11 @@ public class GuildPermissions {
     }
 
     public User getPermissionUser(Member member) {
-        return users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
+        return users.computeIfAbsent(member.getIdLong(), id -> new User());
     }
 
     public List<Group> getUserGroups(Member member) {
-        User user = users.computeIfAbsent(member.getUser().getIdLong(), id -> new User());
+        User user = users.computeIfAbsent(member.getIdLong(), id -> new User());
         List<Group> userGroups = groups.stream().filter(group -> user.getGroupIds().contains(group.getId())).collect(Collectors.toList());
 
         // Now I know this is a mess... If you can figure out a better method hit me up 👀

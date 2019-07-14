@@ -67,7 +67,7 @@ public class PlayingCommand implements ICommandMain {
         if (player.getPlayer().getPlayingTrack() == null) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.playing.no_music_playing"));
         } else {
-            ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+            ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
                     if (context.hasPermission(runner, "volume")) {

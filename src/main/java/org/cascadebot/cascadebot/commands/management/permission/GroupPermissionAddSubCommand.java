@@ -34,7 +34,7 @@ public class GroupPermissionAddSubCommand implements ISubCommand {
             } else {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.add.fail", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
             }
-        }, sender.getUser().getIdLong());
+        }, sender.getIdLong());
     }
 
     @Override

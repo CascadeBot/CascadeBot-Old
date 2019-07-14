@@ -36,7 +36,7 @@ public class GroupPermissionLinkRoleSubCommand implements ISubCommand {
             } else {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.link.fail", group.getName(), role.getName()));
             }
-        }, sender.getUser().getIdLong());
+        }, sender.getIdLong());
     }
 
     @Override

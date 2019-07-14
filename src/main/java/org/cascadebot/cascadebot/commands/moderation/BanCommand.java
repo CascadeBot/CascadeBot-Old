@@ -52,7 +52,7 @@ public class BanCommand implements ICommandMain {
 
             String finalReason = reason;
             ConfirmUtils.confirmAction(
-                    sender.getUser().getIdLong(),
+                    sender.getIdLong(),
                     "forceban_user",
                     context.getChannel(),
                     MessageType.DANGER,

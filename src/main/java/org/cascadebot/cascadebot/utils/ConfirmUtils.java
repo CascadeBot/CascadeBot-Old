@@ -53,7 +53,7 @@ public class ConfirmUtils {
             Task.getScheduler().schedule(() -> {
                 ButtonGroup group = new ButtonGroup(userId, channel.getIdLong(), channel.getGuild().getIdLong());
                 group.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel1, message1) -> {
-                    if (runner.getUser().getIdLong() != action.userID) return;
+                    if (runner.getIdLong() != action.userID) return;
                     action.run();
                 }));
                 group.addButtonsToMessage(sentMessage);

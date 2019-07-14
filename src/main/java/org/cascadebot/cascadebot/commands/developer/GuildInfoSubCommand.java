@@ -59,7 +59,7 @@ public class GuildInfoSubCommand implements ISubCommand {
 
         builder.addField("Flags", flags, false);
         builder.addField("Modules", modules, false);
-        builder.addField("Join Date", FormatUtils.formatDateTime(context.getSelfMember().getJoinDate()), false);
+        builder.addField("Join Date", FormatUtils.formatDateTime(context.getSelfMember().getTimeJoined()), false);
 
         context.getTypedMessaging().replyInfo(builder);
     }
