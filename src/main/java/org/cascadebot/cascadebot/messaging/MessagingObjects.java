@@ -6,9 +6,9 @@
 package org.cascadebot.cascadebot.messaging;
 
 import lombok.experimental.UtilityClass;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.MessageBuilder;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.entities.User;
 
 @UtilityClass
 public class MessagingObjects {

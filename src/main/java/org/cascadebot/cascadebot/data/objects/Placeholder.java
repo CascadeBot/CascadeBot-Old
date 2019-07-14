@@ -7,9 +7,9 @@ package org.cascadebot.cascadebot.data.objects;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.apache.commons.lang.math.NumberUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.language.Language;

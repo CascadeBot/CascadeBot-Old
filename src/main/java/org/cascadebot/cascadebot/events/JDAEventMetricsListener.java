@@ -5,8 +5,8 @@
 
 package org.cascadebot.cascadebot.events;
 
-import net.dv8tion.jda.core.events.Event;
-import net.dv8tion.jda.core.hooks.EventListener;
+import net.dv8tion.jda.api.events.Event;
+import net.dv8tion.jda.api.hooks.EventListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
 
 public class JDAEventMetricsListener implements EventListener {

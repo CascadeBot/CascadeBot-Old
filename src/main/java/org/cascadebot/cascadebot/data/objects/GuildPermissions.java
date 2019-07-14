@@ -7,10 +7,10 @@ package org.cascadebot.cascadebot.data.objects;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Channel;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -43,7 +43,7 @@ public class GuildPermissions {
         return hasPermission(member, null, permission, settings);
     }
 
-    public boolean hasPermission(Member sender, Channel channel, CascadePermission permission, GuildSettingsCore settings) {
+    public boolean hasPermission(Member sender, GuildChannel channel, CascadePermission permission, GuildSettingsCore settings) {
         return evalPermission(sender, channel, permission, settings).isAllowed();
     }
 
@@ -51,7 +51,7 @@ public class GuildPermissions {
         return evalPermission(member, null, permission, settings);
     }
 
-    public Result evalPermission(Member member, Channel channel, CascadePermission permission, GuildSettingsCore settings) {
+    public Result evalPermission(Member member, GuildChannel channel, CascadePermission permission, GuildSettingsCore settings) {
 
         Checks.notNull(member, "member");
         Checks.notNull(permission, "permission");
@@ -96,7 +96,7 @@ public class GuildPermissions {
         return result;
     }
 
-    private boolean hasDiscordPermissions(Member member, Channel channel, Set<Permission> permissions) {
+    private boolean hasDiscordPermissions(Member member, GuildChannel channel, Set<Permission> permissions) {
         if (CollectionUtils.isEmpty(permissions)) return false;
         if (channel != null) {
             return member.hasPermission(channel, permissions);
