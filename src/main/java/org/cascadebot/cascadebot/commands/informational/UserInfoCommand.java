@@ -7,7 +7,11 @@ package org.cascadebot.cascadebot.commands.informational;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.entities.RichPresence;
+import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -20,11 +24,10 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.language.LanguageUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
+import org.cascadebot.shared.SecurityLevel;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.cascadebot.shared.SecurityLevel;
 
 public class UserInfoCommand implements ICommandMain {
 
@@ -41,7 +44,7 @@ public class UserInfoCommand implements ICommandMain {
         Member member = context.getGuild().getMember(userForInfo);
         String status = "";
         String statusName = "";
-        String footer = "Requested by " + sender.getUser().getAsTag();
+        String footer = MessagingObjects.getMessageTypeEmbedBuilder()
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
 
         if (member != null) {
