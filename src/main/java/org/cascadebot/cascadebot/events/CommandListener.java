@@ -48,10 +48,7 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) {
-            return;
-        }
-        if (event.getMessage().getType() != MessageType.DEFAULT) {
+        if (event.getAuthor().isBot() || event.getMessage().getType() != MessageType.DEFAULT || !event.getChannel().canTalk()) {
             return;
         }
 
