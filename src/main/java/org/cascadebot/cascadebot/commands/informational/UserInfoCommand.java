@@ -7,14 +7,9 @@ package org.cascadebot.cascadebot.commands.informational;
 
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.RichPresence;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
+import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -22,14 +17,13 @@ import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
-import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.cascadebot.utils.language.LanguageUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+
 import org.cascadebot.shared.SecurityLevel;
 
 public class UserInfoCommand implements ICommandMain {
@@ -45,9 +39,9 @@ public class UserInfoCommand implements ICommandMain {
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
-        
         String status = "";
         String statusName = "";
+        String footer = "Requested by " + sender.getUser().getAsTag();
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
 
         if (member != null) {
@@ -74,7 +68,9 @@ public class UserInfoCommand implements ICommandMain {
         builder.addField(context.i18n("commands.userinfo.user_created"), FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
         builder.addField(context.i18n("commands.userinfo.user_id"), userForInfo.getId(), true);
         builder.addField(context.i18n("commands.userinfo.user_mutual_servers"), String.valueOf(userForInfo.getMutualGuilds().size()), true);
-
+        builder.setFooter(footer, sender.getUser().getEffectiveAvatarUrl());
+        builder.setColor(Constants.COLOR_INFO);
+        pageList.add(new PageObjects.EmbedPage(builder, false));
         long userId = userForInfo.getIdLong();
         SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
         if (userSecurityLevel != null) {
@@ -84,7 +80,7 @@ public class UserInfoCommand implements ICommandMain {
         if (member != null) {
             builder.addField("Status", status + statusName, true);
             Game game = member.getGame();
-            
+
             if (game != null) {
                 String gameStatus;
                 String gameType = LanguageUtils.getEnumI18n(context.getLocale(), "game_types", game.getType());
@@ -99,16 +95,23 @@ public class UserInfoCommand implements ICommandMain {
                 builder.addField(context.i18n("commands.userinfo.activity"), gameStatus, true);
             }
 
-            Table.TableBuilder tableBuilder = new Table.TableBuilder(context.i18n("commands.userinfo.role_id"), context.i18n("commands.userinfo.role_name"));
-
+            StringBuilder stringer = new StringBuilder();
+            String author = "Roles for: " + sender.getUser().getAsTag();
+            EmbedBuilder embed = new EmbedBuilder().setAuthor(author).setFooter(footer, sender.getUser().getEffectiveAvatarUrl()).setColor(Constants.COLOR_INFO);
+            int i = 1;
             for (Role role : member.getRoles()) {
-                tableBuilder.addRow(role.getId(), role.getName());
+                if (i % 20 == 0) {
+                    pageList.add(new PageObjects.EmbedPage(
+                            new EmbedBuilder().setDescription(stringer.toString()).setColor(Constants.COLOR_INFO).setAuthor(author).setFooter(footer, sender.getUser().getEffectiveAvatarUrl()),
+                            false));
+                    stringer = new StringBuilder();
+                }
+                stringer.append("<@&" + role.getId() + ">" + " ID: " + role.getId() + "\n");
+                i = i + 1;
             }
+            pageList.add(new PageObjects.EmbedPage(embed.setDescription(stringer.toString()), false));
 
-            pageList.add(new PageObjects.TablePage(tableBuilder.build()));
         }
-
-        pageList.add(0, new PageObjects.EmbedPage(builder));
         context.getUIMessaging().sendPagedMessage(pageList);
     }
 
