@@ -10,13 +10,14 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;
 
-public class GuildSaveSubCommand implements ICommandExecutable {
+public class GuildSaveSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -29,11 +30,11 @@ public class GuildSaveSubCommand implements ICommandExecutable {
         } else {
             GuildData guildData = GuildDataManager.getGuilds().asMap().get(Long.parseLong(context.getArg(0)));
             if (guildData == null) {
-                context.getTypedMessaging().replyDanger("Cannot find guild to save!");
+                context.getTypedMessaging().replyDanger("Cannot find a guild to save!");
                 return;
             }
             GuildDataManager.replace(guildData.getGuildID(), guildData);
-            context.getTypedMessaging().replySuccess("Saved guild information for guild **" + context.getArg(0) + "**!");
+            context.getTypedMessaging().replySuccess("Saved guild information for guild **%s**!", context.getArg(0));
         }
     }
 
@@ -43,19 +44,18 @@ public class GuildSaveSubCommand implements ICommandExecutable {
     }
 
     @Override
-    public CascadePermission getPermission() {
-        return null;
+    public String parent() {
+        return "guild";
     }
 
     @Override
     public String description() {
-        return "save current guilds data";
+        return "Save the current guild's data.";
     }
 
     @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.ofA("guild_id", "Saves a specific guild", ArgumentType.REQUIRED, Set.of("all")));
+    public CascadePermission getPermission() {
+        return null;
     }
-
 
 }

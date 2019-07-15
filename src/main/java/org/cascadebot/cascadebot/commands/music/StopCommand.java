@@ -17,9 +17,9 @@ public class StopCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getMusicPlayer().getPlayer().getPlayingTrack() != null) { // If the playing track isn't null, and the bot isn't paused
             context.getMusicPlayer().stop();
-            context.getTypedMessaging().replySuccess("Music has been stopped!");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.stop.stopped"));
         } else {
-            context.getTypedMessaging().replyDanger("Music isn't playing, nothing to stop!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.stop.not_stopped"));
         }
     }
 
@@ -35,12 +35,7 @@ public class StopCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Stop music command", "stop", false);
-    }
-
-    @Override
-    public String description() {
-        return "Stops music when playing";
+        return CascadePermission.of("stop", false);
     }
 
 }

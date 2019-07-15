@@ -17,10 +17,10 @@ public class PrefixCommand implements ICommandCore {
         if (context.getArgs().length > 0) {
             String newPrefix = context.getArg(0);
 
-            if (newPrefix.equals("reset")) {
+            if (context.testForArg("reset")) {
                 if (context.hasPermission("prefix.reset")) {
-                    context.getSettings().setPrefix(Config.INS.getDefaultPrefix());
-                    context.getTypedMessaging().replyInfo("The prefix has been reset to: `%s`", Config.INS.getDefaultPrefix());
+                    context.getCoreSettings().setPrefix(Config.INS.getDefaultPrefix());
+                    context.getTypedMessaging().replyInfo(context.i18n("commands.prefix.prefix_reset", Config.INS.getDefaultPrefix()));
                 } else {
                     context.getUIMessaging().sendPermissionError("prefix.reset");
                 }
@@ -33,24 +33,19 @@ public class PrefixCommand implements ICommandCore {
             }
 
             if (newPrefix.length() > 5) {
-                context.getTypedMessaging().replyDanger("The requested prefix is too long!");
+                context.getTypedMessaging().replyDanger(context.i18n("commands.prefix.prefix_too_long"));
                 return;
             }
-            context.getSettings().setPrefix(newPrefix);
-            context.getTypedMessaging().replyInfo("The new prefix is: `%s`", newPrefix);
+            context.getCoreSettings().setPrefix(newPrefix);
+            context.getTypedMessaging().replyInfo(context.i18n("commands.prefix.new_prefix", newPrefix));
         } else {
-            context.getTypedMessaging().replyInfo("The current server prefix is `%s`", context.getSettings().getPrefix());
+            context.getTypedMessaging().replyInfo(context.i18n("commands.prefix.current_prefix", context.getCoreSettings().getPrefix()));
         }
     }
 
     @Override
     public String command() {
         return "prefix";
-    }
-
-    @Override
-    public String description() {
-        return "Gets the current guild prefix";
     }
 
 }

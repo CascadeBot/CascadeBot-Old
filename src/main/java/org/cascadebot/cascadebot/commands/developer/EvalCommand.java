@@ -90,11 +90,7 @@ public class EvalCommand implements ICommandRestricted {
                 if (results.isBlank()) results = "Empty result!";
                 PasteUtils.pasteIfLong(results, 2048, context::reply);
             } catch (ScriptException e) {
-                context.getTypedMessaging().replyDanger("Error running script: %s \n**%s** \n```swift\n%s```",
-                        PasteUtils.paste(PasteUtils.getStackTrace(e)),
-                        e.getClass().getName(),
-                        e.getMessage()
-                );
+                context.getTypedMessaging().replyDanger("Error running script: %s \n**%s** \n```swift\n%s```" ,PasteUtils.paste(PasteUtils.getStackTrace(e)), e.getClass().getName(), e.getMessage());
             }
         });
     }
@@ -105,13 +101,13 @@ public class EvalCommand implements ICommandRestricted {
     }
 
     @Override
-    public String description() {
-        return "Evaluates code";
+    public Module getModule() {
+        return Module.DEVELOPER;
     }
 
     @Override
-    public Module getModule() {
-        return Module.DEVELOPER;
+    public String description() {
+        return "Evaluates code for the developers.";
     }
 
     @Override

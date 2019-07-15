@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ColourCommand implements ICommandMain {
+public class ColorCommand implements ICommandMain {
 
     private static final Pattern HEX_COLOR = Pattern.compile("#([A-Fa-f0-9]+)");
     private static final Pattern DECIMAL_COLOR = Pattern.compile("([0-9]{1,8})");
@@ -54,7 +54,7 @@ public class ColourCommand implements ICommandMain {
                     color = new Color(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)),
                             Integer.parseInt(matcher.group(3)));
                 } catch (IllegalArgumentException e1) {
-                    context.getTypedMessaging().replyDanger("Values should be between 0-255");
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.color.valid_rgb"));
                     return;
                 }
                 //Hex
@@ -62,7 +62,7 @@ public class ColourCommand implements ICommandMain {
                 try {
                     color = Color.decode(matcher.group());
                 } catch (NumberFormatException e1) {
-                    context.getTypedMessaging().replyDanger("Please provide a valid hex value! #000000-#FFFFFF");
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.color.valid_hex_code"));
                     return;
                 }
                 //Decimal
@@ -70,7 +70,7 @@ public class ColourCommand implements ICommandMain {
                 try {
                     color = Color.decode(matcher.group());
                 } catch (NumberFormatException e1) {
-                    context.getTypedMessaging().replyDanger("Please provide a valid decimal value! 0-16777215");
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.color.valid_decimal"));
                     return;
                 }
                 //Binary
@@ -78,13 +78,13 @@ public class ColourCommand implements ICommandMain {
                 try {
                     color = Color.decode(String.valueOf(Integer.parseUnsignedInt(matcher.group(), 2)));
                 } catch (NumberFormatException e1) {
-                    context.getTypedMessaging().replyDanger("Please enter a valid binary value!\n0-111111111111111111111111");
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.color.valid_binary"));
                 }
             }
         }
 
         if (color == null) {
-            context.getTypedMessaging().replyDanger("Could not recognise colour from the given value!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.color.color_not_recognised"));
             return;
         }
 
@@ -93,11 +93,11 @@ public class ColourCommand implements ICommandMain {
         int decimalColor = Integer.parseUnsignedInt(hex, 16);
 
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
-        builder.setTitle("Values of #" + hex);
+        builder.setTitle(context.i18n("commands.color.embed_title", hex));
         builder.setColor(color);
-        builder.addField("RGB", rgbValues, true); // RGB Values
-        builder.addField("Decimal", Integer.toUnsignedString(decimalColor), true); // Decimal Value
-        builder.addField("Binary", Integer.toBinaryString(decimalColor), true); // Binary Value
+        builder.addField(context.i18n("commands.color.rgb"), rgbValues, true); // RGB Values
+        builder.addField(context.i18n("commands.color.decimal"), Integer.toUnsignedString(decimalColor), true); // Decimal Value
+        builder.addField(context.i18n("commands.color.binary"), Integer.toBinaryString(decimalColor), true); // Binary Value
         context.reply(builder.build());
 
     }
@@ -110,28 +110,12 @@ public class ColourCommand implements ICommandMain {
 
     @Override
     public String command() {
-        return "colour";
-    }
-
-    @Override
-    public Set<String> getGlobalAliases() {
-        return java.util.Set.of("color");
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "Value", "Colour name, decimal, binary, hex code or RGB value.", ArgumentType.REQUIRED));
+        return "color";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("colour command", "colour", true);
-    }
-
-    @Override
-    public String description() {
-        return "Returns the values of the given colour";
+        return CascadePermission.of("color", true);
     }
 
 }

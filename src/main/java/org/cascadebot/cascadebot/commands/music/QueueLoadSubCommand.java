@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -18,12 +19,12 @@ import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
 import java.util.Set;
 
-public class QueueLoadSubCommand implements ICommandExecutable {
+public class QueueLoadSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "queue");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
@@ -53,11 +54,10 @@ public class QueueLoadSubCommand implements ICommandExecutable {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }));
                     })));
-                    context.getUIMessaging().sendButtonedMessage("Where you like to load this track from\n" + UnicodeConstants.ONE +
-                            " User\n" + UnicodeConstants.TWO + " Guild", buttonGroup);
+                    context.getUIMessaging().sendButtonedMessage(context.i18n("commands.queue.load.load_track"), buttonGroup);
                     break;
                 case DOESNT_EXIST:
-                    context.getTypedMessaging().replyDanger("Couldn't find playlist `" + context.getArg(0) + "`");
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.queue.load.cannot_find_playlist", context.getArg(0)));
                     break;
             }
         });
@@ -69,20 +69,19 @@ public class QueueLoadSubCommand implements ICommandExecutable {
     }
 
     @Override
+    public String parent() {
+        return "queue";
+    }
+
+    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Queue load sub command", "queue.load", true);
+        return CascadePermission.of("queue.load", true);
     }
 
     @Deprecated(forRemoval = true)
     @Override
     public String description() {
         return null;
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", "Loads the playlist with the given name", ArgumentType.REQUIRED,
-                Set.of(Argument.of("scope", "Loads the playlist with given name for ether you or this guild", ArgumentType.OPTIONAL))));
     }
 
 }

@@ -27,7 +27,7 @@ public class BanCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.getUIMessaging().replyUsage(this);
+            context.getUIMessaging().replyUsage();
             return;
         }
 
@@ -46,7 +46,7 @@ public class BanCommand implements ICommandMain {
 
             if (targetUser == null) {
                 // We couldn't find user from a member or from discord so just end here
-                context.getTypedMessaging().replyDanger("We could not find that user!");
+                context.getTypedMessaging().replyDanger(context.i18n("responses.cannot_find_user"));
                 return;
             }
 
@@ -56,8 +56,7 @@ public class BanCommand implements ICommandMain {
                     "forceban_user",
                     context.getChannel(),
                     MessageType.DANGER,
-                    "**We couldn't find that user in this guild!** \n" +
-                            "If you would like to forcefully ban them, please react to this message!",
+                    context.i18n("commands.ban.forcefully_ban"),
                     new ConfirmUtils.ConfirmRunnable() {
                         @Override
                         public void execute() {
@@ -98,22 +97,8 @@ public class BanCommand implements ICommandMain {
     }
 
     @Override
-    public String description() {
-        return "Bans or forcebans the specified user";
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Bans a member and can optionally forcefully ban a user", ArgumentType.OPTIONAL)
-                )
-        ));
-    }
-
-    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Ban command", "ban", false, Permission.BAN_MEMBERS);
+        return CascadePermission.of("ban", false, Permission.BAN_MEMBERS);
     }
 
 }

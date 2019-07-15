@@ -20,16 +20,21 @@ public class RolesCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Table.TableBuilder builder = new Table.TableBuilder("Role ID", "Name", "No. Users", "Colour");
-        
+        Table.TableBuilder builder = new Table.TableBuilder(context.i18n("commands.roles.header_id"),
+                context.i18n("commands.roles.header_name"),
+                context.i18n("commands.roles.header_members"),
+                context.i18n("commands.roles.header_color"));
+
         for (Role role : context.getGuild().getRoles()) {
-            if (role.getName().equals("@everyone")) continue;
-            builder.addRow(
-                    role.getId(),
-                    role.getName(),
-                    String.valueOf(context.getGuild().getMembers().stream().filter(member -> member.getRoles().contains(role)).count()),
-                    role.getColor() == null ?  "Default" : "#" + Integer.toHexString(role.getColor().getRGB())
-            );
+            if (role.getName().equals("@everyone")) {
+                continue;
+            }
+            builder.addRow(role.getId(), role.getName(), String.valueOf(context.getGuild()
+                            .getMembers()
+                            .stream()
+                            .filter(member -> member.getRoles().contains(role))
+                            .count()),
+                    role.getColor() == null ? context.i18n("words.default") : "#" + Integer.toHexString(role.getColor().getRGB()));
         }
 
         context.getUIMessaging().sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
@@ -47,17 +52,7 @@ public class RolesCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Roles command", "roles", false);
-    }
-
-    @Override
-    public String description() {
-        return "Returns the server's roles";
-    }
-
-    @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("roleinfo");
+        return CascadePermission.of("roles", false);
     }
 
 }

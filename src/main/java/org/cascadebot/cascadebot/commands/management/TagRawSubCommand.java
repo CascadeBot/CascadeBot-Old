@@ -5,36 +5,33 @@
 
 package org.cascadebot.cascadebot.commands.management;
 
-import java.util.Set;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-public class TagRawSubCommand implements ICommandExecutable {
+public class TagRawSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "tag");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
-        if (!context.getSettings().hasTag(context.getArg(0))) {
-            context.getTypedMessaging().replyDanger("Couldn't find tag with name `" + context.getArg(0) + "`");
+        if (!context.getCoreSettings().hasTag(context.getArg(0))) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
             return;
         }
 
-        Tag tag = context.getSettings().getTag(context.getArg(0));
+        Tag tag = context.getCoreSettings().getTag(context.getArg(0));
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-        builder.setTitle("Tag: " + context.getArg(0));
+        builder.setTitle(context.i18n("words.tag") + ": " + context.getArg(0));
         builder.setDescription("```" + tag.getContent() + "```");
-        builder.addField("Category", tag.getCategory(), true);
+        builder.addField(context.i18n("words.category"), tag.getCategory(), true);
 
         context.getTypedMessaging().replyInfo(builder);
     }
@@ -45,18 +42,13 @@ public class TagRawSubCommand implements ICommandExecutable {
     }
 
     @Override
+    public String parent() {
+        return "tag";
+    }
+
+    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Tag raw sub command", "tag.raw", false);
-    }
-
-    @Override
-    public String description() {
-        return null;
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("name", "Views the raw tag data for a given tag", ArgumentType.REQUIRED));
+        return CascadePermission.of("tag.raw", false);
     }
 
 }

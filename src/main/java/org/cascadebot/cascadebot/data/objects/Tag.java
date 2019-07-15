@@ -36,7 +36,7 @@ public class Tag {
             Placeholder placeholder = EnumUtils.getEnum(Placeholder.class, matcher.group(1).toUpperCase());
             if (placeholder != null) {
                 String[] args;
-                if(matcher.group(2) != null) {
+                if (matcher.group(2) != null) {
                     args = matcher.group(2).split(",");
                 } else {
                     args = new String[0];

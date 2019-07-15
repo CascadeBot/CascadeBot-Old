@@ -24,13 +24,13 @@ public class SoftBanCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.getTypedMessaging().replyDanger("Not enough arguments (No specified member)");
+            context.getTypedMessaging().replyDanger(context.i18n("responses.no_specified_user"));
             return;
         }
 
         Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         if (targetMember == null) {
-            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find that user!", context.getUser()));
+            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed(context.i18n("responses.cannot_find_user"), context.getUser()));
             return;
         }
 
@@ -57,25 +57,9 @@ public class SoftBanCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Soft-ban Command", "softban",
+        return CascadePermission.of("softban",
                 false, Permission.BAN_MEMBERS);
     }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Soft-bans a member", ArgumentType.OPTIONAL)
-                )
-        ));
-    }
-
-
-    @Override
-    public String description() {
-        return "Bans and then unbans a specified user in order to remove messages and kick the user";
-    }
-
 
     @Override
     public Module getModule() {

@@ -30,9 +30,18 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -50,14 +59,11 @@ public class GuildData {
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
-    @Setter
-    private String prefix = Config.INS.getDefaultPrefix();
-
-    private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
+    private Locale locale = Locale.getDefaultLocale();
 
     //region Guild data containers
 
-    private GuildSettingsCore guildSettings = new GuildSettingsCore();
+    private GuildSettingsCore coreSettings = new GuildSettingsCore(guildID);
     private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now
@@ -88,26 +94,26 @@ public class GuildData {
 
     //region Commands
     public void enableCommand(ICommandMain command) {
-        if (command.getModule().isFlagEnabled(ModuleFlag.PRIVATE)) return;
-        if (commandInfo.contains(command.getClass())) {
-            commandInfo.get(command.getClass()).setEnabled(true);
+        if (command.getModule().isPrivate()) return;
+        if (commandInfo.contains(command.getClass()) || !command.getModule().isDefault()) {
+            getGuildCommandInfo(command).setEnabled(true);
         }
     }
 
     public void enableCommandByModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
+        if (module.isPrivate()) return;
         for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             enableCommand(command);
         }
     }
 
     public void disableCommand(ICommandMain command) {
-        if (command.getModule().isFlagEnabled(ModuleFlag.PRIVATE)) return;
-        commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command)).setEnabled(false);
+        if (command.getModule().isPrivate()) return;
+        getGuildCommandInfo(command).setEnabled(false);
     }
 
     public void disableCommandByModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) return;
+        if (module.isPrivate()) return;
         for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             disableCommand(command);
         }
@@ -117,12 +123,12 @@ public class GuildData {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).isEnabled();
         }
-        return true;
+        return command.getModule().isDefault();
     }
 
-    public boolean isTypeEnabled(Module type) {
-        boolean enabled = true;
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(type)) {
+    public boolean isModuleEnabled(Module module) {
+        boolean enabled = module.isDefault();
+        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             enabled &= commandInfo.get(command.getClass()).isEnabled();
         }
         return enabled;
@@ -132,7 +138,7 @@ public class GuildData {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getCommand();
         }
-        return command.command();
+        return command.command(locale);
     }
 
     public void setCommandName(ICommandMain command, String commandName) {
@@ -141,24 +147,22 @@ public class GuildData {
 
     public Set<String> getCommandAliases(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
-            return getGuildCommandInfo(command).getAliases();
+            return commandInfo.get(command.getClass()).getAliases();
         }
-        return command.getGlobalAliases();
+        return command.getGlobalAliases(locale);
     }
 
     public boolean addAlias(ICommandMain command, String alias) {
-        boolean success = getGuildCommandInfo(command).addAlias(alias);
-        return success;
+        return getGuildCommandInfo(command).addAlias(alias);
     }
 
     public boolean removeAlias(ICommandMain command, String alias) {
-        boolean success = getGuildCommandInfo(command).removeAlias(alias);
-        return success;
+        return getGuildCommandInfo(command).removeAlias(alias);
     }
 
     @BsonIgnore
     private GuildCommandInfo getGuildCommandInfo(ICommandMain command) {
-        return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command));
+        return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale));
     }
 
     public Map<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
@@ -182,10 +186,6 @@ public class GuildData {
     public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
         buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
-    }
-
-    public GuildSettingsCore getSettings() {
-        return guildSettings;
     }
 
     public GuildPermissions getPermissions() {

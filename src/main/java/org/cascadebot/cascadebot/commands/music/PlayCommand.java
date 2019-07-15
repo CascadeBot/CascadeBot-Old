@@ -20,19 +20,20 @@ public class PlayCommand implements ICommandMain {
             context.runOtherCommand("resume", sender, context);
         } else if (context.getArgs().length == 1 && context.getArg(0).startsWith("http")) {
             context.getMusicPlayer().loadLink(context.getArg(0), sender.getUser().getIdLong(), input -> {
-                context.getTypedMessaging().replyDanger("We could not find music that matches: `%s`", input);
+                context.getTypedMessaging().replyDanger(context.i18n("commands.play.could_not_find_matches", input));
             }, exception -> {
-                context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
+                context.getTypedMessaging().replyException(context.i18n("commands.play.encountered_error"), exception);
             }, tracks -> {
                 context.getUIMessaging().checkPlaylistOrSong(context.getArg(0), tracks, context);
             });
         } else {
             CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
                 if (searchResults.isEmpty()) {
-                    context.getTypedMessaging().replyDanger("We could not find music that matches: `%s`", context.getArg(0));
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.play.could_not_find_matches", context.getArg(0)));
                 } else {
-                    context.getMusicPlayer().loadLink(searchResults.get(0).getUrl(), sender.getUser().getIdLong(), itShouldMatch -> {}, exception -> {
-                        context.getTypedMessaging().replyException("We encountered an error processing that!", exception);
+                    context.getMusicPlayer().loadLink(searchResults.get(0).getUrl(), sender.getUser().getIdLong(), itShouldMatch -> {
+                    }, exception -> {
+                        context.getTypedMessaging().replyException(context.i18n("commands.play.encountered_error"), exception);
                     }, tracks -> {
                         context.getMusicPlayer().addTracks(tracks);
                         context.getUIMessaging().sendTracksFound(tracks);
@@ -54,12 +55,7 @@ public class PlayCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Play command", "play", true);
-    }
-
-    @Override
-    public String description() {
-        return "Plays music";
+        return CascadePermission.of("play", true);
     }
 
 }

@@ -5,32 +5,29 @@
 
 package org.cascadebot.cascadebot.commands.management;
 
-import java.util.Set;
 import net.dv8tion.jda.core.entities.Member;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-public class TagEditSubCommand implements ICommandExecutable {
+public class TagEditSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage(this, "tag");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
-        Tag tag = context.getSettings().getTag(context.getArg(0));
+        Tag tag = context.getCoreSettings().getTag(context.getArg(0));
         if (tag == null) {
-            context.getTypedMessaging().replyDanger("Tag `" + context.getArg(0) + "` not found");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
             return;
         }
 
         tag.setContent(context.getMessage(1));
-        context.getTypedMessaging().replySuccess("Updated tag `" + context.getArg(0) + "`");
+        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", context.getArg(0)));
     }
 
     @Override
@@ -39,19 +36,13 @@ public class TagEditSubCommand implements ICommandExecutable {
     }
 
     @Override
+    public String parent() {
+        return "tag";
+    }
+
+    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Tag edit sub command", "tag.edit", false);
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of("tag", null, ArgumentType.REQUIRED,
-                Set.of(Argument.of("content", "Edits the specified tag", ArgumentType.REQUIRED))));
-    }
-
-    @Override
-    public String description() {
-        return null;
+        return CascadePermission.of("tag.edit", false);
     }
 
 }

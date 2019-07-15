@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
+import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -24,7 +25,7 @@ public class FlagsCommand implements ICommandMain {
         Guild guildForList = context.getGuild();
 
         String flags = Arrays.stream(Flag.values())
-                             .map(flag -> FormatUtils.formatEnum(flag) + " - " +
+                             .map(flag -> StringUtils.capitalize(FormatUtils.formatEnum(flag, context.getLocale())) + " - " +
                                      (dataForList.isFlagEnabled(flag) ? UnicodeConstants.TICK : UnicodeConstants.RED_CROSS))
                              .collect(Collectors.joining("\n"));
 
@@ -32,7 +33,7 @@ public class FlagsCommand implements ICommandMain {
         builder.setTitle(guildForList.getName());
         builder.setThumbnail(guildForList.getIconUrl());
 
-        builder.addField("Flags", flags, false);
+        builder.addField(context.i18n("words.flags"), flags, false);
 
         context.getTypedMessaging().replyInfo(builder);
     }
@@ -49,12 +50,7 @@ public class FlagsCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Flag Command", "flags", false);
-    }
-
-    @Override
-    public String description() {
-        return "Command to get a list of guild flags, and see if they're enabled or disabled.";
+        return CascadePermission.of("flags", false);
     }
 
 }

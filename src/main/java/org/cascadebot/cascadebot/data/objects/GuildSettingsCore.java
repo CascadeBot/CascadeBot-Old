@@ -6,9 +6,12 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import com.google.common.collect.Sets;
+import jdk.jfr.Name;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.data.Config;
@@ -23,69 +26,70 @@ import java.util.concurrent.ConcurrentHashMap;
 @SettingsContainer(module = Module.CORE)
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GuildSettingsCore {
 
     public static Map<String, Field> VALUES = new HashMap<>();
 
+    private long guildId;
+
     static {
         for (Field field : GuildSettingsCore.class.getDeclaredFields()) {
             if (field.getName().equals("VALUES")) continue;
-            if (field.getAnnotation(Setting.class) != null && !field.getAnnotation(Setting.class).directlyEditable()) continue;
+            if (field.getAnnotation(Setting.class) == null || !field.getAnnotation(Setting.class).directlyEditable()) continue;
             field.setAccessible(true);
             VALUES.put(field.getName().toLowerCase(), field);
         }
     }
 
     //region Boolean flags
-    @Setting(niceName = "Mention Prefix")
+    @Setting
     private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
 
-    @Setting(niceName = "Delete command after execution")
+    @Setting
     private boolean deleteCommand = true;
 
-    @Setting(niceName = "Use embeds for messages")
+    @Setting
     private boolean useEmbedForMessages = true;
 
-    @Setting(niceName = "Show permission errors")
+    @Setting
     private boolean showPermErrors = true; // Whether commands will silently fail on no permissions
 
-    @Setting(niceName = "Show module errors")
+    @Setting
     private boolean showModuleErrors = false;
 
-    @Setting(niceName = "Admins have all permissions")
+    @Setting
     private boolean adminsHaveAllPerms = true;
 
-    @Setting(niceName = "Allow tags to be used as commands")
+    @Setting
     private boolean allowTagCommands = true; // Whether tag commands will be executed by ;<tagname>
     //endregion
 
-    @Setting(niceName = "Enabled modules", directlyEditable = false)
-    private Set<Module> enabledModules = Sets.newConcurrentHashSet(
-            Sets.newHashSet(
-                    Module.CORE,
-                    Module.MANAGEMENT,
-                    Module.INFORMATIONAL
-            )
-    );
+    @Setting(directlyEditable = false)
+    private Set<Module> enabledModules = Sets.newConcurrentHashSet(Module.getModules(ModuleFlag.DEFAULT));
 
-    @Setting(niceName = "Prefix", directlyEditable = false)
+    @Setting(directlyEditable = false)
     private String prefix = Config.INS.getDefaultPrefix();
 
-    @Setting(niceName = "Tags", directlyEditable = false)
+    @Setting(directlyEditable = false)
     private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
+
+    public GuildSettingsCore(long guildId) {
+        this.guildId = guildId;
+    }
 
     //region Modules
     public boolean enableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
+        if (module.isPrivate()) {
             throw new IllegalArgumentException("This module is not available to be enabled!");
         }
         return this.enabledModules.add(module);
     }
 
     public boolean disableModule(Module module) {
-        if (module.isFlagEnabled(ModuleFlag.PRIVATE)) {
+        if (module.isPrivate()) {
             throw new IllegalArgumentException("This module is not available to be disabled!");
-        } else if (module.isFlagEnabled(ModuleFlag.REQUIRED)) {
+        } else if (module.isRequired()) {
             throw new IllegalArgumentException(String.format("Cannot disable the %s module!", module.toString().toLowerCase()));
         }
         return this.enabledModules.remove(module);
@@ -93,7 +97,7 @@ public class GuildSettingsCore {
 
     public boolean isModuleEnabled(Module module) {
         boolean isEnabled = this.enabledModules.contains(module);
-        if (!isEnabled && module.isFlagEnabled(ModuleFlag.REQUIRED)) {
+        if (!isEnabled && module.isRequired()) {
             this.enabledModules.add(module);
             return true;
         }
@@ -102,7 +106,9 @@ public class GuildSettingsCore {
 
     //endregion
 
-    public Map<String, Tag> getTags() { return Collections.unmodifiableMap(tags); }
+    public Map<String, Tag> getTags() {
+        return Collections.unmodifiableMap(tags);
+    }
 
     public Tag getTag(String key) {
         return tags.get(key);

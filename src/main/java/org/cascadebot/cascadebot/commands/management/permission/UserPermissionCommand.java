@@ -8,8 +8,8 @@ package org.cascadebot.cascadebot.commands.management.permission;
 import java.util.Set;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
@@ -17,7 +17,7 @@ public class UserPermissionCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.getUIMessaging().replyUsage(this);
+        context.getUIMessaging().replyUsage();
     }
 
     @Override
@@ -26,17 +26,12 @@ public class UserPermissionCommand implements ICommandMain {
     }
 
     @Override
-    public Set<String> getGlobalAliases() {
-        return Set.of("userpermissions", "user_permissions");
-    }
-
-    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("User permissions command", "permissions.user", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.user", false, Module.MANAGEMENT);
     }
 
     @Override
-    public Set<ICommandExecutable> getSubCommands() {
+    public Set<ISubCommand> getSubCommands() {
         return Set.of(new UserPermissionAddSubCommand(), new UserPermissionRemoveSubCommand(), new UserPermissionGroupSubCommand(),
                 new UserPermissionListSubCommand(), new UserPermissionTestSubCommand());
     }

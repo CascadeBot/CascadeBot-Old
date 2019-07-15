@@ -25,28 +25,28 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        ButtonGroup catButtons = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-        catButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
-            if (member.getUser().getIdLong() != catButtons.getOwner().getUser().getIdLong()) {
-                return;
-            }
-            try {
-                if (message.getEmbeds().size() > 0) {
-                    EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-                    embedBuilder.setImage(getCatUrl());
-                    message.editMessage(embedBuilder.build()).queue();
-                } else {
-                    context.getUIMessaging().replyImage(getCatUrl()).thenAccept(catMessage -> {
-                        catButtons.addButtonsToMessage(catMessage);
-                        catButtons.setMessage(catMessage.getIdLong());
-                        context.getData().addButtonGroup(context.getChannel(), catMessage, catButtons);
-                    });
-                    message.delete().queue();
+        ButtonGroup catButtons = new ButtonGroup(sender.getUser().getIdLong(), context.getUser().getIdLong(), context.getGuild().getIdLong());
+            catButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
+                if(member.getUser().getIdLong() != catButtons.getOwner().getUser().getIdLong()) {
+                    return;
                 }
-            } catch (IOException e) {
-                message.editMessage("Error loading cat picture " + UnicodeConstants.FROWNING).queue();
-            }
-        }));
+                try {
+                    if (message.getEmbeds().size() > 0) {
+                        EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+                        embedBuilder.setImage(getCatUrl());
+                        message.editMessage(embedBuilder.build()).queue();
+                    } else {
+                        context.getUIMessaging().replyImage(getCatUrl()).thenAccept(catMessage -> {
+                            catButtons.addButtonsToMessage(catMessage);
+                            catButtons.setMessage(catMessage.getIdLong());
+                            context.getData().addButtonGroup(context.getChannel(), catMessage, catButtons);
+                        });
+                        message.delete().queue();
+                    }
+                } catch (IOException e) {
+                    message.editMessage(context.i18n("commands.cat.error_loading")).queue();
+                }
+            }));
         try {
             context.getUIMessaging().replyImage(getCatUrl()).thenAccept(message -> {
                 catButtons.addButtonsToMessage(message);
@@ -54,7 +54,7 @@ public class CatCommand implements ICommandMain {
                 context.getData().addButtonGroup(context.getChannel(), message, catButtons);
             });
         } catch (IOException e) {
-            context.getTypedMessaging().replyDanger("Error loading cat picture " + UnicodeConstants.FROWNING);
+            context.getTypedMessaging().replyDanger(context.i18n("commands.cat.error_loading"));
         }
     }
 
@@ -76,12 +76,7 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Cat command", "cat", true);
-    }
-
-    @Override
-    public String description() {
-        return "Returns a random picture of a cat";
+        return CascadePermission.of("cat", true);
     }
 
 }

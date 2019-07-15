@@ -27,9 +27,4 @@ public class InviteCommand implements ICommandCore {
         return "invite";
     }
 
-    @Override
-    public String description() {
-        return "Returns the bot invite link, to invite the bot to other Discord guilds";
-    }
-
 }

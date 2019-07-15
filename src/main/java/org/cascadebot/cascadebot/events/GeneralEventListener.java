@@ -85,18 +85,4 @@ public class GeneralEventListener extends ListenerAdapter {
         }
     }
 
-    @Override
-    public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent event) {
-        if (event.getGuild().getIdLong() == Config.INS.getOfficialServerId()) {
-            CascadeBot.INS.getPermissionsManager().clearCacheForUser(event.getUser().getIdLong());
-        }
-    }
-
-    @Override
-    public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent event) {
-        if (event.getGuild().getIdLong() == Config.INS.getOfficialServerId()) {
-            CascadeBot.INS.getPermissionsManager().clearCacheForUser(event.getUser().getIdLong());
-        }
-    }
-
 }

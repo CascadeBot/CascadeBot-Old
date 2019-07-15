@@ -25,6 +25,7 @@ import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 import net.dv8tion.jda.core.requests.RestAction;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
@@ -63,6 +64,7 @@ public class CascadeBot {
 
     private long startupTime;
     private ShardManager shardManager;
+    private ArgumentManager argumentManager;
     private CommandManager commandManager;
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
@@ -206,12 +208,14 @@ public class CascadeBot {
             return;
         }
 
+        argumentManager = new ArgumentManager();
+        argumentManager.initArguments();
         commandManager = new CommandManager();
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
 
-        Metrics.INS.cacheMetrics.addCache("guild", GuildDataManager.getGuilds());
+        Metrics.INS.cacheMetrics.addCache("guilds", GuildDataManager.getGuilds());
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
@@ -270,6 +274,10 @@ public class CascadeBot {
 
     public ShardManager getShardManager() {
         return shardManager;
+    }
+
+    public ArgumentManager getArgumentManager() {
+        return argumentManager;
     }
 
     public CommandManager getCommandManager() {

@@ -24,14 +24,14 @@ public class KickCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.getUIMessaging().replyUsage(this);
+            context.getUIMessaging().replyUsage();
             return;
         }
 
         Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
 
         if (targetMember == null) {
-            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed("Could not find that user!", context.getUser()));
+            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed(context.i18n("responses.cannot_find_user"), context.getUser()));
             return;
         }
 
@@ -55,21 +55,7 @@ public class KickCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Kick Command", "kick", false, Permission.KICK_MEMBERS);
-    }
-
-    @Override
-    public String description() {
-        return "Kicks the specified user";
-    }
-
-    @Override
-    public Set<Argument> getUndefinedArguments() {
-        return Set.of(Argument.of(
-                "member", "", ArgumentType.REQUIRED, Set.of(
-                        Argument.of("reason", "Kicks a member", ArgumentType.OPTIONAL)
-                )
-        ));
+        return CascadePermission.of("kick", false, Permission.KICK_MEMBERS);
     }
 
     @Override

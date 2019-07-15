@@ -5,125 +5,116 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 
-import java.util.Collections;
 import java.util.Set;
 
 @Getter
 public class Argument {
 
-    private final String arg;
-    private final String description;
+    private final String id;
     private final Set<Argument> subArgs;
     private final ArgumentType type;
+    private final boolean displayAlone;
     private final Set<String> aliases;
 
-    private Argument(String arg, String description, Set<Argument> subArgs, ArgumentType type, Set<String> aliases) {
-        this.arg = arg.toLowerCase(); //This probably isn't needed but megh
-        this.description = description;
-        this.subArgs = Collections.unmodifiableSet(subArgs);
+    Argument(String id, ArgumentType type, boolean displayAlone, Set<Argument> subArgs, Set<String> aliases) {
+        this.id = id;
+        this.subArgs = Set.copyOf(subArgs);
         this.type = type;
-        this.aliases = Collections.unmodifiableSet(aliases);
+        this.displayAlone = displayAlone;
+        this.aliases = Set.copyOf(aliases);
     }
 
-    public static Argument of(String arg, String description) {
-        return new Argument(arg, description, Set.of(), ArgumentType.COMMAND, Set.of());
+    public String name(Locale locale) {
+        if (type != ArgumentType.COMMAND) {
+            return Language.i18n(locale, "arguments." + id.substring(id.lastIndexOf('.') + 1));
+        }
+        int sepCount = StringUtils.countMatches(id, '.');
+        if (sepCount == 1) {
+            ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id.substring(0, id.lastIndexOf('.')));
+            if (command != null) {
+                var subCommand = command.getSubCommands().stream().filter(sub -> sub.command().equals(id.substring(id.lastIndexOf('.') + 1))).findFirst().orElse(null);
+                if (subCommand != null) {
+                    return subCommand.command(locale);
+                }
+            }
+        } else if (sepCount == 0) {
+            ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id);
+            if (command != null) {
+                return command.command(locale);
+            }
+        }
+
+        if (Language.getLanguage(locale).getElement("commands." + id).isPresent()) {
+            return Language.i18n(locale, "commands." + id + ".command");
+        }
+        return Language.i18n(locale, "arguments." + id.replace(".", "#") + ".name");
     }
 
-    public static Argument ofA(String arg, String description, Set<String> aliases) {
-        return new Argument(arg, description, Set.of(), ArgumentType.COMMAND, aliases);
-    }
+    public String description(Locale locale) {
+        if (type != ArgumentType.COMMAND) {
+            Argument parent = CascadeBot.INS.getArgumentManager().getParent(id);
+            return parent != null ? parent.description(locale) : "";
+        }
+        int sepCount = StringUtils.countMatches(id, '.');
+        if (sepCount == 1) {
+            ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id.substring(0, id.lastIndexOf('.')));
+            if (command != null) {
+                var subCommand = command.getSubCommands().stream().filter(sub -> sub.command().equals(id.substring(id.lastIndexOf('.') + 1))).findFirst().orElse(null);
+                if (subCommand != null) {
+                    return subCommand.description(locale);
+                }
+            }
+        } else if (sepCount == 0) {
+            ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(id);
+            if (command != null) {
+                return command.description(locale);
+            }
+        }
 
-    public static Argument of(String arg, String description, ArgumentType type) {
-        return new Argument(arg, description, Set.of(), type, Set.of());
-    }
+        if (Language.getLanguage(locale).getElement("commands." + id).isPresent()) {
+            return Language.i18n(locale, "commands." + id + ".description");
+        }
+        return Language.i18n(locale, "arguments." + id.replace(".", "#") + ".description");
 
-    public static Argument ofA(String arg, String description, ArgumentType type, Set<String> aliases) {
-        return new Argument(arg, description, Set.of(), type, aliases);
-    }
-
-    public static Argument of(String arg, String description, Set<Argument> subArgs) {
-        return new Argument(arg, description, subArgs, ArgumentType.COMMAND, Set.of());
-    }
-
-    public static Argument ofA(String arg, String description, Set<Argument> subArgs, Set<String> aliases) {
-        return new Argument(arg, description, subArgs, ArgumentType.COMMAND, aliases);
-    }
-
-    public static Argument of(String arg, String description, ArgumentType type, Set<Argument> subArgs) {
-        return new Argument(arg, description, subArgs, type, Set.of());
     }
 
     /**
      * Gets the usage string.
      * <p>
      * Formatting:
-     * - Aliased arguments are shown as {@code <alias1/alias2>} for as many aliases as the argument has.
+     * - Aliased arguments are shown as {@code <alias1|alias2>} for as many aliases as the argument has.
      * - A required parameter is show as {@code <argument>}
      * - An optional parameter is show as {@code [argument]}
      *
      * @param base The base command/prefix to use. Example: ';help '.
      * @return A string representing the usage.
      */
-    protected String getUsageString(String base) {
+    public String getUsageString(Locale locale, String base) {
         StringBuilder usageBuilder = new StringBuilder();
-        if (subArgs.size() > 0) {
-            String field = this.toString();
-            if (!StringUtils.isBlank(description) && (subArgs.isEmpty() || subArgs.stream().allMatch(argument -> argument.getType() == ArgumentType.OPTIONAL))) {
-                usageBuilder.append("`").append(base).append(arg).append("` - ").append(description).append('\n');
-            }
-            for (Argument subArg : subArgs) {
-                usageBuilder.append(subArg.getUsageString(base + field + " "));
-            }
-        } else {
-            usageBuilder.append("`").append(base).append(this.toString()).append("`");
-            if (!StringUtils.isBlank(description)) {
-                usageBuilder.append(" - ").append(description);
+        String field = this.getArgument(locale);
+
+        if (isDisplayAlone() || subArgs.size() == 0) {
+            usageBuilder.append("`").append(base).append(field).append("`");
+            if (!StringUtils.isBlank(description(locale))) {
+                usageBuilder.append(" - ").append(description(locale));
             }
             usageBuilder.append('\n');
+        }
+        for (Argument subArg : subArgs) {
+            usageBuilder.append(subArg.getUsageString(locale, base + field + " "));
         }
 
         return usageBuilder.toString();
     }
 
-    /**
-     * Checks for this argument at a given position.
-     *
-     * @param args The arguments sent in from the command.
-     * @param pos  The position this argument should be in.
-     * @return If the argument exists at that position.
-     */
-    public boolean argExists(String[] args, int pos) {
-        if (args.length <= pos) {
-            return false;
-        }
-        if (type.equals(ArgumentType.REQUIRED)) {
-            return true;
-        }
-        if (!args[pos].equalsIgnoreCase(arg) && !this.type.equals(ArgumentType.OPTIONAL)) {
-            for (String alias : aliases) {
-                if (!args[pos].equalsIgnoreCase(alias)) {
-                    return false;
-                }
-            }
-        }
-        if (this.type.equals(ArgumentType.COMMAND) && this.subArgs.size() > 0 && this.description.isEmpty()) {
-            for (Argument sub : this.subArgs) {
-                if (sub.type.equals(ArgumentType.REQUIRED) || sub.type.equals(ArgumentType.COMMAND)) {
-                    return sub.argExists(args, pos + 1);
-                }
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        String argument = arg;
+    public String getArgument(Locale locale) {
+        String argument = name(locale).isBlank() ? id.substring(id.lastIndexOf('.') + 1) : name(locale);
         if (aliases.size() > 0) {
             StringBuilder paramBuilder = new StringBuilder();
             paramBuilder.append(argument);
@@ -141,14 +132,6 @@ public class Argument {
                 break;
         }
         return argument;
-    }
-
-    public boolean argEquals(String arg) {
-        return this.arg.equalsIgnoreCase(arg);
-    }
-
-    public boolean argStartsWith(String start) {
-        return this.arg.startsWith(start.toLowerCase());
     }
 
     //TODO implement utils for checking arguments in the command. we have a class here why not use it.

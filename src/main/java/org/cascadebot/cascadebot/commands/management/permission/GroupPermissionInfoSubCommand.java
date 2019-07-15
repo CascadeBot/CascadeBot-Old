@@ -12,6 +12,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Role;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
@@ -19,18 +20,18 @@ import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
-public class GroupPermissionInfoSubCommand implements ICommandExecutable {
+public class GroupPermissionInfoSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage(this, "groupperms");
+            context.getUIMessaging().replyUsage();
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getMessage(0), group -> {
             if (group.getPermissions().isEmpty() && group.getRoleIds().isEmpty()) {
-                context.getTypedMessaging().replyWarning("Group has no permissions or roles");
+                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.info.empty_group"));
                 return;
             }
 
@@ -54,7 +55,7 @@ public class GroupPermissionInfoSubCommand implements ICommandExecutable {
                 List<String> rolesPageContent = PageUtils.splitString(rolesBuilder.toString(), 1000, '\n');
                 for (String roleContent : rolesPageContent) {
                     EmbedBuilder rolesEmbedBuilder = new EmbedBuilder();
-                    rolesEmbedBuilder.setTitle("Linked Roles");
+                    rolesEmbedBuilder.setTitle(context.i18n("commands.groupperms.info.roles_title"));
                     rolesEmbedBuilder.setDescription("```" + roleContent + "```");
                     pageList.add(new PageObjects.EmbedPage(rolesEmbedBuilder));
                 }
@@ -64,7 +65,7 @@ public class GroupPermissionInfoSubCommand implements ICommandExecutable {
                 List<String> permissionsPageContent = PageUtils.splitString(permissionBuilder.toString(), 1000, '\n');
                 for (String permsContent : permissionsPageContent) {
                     EmbedBuilder permissionsEmbedBuilder = new EmbedBuilder();
-                    permissionsEmbedBuilder.setTitle("Permissions");
+                    permissionsEmbedBuilder.setTitle(context.i18n("commands.groupperms.info.perms_title"));
                     permissionsEmbedBuilder.setDescription("```" + permsContent + "```");
                     pageList.add(new PageObjects.EmbedPage(permissionsEmbedBuilder));
                 }
@@ -80,8 +81,13 @@ public class GroupPermissionInfoSubCommand implements ICommandExecutable {
     }
 
     @Override
+    public String parent() {
+        return "groupperms";
+    }
+
+    @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("Group permissions info sub command", "permissions.group.info", false, Module.MANAGEMENT);
+        return CascadePermission.of("permissions.group.info", false, Module.MANAGEMENT);
     }
 
     @Override
