@@ -220,7 +220,7 @@ public class CascadeBot {
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
-        
+
         RestAction.DEFAULT_FAILURE = throwable -> {
             if (throwable instanceof ErrorResponseException) {
                 ErrorResponseException exception = (ErrorResponseException) throwable;

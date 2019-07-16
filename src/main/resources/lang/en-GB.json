@@ -11,7 +11,8 @@
     },
     "invite": {
       "command": "invite",
-      "description": "Returns the bot invite link, to invite the bot to other Discord guilds."
+      "description": "Returns the bot invite link, to invite the bot to other Discord guilds.",
+      "sent_more_info": "We've sent you a DM with more information!"
     },
     "prefix": {
       "command": "prefix",
