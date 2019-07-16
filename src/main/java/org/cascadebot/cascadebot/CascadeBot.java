@@ -89,7 +89,7 @@ public class CascadeBot {
         }
 
         if (System.getenv("SENTRY_DSN") == null) {
-            LOGGER.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
+            LOGGER.warn("You haven't set a Sentry DSN in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
         }
         INS.init();
     }
@@ -220,7 +220,7 @@ public class CascadeBot {
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
-
+        
         RestAction.DEFAULT_FAILURE = throwable -> {
             if (throwable instanceof ErrorResponseException) {
                 ErrorResponseException exception = (ErrorResponseException) throwable;
