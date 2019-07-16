@@ -5,8 +5,6 @@
 
 package org.cascadebot.cascadebot.utils;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import lombok.experimental.UtilityClass;
@@ -111,7 +109,7 @@ public class FormatUtils {
             sb.append("__**").append(embed.getTitle()).append("**__\n");
         }
         if (embed.getDescription() != null) {
-            sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
+            sb.append(embed.getDescription()).append("\n\n");
         }
         List<MessageEmbed.Field> inline = null;
         int i = 0;
@@ -134,7 +132,7 @@ public class FormatUtils {
                 }
                 i = 0;
                 sb.append("**").append(field.getName()).append("**\n");
-                sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(field.getValue()))).append("\n\n");
+                sb.append(field.getValue()).append("\n\n");
             }
         }
         if (inline != null) {
