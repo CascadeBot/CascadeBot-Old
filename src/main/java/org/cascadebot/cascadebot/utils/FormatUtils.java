@@ -178,6 +178,14 @@ public class FormatUtils {
     }
     //endregion
 
+    /**
+     * Formats date and time by RFC 1123
+     *
+     * @param dateTime the date time to be formatted
+     * @return The formatted string
+     * @deprecated Use the i18n instead
+     */
+    @Deprecated
     public static String formatDateTime(OffsetDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
