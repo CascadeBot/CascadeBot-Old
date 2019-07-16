@@ -11,6 +11,7 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.MessageType;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.core.requests.ErrorResponse;
 import org.apache.commons.lang3.ArrayUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
@@ -27,6 +28,7 @@ import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
@@ -240,11 +242,12 @@ public class CommandListener extends ListenerAdapter {
     private void deleteMessages(ICommandExecutable command, CommandContext context) {
         if (context.getCoreSettings().isDeleteCommand() && command.deleteMessages()) {
             if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
-                context.getMessage().delete().queue();
+                context.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
             } else {
-                context.getGuild().getOwner().getUser().openPrivateChannel().queue(channel -> channel.sendMessage(context.i18n("responses.cant_delete_guild_messages")).queue(), exception -> {
-                    // Sad face :( We'll just let them suffer in silence.
-                });
+                context.getGuild().getOwner().getUser().openPrivateChannel().queue(
+                        channel -> channel.sendMessage(context.i18n("responses.cant_delete_guild_messages")).queue(),
+                        DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)
+                );
             }
         }
     }

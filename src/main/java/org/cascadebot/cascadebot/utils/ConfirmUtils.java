@@ -11,6 +11,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
@@ -64,7 +65,7 @@ public class ConfirmUtils {
 
         Task.getScheduler().schedule(() -> {
             confirmedMap.remove(actionKey, action);
-            sentMessage.delete().queue();
+            sentMessage.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
         }, expiry, TimeUnit.MILLISECONDS);
 
         return true;
@@ -113,7 +114,7 @@ public class ConfirmUtils {
 
         @Override
         public void run() {
-            message.delete().queue();
+            message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
             execute();
         }
 

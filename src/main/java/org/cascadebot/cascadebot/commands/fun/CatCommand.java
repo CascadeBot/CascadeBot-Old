@@ -9,12 +9,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.core.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.WebUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -41,7 +43,7 @@ public class CatCommand implements ICommandMain {
                             catButtons.setMessage(catMessage.getIdLong());
                             context.getData().addButtonGroup(context.getChannel(), catMessage, catButtons);
                         });
-                        message.delete().queue();
+                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                     }
                 } catch (IOException e) {
                     message.editMessage(context.i18n("commands.cat.error_loading")).queue();
