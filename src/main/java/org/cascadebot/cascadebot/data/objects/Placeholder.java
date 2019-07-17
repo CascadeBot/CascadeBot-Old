@@ -59,7 +59,7 @@ public enum Placeholder {
             case "id": return channel.getId();
             case "mention": return channel.getAsMention();
             case "topic": return channel.getTopic();
-            case "creation": return FormatUtils.formatDateTime(channel.getCreationTime());
+            case "creation": return FormatUtils.formatDateTime(channel.getCreationTime(), context.getLocale());
             case "parent": return channel.getParent() == null ? "No channel parent" : channel.getParent().getName();
             default: return channel.getName();
         }
@@ -67,7 +67,7 @@ public enum Placeholder {
     //endregion
 
     //region Other
-    TIME((context, args) -> FormatUtils.formatDateTime(OffsetDateTime.now())),
+    TIME((context, args) -> FormatUtils.formatDateTime(OffsetDateTime.now(), context.getLocale())),
     ARGS((context, args) -> {
         if (args.length == 0) return "";
         int arg = NumberUtils.toInt(args[0], -1);
