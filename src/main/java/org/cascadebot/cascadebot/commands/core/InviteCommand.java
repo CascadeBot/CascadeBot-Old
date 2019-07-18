@@ -17,11 +17,11 @@ public class InviteCommand implements ICommandCore {
     public void onCommand(Member sender, CommandContext context) {
         if (Environment.isProduction()) {
             context.getDirectMessageMessaging().replyDM(CascadeBot.getInvite(), true);
-            context.getTypedMessaging().replyInfo(context.i18n("commands.invite.sent_more_info"));
         } else {
             context.getDirectMessageMessaging().replyDM("https://www.youtube.com/watch?v=ARJ8cAGm6JE");
-            context.getTypedMessaging().replyInfo(context.i18n("commands.invite.sent_more_info"));
+
         }
+        context.getTypedMessaging().replyInfo(context.i18n("commands.invite.sent_more_info"));
     }
 
     @Override
