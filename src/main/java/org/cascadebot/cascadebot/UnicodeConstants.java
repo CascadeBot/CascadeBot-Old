@@ -15,7 +15,7 @@ public class UnicodeConstants {
 
     public static final String INFORMATION = "\u2139"; // ℹ
     public static final String TICK = "\u2705"; // ✅
-    public static final String WARNING = "\26A0"; // ⚠
+    public static final String WARNING = "\u26A0"; // ⚠
     public static final String POLICE = "\uD83D\uDC6E"; // 👮
     public static final String ROBOT = "\uD83E\uDD16"; // 🤖
     public static final String RED_CROSS = "\u274C"; // ❌

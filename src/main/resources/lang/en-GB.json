@@ -354,6 +354,7 @@
         "command": "save",
         "description": "Saves a playlist.",
         "scope_not_found": "Scope `{0}` not found!",
+        "nothing_to_save": "There's nothing to save! The queue for this server is empty.",
         "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it.",
         "playlist_overwrite": "Playlist already exists. Would you like to overwrite it?",
         "saved_playlist": "Saved playlist `{0}` in scope `{1}`."
