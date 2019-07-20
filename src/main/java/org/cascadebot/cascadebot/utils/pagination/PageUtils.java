@@ -122,7 +122,9 @@ public class PageUtils {
                 i = 0;
             }
         }
-        pages.add(new PageObjects.TablePage(tableBuilder.build()));
+        if(tableBuilder.getBody().size() > 0) {
+            pages.add(new PageObjects.TablePage(tableBuilder.build()));
+        }
         return pages;
     }
 
