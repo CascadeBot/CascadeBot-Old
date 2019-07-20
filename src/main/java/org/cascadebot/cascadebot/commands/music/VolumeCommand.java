@@ -27,13 +27,6 @@ public class VolumeCommand implements ICommandMain {
             return;
         }
 
-        // Limits the volume command to only guilds with the music services flag
-        // Allow developers to bypass the check to fix borked audio if need be.
-        if (!context.getData().isFlagEnabled(Flag.MUSIC_SERVICES) && !Security.isAuthorised(sender.getUser().getIdLong(), SecurityLevel.DEVELOPER)) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.volume.no_flag"));
-            return;
-        }
-
         int volume;
         if (context.isArgInteger(0)) {
             volume = context.getArgAsInteger(0);

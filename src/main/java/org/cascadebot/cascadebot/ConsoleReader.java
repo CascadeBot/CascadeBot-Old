@@ -20,9 +20,9 @@ public class ConsoleReader implements Runnable {
     @Override
     public void run() {
         CascadeBot.LOGGER.info("Console reading up and running!");
-        boolean stop = false;
-        while (!stop && !Thread.interrupted()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        //boolean stop = false;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        while (!Thread.interrupted()) {
             String line;
             try {
                 while ((line = reader.readLine()) != null) {

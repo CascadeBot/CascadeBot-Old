@@ -47,7 +47,7 @@ public class UserInfoCommand implements ICommandMain {
         EmbedBuilder builder = new EmbedBuilder(MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser()));
 
         if (member != null) {
-            builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getJoinDate()), true);
+            builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getJoinDate(), context.getLocale()), true);
             statusName = LanguageUtils.getEnumI18n(context.getLocale(), "statuses", member.getOnlineStatus());
             if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
                 status = context.globalEmote("streaming");
@@ -67,14 +67,14 @@ public class UserInfoCommand implements ICommandMain {
 
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
-        builder.addField(context.i18n("commands.userinfo.user_created"), FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
+        builder.addField(context.i18n("commands.userinfo.user_created"), FormatUtils.formatDateTime(userForInfo.getCreationTime(), context.getLocale()), true);
         builder.addField(context.i18n("commands.userinfo.user_id"), userForInfo.getId(), true);
         builder.addField(context.i18n("commands.userinfo.user_mutual_servers"), String.valueOf(userForInfo.getMutualGuilds().size()), true);
         pageList.add(new PageObjects.EmbedPage(builder, false));
         long userId = userForInfo.getIdLong();
         SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
         if (userSecurityLevel != null) {
-            builder.addField(context.i18n("commands.userinfo.user_official_role"), FormatUtils.formatEnum(userSecurityLevel), true);
+            builder.addField(context.i18n("commands.userinfo.user_official_role"), FormatUtils.formatEnum(userSecurityLevel, context.getLocale()), true);
         }
 
         if (member != null) {

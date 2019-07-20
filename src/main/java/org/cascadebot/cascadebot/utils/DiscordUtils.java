@@ -13,6 +13,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.Role;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.exceptions.ErrorResponseException;
+import net.dv8tion.jda.core.requests.ErrorResponse;
 import net.dv8tion.jda.core.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
@@ -20,6 +21,7 @@ import org.cascadebot.shared.Regex;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -157,6 +159,23 @@ public class DiscordUtils {
         }
 
         return id;
+    }
+
+    public static Consumer<? super Throwable> handleExpectedErrors(ErrorResponse... expectedErrors) {
+        return error -> {
+            if (error instanceof ErrorResponseException) {
+                for (ErrorResponse expectedError : expectedErrors) {
+                    if (((ErrorResponseException) error).getErrorResponse().equals(expectedError)) {
+                        // We expected this error, do nothing!
+                        return;
+                    }
+                }
+                // Rethrow the error if it's something unexpected
+                throw (ErrorResponseException) error;
+            }
+            // This shouldn't happen but ¯\_(ツ)_/¯
+            if (error instanceof RuntimeException) throw (RuntimeException) error;
+        };
     }
 
 }

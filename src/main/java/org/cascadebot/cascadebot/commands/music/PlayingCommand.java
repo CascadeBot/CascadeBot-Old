@@ -5,6 +5,7 @@ import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.core.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -17,11 +18,10 @@ import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
-
-import java.util.Set;
 
 public class PlayingCommand implements ICommandMain {
 
@@ -96,7 +96,7 @@ public class PlayingCommand implements ICommandMain {
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.STOP, (runner, channel, message) -> {
                 if (context.hasPermission(runner, "stop")) {
                     context.getMusicPlayer().stop();
-                    message.delete().queue();
+                    message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 }
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
