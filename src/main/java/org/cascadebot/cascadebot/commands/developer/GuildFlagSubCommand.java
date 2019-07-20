@@ -10,12 +10,10 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.Flag;
+import org.cascadebot.cascadebot.data.objects.donation.Flag;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -23,7 +21,6 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.shared.Regex;
 
 import java.util.Arrays;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class GuildFlagSubCommand implements ISubCommand {

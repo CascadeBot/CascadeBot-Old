@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -28,20 +27,11 @@ import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
-import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Locale;
+import org.cascadebot.cascadebot.data.objects.donation.Flag;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
