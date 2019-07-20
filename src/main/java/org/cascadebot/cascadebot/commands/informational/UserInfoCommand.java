@@ -44,7 +44,8 @@ public class UserInfoCommand implements ICommandMain {
         Member member = context.getGuild().getMember(userForInfo);
         String status = "";
         String statusName = "";
-        EmbedBuilder builder = new EmbedBuilder(MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser()));
+        EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
+
 
         if (member != null) {
             builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getJoinDate(), context.getLocale()), true);
@@ -63,14 +64,12 @@ public class UserInfoCommand implements ICommandMain {
             }
         }
 
-        List<Page> pageList = new ArrayList<>();
 
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
         builder.addField(context.i18n("commands.userinfo.user_created"), FormatUtils.formatDateTime(userForInfo.getCreationTime(), context.getLocale()), true);
         builder.addField(context.i18n("commands.userinfo.user_id"), userForInfo.getId(), true);
         builder.addField(context.i18n("commands.userinfo.user_mutual_servers"), String.valueOf(userForInfo.getMutualGuilds().size()), true);
-        pageList.add(new PageObjects.EmbedPage(builder, false));
         long userId = userForInfo.getIdLong();
         SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
         if (userSecurityLevel != null) {
@@ -95,23 +94,8 @@ public class UserInfoCommand implements ICommandMain {
                 builder.addField(context.i18n("commands.userinfo.activity"), gameStatus, true);
             }
 
-            StringBuilder stringer = new StringBuilder();
-            String author = "Roles for: " + sender.getUser().getAsTag();
-            EmbedBuilder embed = new EmbedBuilder(MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser()).setAuthor(author));
-            int i = 1;
-            for (Role role : member.getRoles()) {
-                if (i % 20 == 0) {
-                    pageList.add(new PageObjects.EmbedPage(
-                            new EmbedBuilder(MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser()).setAuthor(author).setAuthor(author)),
-                            false));
-                    stringer = new StringBuilder();
-                }
-                stringer.append("<@&" + role.getId() + ">" + " ID: " + role.getId() + "\n");
-                i = i + 1;
-            }
-            pageList.add(new PageObjects.EmbedPage(embed.setDescription(stringer.toString()), false));
+            context.reply(builder.build());
         }
-        context.getUIMessaging().sendPagedMessage(pageList);
     }
 
     @Override
