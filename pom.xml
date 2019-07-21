@@ -27,6 +27,9 @@
                     <source>11</source>
                     <target>11</target>
                     <release>11</release>
+                    <compilerArguments>
+                        <parameters/>
+                    </compilerArguments>
                 </configuration>
             </plugin>
             <plugin>
