@@ -40,7 +40,7 @@ public class ConfirmUtils {
         Message sentMessage;
         try {
             sentMessage = Messaging.sendMessageTypeMessage(channel, type, message, useEmbed).get();
-            action.userID = userId;
+            action.userId = userId;
             action.message = sentMessage;
             confirmedMap.put(actionKey, action);
         } catch (InterruptedException | ExecutionException e) {
@@ -54,7 +54,7 @@ public class ConfirmUtils {
             Task.getScheduler().schedule(() -> {
                 ButtonGroup group = new ButtonGroup(userId, channel.getIdLong(), channel.getGuild().getIdLong());
                 group.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel1, message1) -> {
-                    if (runner.getUser().getIdLong() != action.userID) return;
+                    if (runner.getUser().getIdLong() != action.userId) return;
                     action.run();
                 }));
                 group.addButtonsToMessage(sentMessage);
@@ -99,17 +99,17 @@ public class ConfirmUtils {
     //endregion
 
     public static boolean hasConfirmedAction(String actionKey, long userId) {
-        return confirmedMap.entries().stream().anyMatch(entry -> entry.getKey().equals(actionKey) && entry.getValue().userID == userId);
+        return confirmedMap.entries().stream().anyMatch(entry -> entry.getKey().equals(actionKey) && entry.getValue().userId == userId);
     }
 
     public static void completeAction(String actionKey, long userId) {
-        Optional<Map.Entry<String, ConfirmRunnable>> entryOptional = confirmedMap.entries().stream().filter(entry -> entry.getKey().equals(actionKey) && entry.getValue().userID == userId).findFirst();
+        Optional<Map.Entry<String, ConfirmRunnable>> entryOptional = confirmedMap.entries().stream().filter(entry -> entry.getKey().equals(actionKey) && entry.getValue().userId == userId).findFirst();
         entryOptional.ifPresent(stringConfirmRunnableEntry -> stringConfirmRunnableEntry.getValue().run());
     }
 
     public abstract static class ConfirmRunnable implements Runnable {
 
-        private long userID;
+        private long userId;
         private Message message;
 
         @Override

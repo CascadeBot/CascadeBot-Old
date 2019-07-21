@@ -140,11 +140,11 @@ public class PlayingCommand implements ICommandMain {
 
     }
 
-    private MessageEmbed getSongEmbed(CascadePlayer player, long guildID) {
+    private MessageEmbed getSongEmbed(CascadePlayer player, long guildId) {
         AudioTrack track = player.getPlayer().getPlayingTrack();
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         if (track == null) {
-            embedBuilder.setDescription(Language.i18n(guildID, "commands.playing.no_music_playing"));
+            embedBuilder.setDescription(Language.i18n(guildId, "commands.playing.no_music_playing"));
             return embedBuilder.build();
         }
         embedBuilder.setAuthor(track.getInfo().author);
@@ -152,22 +152,22 @@ public class PlayingCommand implements ICommandMain {
         if (player.getArtwork() != null) {
             embedBuilder.setThumbnail(player.getArtwork());
         }
-        embedBuilder.addField(Language.i18n(guildID, "words.status"), player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " " + Language.i18n(guildID, "words.paused") : UnicodeConstants.PLAY + " " + Language.i18n(guildID, "words.playing"), true);
+        embedBuilder.addField(Language.i18n(guildId, "words.status"), player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " " + Language.i18n(guildId, "words.paused") : UnicodeConstants.PLAY + " " + Language.i18n(guildId, "words.playing"), true);
 
         if (!track.getInfo().isStream) {
-            embedBuilder.addField(Language.i18n(guildID, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildID).getCoreSettings().isUseEmbedForMessages()), false);
+            embedBuilder.addField(Language.i18n(guildId, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildId).getCoreSettings().isUseEmbedForMessages()), false);
         }
 
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getPlayer().getTrackPosition()) + " / " +
                 (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
-        embedBuilder.addField(Language.i18n(guildID, "words.volume"), player.getPlayer().getVolume() + "%", true);
-        embedBuilder.addField(Language.i18n(guildID, "commands.playing.loop_mode"), FormatUtils.formatEnum(player.getLoopMode(), Language.getGuildLocale(guildID)), true);
+        embedBuilder.addField(Language.i18n(guildId, "words.volume"), player.getPlayer().getVolume() + "%", true);
+        embedBuilder.addField(Language.i18n(guildId, "commands.playing.loop_mode"), FormatUtils.formatEnum(player.getLoopMode(), Language.getGuildLocale(guildId)), true);
         if (track.getUserData() instanceof Long) { //TODO find out why user data sometimes gets set to null.
-            embedBuilder.addField(Language.i18n(guildID, "words.requested_by"), CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
+            embedBuilder.addField(Language.i18n(guildId, "words.requested_by"), CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
         }
         AudioTrack next = player.getQueue().peek();
         if (next != null) {
-            embedBuilder.addField(Language.i18n(guildID, "commands.playing.up_next"), "**" + next.getInfo().title + "**\n" + Language.i18n(guildID, "words.requested_by") +
+            embedBuilder.addField(Language.i18n(guildId, "commands.playing.up_next"), "**" + next.getInfo().title + "**\n" + Language.i18n(guildId, "words.requested_by") +
                     CascadeBot.INS.getShardManager().getUserById((Long) next.getUserData()).getAsTag(), false);
         }
 

@@ -128,9 +128,9 @@ public class DiscordUtils {
         return getAllRoles(member).stream().map(Role::getIdLong).collect(Collectors.toSet());
     }
 
-    public static Set<Long> getAllOfficialRoleIds(long userID) {
-        if (Config.INS.getOfficialServerId() != -1 && getOfficialGuild() != null && getOfficialGuild().getMemberById(userID) != null) {
-            return getAllRoleIds(getOfficialGuild().getMemberById(userID));
+    public static Set<Long> getAllOfficialRoleIds(long userId) {
+        if (Config.INS.getOfficialServerId() != -1 && getOfficialGuild() != null && getOfficialGuild().getMemberById(userId) != null) {
+            return getAllRoleIds(getOfficialGuild().getMemberById(userId));
         } else {
             return Set.of();
         }
