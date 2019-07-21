@@ -1,0 +1,113 @@
+# source: http://localhost:8080/graphql
+# timestamp: Sun Jul 21 2019 10:27:41 GMT+0100 (British Summer Time)
+
+"""Built-in scalar representing an instant in time"""
+scalar Date
+
+enum Flag {
+  BETA
+  SPOTIFY
+  MUSIC_SERVICES
+}
+
+type Group {
+  name: String
+  roleIds: [Long]
+  id: String
+  permissions: [String]
+}
+
+type GuildCommandInfo {
+  defaultCommand: String
+  forceDefault: Boolean!
+  aliases: [String]
+  command: String
+  enabled: Boolean!
+}
+
+type GuildData {
+  guildCommandInfos: [GuildCommandInfo]
+  enabledFlags: [Flag]
+  stateLock: UUID
+  guildPermissions: GuildPermissions
+  locale: Locale
+  creationDate: Date
+  guildId: Long!
+  coreSettings: GuildSettingsCore
+}
+
+type GuildPermissions {
+  mode: PermissionMode
+  groups: [Group]
+}
+
+type GuildSettingsCore {
+  moduleEnabled(module: Module): Boolean!
+  adminsHaveAllPerms: Boolean!
+  prefix: String
+  useEmbedForMessages: Boolean!
+  guildId: Long!
+  showModuleErrors: Boolean!
+  tags: Map_String_TagScalar
+  deleteCommand: Boolean!
+  showPermErrors: Boolean!
+  VALUES: Map_String_FieldScalar
+  enabledModules: [Module]
+  mentionPrefix: Boolean!
+  allowTagCommands: Boolean!
+}
+
+enum Locale {
+  ENGLISH_UK
+  ENGLISH_US
+}
+
+"""Long type"""
+scalar Long
+
+"""Built-in scalar for map-like structures"""
+scalar Map_String_FieldScalar
+
+"""Built-in scalar for map-like structures"""
+scalar Map_String_TagScalar
+
+enum Module {
+  CORE
+  MANAGEMENT
+  MUSIC
+  INFORMATIONAL
+  MODERATION
+  FUN
+  DEVELOPER
+}
+
+enum PermissionMode {
+  HIERARCHICAL
+  MOST_RESTRICTIVE
+}
+
+type Playlist {
+  name: String
+  id: String!
+  ownerId: Long!
+  tracks: [String]
+  scope: PlaylistScope
+}
+
+enum PlaylistScope {
+  GUILD
+  USER
+}
+
+"""Query root"""
+type Query {
+  guild(id: Long!): GuildData
+  allPlaylists(scope: PlaylistScope!, ownerId: Long!): [Playlist]!
+  playlist(id: String!): Playlist
+}
+
+"""Unrepresentable type"""
+scalar UNREPRESENTABLE
+
+"""UUID String"""
+scalar UUID
