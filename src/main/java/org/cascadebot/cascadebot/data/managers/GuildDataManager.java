@@ -64,6 +64,7 @@ public final class GuildDataManager {
     }
 
     public static GuildData getGuildData(long id) {
+        if (CascadeBot.INS.getShardManager().getGuildById(id) == null) return null;
         return guilds.get(id);
     }
 
