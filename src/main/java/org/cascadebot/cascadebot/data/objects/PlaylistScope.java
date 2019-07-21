@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
-public enum PlaylistType {
+public enum PlaylistScope {
     GUILD,
     USER
 }

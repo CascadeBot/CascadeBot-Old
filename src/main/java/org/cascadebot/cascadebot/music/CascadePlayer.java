@@ -20,7 +20,7 @@ import net.dv8tion.jda.core.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
 import org.cascadebot.cascadebot.data.objects.Playlist;
-import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.data.objects.PlaylistScope;
 import org.cascadebot.cascadebot.events.PlayerListener;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
@@ -194,8 +194,8 @@ public class CascadePlayer {
     }
 
     public void loadPlaylist(String name, Member sender, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
-        Playlist guild = PlaylistManager.getPlaylistByName(sender.getGuild().getIdLong(), PlaylistType.GUILD, name);
-        Playlist user = PlaylistManager.getPlaylistByName(sender.getUser().getIdLong(), PlaylistType.USER, name);
+        Playlist guild = PlaylistManager.getPlaylistByName(sender.getGuild().getIdLong(), PlaylistScope.GUILD, name);
+        Playlist user = PlaylistManager.getPlaylistByName(sender.getUser().getIdLong(), PlaylistScope.USER, name);
         if (guild != null && user != null) {
             consumer.accept(LoadPlaylistResult.EXISTS_IN_ALL_SCOPES, null);
         } else if (guild != null) {
@@ -211,7 +211,7 @@ public class CascadePlayer {
         }
     }
 
-    public void loadPlaylist(String name, Member sender, PlaylistType scope, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
+    public void loadPlaylist(String name, Member sender, PlaylistScope scope, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
         LoadPlaylistResult result = LoadPlaylistResult.DOESNT_EXIST;
         long owner = 0;
         switch (scope) {
@@ -252,9 +252,11 @@ public class CascadePlayer {
         }
     }
 
-    public SavePlaylistResult saveCurrentPlaylist(long owner, PlaylistType scope, String name, boolean overwrite) {
+    public SavePlaylistResult saveCurrentPlaylist(long owner, PlaylistScope scope, String name, boolean overwrite) {
         List<AudioTrack> tracks = new ArrayList<>();
-        tracks.add(player.getPlayingTrack());
+        if (player.getPlayingTrack() != null) {
+            tracks.add(player.getPlayingTrack());
+        }
         tracks.addAll(this.queue);
 
         List<String> ids = new ArrayList<>();
