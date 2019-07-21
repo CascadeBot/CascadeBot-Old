@@ -10,7 +10,7 @@ import net.dv8tion.jda.core.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
-import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.data.objects.PlaylistScope;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -38,7 +38,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                             return;
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.USER, ((loadPlaylistResult, newTracks) -> {
+                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistScope.USER, ((loadPlaylistResult, newTracks) -> {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }));
                     })));
@@ -47,7 +47,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                             return;
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
+                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistScope.GUILD, ((loadPlaylistResult, newTracks) -> {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }));
                     })));

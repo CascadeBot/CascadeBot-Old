@@ -7,18 +7,14 @@ package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.core.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
-import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.data.objects.PlaylistScope;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class QueueSaveSubCommand implements ISubCommand {
@@ -30,9 +26,9 @@ public class QueueSaveSubCommand implements ISubCommand {
             return;
         }
 
-        PlaylistType scope = PlaylistType.GUILD;
+        PlaylistScope scope = PlaylistScope.GUILD;
         if (context.getArgs().length > 1) {
-            scope = EnumUtils.getEnum(PlaylistType.class, context.getArg(1).toUpperCase());
+            scope = EnumUtils.getEnum(PlaylistScope.class, context.getArg(1).toUpperCase());
             if (scope == null) {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.queue.save.scope_not_found", context.getArg(1)));
                 return;
@@ -55,11 +51,11 @@ public class QueueSaveSubCommand implements ISubCommand {
         }
 
         long lambdaOwner = owner;
-        PlaylistType lambdaScope = scope;
+        PlaylistScope lambdaScope = scope;
         CascadePlayer.SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
         switch (result) {
             case ALREADY_EXISTS:
-                if (lambdaScope.equals(PlaylistType.GUILD)) {
+                if (lambdaScope.equals(PlaylistScope.GUILD)) {
                     if (!context.hasPermission("queue.save.overwrite")) {
                         context.getTypedMessaging().replyWarning(context.i18n("commands.queue.save.saved_playlist"));
                         return;
