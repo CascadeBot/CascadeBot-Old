@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.data.managers;
 
 import com.mongodb.client.MongoIterable;
+import org.bson.types.ObjectId;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
 import org.cascadebot.cascadebot.data.objects.Playlist;
@@ -18,7 +19,13 @@ public final class PlaylistManager {
 
     private static final String COLLECTION = "playlists";
 
-    public static MongoIterable<Playlist> getPlaylists(long ownerID, PlaylistType scope) {
+    public static Playlist getPlaylistById(String id) {
+        if (!ObjectId.isValid(id)) return null;
+        return CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, Playlist.class)
+                .find(eq("id", new ObjectId(id)))
+                .first();
+    }
+
     public static MongoIterable<Playlist> getPlaylists(long ownerId, PlaylistScope scope) {
         return CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, Playlist.class)
                 .find(

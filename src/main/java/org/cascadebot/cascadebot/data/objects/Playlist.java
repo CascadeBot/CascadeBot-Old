@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import de.bild.codec.annotations.Id;
+import io.leangen.graphql.annotations.GraphQLIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,17 +20,17 @@ import java.util.List;
 public class Playlist {
 
     @Id
-    private ObjectId playlistID = ObjectId.get();
+    @GraphQLIgnore
     private ObjectId playlistId = ObjectId.get();
 
     private String name;
     private long ownerId;
-    private PlaylistType scope;
+    private PlaylistScope scope;
 
     @Setter
     private List<String> tracks;
 
-    public Playlist(long ownerId, String name, PlaylistType scope, List<String> tracks) {
+    public Playlist(long ownerId, String name, PlaylistScope scope, List<String> tracks) {
         this.ownerId = ownerId;
         this.name = name;
         this.scope = scope;

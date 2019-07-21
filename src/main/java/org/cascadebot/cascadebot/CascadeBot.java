@@ -29,6 +29,8 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
+import org.cascadebot.cascadebot.data.graphql.GraphQLManager;
+import org.cascadebot.cascadebot.data.graphql.GraphQLRoute;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
@@ -46,6 +48,7 @@ import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import spark.Spark;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
@@ -69,6 +72,7 @@ public class CascadeBot {
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
+    private GraphQLManager graphQLManager;
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
@@ -230,6 +234,25 @@ public class CascadeBot {
         };
 
         setupTasks();
+
+        graphQLManager = new GraphQLManager();
+
+        Spark.port(8080);
+        Spark.options("/*", (request,response) -> {
+            String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
+            if (accessControlRequestHeaders != null) {
+                response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
+            }
+            String accessControlRequestMethod = request.headers("Access-Control-Request-Method");
+            if(accessControlRequestMethod != null){
+                response.header("Access-Control-Allow-Methods", accessControlRequestMethod);
+            }
+            return "OK";
+        });
+        Spark.before((request,response) -> {
+            response.header("Access-Control-Allow-Origin", "*");
+        });
+        Spark.post("/graphql", new GraphQLRoute(graphQLManager));
 
     }
 

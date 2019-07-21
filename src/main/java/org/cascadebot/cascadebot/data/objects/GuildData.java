@@ -17,10 +17,10 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.leangen.graphql.annotations.GraphQLIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -28,20 +28,10 @@ import org.bson.codecs.pojo.annotations.BsonIgnore;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
-import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -56,6 +46,7 @@ public class GuildData {
     private Date creationDate = new Date();
     //endregion
 
+    @GraphQLIgnore
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
@@ -76,9 +67,11 @@ public class GuildData {
 
     //region Transient fields
     @Transient
+    @GraphQLIgnore
     private ButtonsCache buttonsCache = new ButtonsCache(5);
 
     @Transient
+    @GraphQLIgnore
     private PageCache pageCache = new PageCache();
 
     //endregion
@@ -119,6 +112,7 @@ public class GuildData {
         }
     }
 
+    @GraphQLIgnore
     public boolean isCommandEnabled(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).isEnabled();
@@ -126,6 +120,7 @@ public class GuildData {
         return command.getModule().isDefault();
     }
 
+    @GraphQLIgnore
     public boolean isModuleEnabled(Module module) {
         boolean enabled = module.isDefault();
         for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
@@ -134,6 +129,7 @@ public class GuildData {
         return enabled;
     }
 
+    @GraphQLIgnore
     public String getCommandName(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getCommand();
@@ -145,6 +141,7 @@ public class GuildData {
         getGuildCommandInfo(command).setCommand(commandName);
     }
 
+    @GraphQLIgnore
     public Set<String> getCommandAliases(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getAliases();
@@ -152,19 +149,23 @@ public class GuildData {
         return command.getGlobalAliases(locale);
     }
 
+    @GraphQLIgnore
     public boolean addAlias(ICommandMain command, String alias) {
         return getGuildCommandInfo(command).addAlias(alias);
     }
 
+    @GraphQLIgnore
     public boolean removeAlias(ICommandMain command, String alias) {
         return getGuildCommandInfo(command).removeAlias(alias);
     }
 
+    @GraphQLIgnore
     @BsonIgnore
     private GuildCommandInfo getGuildCommandInfo(ICommandMain command) {
         return commandInfo.computeIfAbsent(command.getClass(), aClass -> new GuildCommandInfo(command, locale));
     }
 
+    @GraphQLIgnore
     public Map<Class<? extends ICommandMain>, GuildCommandInfo> getCommandInfo() {
         return Collections.unmodifiableMap(commandInfo);
     }
@@ -179,6 +180,7 @@ public class GuildData {
         return this.enabledFlags.remove(flag);
     }
 
+    @GraphQLIgnore
     public boolean isFlagEnabled(Flag flag) {
         return this.enabledFlags.contains(flag);
     }
@@ -188,6 +190,7 @@ public class GuildData {
         buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
     }
 
+    @GraphQLIgnore
     public GuildPermissions getPermissions() {
         return guildPermissions;
     }
