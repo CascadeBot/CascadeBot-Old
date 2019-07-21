@@ -1,5 +1,5 @@
 # source: http://localhost:8080/graphql
-# timestamp: Sun Jul 21 2019 21:23:45 GMT+0100 (British Summer Time)
+# timestamp: Sun Jul 21 2019 22:35:23 GMT+0100 (British Summer Time)
 
 type CascadePermission {
   ALL_PERMISSIONS: CascadePermission
@@ -80,6 +80,9 @@ type ISubCommand {
   absoluteCommand: String
   command: String
 }
+
+"""JSON object"""
+scalar JSONObject
 
 enum Locale {
   ENGLISH_UK
@@ -163,6 +166,7 @@ type Query {
   guild(id: Long!): GuildData
   allPlaylists(scope: PlaylistScope!, ownerId: Long!): [Playlist]!
   playlist(id: String!): Playlist
+  language(languageKey: String): JSONObject
   allCommands(module: Module): [ICommandMain]
 }
 
