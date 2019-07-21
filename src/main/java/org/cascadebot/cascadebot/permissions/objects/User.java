@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.permissions.objects;
 
 import com.google.common.collect.Sets;
+import io.leangen.graphql.annotations.types.GraphQLType;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

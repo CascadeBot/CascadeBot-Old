@@ -1,4 +1,4 @@
-package org.cascadebot.cascadebot.data.graphql;
+package org.cascadebot.cascadebot.data.graphql.objects;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
+import io.leangen.graphql.annotations.GraphQLQuery;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.core.Permission;
@@ -204,6 +205,10 @@ public class GuildPermissions {
 
     public List<Group> getGroups() {
         return List.copyOf(groups);
+    }
+
+    public Map<Long, User> getUsers() {
+        return Map.copyOf(users);
     }
 
     public void moveGroup(Group group, int position) throws IndexOutOfBoundsException {

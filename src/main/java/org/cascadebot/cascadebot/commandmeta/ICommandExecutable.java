@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
+import io.leangen.graphql.annotations.GraphQLIgnore;
+import io.leangen.graphql.annotations.GraphQLQuery;
 import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
@@ -18,10 +20,12 @@ public interface ICommandExecutable {
 
     void onCommand(Member sender, CommandContext context);
 
+    @GraphQLIgnore
     default String getCommandPath() {
         return "commands." + getAbsoluteCommand() + ".command";
     }
 
+    @GraphQLQuery(name = "command")
     String command();
 
     default String command(Locale locale) {
@@ -41,6 +45,7 @@ public interface ICommandExecutable {
 
     CascadePermission getPermission();
 
+    @GraphQLIgnore
     default String getDescriptionPath() {
         return "commands." + getAbsoluteCommand() + ".description";
     }
@@ -56,7 +61,6 @@ public interface ICommandExecutable {
             return description();
         }
     }
-
 
     default boolean deleteMessages() {
         return true;

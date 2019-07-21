@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import com.google.common.collect.Sets;
+import io.leangen.graphql.annotations.GraphQLIgnore;
 import jdk.jfr.Name;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,8 +30,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GuildSettingsCore {
 
+    @GraphQLIgnore
     public static Map<String, Field> VALUES = new HashMap<>();
 
+    @GraphQLIgnore
     private long guildId;
 
     static {
@@ -95,6 +98,7 @@ public class GuildSettingsCore {
         return this.enabledModules.remove(module);
     }
 
+    @GraphQLIgnore
     public boolean isModuleEnabled(Module module) {
         boolean isEnabled = this.enabledModules.contains(module);
         if (!isEnabled && module.isRequired()) {
