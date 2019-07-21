@@ -288,6 +288,17 @@
             <artifactId>netty-all</artifactId>
             <version>4.0.56.Final</version>
         </dependency>
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java</artifactId>
+            <version>13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.leangen.graphql</groupId>
+            <artifactId>spqr</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+
 
         <!-- Testing -->
         <dependency>
