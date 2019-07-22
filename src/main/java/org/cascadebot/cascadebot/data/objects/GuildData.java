@@ -9,6 +9,8 @@ import com.google.common.collect.Sets;
 import de.bild.codec.annotations.Id;
 import de.bild.codec.annotations.PreSave;
 import de.bild.codec.annotations.Transient;
+
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -18,6 +20,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.leangen.graphql.annotations.GraphQLIgnore;
+import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -43,21 +46,29 @@ public class GuildData {
     private long guildId;
 
     //region Meta information
+    @GraphQLNonNull
     private UUID stateLock = UUID.randomUUID(); // This is for checking state between the wrapper, bot and panel
-    private Date creationDate = new Date();
+
+    @GraphQLNonNull
+    private OffsetDateTime dbCreationTime = OffsetDateTime.now();
     //endregion
 
     @GraphQLIgnore
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
+
+    @GraphQLNonNull
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
+    @GraphQLNonNull
     private Locale locale = Locale.getDefaultLocale();
 
     //region Guild data containers
 
+    @GraphQLNonNull
     private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
 
     @GraphQLQuery(name = "permissions")
+    @GraphQLNonNull
     private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now

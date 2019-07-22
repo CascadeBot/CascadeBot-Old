@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.permissions;
 
+import io.leangen.graphql.annotations.GraphQLIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.dv8tion.jda.core.Permission;
@@ -19,6 +20,7 @@ import java.util.EnumSet;
 @Getter
 public class CascadePermission {
 
+    @GraphQLIgnore
     public static final CascadePermission ALL_PERMISSIONS = CascadePermission.of("*", false);
 
     private final String permissionRaw;

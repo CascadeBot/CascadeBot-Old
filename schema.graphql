@@ -1,17 +1,13 @@
 # source: http://localhost:8080/graphql
-# timestamp: Sun Jul 21 2019 22:35:23 GMT+0100 (British Summer Time)
+# timestamp: Mon Jul 22 2019 21:43:54 GMT+0100 (British Summer Time)
 
 type CascadePermission {
-  ALL_PERMISSIONS: CascadePermission
   defaultPerm: Boolean!
-  discordPerm: [Permission]
-  module: Module
   discordPerms: [Permission]
+  discordPerm: [Permission]
   permissionRaw: String
+  module: Module
 }
-
-"""Built-in scalar representing an instant in time"""
-scalar Date
 
 enum Flag {
   BETA
@@ -36,13 +32,22 @@ type GuildCommandInfo {
 
 type GuildData {
   guildCommandInfos: [GuildCommandInfo]
-  enabledFlags: [Flag]
-  stateLock: UUID
-  permissions: GuildPermissions
-  locale: Locale
-  creationDate: Date
+  enabledFlags: [Flag]!
+  creationTime: OffsetDateTime!
+  splashUrl: String!
+  memberCount: Int!
+  locale: Locale!
+  ownerId: Long!
   guildId: Long!
-  coreSettings: GuildSettingsCore
+  coreSettings: GuildSettingsCore!
+  stateLock: UUID!
+  dbCreationTime: OffsetDateTime!
+  permissions: GuildPermissions!
+  categoryCount: Int!
+  voiceChannelCount: Int!
+  name: String!
+  iconUrl: String!
+  textChannelCount: Int!
 }
 
 type GuildPermissions {
@@ -108,6 +113,9 @@ enum Module {
   DEVELOPER
 }
 
+"""Built-in scalar representing a date-time with a UTC offset"""
+scalar OffsetDateTime
+
 enum Permission {
   CREATE_INSTANT_INVITE
   KICK_MEMBERS
@@ -163,11 +171,12 @@ enum PlaylistScope {
 
 """Query root"""
 type Query {
-  guild(id: Long!): GuildData
   allPlaylists(scope: PlaylistScope!, ownerId: Long!): [Playlist]!
-  playlist(id: String!): Playlist
   language(languageKey: String): JSONObject
+  guild(id: Long!): GuildData
+  playlist(id: String!): Playlist
   allCommands(module: Module): [ICommandMain]
+  allPermissions: [CascadePermission]
 }
 
 """Unrepresentable type"""
