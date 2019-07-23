@@ -40,13 +40,8 @@ public class GraphQLRoute implements Route {
                 .build();
 
         ExecutionResult executionResult = manager.getGraphQL().execute(input);
-        JsonObject graphQlResponse = new JsonObject();
-        if (!executionResult.getErrors().isEmpty() || executionResult.getData() == null) {
-            graphQlResponse.add("errors", CascadeBot.getGSON().toJsonTree(executionResult.getErrors()));
-        }
-        graphQlResponse.add("data", CascadeBot.getGSON().toJsonTree(executionResult.getData()));
 
-        return CascadeBot.getGSON().toJson(graphQlResponse);
+        return CascadeBot.getGSON().toJson(executionResult.toSpecification());
     }
 
 }
