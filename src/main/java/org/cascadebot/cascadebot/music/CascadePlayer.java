@@ -274,7 +274,7 @@ public class CascadePlayer {
                 return SavePlaylistResult.ALREADY_EXISTS;
             }
         } else {
-            PlaylistManager.savePlaylist(new Playlist(owner, name, scope, ids));
+            PlaylistManager.savePlaylist(new Playlist(name, ids, owner, scope));
             return SavePlaylistResult.NEW;
         }
     }

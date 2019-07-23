@@ -16,6 +16,7 @@ import org.bson.types.ObjectId;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Playlist {
 
@@ -26,11 +27,9 @@ public class Playlist {
     private String name;
     private long ownerId;
     private PlaylistScope scope;
-
-    @Setter
     private List<String> tracks;
 
-    public Playlist(long ownerId, String name, PlaylistScope scope, List<String> tracks) {
+    public Playlist(String name, List<String> tracks, long ownerId, PlaylistScope scope) {
         this.ownerId = ownerId;
         this.name = name;
         this.scope = scope;
