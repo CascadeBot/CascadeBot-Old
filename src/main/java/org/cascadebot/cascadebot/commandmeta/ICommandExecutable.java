@@ -20,7 +20,7 @@ public interface ICommandExecutable {
 
     void onCommand(Member sender, CommandContext context);
 
-    @GraphQLIgnore
+    @GraphQLQuery(name = "languagePath")
     default String getCommandPath() {
         return "commands." + getAbsoluteCommand() + ".command";
     }
@@ -45,7 +45,7 @@ public interface ICommandExecutable {
 
     CascadePermission getPermission();
 
-    @GraphQLIgnore
+    @GraphQLQuery(name = "descriptionLanguagePath")
     default String getDescriptionPath() {
         return "commands." + getAbsoluteCommand() + ".description";
     }
