@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.data.managers;
 
 import com.mongodb.client.MongoIterable;
+import com.mongodb.client.model.Updates;
 import org.bson.types.ObjectId;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
@@ -22,7 +23,7 @@ public final class PlaylistManager {
     public static Playlist getPlaylistById(String id) {
         if (!ObjectId.isValid(id)) return null;
         return CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, Playlist.class)
-                .find(eq("id", new ObjectId(id)))
+                .find(eq("_id", new ObjectId(id)))
                 .first();
     }
 
@@ -60,6 +61,16 @@ public final class PlaylistManager {
                     eq("_id", playlist.getPlaylistId()),
                     playlist,
                     new DebugLogCallback<>("Replaced Playlist with ID: " + playlist.getPlaylistId())
+            );
+        });
+    }
+
+    public static void deletePlaylistById(String id) {
+        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
+            ObjectId playlistId = new ObjectId(id);
+            database.getCollection(COLLECTION, Playlist.class).deleteOne(
+                    eq("_id", playlistId),
+                    new DebugLogCallback<>("Deleted playlist with ID: " + playlistId)
             );
         });
     }
