@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.data.graphql.services;
 
+import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,6 +19,11 @@ public class PermissionsServices {
     @GraphQLQuery
     public Set<CascadePermission> allPermissions() {
         return CascadeBot.INS.getPermissionsManager().getPermissions();
+    }
+
+    @GraphQLQuery
+    public CascadePermission permission(@GraphQLNonNull String permission) {
+        return CascadeBot.INS.getPermissionsManager().getPermission(permission);
     }
 
 }

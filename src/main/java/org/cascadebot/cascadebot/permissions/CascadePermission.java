@@ -25,16 +25,15 @@ public class CascadePermission {
 
     private final String permissionRaw;
     private final boolean defaultPerm;
-    private final EnumSet<Permission> discordPerm;
+    private final EnumSet<Permission> discordPerms;
     private final Module module;
 
-
-    private CascadePermission(String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
+    private CascadePermission(String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerms) {
         this.permissionRaw = permissionRaw;
         this.defaultPerm = defaultPerm;
         this.module = module;
-        this.discordPerm = EnumSet.noneOf(Permission.class);
-        this.discordPerm.addAll(Arrays.asList(discordPerm));
+        this.discordPerms = EnumSet.noneOf(Permission.class);
+        this.discordPerms.addAll(Arrays.asList(discordPerms));
     }
 
     public static CascadePermission of(String permission, boolean defaultPerm) {
@@ -66,7 +65,7 @@ public class CascadePermission {
     }
 
     public EnumSet<Permission> getDiscordPerms() {
-        return discordPerm;
+        return discordPerms;
     }
 
     @Override
