@@ -1,10 +1,9 @@
 # source: http://localhost:8080/graphql
-# timestamp: Mon Jul 22 2019 21:43:54 GMT+0100 (British Summer Time)
+# timestamp: Tue Jul 23 2019 21:46:45 GMT+0100 (British Summer Time)
 
 type CascadePermission {
   defaultPerm: Boolean!
   discordPerms: [Permission]
-  discordPerm: [Permission]
   permissionRaw: String
   module: Module
 }
@@ -43,8 +42,8 @@ type GuildData {
   stateLock: UUID!
   dbCreationTime: OffsetDateTime!
   permissions: GuildPermissions!
-  categoryCount: Int!
   voiceChannelCount: Int!
+  categoryCount: Int!
   name: String!
   iconUrl: String!
   textChannelCount: Int!
@@ -70,7 +69,9 @@ type GuildSettingsCore {
 }
 
 type ICommandMain {
+  languagePath: String
   absoluteCommand: String
+  descriptionLanguagePath: String
   module: Module
   subCommands: [ISubCommand]
   flags: [Flag]
@@ -79,10 +80,12 @@ type ICommandMain {
 }
 
 type ISubCommand {
-  flags: [Flag]
   parent: String
-  permission: CascadePermission
+  languagePath: String
   absoluteCommand: String
+  descriptionLanguagePath: String
+  flags: [Flag]
+  permission: CascadePermission
   command: String
 }
 
@@ -111,6 +114,14 @@ enum Module {
   MODERATION
   FUN
   DEVELOPER
+}
+
+"""Mutation root"""
+type Mutation {
+  """Edits any fields on a playlist. Null fields are skipped."""
+  editPlaylist(name: String, id: String!, ownerId: Long, playlistScope: PlaylistScope, tracks: [String]): Playlist
+  deletePlaylist(id: String!): String
+  createPlaylist(scope: PlaylistScope!, name: String!, ownerId: Long!, tracks: [String]!): Playlist
 }
 
 """Built-in scalar representing a date-time with a UTC offset"""
@@ -172,10 +183,11 @@ enum PlaylistScope {
 """Query root"""
 type Query {
   allPlaylists(scope: PlaylistScope!, ownerId: Long!): [Playlist]!
-  language(languageKey: String): JSONObject
+  permission(permission: String!): CascadePermission
+  language(languageKey: String!): JSONObject
   guild(id: Long!): GuildData
   playlist(id: String!): Playlist
-  allCommands(module: Module): [ICommandMain]
+  allCommands(module: Module): [ICommandMain]!
   allPermissions: [CascadePermission]
 }
 
