@@ -53,6 +53,7 @@ import spark.Spark;
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.lang.reflect.Executable;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -95,7 +96,12 @@ public class CascadeBot {
         if (System.getenv("SENTRY_DSN") == null) {
             LOGGER.warn("You haven't set a Sentry DNS in the environment variables! Set SENTRY_DSN to your DSN for this to work!");
         }
-        INS.init();
+        try {
+            INS.init();
+        } catch (Exception e) {
+            LOGGER.error("Error on initialisation!", e);
+            ShutdownHandler.exitWithError();
+        }
     }
 
     public static Version getVersion() {
