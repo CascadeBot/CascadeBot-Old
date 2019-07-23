@@ -1,6 +1,9 @@
 package org.cascadebot.cascadebot.data.graphql;
 
 import graphql.GraphQL;
+import graphql.execution.AsyncExecutionStrategy;
+import graphql.execution.AsyncSerialExecutionStrategy;
+import graphql.execution.SubscriptionExecutionStrategy;
 import graphql.schema.GraphQLSchema;
 import io.leangen.graphql.GraphQLSchemaGenerator;
 import org.cascadebot.cascadebot.data.graphql.services.CommandsService;
@@ -17,10 +20,14 @@ public class GraphQLManager {
             .withOperationsFromSingleton(CommandsService.getInstance())
             .withOperationsFromSingleton(LanguageService.getInstance())
             .withOperationsFromSingleton(PermissionsServices.getInstance())
-            .withBasePackages()
             .generate();
 
-    private GraphQL graphQL = GraphQL.newGraphQL(schema).build();
+    private GraphQLExceptionHandler exceptionHandler = new GraphQLExceptionHandler();
+    private GraphQL graphQL = GraphQL.newGraphQL(schema)
+            .queryExecutionStrategy(new AsyncExecutionStrategy(exceptionHandler))
+            .mutationExecutionStrategy(new AsyncSerialExecutionStrategy(exceptionHandler))
+            .subscriptionExecutionStrategy(new SubscriptionExecutionStrategy(exceptionHandler))
+            .build();
 
     public GraphQLSchema getSchema() {
         return schema;
