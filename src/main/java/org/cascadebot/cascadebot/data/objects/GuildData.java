@@ -42,7 +42,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageCache;
 public class GuildData {
 
     @Id
-    private long guildID;
+    private long guildId;
 
     //region Meta information
     private UUID stateLock = UUID.randomUUID(); // This is for checking state between the wrapper, bot and panel
@@ -56,7 +56,7 @@ public class GuildData {
 
     //region Guild data containers
 
-    private GuildSettingsCore coreSettings = new GuildSettingsCore(guildID);
+    private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
     private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now

@@ -54,7 +54,7 @@ public class Config {
     private Auth auth;
 
     private String botToken;
-    private Long botID;
+    private Long botId;
     private HashMultimap<SecurityLevel, Long> securityLevels;
 
     private Map<String, Long> globalEmotes;
@@ -130,8 +130,8 @@ public class Config {
             }
         }
 
-        this.botID = config.getLong("bot.id", -1);
-        if (this.botID == -1) {
+        this.botId = config.getLong("bot.id", -1);
+        if (this.botId == -1) {
             LOG.error("No bot ID provided in config! Please provide the bot ID to start the bot.");
             ShutdownHandler.exitWithError();
         }
@@ -267,8 +267,8 @@ public class Config {
         return botToken;
     }
 
-    public Long getBotID() {
-        return botID;
+    public Long getBotId() {
+        return botId;
     }
 
     public boolean isPrettyJson() {
