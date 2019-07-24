@@ -9,9 +9,11 @@ import com.google.common.collect.Sets;
 import de.bild.codec.annotations.Id;
 import de.bild.codec.annotations.PreSave;
 import de.bild.codec.annotations.Transient;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -29,6 +31,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.donation.Flag;
+import org.cascadebot.cascadebot.data.objects.donation.Tier;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
@@ -73,6 +76,16 @@ public class GuildData {
 
     //endregion
 
+    /**
+     * The highest tier the guild has as parent tiers are auto applied.
+     */
+    private Tier guildTier;
+
+    /**
+     * Misc flags not already in a tier (beta would go here for example)
+     */
+    private List<Flag> miscFlags = new ArrayList<>();
+
     @PreSave
     public void preSave() {
         this.stateLock = UUID.randomUUID();
@@ -80,6 +93,7 @@ public class GuildData {
 
     public GuildData(long guildID) {
         this.guildID = guildID;
+        guildTier = Tier.getTier(0);
     }
 
     //region Commands

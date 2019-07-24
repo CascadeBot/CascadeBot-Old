@@ -12,6 +12,11 @@ public class FlagWithAmount extends Flag {
         super(id);
     }
 
+    public FlagWithAmount(String id, int amount) {
+        super(id);
+        this.amount = amount;
+    }
+
     public int getAmount() {
         return amount;
     }
