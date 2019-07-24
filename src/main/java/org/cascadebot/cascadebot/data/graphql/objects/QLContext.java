@@ -10,6 +10,9 @@ import spark.Request;
 public class QLContext {
 
     private final Request request;
-    private final Locale locale;
+    private final long userId;
+    private final long guildId;
+
+    // TODO: Add methods to check that user is authenticated for this guild
 
 }
