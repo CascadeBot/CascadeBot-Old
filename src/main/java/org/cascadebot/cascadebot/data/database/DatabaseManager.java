@@ -38,7 +38,8 @@ public class DatabaseManager {
                     "org.cascadebot.cascadebot.data.objects",
                     "org.cascadebot.cascadebot.permissions.objects",
                     "org.cascadebot.shared"
-            ).build())
+            ).build()),
+            CodecRegistries.fromCodecs(new OffsetDateTimeCodec())
     );
 
     @Getter
