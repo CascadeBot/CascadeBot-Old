@@ -77,7 +77,7 @@ public class UserInfoCommand implements ICommandMain {
         }
 
         if (member != null) {
-            builder.addField(context.i18n("commands.userinfo.status"), status + statusName, true);
+            builder.addField(context.i18n("words.status"), status + statusName, true);
             Game game = member.getGame();
 
             if (game != null) {
