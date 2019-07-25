@@ -6,16 +6,11 @@
 package org.cascadebot.cascadebot.commands.developer;
 
 import net.dv8tion.jda.api.entities.Member;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-
-import java.util.Set;
 
 public class GuildSaveSubCommand implements ISubCommand {
 
@@ -33,7 +28,7 @@ public class GuildSaveSubCommand implements ISubCommand {
                 context.getTypedMessaging().replyDanger("Cannot find a guild to save!");
                 return;
             }
-            GuildDataManager.replace(guildData.getGuildID(), guildData);
+            GuildDataManager.replace(guildData.getGuildId(), guildData);
             context.getTypedMessaging().replySuccess("Saved guild information for guild **%s**!", context.getArg(0));
         }
     }

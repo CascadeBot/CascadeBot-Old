@@ -16,8 +16,6 @@ import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
-import java.util.Set;
-
 public class ServerInfoCommand implements ICommandMain {
 
     @Override
@@ -40,7 +38,7 @@ public class ServerInfoCommand implements ICommandMain {
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(guildForInfo.getName());
         builder.setThumbnail(guildForInfo.getIconUrl());
-        builder.addField(context.i18n("commands.serverinfo.guild_creation_date"), FormatUtils.formatDateTime(guildForInfo.getTimeCreated()), true);
+        builder.addField(context.i18n("commands.serverinfo.guild_creation_date"), FormatUtils.formatDateTime(guildForInfo.getTimeCreated(), context.getLocale()), true);
         builder.addField(context.i18n("commands.serverinfo.guild_name"), guildForInfo.getName(), true);
         builder.addField(context.i18n("commands.serverinfo.guild_owner") + context.globalEmote("server_owner"), guildForInfo.getOwner().getUser().getAsTag(), true);
         builder.addField(context.i18n("commands.serverinfo.guild_region"), guildForInfo.getRegion().toString(), true);

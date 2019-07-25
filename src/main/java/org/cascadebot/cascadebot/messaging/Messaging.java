@@ -143,7 +143,7 @@ public final class Messaging {
         Locale locale = channel instanceof TextChannel ? Language.getGuildLocale(((TextChannel) channel).getGuild().getIdLong()) : Locale.getDefaultLocale();
         String message = Language.i18n(locale, "messaging.exception_message", s, PasteUtils.paste(PasteUtils.getStackTrace(MDCException.from(e))));
         if (Environment.isProduction()) {
-            message += Language.i18n(locale, "messaging.report_error", Constants.serverInvite);
+            message += "\n" + Language.i18n(locale, "messaging.report_error", Constants.serverInvite);
         }
         return sendDangerMessage(channel, message);
     }

@@ -11,6 +11,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
@@ -39,10 +40,13 @@ public class ConfirmUtils {
         Message sentMessage;
         try {
             sentMessage = Messaging.sendMessageTypeMessage(channel, type, message, useEmbed).get();
-            action.userID = userId;
+            action.userId = userId;
             action.message = sentMessage;
             confirmedMap.put(actionKey, action);
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (ExecutionException e) {
+            return false;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return false;
         }
         if (sentMessage == null) {
@@ -53,7 +57,7 @@ public class ConfirmUtils {
             Task.getScheduler().schedule(() -> {
                 ButtonGroup group = new ButtonGroup(userId, channel.getIdLong(), channel.getGuild().getIdLong());
                 group.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel1, message1) -> {
-                    if (runner.getIdLong() != action.userID) return;
+                    if (runner.getIdLong() != action.userId) return;
                     action.run();
                 }));
                 group.addButtonsToMessage(sentMessage);
@@ -64,7 +68,7 @@ public class ConfirmUtils {
 
         Task.getScheduler().schedule(() -> {
             confirmedMap.remove(actionKey, action);
-            sentMessage.delete().queue();
+            sentMessage.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
         }, expiry, TimeUnit.MILLISECONDS);
 
         return true;
@@ -98,22 +102,22 @@ public class ConfirmUtils {
     //endregion
 
     public static boolean hasConfirmedAction(String actionKey, long userId) {
-        return confirmedMap.entries().stream().anyMatch(entry -> entry.getKey().equals(actionKey) && entry.getValue().userID == userId);
+        return confirmedMap.entries().stream().anyMatch(entry -> entry.getKey().equals(actionKey) && entry.getValue().userId == userId);
     }
 
     public static void completeAction(String actionKey, long userId) {
-        Optional<Map.Entry<String, ConfirmRunnable>> entryOptional = confirmedMap.entries().stream().filter(entry -> entry.getKey().equals(actionKey) && entry.getValue().userID == userId).findFirst();
+        Optional<Map.Entry<String, ConfirmRunnable>> entryOptional = confirmedMap.entries().stream().filter(entry -> entry.getKey().equals(actionKey) && entry.getValue().userId == userId).findFirst();
         entryOptional.ifPresent(stringConfirmRunnableEntry -> stringConfirmRunnableEntry.getValue().run());
     }
 
     public abstract static class ConfirmRunnable implements Runnable {
 
-        private long userID;
+        private long userId;
         private Message message;
 
         @Override
         public void run() {
-            message.delete().queue();
+            message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
             execute();
         }
 

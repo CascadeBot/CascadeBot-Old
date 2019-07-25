@@ -140,7 +140,7 @@ public class PageUtils {
             }
         }
 
-        int rows = (int) ((double) length / (double) maxLength);
+        int rows = (int) ((double) length / (double) Math.max(1, maxLength));
 
         return splitTableDataToPages(table, rows);
     }
