@@ -25,3 +25,5 @@ config.yml
 
 *.iml
 TestCommand.java
+
+.graphqlconfig
