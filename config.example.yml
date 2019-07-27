@@ -112,3 +112,5 @@ haste:
 web:
   # The secret to use when authenticating with the site/wrapper
   secret_key:
+  # The port used by Spark to run the web server
+  spark_port: 8080
