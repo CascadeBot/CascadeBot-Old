@@ -243,8 +243,8 @@ public class CascadeBot {
 
         graphQLManager = new GraphQLManager();
 
-        Spark.port(8080);
-        Spark.options("/*", (request,response) -> {
+        Spark.port(Config.INS.getSparkPort());
+        Spark.options("/*", (request, response) -> {
             String accessControlRequestHeaders = request.headers("Access-Control-Request-Headers");
             if (accessControlRequestHeaders != null) {
                 response.header("Access-Control-Allow-Headers", accessControlRequestHeaders);
@@ -255,7 +255,7 @@ public class CascadeBot {
             }
             return "OK";
         });
-        Spark.before((request,response) -> {
+        Spark.before((request, response) -> {
             response.header("Access-Control-Allow-Origin", "*");
         });
         Spark.post("/graphql", new GraphQLRoute(graphQLManager));
