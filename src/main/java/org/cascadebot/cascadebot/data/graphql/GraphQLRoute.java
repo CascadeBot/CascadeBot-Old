@@ -2,6 +2,8 @@ package org.cascadebot.cascadebot.data.graphql;
 
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
@@ -28,31 +30,33 @@ public class GraphQLRoute implements Route {
 //                .findFirst()
 //                .orElse(Locale.getDefaultLocale());
 
-        long userId;
-        long guildId = -1;
+        long userId = -1;
+        User user = null;
+
+        long guildId;
+        Guild guild = null;
+
         try {
-            userId = Long.parseLong(request.headers("Cascade-UserID"));
-            if (!StringUtils.isEmpty(request.headers("Cascade-GuildID"))) {
-                guildId = Long.parseLong(request.headers("Cascade-GuildID"));
+            if (!StringUtils.isEmpty(request.headers("Cascade-UserId"))) {
+                userId = Long.parseLong(request.headers("Cascade-UserId"));
+                user = CascadeBot.INS.getShardManager().getUserById(userId);
             }
-        } catch (NumberFormatException e) {
-            response.status(400);
-            return "The ID's provided are invalid! " + e;
-        }
+            if (!StringUtils.isEmpty(request.headers("Cascade-GuildId"))) {
+                guildId = Long.parseLong(request.headers("Cascade-GuildId"));
+                guild = CascadeBot.INS.getShardManager().getGuildById(guildId);
+            }
+        } catch (NumberFormatException ignored) {}
 
-        if (StringUtils.isEmpty(request.headers("Authorization"))) {
-            response.status(401);
-            return "You are not authorized!";
-        }
+        boolean authenticated;
 
-        if (!Config.INS.getAuth().verifyEncrypt(Long.toString(userId), request.headers("Authorization"))) {
-            response.status(401);
-            return "You are not authorized!";
-        }
+        boolean authHeaderPresent = !StringUtils.isEmpty(request.headers("Authorization"));
+        boolean hmacMatches = Config.INS.getAuth().verifyEncrypt(Long.toString(userId), request.headers("Authorization"));
+
+        authenticated = (userId != -1 && authHeaderPresent && hmacMatches);
 
         ExecutionInput input = ExecutionInput.newExecutionInput()
                 .query(graphQLRequest.getQuery())
-                .context(new QLContext(request, userId, guildId))
+                .context(new QLContext(request, user, guild, authenticated))
                 .operationName(graphQLRequest.getOperationName())
                 .variables(graphQLRequest.getVariables())
                 .build();

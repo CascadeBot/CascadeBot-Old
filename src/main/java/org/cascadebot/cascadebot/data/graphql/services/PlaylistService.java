@@ -43,7 +43,7 @@ public class PlaylistService {
     }
 
     @GraphQLMutation
-    public Playlist createPlaylist(@GraphQLNonNull String name, @GraphQLNonNull List<String> tracks, long ownerId, @GraphQLNonNull PlaylistScope scope) {
+    public Playlist createPlaylist(@GraphQLRootContext QLContext context, @GraphQLNonNull String name, @GraphQLNonNull List<String> tracks, long ownerId, @GraphQLNonNull PlaylistScope scope) {
         Checks.notBlank(name, "name");
         Checks.notEmpty(tracks, "tracks");
 
@@ -57,7 +57,7 @@ public class PlaylistService {
     }
 
     @GraphQLMutation
-    public String deletePlaylist(@GraphQLNonNull String id) {
+    public String deletePlaylist(@GraphQLRootContext QLContext context, @GraphQLNonNull String id) {
         if (PlaylistManager.getPlaylistById(id) == null) {
             throw new IllegalStateException("There is no playlist by that ID to delete!");
         }
@@ -67,7 +67,7 @@ public class PlaylistService {
     }
 
     @GraphQLMutation(description = "Edits any fields on a playlist. Null fields are skipped.")
-    public Playlist editPlaylist(@GraphQLNonNull String id, String name, List<String> tracks, Long ownerId, PlaylistScope playlistScope) {
+    public Playlist editPlaylist(@GraphQLRootContext QLContext context, @GraphQLNonNull String id, String name, List<String> tracks, Long ownerId, PlaylistScope playlistScope) {
         Playlist playlist = PlaylistManager.getPlaylistById(id);
         if (playlist == null) {
             throw new IllegalStateException("There is no playlist by that ID to edit! please create one instead!");
