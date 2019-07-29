@@ -1,0 +1,923 @@
+{
+  "commands": {
+    "invite": {
+      "description": "Returns the bot invite link, to invite the bot to other Discord guilds."
+    },
+    "prefix": {
+      "command": "prefix",
+      "description": "Gets and sets the current guild prefix.",
+      "reset": {
+        "command": "reset",
+        "description": "Resets the prefix to default."
+      },
+      "prefix_reset": "The prefix has been reset to: `{0}`",
+      "prefix_too_long": "The requested prefix is too long!",
+      "new_prefix": "The new prefix is: `{0}`",
+      "current_prefix": "The current server prefix is `{0}`"
+    },
+    "support": {
+      "command": "support",
+      "description": "Returns a link to the Discord support server.",
+      "cascade_support_server": "Cascade Support Server: {0}"
+    },
+    "usage": {
+      "command": "usage",
+      "description": "Gets the usage for a command.",
+      "title": "Usage for command |%|{0}",
+      "specify_usage": "Please specify command to get usage from!",
+      "command_not_found": "Command `{0}` not found!"
+    },
+    "cat": {
+      "command": "cat",
+      "description": "Returns a random picture of a cat.",
+      "error_loading": "Error loading cat picture! |frowning|"
+    },
+    "dog": {
+      "command": "dog",
+      "description": "Returns a random picture of a dog.",
+      "error_loading": "Error loading dog picture! |frowning|"
+    },
+    "color": {
+      "command": "colour",
+      "description": "Gives information about a provided colour.",
+      "aliases": [
+        "color"
+      ],
+      "valid_rgb": "RGB values should be between 0 and 255!",
+      "valid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
+      "valid_decimal": "Please provide a valid decimal value! 0-16777215",
+      "valid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
+      "color_not_recognised": "Could not recognise colour from the given value!",
+      "embed_title": "Values for #{0}",
+      "rgb": "RGB",
+      "decimal": "Decimal value",
+      "binary": "Binary value"
+    },
+    "random": {
+      "command": "random",
+      "description": "Returns a random number",
+      "numbers_only": "The range needs to be a integer value!",
+      "random_result": "Random number is `{0}`"
+    },
+    "roles": {
+      "command": "roles",
+      "description": "Returns the server's roles.",
+      "aliases": [
+        "roleinfo"
+      ],
+      "header_id": "Role ID",
+      "header_name": "Role Name",
+      "header_members": "No. Users",
+      "header_color": "Colour"
+    },
+    "serverinfo": {
+      "command": "serverinfo",
+      "description": "Returns information regarding the specified server.",
+      "aliases": [
+        "guildinfo"
+      ],
+      "guild_creation_date": "Creation Date",
+      "guild_name": "Guild Name",
+      "guild_owner": "Owner",
+      "guild_region": "Region",
+      "guild_member_count": "Member Count",
+      "guild_id": "ID: {0}"
+    },
+    "userinfo": {
+      "command": "userinfo",
+      "description": "Returns information regarding the specified user.",
+      "user_created": "User Created",
+      "user_join_date": "Join Date",
+      "user_id": "User ID",
+      "user_mutual_servers": "Mutual Servers",
+      "user_official_role": "Cascade Official Role",
+      "activity": "Activity",
+      "role_id": "Role ID",
+      "role_name": "Role Name"
+    },
+    "groupperms": {
+      "command": "groupperms",
+      "description": "Interact with permission groups.",
+      "add": {
+        "command": "add",
+        "description": "Adds a permission to a group.",
+        "success": "Successfully added permission `{0}` to group `{1}`",
+        "fail": "Couldn't add permission `{0}` to group `{1}` as they already have the permission"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a permission from the group.",
+        "success": "Successfully removed permission `{0}` from group `{1}`",
+        "fail": "Couldn't removed permission `{0}` from group `{1}` as they already have the permission"
+      },
+      "create": {
+        "command": "create",
+        "description": "Creates a group.",
+        "success": "Created group `{0}` with id `{1}`"
+      },
+      "info": {
+        "command": "info",
+        "description": "Gets the information about a group.",
+        "empty_group": "Group has no permissions or roles",
+        "roles_title": "Linked Roles",
+        "perms_title": "Permissions"
+      },
+      "link": {
+        "command": "link",
+        "description": "Links a group to a role.",
+        "success": "Linked group `{0}` to role `{1}`",
+        "fail": "Couldn't link group `{0}` to role `{1}`"
+      },
+      "unlink": {
+        "command": "unlink",
+        "description": "Unlink a role from a group.",
+        "success": "Unlinked group `{0}` to role `{1}`",
+        "fail": "Couldn't unlink group `{0}` from role `{1}`"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists all groups.",
+        "no_groups": "You have no groups!"
+      },
+      "move": {
+        "command": "move",
+        "description": "Moves groups around in the hierarchy",
+        "wrong_mode": "Cannot move groups in most restrictive mode",
+        "moved": "Moved group {0} to position {1}"
+      },
+      "switch": {
+        "command": "switch",
+        "description": "Changes the permission evaluation mode.",
+        "success": "Switched the permission mode to `{0}`",
+        "fail": "The permission mode {1} isn't a valid permission mode!"
+      }
+    },
+    "userperms": {
+      "command": "userperms",
+      "description": "Interact with user permissions.",
+      "aliases": [
+        "userpermissions"
+      ],
+      "add": {
+        "command": "add",
+        "description": "Adds a permission to a user.",
+        "success": "Successfully added permission `{0}` to user `{1}`",
+        "fail": "Couldn't add permission `{0}` to user `{1}` as they already have the permission"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a permission from a user.",
+        "success": "Successfully removed permission `{0}` from user `{1}`",
+        "fail": "Couldn't remove permission `{0}` from user `{1}` as they don't have the permission"
+      },
+      "group": {
+        "command": "group",
+        "put": {
+          "command": "put",
+          "description": "Adds a group to a user.",
+          "success": "Put user `{0}` in group `{1}`",
+          "fail": "Couldn't add user `{0}` to group `{1}` because they're already in the group"
+        },
+        "remove": {
+          "command": "remove",
+          "description": "Removes a group from a user.",
+          "success": "Removed user `{0}` from group `{1}`",
+          "fail": "Couldn't remove user `{0}` from group {1}` because they're not in the group"
+        }
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the groups or permissions a user has.",
+        "no_groups": "User has no groups!",
+        "group_title": "{0}'s groups",
+        "no_permissions": "User has no permissions!",
+        "perms_title": "{0}'s permissions"
+      },
+      "test": {
+        "command": "test",
+        "description": "Tests whether a user has a permission or not.",
+        "has": "|white_check_mark| User {0} has the permission `{1}`",
+        "does_not_have": "|x| User {0} doesn't the permission `{1}`"
+      }
+    },
+    "flags": {
+      "command": "flags",
+      "description": "Shows what services and extra features this server has access to."
+    },
+    "module": {
+      "command": "module",
+      "description": "Interacts with modules by enabling, disabling or listing them.",
+      "disable": {
+        "command": "disable",
+        "description": "Disables the specified module.",
+        "disabled": "The module `{0}` has been disabled!",
+        "already_disabled": "The module `{0}` is already disabled!",
+        "cannot_find_module": "We couldn't find that module. Use `|%|module list` for a list of modules."
+      },
+      "enable": {
+        "command": "enable",
+        "description": "Enables the specified module.",
+        "enabled": "The module `{0}` has been enabled!",
+        "already_enabled": "The module `{0}` is already enabled!",
+        "cannot_find_module": "We couldn't find that module. Use `|%|module list` for a list of modules."
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists all modules."
+      }
+    },
+    "settings": {
+      "command": "settings",
+      "description": "Allows users to change settings for the guild.",
+      "list": {
+        "command": "list",
+        "description": "Lists the settings that can be changed for the guild."
+      },
+      "cannot_edit": "You cannot edit this setting! You need the: {0} flag to do this!",
+      "setting_set": "Setting {0} has been set to a value of {1}.",
+      "cannot_access": "Could not access that setting!",
+      "couldnt_process": "Could not process settings!",
+      "setting": "Setting",
+      "current_value": "Current value",
+      "section_title": "----- {0} module -----",
+      "cannot_find_field": "Cannot find that field!"
+    },
+    "tag": {
+      "command": "tag",
+      "description": "Tag command",
+      "cannot_find_tag": "Couldn't find tag with name `{0}`.",
+      "category": {
+        "command": "category",
+        "description": "Moves a tag to a specific category.",
+        "successfully_set_tag": "Set tag `{0}` category to `{1}`."
+      },
+      "create": {
+        "command": "create",
+        "description": "Creates a tag.",
+        "successfully_created_tag": "Successfully created tag with name `{0}`."
+      },
+      "delete": {
+        "command": "delete",
+        "description": "Deletes a tag.",
+        "successfully_deleted_tag": "Successfully deleted tag!",
+        "tag_doesnt_exist": "Tag `{0}` doesn't exist!"
+      },
+      "edit": {
+        "command": "edit",
+        "description": "Edits a tag.",
+        "successfully_edited_tag": "Successfully updated tag `{0}`."
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists all a guild's tags.",
+        "no_tags_found": "Server has no tags!"
+      },
+      "placeholders": {
+        "command": "placeholders",
+        "description": "Lists all available placeholders.",
+        "header": "To use placeholders in tags you wrap the placeholder in `{}` (example: `{server_name}`). If a place holder requires more options (like args) you use this format `{placeholder:option1,option2}` (example: `{args:0}`)."
+      },
+      "raw": {
+        "command": "raw",
+        "description": "Displays a tag's content and category."
+      }
+    },
+    "ban": {
+      "command": "ban",
+      "description": "Bans or forcebans the specified user.",
+      "cannot_find_user": "We can't find that user!",
+      "forcefully_ban": "**We couldn't find that user in this guild!** \n If you would like to forcefully ban them, please react to this message!"
+    },
+    "kick": {
+      "command": "kick",
+      "description": "Kicks the specified user.",
+      "cannot_find_user": "Could not find that user!"
+    },
+    "softban": {
+      "command": "softban",
+      "description": "Bans and then unbans a specified user in order to remove messages and kick the user.",
+      "no_specified_user": "Not enough arguments (No specified member)",
+      "cannot_find_user": "Could not find that user!"
+    },
+    "unban": {
+      "command": "unban",
+      "description": "Unbans the specified user.",
+      "cannot_unban": "Could not find a user to unban matching: {0}",
+      "several_matches": "There is more than one user that matches this criteria! \n Please enter the ID or the user's full name!"
+    },
+    "join": {
+      "command": "join",
+      "description": "Joins the bot to a voice channel.",
+      "aliases": [
+        "summon",
+        "connect",
+        "getinhere"
+      ],
+      "user_not_connected": "You are not connected to a voice channel!",
+      "already_connected": "I am already connected to your channel!",
+      "successfully_joined": "I have successfully joined the voice channel `#{0}`"
+    },
+    "leave": {
+      "command": "leave",
+      "description": "Tells the bot to leave a voice channel.",
+      "aliases": [
+        "gtfo"
+      ],
+      "successfully_left": "I have successfully left the channel `#{0}`"
+    },
+    "loop": {
+      "command": "loop",
+      "description": "Changes between loop modes.",
+      "looping_disabled": "Looping has been disabled!",
+      "looping_set": "Set to loop the current **{0}**!",
+      "not_valid_mode": "`{0}` is not a valid loop mode! Valid modes are: {0}"
+    },
+    "pause": {
+      "command": "pause",
+      "description": "Pauses the currently playing track.",
+      "already_paused": "Music has already been paused! Use **{0}resume** to resume.",
+      "successfully_paused": "Paused! Use **{0}resume** to resume."
+    },
+    "play": {
+      "command": "play",
+      "description": "Plays music.",
+      "could_not_find_matches": "We could not find music that matches: `{0}`",
+      "encountered_error": "We encountered an error processing that! {0}"
+    },
+    "playing": {
+      "command": "playing",
+      "description": "Get playing music.",
+      "aliases": [
+        "song"
+      ],
+      "no_music_playing": "There is no music playing!",
+      "loop_mode": "Loop mode",
+      "up_next": "Up next"
+    },
+    "queue": {
+      "command": "queue",
+      "description": "Displays the current queue.",
+      "aliases": [
+        "playlist"
+      ],
+      "no_tracks_playing": "There are no tracks playing!",
+      "load": {
+        "command": "load",
+        "description": "Loads a playlist.",
+        "cannot_find_playlist": "Couldn't find playlist `{0}`.",
+        "load_track": "Where would you like to load this track from\n|one| User\n|two| Guild"
+      },
+      "save": {
+        "command": "save",
+        "description": "Saves a playlist.",
+        "scope_not_found": "Scope `{0}` not found!",
+        "nothing_to_save": "There's nothing to save! The queue for this server is empty.",
+        "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it.",
+        "playlist_overwrite": "Playlist already exists. Would you like to overwrite it?",
+        "saved_playlist": "Saved playlist `{0}` in scope `{1}`."
+      }
+    },
+    "resume": {
+      "command": "resume",
+      "description": "Resumes music.",
+      "successfully_resumed": "Music has been resumed!",
+      "already_resumed": "Music is already playing! Use **{0}pause** to pause it."
+    },
+    "search": {
+      "command": "search",
+      "description": "Searches for a song.",
+      "aliases": [
+        "find"
+      ],
+      "cannot_find_video": "Couldn't find video!",
+      "error_loading_track": "Error loading track",
+      "multiple_results": "We found multiple results for this search!",
+      "search_timed_out": "The search for `{0}` has timed out!"
+    },
+    "shuffle": {
+      "command": "shuffle",
+      "description": "Shuffles music in a queue.",
+      "enabled": "Shuffling has been enabled!",
+      "disabled": "Shuffling has been disabled!"
+    },
+    "skip": {
+      "command": "skip",
+      "description": "Skips the current song.",
+      "yes": {
+        "command": "yes",
+        "description": "Votes to skip a track."
+      },
+      "no": {
+        "command": "no",
+        "description": "Votes to not skip a track."
+      },
+      "not_playing": "I'm not playing anything!",
+      "forcefully_skipped": "Forcefully skipped the song!",
+      "cannot_skip": {
+        "no_music": "Can't skip if you aren't listening to music!",
+        "no_vote": "Cannot vote if you aren't listening!"
+      },
+      "added_vote": "A skip vote is already running but don't worry! We added your vote automatically!",
+      "skipped_user_queued": "Skipped currently playing song because you queued it.",
+      "skipping": "Skipping song!",
+      "not_skipping": "Not skipping song!"
+    },
+    "stop": {
+      "command": "stop",
+      "description": "Stops music when playing.",
+      "stopped": "Music has been stopped!",
+      "not_stopped": "Music isn't playing, nothing to stop!"
+    },
+    "volume": {
+      "command": "volume",
+      "description": "Returns or sets the current music player volume.",
+      "no_flag": "Unfortunately you do not have the flag `Music Services` to run this command! This is a donator feature only |smile|",
+      "current_volume": "Current volume is {0}%.",
+      "greater_than_zero": "Volume needs to be greater than 0%.",
+      "extreme_volume": "Are you sure you want to exceed 100% volume?",
+      "volume_set": "Volume set to {0}%.",
+      "volume_already_set": "Volume is already set to {0}%.",
+      "volume_range": "Volume needs to be between 0% and 200%."
+    }
+  },
+  "permissions": {
+    "module": {
+      "name": "module",
+      "label": "Module command",
+      "disable": {
+        "name": "module.disable",
+        "label": "Disable module sub-command"
+      },
+      "enable": {
+        "name": "module.enable",
+        "label": "Enable module sub-command"
+      },
+      "list": {
+        "name": "module.list",
+        "label": "List modules sub-command"
+      },
+      "info": {
+        "name": "module.info",
+        "label": "Information module"
+      },
+      "fun": {
+        "name": "module.fun",
+        "label": "Fun module"
+      },
+      "music": {
+        "name": "module.music",
+        "label": "Music module"
+      },
+      "moderation": {
+        "name": "module.moderation",
+        "label": "Moderation module"
+      },
+      "management": {
+        "name": "module.management",
+        "label": "Management module"
+      }
+    },
+    "prefix": {
+      "reset": {
+        "name": "prefix.reset",
+        "label": "Reset command prefix"
+      },
+      "set": {
+        "name": "prefix.set",
+        "label": "Set command prefix"
+      }
+    },
+    "cat": {
+      "name": "cat",
+      "label": "Cat command"
+    },
+    "dog": {
+      "name": "dog",
+      "label": "Dog command"
+    },
+    "color": {
+      "name": "colour",
+      "label": "Colour command"
+    },
+    "random": {
+      "name": "random",
+      "label": "Random number command"
+    },
+    "roles": {
+      "name": "roles",
+      "label": "Roles command"
+    },
+    "serverinfo": {
+      "name": "serverinfo",
+      "label": "Server info command"
+    },
+    "userinfo": {
+      "name": "userinfo",
+      "label": "User info command"
+    },
+    "settings": {
+      "name": "settings",
+      "label": "Settings command"
+    },
+    "tag": {
+      "name": "tag",
+      "label": "Tag command",
+      "category": {
+        "name": "tag.category",
+        "label": "Tag category sub-command"
+      },
+      "create": {
+        "name": "tag.create",
+        "label": "Tag create sub-command"
+      },
+      "delete": {
+        "name": "tag.delete",
+        "label": "Tag delete sub-command"
+      },
+      "edit": {
+        "name": "tag.edit",
+        "label": "Tag edit sub-command"
+      },
+      "list": {
+        "name": "tag.list",
+        "label": "Tag list sub-command"
+      },
+      "placeholder": {
+        "name": "tag.placeholder",
+        "label": "Tag placeholder sub-command"
+      },
+      "raw": {
+        "name": "tag.raw",
+        "label": "Tag raw sub-command"
+      }
+    },
+    "ban": {
+      "name": "ban",
+      "label": "Ban command"
+    },
+    "kick": {
+      "name": "kick",
+      "label": "Kick command"
+    },
+    "softban": {
+      "name": "softban",
+      "label": "Soft-ban command"
+    },
+    "unban": {
+      "name": "unban",
+      "label": "Unban command"
+    },
+    "join": {
+      "name": "join",
+      "label": "Join command",
+      "other": {
+        "name": "join.other",
+        "label": "Make Cascade join a different channel"
+      }
+    },
+    "leave": {
+      "name": "leave",
+      "label": "Leave command",
+      "other": {
+        "name": "leave.other",
+        "label": "Make Cascade leave another channel"
+      }
+    },
+    "loop": {
+      "name": "loop",
+      "label": "Loop command"
+    },
+    "pause": {
+      "name": "pause",
+      "label": "Pause command"
+    },
+    "play": {
+      "name": "play",
+      "label": "Play command"
+    },
+    "playing": {
+      "name": "playing",
+      "label": "Playing command"
+    },
+    "queue": {
+      "name": "queue",
+      "label": "Queue command",
+      "load": {
+        "name": "queue.load",
+        "label": "Queue load sub-command"
+      },
+      "save": {
+        "name": "queue.save",
+        "label": "Queue save sub-command",
+        "overwrite": {
+          "name": "queue.save.overwrite",
+          "label": "Overwrite guild playlist"
+        }
+      }
+    },
+    "resume": {
+      "name": "resume",
+      "label": "Resume command"
+    },
+    "search": {
+      "name": "search",
+      "label": "Search command"
+    },
+    "shuffle": {
+      "name": "shuffle",
+      "label": "Shuffle command"
+    },
+    "skip": {
+      "name": "skip",
+      "label": "Skip command",
+      "force": {
+        "name": "skip.force",
+        "label": "Force skip a song"
+      }
+    },
+    "stop": {
+      "name": "stop",
+      "label": "Stop command"
+    },
+    "volume": {
+      "name": "volume",
+      "label": "Volume command",
+      "extreme": {
+        "name": "volume.extreme",
+        "label": "Raise volume above 100%"
+      }
+    },
+    "flags": {
+      "name": "flags",
+      "label": "Flags command"
+    }
+  },
+  "moderation_manager": {
+    "failed_action": "Could not {0} the user {1} due to an exception!",
+    "cannot_action_yourself": "You cannot {0} yourself!",
+    "cannot_action_bot": "You cannot {0} a bot!",
+    "missing_permission": "Cannot {0} user {1}, missing `{2}` permission!",
+    "cannot_action_owner": "Cannot {0} user {1} as they are the owner of the guild!",
+    "cannot_action_superior": "Cannot {0} user {1} the top role they have is higher than mine!",
+    "success": "{0} has been {1}!"
+  },
+  "music": {
+    "misc": {
+      "load_options": "|musical_note| - Load as track `{0}`\n|notes| - Load as playlist `{1}`",
+      "load_options_title": "Load as a single track or as a playlist?",
+      "load_options_typed": "\n\nPlease type either `{0}` or `{1}`!",
+      "load_option": {
+        "track": "track",
+        "playlist": "playlist"
+      },
+      "cannot_find_tracks": "We couldn't find any tracks to load!",
+      "num_tracks": "{0} tracks",
+      "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`",
+      "loaded_track": "Loaded track"
+    },
+    "handler": {
+      "error_searching": "Error searching from YouTube!",
+      "error_processing": "Error while processing search!",
+      "error_reading": "Error reading YouTube data!",
+      "no_data_returned": "YouTube didn't return any data!",
+      "query_unsuccessful": "The query was unsuccessful! Response: {0}",
+      "more_than_five": "YouTube returned more then 5 results! A check of the YouTube api is recommended"
+    }
+  },
+  "responses": {
+    "invalid_user": "Invalid User!",
+    "error_loading_image": "Error loading image",
+    "cannot_find_guild": "We cannot find that guild!",
+    "not_enough_arguments": "Not enough arguments!",
+    "no_arguments_for_command": "No arguments for command `{0}`!",
+    "empty_result": "Empty result!",
+    "cannot_find_argument": "I can't find that argument!",
+    "no_specified_user": "Not enough arguments (no specified member)",
+    "cannot_find_user": "I cannot find that user!",
+    "cannot_find_user_matching": "Cannot find a user matching: {0}",
+    "cannot_find_voice_channel": "Could not find that voice channel to connect to!",
+    "voice_not_connected": "I am not connected to a voice channel!",
+    "type_one_of": "Please type one of: ",
+    "invalid_guild_id": "That isn't a valid guild ID!",
+    "no_cascade_perm_discord": "You don't have the permission `{0}` or the Discord permission(s) {1} that you need to do this!",
+    "no_cascade_perm": "You don't have the permission `{0}` that you need to do this!",
+    "no_discord_perm": "You don't have the Discord permission `{0}` that you need to do this!",
+    "no_discord_perm_bot": "I don't have the Discord permission `{0}` that I need to do this!",
+    "incorrect_usage_title_1": "That's not the correct usage for the command!",
+    "incorrect_usage_title_2": "Correct usage:",
+    "failed_to_process_command": "There was an error while processing your command!",
+    "failed_to_run_command": "There was an error while running the command!",
+    "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
+    "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!",
+    "permission_not_exist": "`{0}` isn't a valid permission",
+    "cannot_find_role_matching": "Could not find role {0}"
+  },
+  "statuses": {
+    "streaming": "Streaming",
+    "online": "Online",
+    "offline": "Offline",
+    "do_not_disturb": "Do Not Disturb",
+    "idle": "Idle"
+  },
+  "enums": {
+    "flag": {
+      "beta": "beta",
+      "spotify": "spotify",
+      "music_services": "music services"
+    },
+    "loop_mode": {
+      "disabled": "disabled",
+      "playlist": "playlist",
+      "song": "song"
+    },
+    "module": {
+      "core": "core",
+      "management": "management",
+      "music": "music",
+      "informational": "informational",
+      "moderation": "moderation",
+      "fun": "fun",
+      "developer": "developer"
+    },
+    "permissionmode": {
+      "most_restrictive": "most restrictive",
+      "hierarchical": "hierarchical"
+    }
+  },
+  "game_types": {
+    "default": "Playing",
+    "streaming": "Streaming",
+    "listening": "Listening to",
+    "watching": "Watching"
+  },
+  "mod_actions": {
+    "ban": {
+      "name": "ban",
+      "verb": "banned"
+    },
+    "unban": {
+      "name": "unban",
+      "verb": "unbanned"
+    },
+    "soft_ban": {
+      "name": "soft ban",
+      "verb": "soft-banned"
+    },
+    "force_ban": {
+      "name": "force ban",
+      "verb": "forcefully banned"
+    },
+    "kick": {
+      "name": "kick",
+      "verb": "kicked"
+    },
+    "mute": {
+      "name": "mute",
+      "verb": "muted"
+    },
+    "warn": {
+      "name": "warn",
+      "verb": "warned"
+    }
+  },
+  "words": {
+    "permission": "Permission",
+    "subcommand": "Subcommand",
+    "command": "Command",
+    "module": "Module",
+    "discord_perms": "Discord permissions",
+    "default_permission": "Default permission",
+    "no_permission": "No permission",
+    "reason": "Reason",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "status": "Status",
+    "queue": "Queue",
+    "requested_by": "Requested by ",
+    "playing": "Playing",
+    "paused": "Paused",
+    "progress": "Progress",
+    "volume": "Volume",
+    "category": "Category",
+    "tag": "Tag",
+    "author": "Author",
+    "length": "Length",
+    "flags": "Flags",
+    "default": "Default"
+  },
+  "messaging": {
+    "loading_page": "Paged message loading...",
+    "exception_message": "**{0}**\nStack trace: {1}",
+    "report_error": "Please report the stack trace and the error to the developers here: {0}"
+  },
+  "page_objects": {
+    "page_footer": "Page {0}/{1}"
+  },
+  "settings": {
+    "core": {
+      "mentionPrefix": {
+        "nice_name": "Mention prefix",
+        "description": "Whether the bot will respond to a mention as a prefix."
+      },
+      "deleteCommand": {
+        "nice_name": "Delete command after execution",
+        "description": "Whether the original command messages should be deleted after running the command."
+      },
+      "useEmbedForMessages": {
+        "nice_name": "Use embeds for messages",
+        "description": "Whether to use embedded messages to display information."
+      },
+      "showPermErrors": {
+        "nice_name": "Show permission errors",
+        "description": "Whether to show an error if someone does not have permission to do an action."
+      },
+      "showModuleErrors": {
+        "nice_name": "Show module errors",
+        "description": "Whether to show an error when trying to run a command from a disabled module."
+      },
+      "adminsHaveAllPerms": {
+        "nice_name": "Admins have all permissions",
+        "description": "Whether users with the \"Administrator\" permission are able to run all actions on the bot."
+      },
+      "allowTagCommands": {
+        "nice_name": "Allow tags to be used as commands",
+        "description": "Whether tags can be executed using ;<tagname>."
+      },
+      "enabledModules": {
+        "nice_name": "Enabled modules",
+        "description": "The modules whose commands are allowed to be ran on the server."
+      },
+      "prefix": {
+        "nice_name": "Prefix",
+        "description": "The prefix for all commands directed at the bot. It is recommended to make sure that this doesn't conflict with other bots."
+      },
+      "tags": {
+        "nice_name": "Tags",
+        "description": "The tags saved on this server."
+      }
+    }
+  },
+  "placeholders": {
+    "server": {
+      "description": "Gets information about the current server"
+    },
+    "member_count": {
+      "description": "Gets the amount of people in this server"
+    },
+    "sender": {
+      "description": "Gets the user who executed the tag"
+    },
+    "channel": {
+      "description": "Gets the channel that the tag was ran in"
+    },
+    "time": {
+      "description": "Gets the current time"
+    },
+    "args": {
+      "description": "Injects a specified argument (zero indexed)"
+    }
+  },
+  "arguments": {
+    "name": "name",
+    "user": "user",
+    "group": "group",
+    "permission": "permission",
+    "position": "position",
+    "role": "role",
+    "mode": "mode",
+    "tag": "tag",
+    "category": "category",
+    "content": "content",
+    "module": "module",
+    "member": "member",
+    "reason": "reason",
+    "guild_id": "guild_id",
+    "value": "value",
+    "volume": "volume",
+    "setting": "setting",
+    "flag": "flag",
+    "query": "query",
+    "force": "force",
+    "scope": "scope",
+    "url": "url",
+    "channel": "channel",
+    "prefix": "prefix",
+    "command": "command",
+    "userperms#list#user#permissions": {
+      "name": "permissions",
+      "description": "Lists the permissions a user has."
+    },
+    "userperms#list#user#groups": {
+      "name": "groups",
+      "description": "Lists the groups a user has."
+    },
+    "guild#save#all": {
+      "name": "all",
+      "description": "Saves all guilds."
+    },
+    "guild#flag#list": {
+      "name": "list",
+      "description": "Lists all flags."
+    }
+  }
+}
