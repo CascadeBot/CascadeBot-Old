@@ -39,6 +39,11 @@ public class QueueSaveSubCommand implements ISubCommand {
             }
         }
 
+        if (context.getMusicPlayer().getPlayer().getPlayingTrack() == null & context.getMusicPlayer().getQueue().size() == 0) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.queue.save.nothing_to_save"));
+            return;
+        }
+
         long owner = 0;
         switch (scope) {
             case GUILD:
@@ -56,7 +61,7 @@ public class QueueSaveSubCommand implements ISubCommand {
             case ALREADY_EXISTS:
                 if (lambdaScope.equals(PlaylistType.GUILD)) {
                     if (!context.hasPermission("queue.save.overwrite")) {
-                        context.getTypedMessaging().replyWarning(context.i18n("commands.save.saved_playlist")); //TODO actually get the perm
+                        context.getTypedMessaging().replyWarning(context.i18n("commands.queue.save.saved_playlist"));
                         return;
                     }
                 }

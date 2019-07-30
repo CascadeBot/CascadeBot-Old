@@ -7,8 +7,10 @@ package org.cascadebot.cascadebot.utils.votes;
 
 import net.dv8tion.jda.core.entities.Emote;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 
 import java.util.ArrayList;
@@ -234,10 +236,8 @@ public class VoteButtonGroupBuilder {
                     @Override
                     public void run() {
                         CascadeBot.INS.getShardManager().getGuildById(buttonGroup.getGuildId()).getTextChannelById(buttonGroup.getChannelId()).getMessageById(buttonGroup.getMessageId()).queue(message -> {
-                            message.delete().queue(null, ignoredFailure -> {
-                            });
-                        }, ignoredFailure -> {
-                        });
+                            message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         buttonGroup.voteFinished();
                         finishConsumer.accept(buttonGroup.getOrderedVoteResults());
                     }
