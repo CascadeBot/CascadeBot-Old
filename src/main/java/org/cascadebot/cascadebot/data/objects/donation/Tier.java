@@ -17,12 +17,35 @@ public class Tier {
     private static List<Tier> tiers = new ArrayList<>();
 
     public static void buildTiers() {
-        //TODO Should i move this else where?
         List<Flag> flags = new ArrayList<>();
-        flags.add(new FlagWithAmount("custom_commands", 3)); //TODO store flags in list so they can be accessed elsewhere
+        flags.add(new FlagWithAmount("custom_commands", 3));
         flags.add(new FlagWithAmount("prefix_length", 5));
         Tier defaultTier = new Tier(flags);
         tiers.add(defaultTier);
+
+        flags = new ArrayList<>();
+        flags.add(new FlagWithAmount("custom_commands", 7));
+        flags.add(new FlagWithAmount("prefix_length", 1000));
+        flags.add(new Flag("music_node"));
+        flags.add(new Flag("voice_stay"));
+        Tier fiveDollarTier = new Tier(defaultTier, flags, new ArrayList<>());
+        tiers.add(fiveDollarTier);
+
+        flags = new ArrayList<>();
+        flags.add(new FlagWithAmount("custom_commands", 15));
+        flags.add(new Flag("companion_bot"));
+        Tier sevenDollarTier = new Tier(fiveDollarTier, flags, new ArrayList<>());
+        tiers.add(sevenDollarTier);
+
+        flags = new ArrayList<>();
+        flags.add(new FlagWithAmount("custom_commands", 20));
+        Tier tenDollarTier = new Tier(sevenDollarTier, flags, new ArrayList<>());
+        tiers.add(tenDollarTier);
+
+        flags = new ArrayList<>();
+        flags.add(new FlagWithAmount("custom_commands", 77));
+        Tier thirtyFiveDollarTier = new Tier(tenDollarTier, flags, new ArrayList<>());
+        tiers.add(thirtyFiveDollarTier);
     }
 
     public static Tier getTier(int index) {
