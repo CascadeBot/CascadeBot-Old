@@ -26,7 +26,7 @@ public @interface Setting {
     /**
      * The module(s) that this setting belongs to. Used to organise the web panel.
      */
-    Module[] module() default {};
+    Module[] modules() default {};
 
     /**
      * Whether the user can directly edit this setting through the ;settings command.

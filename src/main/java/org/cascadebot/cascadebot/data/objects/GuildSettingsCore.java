@@ -31,19 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GuildSettingsCore {
 
     @GraphQLIgnore
-    public static Map<String, Field> VALUES = new HashMap<>();
-
-    @GraphQLIgnore
     private long guildId;
-
-    static {
-        for (Field field : GuildSettingsCore.class.getDeclaredFields()) {
-            if (field.getName().equals("VALUES")) continue;
-            if (field.getAnnotation(Setting.class) == null || !field.getAnnotation(Setting.class).directlyEditable()) continue;
-            field.setAccessible(true);
-            VALUES.put(field.getName().toLowerCase(), field);
-        }
-    }
 
     //region Boolean flags
     @Setting

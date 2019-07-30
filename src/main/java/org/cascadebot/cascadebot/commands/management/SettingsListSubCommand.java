@@ -8,6 +8,7 @@ import org.cascadebot.cascadebot.data.objects.SettingsContainer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.PasteUtils;
+import org.cascadebot.cascadebot.utils.SettingsUtils;
 import org.cascadebot.cascadebot.utils.Table;
 
 import java.util.Comparator;
@@ -16,18 +17,12 @@ import java.util.Map;
 
 public class SettingsListSubCommand implements ISubCommand {
 
-    private List<Class<?>> settingsClasses;
-
-    public SettingsListSubCommand(List<Class<?>> settingsClasses) {
-        this.settingsClasses = settingsClasses;
-    }
-
     @Override
     public void onCommand(Member sender, CommandContext context) {
         StringBuilder messageBuilder = new StringBuilder();
-        for (Class<?> settingsClass : settingsClasses) {
+        for (Class<?> settingsClass : SettingsUtils.getSettingsClasses()) {
             Table.TableBuilder tableBuilder = new Table.TableBuilder(context.i18n("commands.settings.setting"), context.i18n("commands.settings.current_value"));
-            SettingsCommand.getSettingsFromClass(settingsClass).entrySet()
+            SettingsUtils.getSettingsFromClass(settingsClass).entrySet()
                     .stream()
                     .sorted(Comparator.comparing(Map.Entry::getKey))
                     .map(Map.Entry::getValue)
