@@ -43,8 +43,9 @@ public class PermissionsManager {
             JSONConfig config = Language.getLanguages().get(locale);
             if (config.getElement("permissions").isEmpty()) continue;
             for (String permission : permissions.keySet()) {
-                if (config.getString("permissions." + permission + ".name").isEmpty()) continue;
-                localisedPermissionsMapping.put(config.getString("permissions." + permission + ".name").get(), permission);
+                if (config.getString("permissions." + permission + ".name").isPresent()) {
+                    localisedPermissionsMapping.put(config.getString("permissions." + permission + ".name").get(), permission);
+                }
             }
         }
     }

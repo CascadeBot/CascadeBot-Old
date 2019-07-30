@@ -43,7 +43,10 @@ public class ConfirmUtils {
             action.userId = userId;
             action.message = sentMessage;
             confirmedMap.put(actionKey, action);
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (ExecutionException e) {
+            return false;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             return false;
         }
         if (sentMessage == null) {

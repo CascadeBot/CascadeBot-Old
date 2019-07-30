@@ -153,6 +153,18 @@ public final class Table {
             return this;
         }
 
+        public TableBuilder addRow(List<String> row) {
+            if (row.size() != this.headings.size()) {
+                throw new IllegalArgumentException(String.format(
+                        "The number of row elements added was invalid! Expected: %d Actual: %d",
+                        this.headings.size(),
+                        row.size()
+                ));
+            }
+            body.add(row);
+            return this;
+        }
+
         /**
          * Sets the footer for this table.
          *
