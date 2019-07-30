@@ -5,7 +5,11 @@ import lombok.Getter;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.User;
 import org.cascadebot.cascadebot.data.language.Locale;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import spark.Request;
+
+import java.util.function.Supplier;
 
 @AllArgsConstructor
 @Getter
@@ -18,11 +22,16 @@ public class QLContext {
 
     // TODO: Add methods to check that user is authenticated for this guild
 
-    public void runIfAuthenticated(AuthenticationLevel level, Runnable runnable) {
-        if (!authenticated) return;
-        if (level == AuthenticationLevel.USER && user != null) runnable.run();
-        if (level == AuthenticationLevel.GUILD && user != null && guild.getMember(user) != null) runnable.run();
+    public <T> T runIfAuthenticated(AuthenticationLevel level, Supplier<T> runnable) {
+        if (!authenticated) return null;
+        if (level == AuthenticationLevel.USER && user != null) return runnable.get();
+        if (level == AuthenticationLevel.GUILD && user != null && guild.getMember(user) != null) return runnable.get();
         // TODO: Throw errors and do permission checks
+        return null;
+    }
+
+    public GuildData getGuildData() {
+        return GuildDataManager.getGuildData(guild.getIdLong());
     }
 
     public enum AuthenticationLevel {
