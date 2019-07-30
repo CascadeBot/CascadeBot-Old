@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.data.graphql.services.GuildDataService;
 import org.cascadebot.cascadebot.data.graphql.services.LanguageService;
 import org.cascadebot.cascadebot.data.graphql.services.PermissionsServices;
 import org.cascadebot.cascadebot.data.graphql.services.PlaylistService;
+import org.cascadebot.cascadebot.data.graphql.services.SettingsService;
 
 public class GraphQLManager {
 
@@ -20,6 +21,7 @@ public class GraphQLManager {
             .withOperationsFromSingleton(CommandsService.getInstance())
             .withOperationsFromSingleton(LanguageService.getInstance())
             .withOperationsFromSingleton(PermissionsServices.getInstance())
+            .withOperationsFromSingleton(SettingsService.getInstance())
             .generate();
 
     private GraphQLExceptionHandler exceptionHandler = new GraphQLExceptionHandler();
