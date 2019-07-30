@@ -8,6 +8,7 @@ import org.bson.codecs.EncoderContext;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 public class OffsetDateTimeCodec implements Codec<OffsetDateTime> {
 
@@ -23,7 +24,7 @@ public class OffsetDateTimeCodec implements Codec<OffsetDateTime> {
 
     @Override
     public OffsetDateTime decode(BsonReader reader, DecoderContext decoderContext) {
-        return OffsetDateTime.from(Instant.ofEpochMilli(reader.readDateTime()));
+        return Instant.ofEpochMilli(reader.readDateTime()).atOffset(ZoneOffset.UTC);
     }
 
 }
