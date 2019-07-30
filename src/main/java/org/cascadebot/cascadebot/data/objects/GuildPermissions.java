@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
-import io.leangen.graphql.annotations.GraphQLQuery;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.core.Permission;
