@@ -1,3 +1,3 @@
 files:
-  - source: src/main/resources/lang/en-GB.json
-    translation: src/main/resources/lang/%locale%.json
+  - source: /src/main/resources/lang/en-GB.json
+    translation: /src/main/resources/lang/%locale%.json
