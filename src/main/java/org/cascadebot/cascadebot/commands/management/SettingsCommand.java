@@ -53,11 +53,12 @@ public class SettingsCommand implements ICommandMain {
                 try {
                     Setting settingAnnotation = field.getAnnotation(Setting.class);
                     if (settingAnnotation != null) {
-                        if (!context.getData().getEnabledFlags().containsAll(Arrays.asList(settingAnnotation.flagRequired()))) {
+                        /*if (!context.getData().getEnabledFlags().containsAll(Arrays.asList(settingAnnotation.flagRequired()))) {
                             String niceName = Language.i18n(context.getGuild().getIdLong(), "settings." + field.getDeclaringClass().getAnnotation(SettingsContainer.class).module().name().toLowerCase() + "." + field.getName() + ".nice_name");
                             context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_edit", niceName));
                             return;
                         }
+                         */
                     }
 
                     if (context.getArgs().length != 2) {

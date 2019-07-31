@@ -22,6 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -65,6 +66,10 @@ public class GuildData {
 
     */
 
+    @Getter
+    @Setter
+    Tier currentTier = Tier.getTier(0);
+
     //endregion
 
     //region Transient fields
@@ -92,7 +97,7 @@ public class GuildData {
     }
 
     public GuildData(long guildID) {
-        this.guildID = guildID;
+        this.guildId = guildID;
         guildTier = Tier.getTier(0);
     }
 

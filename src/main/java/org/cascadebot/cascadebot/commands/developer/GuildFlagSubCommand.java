@@ -27,6 +27,7 @@ public class GuildFlagSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        /*
         if (context.getArgs().length > 0) {
             Flag flag;
             if (EnumUtils.isValidEnumIgnoreCase(Flag.class, context.getArg(0))) {
@@ -70,6 +71,7 @@ public class GuildFlagSubCommand implements ISubCommand {
             }
 
         }
+        */
     }
 
     @Override

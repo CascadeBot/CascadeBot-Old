@@ -21,7 +21,7 @@ public @interface Setting {
     /**
      * The flag(s) required to have access to change this setting.
      */
-    Flag[] flagRequired() default {};
+    //Flag[] flagRequired() default {};
 
 
     /**

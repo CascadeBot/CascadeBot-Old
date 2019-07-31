@@ -12,6 +12,10 @@ public class Flag {
 
     private String id;
 
+    private Flag() {
+        //default constructor for mongo.
+    }
+
     public Flag(String id) {
         this.id = id;
     }

@@ -70,6 +70,10 @@ public class Tier {
     @Getter
     private List<String> otherBenefits = new ArrayList<>();
 
+    private Tier() {
+        //default constructor for mongo.
+    }
+
     public Tier(List<Flag> flags) {
         this.flags = flags;
     }

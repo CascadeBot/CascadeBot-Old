@@ -21,6 +21,7 @@ public class FlagsCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        /*
         GuildData dataForList = context.getData();
         Guild guildForList = context.getGuild();
 
@@ -36,6 +37,7 @@ public class FlagsCommand implements ICommandMain {
         builder.addField(context.i18n("words.flags"), flags, false);
 
         context.getTypedMessaging().replyInfo(builder);
+        */
     }
 
     @Override

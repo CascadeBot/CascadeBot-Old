@@ -45,10 +45,12 @@ public class GuildInfoSubCommand implements ISubCommand {
 
 
         GuildData finalDataForList = dataForList;
+        /*
         String flags = Arrays.stream(Flag.values())
                              .map(flag -> FormatUtils.formatEnum(flag) + " - " +
                                      (finalDataForList.isFlagEnabled(flag) ? UnicodeConstants.TICK : UnicodeConstants.RED_CROSS))
                              .collect(Collectors.joining("\n"));
+         */
 
         String modules = Arrays.stream(Module.values())
                              .map(module -> FormatUtils.formatEnum(module) + " - " +
@@ -56,7 +58,7 @@ public class GuildInfoSubCommand implements ISubCommand {
                              .collect(Collectors.joining("\n"));
 
 
-        builder.addField("Flags", flags, false);
+        //builder.addField("Flags", flags, false);
         builder.addField("Modules", modules, false);
         builder.addField("Join Date", FormatUtils.formatDateTime(context.getSelfMember().getJoinDate()), false);
 

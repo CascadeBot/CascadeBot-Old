@@ -68,7 +68,7 @@ public class PlayingCommand implements ICommandMain {
             context.getTypedMessaging().replyWarning(context.i18n("commands.playing.no_music_playing"));
         } else {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
+            //if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
                     if (context.hasPermission(runner, "volume")) {
                         int volume = context.getMusicPlayer().getPlayer().getVolume();
@@ -91,7 +91,7 @@ public class PlayingCommand implements ICommandMain {
                         message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                     }
                 }));
-            }
+            //}
 
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.STOP, (runner, channel, message) -> {
                 if (context.hasPermission(runner, "stop")) {

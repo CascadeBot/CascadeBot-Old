@@ -112,7 +112,9 @@ public class MusicHandler {
 
     public void purgeDisconnectedPlayers() {
         // Removes all players that are not connected to a channel unless they have supported us on Patreon
-        players.entrySet().removeIf(entry -> entry.getValue().getConnectedChannel() == null && !GuildDataManager.getGuildData(entry.getKey()).isFlagEnabled(Flag.MUSIC_SERVICES));
+        players.entrySet().removeIf(entry -> entry.getValue().getConnectedChannel() == null
+                //&& !GuildDataManager.getGuildData(entry.getKey()).isFlagEnabled(Flag.MUSIC_SERVICES)
+        );
     }
 
     /**

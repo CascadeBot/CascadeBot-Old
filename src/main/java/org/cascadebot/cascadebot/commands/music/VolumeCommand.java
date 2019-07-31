@@ -84,9 +84,11 @@ public class VolumeCommand implements ICommandMain {
         return CascadePermission.of("volume", false);
     }
 
+    /*
     @Override
     public Set<Flag> getFlags() {
         return Set.of(Flag.MUSIC_SERVICES);
     }
+    */
 
 }
