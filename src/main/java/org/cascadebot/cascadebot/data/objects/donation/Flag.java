@@ -12,7 +12,7 @@ public class Flag {
 
     private String id;
 
-    private Flag() {
+    protected Flag() {
         //default constructor for mongo.
     }
 

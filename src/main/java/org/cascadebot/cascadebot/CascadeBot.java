@@ -30,6 +30,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.donation.Tier;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
@@ -200,6 +201,8 @@ public class CascadeBot {
             } else {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
             }
+
+            Tier.buildTiers();
 
             shardManager = defaultShardManagerBuilder.build();
         } catch (LoginException e) {

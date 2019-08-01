@@ -8,6 +8,10 @@ package org.cascadebot.cascadebot.data.objects.donation;
 public class FlagWithAmount extends Flag {
     private int amount;
 
+    private FlagWithAmount() {
+        super();
+    }
+
     public FlagWithAmount(String id) {
         super(id);
     }
