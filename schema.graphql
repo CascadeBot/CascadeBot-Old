@@ -1,5 +1,5 @@
 # source: http://localhost:8080/graphql
-# timestamp: Tue Jul 23 2019 21:46:45 GMT+0100 (British Summer Time)
+# timestamp: Fri Aug 02 2019 16:18:53 GMT+0100 (British Summer Time)
 
 type CascadePermission {
   defaultPerm: Boolean!
@@ -120,6 +120,7 @@ enum Module {
 type Mutation {
   """Edits any fields on a playlist. Null fields are skipped."""
   editPlaylist(name: String, id: String!, ownerId: Long, playlistScope: PlaylistScope, tracks: [String]): Playlist
+  userHasPermission(permission: String, userId: Long!): Result
   deletePlaylist(id: String!): String
   createPlaylist(scope: PlaylistScope!, name: String!, ownerId: Long!, tracks: [String]!): Playlist
 }
@@ -162,6 +163,12 @@ enum Permission {
   UNKNOWN
 }
 
+enum PermissionAction {
+  NEUTRAL
+  ALLOW
+  DENY
+}
+
 enum PermissionMode {
   HIERARCHICAL
   MOST_RESTRICTIVE
@@ -185,10 +192,33 @@ type Query {
   allPlaylists(scope: PlaylistScope!, ownerId: Long!): [Playlist]!
   permission(permission: String!): CascadePermission
   language(languageKey: String!): JSONObject
+  setting(name: String): SettingsWrapper
+  settingsInformation: [SettingsWrapper]
   guild(id: Long!): GuildData
   playlist(id: String!): Playlist
   allCommands(module: Module): [ICommandMain]!
   allPermissions: [CascadePermission]
+}
+
+type Result {
+  cause: ResultCause
+  action: PermissionAction
+}
+
+enum ResultCause {
+  GROUP
+  USER
+  DISCORD
+  OFFICIAL
+  GUILD
+  DEFAULT
+}
+
+type SettingsWrapper {
+  name: String
+  flagsRequired: [Flag]
+  modules: [Module]
+  directlyEditable: Boolean!
 }
 
 """Unrepresentable type"""
