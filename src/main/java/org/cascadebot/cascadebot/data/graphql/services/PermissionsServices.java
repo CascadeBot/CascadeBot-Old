@@ -1,9 +1,9 @@
 package org.cascadebot.cascadebot.data.graphql.services;
 
-import io.leangen.graphql.annotations.GraphQLContext;
 import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
+import io.leangen.graphql.annotations.GraphQLRootContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +33,7 @@ public class PermissionsServices {
     }
 
     @GraphQLMutation
-    public Result userHasPermission(@GraphQLContext QLContext context, long userId, String permission) {
+    public Result userHasPermission(@GraphQLRootContext QLContext context, long userId, String permission) {
         return context.runIfAuthenticated(QLContext.AuthenticationLevel.GUILD, () -> {
             GuildData guildData = context.getGuildData();
             if (guildData == null) throw new IllegalStateException("GuildData is null!");
