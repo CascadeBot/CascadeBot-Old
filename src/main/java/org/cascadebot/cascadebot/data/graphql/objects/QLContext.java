@@ -30,6 +30,13 @@ public class QLContext {
         return null;
     }
 
+    public void runIfAuthenticated(AuthenticationLevel level, Runnable runnable) {
+        if (!authenticated) return;
+        if (level == AuthenticationLevel.USER && user != null) runnable.run();
+        if (level == AuthenticationLevel.GUILD && user != null && guild.getMember(user) != null) runnable.run();
+        // TODO: Throw errors and do permission checks
+    }
+
     public GuildData getGuildData() {
         return GuildDataManager.getGuildData(guild.getIdLong());
     }
