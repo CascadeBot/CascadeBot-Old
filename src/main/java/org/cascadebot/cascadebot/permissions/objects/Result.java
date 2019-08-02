@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.permissions.objects;
 
+import io.leangen.graphql.annotations.GraphQLIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -16,6 +17,8 @@ public class Result {
 
     private PermissionAction action;
     private ResultCause cause;
+
+    @GraphQLIgnore
     private Object causeObject;
 
     private Result(PermissionAction action) {
@@ -57,14 +60,17 @@ public class Result {
         return new Result(action, container);
     }
 
+    @GraphQLIgnore
     public boolean isDenied() {
         return action == PermissionAction.DENY;
     }
 
+    @GraphQLIgnore
     public boolean isAllowed() {
         return action == PermissionAction.ALLOW;
     }
 
+    @GraphQLIgnore
     public boolean isNeutral() {
         return action == PermissionAction.NEUTRAL;
     }
