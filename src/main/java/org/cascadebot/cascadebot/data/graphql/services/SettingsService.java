@@ -41,6 +41,7 @@ public class SettingsService {
             if (guildData == null) return null;
 
             // TODO We need to find a way to get the settings class instance
+            return null;
         });
     }
 
