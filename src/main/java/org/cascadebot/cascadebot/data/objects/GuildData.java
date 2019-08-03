@@ -68,7 +68,7 @@ public class GuildData {
 
     @Getter
     @Setter
-    Tier currentTier = Tier.getTier(0);
+    Tier currentTier;
 
     //endregion
 
@@ -82,11 +82,6 @@ public class GuildData {
     //endregion
 
     /**
-     * The highest tier the guild has as parent tiers are auto applied.
-     */
-    private Tier guildTier;
-
-    /**
      * Misc flags not already in a tier (beta would go here for example)
      */
     private List<Flag> miscFlags = new ArrayList<>();
@@ -98,7 +93,7 @@ public class GuildData {
 
     public GuildData(long guildID) {
         this.guildId = guildID;
-        guildTier = Tier.getTier(0);
+        currentTier = Tier.getTier(0);
     }
 
     //region Commands
@@ -206,5 +201,23 @@ public class GuildData {
     }
 
     //endregion
+
+    public Flag getFlag(String flagId) {
+        return getFlagRecursive(flagId, currentTier);
+    }
+
+    private Flag getFlagRecursive(String flagId, Tier tier) {
+        for (Flag flag : tier.getFlags()) {
+            if(flag.getId().equals(flagId)) {
+                return flag;
+            }
+        }
+
+        if(tier.getParent() != null) {
+            return getFlagRecursive(flagId, tier.getParent());
+        }
+
+        return null;
+    }
 
 }

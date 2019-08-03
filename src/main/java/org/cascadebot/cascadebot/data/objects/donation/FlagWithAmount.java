@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.data.objects.donation;
 
+import lombok.ToString;
+
 public class FlagWithAmount extends Flag {
     private int amount;
 
@@ -27,5 +29,10 @@ public class FlagWithAmount extends Flag {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return getId() + ": " + amount;
     }
 }

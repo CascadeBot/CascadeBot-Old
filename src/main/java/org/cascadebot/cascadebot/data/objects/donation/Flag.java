@@ -5,9 +5,11 @@
 
 package org.cascadebot.cascadebot.data.objects.donation;
 
+import lombok.ToString;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
+@ToString
 public class Flag {
 
     private String id;
@@ -23,6 +25,10 @@ public class Flag {
     //TODO lang
     public String getName(Locale locale) {
         return Language.getLanguage(locale).getString("flags." + id + ".name").orElse("No language string defined");
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getDescription(Locale locale) {
