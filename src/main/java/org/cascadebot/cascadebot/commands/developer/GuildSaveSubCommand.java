@@ -9,7 +9,7 @@ import net.dv8tion.jda.core.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class GuildSaveSubCommand implements ISubCommand {

@@ -24,7 +24,7 @@ import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 import org.cascadebot.cascadebot.exceptions.DiscordPermissionException;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.utils.FormatUtils;

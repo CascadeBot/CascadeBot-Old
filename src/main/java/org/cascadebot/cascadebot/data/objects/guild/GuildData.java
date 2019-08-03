@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.data.objects;
+package org.cascadebot.cascadebot.data.objects.guild;
 
 import com.google.common.collect.Sets;
 import de.bild.codec.annotations.Id;

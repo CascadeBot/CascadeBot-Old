@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.data.objects;
+package org.cascadebot.cascadebot.data.objects.guild;
 
 public class GuildModeration {
 

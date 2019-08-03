@@ -10,7 +10,7 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
-import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 import org.cascadebot.cascadebot.events.GuildSaveListener;
 
 import java.util.concurrent.TimeUnit;

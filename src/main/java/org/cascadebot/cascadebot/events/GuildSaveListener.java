@@ -9,7 +9,7 @@ import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.RemovalListener;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

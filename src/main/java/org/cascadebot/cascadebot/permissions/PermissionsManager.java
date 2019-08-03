@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
-import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.shared.SecurityLevel;
 import org.slf4j.Logger;

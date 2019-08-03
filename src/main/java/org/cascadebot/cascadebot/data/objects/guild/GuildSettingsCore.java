@@ -3,14 +3,12 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.data.objects;
+package org.cascadebot.cascadebot.data.objects.guild;
 
 import com.google.common.collect.Sets;
-import jdk.jfr.Name;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
@@ -22,6 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import org.cascadebot.cascadebot.data.objects.Setting;
+import org.cascadebot.cascadebot.data.objects.SettingsContainer;
+import org.cascadebot.cascadebot.data.objects.Tag;
 
 @SettingsContainer(module = Module.CORE)
 @Getter

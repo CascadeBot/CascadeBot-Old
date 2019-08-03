@@ -15,7 +15,7 @@ import net.dv8tion.jda.core.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.tasks.Task;

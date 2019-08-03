@@ -9,7 +9,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.data.language.Locale;
-import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 import org.cascadebot.cascadebot.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
