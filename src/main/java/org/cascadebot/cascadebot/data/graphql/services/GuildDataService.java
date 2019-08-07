@@ -23,7 +23,7 @@ public class GuildDataService {
 
     @GraphQLQuery
     public GuildData guild(@GraphQLRootContext QLContext context, long id) {
-        return GuildDataManager.getGuildData(id);
+        return context.runIfAuthenticated(QLContext.AuthenticationLevel.GUILD, () -> GuildDataManager.getGuildData(id));
     }
 
     @GraphQLQuery
@@ -77,7 +77,9 @@ public class GuildDataService {
 
     private Guild getGuildFromId(long guildId) {
         Guild guild = CascadeBot.INS.getShardManager().getGuildById(guildId);
-        if (guild == null) throw new IllegalStateException("We can't get that guild :(");
+        if (guild == null) {
+            throw new IllegalStateException("We can't get that guild :(");
+        }
         return guild;
     }
 
