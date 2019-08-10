@@ -23,7 +23,9 @@ public class GuildDataService {
 
     @GraphQLQuery
     public GuildData guild(@GraphQLRootContext QLContext context, long id) {
-        return context.runIfAuthenticated(QLContext.AuthenticationLevel.GUILD, () -> GuildDataManager.getGuildData(id));
+        return context.runIfAuthenticatedGuild((member) -> {
+            return GuildDataManager.getGuildData(id);
+        });
     }
 
     @GraphQLQuery

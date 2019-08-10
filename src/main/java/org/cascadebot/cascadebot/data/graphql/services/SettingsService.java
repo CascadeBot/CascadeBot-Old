@@ -33,7 +33,7 @@ public class SettingsService {
 
     @GraphQLQuery
     public SettingsWrapper setting(@GraphQLRootContext QLContext context, String name) {
-        return context.runIfAuthenticated(QLContext.AuthenticationLevel.GUILD, () -> {
+        return context.runIfAuthenticatedGuild((member) -> {
             Field setting = SettingsUtils.getAllSettings().get(name);
             if (setting == null) return null;
 
