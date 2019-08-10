@@ -8,10 +8,10 @@ package org.cascadebot.cascadebot.utils;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import lombok.experimental.UtilityClass;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.requests.ErrorResponse;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
@@ -57,7 +57,7 @@ public class ConfirmUtils {
             Task.getScheduler().schedule(() -> {
                 ButtonGroup group = new ButtonGroup(userId, channel.getIdLong(), channel.getGuild().getIdLong());
                 group.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel1, message1) -> {
-                    if (runner.getUser().getIdLong() != action.userId) return;
+                    if (runner.getIdLong() != action.userId) return;
                     action.run();
                 }));
                 group.addButtonsToMessage(sentMessage);

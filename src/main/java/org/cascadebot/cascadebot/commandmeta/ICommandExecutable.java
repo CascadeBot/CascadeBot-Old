@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.commandmeta;
 
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;

@@ -6,14 +6,13 @@
 package org.cascadebot.cascadebot.messaging;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.exceptions.PermissionException;
-import net.dv8tion.jda.core.requests.ErrorResponse;
-import net.dv8tion.jda.core.requests.RequestFuture;
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -33,6 +32,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,12 +51,12 @@ public class MessagingUI {
     /**
      * Sends an image to the channel in the context
      * When embeds are on, it embeds the image into the embed.
-     * When embeds are off, it downloads the image and sends it via the {@link net.dv8tion.jda.core.entities.TextChannel#sendFile(File)} method
+     * When embeds are off, it downloads the image and sends it via the {@link net.dv8tion.jda.api.entities.TextChannel#sendFile(File)} method
      *
      * @param url The url of the image.
      * @return A {@link RequestFuture<Message>} so you can interact with the message after it sends.
      */
-    public RequestFuture<Message> replyImage(String url) {
+    public CompletableFuture<Message> replyImage(String url) {
         if (context.getCoreSettings().isUseEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setImage(url);

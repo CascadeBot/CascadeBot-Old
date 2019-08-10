@@ -5,8 +5,8 @@
 
 package org.cascadebot.cascadebot.commands.management;
 
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;

@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.commands.management.permission;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
@@ -42,9 +42,9 @@ public class GroupPermissionMoveSubCommand implements ISubCommand {
             }
 
             AtomicInteger currIndex = new AtomicInteger(context.getData().getPermissions().getGroups().indexOf(group));
-            ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+            ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
-                if (buttonGroup.getOwner().getUser().getIdLong() != runner.getUser().getIdLong()) {
+                if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
                     return;
                 }
                 context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() - 1);
@@ -52,7 +52,7 @@ public class GroupPermissionMoveSubCommand implements ISubCommand {
                 message.editMessage(getGroupsList(group, context.getData().getPermissions().getGroups())).queue();
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
-                if (buttonGroup.getOwner().getUser().getIdLong() != runner.getUser().getIdLong()) {
+                if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
                     return;
                 }
                 context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() + 1);
@@ -61,7 +61,7 @@ public class GroupPermissionMoveSubCommand implements ISubCommand {
             }));
 
             context.getUIMessaging().sendButtonedMessage(getGroupsList(group, context.getData().getPermissions().getGroups()), buttonGroup);
-        }, sender.getUser().getIdLong());
+        }, sender.getIdLong());
     }
 
     public String getGroupsList(Group targetGroup, List<Group> groups) {

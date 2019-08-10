@@ -5,9 +5,9 @@
 
 package org.cascadebot.cascadebot.utils.votes;
 
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.requests.ErrorResponse;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
@@ -166,13 +166,13 @@ public class VoteButtonGroupBuilder {
         switch (type) {
             case YES_NO:
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                    if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                    if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
                         return;
                     }
                     buttonGroup.addVote(runner.getUser(), UnicodeConstants.TICK);
                 }));
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, (runner, channel, message) -> {
-                    if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                    if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
                         return;
                     }
                     buttonGroup.addVote(runner.getUser(), UnicodeConstants.RED_CROSS);
@@ -183,7 +183,7 @@ public class VoteButtonGroupBuilder {
                     char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
                     final int num = i;
                     buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
-                        if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                        if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
                             return;
                         }
                         buttonGroup.addVote(runner.getUser(), num);
@@ -195,7 +195,7 @@ public class VoteButtonGroupBuilder {
                     char unicode = (char) (0xdde0 + (i + 6));
                     final int num = i;
                     buttonGroup.addButton(new Button.UnicodeButton("\uD83C" + unicode, (runner, channel, message) -> {
-                        if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                        if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
                             return;
                         }
                         buttonGroup.addVote(runner.getUser(), num);
@@ -207,7 +207,7 @@ public class VoteButtonGroupBuilder {
                     if (object instanceof Emote) {
                         Emote emote = (Emote) object;
                         buttonGroup.addButton(new Button.EmoteButton(emote.getIdLong(), (runner, channel, message) -> {
-                            if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                            if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
                                 return;
                             }
                             buttonGroup.addVote(runner.getUser(), emote.getIdLong());
@@ -215,7 +215,7 @@ public class VoteButtonGroupBuilder {
                     } else {
                         String unicode = (String) object;
                         buttonGroup.addButton(new Button.UnicodeButton(unicode, (runner, channel, message) -> {
-                            if (!buttonGroup.isUserAllowed(runner.getUser().getIdLong())) {
+                            if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
                                 return;
                             }
                             buttonGroup.addVote(runner.getUser(), unicode);
@@ -235,7 +235,7 @@ public class VoteButtonGroupBuilder {
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        CascadeBot.INS.getShardManager().getGuildById(buttonGroup.getGuildId()).getTextChannelById(buttonGroup.getChannelId()).getMessageById(buttonGroup.getMessageId()).queue(message -> {
+                        CascadeBot.INS.getShardManager().getGuildById(buttonGroup.getGuildId()).getTextChannelById(buttonGroup.getChannelId()).retrieveMessageById(buttonGroup.getMessageId()).queue(message -> {
                             message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         buttonGroup.voteFinished();

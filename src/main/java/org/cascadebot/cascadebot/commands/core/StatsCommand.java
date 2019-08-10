@@ -1,14 +1,13 @@
 package org.cascadebot.cascadebot.commands.core;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
+import com.sun.management.OperatingSystemMXBean;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.io.FileUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-
-import com.sun.management.OperatingSystemMXBean;
 import org.cascadebot.cascadebot.music.MusicHandler;
 
 import java.lang.management.ManagementFactory;
@@ -30,7 +29,8 @@ public class StatsCommand implements ICommandCore {
         builder.addField("CPU Load", Math.round(osBean.getProcessCpuLoad() * 100) + "%", true);
         builder.addField("Total Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsTotal()), true);
         builder.addField("Online Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsRunning()), true);
-        builder.addField("Ping", String.valueOf(context.getChannel().getJDA().getPing()), true);
+        builder.addField("Gateway Ping", String.valueOf(context.getChannel().getJDA().getGatewayPing()), true);
+        builder.addField("REST Ping", String.valueOf(context.getChannel().getJDA().getRestPing().complete()), true);
         builder.addField("Shard Status", CascadeBot.INS.getShardManager().getStatus(context.getChannel().getJDA().getShardInfo().getShardId()).toString(), true);
         builder.addField("Shard ID", String.valueOf(context.getChannel().getJDA().getShardInfo().getShardId() + 1), true);
 

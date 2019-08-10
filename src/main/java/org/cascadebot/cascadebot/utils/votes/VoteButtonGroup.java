@@ -6,8 +6,8 @@
 package org.cascadebot.cascadebot.utils.votes;
 
 import com.google.common.collect.Sets;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
@@ -46,7 +46,7 @@ public class VoteButtonGroup extends ButtonGroup {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).getMessageById(getMessageId()).queue(message -> {
+                CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
                     periodicConsumer.accept(getOrderedVoteResults(), message);
                 });
             }
@@ -57,7 +57,7 @@ public class VoteButtonGroup extends ButtonGroup {
      * Adds a vote from a specified user.
      *
      * @param user The user this vote came from.
-     * @param vote The unicode or {@link net.dv8tion.jda.core.entities.Emote} that is the vote you want to add.
+     * @param vote The unicode or {@link net.dv8tion.jda.api.entities.Emote} that is the vote you want to add.
      */
     public void addVote(User user, Object vote) {
         if (votes.containsKey(user.getIdLong())) {
