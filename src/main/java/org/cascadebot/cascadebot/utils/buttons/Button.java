@@ -6,7 +6,7 @@
 package org.cascadebot.cascadebot.utils.buttons;
 
 import lombok.Getter;
-import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.api.entities.Message;
 import org.cascadebot.cascadebot.CascadeBot;
 
 public abstract class Button {

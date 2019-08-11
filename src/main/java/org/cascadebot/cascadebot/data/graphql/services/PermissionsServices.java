@@ -7,7 +7,7 @@ import io.leangen.graphql.annotations.GraphQLRootContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.graphql.objects.QLContext;
 import org.cascadebot.cascadebot.data.objects.GuildData;

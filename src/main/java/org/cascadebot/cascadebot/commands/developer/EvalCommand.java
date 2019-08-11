@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.developer;
 
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
@@ -36,11 +36,11 @@ public class EvalCommand implements ICommandRestricted {
             "org.cascadebot.cascadebot.data",
             "org.cascadebot.cascadebot.messaging",
             "org.cascadebot.cascadebot.utils",
-            "net.dv8tion.jda.core",
-            "net.dv8tion.jda.core.managers",
-            "net.dv8tion.jda.core.entities",
-            "net.dv8tion.jda.core.entities.impl",
-            "net.dv8tion.jda.core.utils",
+            "net.dv8tion.jda.api",
+            "net.dv8tion.jda.api.managers",
+            "net.dv8tion.jda.api.entities",
+            "net.dv8tion.jda.internal.entities",
+            "net.dv8tion.jda.internal.utils",
             "java.util",
             "java.util.stream",
             "java.lang",

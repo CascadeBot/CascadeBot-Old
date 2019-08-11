@@ -2,7 +2,9 @@ package org.cascadebot.cascadebot.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.playback.AudioFrame;
-import net.dv8tion.jda.core.audio.AudioSendHandler;
+import net.dv8tion.jda.api.audio.AudioSendHandler;
+
+import java.nio.ByteBuffer;
 
 
 /**
@@ -27,7 +29,7 @@ public class LavaPlayerAudioSendHandler implements AudioSendHandler {
     }
 
     @Override
-    public byte[] provide20MsAudio() {
+    public ByteBuffer provide20MsAudio() {
         if (lastFrame == null) {
             lastFrame = audioPlayer.provide();
         }
@@ -35,7 +37,7 @@ public class LavaPlayerAudioSendHandler implements AudioSendHandler {
         byte[] data = lastFrame != null ? lastFrame.getData() : null;
         lastFrame = null;
 
-        return data;
+        return data != null ? ByteBuffer.wrap(data) : null;
     }
 
     @Override

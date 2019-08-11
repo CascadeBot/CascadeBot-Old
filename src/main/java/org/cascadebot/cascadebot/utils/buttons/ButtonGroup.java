@@ -7,10 +7,11 @@ package org.cascadebot.cascadebot.utils.buttons;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageReaction;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 
 import java.util.ArrayList;
@@ -31,15 +32,21 @@ public class ButtonGroup {
 
     public void addButton(Button button) {
         buttons.add(button);
-        if (messageId != 0) {
-            CascadeBot.INS.getShardManager().getGuildById(guildId).getTextChannelById(channelId).getMessageById(messageId).queue(button::addReaction);
+        Guild guild = CascadeBot.INS.getShardManager().getGuildById(guildId);
+        if (guild == null) return;
+        TextChannel channel = guild.getTextChannelById(channelId);
+        if (messageId != 0 && channel != null) {
+            channel.retrieveMessageById(messageId).queue(button::addReaction);
         }
     }
 
     public void removeButton(Button button) {
         buttons.remove(button);
-        if (messageId != 0) {
-            CascadeBot.INS.getShardManager().getGuildById(guildId).getTextChannelById(channelId).getMessageById(messageId).queue(message -> {
+        Guild guild = CascadeBot.INS.getShardManager().getGuildById(guildId);
+        if (guild == null) return;
+        TextChannel channel = guild.getTextChannelById(channelId);
+        if (messageId != 0 && channel != null) {
+            channel.retrieveMessageById(messageId).queue(message -> {
                 for (MessageReaction reaction : message.getReactions()) {
                     MessageReaction.ReactionEmote reactionEmote = reaction.getReactionEmote();
                     if (button instanceof Button.UnicodeButton && !reactionEmote.isEmote()) {

@@ -25,9 +25,9 @@ public class VoteResult {
     }
 
     /**
-     * Gets the unicode or {@link net.dv8tion.jda.core.entities.Emote} that was this vote.
+     * Gets the unicode or {@link net.dv8tion.jda.api.entities.Emote} that was this vote.
      *
-     * @return the unicode or {@link net.dv8tion.jda.core.entities.Emote} that was this vote.
+     * @return the unicode or {@link net.dv8tion.jda.api.entities.Emote} that was this vote.
      */
     public Object getVote() {
         return vote;

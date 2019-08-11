@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.utils;
 
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.internal.utils.Checks;
 
 import java.util.ArrayList;
 import java.util.Arrays;

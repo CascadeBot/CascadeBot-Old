@@ -2,8 +2,8 @@ package org.cascadebot.cascadebot.data.graphql;
 
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;

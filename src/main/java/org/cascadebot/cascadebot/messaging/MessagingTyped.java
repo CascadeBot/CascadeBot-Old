@@ -5,9 +5,9 @@
 
 package org.cascadebot.cascadebot.messaging;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
 public class MessagingTyped {

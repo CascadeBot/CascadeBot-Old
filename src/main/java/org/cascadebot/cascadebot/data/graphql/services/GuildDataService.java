@@ -7,7 +7,7 @@ import io.leangen.graphql.annotations.GraphQLRootContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.api.entities.Guild;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.graphql.objects.QLContext;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
@@ -74,7 +74,7 @@ public class GuildDataService {
     @GraphQLQuery
     @GraphQLNonNull
     public OffsetDateTime creationTime(@GraphQLContext GuildData guildData) {
-        return getGuildFromId(guildData.getGuildId()).getCreationTime();
+        return getGuildFromId(guildData.getGuildId()).getTimeCreated();
     }
 
     private Guild getGuildFromId(long guildId) {
