@@ -10,8 +10,8 @@
 
     <properties>
         <build.number>DEV</build.number>
-        <jda.version>4.BETA.0_32</jda.version>
-        <lavaplayer.version>1.3.19</lavaplayer.version>
+        <jda.version>4.0.0_39</jda.version>
+        <lavaplayer.version>1.3.20</lavaplayer.version>
         <lavalink.client.version>jda4-3.0-g0605139-41</lavalink.client.version>
     </properties>
 
