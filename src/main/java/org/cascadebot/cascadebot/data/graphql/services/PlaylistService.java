@@ -29,12 +29,12 @@ public class PlaylistService {
     private static PlaylistService instance = new PlaylistService();
 
     @GraphQLQuery
-    public Playlist playlist(@GraphQLRootContext QLContext context, @GraphQLNonNull String id) {
+    public Playlist playlist(@GraphQLRootContext QLContext context, long guildId, @GraphQLNonNull String id) {
         Playlist playlist = PlaylistManager.getPlaylistById(id);
         if (playlist == null) return null;
         // Check that the user is authenticated to get the playlist
         if (playlist.getScope() == PlaylistScope.GUILD) {
-            return context.runIfAuthenticatedGuild(member -> playlist.getOwnerId() == member.getGuild().getIdLong() ? playlist : null);
+            return context.runIfAuthenticatedGuild(playlist.getOwnerId(), member -> playlist.getOwnerId() == member.getGuild().getIdLong() ? playlist : null);
         } else {
             return context.runIfAuthenticatedUser(user -> playlist.getOwnerId() == user.getIdLong() ? playlist : null);
         }
@@ -84,12 +84,12 @@ public class PlaylistService {
                 Guild guild = CascadeBot.INS.getShardManager().getGuildById(ownerId);
                 // If the guild exists and the authenticated user is a member of the guild then try and check permissions
                 if (guild != null && guild.getMember(user) != null) {
-                    boolean hasPermission = context.getGuildData()
+                    boolean hasPermission = context.getGuildData(ownerId)
                                 .getGuildPermissions()
                                 .hasPermission(
                                         guild.getMember(user),
                                         CascadeBot.INS.getPermissionsManager().getPermission("queue.save"),
-                                        context.getGuildData().getCoreSettings()
+                                        context.getGuildData(ownerId).getCoreSettings()
                                 );
                     if (hasPermission) {
                         return playlistSupplier.get();

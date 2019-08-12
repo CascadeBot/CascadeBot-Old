@@ -23,7 +23,7 @@ public class GuildDataService {
 
     @GraphQLQuery
     public GuildData guild(@GraphQLRootContext QLContext context, long id) {
-        return context.runIfAuthenticatedGuild((member) -> {
+        return context.runIfAuthenticatedGuild(id, (member) -> {
             return GuildDataManager.getGuildData(id);
         });
     }

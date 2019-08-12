@@ -33,17 +33,10 @@ public class GraphQLRoute implements Route {
         long userId = -1;
         User user = null;
 
-        long guildId;
-        Guild guild = null;
-
         try {
             if (!StringUtils.isEmpty(request.headers("Cascade-UserId"))) {
                 userId = Long.parseLong(request.headers("Cascade-UserId"));
                 user = CascadeBot.INS.getShardManager().getUserById(userId);
-            }
-            if (!StringUtils.isEmpty(request.headers("Cascade-GuildId"))) {
-                guildId = Long.parseLong(request.headers("Cascade-GuildId"));
-                guild = CascadeBot.INS.getShardManager().getGuildById(guildId);
             }
         } catch (NumberFormatException ignored) {}
 
@@ -56,7 +49,7 @@ public class GraphQLRoute implements Route {
 
         ExecutionInput input = ExecutionInput.newExecutionInput()
                 .query(graphQLRequest.getQuery())
-                .context(new QLContext(request, user, guild, authenticated))
+                .context(new QLContext(request, user, authenticated))
                 .operationName(graphQLRequest.getOperationName())
                 .variables(graphQLRequest.getVariables())
                 .build();

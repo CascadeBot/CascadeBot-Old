@@ -32,12 +32,12 @@ public class SettingsService {
     }
 
     @GraphQLQuery
-    public SettingsWrapper setting(@GraphQLRootContext QLContext context, String name) {
-        return context.runIfAuthenticatedGuild((member) -> {
+    public SettingsWrapper setting(@GraphQLRootContext QLContext context, long guildId, String name) {
+        return context.runIfAuthenticatedGuild(guildId, (member) -> {
             Field setting = SettingsUtils.getAllSettings().get(name);
             if (setting == null) return null;
 
-            GuildData guildData = context.getGuildData();
+            GuildData guildData = context.getGuildData(guildId);
             if (guildData == null) return null;
 
             // TODO We need to find a way to get the settings class instance

@@ -33,12 +33,12 @@ public class PermissionsServices {
     }
 
     @GraphQLMutation
-    public Result userHasPermission(@GraphQLRootContext QLContext context, long userId, String permission) {
-        return context.runIfAuthenticatedGuild((member) -> {
-            GuildData guildData = context.getGuildData();
+    public Result userHasPermission(@GraphQLRootContext QLContext context, long guildId, long userId, String permission) {
+        return context.runIfAuthenticatedGuild(guildId, (member) -> {
+            GuildData guildData = context.getGuildData(guildId);
             if (guildData == null) throw new IllegalStateException("GuildData is null!");
 
-            Member memberToCheck = context.getGuild().getMemberById(userId);
+            Member memberToCheck = CascadeBot.INS.getShardManager().getGuildById(guildId).getMemberById(userId);
 
             CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
             if (cascadePermission == null) throw new IllegalArgumentException("The permission provided does not exist!");
