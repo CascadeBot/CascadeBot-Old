@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.data.objects;
 import de.bild.codec.annotations.Id;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.cascadebot.cascadebot.data.objects.donation.Tier;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CascadeUser {
@@ -18,5 +19,7 @@ public class CascadeUser {
     public CascadeUser(long id) {
         userId = id;
     }
+
+    private Tier tier;
 
 }

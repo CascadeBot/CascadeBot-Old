@@ -1,0 +1,84 @@
+{
+  "default": {
+    "flags": [
+      {
+        "name": "custom_commands",
+        "type": "amount",
+        "data": {
+          "amount": 3
+        }
+      },
+      {
+        "name": "prefix_length",
+        "type": "amount",
+        "data": {
+          "amount": 5
+        }
+      }
+    ]
+  },
+  "supporter": {
+    "keys": {
+      "beta": 1
+    },
+    "extra": [
+      "'Supporter' Role in discord",
+      "Access to primary support channel"
+    ],
+    "parent": "default"
+  },
+  "premium_supporter": {
+    "flags": [
+      {
+        "name": "custom_commands",
+        "type": "amount",
+        "data": {
+          "amount": 7
+        }
+      },
+      {
+        "name": "prefix_length",
+        "type": "amount",
+        "data": {
+          "amount": "inf"
+        }
+      },
+      "node",
+      "voice_stay"
+    ],
+    "keys": {
+      "beta": 3
+    },
+    "extra": [
+      "'Premium supporter' Role in discord"
+    ],
+    "parent": "supporter"
+  },
+  "music": {
+
+  },
+  "example": {
+    "__comment": "This is an example tier to show you how the format works",
+    "flags": [
+      "comment: this stores a list of flags. normal flags are just added to the list with their unique name",
+      "example_regular",
+      {
+        "__comment": "More advanced flags are specified as seen bellow with the name, type, and associated data",
+        "name": "example_amount",
+        "type": "amount",
+        "data": {
+          "__comment": "in the case of the amount flag we specify an amount",
+          "amount": 5
+        }
+      }
+    ],
+    "keys": {
+      "__comment": "here you specify what key to give to a user, and the bot will generate those keys when this tier is applied. currently keys available are beta, beta_unexpiring, beta_unlimited",
+      "beta": 1
+    },
+    "extra": [
+      "Extra strings explaining what you get that the bot it's self doesn't apply"
+    ],
+    "parent": "parent tier that is applied with this tier. flags with same name will be overridden"
+  }
+}
