@@ -22,8 +22,8 @@
       "beta": 1
     },
     "extra": [
-      "'Supporter' Role in discord",
-      "Access to primary support channel"
+      "tiers.extra.supporter_role",
+      "tiers.extra.primary_support"
     ],
     "parent": "default"
   },
@@ -50,7 +50,7 @@
       "beta": 3
     },
     "extra": [
-      "'Premium supporter' Role in discord"
+      "tiers.extra.premium_role"
     ],
     "parent": "supporter"
   },
@@ -72,7 +72,7 @@
       "music_extended_controls"
     ],
     "extra": [
-      "'Music supporter' Role in discord"
+      "tiers.extra.music_role"
     ],
     "parent": "premium_supporter"
   },
@@ -90,7 +90,7 @@
       }
     ],
     "extra": [
-      "'Awesome supporter' Role in discord"
+      "tiers.extra.awesome_role"
     ],
     "parent": "music"
   },
@@ -109,8 +109,8 @@
       }
     ],
     "extra": [
-      "'God supporter' Role in discord",
-      "If donation is keep up for 3 months we'll send you a t-shirt"
+      "tiers.extra.god_role",
+      "tiers.extra.t_shirt"
     ],
     "parent": "awesome_supporter"
   },
@@ -134,7 +134,7 @@
       "beta": 1
     },
     "extra": [
-      "Extra strings explaining what you get that the bot it's self doesn't apply"
+      "Extra strings explaining what you get that the bot it's self doesn't apply. Should be a language file path"
     ],
     "parent": "parent tier that is applied with this tier. flags with same name will be overridden"
   }
