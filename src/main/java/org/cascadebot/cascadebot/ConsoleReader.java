@@ -38,7 +38,7 @@ public class ConsoleReader implements Runnable {
                         } else if (args[0].equalsIgnoreCase("user")) {
                             if (args.length > 2) {
                                 long id = Long.parseLong(args[1]);
-                                if (Config.INS.getAuth().verifyEncrypt(args[1], args[2])) {
+                                if (Config.INS.getAuth().verify(args[2], args[1])) {
                                     if (Security.isAuthorised(id, SecurityLevel.STAFF)) {
                                         System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " authorized " + args[1]);
                                         continue;
