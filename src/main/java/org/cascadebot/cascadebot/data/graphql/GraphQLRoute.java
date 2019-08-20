@@ -2,6 +2,7 @@ package org.cascadebot.cascadebot.data.graphql;
 
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
+import io.jsonwebtoken.Claims;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
@@ -33,19 +34,18 @@ public class GraphQLRoute implements Route {
         long userId = -1;
         User user = null;
 
-        try {
-            if (!StringUtils.isEmpty(request.headers("Cascade-UserId"))) {
-                userId = Long.parseLong(request.headers("Cascade-UserId"));
-                user = CascadeBot.INS.getShardManager().getUserById(userId);
-            }
-        } catch (NumberFormatException ignored) {}
-
         boolean authenticated;
 
         boolean authHeaderPresent = !StringUtils.isEmpty(request.headers("Authorization"));
-        boolean hmacMatches = Config.INS.getAuth().verify(request.headers("Authorization"), Long.toString(userId));
+        Claims claims = Config.INS.getAuth().verify(request.headers("Authorization"));
 
-        authenticated = (userId != -1 && authHeaderPresent && hmacMatches);
+        boolean jwtMatches = claims != null;
+
+        if(jwtMatches) {
+            userId = Long.parseLong(claims.getSubject());
+        }
+
+        authenticated = (userId != -1 && authHeaderPresent && jwtMatches);
 
         ExecutionInput input = ExecutionInput.newExecutionInput()
                 .query(graphQLRequest.getQuery())

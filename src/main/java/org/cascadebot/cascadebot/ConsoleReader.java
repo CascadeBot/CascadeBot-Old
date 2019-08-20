@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot;
 
+import io.jsonwebtoken.Claims;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.shared.Regex;
@@ -38,7 +39,8 @@ public class ConsoleReader implements Runnable {
                         } else if (args[0].equalsIgnoreCase("user")) {
                             if (args.length > 2) {
                                 long id = Long.parseLong(args[1]);
-                                if (Config.INS.getAuth().verify(args[2], args[1])) {
+                                Claims claims = Config.INS.getAuth().verify(args[2]);
+                                if (claims != null && claims.getSubject().equals(args[1])) { //TODO fundamentally change how this works
                                     if (Security.isAuthorised(id, SecurityLevel.STAFF)) {
                                         System.out.println(SharedConstants.WRAPPER_OP_PREFIX + " authorized " + args[1]);
                                         continue;
