@@ -43,7 +43,7 @@ public class GraphQLRoute implements Route {
         boolean authenticated;
 
         boolean authHeaderPresent = !StringUtils.isEmpty(request.headers("Authorization"));
-        boolean hmacMatches = Config.INS.getAuth().verifyEncrypt(Long.toString(userId), request.headers("Authorization"));
+        boolean hmacMatches = Config.INS.getAuth().verify(request.headers("Authorization"), Long.toString(userId));
 
         authenticated = (userId != -1 && authHeaderPresent && hmacMatches);
 

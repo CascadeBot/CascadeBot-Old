@@ -208,7 +208,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
-            <version>2.1.0</version>
+            <version>f404de8</version>
         </dependency>
 
         <!-- Utilities -->
