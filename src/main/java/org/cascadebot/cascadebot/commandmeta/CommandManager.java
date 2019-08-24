@@ -61,7 +61,8 @@ public class CommandManager {
                 return cmd;
             }
         }
-        return null;
+        // Fallback to default if cannot find command
+        return getCommand(command);
     }
 
     public ICommandMain getCommand(String command, GuildData data) {
@@ -72,7 +73,8 @@ public class CommandManager {
                 return cmd;
             }
         }
-        return null;
+        // Fallback to default if cannot find command
+        return getCommand(command);
     }
 
     public List<ICommandMain> getCommandsByModule(Module type) {
