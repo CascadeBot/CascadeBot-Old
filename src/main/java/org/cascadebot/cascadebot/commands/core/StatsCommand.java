@@ -29,8 +29,8 @@ public class StatsCommand implements ICommandCore {
         builder.addField("CPU Load", Math.round(osBean.getProcessCpuLoad() * 100) + "%", true);
         builder.addField("Total Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsTotal()), true);
         builder.addField("Online Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsRunning()), true);
-        builder.addField("Gateway Ping", String.valueOf(context.getChannel().getJDA().getGatewayPing()), true);
-        builder.addField("REST Ping", String.valueOf(context.getChannel().getJDA().getRestPing().complete()), true);
+        builder.addField("Gateway Ping", String.valueOf(context.getChannel().getJDA().getGatewayPing()) + "ms", true);
+        builder.addField("REST Ping", String.valueOf(context.getChannel().getJDA().getRestPing().complete()) + "ms", true);
         builder.addField("Shard Status", CascadeBot.INS.getShardManager().getStatus(context.getChannel().getJDA().getShardInfo().getShardId()).toString(), true);
         builder.addField("Shard ID", String.valueOf(context.getChannel().getJDA().getShardInfo().getShardId() + 1), true);
 
