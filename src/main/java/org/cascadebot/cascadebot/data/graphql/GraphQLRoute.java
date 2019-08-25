@@ -43,6 +43,7 @@ public class GraphQLRoute implements Route {
 
         if(jwtMatches) {
             userId = Long.parseLong(claims.getSubject());
+            user = CascadeBot.INS.getShardManager().getUserById(userId);
         }
 
         authenticated = (userId != -1 && authHeaderPresent && jwtMatches);
