@@ -204,6 +204,11 @@
         </dependency>
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
+            <artifactId>delight-rhino-sandbox</artifactId>
+            <version>13b53def79</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
             <version>2.1.0</version>
         </dependency>
