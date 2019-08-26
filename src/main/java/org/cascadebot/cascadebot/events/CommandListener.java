@@ -122,7 +122,7 @@ public class CommandListener extends ListenerAdapter {
             char charAtPos = input.charAt(pos);
             if (charAtPos == ' ') {
                 // If we are in a quote or bracket scope then we want to ignore this space
-                if (quoteType != NONE && bracketType != NONE) {
+                if (quoteType != NONE || bracketType != NONE) {
                     continue;
                 }
                 int splitTo = pos;
