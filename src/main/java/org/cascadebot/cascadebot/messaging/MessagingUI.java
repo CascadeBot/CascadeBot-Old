@@ -6,18 +6,19 @@
 package org.cascadebot.cascadebot.messaging;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.exceptions.PermissionException;
-import net.dv8tion.jda.core.requests.RequestFuture;
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -31,6 +32,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,12 +51,12 @@ public class MessagingUI {
     /**
      * Sends an image to the channel in the context
      * When embeds are on, it embeds the image into the embed.
-     * When embeds are off, it downloads the image and sends it via the {@link net.dv8tion.jda.core.entities.TextChannel#sendFile(File)} method
+     * When embeds are off, it downloads the image and sends it via the {@link net.dv8tion.jda.api.entities.TextChannel#sendFile(File)} method
      *
      * @param url The url of the image.
      * @return A {@link RequestFuture<Message>} so you can interact with the message after it sends.
      */
-    public RequestFuture<Message> replyImage(String url) {
+    public CompletableFuture<Message> replyImage(String url) {
         if (context.getCoreSettings().isUseEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
             embedBuilder.setImage(url);
@@ -207,12 +209,12 @@ public class MessagingUI {
 
             ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
-                message.delete().queue();
+                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 context.getMusicPlayer().addTrack(selectedTrack);
                 context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.PLAYLIST, (runner, channel, message) -> {
-                message.delete().queue();
+                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 context.getMusicPlayer().addTracks(tracks);
                 context.getUIMessaging().sendTracksFound(tracks);
             }));

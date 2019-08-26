@@ -5,20 +5,21 @@
 
 package org.cascadebot.cascadebot.utils;
 
-import java.util.List;
-import java.util.function.Consumer;
 import lombok.experimental.UtilityClass;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.permissions.objects.Group;
-import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 @UtilityClass
 public class PermissionCommandUtils {
@@ -106,10 +107,10 @@ public class PermissionCommandUtils {
 
             ButtonGroup groupButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
             groupButtons.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                if (runner.getUser().getIdLong() != groupButtons.getOwner().getUser().getIdLong()) {
+                if (runner.getIdLong() != groupButtons.getOwner().getIdLong()) {
                     return;
                 }
-                message.delete().queue();
+                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 groupConsumer.accept(group);
             }));
 
@@ -129,7 +130,7 @@ public class PermissionCommandUtils {
     }
 
     private static void handleSwitchButtons(Member member, Message message, MessageEmbed embedToSwitchTo, ButtonGroup buttonsToSwitchTo, CommandContext context) {
-        if (member.getUser().getIdLong() != buttonsToSwitchTo.getOwner().getUser().getIdLong()) {
+        if (member.getIdLong() != buttonsToSwitchTo.getOwner().getIdLong()) {
             return;
         }
         message.editMessage(embedToSwitchTo).override(true).queue();

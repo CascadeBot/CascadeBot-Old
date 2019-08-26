@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.data.language;
 
 import com.ibm.icu.text.MessageFormat;
 import io.github.binaryoverload.JSONConfig;
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.internal.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;

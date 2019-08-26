@@ -5,11 +5,11 @@
 
 package org.cascadebot.cascadebot.moderation;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.exceptions.HierarchyException;
-import net.dv8tion.jda.core.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
@@ -24,7 +24,7 @@ public class ModerationManager {
     public void ban(CommandContext context, ModAction action, User target, Member submitter, String reason, int messagesToDelete) {
         if (runChecks(action, target, submitter, context)) {
             runWithCheckedExceptions(() -> {
-                context.getGuild().getController()
+                context.getGuild()
                         .ban(target, messagesToDelete, reason)
                         .queue(success -> {
                             sendSuccess(context, target, submitter, action, reason);
@@ -36,7 +36,7 @@ public class ModerationManager {
     public void unban(CommandContext context, User target, Member submitter, String reason) {
         if (runChecks(ModAction.UNBAN, target, submitter, context)) {
             runWithCheckedExceptions(() -> {
-                context.getGuild().getController().unban(target).reason(reason).queue(success -> {
+                context.getGuild().unban(target).reason(reason).queue(success -> {
                     sendSuccess(context, target, submitter, ModAction.UNBAN, reason);
                 }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, ModAction.UNBAN));
             }, context, ModAction.UNBAN, target);
@@ -47,7 +47,7 @@ public class ModerationManager {
         if (runChecks(ModAction.SOFT_BAN, target, submitter, context)) {
             ban(context, ModAction.SOFT_BAN, target, submitter, reason, messagesToDelete);
             runWithCheckedExceptions(() -> {
-                context.getGuild().getController()
+                context.getGuild()
                         .unban(target)
                         .reason("Softban: Unbanned user")
                         .queue(null, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, ModAction.SOFT_BAN));
@@ -58,7 +58,7 @@ public class ModerationManager {
     public void kick(CommandContext context, Member target, Member submitter, String reason) {
         if (runChecks(ModAction.KICK, target.getUser(), submitter, context)) {
             runWithCheckedExceptions(() -> {
-                context.getGuild().getController()
+                context.getGuild()
                         .kick(target, reason)
                         .queue(success -> {
                             sendSuccess(context, target.getUser(), submitter, ModAction.KICK, reason);

@@ -7,14 +7,16 @@ package org.cascadebot.cascadebot.commands.fun;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.WebUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -28,7 +30,7 @@ public class DogCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         ButtonGroup dogButtons = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
         dogButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
-            if (member.getUser().getIdLong() != dogButtons.getOwner().getUser().getIdLong()) {
+            if (member.getIdLong() != dogButtons.getOwner().getIdLong()) {
                 return;
             }
             try {
@@ -42,7 +44,7 @@ public class DogCommand implements ICommandMain {
                         dogButtons.setMessage(dogMessage.getIdLong());
                         context.getData().addButtonGroup(context.getChannel(), dogMessage, dogButtons);
                     });
-                    message.delete().queue();
+                    message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 }
             } catch (IOException e) {
                 message.editMessage(context.i18n("commands.dog.error_loading")).queue();

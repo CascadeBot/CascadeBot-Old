@@ -7,9 +7,9 @@ package org.cascadebot.cascadebot.permissions;
 
 import com.google.common.collect.ImmutableSet;
 import io.github.binaryoverload.JSONConfig;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -43,8 +43,9 @@ public class PermissionsManager {
             JSONConfig config = Language.getLanguages().get(locale);
             if (config.getElement("permissions").isEmpty()) continue;
             for (String permission : permissions.keySet()) {
-                if (config.getString("permissions." + permission + ".name").isEmpty()) continue;
-                localisedPermissionsMapping.put(config.getString("permissions." + permission + ".name").get(), permission);
+                if (config.getString("permissions." + permission + ".name").isPresent()) {
+                    localisedPermissionsMapping.put(config.getString("permissions." + permission + ".name").get(), permission);
+                }
             }
         }
     }
@@ -148,7 +149,7 @@ public class PermissionsManager {
 
     public boolean isAuthorised(ICommandExecutable command, GuildData guildData, Member member) {
         if (command instanceof ICommandRestricted) {
-            SecurityLevel userLevel = getUserSecurityLevel(member.getUser().getIdLong());
+            SecurityLevel userLevel = getUserSecurityLevel(member.getIdLong());
             if (userLevel == null) return false;
             SecurityLevel levelToCheck = ((ICommandRestricted) command).getCommandLevel();
             return userLevel.isAuthorised(levelToCheck);

@@ -5,9 +5,9 @@
 
 package org.cascadebot.cascadebot.commands.developer;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -59,7 +59,7 @@ public class GuildInfoSubCommand implements ISubCommand {
 
         builder.addField("Flags", flags, false);
         builder.addField("Modules", modules, false);
-        builder.addField("Join Date", FormatUtils.formatDateTime(context.getSelfMember().getJoinDate()), false);
+        builder.addField("Join Date", FormatUtils.formatDateTime(context.getSelfMember().getTimeJoined()), false);
 
         context.getTypedMessaging().replyInfo(builder);
     }

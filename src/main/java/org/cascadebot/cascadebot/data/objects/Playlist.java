@@ -20,16 +20,17 @@ public class Playlist {
 
     @Id
     private ObjectId playlistID = ObjectId.get();
+    private ObjectId playlistId = ObjectId.get();
 
     private String name;
-    private long ownerID;
+    private long ownerId;
     private PlaylistType scope;
 
     @Setter
     private List<String> tracks;
 
     public Playlist(long ownerId, String name, PlaylistType scope, List<String> tracks) {
-        this.ownerID = ownerId;
+        this.ownerId = ownerId;
         this.name = name;
         this.scope = scope;
         this.tracks = tracks;

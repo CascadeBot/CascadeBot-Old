@@ -14,9 +14,9 @@ import lavalink.client.io.jda.JdaLink;
 import lavalink.client.player.IPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
 import lombok.Getter;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.VoiceChannel;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
 import org.cascadebot.cascadebot.data.objects.Playlist;
@@ -195,15 +195,15 @@ public class CascadePlayer {
 
     public void loadPlaylist(String name, Member sender, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
         Playlist guild = PlaylistManager.getPlaylistByName(sender.getGuild().getIdLong(), PlaylistType.GUILD, name);
-        Playlist user = PlaylistManager.getPlaylistByName(sender.getUser().getIdLong(), PlaylistType.USER, name);
+        Playlist user = PlaylistManager.getPlaylistByName(sender.getIdLong(), PlaylistType.USER, name);
         if (guild != null && user != null) {
             consumer.accept(LoadPlaylistResult.EXISTS_IN_ALL_SCOPES, null);
         } else if (guild != null) {
-            loadLoadedPlaylist(guild, sender.getUser().getIdLong(), tracks -> {
+            loadLoadedPlaylist(guild, sender.getIdLong(), tracks -> {
                 consumer.accept(LoadPlaylistResult.LOADED_GUILD, tracks);
             });
         } else if (user != null) {
-            loadLoadedPlaylist(user, sender.getUser().getIdLong(), tracks -> {
+            loadLoadedPlaylist(user, sender.getIdLong(), tracks -> {
                 consumer.accept(LoadPlaylistResult.LOADED_USER, tracks);
             });
         } else {
@@ -221,7 +221,7 @@ public class CascadePlayer {
                 break;
             case USER:
                 result = LoadPlaylistResult.LOADED_USER;
-                owner = sender.getUser().getIdLong();
+                owner = sender.getIdLong();
                 break;
         }
         Playlist playlist = PlaylistManager.getPlaylistByName(owner, scope, name);
@@ -231,7 +231,7 @@ public class CascadePlayer {
         }
 
         LoadPlaylistResult loadPlaylistResult = result;
-        loadLoadedPlaylist(playlist, sender.getUser().getIdLong(), tracks -> {
+        loadLoadedPlaylist(playlist, sender.getIdLong(), tracks -> {
             consumer.accept(loadPlaylistResult, tracks);
         });
     }

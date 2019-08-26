@@ -5,9 +5,9 @@
 
 package org.cascadebot.cascadebot.messaging;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
 public class MessagingTyped {
@@ -39,7 +39,9 @@ public class MessagingTyped {
      *
      * @param message The String message to send.
      * @param objects The objects to use with the formatting.
+     * @deprecated This should only be used temporarily. In production, language formatting should be used
      */
+    @Deprecated
     public void replyInfo(String message, Object... objects) {
         replyInfo(String.format(message, objects));
     }
@@ -77,7 +79,9 @@ public class MessagingTyped {
      *
      * @param message The String message to send.
      * @param objects The objects to use with the formatting.
+     * @deprecated This should only be used temporarily. In production, language formatting should be used
      */
+    @Deprecated
     public void replyWarning(String message, Object... objects) {
         replyWarning(String.format(message, objects));
     }
@@ -153,7 +157,9 @@ public class MessagingTyped {
      *
      * @param message The String message to send.
      * @param objects The objects to use with the formatting.
+     * @deprecated This should only be used temporarily. In production, language formatting should be used
      */
+    @Deprecated
     public void replyModeration(String message, Object... objects) {
         replyModeration(String.format(message, objects));
     }
@@ -191,7 +197,9 @@ public class MessagingTyped {
      *
      * @param message The String message to send.
      * @param objects The objects to use with the formatting.
+     * @deprecated This should only be used temporarily. In production, language formatting should be used
      */
+    @Deprecated
     public void replyDanger(String message, Object... objects) {
         replyDanger(String.format(message, objects));
     }
@@ -230,7 +238,9 @@ public class MessagingTyped {
      * @param message   The String message to send.
      * @param throwable The Exception that your sending
      * @param objects   The objects to use with the formatting.
+     * @deprecated This should only be used temporarily. In production, language formatting should be used
      */
+    @Deprecated
     public void replyException(String message, Throwable throwable, Object... objects) {
         Messaging.sendExceptionMessage(context.getChannel(), String.format(message, objects), throwable);
     }

@@ -5,19 +5,16 @@
 
 package org.cascadebot.cascadebot.commands.music;
 
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
-
-import java.util.Set;
 
 public class QueueLoadSubCommand implements ISubCommand {
 
@@ -35,12 +32,12 @@ public class QueueLoadSubCommand implements ISubCommand {
                     context.getUIMessaging().sendTracksFound(tracks);
                     break;
                 case EXISTS_IN_ALL_SCOPES:
-                    ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+                    ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
                     buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ONE, ((runner, channel, message) -> {
                         if (!runner.equals(buttonGroup.getOwner())) {
                             return;
                         }
-                        message.delete().queue();
+                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.USER, ((loadPlaylistResult, newTracks) -> {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }));
@@ -49,7 +46,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                         if (!runner.equals(buttonGroup.getOwner())) {
                             return;
                         }
-                        message.delete().queue();
+                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }));

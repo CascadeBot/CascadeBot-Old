@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.developer;
 
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
@@ -33,7 +33,11 @@ public class EvalCommand implements ICommandRestricted {
 
     private static final List<String> IMPORTS = List.of(
             "org.cascadebot.cascadebot",
+            "org.cascadebot.cascadebot.commandmeta",
             "org.cascadebot.cascadebot.data",
+            "org.cascadebot.cascadebot.data.objects",
+            "org.cascadebot.cascadebot.permissions",
+            "org.cascadebot.cascadebot.permissions.objects",
             "org.cascadebot.cascadebot.messaging",
             "org.cascadebot.cascadebot.utils",
             "net.dv8tion.jda.core",

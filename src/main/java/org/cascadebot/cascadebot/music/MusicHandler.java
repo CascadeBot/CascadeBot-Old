@@ -20,8 +20,8 @@ import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager
 import lavalink.client.io.jda.JdaLavalink;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
@@ -84,7 +84,7 @@ public class MusicHandler {
         playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
 
         if (Config.INS.getMusicNodes().size() > 0) {
-            lavalink = new JdaLavalink(Config.INS.getBotID().toString(), Config.INS.getShardNum(), shardId -> instance.getShardManager().getShardById(shardId));
+            lavalink = new JdaLavalink(Config.INS.getBotId().toString(), Config.INS.getShardNum(), shardId -> instance.getShardManager().getShardById(shardId));
             for (MusicNode musicNode : Config.INS.getMusicNodes()) {
                 lavalink.addNode(musicNode.uri, musicNode.password); //TODO give nodes a name
             }

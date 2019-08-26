@@ -5,13 +5,13 @@
 
 package org.cascadebot.cascadebot.utils;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
+import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.text.SimpleDateFormat;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import lombok.experimental.UtilityClass;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -22,6 +22,7 @@ import org.cascadebot.cascadebot.data.language.Locale;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -111,7 +112,7 @@ public class FormatUtils {
             sb.append("__**").append(embed.getTitle()).append("**__\n");
         }
         if (embed.getDescription() != null) {
-            sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(embed.getDescription()))).append("\n\n");
+            sb.append(embed.getDescription()).append("\n\n");
         }
         List<MessageEmbed.Field> inline = null;
         int i = 0;
@@ -134,7 +135,7 @@ public class FormatUtils {
                 }
                 i = 0;
                 sb.append("**").append(field.getName()).append("**\n");
-                sb.append(Joiner.on("\n").join(Splitter.fixedLength(100).split(field.getValue()))).append("\n\n");
+                sb.append(field.getValue()).append("\n\n");
             }
         }
         if (inline != null) {
@@ -178,10 +179,23 @@ public class FormatUtils {
     }
     //endregion
 
+    /**
+     * Formats date and time by RFC 1123
+     *
+     * @param dateTime the date time to be formatted
+     * @return The formatted string
+     * @deprecated Use the i18n instead
+     */
+    @Deprecated
     public static String formatDateTime(OffsetDateTime dateTime) {
         return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
 
+    public static String formatDateTime(OffsetDateTime dateTime, Locale locale) {
+        return SimpleDateFormat.getDateTimeInstance(DateFormat.RELATIVE_LONG, DateFormat.LONG, locale.getULocale()).format(new Date(dateTime.toEpochSecond() * 1000));
+    }
+
+    @Deprecated
     public static <T extends Enum> String formatEnum(T theEnum) {
         return StringUtils.capitalize(theEnum.name().toLowerCase().replace("_", " "));
     }

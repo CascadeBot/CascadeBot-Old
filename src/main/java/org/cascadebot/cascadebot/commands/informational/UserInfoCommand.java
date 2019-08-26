@@ -5,31 +5,22 @@
 
 package org.cascadebot.cascadebot.commands.informational;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.RichPresence;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.RichPresence;
+import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
-import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.cascadebot.utils.language.LanguageUtils;
-import org.cascadebot.cascadebot.utils.pagination.Page;
-import org.cascadebot.cascadebot.utils.pagination.PageObjects;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import org.cascadebot.shared.SecurityLevel;
 
 public class UserInfoCommand implements ICommandMain {
@@ -45,15 +36,15 @@ public class UserInfoCommand implements ICommandMain {
             return;
         }
         Member member = context.getGuild().getMember(userForInfo);
-        
         String status = "";
         String statusName = "";
-        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+        EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
+
 
         if (member != null) {
-            builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getJoinDate()), true);
+            builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getTimeJoined(), context.getLocale()), true);
             statusName = LanguageUtils.getEnumI18n(context.getLocale(), "statuses", member.getOnlineStatus());
-            if (member.getGame() != null && member.getGame().getType() == Game.GameType.STREAMING) {
+            if (member.getActivities().size() > 0 && member.getActivities().stream().anyMatch(activity -> activity.getType() == Activity.ActivityType.STREAMING)) {
                 status = context.globalEmote("streaming");
                 statusName = context.i18n("statuses.streaming");
             } else if (member.getOnlineStatus() == OnlineStatus.ONLINE) {
@@ -67,49 +58,37 @@ public class UserInfoCommand implements ICommandMain {
             }
         }
 
-        List<Page> pageList = new ArrayList<>();
 
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
-        builder.addField(context.i18n("commands.userinfo.user_created"), FormatUtils.formatDateTime(userForInfo.getCreationTime()), true);
+        builder.addField(context.i18n("commands.userinfo.user_created"), FormatUtils.formatDateTime(userForInfo.getTimeCreated(), context.getLocale()), true);
         builder.addField(context.i18n("commands.userinfo.user_id"), userForInfo.getId(), true);
         builder.addField(context.i18n("commands.userinfo.user_mutual_servers"), String.valueOf(userForInfo.getMutualGuilds().size()), true);
-
         long userId = userForInfo.getIdLong();
         SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
         if (userSecurityLevel != null) {
-            builder.addField(context.i18n("commands.userinfo.user_official_role"), FormatUtils.formatEnum(userSecurityLevel), true);
+            builder.addField(context.i18n("commands.userinfo.user_official_role"), FormatUtils.formatEnum(userSecurityLevel, context.getLocale()), true);
         }
 
         if (member != null) {
-            builder.addField("Status", status + statusName, true);
-            Game game = member.getGame();
-            
-            if (game != null) {
+            builder.addField(context.i18n("words.status"), status + statusName, true);
+
+            for (Activity activity : member.getActivities()) {
                 String gameStatus;
-                String gameType = LanguageUtils.getEnumI18n(context.getLocale(), "game_types", game.getType());
-                if (game.isRich()) {
-                    RichPresence presence = game.asRichPresence();
+                String gameType = LanguageUtils.getEnumI18n(context.getLocale(), "game_types", activity.getType());
+                if (activity.isRich()) {
+                    RichPresence presence = activity.asRichPresence();
                     gameStatus = String.format("%s **%s**", gameType, presence.getName());
                     if (presence.getDetails() != null) gameStatus += "\n*" + presence.getDetails() + "*";
                     if (presence.getState() != null) gameStatus += "\n*" + presence.getState() + "*";
                 } else {
-                    gameStatus = String.format("%s **%s**", gameType, game.getName());
+                    gameStatus = String.format("%s **%s**", gameType, activity.getName());
                 }
                 builder.addField(context.i18n("commands.userinfo.activity"), gameStatus, true);
             }
 
-            Table.TableBuilder tableBuilder = new Table.TableBuilder(context.i18n("commands.userinfo.role_id"), context.i18n("commands.userinfo.role_name"));
-
-            for (Role role : member.getRoles()) {
-                tableBuilder.addRow(role.getId(), role.getName());
-            }
-
-            pageList.add(new PageObjects.TablePage(tableBuilder.build()));
+            context.getTypedMessaging().replyInfo(builder);
         }
-
-        pageList.add(0, new PageObjects.EmbedPage(builder));
-        context.getUIMessaging().sendPagedMessage(pageList);
     }
 
     @Override

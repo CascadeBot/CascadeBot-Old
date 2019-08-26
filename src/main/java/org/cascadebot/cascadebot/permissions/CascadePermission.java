@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.permissions;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.api.Permission;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;

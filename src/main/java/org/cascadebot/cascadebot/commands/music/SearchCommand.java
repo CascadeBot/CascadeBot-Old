@@ -5,13 +5,12 @@
 
 package org.cascadebot.cascadebot.commands.music;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.exceptions.PermissionException;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -19,12 +18,12 @@ import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class SearchCommand implements ICommandMain {
@@ -37,7 +36,7 @@ public class SearchCommand implements ICommandMain {
         }
 
         CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
-            ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+            ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             int i = 0;
             StringBuilder messageBuilder = new StringBuilder();
             for (MusicHandler.SearchResult result : searchResults) {
@@ -47,8 +46,8 @@ public class SearchCommand implements ICommandMain {
                     if (!runner.equals(buttonGroup.getOwner())) {
                         return;
                     }
-                    message.delete().queue();
-                    context.getMusicPlayer().loadLink(result.getUrl(), sender.getUser().getIdLong(), nothing -> {
+                    message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    context.getMusicPlayer().loadLink(result.getUrl(), sender.getIdLong(), nothing -> {
                         context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                     }, exception -> {
                         context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);
@@ -87,7 +86,7 @@ public class SearchCommand implements ICommandMain {
                 for (int index = 0; index < searchResults.size(); index++) {
                     MusicHandler.SearchResult result = searchResults.get(index);
                     responses[index] = new EventWaiter.TextResponse(event -> {
-                        context.getMusicPlayer().loadLink(result.getUrl(), sender.getUser().getIdLong(), nothing -> {
+                        context.getMusicPlayer().loadLink(result.getUrl(), sender.getIdLong(), nothing -> {
                             context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                         }, exception -> {
                             context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);

@@ -15,14 +15,15 @@ import com.google.gson.GsonBuilder;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
-import net.dv8tion.jda.bot.sharding.DefaultShardManagerBuilder;
-import net.dv8tion.jda.bot.sharding.ShardManager;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Game;
-import net.dv8tion.jda.core.entities.SelfUser;
-import net.dv8tion.jda.core.exceptions.ErrorResponseException;
-import net.dv8tion.jda.core.requests.RestAction;
+import lavalink.client.io.jda.JDAVoiceInterceptor;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.SelfUser;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.requests.RestAction;
+import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
@@ -183,13 +184,14 @@ public class CascadeBot {
                     .addEventListeners(new VoiceEventListener())
                     .addEventListeners(new JDAEventMetricsListener())
                     .addEventListeners(eventWaiter)
+                    .setVoiceDispatchInterceptor(new JDAVoiceInterceptor(MusicHandler.getLavalink()))
                     .setToken(Config.INS.getBotToken())
                     .setShardsTotal(-1)
-                    .setGameProvider(shardId -> {
+                    .setActivityProvider(shardId -> {
                         if (Environment.isDevelopment()) {
-                            return Game.streaming(" the devs mistakes", "https://twitch.tv/someone");
+                            return Activity.streaming(" the devs mistakes", "https://twitch.tv/someone");
                         } else {
-                            return Game.playing("CascadeBot Version " + version);
+                            return Activity.playing("CascadeBot Version " + version);
                         }
                     })
                     .setBulkDeleteSplittingEnabled(false)
@@ -221,13 +223,13 @@ public class CascadeBot {
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
 
-        RestAction.DEFAULT_FAILURE = throwable -> {
+        RestAction.setDefaultFailure(throwable -> {
             if (throwable instanceof ErrorResponseException) {
                 ErrorResponseException exception = (ErrorResponseException) throwable;
                 Metrics.INS.failedRestActions.labels(exception.getErrorResponse().name()).inc();
             }
             LOGGER.error("Uncaught exception in rest action", MDCException.from(throwable));
-        };
+        });
 
         setupTasks();
 

@@ -5,12 +5,9 @@
 
 package org.cascadebot.cascadebot.commands.music;
 
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.messaging.MessageType;
@@ -18,7 +15,6 @@ import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class QueueSaveSubCommand implements ISubCommand {
@@ -39,13 +35,18 @@ public class QueueSaveSubCommand implements ISubCommand {
             }
         }
 
+        if (context.getMusicPlayer().getPlayer().getPlayingTrack() == null & context.getMusicPlayer().getQueue().size() == 0) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.queue.save.nothing_to_save"));
+            return;
+        }
+
         long owner = 0;
         switch (scope) {
             case GUILD:
                 owner = context.getGuild().getIdLong();
                 break;
             case USER:
-                owner = sender.getUser().getIdLong();
+                owner = sender.getIdLong();
                 break;
         }
 
@@ -56,11 +57,11 @@ public class QueueSaveSubCommand implements ISubCommand {
             case ALREADY_EXISTS:
                 if (lambdaScope.equals(PlaylistType.GUILD)) {
                     if (!context.hasPermission("queue.save.overwrite")) {
-                        context.getTypedMessaging().replyWarning(context.i18n("commands.save.saved_playlist")); //TODO actually get the perm
+                        context.getTypedMessaging().replyWarning(context.i18n("commands.queue.save.saved_playlist"));
                         return;
                     }
                 }
-                ConfirmUtils.confirmAction(sender.getUser().getIdLong(), "overwrite", context.getChannel(), MessageType.WARNING,
+                ConfirmUtils.confirmAction(sender.getIdLong(), "overwrite", context.getChannel(), MessageType.WARNING,
                         context.i18n("commands.save.already_exists"), TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(10), new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
