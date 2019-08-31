@@ -109,6 +109,11 @@
         "description": "Creates a group.",
         "success": "Created group `{0}` with id `{1}`"
       },
+      "delete": {
+        "command": "delete",
+        "description": "Deletes a group.",
+        "success": "Deleted group `{0}` with id `{1}`"
+      },
       "info": {
         "command": "info",
         "description": "Gets the information about a group.",
@@ -859,6 +864,7 @@
   },
   "arguments": {
     "name": "name",
+    "id": "id",
     "user": "user",
     "group": "group",
     "permission": "permission",
