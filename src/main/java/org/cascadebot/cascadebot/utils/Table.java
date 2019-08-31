@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.utils;
 
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.internal.utils.Checks;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -150,6 +150,18 @@ public final class Table {
                 ));
             }
             body.add(Arrays.asList(row));
+            return this;
+        }
+
+        public TableBuilder addRow(List<String> row) {
+            if (row.size() != this.headings.size()) {
+                throw new IllegalArgumentException(String.format(
+                        "The number of row elements added was invalid! Expected: %d Actual: %d",
+                        this.headings.size(),
+                        row.size()
+                ));
+            }
+            body.add(row);
             return this;
         }
 

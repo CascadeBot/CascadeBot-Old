@@ -7,14 +7,11 @@ package org.cascadebot.cascadebot.metrics;
 
 import io.prometheus.client.Collector;
 import io.prometheus.client.GaugeMetricFamily;
-import lavalink.client.io.Link;
-import net.dv8tion.jda.bot.sharding.ShardManager;
-import net.dv8tion.jda.core.JDA;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.music.MusicHandler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BotMetricsCollector extends Collector {

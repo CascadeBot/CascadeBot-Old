@@ -1,6 +1,6 @@
 package org.cascadebot.cascadebot.commands.music;
 
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -36,7 +36,7 @@ public class VolumeCommand implements ICommandMain {
             return;
         } else if (volume > 100 && volume <= 200) {
             if (context.hasPermission("volume.extreme")) {
-                ConfirmUtils.confirmAction(sender.getUser().getIdLong(),
+                ConfirmUtils.confirmAction(sender.getIdLong(),
                         "volume-extreme",
                         context.getChannel(),
                         MessageType.WARNING,

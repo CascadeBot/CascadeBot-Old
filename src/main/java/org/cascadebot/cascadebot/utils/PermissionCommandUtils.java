@@ -6,12 +6,12 @@
 package org.cascadebot.cascadebot.utils;
 
 import lombok.experimental.UtilityClass;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.requests.ErrorResponse;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.permissions.objects.Group;
@@ -66,10 +66,10 @@ public class PermissionCommandUtils {
             groupEmbed.setTitle(group.getName() + " (" + group.getId() + ")");
 
             if (group.getPermissions().isEmpty()) {
-                groupEmbed.addField("Permissions", "No permissions", false);
+                groupEmbed.addField(context.i18n("words.permissions"), context.i18n("utils.permission_command.no_permissions"), false);
             } else {
                 Table.TableBuilder tableBuilder = new Table.TableBuilder();
-                tableBuilder.addHeading("Permission");
+                tableBuilder.addHeading(context.i18n("words.permission"));
 
                 //integer for detecting when we hit 5 permissions so we can stop adding more.
                 int pi = 0;
@@ -82,11 +82,11 @@ public class PermissionCommandUtils {
                     pi++;
                 }
 
-                groupEmbed.addField("Permissions", tableBuilder.build().toString(), false);
+                groupEmbed.addField(context.i18n("words.permissions"), tableBuilder.build().toString(), false);
             }
 
             if (group.getRoleIds().isEmpty()) {
-                groupEmbed.addField("Linked Roles", "No linked roles", false);
+                groupEmbed.addField(context.i18n("words.linked_roles"), context.i18n("utils.permission_command.no_linked_roles"), false);
             } else {
                 StringBuilder rolesBuilder = new StringBuilder();
 
@@ -95,6 +95,7 @@ public class PermissionCommandUtils {
 
                 for (Long roleId : group.getRoleIds()) {
                     Role role = context.getGuild().getRoleById(roleId);
+                    if (role == null) continue;
                     rolesBuilder.append(role.getName()).append(" (").append(role.getId()).append(")\n");
                     if (ri >= 5) {
                         break;
@@ -102,12 +103,12 @@ public class PermissionCommandUtils {
                     ri++;
                 }
 
-                groupEmbed.addField("Linked Roles", "```" + rolesBuilder.toString() + "```", false);
+                groupEmbed.addField(context.i18n("words.linked_roles"), "```" + rolesBuilder.toString() + "```", false);
             }
 
             ButtonGroup groupButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
             groupButtons.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                if (runner.getUser().getIdLong() != groupButtons.getOwner().getUser().getIdLong()) {
+                if (runner.getIdLong() != groupButtons.getOwner().getIdLong()) {
                     return;
                 }
                 message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
@@ -130,7 +131,7 @@ public class PermissionCommandUtils {
     }
 
     private static void handleSwitchButtons(Member member, Message message, MessageEmbed embedToSwitchTo, ButtonGroup buttonsToSwitchTo, CommandContext context) {
-        if (member.getUser().getIdLong() != buttonsToSwitchTo.getOwner().getUser().getIdLong()) {
+        if (member.getIdLong() != buttonsToSwitchTo.getOwner().getIdLong()) {
             return;
         }
         message.editMessage(embedToSwitchTo).override(true).queue();

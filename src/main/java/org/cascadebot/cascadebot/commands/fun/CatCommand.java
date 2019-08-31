@@ -7,9 +7,9 @@ package org.cascadebot.cascadebot.commands.fun;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.requests.ErrorResponse;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -27,9 +27,9 @@ public class CatCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        ButtonGroup catButtons = new ButtonGroup(sender.getUser().getIdLong(), context.getUser().getIdLong(), context.getGuild().getIdLong());
+        ButtonGroup catButtons = new ButtonGroup(sender.getIdLong(), context.getUser().getIdLong(), context.getGuild().getIdLong());
             catButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
-                if(member.getUser().getIdLong() != catButtons.getOwner().getUser().getIdLong()) {
+                if(member.getIdLong() != catButtons.getOwner().getIdLong()) {
                     return;
                 }
                 try {

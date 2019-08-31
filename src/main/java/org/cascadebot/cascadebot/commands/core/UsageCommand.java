@@ -5,8 +5,8 @@
 
 package org.cascadebot.cascadebot.commands.core;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Argument;
 import org.cascadebot.cascadebot.commandmeta.ArgumentType;
@@ -30,7 +30,7 @@ public class UsageCommand implements ICommandCore {
 
         ICommandMain command = CascadeBot.INS.getCommandManager().getCommand(context.getArg(0), context.getData());
         // If the user isn't authorised to run the command (i.e. it's a dev command) then we pretend it doesn't exist ✨
-        if (command == null || (command instanceof ICommandRestricted && !Security.isAuthorised(sender.getUser().getIdLong(), ((ICommandRestricted) command).getCommandLevel()))) {
+        if (command == null || (command instanceof ICommandRestricted && !Security.isAuthorised(sender.getIdLong(), ((ICommandRestricted) command).getCommandLevel()))) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.usage.command_not_found", context.getArg(0)));
             return;
         }

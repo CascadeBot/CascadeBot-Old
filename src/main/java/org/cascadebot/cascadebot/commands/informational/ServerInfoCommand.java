@@ -5,9 +5,9 @@
 
 package org.cascadebot.cascadebot.commands.informational;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -38,7 +38,7 @@ public class ServerInfoCommand implements ICommandMain {
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(guildForInfo.getName());
         builder.setThumbnail(guildForInfo.getIconUrl());
-        builder.addField(context.i18n("commands.serverinfo.guild_creation_date"), FormatUtils.formatDateTime(guildForInfo.getCreationTime(), context.getLocale()), true);
+        builder.addField(context.i18n("commands.serverinfo.guild_creation_date"), FormatUtils.formatDateTime(guildForInfo.getTimeCreated(), context.getLocale()), true);
         builder.addField(context.i18n("commands.serverinfo.guild_name"), guildForInfo.getName(), true);
         builder.addField(context.i18n("commands.serverinfo.guild_owner") + context.globalEmote("server_owner"), guildForInfo.getOwner().getUser().getAsTag(), true);
         builder.addField(context.i18n("commands.serverinfo.guild_region"), guildForInfo.getRegion().toString(), true);

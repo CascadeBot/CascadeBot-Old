@@ -57,7 +57,7 @@ public class GuildSettingsCore {
     private boolean showPermErrors = true; // Whether commands will silently fail on no permissions
 
     @Setting
-    private boolean showModuleErrors = false;
+    private boolean showModuleErrors = true;
 
     @Setting
     private boolean adminsHaveAllPerms = true;

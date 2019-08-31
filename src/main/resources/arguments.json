@@ -236,6 +236,14 @@
         "_type": "required"
       }
     },
+    "delete*": {
+      "name": {
+        "_type": "required",
+        "_aliases": [
+          "id"
+        ]
+      }
+    },
     "info*": {
       "group": {
         "_type": "required"

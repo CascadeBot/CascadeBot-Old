@@ -7,17 +7,18 @@ package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.SelfUser;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.SelfUser;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.internal.utils.Checks;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
@@ -262,6 +263,9 @@ public class CommandContext {
 
     public void runOtherCommand(String command, Member sender, CommandContext context) {
         ICommandMain commandMain = CascadeBot.INS.getCommandManager().getCommandByDefault(command);
+        if (commandMain == null) {
+            throw new IllegalArgumentException("Cannot find that command!");
+        }
         if (hasPermission(commandMain.getPermission())) {
             commandMain.onCommand(member, context);
         } else {
@@ -319,7 +323,11 @@ public class CommandContext {
     }
 
     public boolean hasPermission(CascadePermission permission) {
-        return permission != null; // TODO: Check actual perms
+        return permission != null && data.getPermissions().hasPermission(member, channel, permission, data.getCoreSettings());
+    }
+
+    public boolean hasPermission(Member member, GuildChannel channel, CascadePermission permission) {
+        return permission != null && data.getPermissions().hasPermission(member, channel, permission, data.getCoreSettings());
     }
 
     //endregion
