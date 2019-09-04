@@ -5,12 +5,12 @@
 
 package org.cascadebot.cascadebot.events;
 
-import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.events.guild.voice.GenericGuildVoiceEvent;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceJoinEvent;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceMoveEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GenericGuildVoiceEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commands.music.SkipCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
@@ -25,7 +25,7 @@ public class VoiceEventListener extends ListenerAdapter {
 
         VoiceChannel botCurrentChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
         VoteButtonGroup voteButtonGroup = SkipCommand.voteMap.get(event.getGuild().getIdLong());
-        long userId = event.getMember().getUser().getIdLong();
+        long userId = event.getMember().getIdLong();
 
         if (event instanceof GuildVoiceJoinEvent) {
             GuildVoiceJoinEvent joinEvent = (GuildVoiceJoinEvent) event;

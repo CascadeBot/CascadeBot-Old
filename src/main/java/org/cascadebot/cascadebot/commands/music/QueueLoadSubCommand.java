@@ -5,8 +5,8 @@
 
 package org.cascadebot.cascadebot.commands.music;
 
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.requests.ErrorResponse;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
@@ -32,7 +32,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                     context.getUIMessaging().sendTracksFound(tracks);
                     break;
                 case EXISTS_IN_ALL_SCOPES:
-                    ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+                    ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
                     buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ONE, ((runner, channel, message) -> {
                         if (!runner.equals(buttonGroup.getOwner())) {
                             return;

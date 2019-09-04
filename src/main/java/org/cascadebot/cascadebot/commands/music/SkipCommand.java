@@ -6,8 +6,8 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.requests.ErrorResponse;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
@@ -57,7 +57,7 @@ public class SkipCommand implements ICommandMain {
         if (voteMap.containsKey(context.getGuild().getIdLong())) {
             if (context.getArgs().length > 0) {
                 if (context.getArg(0).equalsIgnoreCase("yes")) {
-                    if (voteButtonGroup.isUserAllowed(sender.getUser().getIdLong())) {
+                    if (voteButtonGroup.isUserAllowed(sender.getIdLong())) {
                         voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
                         context.getTypedMessaging().replyWarning(context.i18n("commands.skip.added_vote"));
                     } else {
@@ -65,7 +65,7 @@ public class SkipCommand implements ICommandMain {
                     }
                     return;
                 } else if (context.getArg(0).equalsIgnoreCase("no")) {
-                    if (voteButtonGroup.isUserAllowed(sender.getUser().getIdLong())) {
+                    if (voteButtonGroup.isUserAllowed(sender.getIdLong())) {
                         voteButtonGroup.addVote(sender.getUser(), UnicodeConstants.RED_CROSS);
                         context.getTypedMessaging().replyWarning(context.i18n("commands.skip.added_vote"));
                     } else {
@@ -79,7 +79,7 @@ public class SkipCommand implements ICommandMain {
             return;
         }
 
-        if (Objects.equals(track.getUserData(), sender.getUser().getIdLong())) {
+        if (Objects.equals(track.getUserData(), sender.getIdLong())) {
             context.getMusicPlayer().skip();
             context.getTypedMessaging().replySuccess(context.i18n("commands.skip.skipped_user_queued"));
             return;
@@ -114,17 +114,17 @@ public class SkipCommand implements ICommandMain {
                 context.getTypedMessaging().replyInfo(context.i18n("commands.skip.not_skipping"));
             }
         });
-        VoteButtonGroup buttonGroup = buttonGroupBuilder.build(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+        VoteButtonGroup buttonGroup = buttonGroupBuilder.build(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
         for (Member member : context.getGuild().getSelfMember().getVoiceState().getChannel().getMembers()) {
             if (context.hasPermission(member, "skip")) {
-                buttonGroup.allowUser(member.getUser().getIdLong());
+                buttonGroup.allowUser(member.getIdLong());
             }
         }
         voteMap.put(context.getGuild().getIdLong(), buttonGroup);
         context.getUIMessaging().sendButtonedMessage("Skip Vote", buttonGroup);
         buttonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
         for (Member member : context.getMusicPlayer().getConnectedChannel().getMembers()) {
-            buttonGroup.allowUser(member.getUser().getIdLong());
+            buttonGroup.allowUser(member.getIdLong());
         }
     }
 

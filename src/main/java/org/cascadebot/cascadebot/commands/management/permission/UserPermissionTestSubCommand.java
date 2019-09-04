@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -39,7 +39,7 @@ public class UserPermissionTestSubCommand implements ISubCommand {
         if (context.getData().getPermissions().hasPermission(target, context.getChannel(), perm, context.getCoreSettings())) {
             context.getTypedMessaging().replyInfo(context.i18n("commands.userperms.test.has", target.getUser().getAsTag(), perm.getPermission(context.getLocale())));
         } else {
-            context.getTypedMessaging().replyInfo(context.i18n("commands.userperms.test.does_not_have", target.getUser().getAsTag()));
+            context.getTypedMessaging().replyInfo(context.i18n("commands.userperms.test.does_not_have", target.getUser().getAsTag(), perm.getPermission(context.getLocale())));
         }
     }
 

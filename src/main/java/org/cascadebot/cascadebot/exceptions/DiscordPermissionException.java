@@ -5,8 +5,8 @@
 
 package org.cascadebot.cascadebot.exceptions;
 
-import net.dv8tion.jda.core.Permission;
-import net.dv8tion.jda.core.exceptions.PermissionException;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.exceptions.PermissionException;
 
 // We need this because the permission constructor is protected :(
 public class DiscordPermissionException extends PermissionException {

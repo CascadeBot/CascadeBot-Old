@@ -6,7 +6,7 @@
 package org.cascadebot.cascadebot.utils;
 
 import lombok.experimental.UtilityClass;
-import net.dv8tion.jda.core.utils.Checks;
+import net.dv8tion.jda.internal.utils.Checks;
 import org.apache.commons.lang3.StringUtils;
 
 @UtilityClass

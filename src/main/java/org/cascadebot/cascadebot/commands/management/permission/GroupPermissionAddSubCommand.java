@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import net.dv8tion.jda.core.entities.Member;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
@@ -34,7 +34,7 @@ public class GroupPermissionAddSubCommand implements ISubCommand {
             } else {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.add.fail", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
             }
-        }, sender.getUser().getIdLong());
+        }, sender.getIdLong());
     }
 
     @Override
