@@ -10,7 +10,7 @@ import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
 @ToString
-public class Flag {
+public class Flag implements IFlag {
 
     private String id;
 
