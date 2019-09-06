@@ -20,9 +20,11 @@ public class RandomNumberCommand implements ICommandMain {
             if (!context.isArgInteger(0)) {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.random.numbers_only"));
             } else {
-                int range = context.getArgAsInteger(0);
-                int randomNumber = RandomUtils.randomNumber(range);
-                context.getTypedMessaging().replyInfo(context.i18n("commands.random.random_result", randomNumber));
+                if (range > 0) {
+                    int range = context.getArgAsInteger(0);
+                    int randomNumber = RandomUtils.randomNumber(range);
+                    context.getTypedMessaging().replyInfo(context.i18n("commands.random.random_result", randomNumber));
+                }
             }
         } else {
             int randomNumber = RandomUtils.randomNumber(10);
