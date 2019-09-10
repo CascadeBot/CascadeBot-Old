@@ -15,6 +15,7 @@ import io.leangen.graphql.annotations.GraphQLQuery;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -63,6 +64,7 @@ public class GuildData {
     //region Guild data containers
 
     @GraphQLNonNull
+    @Setter
     private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
 
     @GraphQLQuery(name = "permissions")
