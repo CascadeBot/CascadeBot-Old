@@ -34,7 +34,7 @@ public class PermissionsServices {
 
     @GraphQLMutation
     public Result userHasPermission(@GraphQLRootContext QLContext context, long guildId, long userId, String permission) {
-        return context.runIfAuthenticatedGuild(guildId, (member) -> {
+        return context.runIfAuthenticatedGuild(guildId, (guild, member) -> {
             GuildData guildData = context.getGuildData(guildId);
             if (guildData == null) throw new IllegalStateException("GuildData is null!");
 

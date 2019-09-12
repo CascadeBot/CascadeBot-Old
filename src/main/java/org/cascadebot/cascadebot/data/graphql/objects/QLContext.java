@@ -11,6 +11,8 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import spark.Request;
 
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -38,23 +40,23 @@ public class QLContext {
         // TODO: Throw errors and do permission checks
     }
 
-    public <T> T runIfAuthenticatedGuild(long guildId, Function<Member, T> function) {
+    public <T> T runIfAuthenticatedGuild(long guildId, BiFunction<Guild, Member, T> function) {
         if (!authenticated) return null;
         Guild guild = CascadeBot.INS.getShardManager().getGuildById(guildId);
-        if (user != null && guild != null && guild.getMember(user) != null) return function.apply(guild.getMember(user));
+        if (user != null && guild != null && guild.getMember(user) != null) return function.apply(guild, guild.getMember(user));
         // TODO: Throw errors and do permission checks
         return null;
     }
 
-    public void runIfAuthenticatedGuild(long guildId, Consumer<Member> consumer) {
+    public void runIfAuthenticatedGuild(long guildId, BiConsumer<Guild, Member> consumer) {
         if (!authenticated) return;
         Guild guild = CascadeBot.INS.getShardManager().getGuildById(guildId);
-        if (user != null && guild != null && guild.getMember(user) != null) consumer.accept(guild.getMember(user));
+        if (user != null && guild != null && guild.getMember(user) != null) consumer.accept(guild, guild.getMember(user));
         // TODO: Throw errors and do permission checks
     }
 
     public GuildData getGuildData(long guildId) {
-        return runIfAuthenticatedGuild(guildId, member -> {
+        return runIfAuthenticatedGuild(guildId, (guild, member) -> {
             return GuildDataManager.getGuildData(guildId);
         });
     }

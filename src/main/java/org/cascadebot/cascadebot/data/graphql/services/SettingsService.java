@@ -38,7 +38,7 @@ public class SettingsService {
 
     @GraphQLMutation
     public GuildSettingsCore updateCoreSettings(@GraphQLRootContext QLContext context, long guildId, @GraphQLNonNull Map<String, Object> newSettings) {
-        return context.runIfAuthenticatedGuild(guildId, member -> {
+        return context.runIfAuthenticatedGuild(guildId, (guild, member) -> {
             try {
                 GuildSettingsCore newCoreSettings = ReflectionUtils.assignMapToObject(context.getGuildData(guildId).getCoreSettings(), newSettings, true);
                 context.getGuildData(guildId).setCoreSettings(newCoreSettings);

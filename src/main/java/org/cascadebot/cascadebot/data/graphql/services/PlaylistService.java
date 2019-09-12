@@ -34,7 +34,7 @@ public class PlaylistService {
         if (playlist == null) return null;
         // Check that the user is authenticated to get the playlist
         if (playlist.getScope() == PlaylistScope.GUILD) {
-            return context.runIfAuthenticatedGuild(playlist.getOwnerId(), member -> playlist.getOwnerId() == member.getGuild().getIdLong() ? playlist : null);
+            return context.runIfAuthenticatedGuild(playlist.getOwnerId(), (guild, member) -> playlist.getOwnerId() == guild.getIdLong() ? playlist : null);
         } else {
             return context.runIfAuthenticatedUser(user -> playlist.getOwnerId() == user.getIdLong() ? playlist : null);
         }
