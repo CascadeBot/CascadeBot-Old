@@ -11,8 +11,10 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.graphql.objects.QLContext;
 import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.GuildPermissions;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Result;
+import org.cascadebot.cascadebot.utils.ReflectionUtils;
 
 import java.util.Set;
 
@@ -44,6 +46,17 @@ public class PermissionsServices {
             if (cascadePermission == null) throw new IllegalArgumentException("The permission provided does not exist!");
 
             return guildData.getGuildPermissions().evalPermission(memberToCheck, cascadePermission, guildData.getCoreSettings());
+        });
+    }
+
+    @GraphQLMutation
+    public GuildPermissions updateGuildPermissions(@GraphQLRootContext QLContext context, long guildId, GuildPermissions changes) {
+        return context.runIfAuthenticatedGuild(guildId, (guild, member) -> {
+            try {
+                return ReflectionUtils.partiallyUpdateObject(context.getGuildData(guildId).getPermissions(), changes);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("We should always be able to change this! Something broke...");
+            }
         });
     }
 
