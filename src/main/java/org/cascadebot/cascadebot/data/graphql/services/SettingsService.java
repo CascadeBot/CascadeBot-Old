@@ -44,7 +44,7 @@ public class SettingsService {
                 context.getGuildData(guildId).setCoreSettings(newCoreSettings);
                 return newCoreSettings;
             } catch (IllegalAccessException e) {
-                // Rethrow this to be shown to
+                // Rethrow this to be shown to graphql
                 throw new RuntimeException(e);
             } catch (NoSuchFieldException e) {
                 return null;
