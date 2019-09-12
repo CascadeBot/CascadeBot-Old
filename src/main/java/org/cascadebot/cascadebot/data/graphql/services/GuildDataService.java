@@ -8,6 +8,7 @@ import io.leangen.graphql.annotations.GraphQLRootContext;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.graphql.objects.QLContext;
@@ -16,6 +17,8 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class GuildDataService {
@@ -27,6 +30,19 @@ public class GuildDataService {
     public GuildData guild(@GraphQLRootContext QLContext context, long id) {
         return context.runIfAuthenticatedGuild(id, (guild, member) -> {
             return GuildDataManager.getGuildData(id);
+        });
+    }
+
+    @GraphQLQuery
+    public List<GuildData> userGuilds(@GraphQLRootContext QLContext context) {
+        return context.runIfAuthenticatedUser(user -> {
+            return CascadeBot.INS.getShardManager()
+                    .getGuilds()
+                    .stream()
+                    // TODO: Add proper permissions
+                    .filter(guild -> guild.getMember(user) != null && guild.getMember(user).hasPermission(Permission.ADMINISTRATOR))
+                    .map(guild -> GuildDataManager.getGuildData(guild.getIdLong()))
+                    .collect(Collectors.toList());
         });
     }
 

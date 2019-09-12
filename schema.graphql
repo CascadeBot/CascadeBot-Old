@@ -1,5 +1,5 @@
 # source: http://localhost:8080/graphql
-# timestamp: Thu Sep 12 2019 14:49:05 GMT+0100 (British Summer Time)
+# timestamp: Thu Sep 12 2019 21:41:16 GMT+0100 (British Summer Time)
 
 type CascadePermission {
   defaultPerm: Boolean!
@@ -22,10 +22,10 @@ type Group {
 }
 
 input GroupInput {
-  roleIds: [Long]
-  name: String
-  permissions: [String]
   id: String
+  permissions: [String]
+  name: String
+  roleIds: [Long]
 }
 
 type GuildCommandInfo {
@@ -134,7 +134,8 @@ enum Module {
 
 """Mutation root"""
 type Mutation {
-  updateGuildPermissions(changes: GuildPermissionsInput, guildId: Long!): GuildPermissions
+  updateGuildPermissions(changes: GuildPermissionsInput!, guildId: Long!): GuildPermissions
+  setGuildLocale(locale: Locale!, guildId: Long!): GuildData
 
   """Edits any fields on a playlist. Null fields are skipped."""
   editPlaylist(name: String, id: String!, ownerId: Long, playlistScope: PlaylistScope, tracks: [String]): Playlist
@@ -216,6 +217,7 @@ type Query {
   playlist(id: String!, guildId: Long!): Playlist
   allCommands(module: Module): [ICommandMain]!
   allPermissions: [CascadePermission]
+  userGuilds: [GuildData]
 }
 
 type Result {
