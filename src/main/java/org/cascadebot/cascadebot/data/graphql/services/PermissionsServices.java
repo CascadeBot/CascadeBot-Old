@@ -50,10 +50,12 @@ public class PermissionsServices {
     }
 
     @GraphQLMutation
-    public GuildPermissions updateGuildPermissions(@GraphQLRootContext QLContext context, long guildId, GuildPermissions changes) {
+    public GuildPermissions updateGuildPermissions(@GraphQLRootContext QLContext context, long guildId, @GraphQLNonNull GuildPermissions changes) {
         return context.runIfAuthenticatedGuild(guildId, (guild, member) -> {
             try {
-                return ReflectionUtils.partiallyUpdateObject(context.getGuildData(guildId).getPermissions(), changes);
+                GuildPermissions permissions = ReflectionUtils.partiallyUpdateObject(context.getGuildData(guildId).getPermissions(), changes);
+                context.getGuildData(guildId).setGuildPermissions(permissions);
+                return permissions;
             } catch (IllegalAccessException e) {
                 throw new IllegalStateException("We should always be able to change this! Something broke...");
             }
