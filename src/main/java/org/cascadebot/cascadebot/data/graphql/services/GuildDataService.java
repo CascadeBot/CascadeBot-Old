@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.data.graphql.services;
 
 import io.leangen.graphql.annotations.GraphQLContext;
+import io.leangen.graphql.annotations.GraphQLMutation;
 import io.leangen.graphql.annotations.GraphQLNonNull;
 import io.leangen.graphql.annotations.GraphQLQuery;
 import io.leangen.graphql.annotations.GraphQLRootContext;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.graphql.objects.QLContext;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 
@@ -83,6 +85,15 @@ public class GuildDataService {
             throw new IllegalStateException("We can't get that guild :(");
         }
         return guild;
+    }
+
+    @GraphQLMutation
+    public GuildData setGuildLocale(@GraphQLRootContext QLContext context, long guildId, @GraphQLNonNull Locale locale) {
+        return context.runIfAuthenticatedGuild(guildId, (guild, member) -> {
+            GuildData guildData = context.getGuildData(guildId);
+            guildData.setLocale(locale);
+            return guildData;
+        });
     }
 
 }
