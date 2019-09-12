@@ -59,6 +59,7 @@ public class GuildData {
     private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
     @GraphQLNonNull
+    @Setter
     private Locale locale = Locale.getDefaultLocale();
 
     //region Guild data containers
@@ -69,6 +70,7 @@ public class GuildData {
 
     @GraphQLQuery(name = "permissions")
     @GraphQLNonNull
+    @Setter
     private GuildPermissions guildPermissions = new GuildPermissions();
     /*
         Eventually these will be used but they're commented out for now
