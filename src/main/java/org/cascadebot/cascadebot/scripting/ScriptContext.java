@@ -8,12 +8,12 @@ public class ScriptContext {
     private Guild guild;
     private User user;
 
+    private static ThreadLocal<ScriptContext> scriptContextThreadLocal = new ThreadLocal<>();
+
     private ScriptContext(Guild guild, User user) {
         this.guild = guild;
         this.user = user;
     }
-
-    private static ThreadLocal<ScriptContext> scriptContextThreadLocal = new ThreadLocal<>();
 
     public static ScriptContext enterContext(Guild guild, User user) {
         if (scriptContextThreadLocal.get() != null) {
