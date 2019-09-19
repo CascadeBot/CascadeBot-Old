@@ -109,6 +109,11 @@
         "description": "Creates a group.",
         "success": "Created group `{0}` with id `{1}`"
       },
+      "delete": {
+        "command": "delete",
+        "description": "Deletes a group.",
+        "success": "Deleted group `{0}` with id `{1}`"
+      },
       "info": {
         "command": "info",
         "description": "Gets the information about a group.",
@@ -762,6 +767,7 @@
   },
   "words": {
     "permission": "Permission",
+    "permissions": "Permissions",
     "subcommand": "Subcommand",
     "command": "Command",
     "module": "Module",
@@ -783,7 +789,8 @@
     "author": "Author",
     "length": "Length",
     "flags": "Flags",
-    "default": "Default"
+    "default": "Default",
+    "linked_roles": "Linked roles"
   },
   "messaging": {
     "loading_page": "Paged message loading...",
@@ -859,6 +866,7 @@
   },
   "arguments": {
     "name": "name",
+    "id": "id",
     "user": "user",
     "group": "group",
     "permission": "permission",
@@ -898,6 +906,15 @@
     "guild#flag#list": {
       "name": "list",
       "description": "Lists all flags."
+    }
+  },
+  "utils": {
+    "permission_command": {
+      "no_group_found": "No group found with name or id `{0}`!",
+      "too_many_groups": "There are more than 5 groups with the same name! Please use a group ID instead.",
+      "no_permissions": "No permissions!",
+      "no_linked_roles": "No linked roles!"
+
     }
   }
 }
