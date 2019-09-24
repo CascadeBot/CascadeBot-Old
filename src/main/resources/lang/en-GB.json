@@ -841,6 +841,14 @@
         "nice_name": "Enabled modules",
         "description": "The modules whose commands are allowed to be ran on the server."
       },
+      "helpHideCommandsNoPermission": {
+        "nice_name": "Hide command when the user doesn't have permissions",
+        "description": "Whether to hide a command from the help menu if the user doesn't have permission to run it."
+      },
+      "helpShowAllModules": {
+        "nice_name": "Show all modules in the help menu",
+        "description": "Whether to show all modules in the help menu even if they are disabled."
+      },
       "prefix": {
         "nice_name": "Prefix",
         "description": "The prefix for all commands directed at the bot. It is recommended to make sure that this doesn't conflict with other bots."

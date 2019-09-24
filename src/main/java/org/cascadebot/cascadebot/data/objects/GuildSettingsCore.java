@@ -65,10 +65,10 @@ public class GuildSettingsCore {
     private boolean allowTagCommands = true; // Whether tag commands will be executed by ;<tagname>
 
     @Setting
-    private boolean helpHideCommandsNoPermission = true; // TODO: i18n
+    private boolean helpHideCommandsNoPermission = true;
 
     @Setting
-    private boolean helpShowAllModules = false; // TODO: i18n
+    private boolean helpShowAllModules = false;
 
     //endregion
 
