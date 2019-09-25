@@ -5,20 +5,27 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.shared.Regex;
+
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 public class SeekCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        long time = Long.parseLong(context.getArg(0));
-        // String regex = "(\\d+)(?: ?hours|h)|(\\d+)(?: ?minutes|m)|(\\d+)(?: ?seconds|s)";
+        String time = context.getArg(0);
 
-        if (time < 0) {
+        Pattern pattern = Pattern.compile("(\\d+)(?: ?hours|h)|(\\d+)(?: ?minutes|m)|(\\d+)(?: ?seconds|s)");
+        time = Arrays.toString(pattern.split(time));
+        System.out.println(time);
+
+        if (Long.parseLong(time) < 0) {
             context.getTypedMessaging().replyDanger("You cannot seek to a negative value!");
             return;
         }
 
-        context.getMusicPlayer().getPlayer().seekTo(time);
+        context.getMusicPlayer().getPlayer().seekTo(Long.parseLong(time));
     }
 
     @Override
