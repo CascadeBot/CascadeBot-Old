@@ -128,7 +128,7 @@ public class CommandContext {
         return String.join(" ", ArrayUtils.subarray(args, start, end));
     }
 
-    public boolean isArgInteger(int index) {
+    public boolean isArgNumber(int index) {
         return Regex.INTEGER_REGEX.matcher(this.args[index]).matches();
     }
 
