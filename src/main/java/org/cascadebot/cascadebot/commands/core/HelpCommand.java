@@ -28,7 +28,12 @@ public class HelpCommand implements ICommandCore {
         if (context.getArgs().length == 0) {
             context.getUIMessaging().sendPagedMessage(
                     Arrays.stream(Module.values())
-                    .filter(module -> !module.isPrivate() && context.getCoreSettings().isHelpShowAllModules() || context.getCoreSettings().isModuleEnabled(module))
+                    /*
+                     * Filters based on the two conditions:
+                     * 1. The module should *not* be private (i.e. a dev module)
+                     * 2. Either: The setting "helpShowAllModules" is set to true *or
+                     */
+                    .filter(module -> !module.isPrivate() && (context.getCoreSettings().isHelpShowAllModules() || context.getCoreSettings().isModuleEnabled(module)))
                     .map(module -> getModulePages(module, context))
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList())
@@ -56,6 +61,12 @@ public class HelpCommand implements ICommandCore {
     private List<Page> getModulePages(Module module, CommandContext context) {
         StringBuilder stringBuilder = new StringBuilder();
         for (ICommandMain commandMain : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
+            /*
+             * Allows a permission to be displayed under one of the three conditions:
+             * 1. If there is no permission for the command, it will always be displayed
+             * 2. If the setting "helpHideCommandsNoPermission" is set to false, the command will always display regardless of permission
+             * 3. If the sender of the help command has the permission for the command
+             */
             if (commandMain.getPermission() == null || !context.getCoreSettings().isHelpHideCommandsNoPermission() || context.hasPermission(commandMain.getPermission())) {
                 stringBuilder.append("`")
                         .append(context.getCoreSettings().getPrefix())
