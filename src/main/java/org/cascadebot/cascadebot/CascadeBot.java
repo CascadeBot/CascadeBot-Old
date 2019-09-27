@@ -184,7 +184,6 @@ public class CascadeBot {
                     .addEventListeners(new VoiceEventListener())
                     .addEventListeners(new JDAEventMetricsListener())
                     .addEventListeners(eventWaiter)
-                    .setVoiceDispatchInterceptor(new JDAVoiceInterceptor(MusicHandler.getLavalink()))
                     .setToken(Config.INS.getBotToken())
                     .setShardsTotal(-1)
                     .setActivityProvider(shardId -> {
@@ -199,6 +198,7 @@ public class CascadeBot {
 
             if (MusicHandler.isLavalinkEnabled()) {
                 defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
+                defaultShardManagerBuilder.setVoiceDispatchInterceptor(MusicHandler.getLavalink().getVoiceInterceptor());
             } else {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
             }
