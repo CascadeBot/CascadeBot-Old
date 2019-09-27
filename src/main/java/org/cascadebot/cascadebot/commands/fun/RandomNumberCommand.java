@@ -17,7 +17,7 @@ public class RandomNumberCommand implements ICommandMain {
 
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
-            if (!context.isArgInteger(0)) {
+            if (!context.isArgNumber(0)) {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.random.numbers_only"));
             } else {
                 int range = context.getArgAsInteger(0);
