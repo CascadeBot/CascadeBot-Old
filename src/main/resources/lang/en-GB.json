@@ -346,9 +346,10 @@
     "seek": {
       "command": "seek",
       "description": "Seeks to a certain time within a song.",
-      "no music_playing": "There is no music playing!",
-      "negative_value": "Cannot seek to a negative value",
-      "duration_shorter": "Seek value is longer than song duration!"
+      "no_music_playing": "You are not listening to any music!",
+      "negative_value": "You cannot seek to a negative value!",
+      "duration_shorter": "The time you are trying to seek to is longer than song duration!",
+      "success": "Successfully seeked to {0}"
     },
     "queue": {
       "command": "queue",
