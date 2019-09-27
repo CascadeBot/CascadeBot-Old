@@ -343,6 +343,13 @@
       "loop_mode": "Loop mode",
       "up_next": "Up next"
     },
+    "seek": {
+      "command": "seek",
+      "description": "Seeks to a certain time within a song.",
+      "no music_playing": "There is no music playing!",
+      "negative_value": "Cannot seek to a negative value",
+      "duration_shorter": "Seek value is longer than song duration!"
+    },
     "queue": {
       "command": "queue",
       "description": "Displays the current queue.",
@@ -623,6 +630,10 @@
     "stop": {
       "name": "stop",
       "label": "Stop command"
+    },
+    "seek": {
+      "name": "seek",
+      "label": "Seek command"
     },
     "volume": {
       "name": "volume",

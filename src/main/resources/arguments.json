@@ -214,6 +214,11 @@
       "_type": "required"
     }
   },
+  "seek": {
+    "seek_time": {
+      "_type": "required"
+    }
+  },
   "groupperms*": {
     "add*": {
       "group*": {
