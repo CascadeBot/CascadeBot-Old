@@ -5,47 +5,78 @@
 
 package org.cascadebot.cascadebot.data.objects.donation;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import io.github.binaryoverload.JSONConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Locale;
 
 @AllArgsConstructor
+@ToString
 public class Tier {
 
-    private static List<Tier> tiers = new ArrayList<>();
+    @Getter
+    private static Map<String, Tier> tiers = new HashMap<>();
 
-    public static void buildTiers() {
-        List<Flag> flags = new ArrayList<>();
-        flags.add(new AmountFlag("custom_commands", 3));
-        flags.add(new AmountFlag("prefix_length", 5));
-        Tier defaultTier = new Tier(flags);
-        tiers.add(defaultTier);
+    public static void parseTiers() {
+        JSONConfig config;
+        try {
+             config = new JSONConfig(CascadeBot.class.getClassLoader().getResourceAsStream("./default_tiers.json"));
+        } catch (Exception e) {
+            // We have no default tiers :(
+            CascadeBot.LOGGER.warn("The default tiers file was unable to be loaded!", e);
+            return;
+        }
 
-        flags = new ArrayList<>();
-        flags.add(new AmountFlag("custom_commands", 7));
-        flags.add(new AmountFlag("prefix_length", 1000));
-        flags.add(new Flag("music_node"));
-        flags.add(new Flag("voice_stay"));
-        Tier fiveDollarTier = new Tier(defaultTier, flags, new ArrayList<>());
-        tiers.add(fiveDollarTier);
+        for (String tierName : config.getKeys(false)) {
+            if (tierName.equalsIgnoreCase("example")) continue;
+            tiers.put(tierName, parseTier(config.getSubConfig(tierName).orElseThrow()));
+        }
+    }
 
-        flags = new ArrayList<>();
-        flags.add(new AmountFlag("custom_commands", 15));
-        flags.add(new Flag("companion_bot"));
-        Tier sevenDollarTier = new Tier(fiveDollarTier, flags, new ArrayList<>());
-        tiers.add(sevenDollarTier);
+    private static Tier parseTier(JSONConfig config) {
+        String parent = config.getString("parent").orElse(null);
 
-        flags = new ArrayList<>();
-        flags.add(new AmountFlag("custom_commands", 20));
-        Tier tenDollarTier = new Tier(sevenDollarTier, flags, new ArrayList<>());
-        tiers.add(tenDollarTier);
+        List<String> extras = new ArrayList<>();
+        JsonElement extrasElement = config.getElement("extras").orElse(new JsonArray());
+        if (extrasElement.isJsonArray()) {
+            ((JsonArray) extrasElement).forEach(element -> extras.add(element.getAsString()));
+        }
 
-        flags = new ArrayList<>();
-        flags.add(new AmountFlag("custom_commands", 77));
-        Tier thirtyFiveDollarTier = new Tier(tenDollarTier, flags, new ArrayList<>());
-        tiers.add(thirtyFiveDollarTier);
+        Type mapType = new TypeToken<Map<String, Integer>>() {}.getType();
+        Map<String, Integer> keys = CascadeBot.getGSON().fromJson(config.getElement("keys").orElse(new JsonObject()), mapType);
+
+        JsonElement flagsEle = config.getElement("flags").orElse(new JsonArray());
+        Set<Flag> flags = new HashSet<>();
+        if (flagsEle.isJsonArray()) {
+            for (JsonElement jsonElement : flagsEle.getAsJsonArray()) {
+                if (jsonElement.isJsonPrimitive()) {
+                    flags.add(new Flag(jsonElement.getAsString()));
+                } else if (jsonElement.isJsonObject()) {
+                    JsonObject object = jsonElement.getAsJsonObject();
+                    String name = object.get("name").getAsString();
+                    String type = object.get("type").getAsString();
+                    switch (type) {
+                        case "amount":
+                            flags.add(new AmountFlag(name).parseFlagData(object.get("data").getAsJsonObject()));
+                    }
+                }
+            }
+        }
+        return new Tier(parent, flags, keys, extras);
     }
 
     public static Tier getTier(int index) {
@@ -55,31 +86,44 @@ public class Tier {
     /**
      * Parent tier
      */
-    @Getter
-    private Tier parent;
+    private String parent;
 
     /**
      * This is the list of flags the the bot checks agents for actions
      */
-    @Getter
-    private List<Flag> flags;
+    private Set<Flag> flags;
+
+    private Map<String, Integer> keys;
 
     /**
      * This is a list of ids (for use with lang) of other benefits giving at this tier
      */
     @Getter
-    private List<String> otherBenefits = new ArrayList<>();
+    private List<String> extras = new ArrayList<>();
 
     private Tier() {
         //default constructor for mongo.
     }
 
-    public Tier(List<Flag> flags) {
+    public Tier(Set<Flag> flags) {
         this.flags = flags;
     }
 
     public void addFlag(Flag flag) {
         flags.add(flag);
+    }
+
+    public Tier getParent() {
+        if (parent == null) return null;
+        return tiers.get(parent);
+    }
+
+    public Set<Flag> getFlags() {
+        Set<Flag> flags = new HashSet<>(this.flags);
+        if (getParent() != null) {
+            flags.addAll(getParent().getFlags());
+        }
+        return flags;
     }
 
     /**

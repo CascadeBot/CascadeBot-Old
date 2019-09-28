@@ -9,6 +9,13 @@
         }
       },
       {
+        "name": "custom_commands",
+        "type": "amount",
+        "data": {
+          "amount": 3
+        }
+      },
+      {
         "name": "prefix_length",
         "type": "amount",
         "data": {
@@ -21,7 +28,7 @@
     "keys": {
       "beta": 1
     },
-    "extra": [
+    "extras": [
       "tiers.extra.supporter_role",
       "tiers.extra.primary_support"
     ],
@@ -40,7 +47,7 @@
         "name": "prefix_length",
         "type": "amount",
         "data": {
-          "amount": "inf"
+          "amount": -1
         }
       },
       "node",
@@ -49,7 +56,7 @@
     "keys": {
       "beta": 3
     },
-    "extra": [
+    "extras": [
       "tiers.extra.premium_role"
     ],
     "parent": "supporter"
@@ -89,7 +96,7 @@
         }
       }
     ],
-    "extra": [
+    "extras": [
       "tiers.extra.awesome_role"
     ],
     "parent": "music"
@@ -108,7 +115,7 @@
         }
       }
     ],
-    "extra": [
+    "extras": [
       "tiers.extra.god_role",
       "tiers.extra.t_shirt"
     ],
@@ -133,7 +140,7 @@
       "__comment": "here you specify what key to give to a user, and the bot will generate those keys when this tier is applied. currently keys available are beta, beta_unexpiring, beta_unlimited",
       "beta": 1
     },
-    "extra": [
+    "extras": [
       "Extra strings explaining what you get that the bot it's self doesn't apply. Should be a language file path"
     ],
     "parent": "parent tier that is applied with this tier. flags with same name will be overridden"

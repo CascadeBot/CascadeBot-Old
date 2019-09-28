@@ -1,12 +1,22 @@
 package org.cascadebot.cascadebot.data.objects.donation;
 
 import com.google.gson.JsonObject;
-
-import java.io.InvalidClassException;
+import lombok.ToString;
 
 //TODO move stuff over to interface
-public interface DataFlag extends IFlag {
+public abstract class DataFlag extends Flag {
 
-    DataFlag parseFlagData(JsonObject flagDataObject);
+    public DataFlag(String id) {
+        super(id);
+    }
+
+    protected DataFlag() {
+        super(null);
+    }
+
+    abstract DataFlag parseFlagData(JsonObject flagDataObject);
+
+    abstract public String toString();
+
 
 }

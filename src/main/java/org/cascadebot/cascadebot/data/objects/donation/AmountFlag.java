@@ -6,8 +6,14 @@
 package org.cascadebot.cascadebot.data.objects.donation;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-public class AmountFlag extends Flag implements DataFlag {
+public class AmountFlag extends DataFlag {
+
+    @Getter
+    @Setter
     private int amount;
 
     private AmountFlag() {
@@ -18,22 +24,15 @@ public class AmountFlag extends Flag implements DataFlag {
         super(id);
     }
 
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    @Override
-    public String toString() {
-        return getId() + ": " + amount;
-    }
-
     @Override
     public DataFlag parseFlagData(JsonObject flagDataObject) {
         amount = flagDataObject.get("amount").getAsInt();
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "AmountFlag(id=" + getId() + ", amount=" + amount + ")";
+    }
+
 }

@@ -1,38 +1,32 @@
-/*
- * Copyright (c) 2019 CascadeBot. All rights reserved.
- * Licensed under the MIT license.
- */
-
 package org.cascadebot.cascadebot.data.objects.donation;
 
-import lombok.ToString;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
-@ToString
-public class Flag implements IFlag {
+@EqualsAndHashCode
+public class Flag {
 
-    private String id;
-
-    protected Flag() {
-        //default constructor for mongo.
-    }
+    @Getter
+    private final String id;
 
     public Flag(String id) {
         this.id = id;
     }
 
-    //TODO lang
-    public String getName(Locale locale) {
-        return Language.getLanguage(locale).getString("flags." + id + ".name").orElse("No language string defined");
+    protected Flag() {
+        this.id = null;
     }
 
-    public String getId() {
-        return id;
+    public String getName(Locale locale) {
+        return Language.getLanguage(locale).getString("flags." + id + ".name").orElse("No language string defined");
     }
 
     public String getDescription(Locale locale) {
         return Language.getLanguage(locale).getString("flags." + id + ".description").orElse("No language string defined");
     }
-
 }

@@ -203,20 +203,11 @@ public class GuildData {
     //endregion
 
     public Flag getFlag(String flagId) {
-        return getFlagRecursive(flagId, currentTier);
-    }
-
-    private Flag getFlagRecursive(String flagId, Tier tier) {
-        for (Flag flag : tier.getFlags()) {
+        for (Flag flag : currentTier.getFlags()) {
             if(flag.getId().equals(flagId)) {
                 return flag;
             }
         }
-
-        if(tier.getParent() != null) {
-            return getFlagRecursive(flagId, tier.getParent());
-        }
-
         return null;
     }
 
