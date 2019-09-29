@@ -115,14 +115,6 @@ public class GuildData {
         return command.getModule().isDefault();
     }
 
-    public boolean isModuleEnabled(Module module) {
-        boolean enabled = module.isDefault();
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
-            enabled &= commandInfo.get(command.getClass()).isEnabled();
-        }
-        return enabled;
-    }
-
     public String getCommandName(ICommandMain command) {
         if (commandInfo.contains(command.getClass())) {
             return commandInfo.get(command.getClass()).getCommand();

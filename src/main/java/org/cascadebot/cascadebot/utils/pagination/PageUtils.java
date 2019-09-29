@@ -45,10 +45,24 @@ public class PageUtils {
      * @return A list of Embed pages
      */
     public static List<Page> splitStringToEmbedPages(String string, int length, char c) {
+        return splitStringToEmbedPages(string, null, length, c);
+    }
+
+    /**
+     * Splits a string to be used for pages.
+     * Always splits to a length that is <= the length you provide.
+     *
+     * @param string The string to split
+     * @param title The title to add to the embed
+     * @param length The length you want the final pages. Always splits to a length that is <= the length you provide. Cannot be > 1800 as that's the discord limit (including page numbers)
+     * @param c      The character you want to split it at (this should be something like a space or a new line character)
+     * @return A list of Embed pages
+     */
+    public static List<Page> splitStringToEmbedPages(String string, String title, int length, char c) {
         List<String> strings = splitString(string, length, c);
         List<Page> pages = new ArrayList<>();
         for (String pageString : strings) {
-            pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(pageString)));
+            pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setTitle(title).setDescription(pageString)));
         }
 
         return pages;
