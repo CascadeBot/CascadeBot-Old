@@ -2,28 +2,25 @@ package org.cascadebot.cascadebot.data.objects;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TodoList {
 
     @Getter
-    private String name;
-
-    @Getter
-    private List<TodoListItem> items;
+    private List<TodoListItem> items = new ArrayList<>();
 
     @Getter
     private long ownerId;
 
     //List of users id who are able to access this list
-    private List<Long> users;
+    private List<Long> users = new ArrayList<>();
 
     private TodoList() {
         //Constructor for mongodb
     }
 
-    public TodoList(String name, long ownerId) {
-        this.name = name;
+    public TodoList(long ownerId) {
         this.ownerId = ownerId;
     }
 

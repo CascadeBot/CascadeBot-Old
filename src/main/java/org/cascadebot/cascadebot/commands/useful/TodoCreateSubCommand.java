@@ -22,7 +22,7 @@ public class TodoCreateSubCommand implements ISubCommand {
             return;
         }
 
-        context.getTypedMessaging().replySuccess("Created todo list with name `" + todoList.getName() + "`");
+        context.getTypedMessaging().replySuccess("Created todo list with name `" + context.getArg(0) + "`");
     }
 
     @Override

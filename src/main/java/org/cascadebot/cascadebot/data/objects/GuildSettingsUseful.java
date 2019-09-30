@@ -20,7 +20,7 @@ public class GuildSettingsUseful {
         if (todoLists.containsKey(name)) {
             return null;
         }
-        TodoList todoList = new TodoList(name, owner);
+        TodoList todoList = new TodoList(owner);
         todoLists.put(name, todoList);
         return todoList;
     }
