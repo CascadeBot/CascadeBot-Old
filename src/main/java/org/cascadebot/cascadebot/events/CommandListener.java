@@ -96,8 +96,7 @@ public class CommandListener extends ListenerAdapter {
         MDC.put("cascade.mention_prefix", String.valueOf(isMention));
 
         trigger = commandWithArgs.split(" ")[0];
-        commandWithArgs = commandWithArgs.substring(trigger.length()).trim();
-        args = commandWithArgs.split(" ");
+        args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
 
         MDC.put("cascade.trigger", trigger);
         MDC.put("cascade.args", Arrays.toString(args));
