@@ -336,5 +336,33 @@
         }
       }
     }
+  },
+  "todo*": {
+    "create*": {
+      "name": {
+        "_type": "required"
+      }
+    },
+    "add*": {
+      "name*": {
+        "_type": "required",
+        "item": {
+          "_type": "required"
+        }
+      }
+    },
+    "remove*": {
+      "name*": {
+        "_type": "required",
+        "item": {
+          "_type": "required"
+        }
+      }
+    },
+    "send*": {
+      "channel": {
+        "_type": "optional"
+      }
+    }
   }
 }
