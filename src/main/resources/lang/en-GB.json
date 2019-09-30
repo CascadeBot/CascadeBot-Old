@@ -729,7 +729,8 @@
       "informational": "informational",
       "moderation": "moderation",
       "fun": "fun",
-      "developer": "developer"
+      "developer": "developer",
+      "useful": "useful"
     },
     "permissionmode":{
       "most_restrictive": "most restrictive",

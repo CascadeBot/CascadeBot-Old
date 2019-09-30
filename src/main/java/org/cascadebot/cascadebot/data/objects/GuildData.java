@@ -54,6 +54,7 @@ public class GuildData {
 
     private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
     private GuildPermissions guildPermissions = new GuildPermissions();
+    private GuildSettingUseful guildSettingUseful = new GuildSettingUseful();
     /*
         Eventually these will be used but they're commented out for now
 
@@ -70,8 +71,6 @@ public class GuildData {
     @Transient
     private PageCache pageCache = new PageCache();
     //endregion
-
-    private Map<String, TodoList> todoLists = new ConcurrentHashMap<>();
 
     @PreSave
     public void preSave() {
@@ -178,25 +177,6 @@ public class GuildData {
         return Collections.unmodifiableCollection(commandInfo.values());
     }
 
-    //endregion
-
-    //region todo list stuff
-    public TodoList getTodoList(String name) {
-        return todoLists.get(name);
-    }
-
-    public TodoList createTodoList(String name) {
-        if (todoLists.containsKey(name)) {
-            return null;
-        }
-        TodoList todoList = new TodoList(name);
-        todoLists.put(name, todoList);
-        return todoList;
-    }
-
-    public void deleteTodoList(String name) {
-        todoLists.remove(name);
-    }
     //endregion
 
 }
