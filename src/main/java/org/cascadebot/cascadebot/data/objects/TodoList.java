@@ -12,12 +12,19 @@ public class TodoList {
     @Getter
     private List<TodoListItem> items;
 
+    @Getter
+    private long ownerId;
+
+    //List of users id who are able to access this list
+    private List<Long> users;
+
     private TodoList() {
         //Constructor for mongodb
     }
 
-    public TodoList(String name) {
+    public TodoList(String name, long ownerId) {
         this.name = name;
+        this.ownerId = ownerId;
     }
 
     public void addTodoItem(String text) {
@@ -26,6 +33,10 @@ public class TodoList {
 
     public void removeTodoItem(int id) {
         items.remove(id);
+    }
+
+    public boolean canUserEdit(Long id) {
+        return ownerId == id || users.contains(id);
     }
 
     public class TodoListItem {

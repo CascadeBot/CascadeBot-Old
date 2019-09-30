@@ -15,7 +15,7 @@ public class TodoCreateSubCommand implements ISubCommand {
             return;
         }
 
-        TodoList todoList = context.getData().getGuildSettingUseful().createTodoList(context.getArg(0));
+        TodoList todoList = context.getData().getGuildSettingsUseful().createTodoList(context.getArg(0), context.getMember().getIdLong());
 
         if (todoList == null) {
             context.getTypedMessaging().replyDanger("A todo list with that name already exists!");

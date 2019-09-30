@@ -54,7 +54,7 @@ public class GuildData {
 
     private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
     private GuildPermissions guildPermissions = new GuildPermissions();
-    private GuildSettingUseful guildSettingUseful = new GuildSettingUseful();
+    private GuildSettingsUseful guildSettingsUseful = new GuildSettingsUseful();
     /*
         Eventually these will be used but they're commented out for now
 

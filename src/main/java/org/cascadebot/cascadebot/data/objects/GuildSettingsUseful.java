@@ -3,9 +3,9 @@ package org.cascadebot.cascadebot.data.objects;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class GuildSettingUseful {
+public class GuildSettingsUseful {
 
-    public GuildSettingUseful() {
+    public GuildSettingsUseful() {
 
     }
 
@@ -16,11 +16,11 @@ public class GuildSettingUseful {
         return todoLists.get(name);
     }
 
-    public TodoList createTodoList(String name) {
+    public TodoList createTodoList(String name, long owner) {
         if (todoLists.containsKey(name)) {
             return null;
         }
-        TodoList todoList = new TodoList(name);
+        TodoList todoList = new TodoList(name, owner);
         todoLists.put(name, todoList);
         return todoList;
     }
