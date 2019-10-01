@@ -28,6 +28,7 @@ public class TodoAddUserSubCommand implements ISubCommand {
             return;
         }
 
+        //TODO allow multiple users to be added/removed at once
         Member target = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
 
         if (target == null) {
