@@ -35,10 +35,11 @@ public class TodoAddSubCommand implements ISubCommand {
             return;
         }
 
-        todoList.addTodoItem(context.getMessage(1));
+        int index = todoList.addTodoItem(context.getMessage(1)) + 1;
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle("Added item to todo list");
-        builder.addField("List", context.getArg(0), false);
+        builder.addField("List", context.getArg(0), true);
+        builder.addField("Position", String.valueOf(index), true);
         builder.addField("Item", context.getMessage(1), false);
         context.getTypedMessaging().replySuccess(builder);
     }

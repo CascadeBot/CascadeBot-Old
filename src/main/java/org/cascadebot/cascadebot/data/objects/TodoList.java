@@ -24,12 +24,14 @@ public class TodoList {
         this.ownerId = ownerId;
     }
 
-    public void addTodoItem(String text) {
-        items.add(new TodoListItem(text));
+    public int addTodoItem(String text) {
+        TodoListItem item = new TodoListItem(text);
+        items.add(item);
+        return items.indexOf(item);
     }
 
-    public void removeTodoItem(int id) {
-        items.remove(id);
+    public TodoListItem removeTodoItem(int id) {
+        return items.remove(id);
     }
 
     public boolean canUserEdit(Long id) {
@@ -40,7 +42,8 @@ public class TodoList {
 
         boolean done;
 
-        String text;
+        @Getter
+        private String text;
 
         private TodoListItem() {
             //Constructor for mongodb
