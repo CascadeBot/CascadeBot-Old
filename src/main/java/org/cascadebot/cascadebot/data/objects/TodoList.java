@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.Member;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,14 @@ public class TodoList {
 
     public TodoListItem removeTodoItem(int id) {
         return items.remove(id);
+    }
+
+    public void addEditUser(Member member) {
+        users.add(member.getIdLong());
+    }
+
+    public void removeEditUser(Member member) {
+        users.remove(member.getIdLong());
     }
 
     public boolean canUserEdit(Long id) {
