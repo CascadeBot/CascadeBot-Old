@@ -40,7 +40,14 @@ public class TodoRemoveSubCommand implements ISubCommand {
             return;
         }
 
-        TodoList.TodoListItem item = todoList.removeTodoItem(context.getArgAsInteger(1) - 1);
+        int index = context.getArgAsInteger(1) - 1;
+
+        if (index < 0 || index > todoList.getItems().size()) {
+            context.getTypedMessaging().replyDanger("Cannot remove an item that doesn't exist!");
+            return;
+        }
+
+        TodoList.TodoListItem item = todoList.removeTodoItem(index);
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle("Removed item to todo list");
         builder.addField("List", context.getArg(0), false);
@@ -50,12 +57,12 @@ public class TodoRemoveSubCommand implements ISubCommand {
 
     @Override
     public String command() {
-        return "add";
+        return "remove";
     }
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("todo.add", false);
+        return CascadePermission.of("todo.remove", false);
     }
 
     @Override
