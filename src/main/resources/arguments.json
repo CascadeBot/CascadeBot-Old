@@ -363,6 +363,22 @@
       "channel": {
         "_type": "optional"
       }
+    },
+    "adduser*": {
+      "list*": {
+        "_type": "required",
+        "user": {
+          "_type": "required"
+        }
+      }
+    },
+    "removeuser*": {
+      "list*": {
+        "_type": "required",
+        "user": {
+          "_type": "required"
+        }
+      }
     }
   }
 }
