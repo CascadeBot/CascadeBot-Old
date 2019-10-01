@@ -379,6 +379,11 @@
           "_type": "required"
         }
       }
+    },
+    "view*": {
+      "list*": {
+        "_type": "required"
+      }
     }
   }
 }
