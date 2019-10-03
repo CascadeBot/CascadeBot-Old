@@ -360,8 +360,11 @@
       }
     },
     "send*": {
-      "channel": {
-        "_type": "optional"
+      "list*": {
+        "_type": "required",
+        "channel": {
+          "_type": "optional"
+        }
       }
     },
     "adduser*": {

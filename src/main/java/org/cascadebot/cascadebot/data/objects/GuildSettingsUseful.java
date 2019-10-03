@@ -28,6 +28,17 @@ public class GuildSettingsUseful {
     public void deleteTodoList(String name) {
         todoLists.remove(name);
     }
+
+    public TodoList getTodoListByMessage(long messageId) {
+        TodoList list = null;
+        for (Map.Entry<String, TodoList> listEntry : todoLists.entrySet()) {
+            if (listEntry.getValue().getMessage() == messageId) {
+                list = listEntry.getValue();
+            }
+        }
+
+        return list;
+    }
     //endregion
 
 }

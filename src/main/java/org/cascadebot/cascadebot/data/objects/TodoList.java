@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.util.ArrayList;
@@ -10,6 +11,14 @@ public class TodoList {
 
     @Getter
     private List<TodoListItem> items = new ArrayList<>();
+
+    @Getter
+    @Setter
+    private long message;
+
+    @Getter
+    @Setter
+    private int currentItem;
 
     @Getter
     private long ownerId;
@@ -49,7 +58,9 @@ public class TodoList {
 
     public class TodoListItem {
 
-        boolean done;
+        @Getter
+        @Setter
+        private boolean done;
 
         @Getter
         private String text;
