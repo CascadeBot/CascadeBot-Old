@@ -1,7 +1,14 @@
 {
   "commands": {
     "invite": {
+      "command": "invite",
       "description": "Returns the bot invite link, to invite the bot to other Discord guilds."
+    },
+    "help": {
+      "command": "help",
+      "description": "This is the help command; what else did you expect?",
+      "module_not_enabled": "That module isn't enabled for this guild!",
+      "no_access_to_module": "You don't have access to any commands in this module!"
     },
     "prefix": {
       "command": "prefix",
@@ -767,6 +774,7 @@
   },
   "words": {
     "permission": "Permission",
+    "permissions": "Permissions",
     "subcommand": "Subcommand",
     "command": "Command",
     "module": "Module",
@@ -788,7 +796,8 @@
     "author": "Author",
     "length": "Length",
     "flags": "Flags",
-    "default": "Default"
+    "default": "Default",
+    "linked_roles": "Linked roles"
   },
   "messaging": {
     "loading_page": "Paged message loading...",
@@ -831,6 +840,14 @@
       "enabledModules": {
         "nice_name": "Enabled modules",
         "description": "The modules whose commands are allowed to be ran on the server."
+      },
+      "helpHideCommandsNoPermission": {
+        "nice_name": "Hide command when the user doesn't have permissions",
+        "description": "Whether to hide a command from the help menu if the user doesn't have permission to run it."
+      },
+      "helpShowAllModules": {
+        "nice_name": "Show all modules in the help menu",
+        "description": "Whether to show all modules in the help menu even if they are disabled."
       },
       "prefix": {
         "nice_name": "Prefix",
@@ -904,6 +921,15 @@
     "guild#flag#list": {
       "name": "list",
       "description": "Lists all flags."
+    }
+  },
+  "utils": {
+    "permission_command": {
+      "no_group_found": "No group found with name or id `{0}`!",
+      "too_many_groups": "There are more than 5 groups with the same name! Please use a group ID instead.",
+      "no_permissions": "No permissions!",
+      "no_linked_roles": "No linked roles!"
+
     }
   }
 }
