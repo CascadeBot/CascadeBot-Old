@@ -56,7 +56,7 @@ public class TodoList {
         return ownerId == id || users.contains(id);
     }
 
-    public class TodoListItem {
+    public static class TodoListItem {
 
         @Getter
         @Setter

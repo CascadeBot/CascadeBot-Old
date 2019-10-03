@@ -41,6 +41,11 @@ public class TodoViewSubCommand implements ISubCommand {
         List<Page> pages = new ArrayList<>();
         StringBuilder currentPage = new StringBuilder();
 
+        if (todoList.getItems().size() == 0) {
+            context.getTypedMessaging().replyDanger("The todo list doesn't have any items!");
+            return;
+        }
+
         for (int i = 0; i < todoList.getItems().size(); i++) {
             TodoList.TodoListItem item = todoList.getItems().get(i);
 

@@ -33,6 +33,6 @@ public class TodoCommand implements ICommandMain {
 
     @Override
     public Set<ISubCommand> getSubCommands() {
-        return Set.of(new TodoCreateSubCommand(), new TodoAddSubCommand(), new TodoRemoveSubCommand(), new TodoAddUserSubCommand(), new TodoRemoveUserSubCommand(), new TodoViewSubCommand());
+        return Set.of(new TodoCreateSubCommand(), new TodoAddSubCommand(), new TodoRemoveSubCommand(), new TodoAddUserSubCommand(), new TodoRemoveUserSubCommand(), new TodoViewSubCommand(), new TodoSendSubCommand());
     }
 }
