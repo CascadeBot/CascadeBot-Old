@@ -18,28 +18,28 @@ public class TodoRemoveSubCommand implements ISubCommand {
         }
 
         if (!context.isArgInteger(1)) {
-            context.getTypedMessaging().replyDanger("You can only remove an item by number!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.remove.not_number"));
             return;
         }
 
         TodoList todoList = context.getData().getGuildSettingsUseful().getTodoList(context.getArg(0));
 
         if (todoList == null) {
-            context.getTypedMessaging().replyDanger("Todo list " + context.getArg(0) + " doesn't exist");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", context.getArg(0)));
             return;
         }
 
         if (todoList.getMessage() == -1) {
-            context.getTypedMessaging().replyDanger("This todo list has already been sent, and therefor is no longer editable");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_already_sent"));
             return;
         }
 
         if (!todoList.canUserEdit(context.getMember().getIdLong())) {
             Member owner = context.getGuild().getMemberById(todoList.getOwnerId());
             if (owner != null) {
-                context.getTypedMessaging().replyDanger("You cannot edit this todo list. If you want to edit this contact " + owner.getAsMention());
+                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit", owner.getAsMention()));
             } else {
-                context.getTypedMessaging().replyDanger("You cannot edit this todo list and the owner has left the guild so the todo list has been deleted");
+                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit_no_owner"));
                 context.getData().getGuildSettingsUseful().deleteTodoList(context.getArg(0));
             }
             return;
@@ -48,15 +48,15 @@ public class TodoRemoveSubCommand implements ISubCommand {
         int index = context.getArgAsInteger(1) - 1;
 
         if (index < 0 || index > todoList.getItems().size()) {
-            context.getTypedMessaging().replyDanger("Cannot remove an item that doesn't exist!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.remove.item_does_not_exist"));
             return;
         }
 
         TodoList.TodoListItem item = todoList.removeTodoItem(index);
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-        builder.setTitle("Removed item to todo list");
-        builder.addField("List", context.getArg(0), false);
-        builder.addField("Item", item.getText(), false);
+        builder.setTitle(context.i18n("commands.todo.remove.embed_title"));
+        builder.addField(context.i18n("commands.todo.embed_list_field"), context.getArg(0), false);
+        builder.addField(context.i18n("commands.todo.embed_item_field"), item.getText(), false);
         context.getTypedMessaging().replySuccess(builder);
     }
 

@@ -18,11 +18,11 @@ public class TodoCreateSubCommand implements ISubCommand {
         TodoList todoList = context.getData().getGuildSettingsUseful().createTodoList(context.getArg(0), context.getMember().getIdLong());
 
         if (todoList == null) {
-            context.getTypedMessaging().replyDanger("A todo list with that name already exists!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.create.list_exists"));
             return;
         }
 
-        context.getTypedMessaging().replySuccess("Created todo list with name `" + context.getArg(0) + "`");
+        context.getTypedMessaging().replySuccess(context.i18n("commands.todo.create.created", context.getArg(0)));
     }
 
     @Override

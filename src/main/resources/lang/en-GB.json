@@ -430,6 +430,57 @@
       "volume_set": "Volume set to {0}%.",
       "volume_already_set": "Volume is already set to {0}%.",
       "volume_range": "Volume needs to be between 0% and 200%."
+    },
+    "todo": {
+      "command": "todo",
+      "description": "Create and manipulates todo lists",
+      "add": {
+        "command": "add",
+        "description": "Adds an item to a todo list",
+        "embed_title": "Added item to todo list"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes an item from a todo list",
+        "embed_title": "Removed item from todo list",
+        "not_number": "You can only remove an item by number!",
+        "item_does_not_exist": "Cannot remove an item that doesn't exist!"
+      },
+      "create": {
+        "command": "create",
+        "description": "Creates a todo list",
+        "list_exists": "A todo list with that name already exists!",
+        "created": "Created todo list with name `{0}`"
+      },
+      "view": {
+        "command": "view",
+        "description": "Views a todo list contents"
+      },
+      "adduser": {
+        "command": "adduser",
+        "description": "Add a user to a todo list you own",
+        "added": "Added user {0} to the todo list {1}"
+      },
+      "removeuser": {
+        "command": "removeuser",
+        "description": "Remove a user from a todo list you own",
+        "removed": "Removed user {0} from the todo list {1}"
+      },
+      "send": {
+        "command": "send",
+        "description": "Sends the todo list for checking items off, and actually using the list",
+        "cannot_find_channel": "Couldn't find channel `{0}`"
+      },
+      "owner_only": "Only the owner of a todo list can add or remove users from the list!",
+      "cannot_edit": "You cannot edit this todo list. If you want to edit this contact {0}",
+      "cannot_edit_no_owner": "You cannot edit this todo list and the owner has left the guild so the todo list has been deleted",
+      "list_does_not_exist": "Todo list {0} doesn't exist",
+      "list_already_sent": "This todo list has already been sent, and therefor is no longer editable",
+      "no_items": "The todo list doesn't have any items!",
+      "user_not_found": "Couldn't find user `{0}`",
+      "embed_list_field": "List",
+      "embed_position_field": "Position",
+      "embed_item_field": "Item"
     }
   },
   "permissions": {
@@ -642,6 +693,38 @@
     "flags": {
       "name": "flags",
       "label": "Flags command"
+    },
+    "todo": {
+      "name": "todo",
+      "label": "Todo Command",
+      "add": {
+        "name": "todo.add",
+        "label": "Todo add sub command"
+      },
+      "remove": {
+        "name": "todo.remove",
+        "label": "Todo remove sub command"
+      },
+      "create": {
+        "name": "todo.create",
+        "label": "Todo create sub command"
+      },
+      "adduser": {
+        "name": "todo.add.user",
+        "label": "Todo adduser sub command"
+      },
+      "removeuser": {
+        "name": "todo.remove.user",
+        "label": "Todo removeuser sub command"
+      },
+      "view": {
+        "name": "todo.view",
+        "label": "Todo view sub command"
+      },
+      "send": {
+        "name": "todo.send",
+        "label": "Todo send sub command"
+      }
     }
   },
   "moderation_manager": {
@@ -907,6 +990,8 @@
     "channel": "channel",
     "prefix": "prefix",
     "command": "command",
+    "item": "item",
+    "list": "list",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."

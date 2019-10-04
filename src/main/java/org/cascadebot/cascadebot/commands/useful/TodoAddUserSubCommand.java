@@ -19,12 +19,12 @@ public class TodoAddUserSubCommand implements ISubCommand {
         TodoList todoList = context.getData().getGuildSettingsUseful().getTodoList(context.getArg(0));
 
         if (todoList == null) {
-            context.getTypedMessaging().replyDanger("Todo list " + context.getArg(0) + " doesn't exist");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", context.getArg(0)));
             return;
         }
 
         if (todoList.getOwnerId() != context.getMember().getIdLong()) {
-            context.getTypedMessaging().replyDanger("Only the owner of a todo list can add users to the list!");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.owner_only"));
             return;
         }
 
@@ -32,13 +32,13 @@ public class TodoAddUserSubCommand implements ISubCommand {
         Member target = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
 
         if (target == null) {
-            context.getTypedMessaging().replyDanger("Couldn't find user `" + context.getArg(1) + "`");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.user_not_found", context.getArg(1)));
             return;
         }
 
         todoList.addEditUser(target);
 
-        context.getTypedMessaging().replySuccess("Added user " + target.getUser().getAsTag() + " to the todo list " + context.getArg(0));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.todo.adduser.added", target.getUser().getAsTag(), context.getArg(0)));
 
     }
 
