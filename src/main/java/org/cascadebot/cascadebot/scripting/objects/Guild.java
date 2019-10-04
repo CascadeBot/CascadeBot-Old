@@ -121,7 +121,7 @@ public class Guild {
         /* Integer */
     }
 
-    public void getMember(/*User user*/) {
+    public void getMember(User user) {
         /* Member */
     }
 
@@ -203,8 +203,71 @@ public class Guild {
         /* String */
     }
 
+    public void getSplashUrl() {
+        /* String */
+    }
 
+    public void getStoreChannelById(String id) {
+        /* StoreChannel */
+    }
 
+    public void getStoreChannels() {
+        /* Use cache internally
+        * List<StoreChannel> */
+    }
+
+    public void getStoreChannelsByName(String name, boolean ignoreCase) {
+        /* Use cache internally
+        * List<StoreChannel> */
+    }
+
+    public void getSystemChannel() {
+        /* TextChannel */
+    }
+
+    public void getTextChannelById(String id) {
+        /* TextChannel */
+    }
+
+    public void getTextChannels() {
+        /* Use cache internally
+        * List<TextChannel> */
+    }
+
+    public void getTextChannelsByName(String name, boolean ignoreCase) {
+        /* Use cache internally
+         * List<TextChannel> */
+    }
+
+    public void getVanityCode() {
+        /* String */
+    }
+
+    public void getVanityUrl() {
+        /* String */
+    }
+
+    public void getVoiceChannelById(String id) {
+        /* VoiceChannel */
+    }
+
+    public void getVoiceChannels() {
+        /* Use cache internally
+        List<VoiceChannel> */
+    }
+
+    public void getVoiceChannelsByName(String name, boolean ignoreCase) {
+        /* Use cache internally
+        List<VoiceChannel> */
+    }
+
+    public void getVoiceStates() {
+        /* List<GuildVoiceStates> */
+    }
+
+    public void isMember(User user) {
+        /* boolean */
+    }
 
 
 
