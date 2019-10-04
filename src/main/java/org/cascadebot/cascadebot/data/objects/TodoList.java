@@ -14,7 +14,7 @@ public class TodoList {
 
     @Getter
     @Setter
-    private long message;
+    private long message = -1;
 
     @Getter
     @Setter

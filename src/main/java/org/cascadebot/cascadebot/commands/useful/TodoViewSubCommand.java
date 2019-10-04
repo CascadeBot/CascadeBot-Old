@@ -27,6 +27,11 @@ public class TodoViewSubCommand implements ISubCommand {
             return;
         }
 
+        if (todoList.getMessage() == -1) {
+            context.getTypedMessaging().replyDanger("This todo list has already been sent, and therefor is no longer editable");
+            return;
+        }
+
         if (!todoList.canUserEdit(context.getMember().getIdLong())) {
             Member owner = context.getGuild().getMemberById(todoList.getOwnerId());
             if (owner != null) {

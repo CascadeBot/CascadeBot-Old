@@ -172,6 +172,7 @@ public class TodoSendSubCommand implements ISubCommand {
         } else {
             addUncheckButton(message);
         }
+        //TODO check all items check. I'm going to wait for persistent buttons to do this
     }
 
     public String getTodoListMessage(TodoList list) {
