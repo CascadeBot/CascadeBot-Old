@@ -83,6 +83,11 @@ public class TodoSendSubCommand implements ISubCommand {
             return;
         }
 
+        if (todoList.getItems().size() == 0) {
+            context.getTypedMessaging().replyDanger("The todo list doesn't have any items!");
+            return;
+        }
+
         ButtonGroup buttonGroup = new ButtonGroup(context.getMember().getIdLong(), channel.getIdLong(), channel.getGuild().getIdLong());
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.BACKWARD_ARROW, (runner, channel1, message) -> {
             int currentPage = todoList.getCurrentItem()/10 + 1;
@@ -97,7 +102,7 @@ public class TodoSendSubCommand implements ISubCommand {
             todoList.setCurrentItem(newPos);
 
             message.editMessage(getTodoListMessage(todoList)).queue();
-            //TODO implement check for done items when switching items
+            doCheckToggle(todoList, message);
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel1, message) -> {
             int newItem = todoList.getCurrentItem() - 1;
@@ -109,7 +114,7 @@ public class TodoSendSubCommand implements ISubCommand {
             todoList.setCurrentItem(newItem);
 
             message.editMessage(getTodoListMessage(todoList)).queue();
-            //TODO implement check for done items when switching items
+            doCheckToggle(todoList, message);
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel1, message) -> {
             int newItem = todoList.getCurrentItem() + 1;
@@ -121,7 +126,7 @@ public class TodoSendSubCommand implements ISubCommand {
             todoList.setCurrentItem(newItem);
 
             message.editMessage(getTodoListMessage(todoList)).queue();
-            //TODO implement check for done items when switching items
+            doCheckToggle(todoList, message);
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, channel1, message) -> {
             int currentPage = todoList.getCurrentItem()/10 + 1;
@@ -135,7 +140,7 @@ public class TodoSendSubCommand implements ISubCommand {
             todoList.setCurrentItem(end + 1);
 
             message.editMessage(getTodoListMessage(todoList)).queue();
-            //TODO implement check for done items when switching items
+            doCheckToggle(todoList, message);
         }));
 
         buttonGroup.addButton(check_button);
@@ -157,6 +162,16 @@ public class TodoSendSubCommand implements ISubCommand {
         ButtonGroup buttonGroup = buttonGroupMap.get(message.getIdLong());
         buttonGroup.removeButton(uncheck_button);
         buttonGroup.addButton(check_button);
+    }
+
+    private void doCheckToggle(TodoList list, Message message) {
+        TodoList.TodoListItem item = list.getItems().get(list.getCurrentItem());
+
+        if (item.isDone()) {
+            addCheckButton(message);
+        } else {
+            addUncheckButton(message);
+        }
     }
 
     public String getTodoListMessage(TodoList list) {
