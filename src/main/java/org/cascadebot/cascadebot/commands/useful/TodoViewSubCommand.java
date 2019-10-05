@@ -20,14 +20,14 @@ public class TodoViewSubCommand implements ISubCommand {
             return;
         }
 
-        TodoList todoList = context.getData().getGuildSettingsUseful().getTodoList(context.getArg(0));
+        TodoList todoList = context.getData().getUsefulSettings().getTodoList(context.getArg(0));
 
         if (todoList == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", context.getArg(0)));
             return;
         }
 
-        if (todoList.getMessage() == -1) {
+        if (todoList.getMessageId() != -1) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_already_sent"));
             return;
         }
@@ -38,7 +38,7 @@ public class TodoViewSubCommand implements ISubCommand {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit", owner.getAsMention()));
             } else {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit_no_owner"));
-                context.getData().getGuildSettingsUseful().deleteTodoList(context.getArg(0));
+                context.getData().getUsefulSettings().deleteTodoList(context.getArg(0));
             }
             return;
         }

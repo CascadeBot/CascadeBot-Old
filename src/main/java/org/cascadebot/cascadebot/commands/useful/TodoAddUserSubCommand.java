@@ -16,7 +16,7 @@ public class TodoAddUserSubCommand implements ISubCommand {
             return;
         }
 
-        TodoList todoList = context.getData().getGuildSettingsUseful().getTodoList(context.getArg(0));
+        TodoList todoList = context.getData().getUsefulSettings().getTodoList(context.getArg(0));
 
         if (todoList == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", context.getArg(0)));

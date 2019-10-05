@@ -32,7 +32,7 @@ public class GuildSettingsUseful {
     public TodoList getTodoListByMessage(long messageId) {
         TodoList list = null;
         for (Map.Entry<String, TodoList> listEntry : todoLists.entrySet()) {
-            if (listEntry.getValue().getMessage() == messageId) {
+            if (listEntry.getValue().getMessageId() == messageId) {
                 list = listEntry.getValue();
             }
         }
