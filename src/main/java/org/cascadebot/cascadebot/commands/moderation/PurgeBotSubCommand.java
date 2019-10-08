@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
 
 public class PurgeBotSubCommand implements ISubCommand {
+    
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
