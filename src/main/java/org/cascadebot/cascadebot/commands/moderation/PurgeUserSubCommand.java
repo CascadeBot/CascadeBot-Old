@@ -24,6 +24,7 @@ public class PurgeUserSubCommand implements ISubCommand {
 
         PurgeUtils.Purge(context, PurgeUtils.Criteria.USER, context.getArgAsInteger(1), targetMember.getUser().getId());
     }
+
     @Override
     public String command() {
         return "user";
