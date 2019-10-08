@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.moderation;
 
-import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.*;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
