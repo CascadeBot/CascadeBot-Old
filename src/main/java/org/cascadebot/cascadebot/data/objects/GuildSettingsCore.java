@@ -44,31 +44,31 @@ public class GuildSettingsCore {
 
     //region Boolean flags
     @Setting
-    private boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
+    public boolean mentionPrefix = false; // Whether the bot will respond to a mention as a prefix
 
     @Setting
-    private boolean deleteCommand = true;
+    public boolean deleteCommand = true;
 
     @Setting
-    private boolean useEmbedForMessages = true;
+    public boolean useEmbedForMessages = true;
 
     @Setting
-    private boolean showPermErrors = true; // Whether commands will silently fail on no permissions
+    public boolean showPermErrors = true; // Whether commands will silently fail on no permissions
 
     @Setting
-    private boolean showModuleErrors = true;
+    public boolean showModuleErrors = true;
 
     @Setting
-    private boolean adminsHaveAllPerms = true;
+    public boolean adminsHaveAllPerms = true;
 
     @Setting
-    private boolean allowTagCommands = true; // Whether tag commands will be executed by ;<tagname>
+    public boolean allowTagCommands = true; // Whether tag commands will be executed by ;<tagname>
 
     @Setting
-    private boolean helpHideCommandsNoPermission = true;
+    public boolean helpHideCommandsNoPermission = true;
 
     @Setting
-    private boolean helpShowAllModules = false;
+    public boolean helpShowAllModules = false;
 
     //endregion
 
