@@ -44,7 +44,7 @@ public class SettingsUtils {
         Arrays.stream(classForScanning.getDeclaredFields())
                 .map(field -> {field.setAccessible(true); return field;})
                 .filter(field -> field.getAnnotation(Setting.class) != null && field.getAnnotation(Setting.class).directlyEditable())
-                .forEach(setting -> settings.put(setting.getName(), setting));
+                .forEach(setting -> settings.put(setting.getName().toLowerCase(), setting));
         return settings;
     }
 
