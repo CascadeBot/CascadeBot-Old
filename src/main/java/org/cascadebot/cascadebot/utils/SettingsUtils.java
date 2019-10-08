@@ -42,7 +42,8 @@ public class SettingsUtils {
     public static Map<String, Field> getSettingsFromClass(Class<?> classForScanning) {
         Map<String, Field> settings = new HashMap<>();
         Arrays.stream(classForScanning.getDeclaredFields())
-                .filter(field -> field.getAnnotation(Setting.class) != null)
+                .map(field -> {field.setAccessible(true); return field;})
+                .filter(field -> field.getAnnotation(Setting.class) != null && field.getAnnotation(Setting.class).directlyEditable())
                 .forEach(setting -> settings.put(setting.getName(), setting));
         return settings;
     }
