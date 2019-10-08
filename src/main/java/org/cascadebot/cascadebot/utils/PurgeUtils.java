@@ -1,7 +1,7 @@
 package org.cascadebot.cascadebot.utils;
 
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.Message;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
 import javax.annotation.Nullable;
