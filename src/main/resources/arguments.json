@@ -236,14 +236,6 @@
         "_type": "required"
       }
     },
-    "delete*": {
-      "name": {
-        "_type": "required",
-        "_aliases": [
-          "id"
-        ]
-      }
-    },
     "info*": {
       "group": {
         "_type": "required"
@@ -335,6 +327,23 @@
           "_type": "required"
         }
       }
+    }
+  },
+  "purge": {
+    "contains": {
+      "_type": "command"
+    },
+    "user": {
+      "_type": "command"
+    },
+    "attachments": {
+      "_type": "command"
+    },
+    "bot": {
+      "_type": "command"
+    },
+    "link": {
+      "_type": "command"
     }
   }
 }
