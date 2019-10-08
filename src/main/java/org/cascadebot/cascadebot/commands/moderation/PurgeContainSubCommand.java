@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.utils.PurgeUtils;
 
 
 public class PurgeContainSubCommand implements ISubCommand {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length <= 1) {
