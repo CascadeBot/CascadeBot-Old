@@ -56,7 +56,7 @@ public class TodoRemoveSubCommand implements ISubCommand {
 
         if (todoList.getItems().size() == 0) {
             context.getData().getUsefulSettings().deleteTodoList(context.getArg(0));
-            context.reply("Your todo list has been deleth!"); // TODO: 05/10/2019 i18n
+            context.reply(context.i18n("commands.todo.remove.deleted"));
         }
 
         todoList.setCurrentItem(Math.max(todoList.getCurrentItem() - 1, 0));
