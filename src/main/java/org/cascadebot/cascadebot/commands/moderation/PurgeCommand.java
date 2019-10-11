@@ -18,11 +18,17 @@ public class PurgeCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length == 0) {
+        if (context.getArgs().length < 1) {
             context.getUIMessaging().replyUsage();
             return;
         }
-        PurgeUtils.Purge(context, PurgeUtils.Criteria.ALL, context.getArgAsInteger(0), null);
+        try {
+            context.getArgAsInteger(0);
+        } catch (NumberFormatException error) {
+            context.getUIMessaging().replyUsage(this);
+            return;
+        }
+        PurgeUtils.purge(context, PurgeUtils.Criteria.ALL, context.getArgAsInteger(0), null);
     }
 
     @Override
@@ -37,17 +43,12 @@ public class PurgeCommand implements ICommandMain {
 
     @Override
     public Set<ISubCommand> getSubCommands() {
-        return Set.of(new PurgeContainSubCommand(), new PurgeBotSubCommand(), new PurgeAttachmentsSubCommand(), new PurgeLinkSubCommand(), new PurgeUserSubCommand());
+        return Set.of(new PurgeContainSubCommand(), new PurgeBotSubCommand(), new PurgeAttachmentSubCommand(), new PurgeLinkSubCommand(), new PurgeUserSubCommand());
     }
 
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("purge", false, Permission.MESSAGE_MANAGE);
-    }
-
-    @Override
-    public String description() {
-        return "Cleans all messages";
     }
 
 }
