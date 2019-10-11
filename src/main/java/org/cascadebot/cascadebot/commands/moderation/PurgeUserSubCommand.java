@@ -13,6 +13,7 @@ import org.cascadebot.cascadebot.utils.PurgeUtils;
 
 
 public class PurgeUserSubCommand implements ISubCommand {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length <= 0) {
