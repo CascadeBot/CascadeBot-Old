@@ -16,14 +16,24 @@ public class PurgeUserSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length <= 0) {
+        if (context.getArgs().length < 2) {
             context.getUIMessaging().replyUsage();
             return;
         }
+        try {
+            context.getArgAsInteger(0);
+        } catch (NumberFormatException error) {
+            context.getUIMessaging().replyUsage(this);
+            return;
+        }
 
-        Member targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
+        Member targetMember = null;
+        targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
+        if (targetMember == null) {
+            context.getTypedMessaging().replyDanger(context.i18n("response.cannot_find_user"));
+        }
 
-        PurgeUtils.Purge(context, PurgeUtils.Criteria.USER, context.getArgAsInteger(1), targetMember.getUser().getId());
+        PurgeUtils.purge(context, PurgeUtils.Criteria.USER, context.getArgAsInteger(0), targetMember.getUser().getId());
     }
 
     @Override
@@ -36,8 +46,5 @@ public class PurgeUserSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() { return null; }
-
-    @Override
-    public String description() { return "Cleans messages from a specific user"; }
 
 }
