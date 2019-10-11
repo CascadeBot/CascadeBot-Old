@@ -12,14 +12,14 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
 
 public class PurgeBotSubCommand implements ISubCommand {
-    
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length == 0) {
+        if (context.getArgs().length < 1) {
             context.getUIMessaging().replyUsage();
             return;
         }
-        PurgeUtils.Purge(context, PurgeUtils.Criteria.BOT, context.getArgAsInteger(0), null);
+        PurgeUtils.purge(context, PurgeUtils.Criteria.BOT, context.getArgAsInteger(0), null);
     }
 
     @Override
@@ -29,9 +29,6 @@ public class PurgeBotSubCommand implements ISubCommand {
 
     @Override
     public String parent() { return "purge"; }
-
-    @Override
-    public String description() { return "Deletes messages made by bot accounts"; }
 
     @Override
     public CascadePermission getPermission() { return null; }
