@@ -19,7 +19,7 @@ public class PurgeAttachmentSubCommand implements ISubCommand {
             context.getUIMessaging().replyUsage();
             return;
         }
-        PurgeUtils.purge(context, PurgeUtils.Criteria.ATTACHMENT, context.getArgAsInteger(1), context.getArg(0));
+        PurgeUtils.purge(context, PurgeUtils.Criteria.ATTACHMENT, context.getArgAsInteger(0), null);
     }
 
     @Override
