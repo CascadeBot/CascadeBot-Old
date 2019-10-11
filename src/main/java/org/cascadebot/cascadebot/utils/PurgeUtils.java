@@ -79,7 +79,7 @@ public class PurgeUtils {
                 case USER:
                     if (message.getAuthor().getId().equals(argument)) {
                         messageList.add(message);
-                }
+                    }
                     break;
                 case ALL:
                     messageList.add(message);
