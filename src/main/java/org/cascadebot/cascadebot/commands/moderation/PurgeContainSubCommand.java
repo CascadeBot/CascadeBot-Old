@@ -15,12 +15,20 @@ public class PurgeContainSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length <= 1) {
+        if (context.getArgs().length < 2) {
             context.getUIMessaging().replyUsage();
             return;
         }
-            PurgeUtils.Purge(context, PurgeUtils.Criteria.TOKEN, context.getArgAsInteger(1), context.getArg(0));
+
+        try {
+            context.getArgAsInteger(0);
+        } catch (NumberFormatException error) {
+            context.getUIMessaging().replyUsage(this);
+            return;
         }
+        PurgeUtils.purge(context, PurgeUtils.Criteria.TOKEN, context.getArgAsInteger(0), context.getMessage(1));
+    }
+
     @Override
     public String command() {
         return "contains";
@@ -32,7 +40,4 @@ public class PurgeContainSubCommand implements ISubCommand {
     @Override
     public CascadePermission getPermission() { return null; }
 
-    @Override
-    public String description() { return "Cleans messages containing a value"; }
-    
 }
