@@ -1,12 +1,10 @@
 package org.cascadebot.cascadebot.utils;
 
-import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.Message;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
-import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PurgeUtils {
 
@@ -17,48 +15,60 @@ public class PurgeUtils {
         TOKEN,
         USER,
         ALL,
-        ID,
     }
 
-    public static void Purge(CommandContext context, Criteria type, int amount, @Nullable String argument) {
+    public static void purge(CommandContext context, Criteria type, int amount, String argument) {
 
-        MessageHistory history = new MessageHistory(context.getChannel());
-        List<Message> eventMessages = history.retrievePast(amount).complete();
-        eventMessages = eventMessages.stream().filter((message) -> {
-            var reference = new Object() {
-                boolean result;
-            };
+        List<Message> messageList = new ArrayList<>();
+
+        for (Message message : context.getChannel().getIterableHistory()) {
+            if (messageList.size() == amount) {
+                break;
+            }
+            
+            if (!message.getTimeCreated().isBefore(java.time.OffsetDateTime.now().plusWeeks(2))) {
+                break;
+            }
+            
             switch (type) {
+                    
                 case ATTACHMENT:
-                    reference.result = !message.getAttachments().isEmpty();
+                    if (!message.getAttachments().isEmpty()) {
+                        messageList.add(message);
+                    }
                     break;
                 case BOT:
-                    reference.result = message.getAuthor().isBot();
+                    if (message.getAuthor().isBot()) {
+                        messageList.add(message);
+                    }
                     break;
                 case LINK:
-                    reference.result = message.getContentRaw().toLowerCase().contains("http://") || message.getContentRaw().toLowerCase().contains("https://");
+                    if (message.getContentRaw().toLowerCase().matches("^(?:https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$")) {
+                        messageList.add(message);
+                    }
                     break;
                 case TOKEN:
-                    reference.result = message.getContentRaw().toLowerCase().contains(argument.toLowerCase());
+                    if (message.getContentRaw().toLowerCase().contains(argument.toLowerCase())) {
+                        messageList.add(message);
+                    }
                     break;
                 case USER:
-                    reference.result = message.getAuthor().getId().equals(argument);
+                    if (message.getAuthor().getId().equals(argument)) {
+                        messageList.add(message);
+                }
                     break;
                 case ALL:
-                   reference.result = true;
-                   break;
-                case ID:
-                    reference.result = message.getId().equals(argument);
+                    messageList.add(message);
                     break;
             }
-            return reference.result;
-        }).collect(Collectors.toList());
-        if (eventMessages.size() <= 1) {
+        }
+        
+        if (messageList.size() <= 1) {
             context.getTypedMessaging().replyWarning("No messages were purged with this criteria");
             return;
         }
-        context.getChannel().deleteMessages(eventMessages).queue();
-        context.getTypedMessaging().replySuccess("Success! Purged " + eventMessages.size() + " messages.");
+        
+        context.getChannel().deleteMessages(messageList).queue();
+        context.getTypedMessaging().replySuccess("Success! Purged " + messageList.size() + " messages.");
         }
     }
-
