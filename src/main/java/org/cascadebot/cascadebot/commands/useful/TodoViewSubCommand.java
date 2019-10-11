@@ -1,9 +1,11 @@
 package org.cascadebot.cascadebot.commands.useful;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.TodoList;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
@@ -24,11 +26,6 @@ public class TodoViewSubCommand implements ISubCommand {
 
         if (todoList == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", context.getArg(0)));
-            return;
-        }
-
-        if (todoList.getMessageId() != -1) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_already_sent"));
             return;
         }
 
@@ -55,7 +52,10 @@ public class TodoViewSubCommand implements ISubCommand {
             TodoList.TodoListItem item = todoList.getItems().get(i);
 
             if (i % 20 == 0 && i != 0) {
-                pages.add(new PageObjects.StringPage(currentPage.toString()));
+                EmbedBuilder builder = new EmbedBuilder();
+                builder.setTitle("Todo list items");
+                builder.appendDescription(currentPage.toString());
+                pages.add(new PageObjects.EmbedPage(builder));
                 currentPage = new StringBuilder();
             }
 
@@ -64,7 +64,10 @@ public class TodoViewSubCommand implements ISubCommand {
         }
 
         if (!currentPage.toString().isEmpty()) {
-            pages.add(new PageObjects.StringPage(currentPage.toString()));
+            EmbedBuilder builder = new EmbedBuilder();
+            builder.setTitle("Todo list items");
+            builder.appendDescription(currentPage.toString());
+            pages.add(new PageObjects.EmbedPage(builder));
         }
 
         context.getUIMessaging().sendPagedMessage(pages);

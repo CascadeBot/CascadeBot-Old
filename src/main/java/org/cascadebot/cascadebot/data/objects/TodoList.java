@@ -2,14 +2,17 @@ package org.cascadebot.cascadebot.data.objects;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.messaging.Messaging;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
@@ -220,7 +223,7 @@ public class TodoList {
         //TODO check all items check. I'm going to wait for persistent buttons to do this
     }
 
-    private String getTodoListMessage() {
+    private MessageEmbed getTodoListMessage() {
         int pos = this.getCurrentItem();
         int currentPage = pos / 10 + 1;
         int start = currentPage * 10 - 10;
@@ -245,7 +248,10 @@ public class TodoList {
                 pageBuilder.append("~~");
             }
         }
-        return pageBuilder.toString();
+        EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+        embedBuilder.setTitle("Todo List");
+        embedBuilder.appendDescription(pageBuilder.toString());
+        return embedBuilder.build();
     }
 
 }
