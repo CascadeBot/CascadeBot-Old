@@ -15,11 +15,11 @@ public class PurgeLinkSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length == 0) {
+        if (context.getArgs().length < 1) {
             context.getUIMessaging().replyUsage();
             return;
         }
-        PurgeUtils.Purge(context, PurgeUtils.Criteria.LINK, context.getArgAsInteger(1), context.getArg(0));
+        PurgeUtils.purge(context, PurgeUtils.Criteria.LINK, context.getArgAsInteger(1), context.getArg(0));
     }
 
     @Override
@@ -32,8 +32,5 @@ public class PurgeLinkSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() { return null; }
-
-    @Override
-    public String description() { return "Cleans messages containing a link"; }
 
 }
