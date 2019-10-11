@@ -21,6 +21,7 @@ public class PurgeLinkSubCommand implements ISubCommand {
         }
         PurgeUtils.Purge(context, PurgeUtils.Criteria.LINK, context.getArgAsInteger(1), context.getArg(0));
     }
+
     @Override
     public String command() {
         return "link";
