@@ -236,6 +236,14 @@
         "_type": "required"
       }
     },
+    "delete*": {
+      "name": {
+        "_type": "required",
+        "_aliases": [
+          "id"
+        ]
+      }
+    },
     "info*": {
       "group": {
         "_type": "required"
@@ -329,38 +337,40 @@
       }
     }
   },
-  "purge": {
-    "contains": {
-      "_type": "command"
+  "purge*": {
+    "attachment*": {
+      "amount": {
+        "_type": "required"
+      }
     },
-    "user": {
-      "_type": "command"
+    "bot*": {
+      "amount": {
+        "_type": "required"
+      }
     },
-    "attachments": {
-      "_type": "command"
+    "contains*": {
+      "amount*": {
+        "_type": "required",
+        "token*": {
+          "_type": "required"
+        }
+      }
     },
-    "bot": {
-      "_type": "command"
+    "link*": {
+      "amount": {
+        "_type": "required"
+      }
     },
-    "link": {
-      "_type": "command"
-    }
-  },
-  "purge": {
-    "contains": {
-      "_type": "command"
+    "user*": {
+      "amount*": {
+        "_type": "required",
+        "user*": {
+          "_type": "required"
+        }
+      }
     },
-    "user": {
-      "_type": "command"
-    },
-    "attachments": {
-      "_type": "command"
-    },
-    "bot": {
-      "_type": "command"
-    },
-    "link": {
-      "_type": "command"
+    "amount": {
+      "_type": "required"
     }
   }
 }
