@@ -11,18 +11,20 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
 
 
-public class PurgeAttachmentsSubCommand implements ISubCommand {
+public class PurgeAttachmentSubCommand implements ISubCommand {
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length == 0) {
+        if (context.getArgs().length < 1) {
             context.getUIMessaging().replyUsage();
             return;
         }
-        PurgeUtils.Purge(context, PurgeUtils.Criteria.ATTACHMENT, context.getArgAsInteger(1), context.getArg(0));
+        PurgeUtils.purge(context, PurgeUtils.Criteria.ATTACHMENT, context.getArgAsInteger(1), context.getArg(0));
     }
+
     @Override
     public String command() {
-        return "attachments";
+        return "attachment";
     }
 
     @Override
@@ -30,8 +32,5 @@ public class PurgeAttachmentsSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() { return null; }
-
-    @Override
-    public String description() { return "Cleans messages containing an attachment"; }
 
 }
