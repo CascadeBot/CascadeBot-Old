@@ -19,7 +19,13 @@ public class PurgeLinkSubCommand implements ISubCommand {
             context.getUIMessaging().replyUsage();
             return;
         }
-        PurgeUtils.purge(context, PurgeUtils.Criteria.LINK, context.getArgAsInteger(0), null);
+
+        if (!context.isArgInteger(1)) {
+            context.getUIMessaging().replyUsage(this);
+            return;
+        }
+
+        PurgeUtils.purge(context, PurgeUtils.Criteria.LINK, context.getArgAsInteger(1), context.getArg(0));
     }
 
     @Override
