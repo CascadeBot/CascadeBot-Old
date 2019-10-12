@@ -19,6 +19,12 @@ public class PurgeBotSubCommand implements ISubCommand {
             context.getUIMessaging().replyUsage();
             return;
         }
+
+        if (!context.isArgInteger(0)) {
+            context.getUIMessaging().replyUsage(this);
+            return;
+        }
+
         PurgeUtils.purge(context, PurgeUtils.Criteria.BOT, context.getArgAsInteger(0), null);
     }
 
