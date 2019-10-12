@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 
 public class PurgeUtils {
 
@@ -26,6 +27,7 @@ public class PurgeUtils {
      * @author DeadlyFirex
      * @see PurgeUtils#purge
      */
+
     public enum Criteria {
         ATTACHMENT,
         BOT,
@@ -60,7 +62,7 @@ public class PurgeUtils {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.purge.restriction_time"));
                 break;
             }
-            if (!context.getCoreSettings().isPurgePinnedMessages() && message.isPinned()) {
+            if (!context.getData().getGuildModeration().isPurgePinnedMessages() && message.isPinned()) {
                     continue;
             }
 
