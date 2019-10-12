@@ -22,12 +22,12 @@ public class PurgeCommand implements ICommandMain {
             context.getUIMessaging().replyUsage();
             return;
         }
-        try {
-            context.getArgAsInteger(0);
-        } catch (NumberFormatException error) {
+
+        if (!context.isArgInteger(0)) {
             context.getUIMessaging().replyUsage(this);
             return;
         }
+
         PurgeUtils.purge(context, PurgeUtils.Criteria.ALL, context.getArgAsInteger(0), null);
     }
 
