@@ -8,7 +8,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
-import org.cascadebot.cascadebot.data.objects.GuildData;
 
 public class PurgeUtils {
 
