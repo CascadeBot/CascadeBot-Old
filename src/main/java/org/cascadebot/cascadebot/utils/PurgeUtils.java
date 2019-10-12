@@ -105,4 +105,5 @@ public class PurgeUtils {
             context.getTypedMessaging().replySuccess(context.i18n("commands.purge.successfully_done", messageList.size()));
         }, e -> context.getTypedMessaging().replyException(context.i18n("responses.failed_to_run_command"), e));
         }
+
     }
