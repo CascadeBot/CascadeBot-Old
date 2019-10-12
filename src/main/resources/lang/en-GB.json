@@ -62,6 +62,7 @@
       "command": "random",
       "description": "Returns a random number",
       "numbers_only": "The range needs to be a integer value!",
+      "no_negatives": "Negative numbers are not allowed",
       "random_result": "Random number is `{0}`"
     },
     "roles": {
