@@ -57,10 +57,12 @@ public class PurgeUtils {
             if (messageList.size() == amount) {
                 break;
             }
+            
             if (!message.getTimeCreated().isBefore(OffsetDateTime.now().minusWeeks(2))) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.purge.restriction_time"));
                 break;
             }
+            
             if (!context.getData().getGuildModeration().isPurgePinnedMessages() && message.isPinned()) {
                     continue;
             }
@@ -89,12 +91,13 @@ public class PurgeUtils {
                 case USER:
                     if (message.getAuthor().getId().equals(argument)) {
                         messageList.add(message);
-                }
+                    }
                     break;
                 case ALL:
                     messageList.add(message);
                     break;
             }
+            
         }
 
         if (messageList.size() <= 1) {
