@@ -22,7 +22,7 @@ public class RandomNumberCommand implements ICommandMain {
             } else {
                 int range = context.getArgAsInteger(0);
                 if (range < 1) {
-                    context.getTypedMessaging().replyDanger("Negative numbers are not allowed");
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.random.no_negatives"));
                     return;
                 }
                 int randomNumber = RandomUtils.randomNumber(range);
