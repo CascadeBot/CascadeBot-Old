@@ -1,10 +1,10 @@
 package org.cascadebot.cascadebot.utils;
 
-import groovy.transform.Undefined;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -49,14 +49,14 @@ public class PurgeUtils {
      */
 
     public static void purge(CommandContext context, Criteria type, int amount, String argument) {
-        
+
         List<Message> messageList = new ArrayList<>();
 
         for (Message message : context.getChannel().getIterableHistory()) {
             if (messageList.size() == amount) {
                 break;
             }
-            if (!message.getTimeCreated().isBefore(java.time.OffsetDateTime.now().minusWeeks(2))) {
+            if (!message.getTimeCreated().isBefore(OffsetDateTime.now().minusWeeks(2))) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.purge.restriction_time"));
                 break;
             }
