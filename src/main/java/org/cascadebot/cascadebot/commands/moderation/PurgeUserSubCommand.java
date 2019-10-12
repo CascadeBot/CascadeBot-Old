@@ -20,9 +20,8 @@ public class PurgeUserSubCommand implements ISubCommand {
             context.getUIMessaging().replyUsage();
             return;
         }
-        try {
-            context.getArgAsInteger(0);
-        } catch (NumberFormatException error) {
+
+        if (!context.isArgInteger(0)) {
             context.getUIMessaging().replyUsage(this);
             return;
         }
@@ -31,6 +30,7 @@ public class PurgeUserSubCommand implements ISubCommand {
         targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
         if (targetMember == null) {
             context.getTypedMessaging().replyDanger(context.i18n("response.cannot_find_user"));
+            return;
         }
 
         PurgeUtils.purge(context, PurgeUtils.Criteria.USER, context.getArgAsInteger(0), targetMember.getUser().getId());
