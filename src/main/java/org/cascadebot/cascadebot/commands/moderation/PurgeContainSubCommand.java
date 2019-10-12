@@ -20,12 +20,11 @@ public class PurgeContainSubCommand implements ISubCommand {
             return;
         }
 
-        try {
-            context.getArgAsInteger(0);
-        } catch (NumberFormatException error) {
+        if (!context.isArgInteger(0)) {
             context.getUIMessaging().replyUsage(this);
             return;
         }
+
         PurgeUtils.purge(context, PurgeUtils.Criteria.TOKEN, context.getArgAsInteger(0), context.getMessage(1));
     }
 
