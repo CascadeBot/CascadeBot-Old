@@ -70,9 +70,6 @@ public class GuildSettingsCore {
     @Setting
     private boolean helpShowAllModules = false;
 
-    @Setting
-    private boolean purgePinnedMessages = false;
-
     //endregion
 
     @Setting(directlyEditable = false)
