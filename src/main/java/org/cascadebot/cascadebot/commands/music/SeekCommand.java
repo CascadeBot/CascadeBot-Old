@@ -8,7 +8,9 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.ParserUtils;
 import org.cascadebot.shared.Regex;
 
@@ -33,8 +35,8 @@ public class SeekCommand implements ICommandMain {
             return;
         }
 
-        if (context.isArgNumber(0)) {
-            millis = Long.parseLong(time);
+        if (context.isArgLong(0)) {
+            millis = context.getArgAsLong(0);
         } else {
             millis = ParserUtils.parseTime(time, true);
         }
@@ -49,7 +51,8 @@ public class SeekCommand implements ICommandMain {
 
         context.getMusicPlayer().getPlayer().seekTo(millis);
         // TODO: Binary make a method to format time using ICU
-        context.getTypedMessaging().replySuccess(context.i18n("commands.seek.success", millis/1000));
+        String formattedTime = FormatUtils.formatTime(millis, Locale.getDefaultLocale(), true);
+        context.getTypedMessaging().replySuccess(context.i18n("commands.seek.success", formattedTime));
     }
 
     @Override

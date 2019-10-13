@@ -209,12 +209,12 @@
       "_type": "command"
     }
   },
-  "volume": {
+  "volume*": {
     "volume": {
       "_type": "required"
     }
   },
-  "seek": {
+  "seek*": {
     "seek_time": {
       "_type": "required"
     }
