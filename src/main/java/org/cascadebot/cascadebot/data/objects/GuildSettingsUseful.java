@@ -1,13 +1,12 @@
 package org.cascadebot.cascadebot.data.objects;
 
+import org.cascadebot.cascadebot.commandmeta.Module;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SettingsContainer(module = Module.USEFUL)
 public class GuildSettingsUseful {
-
-    public GuildSettingsUseful() {
-
-    }
 
     private Map<String, TodoList> todoLists = new ConcurrentHashMap<>();
 
