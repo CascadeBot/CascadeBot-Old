@@ -364,7 +364,7 @@
     "user*": {
       "amount*": {
         "_type": "required",
-        "user*": {
+        "user": {
           "_type": "required"
         }
       }
