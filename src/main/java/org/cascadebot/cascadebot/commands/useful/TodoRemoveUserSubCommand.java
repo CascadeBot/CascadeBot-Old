@@ -54,7 +54,7 @@ public class TodoRemoveUserSubCommand implements ISubCommand {
 
     @Override
     public String parent() {
-        return "toto";
+        return "todo";
     }
 
 }
