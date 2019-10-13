@@ -237,7 +237,9 @@ public class TodoList {
             }
             TodoList.TodoListItem item = this.getItems().get(i);
             if (i == pos) {
-                pageBuilder.append(UnicodeConstants.WHITE_CIRCLE).append(" ");
+                pageBuilder.append("\uD83D\uDD38").append(" ");
+            } else {
+                pageBuilder.append("▫").append(" ");
             }
             pageBuilder.append(i + 1).append(": ");
             if (item.isDone()) {
