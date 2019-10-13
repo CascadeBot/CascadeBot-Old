@@ -215,7 +215,7 @@
     }
   },
   "seek*": {
-    "seek_time": {
+    "timestamp": {
       "_type": "required"
     }
   },

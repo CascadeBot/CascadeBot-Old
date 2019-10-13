@@ -42,7 +42,7 @@ public class SeekCommand implements ICommandMain {
             try {
                 millis = ParserUtils.parseTime(time, true);
             } catch (IllegalArgumentException e) {
-                context.getTypedMessaging().replyException("Oopsie doopsie", e);
+                context.getTypedMessaging().replyDanger(context.i18n("commands.seek.bad_format"));
             }
         }
 

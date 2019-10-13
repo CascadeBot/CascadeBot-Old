@@ -352,10 +352,11 @@
     },
     "seek": {
       "command": "seek",
-      "description": "Seeks to a certain time within a song.",
+      "description": "Seeks to a timestamp within a song.",
       "no_music_playing": "You are not listening to any music!",
       "negative_value": "You cannot seek to a negative value!",
-      "duration_shorter": "The time you are trying to seek to is longer than song duration!",
+      "duration_shorter": "The timestamp you are trying to seek to is longer than the song duration!",
+      "bad_format": "Incorrect format.",
       "success": "Successfully seeked to {0}"
     },
     "queue": {
@@ -918,7 +919,7 @@
     "channel": "channel",
     "prefix": "prefix",
     "command": "command",
-    "seek_time": "time",
+    "timestamp": "time",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
