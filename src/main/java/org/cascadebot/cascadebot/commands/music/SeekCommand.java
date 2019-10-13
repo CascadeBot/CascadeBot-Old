@@ -27,7 +27,7 @@ public class SeekCommand implements ICommandMain {
         }
 
         String time = context.getMessage(0);
-        long millis;
+        long millis = 0;
 
         VoiceChannel memberVoiceChannel = context.getMember().getVoiceState().getChannel();
         if (context.getMusicPlayer().getPlayer().getPlayingTrack() == null || !context.getMusicPlayer().getConnectedChannel().equals(memberVoiceChannel)) {
@@ -35,10 +35,14 @@ public class SeekCommand implements ICommandMain {
             return;
         }
 
-        if (context.isArgLong(0)) {
-            millis = context.getArgAsLong(0);
-        } else {
-            millis = ParserUtils.parseTime(time, true);
+        try {
+            if (context.isArgLong(0)) {
+                millis = context.getArgAsLong(0);
+            } else {
+                millis = ParserUtils.parseTime(time, true);
+            }
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
 
         if (millis < 0) {
