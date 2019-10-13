@@ -35,14 +35,15 @@ public class SeekCommand implements ICommandMain {
             return;
         }
 
-        try {
-            if (context.isArgLong(0)) {
-                millis = context.getArgAsLong(0);
-            } else {
+
+        if (context.isArgLong(0)) {
+            millis = context.getArgAsLong(0);
+        } else {
+            try {
                 millis = ParserUtils.parseTime(time, true);
+            } catch (IllegalArgumentException e) {
+                context.getTypedMessaging().replyException("Oopsie doopsie", e);
             }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
         }
 
         if (millis < 0) {
