@@ -918,6 +918,7 @@
     "channel": "channel",
     "prefix": "prefix",
     "command": "command",
+    "seek_time": "time",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
