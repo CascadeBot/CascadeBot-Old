@@ -62,6 +62,7 @@
       "command": "random",
       "description": "Returns a random number",
       "numbers_only": "The range needs to be a integer value!",
+      "no_negatives": "Negative numbers are not allowed",
       "random_result": "Random number is `{0}`"
     },
     "roles": {
@@ -350,6 +351,15 @@
       "loop_mode": "Loop mode",
       "up_next": "Up next"
     },
+    "seek": {
+      "command": "seek",
+      "description": "Seeks to a timestamp within a song.",
+      "no_music_playing": "You are not listening to any music!",
+      "negative_value": "You cannot seek to a negative value!",
+      "duration_shorter": "The timestamp you are trying to seek to is longer than the song duration!",
+      "bad_format": "Incorrect format.",
+      "success": "Successfully seeked to {0}"
+    },
     "queue": {
       "command": "queue",
       "description": "Displays the current queue.",
@@ -430,6 +440,33 @@
       "volume_set": "Volume set to {0}%.",
       "volume_already_set": "Volume is already set to {0}%.",
       "volume_range": "Volume needs to be between 0% and 200%."
+    },
+    "purge": {
+      "contains": {
+        "name": "contains",
+        "description": "Cleans messages containing a value"
+      },
+      "link": {
+        "name": "link",
+        "description": "Cleans messages containing a link"
+      },
+      "attachment": {
+        "name": "attachment",
+        "description": "Cleans all messages containing an attachment"
+      },
+      "user": {
+        "name": "user",
+        "description": "Cleans all messages sent by an user"
+      },
+      "bot": {
+        "name": "bot",
+        "description": "Cleans all messages from bots"
+      },
+      "name": "purge",
+      "description": "Cleans all messages",
+      "successfully_done": "Successfully cleaned {0} messages!",
+      "restriction_time": "Found a message older than 2 weeks\nDue to Discord limits, we won't be able to clean it.",
+      "failed_clear": "No messages were purged with this criteria"
     },
     "todo": {
       "command": "todo",
@@ -683,6 +720,10 @@
       "name": "stop",
       "label": "Stop command"
     },
+    "seek": {
+      "name": "seek",
+      "label": "Seek command"
+    },
     "volume": {
       "name": "volume",
       "label": "Volume command",
@@ -694,6 +735,10 @@
     "flags": {
       "name": "flags",
       "label": "Flags command"
+    },
+    "purge": {
+      "name": "purge",
+      "label": "Purge command"
     },
     "todo": {
       "name": "todo",
@@ -991,6 +1036,9 @@
     "channel": "channel",
     "prefix": "prefix",
     "command": "command",
+    "timestamp": "timestamp",
+    "amount": "amount",
+    "token": "token",
     "item": "item",
     "list": "list",
     "userperms#list#user#permissions": {
@@ -1016,7 +1064,6 @@
       "too_many_groups": "There are more than 5 groups with the same name! Please use a group ID instead.",
       "no_permissions": "No permissions!",
       "no_linked_roles": "No linked roles!"
-
     }
   }
 }

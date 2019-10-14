@@ -209,8 +209,13 @@
       "_type": "command"
     }
   },
-  "volume": {
+  "volume*": {
     "volume": {
+      "_type": "required"
+    }
+  },
+  "seek*": {
+    "timestamp": {
       "_type": "required"
     }
   },
@@ -387,6 +392,42 @@
       "list*": {
         "_type": "required"
       }
+    }
+  },
+  "purge*": {
+    "attachment*": {
+      "amount": {
+        "_type": "required"
+      }
+    },
+    "bot*": {
+      "amount": {
+        "_type": "required"
+      }
+    },
+    "contains*": {
+      "amount*": {
+        "_type": "required",
+        "token": {
+          "_type": "required"
+        }
+      }
+    },
+    "link*": {
+      "amount": {
+        "_type": "required"
+      }
+    },
+    "user*": {
+      "amount*": {
+        "_type": "required",
+        "user": {
+          "_type": "required"
+        }
+      }
+    },
+    "amount": {
+      "_type": "required"
     }
   }
 }
