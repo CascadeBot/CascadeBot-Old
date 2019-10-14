@@ -51,5 +51,8 @@ public class UnicodeConstants {
     public static final String WHITE_CIRCLE = "\u26AA"; //⚪
     public static final String WHITE_SQUARE = "\uD83D\uDD33"; //⬜
     public static final String WHITE_HALLOW_SQUARE = "\u2B1C"; //🔳
+    public static final String WHITE_SMALL_SQUARE = "▫";
+
+    public static final String SMALL_ORANGE_DIAMOND = "\uD83D\uDD38"; // 🔸
 
 }

@@ -54,6 +54,7 @@ public class GuildData {
 
     private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
     private GuildPermissions guildPermissions = new GuildPermissions();
+    private GuildSettingsUseful usefulSettings = new GuildSettingsUseful();
     private GuildSettingsModeration guildModeration = new GuildSettingsModeration();
 
     /*
@@ -71,7 +72,6 @@ public class GuildData {
 
     @Transient
     private PageCache pageCache = new PageCache();
-
     //endregion
 
     @PreSave

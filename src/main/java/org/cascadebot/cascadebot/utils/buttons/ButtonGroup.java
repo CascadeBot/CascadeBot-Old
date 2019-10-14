@@ -26,6 +26,12 @@ public class ButtonGroup {
     private final long channelId;
     private final long guildId;
 
+    private ButtonGroup() {
+        this.ownerId = -1;
+        this.channelId = -1;
+        this.guildId = -1;
+    }
+
     private long messageId = 0;
 
     private Runnable messageSentAction;
