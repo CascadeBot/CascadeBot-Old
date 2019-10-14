@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -94,8 +95,22 @@ public class DiscordUtils {
         return CascadeBot.INS.getShardManager().getGuildById(guildId);
     }
 
-    public static MessageChannel getTextChannelById(Long channelId) {
+    public static TextChannel getTextChannelById(Long channelId) {
         return CascadeBot.INS.getShardManager().getTextChannelById(channelId);
+    }
+
+    public static TextChannel getTextChannel(Guild guild, String search) {
+        List<TextChannel> channels = FinderUtil.findTextChannels(search, guild);
+        if (channels.size() > 1) {
+           return null;
+        }
+
+        TextChannel channel = channels.size() != 1 ? null : channels.get(0);
+        if (channel == null && Regex.ID.matcher(search).matches()) {
+            channel = getTextChannelById(Long.valueOf(search));
+        }
+
+        return channel;
     }
 
     //region Roles

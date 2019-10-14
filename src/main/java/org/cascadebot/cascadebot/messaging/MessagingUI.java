@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.api.utils.AttachmentOption;
 import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -51,10 +52,10 @@ public class MessagingUI {
     /**
      * Sends an image to the channel in the context
      * When embeds are on, it embeds the image into the embed.
-     * When embeds are off, it downloads the image and sends it via the {@link net.dv8tion.jda.api.entities.TextChannel#sendFile(File)} method
+     * When embeds are off, it downloads the image and sends it via the {@link net.dv8tion.jda.api.entities.TextChannel#sendFile(File, AttachmentOption...)} method
      *
      * @param url The url of the image.
-     * @return A {@link RequestFuture<Message>} so you can interact with the message after it sends.
+     * @return A {@link CompletableFuture<Message>} so you can interact with the message after it sends.
      */
     public CompletableFuture<Message> replyImage(String url) {
         if (context.getCoreSettings().isUseEmbedForMessages()) {
