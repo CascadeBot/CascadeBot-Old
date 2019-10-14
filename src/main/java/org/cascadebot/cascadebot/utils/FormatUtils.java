@@ -142,10 +142,14 @@ public class FormatUtils {
                 sb.append(field.getValue()).append("\n\n");
             }
         }
+
         if (inline != null) {
             sb.append(getFormattedInlineFields(inline)).append("\n\n");
         }
-        sb.append("_").append(embed.getFooter().getText()).append("_");
+
+        if (embed.getFooter() != null) {
+            sb.append("_").append(embed.getFooter().getText()).append("_");
+        }
 
         return sb.toString();
     }
