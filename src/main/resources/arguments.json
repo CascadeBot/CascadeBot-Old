@@ -209,8 +209,13 @@
       "_type": "command"
     }
   },
-  "volume": {
+  "volume*": {
     "volume": {
+      "_type": "required"
+    }
+  },
+  "seek*": {
+    "timestamp": {
       "_type": "required"
     }
   },
