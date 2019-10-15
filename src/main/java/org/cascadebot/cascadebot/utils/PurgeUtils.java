@@ -58,7 +58,7 @@ public class PurgeUtils {
                 break;
             }
             
-            if (!message.getTimeCreated().isBefore(OffsetDateTime.now().minusWeeks(2))) {
+            if (message.getTimeCreated().isBefore(OffsetDateTime.now().minusWeeks(2))) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.purge.restriction_time"));
                 break;
             }
