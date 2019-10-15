@@ -43,7 +43,7 @@ public class ColorUtils {
                     color = new Color(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)),
                             Integer.parseInt(matcher.group(3)));
                 } catch (IllegalArgumentException e1) {
-                    context.getTypedMessaging().replyDanger(context.i18n("commands.color.valid_rgb"));
+                    context.getTypedMessaging().replyDanger(context.i18n("utils.color_command.valid_rgb"));
                     return null;
                 }
                 //Hex
@@ -51,7 +51,7 @@ public class ColorUtils {
                 try {
                     color = Color.decode(matcher.group());
                 } catch (NumberFormatException e1) {
-                    context.getTypedMessaging().replyDanger(context.i18n("commands.color.valid_hex_code"));
+                    context.getTypedMessaging().replyDanger(context.i18n("utils.color_command.valid_hex_code"));
                     return null;
                 }
                 //Decimal
@@ -59,7 +59,7 @@ public class ColorUtils {
                 try {
                     color = Color.decode(matcher.group());
                 } catch (NumberFormatException e1) {
-                    context.getTypedMessaging().replyDanger(context.i18n("commands.color.valid_decimal"));
+                    context.getTypedMessaging().replyDanger(context.i18n("utils.color_command.valid_decimal"));
                     return null;
                 }
                 //Binary
@@ -67,13 +67,13 @@ public class ColorUtils {
                 try {
                     color = Color.decode(String.valueOf(Integer.parseUnsignedInt(matcher.group(), 2)));
                 } catch (NumberFormatException e1) {
-                    context.getTypedMessaging().replyDanger(context.i18n("commands.color.valid_binary"));
+                    context.getTypedMessaging().replyDanger(context.i18n("utils.color_command.valid_binary"));
                 }
             }
         }
 
         if (color == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.color.color_not_recognised"));
+            context.getTypedMessaging().replyDanger(context.i18n("utils.color_command.color_not_recognised"));
             return null;
         }
 
@@ -82,11 +82,11 @@ public class ColorUtils {
         int decimalColor = Integer.parseUnsignedInt(hex, 16);
 
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
-        builder.setTitle(context.i18n("commands.color.embed_title", hex));
+        builder.setTitle(context.i18n("utils.color_command.embed_title", hex));
         builder.setColor(color);
-        builder.addField(context.i18n("commands.color.rgb"), rgbValues, true); // RGB Values
-        builder.addField(context.i18n("commands.color.decimal"), Integer.toUnsignedString(decimalColor), true); // Decimal Value
-        builder.addField(context.i18n("commands.color.binary"), Integer.toBinaryString(decimalColor), true); // Binary Value
+        builder.addField(context.i18n("utils.color_command.color.rgb"), rgbValues, true); // RGB Values
+        builder.addField(context.i18n("utils.color_command.decimal"), Integer.toUnsignedString(decimalColor), true); // Decimal Value
+        builder.addField(context.i18n("utils.color_command.binary"), Integer.toBinaryString(decimalColor), true); // Binary Value
         return builder.build();
     };
 
