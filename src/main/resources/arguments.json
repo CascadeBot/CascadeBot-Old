@@ -209,8 +209,13 @@
       "_type": "command"
     }
   },
-  "volume": {
+  "volume*": {
     "volume": {
+      "_type": "required"
+    }
+  },
+  "seek*": {
+    "timestamp": {
       "_type": "required"
     }
   },
@@ -334,6 +339,58 @@
         "permission": {
           "_type": "required"
         }
+      }
+    }
+  },
+  "todo*": {
+    "create*": {
+      "name": {
+        "_type": "required"
+      }
+    },
+    "add*": {
+      "name*": {
+        "_type": "required",
+        "item": {
+          "_type": "required"
+        }
+      }
+    },
+    "remove*": {
+      "name*": {
+        "_type": "required",
+        "item": {
+          "_type": "required"
+        }
+      }
+    },
+    "send*": {
+      "list*": {
+        "_type": "required",
+        "channel": {
+          "_type": "optional"
+        }
+      }
+    },
+    "adduser*": {
+      "list*": {
+        "_type": "required",
+        "user": {
+          "_type": "required"
+        }
+      }
+    },
+    "removeuser*": {
+      "list*": {
+        "_type": "required",
+        "user": {
+          "_type": "required"
+        }
+      }
+    },
+    "view*": {
+      "list*": {
+        "_type": "required"
       }
     }
   },
