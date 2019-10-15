@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.utils.RandomUtils;
 
 import java.util.Set;
 
-public class RandomNumberCommand implements ICommandMain {
+public class RandomCommand implements ICommandMain {
 
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
