@@ -209,13 +209,8 @@
       "_type": "command"
     }
   },
-  "volume*": {
+  "volume": {
     "volume": {
-      "_type": "required"
-    }
-  },
-  "seek*": {
-    "timestamp": {
       "_type": "required"
     }
   },
@@ -342,58 +337,6 @@
       }
     }
   },
-  "todo*": {
-    "create*": {
-      "name": {
-        "_type": "required"
-      }
-    },
-    "add*": {
-      "name*": {
-        "_type": "required",
-        "item": {
-          "_type": "required"
-        }
-      }
-    },
-    "remove*": {
-      "name*": {
-        "_type": "required",
-        "item": {
-          "_type": "required"
-        }
-      }
-    },
-    "send*": {
-      "list*": {
-        "_type": "required",
-        "channel": {
-          "_type": "optional"
-        }
-      }
-    },
-    "adduser*": {
-      "list*": {
-        "_type": "required",
-        "user": {
-          "_type": "required"
-        }
-      }
-    },
-    "removeuser*": {
-      "list*": {
-        "_type": "required",
-        "user": {
-          "_type": "required"
-        }
-      }
-    },
-    "view*": {
-      "list*": {
-        "_type": "required"
-      }
-    }
-  },
   "purge*": {
     "attachment*": {
       "amount": {
@@ -428,6 +371,18 @@
     },
     "amount": {
       "_type": "required"
+    }
+  },
+  "random": {
+    "choice": {
+      "words": {
+        "_type": "required"
+      }
+    },
+    "color": {
+    },
+    "amount": {
+      "_type": "optional"
     }
   }
 }
