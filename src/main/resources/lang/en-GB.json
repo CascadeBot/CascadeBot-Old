@@ -63,7 +63,16 @@
       "description": "Returns a random number",
       "numbers_only": "The range needs to be a integer value!",
       "no_negatives": "Negative numbers are not allowed",
-      "random_result": "Random number is `{0}`"
+      "random_result": "Random number is `{0}`",
+      "random_choice_result": "Result is `{0}`!",
+      "choice": {
+        "command": "choice",
+        "description": "Return a random word of your chosen list"
+      },
+      "color": {
+        "command": "color",
+        "description": "Returns a random color"
+      }
     },
     "roles": {
       "command": "roles",
@@ -351,15 +360,6 @@
       "loop_mode": "Loop mode",
       "up_next": "Up next"
     },
-    "seek": {
-      "command": "seek",
-      "description": "Seeks to a timestamp within a song.",
-      "no_music_playing": "You are not listening to any music!",
-      "negative_value": "You cannot seek to a negative value!",
-      "duration_shorter": "The timestamp you are trying to seek to is longer than the song duration!",
-      "bad_format": "Incorrect format.",
-      "success": "Successfully seeked to {0}"
-    },
     "queue": {
       "command": "queue",
       "description": "Displays the current queue.",
@@ -467,58 +467,6 @@
       "successfully_done": "Successfully cleaned {0} messages!",
       "restriction_time": "Found a message older than 2 weeks\nDue to Discord limits, we won't be able to clean it.",
       "failed_clear": "No messages were purged with this criteria"
-    },
-    "todo": {
-      "command": "todo",
-      "description": "Create and manipulates todo lists",
-      "add": {
-        "command": "add",
-        "description": "Adds an item to a todo list",
-        "embed_title": "Added item to todo list"
-      },
-      "remove": {
-        "command": "remove",
-        "description": "Removes an item from a todo list",
-        "embed_title": "Removed item from todo list",
-        "not_number": "You can only remove an item by number!",
-        "item_does_not_exist": "Cannot remove an item that doesn't exist!",
-        "deleted": "You have removed all the items in the todo list meaning that the list has now been deleted!"
-      },
-      "create": {
-        "command": "create",
-        "description": "Creates a todo list",
-        "list_exists": "A todo list with that name already exists!",
-        "created": "Created todo list with name `{0}`"
-      },
-      "view": {
-        "command": "view",
-        "description": "Views a todo list contents"
-      },
-      "adduser": {
-        "command": "adduser",
-        "description": "Add a user to a todo list you own",
-        "added": "Added user {0} to the todo list {1}"
-      },
-      "removeuser": {
-        "command": "removeuser",
-        "description": "Remove a user from a todo list you own",
-        "removed": "Removed user {0} from the todo list {1}"
-      },
-      "send": {
-        "command": "send",
-        "description": "Sends the todo list for checking items off, and actually using the list",
-        "cannot_find_channel": "Couldn't find channel `{0}`"
-      },
-      "owner_only": "Only the owner of a todo list can add or remove users from the list!",
-      "cannot_edit": "You cannot edit this todo list. If you want to edit this contact {0}",
-      "cannot_edit_no_owner": "You cannot edit this todo list and the owner has left the guild so the todo list has been deleted",
-      "list_does_not_exist": "Todo list {0} doesn't exist",
-      "list_already_sent": "This todo list has already been sent, and therefor is no longer editable",
-      "no_items": "The todo list doesn't have any items!",
-      "user_not_found": "Couldn't find user `{0}`",
-      "embed_list_field": "List",
-      "embed_position_field": "Position",
-      "embed_item_field": "Item"
     }
   },
   "permissions": {
@@ -720,10 +668,6 @@
       "name": "stop",
       "label": "Stop command"
     },
-    "seek": {
-      "name": "seek",
-      "label": "Seek command"
-    },
     "volume": {
       "name": "volume",
       "label": "Volume command",
@@ -739,38 +683,6 @@
     "purge": {
       "name": "purge",
       "label": "Purge command"
-    },
-    "todo": {
-      "name": "todo",
-      "label": "Todo Command",
-      "add": {
-        "name": "todo.add",
-        "label": "Todo add sub command"
-      },
-      "remove": {
-        "name": "todo.remove",
-        "label": "Todo remove sub command"
-      },
-      "create": {
-        "name": "todo.create",
-        "label": "Todo create sub command"
-      },
-      "adduser": {
-        "name": "todo.add.user",
-        "label": "Todo adduser sub command"
-      },
-      "removeuser": {
-        "name": "todo.remove.user",
-        "label": "Todo removeuser sub command"
-      },
-      "view": {
-        "name": "todo.view",
-        "label": "Todo view sub command"
-      },
-      "send": {
-        "name": "todo.send",
-        "label": "Todo send sub command"
-      }
     }
   },
   "moderation_manager": {
@@ -858,8 +770,7 @@
       "informational": "informational",
       "moderation": "moderation",
       "fun": "fun",
-      "developer": "developer",
-      "useful": "useful"
+      "developer": "developer"
     },
     "permissionmode":{
       "most_restrictive": "most restrictive",
@@ -1036,11 +947,9 @@
     "channel": "channel",
     "prefix": "prefix",
     "command": "command",
-    "timestamp": "timestamp",
     "amount": "amount",
     "token": "token",
-    "item": "item",
-    "list": "list",
+    "words": "words",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
