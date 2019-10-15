@@ -430,8 +430,8 @@
       "_type": "required"
     }
   },
-  "random": {
-    "choice": {
+  "random*": {
+    "choice*": {
       "words": {
         "_type": "required"
       }
