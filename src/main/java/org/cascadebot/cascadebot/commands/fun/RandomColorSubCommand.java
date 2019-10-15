@@ -22,7 +22,7 @@ public class RandomColorSubCommand implements ISubCommand {
     }
 
     @Override
-    public String command() { return "color"; }
+    public String command() { return "colour"; }
 
     @Override
     public String parent() { return "random"; }
