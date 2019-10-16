@@ -437,6 +437,7 @@
       }
     },
     "color": {
+      "_type": "command"
     },
     "amount": {
       "_type": "optional"
