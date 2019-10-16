@@ -429,5 +429,18 @@
     "amount": {
       "_type": "required"
     }
+  },
+  "random*": {
+    "choice*": {
+      "words": {
+        "_type": "required"
+      }
+    },
+    "color": {
+      "_type": "command"
+    },
+    "amount": {
+      "_type": "optional"
+    }
   }
 }

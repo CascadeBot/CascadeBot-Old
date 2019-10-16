@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
+
 package org.cascadebot.cascadebot.utils;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -58,7 +64,7 @@ public class PurgeUtils {
                 break;
             }
             
-            if (!message.getTimeCreated().isBefore(OffsetDateTime.now().minusWeeks(2))) {
+            if (message.getTimeCreated().isBefore(OffsetDateTime.now().minusWeeks(2))) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.purge.restriction_time"));
                 break;
             }

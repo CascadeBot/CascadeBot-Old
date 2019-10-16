@@ -47,23 +47,19 @@
     "color": {
       "command": "colour",
       "description": "Gives information about a provided colour.",
-      "aliases": ["color"],
-      "valid_rgb": "RGB values should be between 0 and 255!",
-      "valid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
-      "valid_decimal": "Please provide a valid decimal value! 0-16777215",
-      "valid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
-      "color_not_recognised": "Could not recognise colour from the given value!",
-      "embed_title": "Values for #{0}",
-      "rgb": "RGB",
-      "decimal": "Decimal value",
-      "binary": "Binary value"
+      "aliases": ["color"]
     },
     "random": {
       "command": "random",
       "description": "Returns a random number",
       "numbers_only": "The range needs to be a integer value!",
       "no_negatives": "Negative numbers are not allowed",
-      "random_result": "Random number is `{0}`"
+      "random_result": "Random number is `{0}`",
+      "random_choice_result": "Result is `{0}`!",
+      "choice": {
+        "command": "choice",
+        "description": "Return a random word of your chosen list"
+      }
     },
     "roles": {
       "command": "roles",
@@ -1041,6 +1037,7 @@
     "token": "token",
     "item": "item",
     "list": "list",
+    "words": "words",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
@@ -1064,6 +1061,17 @@
       "too_many_groups": "There are more than 5 groups with the same name! Please use a group ID instead.",
       "no_permissions": "No permissions!",
       "no_linked_roles": "No linked roles!"
+    },
+    "color_command": {
+      "valid_rgb": "RGB values should be between 0 and 255!",
+      "valid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
+      "valid_decimal": "Please provide a valid decimal value! 0-16777215",
+      "valid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
+      "color_not_recognised": "Could not recognise colour from the given value!",
+      "embed_title": "Values for #{0}",
+      "rgb": "RGB",
+      "decimal": "Decimal value",
+      "binary": "Binary value"
     }
   }
 }
