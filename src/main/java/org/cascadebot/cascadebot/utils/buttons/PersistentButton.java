@@ -7,6 +7,7 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.TodoList;
 
 public enum PersistentButton {
+
     TODO_BUTTON_CHECK(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
         TodoList todoList = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getUsefulSettings().getTodoListByMessage(message.getIdLong());
         if(!todoList.canUserEdit(runner.getIdLong())) {
@@ -115,4 +116,5 @@ public enum PersistentButton {
     PersistentButton(Button button) {
         this.button = button;
     }
+    
 }

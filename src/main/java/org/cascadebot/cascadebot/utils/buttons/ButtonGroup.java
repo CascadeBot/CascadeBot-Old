@@ -25,7 +25,7 @@ public class ButtonGroup {
 
     @Transient
     private List<Button> buttons = new ArrayList<>();
-    
+
     private final long ownerId;
     private final long channelId;
     private final long guildId;
