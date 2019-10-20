@@ -7,10 +7,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -52,7 +50,7 @@ public class TodoList {
 
         TodoList.TodoListItem item = this.getItems().get(this.getCurrentItem());
         item.setDone(true);
-        addCheckButton(message);
+        addUncheckButton(message);
         message.editMessage(getTodoListMessage()).queue();
     });
 
@@ -62,7 +60,7 @@ public class TodoList {
         }
         TodoList.TodoListItem item = this.getItems().get(this.getCurrentItem());
         item.setDone(false);
-        addUncheckButton(message);
+        addCheckButton(message);
         message.editMessage(getTodoListMessage()).queue();
     });
 
@@ -202,28 +200,28 @@ public class TodoList {
         return buttonGroup;
     }
 
-    private void addCheckButton(Message message) {
+    public void addUncheckButton(Message message) {
         buttonGroup.addButton(uncheckButton);
         buttonGroup.removeButton(checkButton);
     }
 
-    private void addUncheckButton(Message message) {
+    public void addCheckButton(Message message) {
         buttonGroup.removeButton(uncheckButton);
         buttonGroup.addButton(checkButton);
     }
 
-    private void doCheckToggle(Message message) {
+    public void doCheckToggle(Message message) {
         TodoList.TodoListItem item = items.get(this.getCurrentItem());
 
         if (item.isDone()) {
-            addCheckButton(message);
-        } else {
             addUncheckButton(message);
+        } else {
+            addCheckButton(message);
         }
         //TODO check all items check. I'm going to wait for persistent buttons to do this
     }
 
-    private MessageEmbed getTodoListMessage() {
+    public MessageEmbed getTodoListMessage() {
         int pos = this.getCurrentItem();
         int currentPage = pos / 10 + 1;
         int start = currentPage * 10 - 10;
