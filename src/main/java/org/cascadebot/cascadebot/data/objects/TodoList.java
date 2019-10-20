@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.data.objects;
 
+import de.bild.codec.annotations.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -11,8 +12,8 @@ import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,8 @@ public class TodoList {
     @Setter
     private long channelId = -1;
 
-    private ButtonGroup buttonGroup;
+    @Transient
+    private PersistentButtonGroup buttonGroup;
 
     @Getter
     @Setter
@@ -43,6 +45,7 @@ public class TodoList {
     //List of users id who are able to access this list
     private List<Long> users = new ArrayList<>();
 
+    /*
     private Button checkButton = new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
         if (!canUserEdit(runner.getIdLong())) {
             return;
@@ -63,6 +66,7 @@ public class TodoList {
         addCheckButton(message);
         message.editMessage(getTodoListMessage()).queue();
     });
+     */
 
     private TodoList() {
         //Constructor for mongodb
@@ -139,75 +143,24 @@ public class TodoList {
         });
     }
 
-    private ButtonGroup generateButtons(long memberId, long channelId, long guildId) {
-        ButtonGroup buttonGroup = new ButtonGroup(memberId, channelId, guildId);
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.BACKWARD_ARROW, (runner, channel1, message) -> {
-            int currentPage = this.getCurrentItem() / 10 + 1;
-            int start = currentPage * 10 - 10;
-
-            if (start == 0) {
-                return;
-            }
-
-            int newPos = Math.max(start - 10, 0);
-
-            this.setCurrentItem(newPos);
-
-            message.editMessage(getTodoListMessage()).queue();
-            doCheckToggle(message);
-        }));
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel1, message) -> {
-            int newItem = this.getCurrentItem() - 1;
-
-            if (newItem < 0) {
-                return;
-            }
-
-            this.setCurrentItem(newItem);
-
-            message.editMessage(getTodoListMessage()).queue();
-            doCheckToggle(message);
-        }));
-
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel1, message) -> {
-            int newItem = this.getCurrentItem() + 1;
-
-            if (newItem >= this.getItems().size()) {
-                return;
-            }
-
-            this.setCurrentItem(newItem);
-
-            message.editMessage(getTodoListMessage()).queue();
-            doCheckToggle(message);
-        }));
-
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, channel1, message) -> {
-            int currentPage = this.getCurrentItem() / 10 + 1;
-            int start = currentPage * 10 - 10;
-            int end = start + 9;
-
-            if (end + 1 >= this.getItems().size()) {
-                return;
-            }
-
-            this.setCurrentItem(end + 1);
-
-            message.editMessage(getTodoListMessage()).queue();
-            doCheckToggle(message);
-        }));
-        buttonGroup.addButton(checkButton);
+    private PersistentButtonGroup generateButtons(long memberId, long channelId, long guildId) {
+        PersistentButtonGroup buttonGroup = new PersistentButtonGroup(memberId, channelId, guildId);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_LEFT);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_UP);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_DOWN);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_RIGHT);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_CHECK);
         return buttonGroup;
     }
 
     public void addUncheckButton(Message message) {
-        buttonGroup.addButton(uncheckButton);
-        buttonGroup.removeButton(checkButton);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_UNCHECK);
+        buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_CHECK);
     }
 
     public void addCheckButton(Message message) {
-        buttonGroup.removeButton(uncheckButton);
-        buttonGroup.addButton(checkButton);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_CHECK);
+        buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_UNCHECK);
     }
 
     public void doCheckToggle(Message message) {

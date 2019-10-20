@@ -6,7 +6,7 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.TodoList;
 
 public enum PersistentButton {
-    TODO_Button_Check(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
+    TODO_BUTTON_CHECK(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
         TodoList todoList = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getUsefulSettings().getTodoListByMessage(message.getIdLong());
         if(!todoList.canUserEdit(runner.getIdLong())) {
             return;
@@ -18,7 +18,7 @@ public enum PersistentButton {
         message.editMessage(todoList.getTodoListMessage()).queue();
     })),
 
-    TODO_Button_Uncheck(new Button.UnicodeButton(UnicodeConstants.WHITE_HALLOW_SQUARE, (runner, channel, message) -> {
+    TODO_BUTTON_UNCHECK(new Button.UnicodeButton(UnicodeConstants.WHITE_HALLOW_SQUARE, (runner, channel, message) -> {
         TodoList todoList = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getUsefulSettings().getTodoListByMessage(message.getIdLong());
         if(!todoList.canUserEdit(runner.getIdLong())) {
             return;
@@ -30,7 +30,7 @@ public enum PersistentButton {
         message.editMessage(todoList.getTodoListMessage()).queue();
     })),
 
-    TODO_Button_Navigate_Left(new Button.UnicodeButton(UnicodeConstants.BACKWARD_ARROW, (runner, channel, message) -> {
+    TODO_BUTTON_NAVIGATE_LEFT(new Button.UnicodeButton(UnicodeConstants.BACKWARD_ARROW, (runner, channel, message) -> {
         TodoList todoList = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getUsefulSettings().getTodoListByMessage(message.getIdLong());
         if(!todoList.canUserEdit(runner.getIdLong())) {
             return;
@@ -51,7 +51,7 @@ public enum PersistentButton {
         todoList.doCheckToggle(message);
     })),
 
-    TODO_Button_Navigate_Right(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, channel, message) -> {
+    TODO_BUTTON_NAVIGATE_RIGHT(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, channel, message) -> {
         TodoList todoList = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getUsefulSettings().getTodoListByMessage(message.getIdLong());
         if(!todoList.canUserEdit(runner.getIdLong())) {
             return;
@@ -71,7 +71,7 @@ public enum PersistentButton {
         todoList.doCheckToggle(message);
     })),
 
-    TODO_Button_Navigate_Up(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
+    TODO_BUTTON_NAVIGATE_UP(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
         TodoList todoList = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getUsefulSettings().getTodoListByMessage(message.getIdLong());
         if(!todoList.canUserEdit(runner.getIdLong())) {
             return;
@@ -89,7 +89,7 @@ public enum PersistentButton {
         todoList.doCheckToggle(message);
     })),
 
-    TODO_Button_Navigate_Down(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
+    TODO_BUTTON_NAVIGATE_DOWN(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
         TodoList todoList = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getUsefulSettings().getTodoListByMessage(message.getIdLong());
         if(!todoList.canUserEdit(runner.getIdLong())) {
             return;

@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -90,7 +91,7 @@ public class ButtonGroup {
     }
 
     public void handleButton(Member clicker, TextChannel channel, Message buttonMessage, MessageReaction.ReactionEmote emote) {
-        for (Button button : buttons) {
+        for (Button button : this.getButtons()) {
             if (button instanceof Button.EmoteButton && emote.isEmote()) {
                 if (((Button.EmoteButton) button).getEmoteId() == emote.getEmote().getIdLong()) {
                     button.runnable.run(clicker, channel, buttonMessage);
@@ -106,8 +107,8 @@ public class ButtonGroup {
     }
 
     public void addButtonsToMessage(Message message) {
-        if (buttons == null) return;
-        for (Button button : buttons) {
+        if (this.getButtons() == null) return;
+        for (Button button : this.getButtons()) {
             button.addReaction(message);
         }
         setMessage(message.getIdLong());
