@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.utils.buttons;
 
+import de.bild.codec.annotations.Transient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
@@ -35,6 +36,7 @@ public class ButtonGroup {
 
     private long messageId = 0;
 
+    @Transient
     private Runnable messageSentAction;
 
     public void addButton(Button button) {

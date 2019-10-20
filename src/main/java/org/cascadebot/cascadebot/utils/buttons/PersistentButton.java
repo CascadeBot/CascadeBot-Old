@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.utils.buttons;
 
+import de.bild.codec.annotations.Transient;
 import lombok.Getter;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
@@ -108,6 +109,7 @@ public enum PersistentButton {
     }));
 
     @Getter
+    @Transient
     private Button button;
 
     PersistentButton(Button button) {
