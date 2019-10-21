@@ -54,6 +54,9 @@ public class GuildData {
 
     private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
     private GuildPermissions guildPermissions = new GuildPermissions();
+    private GuildSettingsUseful usefulSettings = new GuildSettingsUseful();
+    private GuildSettingsModeration guildModeration = new GuildSettingsModeration();
+
     /*
         Eventually these will be used but they're commented out for now
 
@@ -69,7 +72,6 @@ public class GuildData {
 
     @Transient
     private PageCache pageCache = new PageCache();
-
     //endregion
 
     @PreSave
@@ -113,14 +115,6 @@ public class GuildData {
             return commandInfo.get(command.getClass()).isEnabled();
         }
         return command.getModule().isDefault();
-    }
-
-    public boolean isModuleEnabled(Module module) {
-        boolean enabled = module.isDefault();
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
-            enabled &= commandInfo.get(command.getClass()).isEnabled();
-        }
-        return enabled;
     }
 
     public String getCommandName(ICommandMain command) {
