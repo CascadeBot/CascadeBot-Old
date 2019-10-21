@@ -57,6 +57,7 @@ public class TodoList {
         message.editMessage(getTodoListMessage()).queue();
     });
 
+    @Transient
     private Button uncheckButton = new Button.UnicodeButton(UnicodeConstants.WHITE_HALLOW_SQUARE, (runner, channel, message) -> {
         if (!this.canUserEdit(runner.getIdLong())) {
             return;
