@@ -8,8 +8,10 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
@@ -32,9 +34,6 @@ public class TodoList {
     @Setter
     private long channelId = -1;
 
-    @Transient
-    private PersistentButtonGroup buttonGroup;
-
     @Getter
     @Setter
     private int currentItem;
@@ -44,30 +43,6 @@ public class TodoList {
 
     //List of users id who are able to access this list
     private List<Long> users = new ArrayList<>();
-
-    /*
-    private Button checkButton = new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-        if (!canUserEdit(runner.getIdLong())) {
-            return;
-        }
-
-        TodoList.TodoListItem item = this.getItems().get(this.getCurrentItem());
-        item.setDone(true);
-        addUncheckButton(message);
-        message.editMessage(getTodoListMessage()).queue();
-    });
-
-    @Transient
-    private Button uncheckButton = new Button.UnicodeButton(UnicodeConstants.WHITE_HALLOW_SQUARE, (runner, channel, message) -> {
-        if (!this.canUserEdit(runner.getIdLong())) {
-            return;
-        }
-        TodoList.TodoListItem item = this.getItems().get(this.getCurrentItem());
-        item.setDone(false);
-        addCheckButton(message);
-        message.editMessage(getTodoListMessage()).queue();
-    });
-     */
 
     private TodoList() {
         //Constructor for mongodb
@@ -136,7 +111,7 @@ public class TodoList {
         if (channel == null) {
             throw new IllegalArgumentException("The channel should exist :(");
         }
-        buttonGroup = generateButtons(context.getMember().getIdLong(), channel.getIdLong(), context.getGuild().getIdLong());
+        PersistentButtonGroup buttonGroup = generateButtons(context.getMember().getIdLong(), channel.getIdLong(), context.getGuild().getIdLong());
         this.setCurrentItem(0);
         Messaging.sendButtonedMessage(channel, getTodoListMessage(), buttonGroup).thenAccept(message -> {
             messageId = message.getIdLong();
@@ -155,13 +130,23 @@ public class TodoList {
     }
 
     public void addUncheckButton(Message message) {
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_UNCHECK);
-        buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_CHECK);
+        TextChannel channel = CascadeBot.INS.getClient().getTextChannelById(channelId);
+        if (channel != null) {
+            GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
+            PersistentButtonGroup buttonGroup = data.getPersistentButtons().get(channelId).get(messageId);
+            buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_UNCHECK);
+            buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_CHECK);
+        }
     }
 
     public void addCheckButton(Message message) {
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_CHECK);
-        buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_UNCHECK);
+        TextChannel channel = CascadeBot.INS.getClient().getTextChannelById(channelId);
+        if (channel != null) {
+            GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
+            PersistentButtonGroup buttonGroup = data.getPersistentButtons().get(channelId).get(messageId);
+            buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_CHECK);
+            buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_UNCHECK);
+        }
     }
 
     public void doCheckToggle(Message message) {
