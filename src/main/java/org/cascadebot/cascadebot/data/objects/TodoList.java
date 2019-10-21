@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.data.objects;
 
+import de.bild.codec.annotations.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -33,6 +34,7 @@ public class TodoList {
     @Setter
     private long channelId = -1;
 
+    @Transient
     private ButtonGroup buttonGroup;
 
     @Getter
@@ -45,6 +47,7 @@ public class TodoList {
     //List of users id who are able to access this list
     private List<Long> users = new ArrayList<>();
 
+    @Transient
     private Button checkButton = new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
         if (!canUserEdit(runner.getIdLong())) {
             return;
@@ -56,6 +59,7 @@ public class TodoList {
         message.editMessage(getTodoListMessage()).queue();
     });
 
+    @Transient
     private Button uncheckButton = new Button.UnicodeButton(UnicodeConstants.WHITE_HALLOW_SQUARE, (runner, channel, message) -> {
         if (!this.canUserEdit(runner.getIdLong())) {
             return;
