@@ -50,11 +50,7 @@ public class ButtonEventListener extends ListenerAdapter {
     }
 
     private void doButtonPress(ButtonGroup group, MessageReaction reaction, Member sender, TextChannel channel) {
-        if (group instanceof PersistentButtonGroup) {
-            Metrics.INS.persistentButtonsPressed.labels(reaction.getReactionEmote().getName()).inc();
-        } else {
-            Metrics.INS.buttonsPressed.labels(reaction.getReactionEmote().getName()).inc();
-        }
+        Metrics.INS.buttonsPressed.labels(reaction.getReactionEmote().getName(), group instanceof PersistentButtonGroup ? "persistent" : "normal").inc();
         channel.retrieveMessageById(group.getMessageId()).queue(message -> group.handleButton(sender, channel, message, reaction.getReactionEmote()));
         reaction.removeReaction(sender.getUser()).queue();
         //TODO perms checking
