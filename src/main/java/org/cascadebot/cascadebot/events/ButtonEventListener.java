@@ -19,6 +19,7 @@ import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 
 import java.util.Objects;
 
@@ -49,7 +50,11 @@ public class ButtonEventListener extends ListenerAdapter {
     }
 
     private void doButtonPress(ButtonGroup group, MessageReaction reaction, Member sender, TextChannel channel) {
-        Metrics.INS.buttonsPressed.labels(reaction.getReactionEmote().getName()).inc();
+        if (group instanceof PersistentButtonGroup) {
+            Metrics.INS.buttonsPressed.labels(reaction.getReactionEmote().getName() + "-Persistent").inc();
+        } else {
+            Metrics.INS.buttonsPressed.labels(reaction.getReactionEmote().getName()).inc();
+        }
         channel.retrieveMessageById(group.getMessageId()).queue(message -> group.handleButton(sender, channel, message, reaction.getReactionEmote()));
         reaction.removeReaction(sender.getUser()).queue();
         //TODO perms checking

@@ -1,9 +1,7 @@
 package org.cascadebot.cascadebot.utils.buttons;
 
-import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class PersistentButtonGroup extends ButtonGroup {
@@ -25,10 +23,12 @@ public class PersistentButtonGroup extends ButtonGroup {
 
     @Override
     public void addButton(Button button) {
+        throw new UnsupportedOperationException("Cannot add normal buttons to a persistent group!");
     }
 
     @Override
     public void removeButton(Button button) {
+        throw new UnsupportedOperationException("Cannot remove normal buttons from a persistent group!");
     }
 
     public void addPersistentButton(PersistentButton persistentButton) {
