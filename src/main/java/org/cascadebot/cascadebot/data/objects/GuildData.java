@@ -77,7 +77,7 @@ public class GuildData {
     private PageCache pageCache = new PageCache();
     //endregion
 
-    private HashMap<Long, LinkedHashMap<Long, PersistentButtonGroup>> persistentButtons = new HashMap<>();
+    private HashMap<Long, HashMap<Long, PersistentButtonGroup>> persistentButtons = new HashMap<>();
 
     @PreSave
     public void preSave() {
@@ -185,7 +185,7 @@ public class GuildData {
         if (persistentButtons.containsKey(channelId) && persistentButtons.get(channelId) != null) {
             persistentButtons.get(channelId).put(messageId, buttonGroup);
         } else {
-            persistentButtons.put(channelId, new LinkedHashMap<>());
+            persistentButtons.put(channelId, new HashMap<>());
             persistentButtons.get(channelId).put(messageId, buttonGroup);
         }
     }

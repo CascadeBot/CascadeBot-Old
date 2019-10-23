@@ -62,7 +62,7 @@ public class VoteButtonGroupBuilder {
             throw new UnsupportedOperationException("Cannot set options amount for yes no votes");
         }
 
-        if (type == VoteMessageType.LETTERS && amount > 15) {
+        if (type == VoteMessageType.LETTERS && amount > 15) { //This is because discord has a limit of 20 emotes per message, and I decided to have 5 extra for non vote buttons
             throw new UnsupportedOperationException("Cannot have more then 15 options when using letters");
         }
 

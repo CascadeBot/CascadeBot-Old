@@ -51,7 +51,7 @@ public class ButtonEventListener extends ListenerAdapter {
 
     private void doButtonPress(ButtonGroup group, MessageReaction reaction, Member sender, TextChannel channel) {
         if (group instanceof PersistentButtonGroup) {
-            Metrics.INS.buttonsPressed.labels(reaction.getReactionEmote().getName() + "-Persistent").inc();
+            Metrics.INS.persistentButtonsPressed.labels(reaction.getReactionEmote().getName()).inc();
         } else {
             Metrics.INS.buttonsPressed.labels(reaction.getReactionEmote().getName()).inc();
         }

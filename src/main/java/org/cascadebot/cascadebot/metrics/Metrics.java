@@ -45,6 +45,11 @@ public class Metrics {
             .help("The number of buttons pressed in this session")
             .labelNames("button")
             .register();
+    public Counter persistentButtonsPressed = Counter.build()
+            .name("cascade_persistent_buttons_pressed_total")
+            .help("The number of persistent buttons pressed in this session")
+            .labelNames("persistent_button")
+            .register();
     public Counter messagesSent = Counter.build()
             .name("cascade_messages_sent_total")
             .help("The numbers of messages sent in this session")
