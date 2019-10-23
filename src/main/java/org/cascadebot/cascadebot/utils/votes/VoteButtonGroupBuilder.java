@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class VoteButtonGroupBuilder {
 
     private boolean sent = false;
 
-    private List<Button> extraButtonList = new ArrayList<>();
+    private List<PersistentButton> extraButtonList = new ArrayList<>();
     private List<Object> voteButtons = new ArrayList<>();
     private int amount = 1; //Setting this so things don't break
 
@@ -57,12 +58,12 @@ public class VoteButtonGroupBuilder {
      * @return this.
      */
     public VoteButtonGroupBuilder setOptionsAmount(int amount) {
-        if (type == VoteMessageType.YES_NO || type == VoteMessageType.CUSTOM) {
-            throw new UnsupportedOperationException("Cannot set options amount for yes no votes, or custom votes");
+        if (type == VoteMessageType.YES_NO) {
+            throw new UnsupportedOperationException("Cannot set options amount for yes no votes");
         }
 
-        if (type == VoteMessageType.LETTERS && amount > 26) {
-            throw new UnsupportedOperationException("Cannot have more then 26 options when using letters");
+        if (type == VoteMessageType.LETTERS && amount > 15) { //This is because discord has a limit of 20 emotes per message, and I decided to have 5 extra for non vote buttons
+            throw new UnsupportedOperationException("Cannot have more then 15 options when using letters");
         }
 
         if (type == VoteMessageType.NUMBERS && amount > 9) {
@@ -80,40 +81,8 @@ public class VoteButtonGroupBuilder {
      * @param button the non-vote related button to add.
      * @return this.
      */
-    public VoteButtonGroupBuilder addExtraButton(Button button) {
+    public VoteButtonGroupBuilder addExtraButton(PersistentButton button) {
         extraButtonList.add(button);
-
-        return this;
-    }
-
-    /**
-     * And a unicode button to be used for votes. Only usable with {@link VoteMessageType#CUSTOM}.
-     *
-     * @param unicode The unicode string to use.
-     * @return this.
-     */
-    public VoteButtonGroupBuilder addVoteButtonUnicode(String unicode) {
-        if (type != VoteMessageType.CUSTOM) {
-            throw new UnsupportedOperationException("Cannot add vote buttons to any type besides custom");
-        }
-
-        voteButtons.add(unicode);
-
-        return this;
-    }
-
-    /**
-     * Add a emote button to be used for votes. Only usable with {@link VoteMessageType#CUSTOM}.
-     *
-     * @param emote The {@link Emote} to use for the button.
-     * @return this.
-     */
-    public VoteButtonGroupBuilder addVoteButtonEmote(Emote emote) {
-        if (type != VoteMessageType.CUSTOM) {
-            throw new UnsupportedOperationException("Cannot add vote buttons to any type besides custom");
-        }
-
-        voteButtons.add(emote);
 
         return this;
     }
@@ -165,68 +134,23 @@ public class VoteButtonGroupBuilder {
         VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer);
         switch (type) {
             case YES_NO:
-                buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                    if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
-                        return;
-                    }
-                    buttonGroup.addVote(runner.getUser(), UnicodeConstants.TICK);
-                }));
-                buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, (runner, channel, message) -> {
-                    if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
-                        return;
-                    }
-                    buttonGroup.addVote(runner.getUser(), UnicodeConstants.RED_CROSS);
-                }));
+                buttonGroup.addPersistentButton(PersistentButton.VOTE_BUTTON_YES);
+                buttonGroup.addPersistentButton(PersistentButton.VOTE_BUTTON_NO);
                 break;
             case NUMBERS:
-                for (int i = 1; i <= amount; i++) {
-                    char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
-                    final int num = i;
-                    buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
-                        if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
-                            return;
-                        }
-                        buttonGroup.addVote(runner.getUser(), num);
-                    }));
+                for (int i = 0; i < amount; i++) {
+                    buttonGroup.addPersistentButton(PersistentButton.values()[PersistentButton.VOTE_BUTTON_ONE.ordinal() + i]);
                 }
                 break;
             case LETTERS:
                 for (int i = 0; i < amount; i++) {
-                    char unicode = (char) (0xdde0 + (i + 6));
-                    final int num = i;
-                    buttonGroup.addButton(new Button.UnicodeButton("\uD83C" + unicode, (runner, channel, message) -> {
-                        if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
-                            return;
-                        }
-                        buttonGroup.addVote(runner.getUser(), num);
-                    }));
-                }
-                break;
-            case CUSTOM:
-                for (Object object : voteButtons) {
-                    if (object instanceof Emote) {
-                        Emote emote = (Emote) object;
-                        buttonGroup.addButton(new Button.EmoteButton(emote.getIdLong(), (runner, channel, message) -> {
-                            if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
-                                return;
-                            }
-                            buttonGroup.addVote(runner.getUser(), emote.getIdLong());
-                        }));
-                    } else {
-                        String unicode = (String) object;
-                        buttonGroup.addButton(new Button.UnicodeButton(unicode, (runner, channel, message) -> {
-                            if (!buttonGroup.isUserAllowed(runner.getIdLong())) {
-                                return;
-                            }
-                            buttonGroup.addVote(runner.getUser(), unicode);
-                        }));
-                    }
+                    buttonGroup.addPersistentButton(PersistentButton.values()[PersistentButton.VOTE_BUTTON_A.ordinal() + i]);
                 }
                 break;
         }
 
-        for (Button button : extraButtonList) {
-            buttonGroup.addButton(button);
+        for (PersistentButton button : extraButtonList) {
+            buttonGroup.addPersistentButton(button);
         }
 
         buttonGroup.setMessageSentAction(() -> {

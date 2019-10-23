@@ -20,11 +20,6 @@ public enum VoteMessageType {
     /**
      * This vote type will use discord regional indicator letters up to the amount specified in the builder.
      */
-    LETTERS,
-
-    /**
-     * This vote type will give you complete control over what reactions you want to use .
-     */
-    CUSTOM
+    LETTERS
 
 }
