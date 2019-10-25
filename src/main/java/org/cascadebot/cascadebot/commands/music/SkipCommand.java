@@ -15,6 +15,7 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroupBuilder;
 import org.cascadebot.cascadebot.utils.votes.VoteMessageType;
@@ -86,17 +87,7 @@ public class SkipCommand implements ICommandMain {
         }
 
         VoteButtonGroupBuilder buttonGroupBuilder = new VoteButtonGroupBuilder(VoteMessageType.YES_NO);
-        buttonGroupBuilder.addExtraButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
-            if (context.hasPermission(runner, "skip.force")) {
-                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                voteButtonGroup.stopVote();
-                voteMap.remove(context.getGuild().getIdLong());
-                context.getMusicPlayer().skip();
-                context.getTypedMessaging().replySuccess(context.i18n("commands.skip.forcefully_skipped"));
-            } else {
-                context.getUIMessaging().sendPermissionError("skip.force");
-            }
-        }));
+        buttonGroupBuilder.addExtraButton(PersistentButton.SKIP_BUTTON_FORCE);
         buttonGroupBuilder.setPeriodicConsumer((results, message) -> {
             StringBuilder resultsBuilder = new StringBuilder();
             for (VoteResult result : results) {

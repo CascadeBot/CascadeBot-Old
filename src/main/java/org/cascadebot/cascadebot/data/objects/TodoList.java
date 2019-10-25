@@ -14,8 +14,8 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +34,6 @@ public class TodoList {
     @Setter
     private long channelId = -1;
 
-    @Transient
-    private ButtonGroup buttonGroup;
-
     @Getter
     @Setter
     private int currentItem;
@@ -46,29 +43,6 @@ public class TodoList {
 
     //List of users id who are able to access this list
     private List<Long> users = new ArrayList<>();
-
-    @Transient
-    private Button checkButton = new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-        if (!canUserEdit(runner.getIdLong())) {
-            return;
-        }
-
-        TodoList.TodoListItem item = this.getItems().get(this.getCurrentItem());
-        item.setDone(true);
-        addCheckButton(message);
-        message.editMessage(getTodoListMessage()).queue();
-    });
-
-    @Transient
-    private Button uncheckButton = new Button.UnicodeButton(UnicodeConstants.WHITE_HALLOW_SQUARE, (runner, channel, message) -> {
-        if (!this.canUserEdit(runner.getIdLong())) {
-            return;
-        }
-        TodoList.TodoListItem item = this.getItems().get(this.getCurrentItem());
-        item.setDone(false);
-        addUncheckButton(message);
-        message.editMessage(getTodoListMessage()).queue();
-    });
 
     private TodoList() {
         //Constructor for mongodb
@@ -137,7 +111,7 @@ public class TodoList {
         if (channel == null) {
             throw new IllegalArgumentException("The channel should exist :(");
         }
-        buttonGroup = generateButtons(context.getMember().getIdLong(), channel.getIdLong(), context.getGuild().getIdLong());
+        PersistentButtonGroup buttonGroup = generateButtons(context.getMember().getIdLong(), channel.getIdLong(), context.getGuild().getIdLong());
         this.setCurrentItem(0);
         Messaging.sendButtonedMessage(channel, getTodoListMessage(), buttonGroup).thenAccept(message -> {
             messageId = message.getIdLong();
@@ -145,89 +119,48 @@ public class TodoList {
         });
     }
 
-    private ButtonGroup generateButtons(long memberId, long channelId, long guildId) {
-        ButtonGroup buttonGroup = new ButtonGroup(memberId, channelId, guildId);
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.BACKWARD_ARROW, (runner, channel1, message) -> {
-            int currentPage = this.getCurrentItem() / 10 + 1;
-            int start = currentPage * 10 - 10;
-
-            if (start == 0) {
-                return;
-            }
-
-            int newPos = Math.max(start - 10, 0);
-
-            this.setCurrentItem(newPos);
-
-            message.editMessage(getTodoListMessage()).queue();
-            doCheckToggle(message);
-        }));
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel1, message) -> {
-            int newItem = this.getCurrentItem() - 1;
-
-            if (newItem < 0) {
-                return;
-            }
-
-            this.setCurrentItem(newItem);
-
-            message.editMessage(getTodoListMessage()).queue();
-            doCheckToggle(message);
-        }));
-
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel1, message) -> {
-            int newItem = this.getCurrentItem() + 1;
-
-            if (newItem >= this.getItems().size()) {
-                return;
-            }
-
-            this.setCurrentItem(newItem);
-
-            message.editMessage(getTodoListMessage()).queue();
-            doCheckToggle(message);
-        }));
-
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, channel1, message) -> {
-            int currentPage = this.getCurrentItem() / 10 + 1;
-            int start = currentPage * 10 - 10;
-            int end = start + 9;
-
-            if (end + 1 >= this.getItems().size()) {
-                return;
-            }
-
-            this.setCurrentItem(end + 1);
-
-            message.editMessage(getTodoListMessage()).queue();
-            doCheckToggle(message);
-        }));
-        buttonGroup.addButton(checkButton);
+    private PersistentButtonGroup generateButtons(long memberId, long channelId, long guildId) {
+        PersistentButtonGroup buttonGroup = new PersistentButtonGroup(memberId, channelId, guildId);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_LEFT);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_UP);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_DOWN);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_RIGHT);
+        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_CHECK);
         return buttonGroup;
     }
 
-    private void addCheckButton(Message message) {
-        buttonGroup.addButton(uncheckButton);
-        buttonGroup.removeButton(checkButton);
+    public void addUncheckButton(Message message) {
+        TextChannel channel = CascadeBot.INS.getClient().getTextChannelById(channelId);
+        if (channel != null) {
+            GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
+            PersistentButtonGroup buttonGroup = data.getPersistentButtons().get(channelId).get(messageId);
+            buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_UNCHECK);
+            buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_CHECK);
+        }
     }
 
-    private void addUncheckButton(Message message) {
-        buttonGroup.removeButton(uncheckButton);
-        buttonGroup.addButton(checkButton);
+    public void addCheckButton(Message message) {
+        TextChannel channel = CascadeBot.INS.getClient().getTextChannelById(channelId);
+        if (channel != null) {
+            GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
+            PersistentButtonGroup buttonGroup = data.getPersistentButtons().get(channelId).get(messageId);
+            buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_CHECK);
+            buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_UNCHECK);
+        }
     }
 
-    private void doCheckToggle(Message message) {
+    public void doCheckToggle(Message message) {
         TodoList.TodoListItem item = items.get(this.getCurrentItem());
 
         if (item.isDone()) {
-            addCheckButton(message);
-        } else {
             addUncheckButton(message);
+        } else {
+            addCheckButton(message);
         }
         //TODO check all items check. I'm going to wait for persistent buttons to do this
     }
 
-    private MessageEmbed getTodoListMessage() {
+    public MessageEmbed getTodoListMessage() {
         int pos = this.getCurrentItem();
         int currentPage = pos / 10 + 1;
         int start = currentPage * 10 - 10;
