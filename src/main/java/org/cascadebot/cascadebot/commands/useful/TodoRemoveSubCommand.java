@@ -22,10 +22,11 @@ public class TodoRemoveSubCommand implements ISubCommand {
             return;
         }
 
-        TodoList todoList = context.getData().getUsefulSettings().getTodoList(context.getArg(0));
+        String todoName = context.getArg(0).toLowerCase();
+        TodoList todoList = context.getData().getUsefulSettings().getTodoList(todoName);
 
         if (todoList == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", context.getArg(0)));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", todoName));
             return;
         }
 
@@ -35,7 +36,7 @@ public class TodoRemoveSubCommand implements ISubCommand {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit", owner.getAsMention()));
             } else {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit_no_owner"));
-                context.getData().getUsefulSettings().deleteTodoList(context.getArg(0));
+                context.getData().getUsefulSettings().deleteTodoList(todoName);
             }
             return;
         }
@@ -50,12 +51,12 @@ public class TodoRemoveSubCommand implements ISubCommand {
         TodoList.TodoListItem item = todoList.removeTodoItem(index);
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(context.i18n("commands.todo.remove.embed_title"));
-        builder.addField(context.i18n("commands.todo.embed_list_field"), context.getArg(0), false);
+        builder.addField(context.i18n("commands.todo.embed_list_field"), todoName, false);
         builder.addField(context.i18n("commands.todo.embed_item_field"), item.getText(), false);
         context.getTypedMessaging().replySuccess(builder);
 
         if (todoList.getItems().size() == 0) {
-            context.getData().getUsefulSettings().deleteTodoList(context.getArg(0));
+            context.getData().getUsefulSettings().deleteTodoList(todoName);
             context.reply(context.i18n("commands.todo.remove.deleted"));
         }
 

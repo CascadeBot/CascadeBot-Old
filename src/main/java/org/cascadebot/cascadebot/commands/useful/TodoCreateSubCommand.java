@@ -15,14 +15,15 @@ public class TodoCreateSubCommand implements ISubCommand {
             return;
         }
 
-        TodoList todoList = context.getData().getUsefulSettings().createTodoList(context.getArg(0), context.getMember().getIdLong());
+        String todoName = context.getArg(0).toLowerCase();
+        TodoList todoList = context.getData().getUsefulSettings().createTodoList(todoName, context.getMember().getIdLong());
 
         if (todoList == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.create.list_exists"));
             return;
         }
 
-        context.getTypedMessaging().replySuccess(context.i18n("commands.todo.create.created", context.getArg(0)));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.todo.create.created", todoName));
     }
 
     @Override
