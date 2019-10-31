@@ -12,20 +12,20 @@ public class GuildSettingsUseful {
 
     //region todo list stuff
     public TodoList getTodoList(String name) {
-        return todoLists.get(name);
+        return todoLists.get(name.toLowerCase());
     }
 
     public TodoList createTodoList(String name, long owner) {
-        if (todoLists.containsKey(name)) {
+        if (todoLists.containsKey(name.toLowerCase())) {
             return null;
         }
         TodoList todoList = new TodoList(owner);
-        todoLists.put(name, todoList);
+        todoLists.put(name.toLowerCase(), todoList);
         return todoList;
     }
 
     public void deleteTodoList(String name) {
-        todoLists.remove(name);
+        todoLists.remove(name.toLowerCase());
     }
 
     public TodoList getTodoListByMessage(long messageId) {
