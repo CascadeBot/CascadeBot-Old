@@ -118,19 +118,19 @@ public class GuildSettingsCore {
     }
 
     public Tag getTag(String key) {
-        return tags.get(key);
+        return tags.get(key.toLowerCase());
     }
 
     public boolean hasTag(String key) {
-        return tags.containsKey(key);
+        return tags.containsKey(key.toLowerCase());
     }
 
     public void addTag(String key, Tag tag) {
-        tags.put(key, tag);
+        tags.put(key.toLowerCase(), tag);
     }
 
     public boolean removeTag(String key) {
-        return tags.remove(key) != null;
+        return tags.remove(key.toLowerCase()) != null;
     }
 
 }
