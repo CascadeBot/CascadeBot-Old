@@ -20,14 +20,16 @@ public class TagEditSubCommand implements ISubCommand {
             return;
         }
 
-        Tag tag = context.getCoreSettings().getTag(context.getArg(0));
+        String tagName = context.getArg(0).toLowerCase();
+
+        Tag tag = context.getCoreSettings().getTag(tagName);
         if (tag == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
         }
 
         tag.setContent(context.getMessage(1));
-        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", context.getArg(0)));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", tagName));
     }
 
     @Override

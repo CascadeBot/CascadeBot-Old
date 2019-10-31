@@ -19,8 +19,14 @@ public class TagCreateSubCommand implements ISubCommand {
             context.getUIMessaging().replyUsage();
             return;
         }
+        String tagName = context.getArg(0).toLowerCase();
+
+        if (context.getCoreSettings().hasTag(tagName)) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.create.tag_already_exists", tagName));
+            return;
+        }
         context.getCoreSettings().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));
-        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.create.successfully_created_tag" ,context.getArg(0)));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.create.successfully_created_tag", tagName));
     }
 
     @Override
