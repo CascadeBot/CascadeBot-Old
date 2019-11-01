@@ -197,6 +197,15 @@ public final class Messaging {
     }
 
     public static CompletableFuture<Message> sendPagedMessage(TextChannel channel, Member owner, List<Page> pages) {
+        if (pages.size() == 0) {
+            throw new IllegalArgumentException("The number of pages cannot be zero!");
+        } else if (pages.size() == 1) {
+            CompletableFuture<Message> future = channel.sendMessage(Language.i18n(channel.getGuild().getIdLong(), "messaging.loading_page")).submit();
+            future.thenAccept(sentMessage -> {
+                pages.get(0).pageShow(sentMessage, 1, pages.size());
+            });
+            return future;
+        }
         ButtonGroup group = new ButtonGroup(owner.getIdLong(), channel.getIdLong(), channel.getGuild().getIdLong());
         group.addButton(new Button.UnicodeButton(UnicodeConstants.REWIND, (runner, textChannel, message) -> {
             PageCache.Pages pageGroup = GuildDataManager.getGuildData(textChannel.getGuild().getIdLong()).getPageCache().get(message.getIdLong());
