@@ -60,6 +60,10 @@ public class ConfirmUtils {
                     if (runner.getIdLong() != action.userId) return;
                     action.run();
                 }));
+                group.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, ((runner, channel1, message1) -> {
+                    confirmedMap.remove(actionKey, action);
+                    sentMessage.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                })));
                 group.addButtonsToMessage(sentMessage);
                 group.setMessage(sentMessage.getIdLong());
                 guildData.addButtonGroup(channel, sentMessage, group);
