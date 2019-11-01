@@ -96,6 +96,7 @@ public class FormatUtils {
 
     private static String getFooter(String footer, int padding, int... sizes) {
         StringBuilder sb = new StringBuilder();
+        footer = " " + footer;
         sb.append("|");
         int total = 0;
         for (int i = 0; i < sizes.length; i++) {
