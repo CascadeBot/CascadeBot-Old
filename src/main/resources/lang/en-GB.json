@@ -389,7 +389,9 @@
       "aliases": ["find"],
       "cannot_find_video": "Couldn't find video!",
       "error_loading_track": "Error loading track",
+      "single_result": "We found one result for this search!",
       "multiple_results": "We found multiple results for this search!",
+      "no_results": "We couldn't find any results for this search!",
       "search_timed_out": "The search for `{0}` has timed out!"
     },
     "shuffle": {

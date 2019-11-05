@@ -36,6 +36,12 @@ public class SearchCommand implements ICommandMain {
         }
 
         CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
+
+            if (searchResults.size() == 0) {
+                context.getTypedMessaging().replyInfo(context.i18n("commands.search.no_results"));
+                return;
+            }
+
             ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             int i = 0;
             StringBuilder messageBuilder = new StringBuilder();
@@ -68,8 +74,12 @@ public class SearchCommand implements ICommandMain {
                 messageBuilder.append('\n');
             }
 
-            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO);
-            embedBuilder.setTitle(context.i18n("commands.search.multiple_results"));
+            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
+            if (searchResults.size() > 1) {
+                embedBuilder.setTitle(context.i18n("commands.search.multiple_results"));
+            } else if (searchResults.size() == 1) {
+                embedBuilder.setTitle(context.i18n("commands.search.single_result"));
+            }
             embedBuilder.setDescription(messageBuilder.toString());
 
             try {
@@ -97,7 +107,7 @@ public class SearchCommand implements ICommandMain {
                     }, String.valueOf(index + 1));
                 }
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(), 30, TimeUnit.SECONDS, () -> {
-                    context.getTypedMessaging().replyWarning(context.i18n("commands.search.search_timed_out", context.getMessage(0 )));
+                    context.getTypedMessaging().replyWarning(context.i18n("commands.search.search_timed_out", context.getMessage(0)));
                 }, responses);
             }
 
