@@ -24,7 +24,7 @@ public class LeaveCommand implements ICommandMain {
             return;
         }
 
-        if (!sender.getVoiceState().inVoiceChannel() || sender.getVoiceState().getChannel().equals(voiceChannel)) {
+        if (!sender.getVoiceState().inVoiceChannel() || !sender.getVoiceState().getChannel().equals(voiceChannel)) {
             if (!context.hasPermission("leave.other")) {
                 context.getUIMessaging().sendPermissionError("leave.other");
                 return;
