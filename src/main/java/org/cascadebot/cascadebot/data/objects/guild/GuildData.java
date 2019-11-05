@@ -93,7 +93,7 @@ public class GuildData {
 
     public GuildData(long guildID) {
         this.guildId = guildID;
-        currentTier = Tier.getTier(0);
+        currentTier = Tier.getTier("default");
     }
 
     //region Commands

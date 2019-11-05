@@ -9,13 +9,6 @@
         }
       },
       {
-        "name": "custom_commands",
-        "type": "amount",
-        "data": {
-          "amount": 3
-        }
-      },
-      {
         "name": "prefix_length",
         "type": "amount",
         "data": {
@@ -24,69 +17,27 @@
       }
     ]
   },
-  "supporter": {
-    "keys": {
-      "beta": 1
-    },
+  "cheep": {
     "extras": [
       "tiers.extra.supporter_role",
       "tiers.extra.primary_support"
     ],
+    "flags": [
+      {
+        "name": "custom_commands",
+        "type": "amount",
+        "data": {
+          "amount": 10
+        }
+      },
+      "supporter_badge",
+      "more_backgrounds",
+      "custom_footer",
+      "beta"
+    ],
     "parent": "default"
   },
-  "premium_supporter": {
-    "flags": [
-      {
-        "name": "custom_commands",
-        "type": "amount",
-        "data": {
-          "amount": 7
-        }
-      },
-      {
-        "name": "prefix_length",
-        "type": "amount",
-        "data": {
-          "amount": -1
-        }
-      },
-      "node",
-      "voice_stay"
-    ],
-    "keys": {
-      "beta": 3
-    },
-    "extras": [
-      "tiers.extra.premium_role"
-    ],
-    "parent": "supporter"
-  },
-  "music": {
-    "keys": {
-      "beta": 5
-    },
-    "flags": [
-      {
-        "name": "custom_commands",
-        "type": "amount",
-        "data": {
-          "amount": 15
-        }
-      },
-      "companion_bot",
-      "music_services",
-      "music_services",
-      "music_extended_controls"
-    ],
-    "extra": [
-      "tiers.extra.music_role"
-    ],
-    "parent": "premium_supporter"
-  },
-  "awesome_supporter": {
-    "keys": {
-      "beta": 10
-    },
+  "medium": {
     "flags": [
       {
         "name": "custom_commands",
@@ -94,32 +45,39 @@
         "data": {
           "amount": 20
         }
-      }
+      },
+      {
+        "name": "prefix_length",
+        "type": "amount",
+        "data": {
+          "amount": 1900
+        }
+      },
+      "music_services",
+      "music_controls",
+      "music_soundcloud",
+      "custom_backgrounds",
+      "planner_agenda",
+      "medium_badge"
     ],
-    "extras": [
-      "tiers.extra.awesome_role"
-    ],
-    "parent": "music"
+    "parent": "cheep"
   },
-  "god_supporter": {
-    "keys": {
-      "beta_unexpiring": 1,
-      "beta_unlimited": 1
-    },
+  "hardcode": {
     "flags": [
       {
         "name": "custom_commands",
         "type": "amount",
         "data": {
-          "amount": 77
+          "amount": 50
         }
-      }
+      },
+      "cascade_hosting",
+      "hardcode_badge"
     ],
-    "extras": [
-      "tiers.extra.god_role",
-      "tiers.extra.t_shirt"
+    "extra": [
+      "tiers.extra.tshirt"
     ],
-    "parent": "awesome_supporter"
+    "parent": "medium"
   },
   "example": {
     "__comment": "This is an example tier to show you how the format works",
@@ -136,10 +94,6 @@
         }
       }
     ],
-    "keys": {
-      "__comment": "here you specify what key to give to a user, and the bot will generate those keys when this tier is applied. currently keys available are beta, beta_unexpiring, beta_unlimited",
-      "beta": 1
-    },
     "extras": [
       "Extra strings explaining what you get that the bot it's self doesn't apply. Should be a language file path"
     ],

@@ -56,9 +56,6 @@ public class Tier {
             ((JsonArray) extrasElement).forEach(element -> extras.add(element.getAsString()));
         }
 
-        Type mapType = new TypeToken<Map<String, Integer>>() {}.getType();
-        Map<String, Integer> keys = CascadeBot.getGSON().fromJson(config.getElement("keys").orElse(new JsonObject()), mapType);
-
         JsonElement flagsEle = config.getElement("flags").orElse(new JsonArray());
         Set<Flag> flags = new HashSet<>();
         if (flagsEle.isJsonArray()) {
@@ -76,11 +73,11 @@ public class Tier {
                 }
             }
         }
-        return new Tier(parent, flags, keys, extras);
+        return new Tier(parent, flags, extras);
     }
 
-    public static Tier getTier(int index) {
-        return tiers.get(index);
+    public static Tier getTier(String id) {
+        return tiers.get(id);
     }
 
     /**
@@ -92,8 +89,6 @@ public class Tier {
      * This is the list of flags the the bot checks agents for actions
      */
     private Set<Flag> flags;
-
-    private Map<String, Integer> keys;
 
     /**
      * This is a list of ids (for use with lang) of other benefits giving at this tier

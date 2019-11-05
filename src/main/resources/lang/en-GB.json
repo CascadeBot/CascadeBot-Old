@@ -911,20 +911,14 @@
   "tiers": {
     "names": {
       "default": "Default",
-      "supporter": "Supporter",
-      "premium_supporter": "Premium Supporter",
-      "music": "Music Supporter",
-      "awesome_supporter": "Awesome Supporter",
-      "god_supporter": "God Supporter"
+      "cheap": "To be decided",
+      "medium": "To be decided",
+      "hardcode": "To be decided",
     },
     "extra": {
       "supporter_role": "'Supporter' Role in discord",
-      "premium_role": "'Premium supporter' Role in discord",
-      "music_role": "'Music supporter' Role in discord",
-      "awesome_role": "'Awesome supporter' Role in discord",
-      "god_role": "'God supporter' Role in discord",
       "primary_support": "Access to primary support channel",
-      "t_shirt": "If donation is keep up for 3 months we'll send you a t-shirt"
+      "tshirt": "If donation is keep up for 6 months we'll send you a donator only t-shirt!"
     }
   },
   "utils": {
