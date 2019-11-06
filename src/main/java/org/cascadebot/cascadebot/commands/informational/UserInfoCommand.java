@@ -87,8 +87,8 @@ public class UserInfoCommand implements ICommandMain {
                 builder.addField(context.i18n("commands.userinfo.activity"), gameStatus, true);
             }
 
-            context.getTypedMessaging().replyInfo(builder);
         }
+        context.getTypedMessaging().replyInfo(builder);
     }
 
     @Override

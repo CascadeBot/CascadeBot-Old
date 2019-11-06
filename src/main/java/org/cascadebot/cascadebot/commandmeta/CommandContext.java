@@ -129,11 +129,41 @@ public class CommandContext {
     }
 
     public boolean isArgInteger(int index) {
-        return Regex.INTEGER_REGEX.matcher(this.args[index]).matches();
+        try {
+            Integer.parseInt(args[index]);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
-    public boolean isArgDecimal(int index) {
-        return Regex.DECIMAL_REGEX.matcher(this.args[index]).matches();
+    public boolean isArgLong(int index) {
+        try {
+            Long.parseLong(args[index]);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public boolean isArgFloat(int index) {
+        try {
+            // The replacement of the comma is to support languages which use a comma for the decimal point
+            Float.parseFloat(args[index].replaceAll(",", "."));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public boolean isArgDouble(int index) {
+        try {
+            // The replacement of the comma is to support languages which use a comma for the decimal point
+            Float.parseFloat(args[index].replaceAll(",", "."));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public String getArg(int index) {
@@ -144,8 +174,18 @@ public class CommandContext {
         return Integer.parseInt(this.args[index]);
     }
 
-    public Double getArgAsDouble(int index) {
-        return Double.parseDouble(StringUtils.replace(this.args[index], ",", "."));
+    public long getArgAsLong(int index) {
+        return Long.parseLong(this.args[index]);
+    }
+
+    public float getArgAsFloat(int index) {
+        // The replacement of the comma is to support languages which use a comma for the decimal point
+        return Float.parseFloat(this.args[index].replaceAll(",", "."));
+    }
+
+    public double getArgAsDouble(int index) {
+        // The replacement of the comma is to support languages which use a comma for the decimal point
+        return Double.parseDouble(this.args[index].replaceAll(",", "."));
     }
 
     /**

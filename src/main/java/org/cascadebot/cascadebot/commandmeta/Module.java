@@ -39,6 +39,10 @@ public enum Module {
      */
     FUN,
     /**
+     * This is a module for containing useful stuff that doesn't really fit into any other module.
+     */
+    USEFUL,
+    /**
      * All our special commands :D
      */
     DEVELOPER(ModuleFlag.PRIVATE);

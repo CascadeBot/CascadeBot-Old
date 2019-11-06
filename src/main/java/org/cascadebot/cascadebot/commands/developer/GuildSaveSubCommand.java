@@ -23,7 +23,11 @@ public class GuildSaveSubCommand implements ISubCommand {
             GuildDataManager.getGuilds().asMap().forEach(GuildDataManager::replace);
             context.getTypedMessaging().replySuccess("Saved **all** guild information successfully!");
         } else {
-            GuildData guildData = GuildDataManager.getGuilds().asMap().get(Long.parseLong(context.getArg(0)));
+            if (!context.isArgLong(0)) {
+                context.getTypedMessaging().replyDanger("Please provide a valid ID!");
+                return;
+            }
+            GuildData guildData = GuildDataManager.getGuilds().asMap().get(context.getArgAsLong(0));
             if (guildData == null) {
                 context.getTypedMessaging().replyDanger("Cannot find a guild to save!");
                 return;

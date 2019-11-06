@@ -91,10 +91,4 @@ public class QueueSaveSubCommand implements ISubCommand {
         return CascadePermission.of("queue.save", true);
     }
 
-    @Deprecated(forRemoval = true)
-    @Override
-    public String description() {
-        return null;
-    }
-
 }

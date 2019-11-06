@@ -96,8 +96,7 @@ public class CommandListener extends ListenerAdapter {
         MDC.put("cascade.mention_prefix", String.valueOf(isMention));
 
         trigger = commandWithArgs.split(" ")[0];
-        commandWithArgs = commandWithArgs.substring(trigger.length()).trim();
-        args = splitArgs(commandWithArgs);
+        args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
 
         MDC.put("cascade.trigger", trigger);
         MDC.put("cascade.args", Arrays.toString(args));
@@ -109,70 +108,6 @@ public class CommandListener extends ListenerAdapter {
             return;
         } finally {
             CascadeBot.clearCascadeMDC();
-        }
-    }
-
-    public String[] splitArgs(String input) {
-        final char NONE = 0;        
-        char quoteType = NONE; // Whether the current position is surrounded by quotes or not and what type
-        char bracketType = NONE;
-        int splitFrom = NONE; // We initially start the first split from NONE to the first space
-        var args = new ArrayList<String>();
-        for (int pos = NONE; pos < input.length(); pos++) {
-            char charAtPos = input.charAt(pos);
-            if (charAtPos == ' ') {
-                // If we are in a quote or bracket scope then we want to ignore this space
-                if (quoteType != NONE || bracketType != NONE) {
-                    continue;
-                }
-                int splitTo = pos;
-
-                if (input.charAt(pos - 1) == '"' || input.charAt(pos - 1) == '\'') {
-                    splitTo = pos - 1; // If we are splitting after a quote, don't include the quote in the split
-                }
-                args.add(input.substring(splitFrom, splitTo));
-                splitFrom = pos + 1; // Set the next split start to be after
-            } else if (pos == input.length() - 1) {
-                int splitTo = input.length();
-                // If the end character is a quote, we want to split before the quote to not include it.
-                if (quoteType != NONE && input.charAt(pos) == quoteType) {
-                    splitTo = pos;
-                }
-                args.add(input.substring(splitFrom, splitTo));
-                // End of string so do nothing else
-            } else if (charAtPos == '"' || charAtPos == '\'') {
-                if (bracketType != NONE) continue;
-                // If we are not already in quotes AND [the quote is at the start OR it has a space before it] AND there is a quote to close the scope
-                if (quoteType == NONE && (pos == 0 || input.charAt(pos - 1) == ' ') && input.substring(pos + 1).indexOf(charAtPos) != -1) {
-                    splitFrom += 1; // Start the split after the first quote
-                    quoteType = charAtPos;
-                } else if (quoteType == charAtPos) {
-                    quoteType = NONE;
-                }
-            } else if (charAtPos == '(' || charAtPos == '{' || charAtPos == '[') {
-                // If we are not in a bracket scope AND there is a closing bracket
-                if (bracketType == NONE && input.substring(pos + 1).indexOf(getClosingBracket(charAtPos)) != -1) {
-                    bracketType = charAtPos;
-                }
-            } else if (charAtPos == ')' || charAtPos == '}' || charAtPos == ']') {
-                if (getClosingBracket(bracketType) == charAtPos) {
-                    bracketType = NONE;
-                }
-            }
-
-        }
-        return args.toArray(String[]::new);
-    }
-
-    private static char getClosingBracket(char opening) {
-        if (opening == '(') {
-            return ')';
-        } else if (opening == '{') {
-            return '}';
-        } else if (opening == '[') {
-            return ']';
-        } else {
-            return '\u0000';
         }
     }
 

@@ -64,6 +64,13 @@ public class GuildSettingsCore {
 
     @Setting
     private boolean allowTagCommands = true; // Whether tag commands will be executed by ;<tagname>
+
+    @Setting
+    private boolean helpHideCommandsNoPermission = true;
+
+    @Setting
+    private boolean helpShowAllModules = false;
+
     //endregion
 
     @Setting(directlyEditable = false)
