@@ -485,7 +485,8 @@
         "command": "create",
         "description": "Creates a todo list",
         "list_exists": "A todo list with that name already exists!",
-        "created": "Created todo list with name `{0}`"
+        "created": "Created todo list with name `{0}`",
+        "warn_uppercase": "|warning| Todo-list names are case-insensitive!"
       },
       "view": {
         "command": "view",
