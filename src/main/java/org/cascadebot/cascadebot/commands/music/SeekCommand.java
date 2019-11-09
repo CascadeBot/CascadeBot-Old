@@ -27,6 +27,10 @@ public class SeekCommand implements ICommandMain {
             context.getTypedMessaging().replyDanger(context.i18n("commands.seek.no_music_playing"));
             return;
         }
+        if (context.getMusicPlayer().getPlayer().getPlayingTrack().getInfo().isStream) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.seek.music_is_stream"));
+            return;
+        }
 
 
         try {
