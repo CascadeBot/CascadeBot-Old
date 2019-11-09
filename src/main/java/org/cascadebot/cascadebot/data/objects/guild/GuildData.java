@@ -27,10 +27,12 @@ import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -72,7 +74,7 @@ public class GuildData {
 
     private HashMap<Long, HashMap<Long, PersistentButtonGroup>> persistentButtons = new HashMap<>();
 
-    private long userForTiers = -1;
+    private Set<Long> usersForTiers = new HashSet<>();
 
     @PreSave
     public void preSave() {
@@ -184,16 +186,29 @@ public class GuildData {
     //endregion
 
     public Tier getGuildTier() {
-        if (userForTiers == -1) {
+        if (usersForTiers.isEmpty()) {
             return Tier.getTier("default");
         }
 
-        CascadeUser user = CascadeUserDataManager.getUser(userForTiers);
-        return user.getTier();
+        Tier highest = Tier.getTier("default");
+        String highest_tier_name = "default";
+        for (long id : usersForTiers) {
+            CascadeUser user = CascadeUserDataManager.getUser(id);
+
+            if (user.getTier().isTierParent(highest_tier_name)) {
+                highest = user.getTier();
+                highest_tier_name = user.getTierName();
+            }
+        }
+        return highest;
     }
 
-    public void setUserForTiers(long userId) {
-        this.userForTiers = userId;
+    public void addUserForTiers(long userId) {
+        usersForTiers.add(userId);
+    }
+
+    public void removeUserForTiers(long userID) {
+        usersForTiers.remove(userID);
     }
 
 }

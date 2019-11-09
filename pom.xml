@@ -356,6 +356,11 @@
             <artifactId>icu4j</artifactId>
             <version>64.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.patreon</groupId>
+            <artifactId>patreon</artifactId>
+            <version>0.4.2</version>
+        </dependency>
 
     </dependencies>
 

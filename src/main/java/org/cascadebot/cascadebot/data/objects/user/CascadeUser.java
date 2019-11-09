@@ -22,10 +22,10 @@ public class CascadeUser {
         userId = id;
     }
 
-    private String tier = "default";
+    private String tierName = "default";
 
     public Tier getTier() {
-        return Tier.getTier(tier);
+        return Tier.getTier(tierName);
     }
 
 }

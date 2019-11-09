@@ -32,7 +32,7 @@ public class Tier {
     public static void parseTiers() {
         JSONConfig config;
         try {
-             config = new JSONConfig(CascadeBot.class.getClassLoader().getResourceAsStream("./default_tiers.json"));
+            config = new JSONConfig(CascadeBot.class.getClassLoader().getResourceAsStream("./default_tiers.json"));
         } catch (Exception e) {
             // We have no default tiers :(
             CascadeBot.LOGGER.warn("The default tiers file was unable to be loaded!", e);
@@ -123,15 +123,21 @@ public class Tier {
     }
 
     public Flag getFlag(String id) {
-        for (Flag flag : flags) {
-            if (flag.getId().equals(id)) {
-                return flag;
-            }
+        Flag return_flag = flags.stream().filter(flag -> flag.getId().equals(id)).findFirst().orElse(null);
+        if (!parent.isEmpty() && return_flag == null) {
+            return_flag = tiers.get(parent).getFlag(id);
         }
-        if (!parent.isEmpty()) {
-            return tiers.get(parent).getFlag(id);
+        return return_flag;
+    }
+
+    public boolean isTierParent(String tier) {
+        if (this.parent.equals(tier)) {
+            return true;
         }
-        return null;
+        if (this.parent.isEmpty()) {
+            return false;
+        }
+        return tiers.get(parent).isTierParent(tier);
     }
 
     /**
@@ -153,4 +159,5 @@ public class Tier {
     public String toDonateString(Locale locale) {
         return "";
     }
+
 }
