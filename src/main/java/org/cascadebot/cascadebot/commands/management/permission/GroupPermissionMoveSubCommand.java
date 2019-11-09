@@ -5,8 +5,6 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -18,6 +16,9 @@ import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GroupPermissionMoveSubCommand implements ISubCommand {
 

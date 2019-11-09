@@ -5,13 +5,11 @@
  
 
 package org.cascadebot.cascadebot.utils;
- 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+
+import java.util.Random;
 
 @UtilityClass
 public class RandomUtils {

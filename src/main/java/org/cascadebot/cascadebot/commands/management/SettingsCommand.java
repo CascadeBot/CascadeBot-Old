@@ -7,26 +7,20 @@ package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
-import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.objects.Setting;
 import org.cascadebot.cascadebot.data.objects.SettingsContainer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.FormatUtils;
-import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.cascadebot.utils.ReflectionUtils;
-import org.cascadebot.cascadebot.utils.Table;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

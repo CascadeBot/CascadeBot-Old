@@ -33,7 +33,6 @@ import org.cascadebot.cascadebot.messaging.MessagingTyped;
 import org.cascadebot.cascadebot.messaging.MessagingUI;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.shared.Regex;
 
 @Getter
 public class CommandContext {

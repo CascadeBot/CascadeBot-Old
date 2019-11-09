@@ -5,8 +5,6 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
@@ -17,6 +15,9 @@ import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupPermissionListSubCommand implements ISubCommand {
 

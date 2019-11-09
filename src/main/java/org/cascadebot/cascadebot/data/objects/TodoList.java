@@ -1,6 +1,5 @@
 package org.cascadebot.cascadebot.data.objects;
 
-import de.bild.codec.annotations.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,6 +11,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton;

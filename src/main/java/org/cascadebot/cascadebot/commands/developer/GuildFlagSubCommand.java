@@ -5,13 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.developer;
 
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import org.apache.commons.lang3.EnumUtils;
-import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;

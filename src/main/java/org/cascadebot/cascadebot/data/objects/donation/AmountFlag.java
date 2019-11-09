@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.data.objects.donation;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 public class AmountFlag extends DataFlag {
 

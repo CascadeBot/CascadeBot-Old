@@ -14,10 +14,17 @@
         "data": {
           "amount": 5
         }
+      },
+      {
+        "name": "dashboard_modlog_time",
+        "type": "time",
+        "data": {
+          "time": 604800000
+        }
       }
     ]
   },
-  "cheep": {
+  "cheap": {
     "extras": [
       "tiers.extra.supporter_role",
       "tiers.extra.primary_support"
@@ -28,6 +35,13 @@
         "type": "amount",
         "data": {
           "amount": 10
+        }
+      },
+      {
+        "name": "dashboard_modlog_time",
+        "type": "time",
+        "data": {
+          "time": 1209600000
         }
       },
       "supporter_badge",
@@ -53,6 +67,13 @@
           "amount": 1900
         }
       },
+      {
+        "name": "dashboard_modlog_time",
+        "type": "time",
+        "data": {
+          "time": 2592000000
+        }
+      },
       "music_services",
       "music_controls",
       "music_soundcloud",
@@ -69,6 +90,13 @@
         "type": "amount",
         "data": {
           "amount": 50
+        }
+      },
+      {
+        "name": "dashboard_modlog_time",
+        "type": "time",
+        "data": {
+          "time": 15768000000
         }
       },
       "cascade_hosting",

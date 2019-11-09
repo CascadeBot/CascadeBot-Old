@@ -5,24 +5,22 @@
 
 package org.cascadebot.cascadebot.data.objects.donation;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import io.github.binaryoverload.JSONConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Locale;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @AllArgsConstructor
 @ToString
@@ -69,6 +67,9 @@ public class Tier {
                     switch (type) {
                         case "amount":
                             flags.add(new AmountFlag(name).parseFlagData(object.get("data").getAsJsonObject()));
+                            break;
+                        case "time":
+                            flags.add(new TimeFlag(name).parseFlagData(object.get("data").getAsJsonObject()));
                     }
                 }
             }

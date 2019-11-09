@@ -1060,7 +1060,7 @@
       "default": "Default",
       "cheap": "To be decided",
       "medium": "To be decided",
-      "hardcode": "To be decided",
+      "hardcode": "To be decided"
     },
     "extra": {
       "supporter_role": "'Supporter' Role in discord",

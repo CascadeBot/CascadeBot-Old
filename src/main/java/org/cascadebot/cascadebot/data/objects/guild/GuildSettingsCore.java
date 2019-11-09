@@ -13,6 +13,9 @@ import lombok.Setter;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.objects.Setting;
+import org.cascadebot.cascadebot.data.objects.SettingsContainer;
+import org.cascadebot.cascadebot.data.objects.Tag;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -20,9 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import org.cascadebot.cascadebot.data.objects.Setting;
-import org.cascadebot.cascadebot.data.objects.SettingsContainer;
-import org.cascadebot.cascadebot.data.objects.Tag;
 
 @SettingsContainer(module = Module.CORE)
 @Getter

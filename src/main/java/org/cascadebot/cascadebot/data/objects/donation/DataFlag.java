@@ -1,7 +1,6 @@
 package org.cascadebot.cascadebot.data.objects.donation;
 
 import com.google.gson.JsonObject;
-import lombok.ToString;
 
 //TODO move stuff over to interface
 public abstract class DataFlag extends Flag {

@@ -5,24 +5,12 @@
 
 package org.cascadebot.cascadebot.data.objects.guild;
 
-import com.google.common.collect.Sets;
 import de.bild.codec.annotations.Id;
 import de.bild.codec.annotations.PreSave;
 import de.bild.codec.annotations.Transient;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import org.bson.codecs.pojo.annotations.BsonDiscriminator;
@@ -31,11 +19,19 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.language.Locale;
-import org.cascadebot.cascadebot.data.objects.donation.Flag;
-import org.cascadebot.cascadebot.data.objects.donation.Tier;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -51,7 +47,6 @@ public class GuildData {
     //endregion
 
     private ConcurrentHashMap<Class<? extends ICommandMain>, GuildCommandInfo> commandInfo = new ConcurrentHashMap<>();
-    private Set<Flag> enabledFlags = Sets.newConcurrentHashSet();
 
     private Locale locale = Locale.getDefaultLocale();
 
@@ -59,16 +54,15 @@ public class GuildData {
 
     private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
     private GuildPermissions guildPermissions = new GuildPermissions();
+    private GuildSettingsUseful usefulSettings = new GuildSettingsUseful();
+    private GuildModeration guildModeration = new GuildModeration();
+
     /*
         Eventually these will be used but they're commented out for now
 
         private GuildModeration guildModeration = new GuildModeration();
 
     */
-
-    @Getter
-    @Setter
-    Tier currentTier;
 
     //endregion
 
@@ -78,22 +72,17 @@ public class GuildData {
 
     @Transient
     private PageCache pageCache = new PageCache();
-
     //endregion
 
-    /**
-     * Misc flags not already in a tier (beta would go here for example)
-     */
-    private List<Flag> miscFlags = new ArrayList<>();
+    private HashMap<Long, HashMap<Long, PersistentButtonGroup>> persistentButtons = new HashMap<>();
 
     @PreSave
     public void preSave() {
         this.stateLock = UUID.randomUUID();
     }
 
-    public GuildData(long guildID) {
-        this.guildId = guildID;
-        currentTier = Tier.getTier("default");
+    public GuildData(long guildId) {
+        this.guildId = guildId;
     }
 
     //region Commands
@@ -128,14 +117,6 @@ public class GuildData {
             return commandInfo.get(command.getClass()).isEnabled();
         }
         return command.getModule().isDefault();
-    }
-
-    public boolean isModuleEnabled(Module module) {
-        boolean enabled = module.isDefault();
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
-            enabled &= commandInfo.get(command.getClass()).isEnabled();
-        }
-        return enabled;
     }
 
     public String getCommandName(ICommandMain command) {
@@ -175,21 +156,23 @@ public class GuildData {
 
     //endregion
 
-    public boolean enableFlag(Flag flag) {
-        return this.enabledFlags.add(flag);
-    }
-
-    public boolean disableFlag(Flag flag) {
-        return this.enabledFlags.remove(flag);
-    }
-
-    public boolean isFlagEnabled(Flag flag) {
-        return this.enabledFlags.contains(flag);
-    }
-
     public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
-        buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
+
+        if (group instanceof PersistentButtonGroup) {
+            putPersistentButtonGroup(channel.getIdLong(), message.getIdLong(), (PersistentButtonGroup) group);
+        } else {
+            buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
+        }
+    }
+
+    private void putPersistentButtonGroup(Long channelId, Long messageId, PersistentButtonGroup buttonGroup) {
+        if (persistentButtons.containsKey(channelId) && persistentButtons.get(channelId) != null) {
+            persistentButtons.get(channelId).put(messageId, buttonGroup);
+        } else {
+            persistentButtons.put(channelId, new HashMap<>());
+            persistentButtons.get(channelId).put(messageId, buttonGroup);
+        }
     }
 
     public GuildPermissions getPermissions() {
@@ -201,14 +184,5 @@ public class GuildData {
     }
 
     //endregion
-
-    public Flag getFlag(String flagId) {
-        for (Flag flag : currentTier.getFlags()) {
-            if(flag.getId().equals(flagId)) {
-                return flag;
-            }
-        }
-        return null;
-    }
 
 }

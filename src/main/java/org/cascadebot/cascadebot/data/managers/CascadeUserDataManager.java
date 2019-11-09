@@ -7,13 +7,12 @@ package org.cascadebot.cascadebot.data.managers;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import java.util.concurrent.TimeUnit;
 import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
 import org.cascadebot.cascadebot.data.objects.CascadeUser;
-import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 
+import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.Filters.eq;
 
