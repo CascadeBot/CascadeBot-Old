@@ -1,8 +1,5 @@
 package org.cascadebot.cascadebot.commands.music;
 
-import com.ibm.icu.text.MeasureFormat;
-import com.ibm.icu.util.Measure;
-import com.ibm.icu.util.ULocale;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -12,10 +9,6 @@ import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.ParserUtils;
-import org.cascadebot.shared.Regex;
-
-import java.util.Arrays;
-import java.util.regex.Pattern;
 
 public class SeekCommand implements ICommandMain {
 
@@ -36,14 +29,10 @@ public class SeekCommand implements ICommandMain {
         }
 
 
-        if (context.isArgLong(0)) {
-            millis = context.getArgAsLong(0);
-        } else {
-            try {
-                millis = ParserUtils.parseTime(time, true);
-            } catch (IllegalArgumentException e) {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.seek.bad_format"));
-            }
+        try {
+            millis = ParserUtils.parseTime(time);
+        } catch (IllegalArgumentException e) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.seek.bad_format"));
         }
 
         if (millis < 0) {
