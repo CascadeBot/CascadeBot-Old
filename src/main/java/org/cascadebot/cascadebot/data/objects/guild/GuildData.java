@@ -19,6 +19,9 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.language.Locale;
+import org.cascadebot.cascadebot.data.managers.CascadeUserDataManager;
+import org.cascadebot.cascadebot.data.objects.donation.Tier;
+import org.cascadebot.cascadebot.data.objects.user.CascadeUser;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
@@ -57,13 +60,6 @@ public class GuildData {
     private GuildSettingsUseful usefulSettings = new GuildSettingsUseful();
     private GuildModeration guildModeration = new GuildModeration();
 
-    /*
-        Eventually these will be used but they're commented out for now
-
-        private GuildModeration guildModeration = new GuildModeration();
-
-    */
-
     //endregion
 
     //region Transient fields
@@ -75,6 +71,8 @@ public class GuildData {
     //endregion
 
     private HashMap<Long, HashMap<Long, PersistentButtonGroup>> persistentButtons = new HashMap<>();
+
+    private long userForTiers = -1;
 
     @PreSave
     public void preSave() {
@@ -184,5 +182,18 @@ public class GuildData {
     }
 
     //endregion
+
+    public Tier getGuildTier() {
+        if (userForTiers == -1) {
+            return Tier.getTier("default");
+        }
+
+        CascadeUser user = CascadeUserDataManager.getUser(userForTiers);
+        return user.getTier();
+    }
+
+    public void setUserForTiers(long userId) {
+        this.userForTiers = userId;
+    }
 
 }

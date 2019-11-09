@@ -10,7 +10,7 @@ import com.github.benmanes.caffeine.cache.LoadingCache;
 import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
-import org.cascadebot.cascadebot.data.objects.CascadeUser;
+import org.cascadebot.cascadebot.data.objects.user.CascadeUser;
 
 import java.util.concurrent.TimeUnit;
 
@@ -18,10 +18,10 @@ import static com.mongodb.client.model.Filters.eq;
 
 public class CascadeUserDataManager {
 
-    private static final String COLLECTION = "users";
+    private static final String COLLECTION = "bot_users";
     
     private static LoadingCache<Long, CascadeUser> users = Caffeine.newBuilder()
-            .expireAfterAccess(5,TimeUnit.MINUTES)
+            .expireAfterAccess(1,TimeUnit.SECONDS)
             .recordStats()
             .build(id -> {
                 CascadeUser user = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, CascadeUser.class).find(eq("_id", id)).first();

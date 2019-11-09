@@ -122,6 +122,18 @@ public class Tier {
         return flags;
     }
 
+    public Flag getFlag(String id) {
+        for (Flag flag : flags) {
+            if (flag.getId().equals(id)) {
+                return flag;
+            }
+        }
+        if (!parent.isEmpty()) {
+            return tiers.get(parent).getFlag(id);
+        }
+        return null;
+    }
+
     /**
      * Returns the guild benefits gave in this tier.
      *

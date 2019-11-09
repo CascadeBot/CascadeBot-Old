@@ -86,6 +86,7 @@ public class EvalCommand implements ICommandRestricted {
                 scriptEngine.put("context", context);
                 scriptEngine.put("channel", context.getChannel());
                 scriptEngine.put("guild", context.getGuild());
+                scriptEngine.put("data", context.getData());
 
                 String imports = IMPORTS.stream().map(s -> "import " + s + ".*;").collect(Collectors.joining(" "));
 
