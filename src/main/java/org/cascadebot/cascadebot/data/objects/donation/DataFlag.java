@@ -1,8 +1,9 @@
 package org.cascadebot.cascadebot.data.objects.donation;
 
 import com.google.gson.JsonObject;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 
-//TODO move stuff over to interface
 public abstract class DataFlag extends Flag {
 
     public DataFlag(String id) {
@@ -17,5 +18,6 @@ public abstract class DataFlag extends Flag {
 
     abstract public String toString();
 
+    abstract public String getDescription(Locale locale);
 
 }

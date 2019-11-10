@@ -9,7 +9,7 @@ import org.cascadebot.cascadebot.data.language.Locale;
 public class Flag {
 
     @Getter
-    private final String id;
+    protected final String id;
 
     public Flag(String id) {
         this.id = id;

@@ -8,6 +8,8 @@ package org.cascadebot.cascadebot.data.objects.donation;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import lombok.Setter;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 
 public class AmountFlag extends DataFlag {
 
@@ -32,6 +34,11 @@ public class AmountFlag extends DataFlag {
     @Override
     public String toString() {
         return "AmountFlag(id=" + getId() + ", amount=" + amount + ")";
+    }
+
+    @Override
+    public String getDescription(Locale locale) {
+        return Language.i18n(locale, "flags." + id + ".description", amount);
     }
 
 }

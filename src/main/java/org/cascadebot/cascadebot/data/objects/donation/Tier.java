@@ -141,13 +141,33 @@ public class Tier {
     }
 
     /**
-     * Returns the guild benefits gave in this tier.
+     * Returns the benefits gave in this tier.
      *
      * @param locale The locale to use for translations
      * @return The guild benefits gave in this tier
      */
-    public String toTierString(Locale locale) {
-        return "";
+    public String toTierString(Locale locale, List<String> idsUsed) {
+        if (idsUsed == null) {
+            idsUsed = new ArrayList<>();
+        }
+        StringBuilder tierStringBuilder = new StringBuilder();
+        for (Flag flag : flags) {
+            if(!idsUsed.contains(flag.getId())) {
+                idsUsed.add(flag.getId());
+                tierStringBuilder.append(" - ").append(flag.getName(locale)).append(": ").append(flag.getDescription(locale)).append('\n');
+            }
+        }
+        for (String extra : extras) {
+            tierStringBuilder.append(" - ").append(extra).append('\n');
+        }
+
+        if (!parent.isEmpty()) {
+            tierStringBuilder.append('\n');
+            tierStringBuilder.append("Inherited from ").append(parent).append(":\n");
+            tierStringBuilder.append(tiers.get(parent).toTierString(locale, idsUsed));
+        }
+
+        return tierStringBuilder.toString();
     }
 
     /**

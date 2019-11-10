@@ -1086,5 +1086,71 @@
       "decimal": "Decimal value",
       "binary": "Binary value"
     }
+  },
+  "flags": {
+    "custom_commands": {
+      "name": "Custom commands",
+      "description": "Gives {0} custom commands per guild."
+    },
+    "prefix_length": {
+      "name": "Prefix length",
+      "description": "Increases the prefix length to {0} chars."
+    },
+    "dashboard_modlog_time": {
+      "name": "Dashboard modlog persistence",
+      "description": "Modlog items will persist on the dashboard for {0}"
+    },
+    "supporter_badge": {
+      "name": "Supporter badge",
+      "description": "A badge on your Cascade profile showing that you support Cascade."
+    },
+    "more_backgrounds": {
+      "name": "More profile backgrounds",
+      "description": "You'll unlock more background you can use for your Cascade profile."
+    },
+    "custom_footer": {
+      "name": "Custom footer",
+      "description": "You can set up a custom footer that will appear on all messages from the bot."
+    },
+    "beta": {
+      "name": "Beta features",
+      "description": "Access to upcoming bot features early"
+    },
+    "music_services": {
+      "name": "Music services",
+      "description": "You can now play music from mixer, bandcamp, twich, soundcloud"
+    },
+    "music_controls": {
+      "name": "Extended music controls",
+      "description": "You'll get access to more controls for music like volume"
+    },
+    "music_spotify": {
+      "name": "Spotify to youtube",
+      "description": "Due to spotify terms of service we can't play directly from spotify, but with this we'll do our best to convert your spotify playlists to youtube."
+    },
+    "music_donator_node": {
+      "name": "Donator audio node",
+      "description": "Access to donator only audio nodes for smoother audio."
+    },
+    "custom_backgrounds": {
+      "name": "Custom profile background",
+      "description": "You can upload a custom background to be used for your Cascade profile"
+    },
+    "planner_agenda": {
+      "name": "Meeting planer agendas",
+      "description": "You can attach a todo list to a meeting via the meeting planer to be sent automatically to a specified channel when the meeting starts."
+    },
+    "medium_badge": {
+      "name": "Medium supporter badge",
+      "description": "A badge on your Cascade profile showing that you support Cascade."
+    },
+    "cascade_hosting": {
+      "name": "Cascade hosting",
+      "description": "We'll host CascadeBot on your token so you can have custom branding"
+    },
+    "hardcode_badge": {
+      "name": "Hardcode supporter badge",
+      "description": "A badge on your Cascade profile showing that you support Cascade."
+    }
   }
 }

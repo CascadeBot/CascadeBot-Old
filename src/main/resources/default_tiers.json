@@ -76,13 +76,13 @@
       },
       "music_services",
       "music_controls",
-      "music_soundcloud",
-      "donator_node",
+      "music_spotify",
+      "music_donator_node",
       "custom_backgrounds",
       "planner_agenda",
       "medium_badge"
     ],
-    "parent": "cheep"
+    "parent": "cheap"
   },
   "hardcode": {
     "flags": [
