@@ -103,7 +103,7 @@
       "cascade_hosting",
       "hardcode_badge"
     ],
-    "extra": [
+    "extras": [
       "tiers.extra.tshirt"
     ],
     "parent": "medium"

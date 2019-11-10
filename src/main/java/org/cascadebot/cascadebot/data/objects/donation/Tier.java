@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.util.ArrayList;
@@ -124,13 +125,16 @@ public class Tier {
 
     public Flag getFlag(String id) {
         Flag return_flag = flags.stream().filter(flag -> flag.getId().equals(id)).findFirst().orElse(null);
-        if (!parent.isEmpty() && return_flag == null) {
+        if (parent != null && return_flag == null) {
             return_flag = tiers.get(parent).getFlag(id);
         }
         return return_flag;
     }
 
     public boolean isTierParent(String tier) {
+        if (this.parent == null) {
+            return false;
+        }
         if (this.parent.equals(tier)) {
             return true;
         }
@@ -154,16 +158,17 @@ public class Tier {
         for (Flag flag : flags) {
             if(!idsUsed.contains(flag.getId())) {
                 idsUsed.add(flag.getId());
-                tierStringBuilder.append(" - ").append(flag.getName(locale)).append(": ").append(flag.getDescription(locale)).append('\n');
+                tierStringBuilder.append(" - **").append(flag.getName(locale)).append(":** ").append(flag.getDescription(locale)).append('\n');
             }
         }
         for (String extra : extras) {
+            extra = Language.getLanguage(locale).getString(extra).orElse("No language string defined");
             tierStringBuilder.append(" - ").append(extra).append('\n');
         }
 
-        if (!parent.isEmpty()) {
+        if (parent != null && !parent.equals("default")) {
             tierStringBuilder.append('\n');
-            tierStringBuilder.append("Inherited from ").append(parent).append(":\n");
+            tierStringBuilder.append("**__Inherited from ").append(parent).append(":__**\n");
             tierStringBuilder.append(tiers.get(parent).toTierString(locale, idsUsed));
         }
 
@@ -176,8 +181,10 @@ public class Tier {
      * @param locale he locale to use for translations
      * @return This tiers text as it would appear on patreon, and other front end stuffs.
      */
+    /*
     public String toDonateString(Locale locale) {
         return "";
     }
+     */
 
 }
