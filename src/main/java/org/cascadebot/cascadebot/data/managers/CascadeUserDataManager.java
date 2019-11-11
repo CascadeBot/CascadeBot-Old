@@ -21,7 +21,7 @@ public class CascadeUserDataManager {
     private static final String COLLECTION = "bot_users";
     
     private static LoadingCache<Long, CascadeUser> users = Caffeine.newBuilder()
-            .expireAfterAccess(1,TimeUnit.SECONDS)
+            .expireAfterAccess(5, TimeUnit.MINUTES)
             .recordStats()
             .build(id -> {
                 CascadeUser user = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, CascadeUser.class).find(eq("_id", id)).first();
