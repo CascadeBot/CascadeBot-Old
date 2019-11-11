@@ -114,6 +114,14 @@ public class CommandListener extends ListenerAdapter {
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         CommandContext context = new CommandContext(cmd, event.getJDA(), event.getChannel(), event.getMessage(), event.getGuild(), guildData, args, event.getMember(), trigger, isMention);
         if (cmd != null) {
+            if (cmd.getRequiredFlag() != null) {
+                if (guildData.getGuildTier().getFlag(cmd.getRequiredFlag()) == null) {
+                    EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(org.cascadebot.cascadebot.messaging.MessageType.WARNING, event.getAuthor());
+                    builder.appendDescription(Language.i18n(guildData.getLocale(), "command_meta", guildData.getCoreSettings().getPrefix()));
+                    event.getChannel().sendMessage(builder.build()).queue();
+                    return;
+                }
+            }
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.getModule().isPrivate() && !guildData.getCoreSettings().isModuleEnabled(cmd.getModule())) {
                 if (guildData.getCoreSettings().isShowModuleErrors() || Environment.isDevelopment()) {
@@ -151,6 +159,14 @@ public class CommandListener extends ListenerAdapter {
                 CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.isMention());
                 if (!isAuthorised(cmd, subCommandContext)) {
                     return false;
+                }
+                if (subCommand.getRequiredFlag() != null) {
+                    if (parentCommandContext.getData().getGuildTier().getFlag(subCommand.getRequiredFlag()) == null) {
+                        EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(org.cascadebot.cascadebot.messaging.MessageType.WARNING, parentCommandContext.getUser());
+                        builder.appendDescription(Language.i18n(parentCommandContext.getData().getLocale(), "command_meta", parentCommandContext.getData().getCoreSettings().getPrefix()));
+                        parentCommandContext.getChannel().sendMessage(builder.build()).queue();
+                        return false;
+                    }
                 }
                 return dispatchCommand(subCommand, subCommandContext);
             }

@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.objects.donation.Flag;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -82,11 +83,8 @@ public class VolumeCommand implements ICommandMain {
         return CascadePermission.of("volume", false);
     }
 
-    /*
     @Override
-    public Set<Flag> getFlags() {
-        return Set.of(Flag.MUSIC_SERVICES);
+    public String getRequiredFlag() {
+        return "music_controls";
     }
-    */
-
 }

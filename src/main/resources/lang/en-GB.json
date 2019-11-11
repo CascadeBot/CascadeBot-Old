@@ -1,4 +1,7 @@
 {
+  "command_meta": {
+    "donate": "This command is a donator-only feature.\nPlease consider donating to Cascade over on [Patreon](https://www.patreon.com/cascadebot/).\nTo find out more run `{0}donate`."
+  },
   "commands": {
     "invite": {
       "command": "invite",

@@ -61,8 +61,8 @@ public interface ICommandExecutable {
         return true;
     }
 
-    default Set<Flag> getFlags() {
-        return Set.of();
+    default String getRequiredFlag() {
+        return null;
     }
 
 }
