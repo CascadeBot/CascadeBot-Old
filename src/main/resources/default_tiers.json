@@ -4,6 +4,7 @@
       {
         "name": "custom_commands",
         "type": "amount",
+        "scope": "guild",
         "data": {
           "amount": 3
         }
@@ -11,6 +12,7 @@
       {
         "name": "prefix_length",
         "type": "amount",
+        "scope": "guild",
         "data": {
           "amount": 5
         }
@@ -18,6 +20,7 @@
       {
         "name": "dashboard_modlog_time",
         "type": "time",
+        "scope": "guild",
         "data": {
           "time": 604800000
         }
@@ -26,13 +29,20 @@
   },
   "cheap": {
     "extras": [
-      "tiers.extra.supporter_role",
-      "tiers.extra.primary_support"
+      {
+        "path": "tiers.extra.supporter_role",
+        "scope": "user"
+      },
+      {
+        "path": "tiers.extra.primary_support",
+        "scope": "user"
+      }
     ],
     "flags": [
       {
         "name": "custom_commands",
         "type": "amount",
+        "scope": "guild",
         "data": {
           "amount": 10
         }
@@ -40,14 +50,27 @@
       {
         "name": "dashboard_modlog_time",
         "type": "time",
+        "scope": "guild",
         "data": {
           "time": 1209600000
         }
       },
-      "supporter_badge",
-      "more_backgrounds",
-      "custom_footer",
-      "beta"
+      {
+        "name": "supporter_badge",
+        "scope": "user"
+      },
+      {
+        "name": "more_background",
+        "scope": "user"
+      },
+      {
+        "name": "custom_footer",
+        "scope": "guild"
+      },
+      {
+        "name": "beta",
+        "scope": "guild"
+      }
     ],
     "parent": "default"
   },
@@ -56,6 +79,7 @@
       {
         "name": "custom_commands",
         "type": "amount",
+        "scope": "guild",
         "data": {
           "amount": 20
         }
@@ -63,6 +87,7 @@
       {
         "name": "prefix_length",
         "type": "amount",
+        "scope": "guild",
         "data": {
           "amount": 1900
         }
@@ -70,17 +95,39 @@
       {
         "name": "dashboard_modlog_time",
         "type": "time",
+        "scope": "guild",
         "data": {
           "time": 2592000000
         }
       },
-      "music_services",
-      "music_controls",
-      "music_spotify",
-      "music_donator_node",
-      "custom_backgrounds",
-      "planner_agenda",
-      "medium_badge"
+      {
+        "name": "music_services",
+        "scope": "guild"
+      },
+      {
+        "name": "music_controls",
+        "scope": "guild"
+      },
+      {
+        "name": "music_spotifty",
+        "scope": "user"
+      },
+      {
+        "name": "music_donator_node",
+        "scope": "guild"
+      },
+      {
+        "name": "custom_custom_backgrounds",
+        "scope": "user"
+      },
+      {
+        "name": "planner_agenda",
+        "scope": "guild"
+      },
+      {
+        "name": "medium_badge",
+        "scope": "user"
+      }
     ],
     "parent": "cheap"
   },
@@ -89,6 +136,7 @@
       {
         "name": "custom_commands",
         "type": "amount",
+        "scope": "guild",
         "data": {
           "amount": 50
         }
@@ -96,36 +144,26 @@
       {
         "name": "dashboard_modlog_time",
         "type": "time",
+        "scope": "guild",
         "data": {
           "time": 15768000000
         }
       },
-      "cascade_hosting",
-      "hardcode_badge"
-    ],
-    "extras": [
-      "tiers.extra.tshirt"
-    ],
-    "parent": "medium"
-  },
-  "example": {
-    "__comment": "This is an example tier to show you how the format works",
-    "flags": [
-      "comment: this stores a list of flags. normal flags are just added to the list with their unique name",
-      "example_regular",
       {
-        "__comment": "More advanced flags are specified as seen bellow with the name, type, and associated data",
-        "name": "example_amount",
-        "type": "amount",
-        "data": {
-          "__comment": "in the case of the amount flag we specify an amount",
-          "amount": 5
-        }
+        "name": "cascade_hosting",
+        "scope": "user"
+      },
+      {
+        "name": "hardcode_badge",
+        "scope": "user"
       }
     ],
     "extras": [
-      "Extra strings explaining what you get that the bot it's self doesn't apply. Should be a language file path"
+      {
+        "path": "tiers.extra.tshirt",
+        "scope": "user"
+      }
     ],
-    "parent": "parent tier that is applied with this tier. flags with same name will be overridden"
+    "parent": "medium"
   }
 }

@@ -10,13 +10,17 @@ public class Flag {
 
     @Getter
     protected final String id;
+    @Getter
+    protected final FlagScope scope;
 
-    public Flag(String id) {
+    public Flag(String id, FlagScope scope) {
         this.id = id;
+        this.scope = scope;
     }
 
     protected Flag() {
         this.id = null;
+        this.scope = null;
     }
 
     public String getName(Locale locale) {
@@ -25,5 +29,12 @@ public class Flag {
 
     public String getDescription(Locale locale) {
         return Language.getLanguage(locale).getString("flags." + id + ".description").orElse("No language string defined");
+    }
+
+    public enum FlagScope {
+
+        USER,
+        GUILD
+
     }
 }

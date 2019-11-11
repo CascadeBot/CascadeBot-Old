@@ -21,8 +21,8 @@ public class AmountFlag extends DataFlag {
         super();
     }
 
-    public AmountFlag(String id) {
-        super(id);
+    public AmountFlag(String id, FlagScope scope) {
+        super(id, scope);
     }
 
     @Override

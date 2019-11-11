@@ -1,17 +1,16 @@
 package org.cascadebot.cascadebot.data.objects.donation;
 
 import com.google.gson.JsonObject;
-import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
 public abstract class DataFlag extends Flag {
 
-    public DataFlag(String id) {
-        super(id);
+    public DataFlag(String id, FlagScope scope) {
+        super(id, scope);
     }
 
     protected DataFlag() {
-        super(null);
+        super();
     }
 
     abstract DataFlag parseFlagData(JsonObject flagDataObject);

@@ -49,29 +49,55 @@ public class Tier {
     private static Tier parseTier(JSONConfig config) {
         String parent = config.getString("parent").orElse(null);
 
-        List<String> extras = new ArrayList<>();
+        List<TierExtra> extras = new ArrayList<>();
         JsonElement extrasElement = config.getElement("extras").orElse(new JsonArray());
         if (extrasElement.isJsonArray()) {
-            ((JsonArray) extrasElement).forEach(element -> extras.add(element.getAsString()));
+            for (JsonElement element : extrasElement.getAsJsonArray()) {
+                JsonObject object = element.getAsJsonObject();
+                String path = object.get("path").getAsString();
+                String scopeStr = object.get("scope").getAsString();
+                Flag.FlagScope scope = null;
+                switch (scopeStr) {
+                    case "user":
+                        scope = Flag.FlagScope.USER;
+                        break;
+                    case "guild":
+                        scope = Flag.FlagScope.GUILD;
+                        break;
+                }
+
+                extras.add(new TierExtra(path, scope));
+
+            }
         }
 
         JsonElement flagsEle = config.getElement("flags").orElse(new JsonArray());
         Set<Flag> flags = new HashSet<>();
         if (flagsEle.isJsonArray()) {
             for (JsonElement jsonElement : flagsEle.getAsJsonArray()) {
-                if (jsonElement.isJsonPrimitive()) {
-                    flags.add(new Flag(jsonElement.getAsString()));
-                } else if (jsonElement.isJsonObject()) {
-                    JsonObject object = jsonElement.getAsJsonObject();
-                    String name = object.get("name").getAsString();
+                JsonObject object = jsonElement.getAsJsonObject();
+                String name = object.get("name").getAsString();
+                String scopeStr = object.get("scope").getAsString();
+                Flag.FlagScope scope = null;
+                switch (scopeStr) {
+                    case "user":
+                        scope = Flag.FlagScope.USER;
+                        break;
+                    case "guild":
+                        scope = Flag.FlagScope.GUILD;
+                        break;
+                }
+                if (object.has("type")) {
                     String type = object.get("type").getAsString();
                     switch (type) {
                         case "amount":
-                            flags.add(new AmountFlag(name).parseFlagData(object.get("data").getAsJsonObject()));
+                            flags.add(new AmountFlag(name, scope).parseFlagData(object.get("data").getAsJsonObject()));
                             break;
                         case "time":
-                            flags.add(new TimeFlag(name).parseFlagData(object.get("data").getAsJsonObject()));
+                            flags.add(new TimeFlag(name, scope).parseFlagData(object.get("data").getAsJsonObject()));
                     }
+                } else {
+                    flags.add(new Flag(name, scope));
                 }
             }
         }
@@ -96,7 +122,7 @@ public class Tier {
      * This is a list of ids (for use with lang) of other benefits giving at this tier
      */
     @Getter
-    private List<String> extras = new ArrayList<>();
+    private List<TierExtra> extras = new ArrayList<>();
 
     private Tier() {
         //default constructor for mongo.
@@ -145,37 +171,41 @@ public class Tier {
     }
 
     /**
-     * Returns the benefits gave in this tier.
+     * Returns the benefits gave in this tier to a guild.
      *
      * @param locale The locale to use for translations
      * @return The guild benefits gave in this tier
      */
-    public String toTierString(Locale locale, List<String> idsUsed) {
+    public String getGuildTierString(Locale locale, List<String> idsUsed) {
         if (idsUsed == null) {
             idsUsed = new ArrayList<>();
         }
         StringBuilder tierStringBuilder = new StringBuilder();
         for (Flag flag : flags) {
-            if(!idsUsed.contains(flag.getId())) {
-                idsUsed.add(flag.getId());
-                tierStringBuilder.append(" - **").append(flag.getName(locale)).append(":** ").append(flag.getDescription(locale)).append('\n');
+            if (!idsUsed.contains(flag.getId())) {
+                if (flag.scope.equals(Flag.FlagScope.GUILD)) {
+                    idsUsed.add(flag.getId());
+                    tierStringBuilder.append(" - **").append(flag.getName(locale)).append(":** ").append(flag.getDescription(locale)).append('\n');
+                }
             }
         }
-        for (String extra : extras) {
-            extra = Language.getLanguage(locale).getString(extra).orElse("No language string defined");
-            tierStringBuilder.append(" - ").append(extra).append('\n');
+        for (TierExtra extra : extras) {
+            if (extra.scope.equals(Flag.FlagScope.GUILD)) { //Ignore t-shirt related extra stuff as that isn't a guild thing.
+                String extraStr = Language.getLanguage(locale).getString(extra.path).orElse("No language string defined");
+                tierStringBuilder.append(" - ").append(extraStr).append('\n');
+            }
         }
 
         if (parent != null && !parent.equals("default")) {
             tierStringBuilder.append('\n');
             tierStringBuilder.append("**__Inherited from ").append(parent).append(":__**\n");
-            tierStringBuilder.append(tiers.get(parent).toTierString(locale, idsUsed));
+            tierStringBuilder.append(tiers.get(parent).getGuildTierString(locale, idsUsed));
         }
 
         return tierStringBuilder.toString();
     }
 
-    /**
+    /*
      * Get's this tiers text as it would appear on patreon, and other front end stuffs.
      *
      * @param locale he locale to use for translations
@@ -186,5 +216,24 @@ public class Tier {
         return "";
     }
      */
+
+    public static class TierExtra {
+
+        @Getter
+        protected final String path;
+        @Getter
+        protected final Flag.FlagScope scope;
+
+        protected TierExtra() {
+            this.path = null;
+            this.scope = null;
+        }
+
+        public TierExtra(String path, Flag.FlagScope scope) {
+            this.path = path;
+            this.scope = scope;
+        }
+
+    }
 
 }

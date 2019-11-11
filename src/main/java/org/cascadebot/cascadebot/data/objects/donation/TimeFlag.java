@@ -12,8 +12,8 @@ public class TimeFlag extends DataFlag {
         super();
     }
 
-    public TimeFlag(String id) {
-        super(id);
+    public TimeFlag(String id, FlagScope scope) {
+        super(id, scope);
     }
 
     @Getter

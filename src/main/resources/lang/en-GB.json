@@ -1090,7 +1090,7 @@
   "flags": {
     "custom_commands": {
       "name": "Custom commands",
-      "description": "Gives {0} custom commands per guild."
+      "description": "Gives {0} custom commands."
     },
     "prefix_length": {
       "name": "Prefix length",

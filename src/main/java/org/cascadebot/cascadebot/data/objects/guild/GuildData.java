@@ -203,6 +203,22 @@ public class GuildData {
         return highest;
     }
 
+    public String getGuildTierName() {
+        if (usersForTiers.isEmpty()) {
+            return "default";
+        }
+
+        String highest_tier_name = "default";
+        for (long id : usersForTiers) {
+            CascadeUser user = CascadeUserDataManager.getUser(id);
+
+            if (user.getTier().isTierParent(highest_tier_name)) {
+                highest_tier_name = user.getTierName();
+            }
+        }
+        return highest_tier_name;
+    }
+
     public void addUserForTiers(long userId) {
         usersForTiers.add(userId);
     }
