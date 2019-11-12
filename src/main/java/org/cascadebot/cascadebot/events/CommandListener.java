@@ -136,11 +136,12 @@ public class CommandListener extends ListenerAdapter {
             dispatchCommand(cmd, context);
         } else {
             if (guildData.getCoreSettings().isAllowTagCommands()) {
-                if (guildData.getCoreSettings().getTags().containsKey(trigger)) {
-                    Tag tag = guildData.getCoreSettings().getTag(trigger);
+                String tagName = trigger.toLowerCase();
+                if (guildData.getCoreSettings().hasTag(tagName)) {
+                    Tag tag = guildData.getCoreSettings().getTag(tagName);
 
                     context.reply(tag.formatTag(context)); //TODO perms for tags
-                    CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", trigger, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
+                    CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", tagName, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
                 }
             }
         }
