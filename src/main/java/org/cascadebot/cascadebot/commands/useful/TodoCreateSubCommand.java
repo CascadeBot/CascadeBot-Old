@@ -6,6 +6,8 @@ import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.TodoList;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
+import java.util.regex.Pattern;
+
 public class TodoCreateSubCommand implements ISubCommand {
 
     @Override
@@ -15,14 +17,23 @@ public class TodoCreateSubCommand implements ISubCommand {
             return;
         }
 
-        TodoList todoList = context.getData().getUsefulSettings().createTodoList(context.getArg(0), context.getMember().getIdLong());
+        // Warn if the original argument contains uppercase letters
+        boolean warnUppercase = !context.getArg(0).equals(context.getArg(0).toLowerCase());
+        String todoName = context.getArg(0).toLowerCase();
+        TodoList todoList = context.getData().getUsefulSettings().createTodoList(todoName, context.getMember().getIdLong());
 
         if (todoList == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.create.list_exists"));
             return;
         }
 
-        context.getTypedMessaging().replySuccess(context.i18n("commands.todo.create.created", context.getArg(0)));
+        String message = context.i18n("commands.todo.create.created", todoName);
+
+        if (warnUppercase) {
+            message += "\n\n" + context.i18n("commands.todo.create.warn_uppercase", todoName);
+        }
+
+        context.getTypedMessaging().replySuccess(message);
     }
 
     @Override
