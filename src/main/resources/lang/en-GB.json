@@ -256,7 +256,8 @@
         "command": "create",
         "description": "Creates a tag.",
         "tag_already_exists": "The tag `{0}` already exists!",
-        "successfully_created_tag": "Successfully created tag with name `{0}`."
+        "successfully_created_tag": "Successfully created tag with name `{0}`.",
+        "warn_uppercase": "|warning| The tag name has been converted to lowercase since tags are case insensitive!"
       },
       "delete": {
         "command": "delete",
