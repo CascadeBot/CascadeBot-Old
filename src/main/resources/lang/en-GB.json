@@ -258,7 +258,9 @@
       "create": {
         "command": "create",
         "description": "Creates a tag.",
-        "successfully_created_tag": "Successfully created tag with name `{0}`."
+        "tag_already_exists": "The tag `{0}` already exists!",
+        "successfully_created_tag": "Successfully created tag with name `{0}`.",
+        "warn_uppercase": "|warning| The tag name has been converted to lowercase since tags are case insensitive!"
       },
       "delete": {
         "command": "delete",
@@ -487,7 +489,8 @@
         "command": "create",
         "description": "Creates a todo list",
         "list_exists": "A todo list with that name already exists!",
-        "created": "Created todo list with name `{0}`"
+        "created": "Created todo list with name `{0}`",
+        "warn_uppercase": "|warning| The todo-list name has been converted to lowercase since todo-lists are case insensitive!"
       },
       "view": {
         "command": "view",
