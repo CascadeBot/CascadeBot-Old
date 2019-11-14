@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.objects.donation.AmountFlag;
 
 public class PrefixCommand implements ICommandCore {
 
@@ -32,7 +33,8 @@ public class PrefixCommand implements ICommandCore {
                 return;
             }
 
-            if (newPrefix.length() > 5) {
+            AmountFlag prefixFlag = (AmountFlag) context.getData().getGuildTier().getFlag("prefix_length");
+            if (newPrefix.length() > prefixFlag.getAmount()) {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.prefix.prefix_too_long"));
                 return;
             }

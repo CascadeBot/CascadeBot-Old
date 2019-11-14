@@ -7,6 +7,7 @@ package org.cascadebot.cascadebot.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -163,10 +164,15 @@ public class CascadePlayer {
         player.stopTrack();
     }
 
-    public void loadLink(String input, long requestUser, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
+    public void loadLink(String input, long requestUser, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks, boolean allServices) {
         MusicHandler.getPlayerManager().loadItem(input, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
+                if (!allServices) {
+                    if (!audioTrack.getSourceManager().getSourceName().equals(new YoutubeAudioSourceManager().getSourceName())) {
+                        noMatchConsumer.accept("Cannot load non-youtube tracks");
+                    }
+                }
                 audioTrack.setUserData(requestUser);
                 resultTracks.accept(Collections.singletonList(audioTrack));
             }
@@ -175,6 +181,12 @@ public class CascadePlayer {
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 List<AudioTrack> tracks = new ArrayList<>();
                 for (AudioTrack track : audioPlaylist.getTracks()) {
+                    if (!allServices) {
+                        if (!track.getSourceManager().getSourceName().equals(new YoutubeAudioSourceManager().getSourceName())) {
+                            noMatchConsumer.accept("Cannot load non-youtube tracks");
+                            break;
+                        }
+                    }
                     track.setUserData(requestUser);
                     tracks.add(track);
                 }
@@ -193,7 +205,7 @@ public class CascadePlayer {
         });
     }
 
-    public void loadPlaylist(String name, Member sender, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
+    public void loadPlaylist(String name, Member sender, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer, boolean allServices) {
         Playlist guild = PlaylistManager.getPlaylistByName(sender.getGuild().getIdLong(), PlaylistType.GUILD, name);
         Playlist user = PlaylistManager.getPlaylistByName(sender.getIdLong(), PlaylistType.USER, name);
         if (guild != null && user != null) {
@@ -201,17 +213,17 @@ public class CascadePlayer {
         } else if (guild != null) {
             loadLoadedPlaylist(guild, sender.getIdLong(), tracks -> {
                 consumer.accept(LoadPlaylistResult.LOADED_GUILD, tracks);
-            });
+            }, allServices);
         } else if (user != null) {
             loadLoadedPlaylist(user, sender.getIdLong(), tracks -> {
                 consumer.accept(LoadPlaylistResult.LOADED_USER, tracks);
-            });
+            }, allServices);
         } else {
             consumer.accept(LoadPlaylistResult.DOESNT_EXIST, null);
         }
     }
 
-    public void loadPlaylist(String name, Member sender, PlaylistType scope, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
+    public void loadPlaylist(String name, Member sender, PlaylistType scope, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer, boolean allServices) {
         LoadPlaylistResult result = LoadPlaylistResult.DOESNT_EXIST;
         long owner = 0;
         switch (scope) {
@@ -233,10 +245,10 @@ public class CascadePlayer {
         LoadPlaylistResult loadPlaylistResult = result;
         loadLoadedPlaylist(playlist, sender.getIdLong(), tracks -> {
             consumer.accept(loadPlaylistResult, tracks);
-        });
+        }, allServices);
     }
 
-    private void loadLoadedPlaylist(Playlist playlist, long reqUser, Consumer<List<AudioTrack>> loadedConsumer) {
+    private void loadLoadedPlaylist(Playlist playlist, long reqUser, Consumer<List<AudioTrack>> loadedConsumer, boolean allServices) {
         List<AudioTrack> tracks = new ArrayList<>();
         for (String url : playlist.getTracks()) {
             loadLink(url, reqUser, noMatch -> {
@@ -248,7 +260,7 @@ public class CascadePlayer {
                 if (tracks.size() == playlist.getTracks().size()) {
                     loadedConsumer.accept(tracks);
                 }
-            });
+            }, allServices);
         }
     }
 
