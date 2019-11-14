@@ -109,7 +109,7 @@
         "scope": "guild"
       },
       {
-        "name": "music_spotifty",
+        "name": "music_spotify",
         "scope": "user"
       },
       {
