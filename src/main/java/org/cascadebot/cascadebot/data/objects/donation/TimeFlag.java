@@ -8,6 +8,9 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 
 public class TimeFlag extends DataFlag {
 
+    @Getter
+    private long mills;
+
     private TimeFlag() {
         super();
     }
@@ -15,9 +18,6 @@ public class TimeFlag extends DataFlag {
     public TimeFlag(String id, FlagScope scope) {
         super(id, scope);
     }
-
-    @Getter
-    private long mills;
 
     @Override
     DataFlag parseFlagData(JsonObject flagDataObject) {

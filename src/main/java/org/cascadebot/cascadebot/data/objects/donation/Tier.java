@@ -12,9 +12,11 @@ import io.github.binaryoverload.JSONConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
+import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
+import org.cascadebot.cascadebot.utils.StringsUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -162,14 +164,11 @@ public class Tier {
     }
 
     public boolean isTierParent(String tier) {
-        if (this.parent == null) {
+        if (StringUtils.isBlank(this.parent)) {
             return false;
         }
         if (this.parent.equals(tier)) {
             return true;
-        }
-        if (this.parent.isEmpty()) {
-            return false;
         }
         return tiers.get(parent).isTierParent(tier);
     }
