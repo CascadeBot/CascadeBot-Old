@@ -115,7 +115,7 @@ public class CommandListener extends ListenerAdapter {
         CommandContext context = new CommandContext(cmd, event.getJDA(), event.getChannel(), event.getMessage(), event.getGuild(), guildData, args, event.getMember(), trigger, isMention);
         if (cmd != null) {
             if (cmd.getRequiredFlag() != null) {
-                if (guildData.getGuildTier().getFlag(cmd.getRequiredFlag()) == null) {
+                if (!guildData.getGuildTier().hasFlag(cmd.getRequiredFlag())) {
                     EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(org.cascadebot.cascadebot.messaging.MessageType.WARNING, event.getAuthor());
                     builder.appendDescription(Language.i18n(guildData.getLocale(), "command_meta.donate", guildData.getCoreSettings().getPrefix()));
                     event.getChannel().sendMessage(builder.build()).queue();
@@ -162,7 +162,7 @@ public class CommandListener extends ListenerAdapter {
                     return false;
                 }
                 if (subCommand.getRequiredFlag() != null) {
-                    if (parentCommandContext.getData().getGuildTier().getFlag(subCommand.getRequiredFlag()) == null) {
+                    if (!parentCommandContext.getData().getGuildTier().hasFlag(subCommand.getRequiredFlag())) {
                         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(org.cascadebot.cascadebot.messaging.MessageType.WARNING, parentCommandContext.getUser());
                         builder.appendDescription(Language.i18n(parentCommandContext.getData().getLocale(), "command_meta.donate", parentCommandContext.getData().getCoreSettings().getPrefix()));
                         parentCommandContext.getChannel().sendMessage(builder.build()).queue();

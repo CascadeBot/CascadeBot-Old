@@ -157,6 +157,10 @@ public class Tier {
         return return_flag;
     }
 
+    public boolean hasFlag(String id) {
+        return getFlag(id) != null;
+    }
+
     public boolean isTierParent(String tier) {
         if (this.parent == null) {
             return false;
