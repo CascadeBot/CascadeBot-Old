@@ -27,7 +27,6 @@ import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -60,7 +59,7 @@ public class GuildData {
     private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
     private GuildPermissions guildPermissions = new GuildPermissions();
     private GuildSettingsUseful usefulSettings = new GuildSettingsUseful();
-    private GuildModeration guildModeration = new GuildModeration();
+    private GuildSettingsModeration guildModeration = new GuildSettingsModeration();
 
     //endregion
 
@@ -208,15 +207,15 @@ public class GuildData {
             return "default";
         }
 
-        String highest_tier_name = "default";
+        String highestTierName = "default";
         for (long id : usersForTiers) {
             CascadeUser user = CascadeUserDataManager.getUser(id);
 
-            if (user.getTier().isTierParent(highest_tier_name)) {
-                highest_tier_name = user.getTierName();
+            if (user.getTier().isTierParent(highestTierName)) {
+                highestTierName = user.getTierName();
             }
         }
-        return highest_tier_name;
+        return highestTierName;
     }
 
     public void addUserForTiers(long userId) {

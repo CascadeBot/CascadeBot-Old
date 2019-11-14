@@ -150,11 +150,11 @@ public class Tier {
     }
 
     public Flag getFlag(String id) {
-        Flag return_flag = flags.stream().filter(flag -> flag.getId().equals(id)).findFirst().orElse(null);
-        if (parent != null && return_flag == null) {
-            return_flag = tiers.get(parent).getFlag(id);
+        Flag returnFlag = flags.stream().filter(flag -> flag.getId().equals(id)).findFirst().orElse(null);
+        if (parent != null && returnFlag == null) {
+            returnFlag = tiers.get(parent).getFlag(id);
         }
-        return return_flag;
+        return returnFlag;
     }
 
     public boolean hasFlag(String id) {

@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.data.objects.SettingsContainer;
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
-public class GuildModeration {
+public class GuildSettingsModeration {
 
     @Setting
     private boolean purgePinnedMessages = false;
