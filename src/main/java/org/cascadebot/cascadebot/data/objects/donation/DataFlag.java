@@ -15,8 +15,6 @@ public abstract class DataFlag extends Flag {
 
     abstract DataFlag parseFlagData(JsonObject flagDataObject);
 
-    abstract public String toString();
-
     abstract public String getDescription(Locale locale);
 
 }
