@@ -25,7 +25,7 @@ public class CascadeUserDataManager {
             .recordStats()
             .build(id -> {
                 CascadeUser user = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, CascadeUser.class).find(eq("_id", id)).first();
-                if(user == null) {
+                if (user == null) {
                     user = new CascadeUser(id);
                     insert(id, user);
                 }
