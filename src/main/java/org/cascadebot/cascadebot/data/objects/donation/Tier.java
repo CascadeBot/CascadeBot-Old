@@ -177,6 +177,7 @@ public class Tier {
      * Returns the benefits gave in this tier to a guild.
      *
      * @param locale The locale to use for translations
+     * @param idsUsed This parameter should be null. It's used for when calling parent method. It stores flags that have been used already.
      * @return The guild benefits gave in this tier
      */
     public String getGuildTierString(Locale locale, List<String> idsUsed) {
