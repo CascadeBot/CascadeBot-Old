@@ -171,6 +171,7 @@ public class CascadePlayer {
                 if (!allServices) {
                     if (!audioTrack.getSourceManager().getSourceName().equals(new YoutubeAudioSourceManager().getSourceName())) {
                         noMatchConsumer.accept("Cannot load non-youtube tracks");
+                        return;
                     }
                 }
                 audioTrack.setUserData(requestUser);
