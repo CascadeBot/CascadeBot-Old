@@ -222,8 +222,8 @@ public class GuildData {
         usersForTiers.add(userId);
     }
 
-    public void removeUserForTiers(long userID) {
-        usersForTiers.remove(userID);
+    public void removeUserForTiers(long userId) {
+        usersForTiers.remove(userId);
     }
 
 }

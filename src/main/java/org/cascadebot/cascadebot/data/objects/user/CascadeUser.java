@@ -18,11 +18,11 @@ public class CascadeUser {
     @Id
     private long userId;
 
+    private String tierName = "default";
+
     public CascadeUser(long id) {
         userId = id;
     }
-
-    private String tierName = "default";
 
     public Tier getTier() {
         return Tier.getTier(tierName);
