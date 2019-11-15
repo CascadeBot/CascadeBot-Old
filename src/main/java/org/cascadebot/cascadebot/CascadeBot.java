@@ -29,6 +29,7 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
+import org.cascadebot.cascadebot.data.managers.CascadeUserDataManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.donation.Tier;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
@@ -220,6 +221,7 @@ public class CascadeBot {
         moderationManager = new ModerationManager();
 
         Metrics.INS.cacheMetrics.addCache("guilds", GuildDataManager.getGuilds());
+        Metrics.INS.cacheMetrics.addCache("users", CascadeUserDataManager.getUsers());
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
