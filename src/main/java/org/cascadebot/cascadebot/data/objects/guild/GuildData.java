@@ -190,13 +190,13 @@ public class GuildData {
         }
 
         Tier highest = Tier.getTier("default");
-        String highest_tier_name = "default";
+        String highestTierName = "default";
         for (long id : usersForTiers) {
             CascadeUser user = CascadeUserDataManager.getUser(id);
 
-            if (user.getTier().isTierParent(highest_tier_name)) {
+            if (user.getTier().isTierParent(highestTierName)) {
                 highest = user.getTier();
-                highest_tier_name = user.getTierName();
+                highestTierName = user.getTierName();
             }
         }
         return highest;
