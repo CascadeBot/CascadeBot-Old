@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.objects.Setting;
 import org.cascadebot.cascadebot.data.objects.SettingsContainer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -47,12 +48,13 @@ public class SettingsCommand implements ICommandMain {
                 try {
                     Setting settingAnnotation = field.getAnnotation(Setting.class);
                     if (settingAnnotation != null) {
-                        /*if (!context.getData().getEnabledFlags().containsAll(Arrays.asList(settingAnnotation.flagRequired()))) {
-                            String niceName = Language.i18n(context.getGuild().getIdLong(), "settings." + field.getDeclaringClass().getAnnotation(SettingsContainer.class).module().name().toLowerCase() + "." + field.getName() + ".nice_name");
-                            context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_edit", niceName));
-                            return;
+                        for (String flag : settingAnnotation.flagsRequired()) {
+                            if (!context.getData().getGuildTier().hasFlag(flag)) {
+                                String niceName = Language.i18n(context.getGuild().getIdLong(), "settings." + field.getDeclaringClass().getAnnotation(SettingsContainer.class).module().name().toLowerCase() + "." + field.getName() + ".nice_name");
+                                context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_edit", niceName));
+                                return;
+                            }
                         }
-                         */
                     }
 
                     if (context.getArgs().length != 2) {
