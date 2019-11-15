@@ -117,6 +117,10 @@
         "scope": "guild"
       },
       {
+        "name": "music_stay",
+        "scope": "guild"
+      },
+      {
         "name": "custom_custom_backgrounds",
         "scope": "user"
       },

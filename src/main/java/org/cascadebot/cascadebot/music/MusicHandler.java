@@ -33,6 +33,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.jetbrains.annotations.NotNull;
@@ -111,9 +112,8 @@ public class MusicHandler {
     }
 
     public void purgeDisconnectedPlayers() {
-        // Removes all players that are not connected to a channel unless they have supported us on Patreon
         players.entrySet().removeIf(entry -> entry.getValue().getConnectedChannel() == null
-                //&& !GuildDataManager.getGuildData(entry.getKey()).isFlagEnabled(Flag.MUSIC_SERVICES)
+                && !GuildDataManager.getGuildData(entry.getKey()).getGuildTier().hasFlag("music_stay")
         );
     }
 
