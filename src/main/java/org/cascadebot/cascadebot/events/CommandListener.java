@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.MDCException;
@@ -114,7 +115,7 @@ public class CommandListener extends ListenerAdapter {
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         CommandContext context = new CommandContext(cmd, event.getJDA(), event.getChannel(), event.getMessage(), event.getGuild(), guildData, args, event.getMember(), trigger, isMention);
         if (cmd != null) {
-            if (cmd.getRequiredFlag() != null) {
+            if (!StringUtils.isBlank(cmd.getRequiredFlag())) {
                 if (!guildData.getGuildTier().hasFlag(cmd.getRequiredFlag())) {
                     EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(org.cascadebot.cascadebot.messaging.MessageType.WARNING, event.getAuthor());
                     builder.appendDescription(Language.i18n(guildData.getLocale(), "command_meta.donate", guildData.getCoreSettings().getPrefix()));
@@ -161,7 +162,7 @@ public class CommandListener extends ListenerAdapter {
                 if (!isAuthorised(cmd, subCommandContext)) {
                     return false;
                 }
-                if (subCommand.getRequiredFlag() != null) {
+                if (!StringUtils.isBlank(subCommand.getRequiredFlag())) {
                     if (!parentCommandContext.getData().getGuildTier().hasFlag(subCommand.getRequiredFlag())) {
                         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(org.cascadebot.cascadebot.messaging.MessageType.WARNING, parentCommandContext.getUser());
                         builder.appendDescription(Language.i18n(parentCommandContext.getData().getLocale(), "command_meta.donate", parentCommandContext.getData().getCoreSettings().getPrefix()));
