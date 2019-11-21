@@ -423,7 +423,8 @@
       "added_vote": "A skip vote is already running but don't worry! We added your vote automatically!",
       "skipped_user_queued": "Skipped currently playing song because you queued it.",
       "skipping": "Skipping song!",
-      "not_skipping": "Not skipping song!"
+      "not_skipping": "Not skipping song!",
+      "skip_vote_title": "Skip vote"
     },
     "stop": {
       "command": "stop",
