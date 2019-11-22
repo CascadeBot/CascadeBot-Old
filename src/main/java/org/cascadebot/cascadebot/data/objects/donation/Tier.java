@@ -209,18 +209,6 @@ public class Tier {
         return tierStringBuilder.toString();
     }
 
-    /*
-     * Get's this tiers text as it would appear on patreon, and other front end stuffs.
-     *
-     * @param locale he locale to use for translations
-     * @return This tiers text as it would appear on patreon, and other front end stuffs.
-     */
-    /*
-    public String toDonateString(Locale locale) {
-        return "";
-    }
-     */
-
     public static class TierExtra {
 
         @Getter
