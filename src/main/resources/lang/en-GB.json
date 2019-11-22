@@ -353,6 +353,7 @@
       "command": "seek",
       "description": "Seeks to a timestamp within a song.",
       "no_music_playing": "You are not listening to any music!",
+      "music_is_stream": "You can't seek on a livestream!",
       "negative_value": "You cannot seek to a negative value!",
       "duration_shorter": "The timestamp you are trying to seek to is longer than the song duration!",
       "bad_format": "Incorrect format.",
@@ -391,7 +392,7 @@
       "aliases": ["find"],
       "cannot_find_video": "Couldn't find video!",
       "error_loading_track": "Error loading track",
-      "multiple_results": "We found multiple results for this search!",
+      "found_result": "We found {0, plural, offset:1\n =0 {no results}\n =1 {one result}\n other {multiple results}} for this search!",
       "search_timed_out": "The search for `{0}` has timed out!"
     },
     "shuffle": {
@@ -420,7 +421,8 @@
       "added_vote": "A skip vote is already running but don't worry! We added your vote automatically!",
       "skipped_user_queued": "Skipped currently playing song because you queued it.",
       "skipping": "Skipping song!",
-      "not_skipping": "Not skipping song!"
+      "not_skipping": "Not skipping song!",
+      "skip_vote_title": "Skip vote"
     },
     "stop": {
       "command": "stop",
