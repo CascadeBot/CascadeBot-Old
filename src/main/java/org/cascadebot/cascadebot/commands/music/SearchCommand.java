@@ -38,7 +38,7 @@ public class SearchCommand implements ICommandMain {
         CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
 
             if (searchResults.size() == 0) {
-                context.getTypedMessaging().replyInfo(context.i18n("commands.search.no_results"));
+                context.getTypedMessaging().replyInfo(context.i18n("commands.search.found_result", searchResults.size()));
                 return;
             }
 
@@ -75,11 +75,7 @@ public class SearchCommand implements ICommandMain {
             }
 
             EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
-            if (searchResults.size() > 1) {
-                embedBuilder.setTitle(context.i18n("commands.search.multiple_results"));
-            } else if (searchResults.size() == 1) {
-                embedBuilder.setTitle(context.i18n("commands.search.single_result"));
-            }
+            embedBuilder.setTitle(context.i18n("commands.search.found_result", searchResults.size()));
             embedBuilder.setDescription(messageBuilder.toString());
 
             try {
