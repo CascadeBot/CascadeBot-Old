@@ -57,6 +57,7 @@ public class BanCommand implements ICommandMain {
                     context.getChannel(),
                     MessageType.DANGER,
                     context.i18n("commands.ban.forcefully_ban"),
+                    true,
                     new ConfirmUtils.ConfirmRunnable() {
                         @Override
                         public void execute() {

@@ -43,6 +43,7 @@ public class VolumeCommand implements ICommandMain {
                         context.i18n("commands.volume.extreme_volume"),
                         0,
                         TimeUnit.SECONDS.toMillis(30),
+                        true,
                         new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {

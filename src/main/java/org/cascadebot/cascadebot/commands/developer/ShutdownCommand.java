@@ -31,6 +31,7 @@ public class ShutdownCommand implements ICommandRestricted {
                         context.getChannel(),
                         MessageType.DANGER,
                         "It looks like the bot is running in ***production*** mode, **do you _really_ want to do this?** \n If so, simply repeat the command again. This confirmation will expire in one minute!",
+                        true,
                         new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
