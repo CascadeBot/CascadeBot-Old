@@ -34,7 +34,7 @@ public class CatCommand implements ICommandMain {
                 }
                 try {
                     if (message.getEmbeds().size() > 0) {
-                        EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+                        EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
                         embedBuilder.setImage(getCatUrl());
                         message.editMessage(embedBuilder.build()).queue();
                     } else {

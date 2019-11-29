@@ -1,4 +1,4 @@
-[![banner](https://user-images.githubusercontent.com/15330699/59555486-e9215980-8faa-11e9-95a2-cc2f1ec214a3.png)](https://cascadebot.org)
+[![banner](https://user-images.githubusercontent.com/47500195/69008142-9e668d80-090c-11ea-9913-42b62ed978db.png)](https://cascadebot.org)
 
 <p align="center">
     <a href="https://github.com/CascadeBot/CascadeBot/blob/dev/LICENSE"><img src="https://img.shields.io/github/license/cascadebot/cascadebot.svg?style=flat-square" alt="GitHub License"></a>

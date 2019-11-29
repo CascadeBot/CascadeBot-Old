@@ -19,8 +19,24 @@ public class TagCreateSubCommand implements ISubCommand {
             context.getUIMessaging().replyUsage();
             return;
         }
+
+        // Warn if the original argument contains uppercase letters
+        boolean warnUppercase = !context.getArg(0).equals(context.getArg(0).toLowerCase());
+        String tagName = context.getArg(0).toLowerCase();
+
+        if (context.getCoreSettings().hasTag(tagName)) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.create.tag_already_exists", tagName));
+            return;
+        }
+
+        String message = context.i18n("commands.tag.create.successfully_created_tag", tagName);
+
+        if (warnUppercase) {
+            message += "\n\n" + context.i18n("commands.tag.create.warn_uppercase");
+        }
+
         context.getCoreSettings().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));
-        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.create.successfully_created_tag" ,context.getArg(0)));
+        context.getTypedMessaging().replySuccess(message);
     }
 
     @Override

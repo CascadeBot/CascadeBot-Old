@@ -16,10 +16,11 @@ public class TodoRemoveUserSubCommand implements ISubCommand {
             return;
         }
 
-        TodoList todoList = context.getData().getUsefulSettings().getTodoList(context.getArg(0));
+        String todoName = context.getArg(0).toLowerCase();
+        TodoList todoList = context.getData().getUsefulSettings().getTodoList(todoName);
 
         if (todoList == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", context.getArg(0)));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", todoName));
             return;
         }
 
@@ -38,7 +39,7 @@ public class TodoRemoveUserSubCommand implements ISubCommand {
 
         todoList.removeEditUser(target);
 
-        context.getTypedMessaging().replySuccess(context.i18n("commands.todo.removeuser.removed", target.getUser().getAsTag(), context.getArg(0)));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.todo.removeuser.removed", target.getUser().getAsTag(), todoName));
 
     }
 

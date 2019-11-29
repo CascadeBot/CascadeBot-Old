@@ -96,6 +96,7 @@ public class FormatUtils {
 
     private static String getFooter(String footer, int padding, int... sizes) {
         StringBuilder sb = new StringBuilder();
+        footer = " " + footer;
         sb.append("|");
         int total = 0;
         for (int i = 0; i < sizes.length; i++) {
@@ -244,8 +245,8 @@ public class FormatUtils {
         Matcher matcher = UNICODE_REGEX.matcher(stringToFormat);
         String formatted = stringToFormat;
         while (matcher.find()) {
-            // If matching a normal @<emoji>@ otherwise it's a
-            // global emote @g:<emote>@
+            // If matching a normal |<emoji>| otherwise it's a
+            // global emote |g:<emote>|
             if (matcher.group(1) == null) {
                 Emoji emoji = EmojiManager.getForAlias(matcher.group(2).toLowerCase());
                 if (emoji != null) {
