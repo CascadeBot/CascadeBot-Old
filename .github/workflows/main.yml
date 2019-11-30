@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: CascadeBot/Changelog-Action@v1
+    - uses: CascadeBot/Changelog-Action@master
       with:
         discordPreviewWebhook: ${{ secrets.discordPreviewWebhook }}
         discordPublishWebhook: ${{ secrets.discordPublishWebhook }}
