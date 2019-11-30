@@ -1,0 +1,15 @@
+name: cascade-changelog
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: CascadeBot/Changelog-Action@v1
+      with:
+        discordPreviewWebhook: https://discordapp.com/api/webhooks/648657482763206656/Xj3WGIFPeZr_sYVghgmbjqlMv-_rsfXC0JKAELc9n1ZPvzdZFYtz1MpDnJ46DIkO3aeM
+        discordPublishWebhook: https://discordapp.com/api/webhooks/648657482763206656/Xj3WGIFPeZr_sYVghgmbjqlMv-_rsfXC0JKAELc9n1ZPvzdZFYtz1MpDnJ46DIkO3aeM
+        authorisedUsers: mrjvs,binaryoverload,weeryan17
