@@ -19,10 +19,12 @@ public class TagDeleteSubCommand implements ISubCommand {
             return;
         }
 
-        if (context.getCoreSettings().removeTag(context.getArg(0))) {
+        String tagName = context.getArg(0).toLowerCase();
+
+        if (context.getCoreSettings().removeTag(tagName)) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.tag.delete.successfully_deleted_tag"));
         } else {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", context.getArg(0)));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", tagName));
         }
     }
 

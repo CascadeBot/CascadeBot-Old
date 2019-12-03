@@ -6,12 +6,15 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.messaging.MessageType;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -91,9 +94,14 @@ public class SkipCommand implements ICommandMain {
         buttonGroupBuilder.setPeriodicConsumer((results, message) -> {
             StringBuilder resultsBuilder = new StringBuilder();
             for (VoteResult result : results) {
-                resultsBuilder.append(result.getVote()).append(" - ").append(result.getAmount()).append(' ');
+                resultsBuilder.append(result.getVote()).append(" (").append(result.getAmount()).append(")\n");
             }
-            message.editMessage("Skip Vote\n" + resultsBuilder.toString()).queue();
+            EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser())
+                    .setTitle(context.i18n("commands.skip.skip_vote_title"));
+            if (resultsBuilder.length() > 0) {
+                skipVoteEmbed.setDescription(resultsBuilder.toString());
+            }
+            message.editMessage(skipVoteEmbed.build()).queue();
         });
         buttonGroupBuilder.setVoteFinishConsumer(voteResults -> {
             if (voteResults.size() != 0 && voteResults.get(0).getVote().equals(UnicodeConstants.TICK)) {
@@ -112,7 +120,9 @@ public class SkipCommand implements ICommandMain {
             }
         }
         voteMap.put(context.getGuild().getIdLong(), buttonGroup);
-        context.getUIMessaging().sendButtonedMessage("Skip Vote", buttonGroup);
+        EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser())
+                .setTitle(context.i18n("commands.skip.skip_vote_title"));
+        context.getUIMessaging().sendButtonedMessage(skipVoteEmbed.build(), buttonGroup);
         buttonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
         for (Member member : context.getMusicPlayer().getConnectedChannel().getMembers()) {
             buttonGroup.allowUser(member.getIdLong());

@@ -16,6 +16,7 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 
@@ -49,14 +50,14 @@ public class QueueCommand implements ICommandMain {
             }
             builder.append("\n\n");
             if (i % 10 == 0) {
-                pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString())));
+                pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString() + context.i18n("commands.queue.queue_time", FormatUtils.formatLongTimeMills((long) player.getQueueLength())))));
                 builder = new StringBuilder();
             }
             i++;
         }
 
         if (builder.toString().length() > 0) {
-            pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString())));
+            pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString() + context.i18n("commands.queue.queue_time", FormatUtils.formatLongTimeMills((long) player.getQueueLength())))));
         }
 
         context.getUIMessaging().sendPagedMessage(pages);
