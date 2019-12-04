@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.utils.buttons;
 
+import de.bild.codec.annotations.Transient;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
@@ -21,13 +22,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ButtonGroup {
 
+    @Transient
     private List<Button> buttons = new ArrayList<>();
+
     private final long ownerId;
     private final long channelId;
     private final long guildId;
 
+    private ButtonGroup() {
+        this.ownerId = -1;
+        this.channelId = -1;
+        this.guildId = -1;
+    }
+
     private long messageId = 0;
 
+    @Transient
     private Runnable messageSentAction;
 
     public void addButton(Button button) {
@@ -84,7 +94,7 @@ public class ButtonGroup {
     }
 
     public void handleButton(Member clicker, TextChannel channel, Message buttonMessage, MessageReaction.ReactionEmote emote) {
-        for (Button button : buttons) {
+        for (Button button : this.getButtons()) {
             if (button instanceof Button.EmoteButton && emote.isEmote()) {
                 if (((Button.EmoteButton) button).getEmoteId() == emote.getEmote().getIdLong()) {
                     button.runnable.run(clicker, channel, buttonMessage);
@@ -100,8 +110,8 @@ public class ButtonGroup {
     }
 
     public void addButtonsToMessage(Message message) {
-        if (buttons == null) return;
-        for (Button button : buttons) {
+        if (this.getButtons() == null) return;
+        for (Button button : this.getButtons()) {
             button.addReaction(message);
         }
         setMessage(message.getIdLong());

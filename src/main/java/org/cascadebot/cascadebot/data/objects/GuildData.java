@@ -22,11 +22,13 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.PageCache;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -54,6 +56,9 @@ public class GuildData {
 
     private GuildSettingsCore coreSettings = new GuildSettingsCore(guildId);
     private GuildPermissions guildPermissions = new GuildPermissions();
+    private GuildSettingsUseful usefulSettings = new GuildSettingsUseful();
+    private GuildSettingsModeration guildModeration = new GuildSettingsModeration();
+
     /*
         Eventually these will be used but they're commented out for now
 
@@ -69,8 +74,9 @@ public class GuildData {
 
     @Transient
     private PageCache pageCache = new PageCache();
-
     //endregion
+
+    private HashMap<Long, HashMap<Long, PersistentButtonGroup>> persistentButtons = new HashMap<>();
 
     @PreSave
     public void preSave() {
@@ -166,7 +172,21 @@ public class GuildData {
 
     public void addButtonGroup(MessageChannel channel, Message message, ButtonGroup group) {
         group.setMessage(message.getIdLong());
-        buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
+
+        if (group instanceof PersistentButtonGroup) {
+            putPersistentButtonGroup(channel.getIdLong(), message.getIdLong(), (PersistentButtonGroup) group);
+        } else {
+            buttonsCache.put(channel.getIdLong(), message.getIdLong(), group);
+        }
+    }
+
+    private void putPersistentButtonGroup(Long channelId, Long messageId, PersistentButtonGroup buttonGroup) {
+        if (persistentButtons.containsKey(channelId) && persistentButtons.get(channelId) != null) {
+            persistentButtons.get(channelId).put(messageId, buttonGroup);
+        } else {
+            persistentButtons.put(channelId, new HashMap<>());
+            persistentButtons.get(channelId).put(messageId, buttonGroup);
+        }
     }
 
     public GuildPermissions getPermissions() {

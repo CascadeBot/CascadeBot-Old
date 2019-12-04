@@ -62,7 +62,7 @@ public class QueueSaveSubCommand implements ISubCommand {
                     }
                 }
                 ConfirmUtils.confirmAction(sender.getIdLong(), "overwrite", context.getChannel(), MessageType.WARNING,
-                        context.i18n("commands.save.already_exists"), TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(10), new ConfirmUtils.ConfirmRunnable() {
+                        context.i18n("commands.save.already_exists"), TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(10), true,  new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
                                 context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
@@ -89,12 +89,6 @@ public class QueueSaveSubCommand implements ISubCommand {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("queue.save", true);
-    }
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public String description() {
-        return null;
     }
 
 }

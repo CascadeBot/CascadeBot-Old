@@ -49,7 +49,14 @@ public class PermissionCommandUtils {
 
         EmbedBuilder groupsEmbed = new EmbedBuilder();
 
-        ButtonGroup buttonGroup = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
+        ButtonGroup firstPageButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
+
+        firstPageButtons.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, ((runner, channel, message) -> {
+            if (runner.getIdLong() != firstPageButtons.getOwner().getIdLong()) {
+                return;
+            }
+            message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+        })));
 
         // integer for creating buttons, and numbering the possible groups to select
         int i = 1;
@@ -106,28 +113,28 @@ public class PermissionCommandUtils {
                 groupEmbed.addField(context.i18n("words.linked_roles"), "```" + rolesBuilder.toString() + "```", false);
             }
 
-            ButtonGroup groupButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            groupButtons.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                if (runner.getIdLong() != groupButtons.getOwner().getIdLong()) {
+            ButtonGroup groupPageButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
+            groupPageButtons.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
+                if (runner.getIdLong() != groupPageButtons.getOwner().getIdLong()) {
                     return;
                 }
                 message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 groupConsumer.accept(group);
             }));
 
-            groupButtons.addButton(new Button.UnicodeButton(UnicodeConstants.LEFT_ARROW, (runner, channel, message) -> {
-                handleSwitchButtons(runner, message, groupsEmbed.build(), buttonGroup, context);
+            groupPageButtons.addButton(new Button.UnicodeButton(UnicodeConstants.LEFT_ARROW, (runner, channel, message) -> {
+                handleSwitchButtons(runner, message, groupsEmbed.build(), firstPageButtons, context);
             }));
 
-            buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
-                handleSwitchButtons(runner, message, groupEmbed.build(), groupButtons, context);
+            firstPageButtons.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
+                handleSwitchButtons(runner, message, groupEmbed.build(), groupPageButtons, context);
             }));
 
             i++;
         }
 
         groupsEmbed.setDescription(groupsBuilder.toString());
-        context.getUIMessaging().sendButtonedMessage(groupsEmbed.build(), buttonGroup);
+        context.getUIMessaging().sendButtonedMessage(groupsEmbed.build(), firstPageButtons);
     }
 
     private static void handleSwitchButtons(Member member, Message message, MessageEmbed embedToSwitchTo, ButtonGroup buttonsToSwitchTo, CommandContext context) {
