@@ -1064,9 +1064,10 @@
   "tiers": {
     "names": {
       "default": "Default",
-      "cheap": "To be decided",
-      "medium": "To be decided",
-      "hardcode": "To be decided"
+      "cheap": "Cheep",
+      "medium": "Medium",
+      "hardcode": "Hardcode",
+      "boost": "Guild booster"
     },
     "extra": {
       "supporter_role": "'Supporter' Role in discord",
@@ -1157,6 +1158,10 @@
     "hardcode_badge": {
       "name": "Hardcode supporter badge",
       "description": "A badge on your Cascade profile showing that you support Cascade."
+    },
+    "boost_badge": {
+      "name": "Guild booster badge",
+      "description": "A badge on your Cascade profile showing that you boosted the Cascade guild."
     }
   }
 }

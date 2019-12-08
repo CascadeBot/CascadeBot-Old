@@ -27,6 +27,19 @@
       }
     ]
   },
+  "boost": {
+    "flags": [
+      {
+        "name": "beta",
+        "scope": "guild"
+      },
+      {
+        "name": "boost_badge",
+        "scope": "user"
+      }
+    ],
+    "parent": "default"
+  },
   "cheap": {
     "extras": [
       {
