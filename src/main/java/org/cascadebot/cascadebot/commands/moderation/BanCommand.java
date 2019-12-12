@@ -38,7 +38,7 @@ public class BanCommand implements ICommandMain {
         if (targetMember == null) {
             // If the member is null, the user does not exist in the guild.
             // This attempts to retrieve the user from Discord.
-            targetUser = DiscordUtils.getUser(context.getGuild(), context.getMessage(0), true);
+            targetUser = DiscordUtils.getUser(context.getGuild(), context.getArg(0), true);
 
             if (targetUser == null) {
                 // We couldn't find user from a member or from discord so just end here
@@ -53,6 +53,7 @@ public class BanCommand implements ICommandMain {
                     context.getChannel(),
                     MessageType.DANGER,
                     context.i18n("commands.ban.forcefully_ban"),
+                    true,
                     new ConfirmUtils.ConfirmRunnable() {
                         @Override
                         public void execute() {

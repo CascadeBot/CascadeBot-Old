@@ -35,7 +35,7 @@ public class DogCommand implements ICommandMain {
             }
             try {
                 if (message.getEmbeds().size() > 0) {
-                    EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+                    EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
                     embedBuilder.setImage(getDogUrl());
                     message.editMessage(embedBuilder.build()).queue();
                 } else {

@@ -59,7 +59,7 @@ public class MessagingUI {
      */
     public CompletableFuture<Message> replyImage(String url) {
         if (context.getCoreSettings().isUseEmbedForMessages()) {
-            EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+            EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
             embedBuilder.setImage(url);
             return context.getChannel().sendMessage(embedBuilder.build()).submit();
         } else {

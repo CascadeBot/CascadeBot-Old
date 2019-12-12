@@ -5,6 +5,10 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
@@ -40,7 +44,7 @@ public class GroupPermissionListSubCommand implements ISubCommand {
         List<String> stringPages = PageUtils.splitString(stringBuilder.toString(), 1000, '\n');
         List<Page> pages = new ArrayList<>();
         for (String pageContent : stringPages) {
-            pages.add(new PageObjects.StringPage(pageContent));
+            pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(pageContent)));
         }
 
         context.getUIMessaging().sendPagedMessage(pages);

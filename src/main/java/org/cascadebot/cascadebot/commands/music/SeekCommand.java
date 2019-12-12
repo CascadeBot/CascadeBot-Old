@@ -27,16 +27,16 @@ public class SeekCommand implements ICommandMain {
             context.getTypedMessaging().replyDanger(context.i18n("commands.seek.no_music_playing"));
             return;
         }
+        if (context.getMusicPlayer().getPlayer().getPlayingTrack().getInfo().isStream) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.seek.music_is_stream"));
+            return;
+        }
 
 
-        if (context.isArgLong(0)) {
-            millis = context.getArgAsLong(0);
-        } else {
-            try {
-                millis = ParserUtils.parseTime(time, true);
-            } catch (IllegalArgumentException e) {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.seek.bad_format"));
-            }
+        try {
+            millis = ParserUtils.parseTime(time);
+        } catch (IllegalArgumentException e) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.seek.bad_format"));
         }
 
         if (millis < 0) {
