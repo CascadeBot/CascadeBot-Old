@@ -15,7 +15,7 @@ public class DonateCommand implements ICommandCore {
         builder.setTitle(context.i18n("commands.donate.embed_title"));
         builder.setDescription(context.i18n("commands.donate.embed_description"));
         builder.addField("Patreon", context.i18n("commands.donate.embed_patreon"), true);
-        builder.addField("PayPal", context.i18n("commands.donate.embed_paypal"), true);
+        //builder.addField("PayPal", context.i18n("commands.donate.embed_paypal"), true);
         builder.setFooter(context.i18n("commands.donate.embed_footer"), context.getSelfUser().getAvatarUrl());
         context.getTypedMessaging().replyInfo(builder);
     }
