@@ -364,6 +364,7 @@
       "description": "Displays the current queue.",
       "aliases": ["playlist"],
       "no_tracks_playing": "There are no tracks playing!",
+      "queue_time": "*There is `{0}` left in this queue*",
       "load": {
         "command": "load",
         "description": "Loads a playlist.",
