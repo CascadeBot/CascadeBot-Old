@@ -27,13 +27,16 @@ public class DonateCommand implements ICommandCore {
 
         pages.add(new PageObjects.EmbedPage(builder));
         for (Map.Entry<String, Tier> tier : Tier.getTiers().entrySet()) {
+            if (tier.getKey().equals("default") || tier.getKey().equals("nitro")) {
+                continue;
+            }
             String title = tier.getKey();
             pages.add(new PageObjects.EmbedPage(new EmbedBuilder()
                     .setDescription((tier.getValue().getGuildTierString(context.getLocale(), null)))
                     .setTitle(title.substring(0, 1).toUpperCase() + title.substring(1))
             ));
         }
-        
+
         context.getUIMessaging().sendPagedMessage(pages);
     }
 
