@@ -3,6 +3,15 @@
     "donate": "This command is a donator-only feature.\nPlease consider donating to Cascade over on [Patreon](https://www.patreon.com/cascadebot/).\nTo find out more run `{0}donate`."
   },
   "commands": {
+    "donate": {
+      "command": "donate",
+      "description": "Provides information for donating to Cascade.",
+      "embed_title": "Donate to Cascade!",
+      "embed_description": "Thanks for your interest in donating to Cascade! Us developers work hard to ensure that you receive the best content, however we could do with a coffee every once in a while! Please find information below for donating.",
+      "embed_patreon": "When donating via Patreon, you will automatically receive perks for your bot, including music services! Donating via Patreon is a monthly donation. You can find our Patreon page here: **https://www.patreon.com/cascadebot/creators**",
+      "embed_paypal": "If you don't feel like donating monthly to support the bot, you can always donate via PayPal. Although you won't automatically receive perks, you can join our Support Discord server with proof of donation, and we can certainly sort things out for you. Our PayPal email is: **cascadediscordbot@gmail.com**",
+      "embed_footer": "Thanks for your interest in donating!"
+    },
     "invite": {
       "command": "invite",
       "description": "Returns the bot invite link, to invite the bot to other Discord guilds."
