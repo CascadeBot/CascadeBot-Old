@@ -59,11 +59,6 @@
       "choice": {
         "command": "choice",
         "description": "Return a random word of your chosen list"
-      },
-      "joke": {
-        "command": "joke",
-        "description": "Returns a random joke.",
-        "error_loading": "Could not load joke!"
       }
     },
     "roles": {
@@ -74,6 +69,11 @@
       "header_name": "Role Name",
       "header_members": "No. Users",
       "header_color": "Colour"
+    },
+    "joke": {
+      "command": "joke",
+      "description": "Returns a random joke.",
+      "error_loading": "Could not load joke!"
     },
     "serverinfo": {
       "command": "serverinfo",

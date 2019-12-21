@@ -55,7 +55,7 @@ public class RandomCommand implements ICommandMain {
 
     @Override
     public Set<ISubCommand> getSubCommands() {
-        return Set.of(new RandomChoiceSubCommand(), new RandomColorSubCommand(), new RandomJokeSubCommand());
+        return Set.of(new RandomChoiceSubCommand(), new RandomColorSubCommand());
     }
 
 }
