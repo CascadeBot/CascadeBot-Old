@@ -59,6 +59,11 @@
       "choice": {
         "command": "choice",
         "description": "Return a random word of your chosen list"
+      },
+      "joke": {
+        "command": "joke",
+        "description": "Returns a random joke.",
+        "error_loading": "Could not load joke!"
       }
     },
     "roles": {

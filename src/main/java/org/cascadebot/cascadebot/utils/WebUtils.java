@@ -25,6 +25,7 @@ public class WebUtils {
         OkHttpClient client = CascadeBot.INS.getHttpClient();
         Request request = new Request.Builder()
                 .url(url)
+                .addHeader("Accept", "application/json")
                 .build();
 
         Response response = client.newCall(request).execute();
