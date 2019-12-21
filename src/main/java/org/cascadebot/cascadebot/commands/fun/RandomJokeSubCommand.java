@@ -1,12 +1,7 @@
 package org.cascadebot.cascadebot.commands.fun;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.entities.Member;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
