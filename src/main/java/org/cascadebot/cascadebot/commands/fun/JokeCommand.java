@@ -39,4 +39,5 @@ public class JokeCommand implements ICommandMain {
     public Module getModule() {
         return Module.FUN;
     }
+
 }
