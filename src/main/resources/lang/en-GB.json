@@ -73,7 +73,7 @@
     "joke": {
       "command": "joke",
       "description": "Returns a random joke.",
-      "error_loading": "Could not load joke!"
+      "error_loading": "We were not able to load a joke."
     },
     "serverinfo": {
       "command": "serverinfo",
