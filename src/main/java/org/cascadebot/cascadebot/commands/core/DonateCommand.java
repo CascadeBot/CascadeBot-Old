@@ -45,4 +45,5 @@ public class DonateCommand implements ICommandCore {
     public String command() {
         return "donate";
     }
+
 }
