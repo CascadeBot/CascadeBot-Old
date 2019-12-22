@@ -40,7 +40,7 @@ public class RandomUtils {
         return result.toString();
     }
 
-    public String randomJoke() throws IOException {
+    public String randomJoke() throws IOException, IllegalArgumentException {
         JsonElement jsonElement = WebUtils.getJsonFromURL("https://icanhazdadjoke.com/");
         return jsonElement.getAsJsonObject().get("joke").getAsString();
     }

@@ -20,7 +20,7 @@ public class JokeCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         try {
             context.getTypedMessaging().replyInfo(RandomUtils.randomJoke());
-        } catch (IOException e) {
+        } catch (IOException | IllegalArgumentException e) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.joke.error_loading"));
         }
     }
