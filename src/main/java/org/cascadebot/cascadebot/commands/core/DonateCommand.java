@@ -2,6 +2,7 @@ package org.cascadebot.cascadebot.commands.core;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.data.objects.donation.Tier;
@@ -33,7 +34,7 @@ public class DonateCommand implements ICommandCore {
             String title = tier.getKey();
             pages.add(new PageObjects.EmbedPage(new EmbedBuilder()
                     .setDescription((tier.getValue().getGuildTierString(context.getLocale(), null)))
-                    .setTitle(title.substring(0, 1).toUpperCase() + title.substring(1))
+                    .setTitle(StringUtils.capitalize(title))
             ));
         }
 
