@@ -70,6 +70,11 @@
       "header_members": "No. Users",
       "header_color": "Colour"
     },
+    "joke": {
+      "command": "joke",
+      "description": "Returns a random joke.",
+      "error_loading": "We were not able to load a joke."
+    },
     "serverinfo": {
       "command": "serverinfo",
       "description": "Returns information regarding the specified server.",
