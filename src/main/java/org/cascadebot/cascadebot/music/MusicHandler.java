@@ -82,7 +82,7 @@ public class MusicHandler {
 
         playerManager.registerSourceManager(new BeamAudioSourceManager());
         playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
-        playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
+        //playerManager.registerSourceManager(new SoundCloudAudioSourceManager());
         playerManager.registerSourceManager(new BandcampAudioSourceManager());
 
         if (Config.INS.getMusicNodes().size() > 0) {
