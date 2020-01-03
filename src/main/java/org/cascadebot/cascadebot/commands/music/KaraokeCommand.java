@@ -15,7 +15,7 @@ public class KaraokeCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         try {
-            KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayer().getPlayingTrack().getIdentifier(), context.getChannel());
+            KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong());
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
     }

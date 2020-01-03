@@ -1,16 +1,24 @@
 package org.cascadebot.cascadebot.music;
 
+
+
+import io.netty.util.AttributeMap;
 import net.dv8tion.jda.api.entities.TextChannel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -18,12 +26,13 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class KaraokeHandler {
 
-    public boolean karaokeStatus(long guildId) { return false; }
-
-    public static void getSongLyrics(String trackId, TextChannel channel) throws ParserConfigurationException {
+    public static void getSongLyrics(String trackId, TextChannel channel, Long guildId) throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -37,6 +46,7 @@ public class KaraokeHandler {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
+
                 if (response.body() == null) {
                     Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""));
                     return;
@@ -47,27 +57,44 @@ public class KaraokeHandler {
                     return;
                 }
 
+                String body = "";
                 try {
-                    if (response.body().string().equals("")) {
-                        Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""));
-                        return;
-                    }
+                    body = response.body().string();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
+                if (body.equals("")) {
+                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""));
+                    return;
+                }
+
                 try {
-                    String body = response.body().string();
                     Document doc = builder.parse(new StringInputStream(body));
                     NodeList texts = doc.getElementsByTagName("text");
-                    StringBuilder result = new StringBuilder();
+                    StringBuilder lyrics = new StringBuilder();
+                    Captions captions = new Captions();
                     for (int i = 0; i < texts.getLength(); i++) {
-                        result.append(texts.item(i).getNodeName()).append("\n");
+                        NamedNodeMap attrs = texts.item(i).getAttributes();
+                        Node dur = attrs.getNamedItem("dur");
+                        Node start = attrs.getNamedItem("start");
+
+                        if (dur != null && start != null) {
+                            captions.addCaption(StringEscapeUtils.unescapeHtml(texts.item(i).getTextContent()), Double.parseDouble(start.getNodeValue()), Double.parseDouble(dur.getNodeValue()));
+                        }
+
+//                        for (int j = 0; j < attrs.getLength(); j++) {
+//
+//                            lyrics.append("Name:").append(attrs.item(j).getNodeName()).append("\nValue: ").append(attrs.item(j).getNodeValue()).append("\n");
+//                        }
+//                        lyrics.append("\n");
                     }
-                    System.out.println(result.toString());
-                } catch (IOException | SAXException e) {
+                    System.out.println(captions.getCaptions(120).stream().collect(Collectors.joining("\n")));
+                } catch (IOException | SAXException | MDCException e) {
                     e.printStackTrace();
                 }
+
+                System.out.println("Position: " + (CascadeBot.INS.getMusicHandler().getPlayer(guildId).getPlayer().getPlayingTrack().getPosition() / 1000));
             }
         });
     }
