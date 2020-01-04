@@ -52,13 +52,13 @@ public class KaraokeHandler {
     }
 
     public static void getSongLyrics(String trackId, TextChannel channel, Long guildId, Message message) throws ParserConfigurationException {
-
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         Request request = new Request.Builder().url("https://video.google.com/timedtext?lang=en&v=" + trackId).build();
         CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {
+            
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Messaging.sendExceptionMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""), e);
