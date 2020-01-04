@@ -1,10 +1,17 @@
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.music.KaraokeHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -35,7 +42,8 @@ public class KaraokeCommand implements ICommandMain {
             Message message = Messaging.sendInfoMessage(context.getChannel(), context.i18n("commands.karaoke.loading_karaoke")).get();
             KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong(), message);
         } catch (InterruptedException | ExecutionException | ParserConfigurationException e) {
-            e.printStackTrace();
+            context.getTypedMessaging().replyDanger("commands.karaoke.cannot_find");
+            CascadeBot.LOGGER.error("Error in karaoke command", e);
         }
     }
 

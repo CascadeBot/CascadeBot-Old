@@ -366,7 +366,7 @@
     },
     "karaoke": {
       "command": "karaoke",
-      "description": "Sends lyrics to the currently playing song.",
+      "description": "Send the current song's lyrics to a channel.",
       "aliases": ["lyrics"],
       "cannot_find": "There are no lyrics available for this song!",
       "enabled_karaoke": "Successfully enabled karaoke!",

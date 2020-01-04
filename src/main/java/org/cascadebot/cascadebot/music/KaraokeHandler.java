@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2019 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
 package org.cascadebot.cascadebot.music;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -28,6 +33,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class KaraokeHandler {
 
@@ -58,12 +64,7 @@ public class KaraokeHandler {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
 
-                if (response.body() == null) {
-                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
-                    return;
-                }
-
-                if (response.code() != 200) {
+                if (response.body() == null || response.code() != 200) {
                     Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
                     return;
                 }
@@ -103,7 +104,8 @@ public class KaraokeHandler {
                         Thread.sleep(14000);
                     }
                 } catch (IOException | SAXException | MDCException | InterruptedException e) {
-                    e.printStackTrace();
+                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
+                    CascadeBot.LOGGER.error("Error in karaoke handler", e);
                 }
             }
         });
