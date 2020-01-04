@@ -103,9 +103,13 @@ public class KaraokeHandler {
 
                     while (isKaraoke(guildId)) {
                         List<String>caption = captions.getCaptions((CascadeBot.INS.getMusicHandler().getPlayer(guildId).getPlayer().getPlayingTrack().getPosition() / 1000D));
-                        EmbedBuilder embed = new EmbedBuilder()
-                                .setDescription(String.join("\n", caption))
-                                .setColor(MessageType.INFO.getColor());
+                        EmbedBuilder embed = new EmbedBuilder();
+                        embed.setColor(MessageType.INFO.getColor());
+                        if (!caption.isEmpty()) {
+                            embed.setDescription(String.join("\n", caption));
+                        } else {
+                            embed.setDescription(Language.i18n(guildId, "commands.karaoke.no_lyrics_atm"));
+                        }
                         message.editMessage(embed.build()).override(true).queue();
                         Thread.sleep(14000);
                     }

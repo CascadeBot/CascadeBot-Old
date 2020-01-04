@@ -40,7 +40,7 @@ public class KaraokeCommand implements ICommandMain {
         try {
             Message message = Messaging.sendInfoMessage(context.getChannel(), context.i18n("commands.karaoke.loading_karaoke")).get();
             KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong(), message);
-        } catch (InterruptedException | ExecutionException | ParserConfigurationException e) {
+        } catch (InterruptedException | ExecutionException e) {
             context.getTypedMessaging().replyDanger("commands.karaoke.cannot_find");
             CascadeBot.LOGGER.error("Error in karaoke command", e);
         }

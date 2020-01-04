@@ -372,7 +372,8 @@
       "enabled_karaoke": "Successfully enabled karaoke!",
       "disabled_karaoke": "Successfully disabled karaoke!",
       "loading_karaoke": "Loading karaoke...",
-      "nothing_playing": "There is no song playing, so karaoke cannot be enabled!"
+      "nothing_playing": "There is no song playing, so karaoke cannot be enabled!",
+      "no_lyrics_atm": "There are no lyrics available for this part of the song."
     },
     "queue": {
       "command": "queue",
