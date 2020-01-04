@@ -367,6 +367,7 @@
     "karaoke": {
       "command": "karaoke",
       "description": "Sends lyrics to the currently playing song.",
+      "aliases": ["lyrics"],
       "cannot_find": "There are no lyrics available for this song!",
       "enabled_karaoke": "Successfully enabled karaoke!",
       "disabled_karaoke": "Successfully disabled karaoke!",
