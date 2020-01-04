@@ -736,6 +736,10 @@
       "name": "stop",
       "label": "Stop command"
     },
+    "karaoke": {
+      "name": "karaoke",
+      "label": "Karaoke command"
+    },
     "seek": {
       "name": "seek",
       "label": "Seek command"
