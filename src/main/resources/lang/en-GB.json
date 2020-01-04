@@ -1079,10 +1079,11 @@
       "invalid_decimal": "Please provide a valid decimal value! 0-16777215",
       "invalid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
       "color_not_recognised": "Could not recognise colour from the given value!",
-      "embed_title": "Values for #{0}",
+      "embed_title": "Values for {0}",
       "rgb": "RGB",
       "decimal": "Decimal value",
-      "binary": "Binary value"
+      "binary": "Binary value",
+      "hex": "Hex"
     }
   }
 }

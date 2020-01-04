@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import org.cascadebot.cascadebot.CSSColor;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
@@ -29,6 +30,7 @@ public class ColorUtils {
     private static final Pattern RGB_COLOR = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
     private static final Pattern BINARY_COLOR = Pattern.compile("([0-1]+)");
 
+
     public String getHex(int r, int g, int b) {
         return String.format("%02x%02x%02x", r, g, b);
     }
@@ -37,7 +39,7 @@ public class ColorUtils {
 
         Matcher matcher;
 
-        Color color = getJavaColor(text);
+        Color color = getCssColor(text);
 
         if (color != null) {
             return color;
@@ -81,12 +83,12 @@ public class ColorUtils {
 
     public static MessageEmbed getColorEmbed(Color color, CommandContext context) {
         String rgbValues = color.getRed() + "," + color.getGreen() + "," + color.getBlue();
-        String hex = ColorUtils.getHex(color.getRed(), color.getGreen(), color.getBlue());
-        int decimalColor = Integer.parseUnsignedInt(hex, 16);
-
+        String hex = "#" + ColorUtils.getHex(color.getRed(), color.getGreen(), color.getBlue());
+        int decimalColor = color.getRGB();
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
-        builder.setTitle(context.i18n("utils.color.embed_title", hex));
+        builder.setTitle(context.i18n("utils.color.embed_title", CSSColor.getColorNameMap().getOrDefault(color, hex)));
         builder.setColor(color);
+        builder.addField(context.i18n("utils.color.hex"), hex, true);
         builder.addField(context.i18n("utils.color.rgb"), rgbValues, true); // RGB Values
         builder.addField(context.i18n("utils.color.decimal"), Integer.toUnsignedString(decimalColor), true); // Decimal Value
         builder.addField(context.i18n("utils.color.binary"), Integer.toBinaryString(decimalColor), true); // Binary Value
@@ -121,10 +123,10 @@ public class ColorUtils {
 
     }
 
-    public static Color getJavaColor(String name) {
+    public static Color getCssColor(String name) {
         try {
-            return (Color) Color.class.getField(name.toUpperCase()).get(null);
-        } catch (IllegalAccessException | NoSuchFieldException e) {
+            return CSSColor.valueOf(name.toUpperCase()).getColor();
+        } catch (IllegalArgumentException e) {
             return null;
         }
     }
