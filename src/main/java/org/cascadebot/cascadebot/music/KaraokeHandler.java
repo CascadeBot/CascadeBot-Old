@@ -102,7 +102,7 @@ public class KaraokeHandler {
                     }
 
                     while (isKaraoke(guildId)) {
-                        List<String>caption = captions.getCaptions((CascadeBot.INS.getMusicHandler().getPlayer(guildId).getPlayer().getPlayingTrack().getPosition() / 1000D));
+                        List<String> caption = captions.getCaptions((CascadeBot.INS.getMusicHandler().getPlayer(guildId).getPlayer().getPlayingTrack().getPosition() / 1000D));
                         EmbedBuilder embed = new EmbedBuilder();
                         embed.setColor(MessageType.INFO.getColor());
                         if (!caption.isEmpty()) {
