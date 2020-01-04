@@ -50,6 +50,7 @@ public class KaraokeHandler {
     }
 
     public static void getSongLyrics(String trackId, TextChannel channel, Long guildId, Message message) throws ParserConfigurationException {
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -63,7 +64,6 @@ public class KaraokeHandler {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
-
                 if (response.body() == null || response.code() != 200) {
                     Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
                     return;
