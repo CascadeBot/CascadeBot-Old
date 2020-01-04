@@ -34,31 +34,35 @@ import java.util.*;
 
 public class KaraokeHandler {
 
-    private static Set<Long> karaokeEnabled = new HashSet<>();
+    private static Set<Long> karaokeStatus = new HashSet<>();
 
     public static boolean isKaraoke(Long guildId) {
-        if (!karaokeEnabled.contains(guildId)) {
-            return false;
-        }
-        return karaokeEnabled.contains(guildId);
+        return karaokeStatus.contains(guildId);
     }
 
-    public static void setKaraoke(Long guildId, Boolean status) {
+    public static void setKaraoke(long guildId, boolean status) {
         if (status) {
-            karaokeEnabled.add(guildId);
+            karaokeStatus.add(guildId);
         } else {
-            karaokeEnabled.remove(guildId);
+            karaokeStatus.remove(guildId);
         }
     }
 
-    public static void getSongLyrics(String trackId, TextChannel channel, Long guildId, Message message) throws ParserConfigurationException {
+    public static void getSongLyrics(String trackId, TextChannel channel, Long guildId, Message message) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
-        DocumentBuilder builder = factory.newDocumentBuilder();
+        DocumentBuilder builder = null;
+        try {
+            builder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
+            CascadeBot.LOGGER.error("Error in karaoke handler", e);
+        }
         Request request = new Request.Builder().url("https://video.google.com/timedtext?lang=en&v=" + trackId).build();
+        DocumentBuilder finalBuilder = builder;
         CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {
-            
+
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Messaging.sendExceptionMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""), e);
@@ -71,7 +75,7 @@ public class KaraokeHandler {
                     return;
                 }
 
-                String body = "";
+                String body = null;
                 try {
                     body = response.body().string();
                 } catch (IOException e) {
@@ -84,7 +88,7 @@ public class KaraokeHandler {
                 }
 
                 try {
-                    Document doc = builder.parse(new StringInputStream(body));
+                    Document doc = finalBuilder.parse(new StringInputStream(body));
                     NodeList texts = doc.getElementsByTagName("text");
                     Captions captions = new Captions();
                     for (int i = 0; i < texts.getLength(); i++) {
@@ -110,6 +114,7 @@ public class KaraokeHandler {
                     CascadeBot.LOGGER.error("Error in karaoke handler", e);
                 }
             }
+
         });
     }
 
