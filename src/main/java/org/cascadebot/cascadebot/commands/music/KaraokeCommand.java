@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.music.KaraokeHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;

@@ -42,9 +42,8 @@ public class KaraokeHandler {
     public static boolean isKaraoke(Long guildId) {
         if (karaokeEnabled.get(guildId) == null) {
             return false;
-        } else {
-            return karaokeEnabled.get(guildId);
         }
+        return karaokeEnabled.get(guildId);
     }
 
     public static void setKaraoke(Long guildId, Boolean status) {
