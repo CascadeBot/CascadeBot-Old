@@ -30,24 +30,25 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class KaraokeHandler {
 
-    private static Map<Long, Boolean> karaokeEnabled = new HashMap<>();
+    private static Set<Long> karaokeEnabled = new HashSet<>();
 
     public static boolean isKaraoke(Long guildId) {
-        if (karaokeEnabled.get(guildId) == null) {
+        if (!karaokeEnabled.contains(guildId)) {
             return false;
         }
-        return karaokeEnabled.get(guildId);
+        return karaokeEnabled.contains(guildId);
     }
 
     public static void setKaraoke(Long guildId, Boolean status) {
-        karaokeEnabled.put(guildId, status);
+        if (status) {
+            karaokeEnabled.add(guildId);
+        } else {
+            karaokeEnabled.remove(guildId);
+        }
     }
 
     public static void getSongLyrics(String trackId, TextChannel channel, Long guildId, Message message) throws ParserConfigurationException {
