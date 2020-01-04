@@ -12,8 +12,8 @@ import org.apache.tools.ant.filters.StringInputStream;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
-import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -43,15 +43,7 @@ public class KaraokeHandler {
         karaokeEnabled.put(guildId, status);
     }
 
-//    public static void enableKaraoke(Long guildId) {
-//        karaokeEnabled.put(guildId, true);
-//    }
-//
-//    public static void disableKaraoke(Long guildId) {
-//        karaokeEnabled.put(guildId, false);
-//    }
-
-    public static void getSongLyrics(String trackId, TextChannel channel, Long guildId, Long messageId) throws ParserConfigurationException {
+    public static void getSongLyrics(String trackId, TextChannel channel, Long guildId, Message message) throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -104,11 +96,12 @@ public class KaraokeHandler {
 
                     while (isKaraoke(guildId)) {
                         List<String>caption = captions.getCaptions((CascadeBot.INS.getMusicHandler().getPlayer(guildId).getPlayer().getPlayingTrack().getPosition() / 1000D));
-                        Message message = channel.retrieveMessageById(messageId).complete();
-                        message.editMessage(String.join("\n", caption)).queue();
-                        Thread.sleep(13000);
+                        EmbedBuilder embed = new EmbedBuilder()
+                                .setDescription(String.join("\n", caption))
+                                .setColor(MessageType.INFO.getColor());
+                        message.editMessage(embed.build()).override(true).queue();
+                        Thread.sleep(14000);
                     }
-
                 } catch (IOException | SAXException | MDCException | InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -1,14 +1,16 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.api.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
+import net.dv8tion.jda.api.entities.Message;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.music.KaraokeHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import javax.xml.parsers.ParserConfigurationException;
+import java.util.concurrent.ExecutionException;
 
 
 public class KaraokeCommand implements ICommandMain {
@@ -17,24 +19,22 @@ public class KaraokeCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getMusicPlayer().getPlayer().getPlayingTrack() == null) {
             KaraokeHandler.setKaraoke(context.getGuild().getIdLong(), false);
-            context.getTypedMessaging().replyDanger("nothing playing so i dont wanna turn on karaoke");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.karaoke.nothing_playing"));
             return;
         }
 
         if (KaraokeHandler.isKaraoke(context.getGuild().getIdLong())) {
             KaraokeHandler.setKaraoke(context.getGuild().getIdLong(), false);
-            context.getTypedMessaging().replySuccess("Karaoke disabled thx for using cascade xo");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.disabled_karaoke"));
+            return;
         } else {
             KaraokeHandler.setKaraoke(context.getGuild().getIdLong(), true);
-            context.getTypedMessaging().replySuccess("enabled");
+            context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.enabled_karaoke"));
         }
-
         try {
-            context.getTypedMessaging().replyInfo("Loading lyrics...");
-            System.out.println(context.getMessage().getId());
-            context.getChannel().getLatestMessageId();
-            KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong(), context.getMessage().getIdLong());
-        } catch (ParserConfigurationException e) {
+            Message message = Messaging.sendInfoMessage(context.getChannel(), context.i18n("commands.karaoke.loading_karaoke")).get();
+            KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong(), message);
+        } catch (InterruptedException | ExecutionException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
@@ -51,6 +51,6 @@ public class KaraokeCommand implements ICommandMain {
 
     @Override
     public CascadePermission getPermission() {
-        return null;
+        return CascadePermission.of("karaoke", true);
     }
 }

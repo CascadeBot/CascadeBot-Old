@@ -367,7 +367,11 @@
     "karaoke": {
       "command": "karaoke",
       "description": "Sends lyrics to the currently playing song.",
-      "cannot_find": "There are no lyrics available for this song!"
+      "cannot_find": "There are no lyrics available for this song!",
+      "enabled_karaoke": "Successfully enabled karaoke!",
+      "disabled_karaoke": "Successfully disabled karaoke!",
+      "loading_karaoke": "Loading karaoke...",
+      "nothing_playing": "There is no song playing, so karaoke cannot be enabled!"
     },
     "queue": {
       "command": "queue",
