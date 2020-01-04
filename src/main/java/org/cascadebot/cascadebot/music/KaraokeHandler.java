@@ -1,20 +1,19 @@
 package org.cascadebot.cascadebot.music;
 
-
-
-import io.netty.util.AttributeMap;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.Messaging;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -26,13 +25,33 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class KaraokeHandler {
 
-    public static void getSongLyrics(String trackId, TextChannel channel, Long guildId) throws ParserConfigurationException {
+    private static Map<Long, Boolean> karaokeEnabled = new HashMap<>();
+
+    public static boolean isKaraoke(Long guildId) {
+        if (karaokeEnabled.get(guildId) == null) {
+            return false;
+        } else { return karaokeEnabled.get(guildId); }
+    }
+
+    public static void setKaraoke(Long guildId, Boolean status) {
+        karaokeEnabled.put(guildId, status);
+    }
+
+//    public static void enableKaraoke(Long guildId) {
+//        karaokeEnabled.put(guildId, true);
+//    }
+//
+//    public static void disableKaraoke(Long guildId) {
+//        karaokeEnabled.put(guildId, false);
+//    }
+
+    public static void getSongLyrics(String trackId, TextChannel channel, Long guildId, Long messageId) throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -48,12 +67,12 @@ public class KaraokeHandler {
             public void onResponse(@NotNull Call call, @NotNull Response response) {
 
                 if (response.body() == null) {
-                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""));
+                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
                     return;
                 }
 
                 if (response.code() != 200) {
-                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""));
+                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
                     return;
                 }
 
@@ -65,14 +84,13 @@ public class KaraokeHandler {
                 }
 
                 if (body.equals("")) {
-                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""));
+                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
                     return;
                 }
 
                 try {
                     Document doc = builder.parse(new StringInputStream(body));
                     NodeList texts = doc.getElementsByTagName("text");
-                    StringBuilder lyrics = new StringBuilder();
                     Captions captions = new Captions();
                     for (int i = 0; i < texts.getLength(); i++) {
                         NamedNodeMap attrs = texts.item(i).getAttributes();
@@ -82,19 +100,18 @@ public class KaraokeHandler {
                         if (dur != null && start != null) {
                             captions.addCaption(StringEscapeUtils.unescapeHtml(texts.item(i).getTextContent()), Double.parseDouble(start.getNodeValue()), Double.parseDouble(dur.getNodeValue()));
                         }
-
-//                        for (int j = 0; j < attrs.getLength(); j++) {
-//
-//                            lyrics.append("Name:").append(attrs.item(j).getNodeName()).append("\nValue: ").append(attrs.item(j).getNodeValue()).append("\n");
-//                        }
-//                        lyrics.append("\n");
                     }
-                    System.out.println(captions.getCaptions(120).stream().collect(Collectors.joining("\n")));
-                } catch (IOException | SAXException | MDCException e) {
+
+                    while (isKaraoke(guildId)) {
+                        List<String>caption = captions.getCaptions((CascadeBot.INS.getMusicHandler().getPlayer(guildId).getPlayer().getPlayingTrack().getPosition() / 1000D));
+                        Message message = channel.retrieveMessageById(messageId).complete();
+                        message.editMessage(String.join("\n", caption)).queue();
+                        Thread.sleep(13000);
+                    }
+
+                } catch (IOException | SAXException | MDCException | InterruptedException e) {
                     e.printStackTrace();
                 }
-
-                System.out.println("Position: " + (CascadeBot.INS.getMusicHandler().getPlayer(guildId).getPlayer().getPlayingTrack().getPosition() / 1000));
             }
         });
     }

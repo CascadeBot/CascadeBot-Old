@@ -364,6 +364,11 @@
       "bad_format": "Incorrect format.",
       "success": "Successfully seeked to {0}"
     },
+    "karaoke": {
+      "command": "karaoke",
+      "description": "Sends lyrics to the currently playing song.",
+      "cannot_find": "There are no lyrics available for this song!"
+    },
     "queue": {
       "command": "queue",
       "description": "Displays the current queue.",

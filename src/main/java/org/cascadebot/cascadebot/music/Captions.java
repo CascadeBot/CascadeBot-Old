@@ -20,7 +20,7 @@ public class Captions {
     public List<String> getCaptions(double position) {
         List<String> captions = new ArrayList<>();
         for (Caption caption : captionSet) {
-            if (caption.start >= position && (caption.start + caption.duration) <= (position + CAPTION_RANGE)) {
+            if (caption.start >= position && (caption.start + caption.duration) < (position + CAPTION_RANGE)) {
                 captions.add(caption.text);
             }
         }
