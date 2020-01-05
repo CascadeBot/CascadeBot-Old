@@ -6,13 +6,13 @@
 
     <groupId>org.cascadebot</groupId>
     <artifactId>cascadebot</artifactId>
-    <version>0.1.5</version>
+    <version>0.1.7</version>
 
     <properties>
         <build.number>DEV</build.number>
         <jda.version>4.0.0_39</jda.version>
-        <lavaplayer.version>1.3.22</lavaplayer.version>
-        <lavalink.client.version>4.0</lavalink.client.version>
+        <lavaplayer.version>1.3.32</lavaplayer.version>
+        <lavalink.client.version>f9ab37f</lavalink.client.version>
     </properties>
 
     <build>

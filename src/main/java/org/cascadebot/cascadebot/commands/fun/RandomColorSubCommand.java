@@ -18,7 +18,7 @@ public class RandomColorSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.reply(ColorUtils.getColor(RandomUtils.randomColor(), context));
+        context.reply(ColorUtils.getColorEmbed(RandomUtils.randomColor(), context));
     }
 
     @Override

@@ -6,6 +6,7 @@
 
 package org.cascadebot.cascadebot.utils;
  
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +33,8 @@ public class RandomUtils {
         return (choices[random.nextInt(choices.length)]);
     }
 
-    public static String randomColor() {
-        StringBuilder result = new StringBuilder("#");
-        for (int i = 0; i < 6; i++) {
-            result.append(randomChoice(characters));
-        }
-        return result.toString();
+    public static Color randomColor() {
+        return Color.getHSBColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
     }
 
     public String randomJoke() throws IOException, IllegalArgumentException {

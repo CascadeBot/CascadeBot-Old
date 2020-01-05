@@ -79,10 +79,10 @@ public class CascadePlayer {
     }
 
     public String getArtwork() {
-        if (player.getPlayingTrack().getInfo().uri.contains("youtube")) {
+        if (player.getPlayingTrack().getSourceManager().getSourceName().equals(CascadeBot.INS.getMusicHandler().getYoutubeSourceName())) {
             return "https://img.youtube.com/vi/" + player.getPlayingTrack().getIdentifier() + "/hqdefault.jpg";
         }
-        if (player.getPlayingTrack().getInfo().uri.contains("twitch")) {
+        if (player.getPlayingTrack().getSourceManager().getSourceName().equals(CascadeBot.INS.getMusicHandler().getTwitchSourceName())) {
             String[] split = player.getPlayingTrack().getInfo().identifier.split("/");
             return "https://static-cdn.jtvnw.net/previews-ttv/live_user_" + split[split.length - 1] + "-500x400.jpg";
         }
