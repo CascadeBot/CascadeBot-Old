@@ -166,7 +166,6 @@ public enum CSSColor {
 
     static {
         for (CSSColor value : CSSColor.values()) {
-            // TODO: i18n this when I can be bothered
             colorNameMap.put(value.color, value.name().toLowerCase());
         }
     }
