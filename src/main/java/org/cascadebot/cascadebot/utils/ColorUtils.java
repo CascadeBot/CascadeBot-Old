@@ -86,7 +86,7 @@ public class ColorUtils {
         String hex = "#" + ColorUtils.getHex(color.getRed(), color.getGreen(), color.getBlue());
         int decimalColor = color.getRGB();
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
-        builder.setTitle(context.i18n("utils.color.embed_title", CSSColor.getColorNameMap().getOrDefault(color, hex)));
+        builder.setTitle(context.i18n("utils.color.embed_title", CSSColor.getLocalNameOrDefault(context.getLocale(), color, hex)));
         builder.setColor(color);
         builder.addField(context.i18n("utils.color.hex"), hex, true);
         builder.addField(context.i18n("utils.color.rgb"), rgbValues, true); // RGB Values

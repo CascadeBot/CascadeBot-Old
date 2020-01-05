@@ -2,7 +2,8 @@ package org.cascadebot.cascadebot;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -166,11 +167,18 @@ public enum CSSColor {
     static {
         for (CSSColor value : CSSColor.values()) {
             // TODO: i18n this when I can be bothered
-            colorNameMap.put(value.color, StringUtils.capitalize(value.name().toLowerCase()));
+            colorNameMap.put(value.color, value.name().toLowerCase());
         }
     }
 
     private Color color;
+
+    public static String getLocalNameOrDefault(Locale locale, Color color, String defaultName) {
+        if (!colorNameMap.containsKey(color)) {
+            return defaultName;
+        }
+        return Language.i18n(locale, "utils.color.colors." + colorNameMap.get(color));
+    }
 
     public static Map<Color, String> getColorNameMap() {
         return colorNameMap;
