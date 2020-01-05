@@ -19,6 +19,7 @@ import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
+import org.cascadebot.cascadebot.tasks.Task;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -34,21 +35,19 @@ import java.util.*;
 
 public class KaraokeHandler {
 
+    public static int CAPTION_BUFFER_TIME = 15;
+
     private static Set<Long> karaokeStatus = new HashSet<>();
 
-    public static boolean isKaraoke(Long guildId) {
-        return karaokeStatus.contains(guildId);
+    public static boolean isKaraoke(long guildId) {
+        return Task.getTasks().containsKey("captions-" + guildId);
     }
 
-    public static void setKaraoke(long guildId, boolean status) {
-        if (status) {
-            karaokeStatus.add(guildId);
-        } else {
-            karaokeStatus.remove(guildId);
-        }
+    public static void disableKaraoke(long guildId) {
+        Task.cancelTask("captions-" + guildId);
     }
 
-    public static void getSongLyrics(String trackId, TextChannel channel, Long guildId, Message message) {
+    public static void getSongLyrics(String trackId, TextChannel channel, long guildId, Message message) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -61,6 +60,7 @@ public class KaraokeHandler {
         }
         Request request = new Request.Builder().url("https://video.google.com/timedtext?lang=en&v=" + trackId).build();
         DocumentBuilder finalBuilder = builder;
+
         CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {
 
             @Override
@@ -101,19 +101,9 @@ public class KaraokeHandler {
                         }
                     }
 
-                    while (isKaraoke(guildId)) {
-                        List<String> caption = captions.getCaptions((CascadeBot.INS.getMusicHandler().getPlayer(guildId).getPlayer().getPlayingTrack().getPosition() / 1000D));
-                        EmbedBuilder embed = new EmbedBuilder();
-                        embed.setColor(MessageType.INFO.getColor());
-                        if (!caption.isEmpty()) {
-                            embed.setDescription(String.join("\n", caption));
-                        } else {
-                            embed.setDescription(Language.i18n(guildId, "commands.karaoke.no_lyrics_atm"));
-                        }
-                        message.editMessage(embed.build()).override(true).queue();
-                        Thread.sleep(14000);
-                    }
-                } catch (IOException | SAXException | MDCException | InterruptedException e) {
+                    new CaptionsTask(guildId, channel.getIdLong(), message.getIdLong(), captions).start(0, CAPTION_BUFFER_TIME * 1000);
+
+                } catch (IOException | SAXException | MDCException e) {
                     Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
                     CascadeBot.LOGGER.error("Error in karaoke handler", e);
                 }

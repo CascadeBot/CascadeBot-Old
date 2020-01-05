@@ -13,6 +13,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.music.KaraokeHandler;
+import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,17 +24,25 @@ public class KaraokeCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getMusicPlayer().getPlayer().getPlayingTrack() == null) {
-            KaraokeHandler.setKaraoke(context.getGuild().getIdLong(), false);
+            KaraokeHandler.disableKaraoke(context.getGuild().getIdLong());
             context.getTypedMessaging().replyDanger(context.i18n("commands.karaoke.nothing_playing"));
             return;
         }
 
+        if (!context.getMusicPlayer()
+                   .getPlayer()
+                   .getPlayingTrack()
+                   .getSourceManager()
+                   .getSourceName()
+                   .equals(CascadeBot.INS.getMusicHandler().getYoutubeSourceName())) {
+            // TODO: sned angri msg to usr abot not beeing yt
+        }
+
         if (KaraokeHandler.isKaraoke(context.getGuild().getIdLong())) {
-            KaraokeHandler.setKaraoke(context.getGuild().getIdLong(), false);
+            KaraokeHandler.disableKaraoke(context.getGuild().getIdLong());
             context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.disabled_karaoke"));
             return;
         } else {
-            KaraokeHandler.setKaraoke(context.getGuild().getIdLong(), true);
             context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.enabled_karaoke"));
         }
         try {
