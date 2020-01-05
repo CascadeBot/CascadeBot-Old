@@ -18,7 +18,6 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import javax.xml.parsers.ParserConfigurationException;
 import java.util.concurrent.ExecutionException;
 
-
 public class KaraokeCommand implements ICommandMain {
 
     @Override
