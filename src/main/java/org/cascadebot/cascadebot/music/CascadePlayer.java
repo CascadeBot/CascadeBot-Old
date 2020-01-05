@@ -169,7 +169,7 @@ public class CascadePlayer {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
                 if (!allServices) {
-                    if (!audioTrack.getSourceManager().getSourceName().equals(new YoutubeAudioSourceManager().getSourceName())) {
+                    if (!audioTrack.getSourceManager().getSourceName().equals(CascadeBot.INS.getMusicHandler().getYoutubeSourceName())) {
                         noMatchConsumer.accept("Cannot load non-youtube tracks");
                         return;
                     }
@@ -183,7 +183,7 @@ public class CascadePlayer {
                 List<AudioTrack> tracks = new ArrayList<>();
                 for (AudioTrack track : audioPlaylist.getTracks()) {
                     if (!allServices) {
-                        if (!track.getSourceManager().getSourceName().equals(new YoutubeAudioSourceManager().getSourceName())) {
+                        if (!track.getSourceManager().getSourceName().equals(CascadeBot.INS.getMusicHandler().getYoutubeSourceName())) {
                             noMatchConsumer.accept("Cannot load non-youtube tracks");
                             break;
                         }
