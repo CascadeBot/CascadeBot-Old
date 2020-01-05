@@ -6,6 +6,7 @@
 
 package org.cascadebot.cascadebot.utils;
 
+import io.github.binaryoverload.JSONConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -17,8 +18,12 @@ import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,7 +44,8 @@ public class ColorUtils {
 
         Matcher matcher;
 
-        Color color = getCssColor(text);
+        String name = getColorNameFromLocale(context.getLocale(), text);
+        Color color = getCssColor(name);
 
         if (color != null) {
             return color;
@@ -121,6 +127,35 @@ public class ColorUtils {
             RGB, BINARY, HEX, DECIMAL, UNRECOGNISED
         }
 
+    }
+
+    // Gets a color name based on current locale, if not found return original input
+    // This method needs a serious overhaul since I don't know how JSONConfig works...
+    private static String getColorNameFromLocale(Locale locale, String name) {
+        // Get language config
+        JSONConfig lang = Language.getLanguage(locale);
+        // Get sub config that defines the colors
+        Optional<JSONConfig> sub = lang.getSubConfig("utils.color.colors");
+        // If the sub config is not present return the name
+        if (!sub.isPresent()) {
+            return name;
+        }
+
+        // Get the sub config
+        JSONConfig colorsLangConfig = sub.get();
+        // Get all the values from the sub config
+        Map<String, Object> colors = colorsLangConfig.getValues(false);
+
+        // Loop over all values
+        for (Map.Entry<String, Object> color : colors.entrySet()) {
+            // Check if the value (color translation) is equal to the name provided
+            // Add double quotes to the name because something (valueof, jsonconfig) adds them
+            if (String.valueOf(color.getValue()).equalsIgnoreCase("\"" + name + "\"")) {
+                return color.getKey();
+            }
+        }
+        // Return input when nothing has been found
+        return name;
     }
 
     public static Color getCssColor(String name) {
