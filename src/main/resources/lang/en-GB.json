@@ -82,6 +82,11 @@
       "header_members": "No. Users",
       "header_color": "Colour"
     },
+    "joke": {
+      "command": "joke",
+      "description": "Returns a random joke.",
+      "error_loading": "We were not able to load a joke."
+    },
     "serverinfo": {
       "command": "serverinfo",
       "description": "Returns information regarding the specified server.",
@@ -1094,16 +1099,17 @@
       "no_permissions": "No permissions!",
       "no_linked_roles": "No linked roles!"
     },
-    "color_command": {
-      "valid_rgb": "RGB values should be between 0 and 255!",
-      "valid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
-      "valid_decimal": "Please provide a valid decimal value! 0-16777215",
-      "valid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
+    "color": {
+      "invalid_rgb": "RGB values should be between 0 and 255!",
+      "invalid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
+      "invalid_decimal": "Please provide a valid decimal value! 0-16777215",
+      "invalid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
       "color_not_recognised": "Could not recognise colour from the given value!",
-      "embed_title": "Values for #{0}",
+      "embed_title": "Values for {0}",
       "rgb": "RGB",
       "decimal": "Decimal value",
-      "binary": "Binary value"
+      "binary": "Binary value",
+      "hex": "Hex"
     }
   },
   "flags": {
