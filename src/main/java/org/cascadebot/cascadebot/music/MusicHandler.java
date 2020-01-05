@@ -61,6 +61,11 @@ public class MusicHandler {
     private CascadeBot instance;
 
     @Getter
+    private String youtubeSourceName;
+    @Getter
+    private String twitchSourceName;
+
+    @Getter
     private static Map<Long, CascadePlayer> players = new HashMap<>();
 
     public MusicHandler(CascadeBot instance) {
@@ -77,11 +82,16 @@ public class MusicHandler {
 
         YoutubeAudioSourceManager youtubeAudioSourceManager = new YoutubeAudioSourceManager(false);
         youtubeAudioSourceManager.configureRequests(config -> RequestConfig.copy(config).setCookieSpec(CookieSpecs.IGNORE_COOKIES).setConnectTimeout(5000).build());
+        youtubeSourceName = youtubeAudioSourceManager.getSourceName();
 
         playerManager.registerSourceManager(youtubeAudioSourceManager);
 
+        TwitchStreamAudioSourceManager twitchAudioManager = new TwitchStreamAudioSourceManager();
+        twitchSourceName = twitchAudioManager.getSourceName();
+
+        playerManager.registerSourceManager(twitchAudioManager);
+
         playerManager.registerSourceManager(new BeamAudioSourceManager());
-        playerManager.registerSourceManager(new TwitchStreamAudioSourceManager());
         playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault());
         playerManager.registerSourceManager(new BandcampAudioSourceManager());
 
