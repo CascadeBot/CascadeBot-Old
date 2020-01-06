@@ -40,7 +40,7 @@ public class CascadeLavalinkPlayer extends LavalinkPlayer implements CascadePlay
         return MusicHandler.getLavaLink().getLink(getGuild());
     }
 
-    public void setBands(Map<Integer, Float> bands) {
+    public void setBands(Map<Integer, Float> bands) throws UnsupportedOperationException {
         LavalinkSocket node =  super.getLink().getNode(false);
         if (node != null) {
             JSONObject json = new JSONObject();
@@ -48,6 +48,9 @@ public class CascadeLavalinkPlayer extends LavalinkPlayer implements CascadePlay
             json.put("guildId", super.getLink().getGuildId());
             JSONArray jsonArray = new JSONArray();
             for (Map.Entry<Integer, Float> entry : bands.entrySet()) {
+                if (entry.getKey() < 0 || entry.getKey() > 14) {
+                    throw new UnsupportedOperationException("Cannot set a band that doesn't exist");
+                }
                 JSONObject bandJson = new JSONObject();
                 bandJson.put("band", entry.getKey());
                 bandJson.put("gain", entry.getValue());
