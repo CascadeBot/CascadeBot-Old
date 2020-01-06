@@ -64,30 +64,30 @@ public class PlayingCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         CascadePlayer player = context.getMusicPlayer();
 
-        if (player.getPlayer().getPlayingTrack() == null) {
+        if (player.getPlayingTrack() == null) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.playing.no_music_playing"));
         } else {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
                     if (context.hasPermission(runner, "volume")) {
-                        int volume = context.getMusicPlayer().getPlayer().getVolume();
+                        int volume = context.getMusicPlayer().getVolume();
                         volume -= 10;
                         if (volume <= 0) {
                             volume = 0;
                         }
-                        context.getMusicPlayer().getPlayer().setVolume(volume);
+                        context.getMusicPlayer().setVolume(volume);
                         message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                     }
                 }));
                 buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
                     if (context.hasPermission(runner, "volume")) {
-                        int volume = context.getMusicPlayer().getPlayer().getVolume();
+                        int volume = context.getMusicPlayer().getVolume();
                         volume += 10;
                         if (volume >= 100) {
                             volume = 100;
                         }
-                        context.getMusicPlayer().getPlayer().setVolume(volume);
+                        context.getMusicPlayer().setVolume(volume);
                         message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                     }
                 }));
@@ -115,7 +115,7 @@ public class PlayingCommand implements ICommandMain {
                             false
                     ));
                     message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
-                    if (player.getPlayer().getPlayingTrack() == null) {
+                    if (player.getPlayingTrack() == null) {
                         message.clearReactions().queue();
                     }
                 }
@@ -133,7 +133,7 @@ public class PlayingCommand implements ICommandMain {
                     break;
             }
 
-            buttonGroup.addButton(player.getPlayer().isPaused() ? playButton : pauseButton);
+            buttonGroup.addButton(player.isPaused() ? playButton : pauseButton);
 
             context.getUIMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
         }
@@ -141,7 +141,7 @@ public class PlayingCommand implements ICommandMain {
     }
 
     private MessageEmbed getSongEmbed(CascadePlayer player, long guildId) {
-        AudioTrack track = player.getPlayer().getPlayingTrack();
+        AudioTrack track = player.getPlayingTrack();
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         if (track == null) {
             embedBuilder.setDescription(Language.i18n(guildId, "commands.playing.no_music_playing"));
@@ -152,15 +152,15 @@ public class PlayingCommand implements ICommandMain {
         if (player.getArtwork() != null) {
             embedBuilder.setThumbnail(player.getArtwork());
         }
-        embedBuilder.addField(Language.i18n(guildId, "words.status"), player.getPlayer().isPaused() ? UnicodeConstants.PAUSE + " " + Language.i18n(guildId, "words.paused") : UnicodeConstants.PLAY + " " + Language.i18n(guildId, "words.playing"), true);
+        embedBuilder.addField(Language.i18n(guildId, "words.status"), player.isPaused() ? UnicodeConstants.PAUSE + " " + Language.i18n(guildId, "words.paused") : UnicodeConstants.PLAY + " " + Language.i18n(guildId, "words.playing"), true);
 
         if (!track.getInfo().isStream) {
             embedBuilder.addField(Language.i18n(guildId, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildId).getCoreSettings().isUseEmbedForMessages()), false);
         }
 
-        embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getPlayer().getTrackPosition()) + " / " +
+        embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getTrackPosition()) + " / " +
                 (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
-        embedBuilder.addField(Language.i18n(guildId, "words.volume"), player.getPlayer().getVolume() + "%", true);
+        embedBuilder.addField(Language.i18n(guildId, "words.volume"), player.getVolume() + "%", true);
         embedBuilder.addField(Language.i18n(guildId, "commands.playing.loop_mode"), FormatUtils.formatEnum(player.getLoopMode(), Language.getGuildLocale(guildId)), true);
         if (track.getUserData() instanceof Long) { //TODO find out why user data sometimes gets set to null.
             embedBuilder.addField(Language.i18n(guildId, "words.requested_by"), CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
@@ -176,12 +176,12 @@ public class PlayingCommand implements ICommandMain {
 
     public void handlePlayPause(ButtonGroup buttonGroup, Message buttonMessage) {
         CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
-        if (player.getPlayer().isPaused()) {
-            player.getPlayer().setPaused(false);
+        if (player.isPaused()) {
+            player.setPaused(false);
             buttonGroup.removeButton(playButton);
             buttonGroup.addButton(pauseButton);
         } else {
-            player.getPlayer().setPaused(true);
+            player.setPaused(true);
             buttonGroup.removeButton(pauseButton);
             buttonGroup.addButton(playButton);
         }

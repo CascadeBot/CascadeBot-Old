@@ -35,6 +35,7 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
+import org.cascadebot.cascadebot.events.PlayerListener;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +55,7 @@ import java.util.regex.Pattern;
 public class MusicHandler {
 
     @Getter
-    private static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+    private AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
     private Pattern typePattern = Pattern.compile("youtube#([A-z]+)");
 
@@ -111,11 +112,25 @@ public class MusicHandler {
         return players.computeIfAbsent(guildId, id -> {
             Guild guild = CascadeBot.INS.getShardManager().getGuildById(id);
             if (guild != null) {
-                return new CascadePlayer(guild);
+                return createPlayer(guild);
             } else {
                 return null;
             }
         });
+    }
+
+    private CascadePlayer createPlayer(Guild guild) {
+        CascadePlayer player;
+        if (MusicHandler.isLavalinkEnabled()) {
+            player = new CascadeLavalinkPlayer(MusicHandler.getLavaLink().getLink(guild));
+        } else {
+            AudioPlayer aPlayer = createLavaplayerPlayer();
+            player = new CascadeLavaplayerPlayer(aPlayer);
+            guild.getAudioManager().setSendingHandler(new LavaPlayerAudioSendHandler(aPlayer));
+        }
+        player.setGuild(guild);
+        player.addListener(new PlayerListener(player));
+        return player;
     }
 
     public boolean removePlayer(long guildId) {
@@ -202,7 +217,7 @@ public class MusicHandler {
         });
     }
 
-    public static AudioPlayer createLavaLinkPlayer() {
+    private AudioPlayer createLavaplayerPlayer() {
         return playerManager.createPlayer();
     }
 
