@@ -123,12 +123,12 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
 
     @Override
     public void seekTo(long position) {
-        lavalinkPlayer.seekTo(l);
+        lavalinkPlayer.seekTo(position);
     }
 
     @Override
     public void setVolume(int volumeLevel) {
-        lavalinkPlayer.setVolume(i);
+        lavalinkPlayer.setVolume(volumeLevel);
     }
 
     @Override
