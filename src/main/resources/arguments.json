@@ -214,7 +214,7 @@
       "_type": "required"
     }
   },
-  "karaoke*": {
+  "karaoke": {
     "_type": "command"
   },
   "seek*": {
