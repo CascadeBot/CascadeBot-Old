@@ -1,17 +1,21 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +39,7 @@ public class EqualizerCommand implements ICommandMain {
 
             currentBand.set(newBand);
 
-            message.editMessage("```" + getEqualizerString(player.getCurrentBands(), currentBand.get()) + "```").override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser()).build()).override(true).queue();
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, channel, message) -> {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
@@ -48,7 +52,7 @@ public class EqualizerCommand implements ICommandMain {
 
             currentBand.set(newBand);
 
-            message.editMessage("```" + getEqualizerString(player.getCurrentBands(), currentBand.get()) + "```").override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser()).build()).override(true).queue();
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
@@ -63,7 +67,7 @@ public class EqualizerCommand implements ICommandMain {
 
             player.setBand(currentBand.get(), gain);
 
-            message.editMessage("```" + getEqualizerString(player.getCurrentBands(), currentBand.get()) + "```").override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser()).build()).override(true).queue();
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
@@ -78,9 +82,9 @@ public class EqualizerCommand implements ICommandMain {
 
             player.setBand(currentBand.get(), gain);
 
-            message.editMessage("```" + getEqualizerString(player.getCurrentBands(), currentBand.get()) + "```").override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser()).build()).override(true).queue();
         }));
-        context.getUIMessaging().sendButtonedMessage("```" + getEqualizerString(player.getCurrentBands(), currentBand.get()) + "```", buttonGroup);
+        context.getUIMessaging().sendButtonedMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), context.getUser()).build(), buttonGroup);
     }
 
     private String getEqualizerString(Map<Integer, Float> bands, int currentBand) {
@@ -163,6 +167,22 @@ public class EqualizerCommand implements ICommandMain {
                 .append('\n').append(footerBuilder.toString());
 
         return equalizerBuilder.toString();
+    }
+
+    public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, int currentBand, User requester) {
+        String equalizer = getEqualizerString(bands, currentBand);
+
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(requester);
+        if (bands.get(currentBand) > 0) { //TODO maybe implement color shift instead of changing color over certain value (need to talk to jvs about this)
+            builder.setColor(Color.RED);
+        } else {
+            builder.setColor(Color.GREEN);
+        }
+
+        builder.setTitle(Equalizer.BAND_COUNT + " channel Equalizer");
+
+        builder.setDescription("```" + equalizer + "```");
+        return builder;
     }
 
     @Override
