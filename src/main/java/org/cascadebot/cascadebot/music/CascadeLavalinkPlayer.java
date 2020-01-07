@@ -40,6 +40,8 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
 
     @Override
     public void leave() {
+        queue.clear();
+        stopTrack(); // Clear queue and stop track to prevent errors with lavalink server
         getLink().disconnect();
     }
 
