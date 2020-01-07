@@ -122,14 +122,14 @@ public class EqualizerCommand implements ICommandMain {
         int selectedBarNumber = 0;
         for (int i = lowestBandDisplay; i <= highestBandDisplay + 1; i++) {
             if (i == currentBand) {
-                if (i < 10) {
+                if (i < 9) {
                     footer.add("[0" + (i + 1) + "]");
                 } else {
                     footer.add("[" + (i + 1) + "]");
                 }
                 selectedBarNumber = currentBarNumber;
             } else {
-                if (i < 10) {
+                if (i < 9) {
                     footer.add("(0" + (i + 1) + ")");
                 } else {
                     footer.add("(" + (i + 1) + ")");
