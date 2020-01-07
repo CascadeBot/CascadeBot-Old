@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.music;
 
+import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -23,8 +24,12 @@ public class EqualizerResetSubCommand implements ISubCommand {
             context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
             return;
         }
+        if (!(context.getMusicPlayer() instanceof CascadeLavalinkPlayer)) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
+            return;
+        }
         Map<Integer, Float> bands = new HashMap<>();
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < Equalizer.BAND_COUNT; i++) {
             bands.put(i, 0.0f);
         }
         ((CascadeLavalinkPlayer) context.getMusicPlayer()).setBands(bands);

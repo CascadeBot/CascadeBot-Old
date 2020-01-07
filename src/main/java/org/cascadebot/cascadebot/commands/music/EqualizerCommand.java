@@ -37,6 +37,10 @@ public class EqualizerCommand implements ICommandMain {
             context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
             return;
         }
+        if (!(context.getMusicPlayer() instanceof CascadeLavalinkPlayer)) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
+            return;
+        }
         CascadeLavalinkPlayer player = (CascadeLavalinkPlayer) context.getMusicPlayer();
         AtomicInteger currentBand = new AtomicInteger();
         ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
