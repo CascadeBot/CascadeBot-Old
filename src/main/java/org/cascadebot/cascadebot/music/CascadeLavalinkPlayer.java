@@ -87,7 +87,6 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
         setBands(bands);
     }
 
-
     //region Player methods
     @Override
     public AudioTrack getPlayingTrack() {
