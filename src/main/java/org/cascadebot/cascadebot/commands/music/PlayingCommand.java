@@ -66,77 +66,92 @@ public class PlayingCommand implements ICommandMain {
 
         if (player.getPlayingTrack() == null) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.playing.no_music_playing"));
-        } else {
-            ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
-                buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
-                    if (context.hasPermission(runner, "volume")) {
-                        int volume = context.getMusicPlayer().getVolume();
-                        volume -= 10;
-                        if (volume <= 0) {
-                            volume = 0;
-                        }
-                        context.getMusicPlayer().setVolume(volume);
-                        message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
-                    }
-                }));
-                buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
-                    if (context.hasPermission(runner, "volume")) {
-                        int volume = context.getMusicPlayer().getVolume();
-                        volume += 10;
-                        if (volume >= 100) {
-                            volume = 100;
-                        }
-                        context.getMusicPlayer().setVolume(volume);
-                        message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
-                    }
-                }));
-            }
-
-            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.STOP, (runner, channel, message) -> {
-                if (context.hasPermission(runner, "stop")) {
-                    context.getMusicPlayer().stop();
-                    message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                }
-            }));
-            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
-                if (context.hasPermission(runner, "skip")) {
-                    ICommandMain skip = CascadeBot.INS.getCommandManager().getCommandByDefault("skip");
-                    skip.onCommand(runner, new CommandContext(
-                            skip,
-                            CascadeBot.INS.getClient(),
-                            context.getChannel(),
-                            message,
-                            context.getGuild(),
-                            context.getData(),
-                            new String[0],
-                            runner,
-                            "skip",
-                            false
-                    ));
-                    message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
-                    if (player.getPlayingTrack() == null) {
-                        message.clearReactions().queue();
-                    }
-                }
-            }));
-
-            switch (player.getLoopMode()) {
-                case DISABLED:
-                    buttonGroup.addButton(repeat);
-                    break;
-                case PLAYLIST:
-                    buttonGroup.addButton(repeatOne);
-                    break;
-                case SONG:
-                    buttonGroup.addButton(noRepeat);
-                    break;
-            }
-
-            buttonGroup.addButton(player.isPaused() ? playButton : pauseButton);
-
-            context.getUIMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
+            return;
         }
+        ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+        if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
+            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
+                if (context.hasPermission(runner, "volume")) {
+                    int volume = context.getMusicPlayer().getVolume();
+                    volume -= 10;
+                    if (volume <= 0) {
+                        volume = 0;
+                    }
+                    context.getMusicPlayer().setVolume(volume);
+                    message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
+                }
+            }));
+            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
+                if (context.hasPermission(runner, "volume")) {
+                    int volume = context.getMusicPlayer().getVolume();
+                    volume += 10;
+                    if (volume >= 100) {
+                        volume = 100;
+                    }
+                    context.getMusicPlayer().setVolume(volume);
+                    message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
+                }
+            }));
+        }
+
+        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.STOP, (runner, channel, message) -> {
+            if (context.hasPermission(runner, "stop")) {
+                context.getMusicPlayer().stop();
+                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+            }
+        }));
+        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
+            if (context.hasPermission(runner, "skip")) {
+                ICommandMain skip = CascadeBot.INS.getCommandManager().getCommandByDefault("skip");
+                skip.onCommand(runner, new CommandContext(
+                        skip,
+                        CascadeBot.INS.getClient(),
+                        context.getChannel(),
+                        message,
+                        context.getGuild(),
+                        context.getData(),
+                        new String[0],
+                        runner,
+                        "skip",
+                        false
+                ));
+                message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
+                if (player.getPlayingTrack() == null) {
+                    message.clearReactions().queue();
+                }
+            }
+        }));
+        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.BAR_CHART, (runner, channel, message) -> {
+            ICommandMain equalizer = CascadeBot.INS.getCommandManager().getCommandByDefault("equalizer");
+            equalizer.onCommand(runner, new CommandContext(
+                    equalizer,
+                    CascadeBot.INS.getClient(),
+                    context.getChannel(),
+                    message,
+                    context.getGuild(),
+                    context.getData(),
+                    new String[0],
+                    runner,
+                    "equalizer",
+                    false
+            ));
+        }));
+
+        switch (player.getLoopMode()) {
+            case DISABLED:
+                buttonGroup.addButton(repeat);
+                break;
+            case PLAYLIST:
+                buttonGroup.addButton(repeatOne);
+                break;
+            case SONG:
+                buttonGroup.addButton(noRepeat);
+                break;
+        }
+
+        buttonGroup.addButton(player.isPaused() ? playButton : pauseButton);
+
+        context.getUIMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
 
     }
 

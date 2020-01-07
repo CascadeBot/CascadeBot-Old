@@ -85,4 +85,6 @@ public class UnicodeConstants {
     public static final char SQUARE = '\u2588'; //█
     public static final char DOTTED_SQUARE = '\u2591'; //░
 
+    public static final String BAR_CHART = "\uD83D\uDCCA"; //📊
+
 }
