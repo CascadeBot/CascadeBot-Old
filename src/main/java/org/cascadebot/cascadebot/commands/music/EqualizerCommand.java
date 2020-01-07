@@ -5,9 +5,11 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer;
@@ -19,12 +21,17 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EqualizerCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        if (!CascadeBot.INS.getMusicHandler().isLavalinkEnabled()) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
+            return;
+        }
         CascadeLavalinkPlayer player = (CascadeLavalinkPlayer) context.getMusicPlayer();
         AtomicInteger currentBand = new AtomicInteger();
         ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
@@ -39,7 +46,7 @@ public class EqualizerCommand implements ICommandMain {
 
             currentBand.set(newBand);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser()).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, channel, message) -> {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
@@ -52,7 +59,7 @@ public class EqualizerCommand implements ICommandMain {
 
             currentBand.set(newBand);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser()).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
@@ -67,7 +74,7 @@ public class EqualizerCommand implements ICommandMain {
 
             player.setBand(currentBand.get(), gain);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser()).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
@@ -82,9 +89,9 @@ public class EqualizerCommand implements ICommandMain {
 
             player.setBand(currentBand.get(), gain);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser()).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
-        context.getUIMessaging().sendButtonedMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), context.getUser()).build(), buttonGroup);
+        context.getUIMessaging().sendButtonedMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), context.getUser(), context).build(), buttonGroup);
     }
 
     private String getEqualizerString(Map<Integer, Float> bands, int currentBand) {
@@ -169,7 +176,7 @@ public class EqualizerCommand implements ICommandMain {
         return equalizerBuilder.toString();
     }
 
-    public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, int currentBand, User requester) {
+    public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, int currentBand, User requester, CommandContext context) {
         String equalizer = getEqualizerString(bands, currentBand);
 
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(requester);
@@ -179,7 +186,7 @@ public class EqualizerCommand implements ICommandMain {
             builder.setColor(Color.GREEN);
         }
 
-        builder.setTitle(Equalizer.BAND_COUNT + " channel Equalizer");
+        builder.setTitle(context.i18n("commands.equalizer.embed_title", Equalizer.BAND_COUNT));
 
         builder.setDescription("```" + equalizer + "```");
         return builder;
@@ -200,4 +207,8 @@ public class EqualizerCommand implements ICommandMain {
         return CascadePermission.of("equalizer", true);
     }
 
+    @Override
+    public Set<ISubCommand> getSubCommands() {
+        return Set.of(new EqualizerResetSubCommand());
+    }
 }

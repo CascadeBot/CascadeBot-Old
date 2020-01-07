@@ -48,7 +48,7 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
     }
 
     public JdaLink getLink() {
-        return MusicHandler.getLavaLink().getLink(getGuild());
+        return CascadeBot.INS.getMusicHandler().getLavaLink().getLink(getGuild());
     }
 
     public void setBands(Map<Integer, Float> bands) throws UnsupportedOperationException {

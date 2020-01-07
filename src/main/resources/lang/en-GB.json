@@ -447,6 +447,17 @@
       "volume_already_set": "Volume is already set to {0}%.",
       "volume_range": "Volume needs to be between 0% and 200%."
     },
+    "equalizer": {
+      "command": "equalizer",
+      "description": "Allows you to control an equalizer",
+      "embed_title": "{0} channel Equalizer",
+      "not_lavalink": "The equalizer is only available when using lavalink",
+      "reset": {
+        "command": "reset",
+        "description": "Resets the equalizer",
+        "success": "Reset equalizer to default values"
+      }
+    },
     "purge": {
       "contains": {
         "name": "contains",

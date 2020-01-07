@@ -196,7 +196,7 @@ public class CascadeBot {
                     .setBulkDeleteSplittingEnabled(false)
                     .setEnableShutdownHook(false);
 
-            if (MusicHandler.isLavalinkEnabled()) {
+            if (musicHandler.isLavalinkEnabled()) {
                 defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
                 defaultShardManagerBuilder.setVoiceDispatchInterceptor(MusicHandler.getLavalink().getVoiceInterceptor());
             } else {

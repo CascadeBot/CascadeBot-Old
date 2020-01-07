@@ -77,7 +77,8 @@ public class MusicHandler {
     JsonParser musicJsonParser = new JsonParser();
 
     private static JdaLavalink lavalink;
-    private static boolean lavalinkEnabled;
+    @Getter
+    private boolean lavalinkEnabled;
 
     public void buildMusic() {
         AudioSourceManagers.registerRemoteSources(playerManager);
@@ -122,8 +123,8 @@ public class MusicHandler {
 
     private CascadePlayer createPlayer(Guild guild) {
         CascadePlayer player;
-        if (MusicHandler.isLavalinkEnabled()) {
-            JdaLink link = MusicHandler.getLavaLink().getLink(guild);
+        if (isLavalinkEnabled()) {
+            JdaLink link = getLavaLink().getLink(guild);
             player = new CascadeLavalinkPlayer(link.getPlayer());
         } else {
             AudioPlayer aPlayer = createLavaplayerPlayer();
@@ -252,12 +253,8 @@ public class MusicHandler {
         VIDEO, PLAYLIST
     }
 
-    static JdaLavalink getLavaLink() {
+    public JdaLavalink getLavaLink() {
         return lavalink;
-    }
-
-    public static boolean isLavalinkEnabled() {
-        return lavalinkEnabled;
     }
 
 }
