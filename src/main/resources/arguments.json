@@ -215,7 +215,7 @@
     }
   },
   "karaoke*": {
-    "_type": "required"
+    "_type": "command"
   },
   "seek*": {
     "timestamp": {
