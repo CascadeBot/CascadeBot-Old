@@ -24,7 +24,7 @@ public class StatsCommand implements ICommandCore {
 
         builder.addField("Total Guilds", String.valueOf(CascadeBot.INS.getShardManager().getGuilds().size()), true);
         builder.addField("Active Guilds", String.valueOf(CascadeBot.INS.getShardManager().getGuildCache().size()), true);
-        builder.addField("Active Voice Channels", String.valueOf(MusicHandler.getPlayers().entrySet().stream().filter(entry -> entry.getValue().getConnectedChannel() != null).count()), true);
+        builder.addField("Active Voice Channels", String.valueOf(CascadeBot.INS.getMusicHandler().getPlayers().entrySet().stream().filter(entry -> entry.getValue().getConnectedChannel() != null).count()), true);
         builder.addField("RAM Usage", FileUtils.byteCountToDisplaySize(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()), true);
         builder.addField("CPU Load", Math.round(osBean.getProcessCpuLoad() * 100) + "%", true);
         builder.addField("Total Shards", String.valueOf(CascadeBot.INS.getShardManager().getShardsTotal()), true);

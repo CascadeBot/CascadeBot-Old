@@ -68,7 +68,7 @@ public class MusicHandler {
     private String twitchSourceName;
 
     @Getter
-    private static Map<Long, CascadePlayer> players = new HashMap<>();
+    private Map<Long, CascadePlayer> players = new HashMap<>();
 
     public MusicHandler(CascadeBot instance) {
         this.instance = instance;
@@ -76,7 +76,7 @@ public class MusicHandler {
 
     JsonParser musicJsonParser = new JsonParser();
 
-    private static JdaLavalink lavalink;
+    private JdaLavalink lavalink;
     @Getter
     private boolean lavalinkEnabled;
 
@@ -224,7 +224,7 @@ public class MusicHandler {
         return playerManager.createPlayer();
     }
 
-    public static JdaLavalink getLavalink() {
+    public JdaLavalink getLavalink() {
         return lavalink;
     }
 
