@@ -189,10 +189,12 @@ public class EqualizerCommand implements ICommandMain {
         String equalizer = getEqualizerString(bands, currentBand);
 
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(requester);
-        if (bands.get(currentBand) > 0) { //TODO maybe implement color shift instead of changing color over certain value (need to talk to jvs about this)
-            builder.setColor(Color.RED);
+        if (bands.get(currentBand) >= .2) {
+            builder.setColor(Color.decode("#EE6767")); // Red
+        } else if (bands.get(currentBand) > 0 && bands.get(currentBand) < .2) {
+            builder.setColor(Color.decode("#D9E94A")); // Yellow
         } else {
-            builder.setColor(Color.GREEN);
+            builder.setColor(Color.decode("#84D6A2")); // Green
         }
 
         builder.setTitle(context.i18n("commands.equalizer.embed_title", Equalizer.BAND_COUNT));
