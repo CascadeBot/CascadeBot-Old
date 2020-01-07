@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.music;
 
+import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.io.LavalinkSocket;
 import lavalink.client.io.jda.JdaLink;
@@ -22,9 +23,9 @@ import java.util.Map;
 public class CascadeLavalinkPlayer implements CascadePlayer {
 
     @Getter
-    Map<Integer, Float> currentBands = new HashMap<>();
+    private Map<Integer, Float> currentBands = new HashMap<>();
 
-    LavalinkPlayer lavalinkPlayer;
+    private LavalinkPlayer lavalinkPlayer;
 
     public CascadeLavalinkPlayer(LavalinkPlayer lavalinkPlayer) {
         for (int i = 0; i < 15; i++) {
@@ -66,7 +67,7 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
             json.put("guildId", lavalinkPlayer.getLink().getGuildId());
             JSONArray jsonArray = new JSONArray();
             for (Map.Entry<Integer, Float> entry : bands.entrySet()) {
-                if (entry.getKey() < 0 || entry.getKey() > 14) {
+                if (entry.getKey() < 0 || entry.getKey() > Equalizer.BAND_COUNT - 1) { // Make sure band is in range
                     throw new UnsupportedOperationException("Cannot set a band that doesn't exist");
                 }
                 JSONObject bandJson = new JSONObject();
