@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020 CascadeBot. All rights reserved.
+ *  Licensed under the MIT license.
+ */
+
 package org.cascadebot.cascadebot.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
@@ -158,9 +163,9 @@ public class EqualizerCommand implements ICommandMain {
             for (int barHeight : heights) {
                 if (currentHeight <= barHeight) {
                     int barLocation = barLocations.get(currentBar);
-                    char barChar = '░';
+                    char barChar = UnicodeConstants.DOTTED_SQUARE;
                     if (currentBar == selectedBarNumber) {
-                        barChar = '█';
+                        barChar = UnicodeConstants.SQUARE;
                     }
                     lineChars[barLocation] = barChar;
                 }

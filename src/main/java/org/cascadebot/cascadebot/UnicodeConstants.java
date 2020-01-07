@@ -82,4 +82,7 @@ public class UnicodeConstants {
 
     public static final String SMALL_ORANGE_DIAMOND = "\uD83D\uDD38"; // 🔸
 
+    public static final char SQUARE = '\u2588'; //█
+    public static final char DOTTED_SQUARE = '\u2591'; //░
+
 }
