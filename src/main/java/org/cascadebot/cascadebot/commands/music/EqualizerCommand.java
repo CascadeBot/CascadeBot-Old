@@ -44,7 +44,7 @@ public class EqualizerCommand implements ICommandMain {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
                 return;
             }
-            int newBand = currentBand.get() - 1;
+            int newBand = currentBand.decrementAndGet();
             if (newBand < 0) {
                 return;
             }
@@ -57,7 +57,7 @@ public class EqualizerCommand implements ICommandMain {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
                 return;
             }
-            int newBand = currentBand.get() + 1;
+            int newBand = currentBand.incrementAndGet();
             if (newBand >= Equalizer.BAND_COUNT) {
                 return;
             }
