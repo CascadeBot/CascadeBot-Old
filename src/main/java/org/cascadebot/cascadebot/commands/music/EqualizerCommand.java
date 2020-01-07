@@ -71,13 +71,13 @@ public class EqualizerCommand implements ICommandMain {
                 return;
             }
 
-            float gain = player.getCurrentBands().get(currentBand.get());
-            gain -= 0.05f;
-            if (gain < -0.25) {
+            int gain = (int) (player.getCurrentBands().get(currentBand.get()) * 20);
+            gain -= 1;
+            if (gain < -5) {
                 return;
             }
 
-            player.setBand(currentBand.get(), gain);
+            player.setBand(currentBand.get(), ((float) gain) / 20f);
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
@@ -86,13 +86,13 @@ public class EqualizerCommand implements ICommandMain {
                 return;
             }
 
-            float gain = player.getCurrentBands().get(currentBand.get());
-            gain += 0.05f;
-            if (gain > 0.25) {
+            int gain = (int) (player.getCurrentBands().get(currentBand.get()) * 20);
+            gain += 1;
+            if (gain > 5) {
                 return;
             }
 
-            player.setBand(currentBand.get(), gain);
+            player.setBand(currentBand.get(), ((float) gain) / 20f);
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
