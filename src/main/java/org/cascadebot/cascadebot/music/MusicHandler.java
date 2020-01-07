@@ -19,6 +19,7 @@ import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceM
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import lavalink.client.io.jda.JdaLavalink;
+import lavalink.client.io.jda.JdaLink;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
@@ -122,7 +123,8 @@ public class MusicHandler {
     private CascadePlayer createPlayer(Guild guild) {
         CascadePlayer player;
         if (MusicHandler.isLavalinkEnabled()) {
-            player = new CascadeLavalinkPlayer(MusicHandler.getLavaLink().getLink(guild));
+            JdaLink link = MusicHandler.getLavaLink().getLink(guild);
+            player = new CascadeLavalinkPlayer(link.getPlayer());
         } else {
             AudioPlayer aPlayer = createLavaplayerPlayer();
             player = new CascadeLavaplayerPlayer(aPlayer);
