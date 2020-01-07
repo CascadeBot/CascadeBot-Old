@@ -34,7 +34,7 @@ public class EqualizerResetSubCommand implements ISubCommand {
         for (int i = 0; i < Equalizer.BAND_COUNT; i++) {
             bands.put(i, 0.0f);
         }
-        
+
         ((CascadeLavalinkPlayer) context.getMusicPlayer()).setBands(bands);
         context.getTypedMessaging().replySuccess(context.i18n("commands.equalizer.reset.success"));
     }

@@ -102,19 +102,7 @@ public class PlayingCommand implements ICommandMain {
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
             if (context.hasPermission(runner, "skip")) {
-                ICommandMain skip = CascadeBot.INS.getCommandManager().getCommandByDefault("skip");
-                skip.onCommand(runner, new CommandContext(
-                        skip,
-                        CascadeBot.INS.getClient(),
-                        context.getChannel(),
-                        message,
-                        context.getGuild(),
-                        context.getData(),
-                        new String[0],
-                        runner,
-                        "skip",
-                        false
-                ));
+                context.runOtherCommand("skip", runner, context);
                 message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                 if (player.getPlayingTrack() == null) {
                     message.clearReactions().queue();
@@ -122,19 +110,7 @@ public class PlayingCommand implements ICommandMain {
             }
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.BAR_CHART, (runner, channel, message) -> {
-            ICommandMain equalizer = CascadeBot.INS.getCommandManager().getCommandByDefault("equalizer");
-            equalizer.onCommand(runner, new CommandContext(
-                    equalizer,
-                    CascadeBot.INS.getClient(),
-                    context.getChannel(),
-                    message,
-                    context.getGuild(),
-                    context.getData(),
-                    new String[0],
-                    runner,
-                    "equalizer",
-                    false
-            ));
+            context.runOtherCommand("equalizer", runner, context);
         }));
 
         switch (player.getLoopMode()) {
