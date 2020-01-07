@@ -35,7 +35,7 @@ public class KaraokeCommand implements ICommandMain {
                    .getSourceManager()
                    .getSourceName()
                    .equals(CascadeBot.INS.getMusicHandler().getYoutubeSourceName())) {
-            // TODO: sned angri msg to usr abot not beeing yt
+            context.getTypedMessaging().replyDanger(context.i18n("commands.karaoke.not_youtube"));
         }
 
         if (KaraokeHandler.isKaraoke(context.getGuild().getIdLong())) {
