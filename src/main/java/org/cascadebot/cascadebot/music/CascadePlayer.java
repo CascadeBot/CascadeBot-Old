@@ -41,7 +41,7 @@ public interface CascadePlayer extends IPlayer {
     AtomicBoolean shuffleEnabled = new AtomicBoolean(false);
 
     default double getQueueLength() {
-        double queueLength = getPlayingTrack().getDuration();
+        double queueLength = getPlayingTrack().getDuration() - getTrackPosition();
         for (AudioTrack track : queue) {
             queueLength += track.getDuration();
         }
