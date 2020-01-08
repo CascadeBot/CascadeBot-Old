@@ -28,7 +28,7 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
     private LavalinkPlayer lavalinkPlayer;
 
     public CascadeLavalinkPlayer(LavalinkPlayer lavalinkPlayer) {
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < Equalizer.BAND_COUNT; i++) {
             currentBands.put(i, 0.0f);
         }
         this.lavalinkPlayer = lavalinkPlayer;
