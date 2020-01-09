@@ -45,6 +45,7 @@ public class KaraokeCommand implements ICommandMain {
         } else {
             context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.enabled_karaoke"));
         }
+
         try {
             Message message = Messaging.sendInfoMessage(context.getChannel(), context.i18n("commands.karaoke.loading_karaoke")).get();
             KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong(), message);
