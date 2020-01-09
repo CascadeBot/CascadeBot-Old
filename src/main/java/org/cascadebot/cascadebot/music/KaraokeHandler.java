@@ -16,9 +16,11 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.MDCException;
+import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
+import org.cascadebot.cascadebot.messaging.MessagingTyped;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
@@ -47,7 +49,7 @@ public class KaraokeHandler {
         Task.cancelTask("captions-" + guildId);
     }
 
-    public static void getSongLyrics(String trackId, TextChannel channel, long guildId, Message message) {
+    public static void getSongLyrics(String trackId, TextChannel channel, long guildId, Message message, CommandContext context) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -103,9 +105,8 @@ public class KaraokeHandler {
 
                     new CaptionsTask(guildId, channel.getIdLong(), message.getIdLong(), captions).start(0, CAPTION_BUFFER_TIME * 1000);
 
-                } catch (IOException | SAXException | MDCException e) {
-                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
-                    CascadeBot.LOGGER.error("Error in karaoke handler", e);
+                } catch (IOException | SAXException e) {
+                    context.getTypedMessaging().replyException(context.i18n("commands.karaoke.cannot_find"), e);
                 }
             }
 
