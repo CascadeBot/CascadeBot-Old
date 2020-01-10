@@ -29,7 +29,7 @@ public class CaptionsTask extends Task {
     @Override
     protected void execute() {
 
-        IPlayer player = CascadeBot.INS.getMusicHandler().getPlayer(this.guildId).getPlayer();
+        IPlayer player = CascadeBot.INS.getMusicHandler().getPlayer(this.guildId);
         if (player.getPlayingTrack() == null) this.cancel();
 
         List<String> captionSet = this.captions.getCaptions((player.getPlayingTrack().getPosition() / 1000D));
