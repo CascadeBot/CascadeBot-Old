@@ -42,13 +42,12 @@ public class KaraokeCommand implements ICommandMain {
             KaraokeHandler.disableKaraoke(context.getGuild().getIdLong());
             context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.disabled_karaoke"));
             return;
-        } else {
-            context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.enabled_karaoke"));
         }
 
         try {
             Message message = Messaging.sendInfoMessage(context.getChannel(), context.i18n("commands.karaoke.loading_karaoke")).get();
             KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong(), message);
+            context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.enabled_karaoke"));
         } catch (InterruptedException | ExecutionException e) {
             context.getTypedMessaging().replyException(context.i18n("commands.karaoke.cannot_find"), e);
         }
