@@ -214,6 +214,9 @@
       "_type": "required"
     }
   },
+  "karaoke": {
+    "_type": "command"
+  },
   "seek*": {
     "timestamp": {
       "_type": "required"
