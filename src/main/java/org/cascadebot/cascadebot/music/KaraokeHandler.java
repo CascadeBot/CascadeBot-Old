@@ -49,7 +49,7 @@ public class KaraokeHandler {
         Task.cancelTask("captions-" + guildId);
     }
 
-    public static void getSongLyrics(String trackId, TextChannel channel, long guildId, Message message, CommandContext context) {
+    public static void getSongLyrics(String trackId, TextChannel channel, long guildId, Message message) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -106,7 +106,7 @@ public class KaraokeHandler {
                     new CaptionsTask(guildId, channel.getIdLong(), message.getIdLong(), captions).start(0, CAPTION_BUFFER_TIME * 1000);
 
                 } catch (IOException | SAXException e) {
-                    context.getTypedMessaging().replyException(context.i18n("commands.karaoke.cannot_find"), e);
+                    Messaging.sendExceptionMessage(channel, Language.i18n(guildId, "commands.karaoke.cannot_find"), e);
                 }
             }
 
