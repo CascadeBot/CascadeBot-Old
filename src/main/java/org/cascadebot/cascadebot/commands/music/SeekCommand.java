@@ -23,11 +23,11 @@ public class SeekCommand implements ICommandMain {
         long millis = 0;
 
         VoiceChannel memberVoiceChannel = context.getMember().getVoiceState().getChannel();
-        if (context.getMusicPlayer().getPlayer().getPlayingTrack() == null || !context.getMusicPlayer().getConnectedChannel().equals(memberVoiceChannel)) {
+        if (context.getMusicPlayer().getPlayingTrack() == null || !context.getMusicPlayer().getConnectedChannel().equals(memberVoiceChannel)) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.seek.no_music_playing"));
             return;
         }
-        if (context.getMusicPlayer().getPlayer().getPlayingTrack().getInfo().isStream) {
+        if (context.getMusicPlayer().getPlayingTrack().getInfo().isStream) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.seek.music_is_stream"));
             return;
         }
@@ -42,12 +42,12 @@ public class SeekCommand implements ICommandMain {
         if (millis < 0) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.seek.negative_value"));
             return;
-        } else if (millis > context.getMusicPlayer().getPlayer().getPlayingTrack().getDuration()) {
+        } else if (millis > context.getMusicPlayer().getPlayingTrack().getDuration()) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.seek.duration_shorter"));
             return;
         }
 
-        context.getMusicPlayer().getPlayer().seekTo(millis);
+        context.getMusicPlayer().seekTo(millis);
         // TODO: Binary make a method to format time using ICU
         String formattedTime = FormatUtils.formatTime(millis, Locale.getDefaultLocale(), true);
         context.getTypedMessaging().replySuccess(context.i18n("commands.seek.success", formattedTime));

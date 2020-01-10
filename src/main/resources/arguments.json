@@ -222,6 +222,11 @@
       "_type": "required"
     }
   },
+  "equalizer": {
+    "reset": {
+      "_type": "command"
+    }
+  },
   "groupperms*": {
     "add*": {
       "group*": {

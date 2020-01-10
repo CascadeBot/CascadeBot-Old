@@ -35,7 +35,7 @@ public class QueueSaveSubCommand implements ISubCommand {
             }
         }
 
-        if (context.getMusicPlayer().getPlayer().getPlayingTrack() == null & context.getMusicPlayer().getQueue().size() == 0) {
+        if (context.getMusicPlayer().getPlayingTrack() == null & context.getMusicPlayer().getQueue().size() == 0) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.queue.save.nothing_to_save"));
             return;
         }
