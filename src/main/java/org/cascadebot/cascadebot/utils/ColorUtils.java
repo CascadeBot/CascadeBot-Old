@@ -6,6 +6,7 @@
 
 package org.cascadebot.cascadebot.utils;
 
+import com.google.gson.JsonPrimitive;
 import io.github.binaryoverload.JSONConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +19,6 @@ import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.util.Map;
@@ -104,9 +103,9 @@ public class ColorUtils {
     @Getter
     @AllArgsConstructor
     public static class ColorException extends Exception {
-        
+
         private final ColorErrorType type;
-        
+
         public String getI18nMessage(Locale locale) {
             switch (type) {
                 case RGB:
@@ -137,7 +136,7 @@ public class ColorUtils {
         // Get sub config that defines the colors
         Optional<JSONConfig> sub = lang.getSubConfig("utils.color.colors");
         // If the sub config is not present return the name
-        if (!sub.isPresent()) {
+        if (sub.isEmpty()) {
             return name;
         }
 
@@ -149,8 +148,7 @@ public class ColorUtils {
         // Loop over all values
         for (Map.Entry<String, Object> color : colors.entrySet()) {
             // Check if the value (color translation) is equal to the name provided
-            // Add double quotes to the name because something (valueof, jsonconfig) adds them
-            if (String.valueOf(color.getValue()).equalsIgnoreCase("\"" + name + "\"")) {
+            if (((JsonPrimitive) color.getValue()).getAsString().equalsIgnoreCase(name)) {
                 return color.getKey();
             }
         }
