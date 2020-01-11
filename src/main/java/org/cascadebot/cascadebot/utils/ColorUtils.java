@@ -6,6 +6,8 @@
 
 package org.cascadebot.cascadebot.utils;
 
+import com.google.gson.JsonPrimitive;
+import io.github.binaryoverload.JSONConfig;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
@@ -19,6 +21,8 @@ import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 
 import java.awt.Color;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,7 +43,8 @@ public class ColorUtils {
 
         Matcher matcher;
 
-        Color color = getCssColor(text);
+        String name = getColorNameFromLocale(context.getLocale(), text);
+        Color color = getCssColor(name);
 
         if (color != null) {
             return color;
@@ -86,7 +91,7 @@ public class ColorUtils {
         String hex = "#" + ColorUtils.getHex(color.getRed(), color.getGreen(), color.getBlue());
         int decimalColor = color.getRGB();
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
-        builder.setTitle(context.i18n("utils.color.embed_title", CSSColor.getColorNameMap().getOrDefault(color, hex)));
+        builder.setTitle(context.i18n("utils.color.embed_title", CSSColor.getLocalNameOrDefault(context.getLocale(), color, hex)));
         builder.setColor(color);
         builder.addField(context.i18n("utils.color.hex"), hex, true);
         builder.addField(context.i18n("utils.color.rgb"), rgbValues, true); // RGB Values
@@ -98,9 +103,9 @@ public class ColorUtils {
     @Getter
     @AllArgsConstructor
     public static class ColorException extends Exception {
-        
+
         private final ColorErrorType type;
-        
+
         public String getI18nMessage(Locale locale) {
             switch (type) {
                 case RGB:
@@ -121,6 +126,34 @@ public class ColorUtils {
             RGB, BINARY, HEX, DECIMAL, UNRECOGNISED
         }
 
+    }
+
+    // Gets a color name based on current locale, if not found return original input
+    // This method needs a serious overhaul since I don't know how JSONConfig works...
+    private static String getColorNameFromLocale(Locale locale, String name) {
+        // Get language config
+        JSONConfig lang = Language.getLanguage(locale);
+        // Get sub config that defines the colors
+        Optional<JSONConfig> sub = lang.getSubConfig("utils.color.colors");
+        // If the sub config is not present return the name
+        if (sub.isEmpty()) {
+            return name;
+        }
+
+        // Get the sub config
+        JSONConfig colorsLangConfig = sub.get();
+        // Get all the values from the sub config
+        Map<String, Object> colors = colorsLangConfig.getValues(false);
+
+        // Loop over all values
+        for (Map.Entry<String, Object> color : colors.entrySet()) {
+            // Check if the value (color translation) is equal to the name provided
+            if (((JsonPrimitive) color.getValue()).getAsString().equalsIgnoreCase(name)) {
+                return color.getKey();
+            }
+        }
+        // Return input when nothing has been found
+        return name;
     }
 
     public static Color getCssColor(String name) {
