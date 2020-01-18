@@ -49,7 +49,7 @@ public class KaraokeHandler {
         Task.cancelTask("captions-" + guildId);
     }
 
-    public static void getSongLyrics(String trackId, TextChannel channel, long guildId, Message message) {
+    public static void getSongLyrics(String trackId, TextChannel channel, long guildId, Message message, String language) {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setValidating(true);
         factory.setIgnoringElementContentWhitespace(true);
@@ -60,7 +60,7 @@ public class KaraokeHandler {
             Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
             CascadeBot.LOGGER.error("Error in karaoke handler", e);
         }
-        Request request = new Request.Builder().url("https://video.google.com/timedtext?lang=en&v=" + trackId).build();
+        Request request = new Request.Builder().url("https://video.google.com/timedtext?lang=" + language + "&v=" + trackId).build();
         DocumentBuilder finalBuilder = builder;
 
         CascadeBot.INS.getHttpClient().newCall(request).enqueue(new Callback() {

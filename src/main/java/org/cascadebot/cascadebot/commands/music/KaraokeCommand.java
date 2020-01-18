@@ -45,7 +45,7 @@ public class KaraokeCommand implements ICommandMain {
 
         try {
             Message message = Messaging.sendInfoMessage(context.getChannel(), context.i18n("commands.karaoke.loading_karaoke")).get();
-            KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong(), message);
+            KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong(), message, context.getData().getLocale().getLanguage());
             context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.enabled_karaoke"));
         } catch (InterruptedException | ExecutionException e) {
             context.getTypedMessaging().replyException(context.i18n("commands.karaoke.cannot_find"), e);
