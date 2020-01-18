@@ -54,4 +54,9 @@ public class EqualizerResetSubCommand implements ISubCommand {
         return CascadePermission.of("equalizer.reset", true);
     }
 
+    @Override
+    public String getRequiredFlag() {
+        return "music_controls";
+    }
+
 }

@@ -222,4 +222,10 @@ public class EqualizerCommand implements ICommandMain {
     public Set<ISubCommand> getSubCommands() {
         return Set.of(new EqualizerResetSubCommand());
     }
+
+    @Override
+    public String getRequiredFlag() {
+        return "music_controls";
+    }
+
 }
