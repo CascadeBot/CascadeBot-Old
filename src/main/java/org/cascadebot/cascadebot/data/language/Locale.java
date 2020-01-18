@@ -34,6 +34,10 @@ public enum Locale {
         return locale.toLanguageTag();
     }
 
+    public String getLanguage() {
+        return locale.getLanguage();
+    }
+
     public String getLanguageFileName() {
         return getLanguageCode() + ".json";
     }

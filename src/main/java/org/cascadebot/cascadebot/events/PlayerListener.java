@@ -56,10 +56,10 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
                 }
                 // Take the next track in the queue, remove it from the queue and play it
                 AudioTrack audioTrack = player.getQueue().remove();
-                player.getPlayer().playTrack(audioTrack);
+                player.playTrack(audioTrack);
             } else if (player.getLoopMode().equals(CascadePlayer.LoopMode.SONG)) {
                 // Take the song that just finished and repeat it
-                player.getPlayer().playTrack(track.makeClone());
+                player.playTrack(track.makeClone());
             }
         } catch (NoSuchElementException e) {
             // No more songs left in the queue
