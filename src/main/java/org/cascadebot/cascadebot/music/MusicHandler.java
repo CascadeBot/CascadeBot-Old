@@ -35,7 +35,6 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.events.PlayerListener;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.utils.PasteUtils;

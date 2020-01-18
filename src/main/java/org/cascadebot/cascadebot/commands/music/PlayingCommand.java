@@ -67,17 +67,14 @@ public class PlayingCommand implements ICommandMain {
             context.getTypedMessaging().replyWarning(context.i18n("commands.playing.no_music_playing"));
             return;
         }
-            ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            if (context.getData().getGuildTier().hasFlag("music_controls")) {
-                buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
-                    if (context.hasPermission(runner, "volume")) {
-                        int volume = context.getMusicPlayer().getPlayer().getVolume();
-                        volume -= 10;
-                        if (volume <= 0) {
-                            volume = 0;
-                        }
-                        context.getMusicPlayer().getPlayer().setVolume(volume);
-                        message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
+        ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+        if (context.getData().getGuildTier().hasFlag("music_controls")) {
+            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
+                if (context.hasPermission(runner, "volume")) {
+                    int volume = context.getMusicPlayer().getVolume();
+                    volume -= 10;
+                    if (volume <= 0) {
+                        volume = 0;
                     }
                     context.getMusicPlayer().setVolume(volume);
                     message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
