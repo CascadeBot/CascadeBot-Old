@@ -75,6 +75,8 @@ public class GuildData {
 
     private Set<Long> usersForTiers = new HashSet<>();
 
+    private String manual_tier = null;
+
     @PreSave
     public void preSave() {
         this.stateLock = UUID.randomUUID();
@@ -185,11 +187,14 @@ public class GuildData {
     //endregion
 
     public Tier getGuildTier() {
-        if (usersForTiers.isEmpty()) {
+        if (usersForTiers.isEmpty() && manual_tier == null) {
             return Tier.getTier("default");
         }
 
         Tier highest = Tier.getTier("default");
+        if (manual_tier != null) {
+            highest = Tier.getTier(manual_tier);
+        }
         String highestTierName = "default";
         for (long id : usersForTiers) {
             CascadeUser user = CascadeUserDataManager.getUser(id);
