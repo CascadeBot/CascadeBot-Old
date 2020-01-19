@@ -7,7 +7,9 @@ import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.MessageType;
+import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
@@ -18,7 +20,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @Getter
-public class ScheduledAction {
+public class ScheduledAction implements Runnable {
 
     private final ActionType type;
     private final ActionData data;
@@ -48,18 +50,30 @@ public class ScheduledAction {
         this.executionTime = executionTime;
     }
 
+    @Override
+    public void run() {
+        this.type.dataConsumer.accept(this);
+    }
+
     @Getter
     @AllArgsConstructor
     public enum ActionType {
 
-        TEMP_MUTE((action, data) -> {
+        TEMP_MUTE(action -> {
 
         }),
-        TEMP_BAN((action, data) -> {
+        TEMP_BAN(action -> {
 
         }),
-        REMINDER((action, data) -> {
-            ReminderActionData reminderData = ((ReminderActionData) data);
+        REMINDER(action -> {
+            if (!(action.data instanceof ReminderActionData)) {
+                CascadeBot.LOGGER.error("Could not process data! Expected type: ReminderActionData Actual Type: " + action.data.getClass().getSimpleName());
+                TextChannel channel = CascadeBot.INS.getShardManager().getTextChannelById(action.channelId);
+                Messaging.sendDangerMessage(channel, "We were unable to process a reminder! Data: " + CascadeBot.getGSON().toJson(action.data));
+                return;
+            }
+
+            ReminderActionData reminderData = ((ReminderActionData) action.data);
 
             User user = CascadeBot.INS.getShardManager().getUserById(action.userId);
             if (user == null) return;
@@ -67,7 +81,7 @@ public class ScheduledAction {
             EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, user);
             builder.setTitle("Reminder!");
             builder.setDescription(user.getAsMention() + " you asked us to remind you of this: ```\n" + reminderData.reminder + "```");
-            builder.setFooter("Requested at: A TIME");
+            builder.setFooter("Requested at: " + FormatUtils.formatDateTime(action.creationTime, Language.getGuildLocale(action.guildId)));
 
             if (reminderData.isDM) {
                 user.openPrivateChannel().queue(channel -> {
@@ -80,7 +94,7 @@ public class ScheduledAction {
             }
         });
 
-        private final BiConsumer<ScheduledAction, ActionData> dataConsumer;
+        private final Consumer<ScheduledAction> dataConsumer;
 
     }
 
@@ -88,7 +102,7 @@ public class ScheduledAction {
 
     @Getter
     @AllArgsConstructor
-    public class ModerationActionData implements ActionData {
+    public static class ModerationActionData implements ActionData {
 
         private final long targetId;
 
@@ -96,7 +110,7 @@ public class ScheduledAction {
 
     @Getter
     @AllArgsConstructor
-    public class ReminderActionData implements ActionData {
+    public static class ReminderActionData implements ActionData {
 
         private final String reminder;
         private final boolean isDM;
