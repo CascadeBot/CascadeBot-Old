@@ -34,7 +34,7 @@ public class SkipCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        AudioTrack track = context.getMusicPlayer().getPlayer().getPlayingTrack();
+        AudioTrack track = context.getMusicPlayer().getPlayingTrack();
         if (track == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.skip.not_playing"));
             return;

@@ -19,6 +19,7 @@ import com.sedmelluq.discord.lavaplayer.source.soundcloud.SoundCloudAudioSourceM
 import com.sedmelluq.discord.lavaplayer.source.twitch.TwitchStreamAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import lavalink.client.io.jda.JdaLavalink;
+import lavalink.client.io.jda.JdaLink;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
@@ -35,6 +36,7 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
+import org.cascadebot.cascadebot.events.PlayerListener;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +56,7 @@ import java.util.regex.Pattern;
 public class MusicHandler {
 
     @Getter
-    private static AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
+    private AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
 
     private Pattern typePattern = Pattern.compile("youtube#([A-z]+)");
 
@@ -66,7 +68,7 @@ public class MusicHandler {
     private String twitchSourceName;
 
     @Getter
-    private static Map<Long, CascadePlayer> players = new HashMap<>();
+    private Map<Long, CascadePlayer> players = new HashMap<>();
 
     public MusicHandler(CascadeBot instance) {
         this.instance = instance;
@@ -74,8 +76,9 @@ public class MusicHandler {
 
     JsonParser musicJsonParser = new JsonParser();
 
-    private static JdaLavalink lavalink;
-    private static boolean lavalinkEnabled;
+    private JdaLavalink lavalink;
+    @Getter
+    private boolean lavalinkEnabled;
 
     public void buildMusic() {
         AudioSourceManagers.registerRemoteSources(playerManager);
@@ -111,11 +114,26 @@ public class MusicHandler {
         return players.computeIfAbsent(guildId, id -> {
             Guild guild = CascadeBot.INS.getShardManager().getGuildById(id);
             if (guild != null) {
-                return new CascadePlayer(guild);
+                return createPlayer(guild);
             } else {
                 return null;
             }
         });
+    }
+
+    private CascadePlayer createPlayer(Guild guild) {
+        CascadePlayer player;
+        if (isLavalinkEnabled()) {
+            JdaLink link = getLavaLink().getLink(guild);
+            player = new CascadeLavalinkPlayer(link.getPlayer());
+        } else {
+            AudioPlayer aPlayer = createLavaplayerPlayer();
+            player = new CascadeLavaplayerPlayer(aPlayer);
+            guild.getAudioManager().setSendingHandler(new LavaPlayerAudioSendHandler(aPlayer));
+        }
+        player.setGuild(guild);
+        player.addListener(new PlayerListener(player));
+        return player;
     }
 
     public boolean removePlayer(long guildId) {
@@ -202,11 +220,11 @@ public class MusicHandler {
         });
     }
 
-    public static AudioPlayer createLavaLinkPlayer() {
+    private AudioPlayer createLavaplayerPlayer() {
         return playerManager.createPlayer();
     }
 
-    public static JdaLavalink getLavalink() {
+    public JdaLavalink getLavalink() {
         return lavalink;
     }
 
@@ -235,12 +253,8 @@ public class MusicHandler {
         VIDEO, PLAYLIST
     }
 
-    static JdaLavalink getLavaLink() {
+    public JdaLavalink getLavaLink() {
         return lavalink;
-    }
-
-    public static boolean isLavalinkEnabled() {
-        return lavalinkEnabled;
     }
 
 }

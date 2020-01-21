@@ -214,9 +214,17 @@
       "_type": "required"
     }
   },
+  "karaoke": {
+    "_type": "command"
+  },
   "seek*": {
     "timestamp": {
       "_type": "required"
+    }
+  },
+  "equalizer": {
+    "reset": {
+      "_type": "command"
     }
   },
   "groupperms*": {
