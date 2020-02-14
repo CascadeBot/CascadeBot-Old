@@ -40,6 +40,7 @@ import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
+import org.cascadebot.cascadebot.scheduler.ScheduledActionManager;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
@@ -70,6 +71,8 @@ public class CascadeBot {
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
+    private ScheduledActionManager scheduledActionManager;
+
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
@@ -216,6 +219,7 @@ public class CascadeBot {
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
+        scheduledActionManager = new ScheduledActionManager();
 
         Metrics.INS.cacheMetrics.addCache("guilds", GuildDataManager.getGuilds());
 
@@ -296,6 +300,10 @@ public class CascadeBot {
 
     public ModerationManager getModerationManager() {
         return moderationManager;
+    }
+
+    public ScheduledActionManager getScheduledActionManager() {
+        return scheduledActionManager;
     }
 
     public OkHttpClient getHttpClient() {
