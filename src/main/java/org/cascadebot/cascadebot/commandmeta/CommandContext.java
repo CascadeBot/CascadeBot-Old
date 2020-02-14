@@ -353,7 +353,7 @@ public class CommandContext {
     }
 
     public boolean hasPermission(Member member, String permission) {
-        CascadePermission cascadePermission = CascadeBot.INS.getPermissionsManager().getPermission(permission);
+        CascadePermission cascadePermission = getData().getGuildPermissionsManager().getPermission(permission);
         if (cascadePermission == null) {
             CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission);
             return false;
