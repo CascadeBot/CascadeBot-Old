@@ -1,8 +1,11 @@
 package org.cascadebot.cascadebot.scheduler;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -16,10 +19,13 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import javax.swing.Action;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @Getter
+@EqualsAndHashCode
+@ToString
 public class ScheduledAction implements Runnable {
 
     private final ActionType type;
@@ -55,14 +61,20 @@ public class ScheduledAction implements Runnable {
         this.type.dataConsumer.accept(this);
     }
 
+    public long getDelay() {
+        return ChronoUnit.MILLIS.between(creationTime, executionTime);
+    }
+
     @Getter
     @AllArgsConstructor
     public enum ActionType {
 
-        TEMP_MUTE(action -> {
+        UNMUTE(action -> {
+            if (!(action.data instanceof ModerationActionData)) {
 
+            }
         }),
-        TEMP_BAN(action -> {
+        UNBAN(action -> {
 
         }),
         REMINDER(action -> {
@@ -76,12 +88,13 @@ public class ScheduledAction implements Runnable {
             ReminderActionData reminderData = ((ReminderActionData) action.data);
 
             User user = CascadeBot.INS.getShardManager().getUserById(action.userId);
-            if (user == null) return;
+            if (user == null)
+                return;
 
             EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, user);
             builder.setTitle("Reminder!");
-            builder.setDescription(user.getAsMention() + " you asked us to remind you of this: ```\n" + reminderData.reminder + "```");
-            builder.setFooter("Requested at: " + FormatUtils.formatDateTime(action.creationTime, Language.getGuildLocale(action.guildId)));
+            builder.setDescription("You asked us to remind you of this: ```\n" + reminderData.reminder + "```");
+            builder.setFooter("Requested: " + FormatUtils.formatDateTime(action.creationTime, Language.getGuildLocale(action.guildId)));
 
             if (reminderData.isDM) {
                 user.openPrivateChannel().queue(channel -> {
