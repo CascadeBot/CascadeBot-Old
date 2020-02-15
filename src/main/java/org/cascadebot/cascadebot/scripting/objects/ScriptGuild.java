@@ -1,8 +1,13 @@
 package org.cascadebot.cascadebot.scripting.objects;
 
 import lombok.AllArgsConstructor;
+import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.utils.cache.SnowflakeCacheView;
+import org.bukkit.block.data.type.Snow;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 
@@ -13,41 +18,40 @@ public class ScriptGuild extends ScriptableObject {
 
     private final Guild internalGuild;
 
-    public void getAfkChannel() {
-        /* Channel */
+    public GuildChannel getAfkChannel() {
+        return internalGuild.getAfkChannel();
     }
 
-    public void getAfkTimeout() {
-        /* Guild.Timeout */
+    public Guild.Timeout getAfkTimeout() {
+        return internalGuild.getAfkTimeout();
     }
 
-    public void getBannerId() {
-        /* String */
+    public String getBannerId() {
+        return internalGuild.getBannerId();
     }
 
-    public void getBannerUrl() {
-        /* String */
+    public String getBannerUrl() {
+        return internalGuild.getBannerUrl();
     }
 
-    public void getBoostCount() {
-        /* Integer */
+    public Integer getBoostCount() {
+        return internalGuild.getBoostCount();
     }
 
-    public void getBoosters() {
-        /* List<Member> */
+    public List<Member> getBoosters() {
+        return internalGuild.getBoosters();
     }
 
-    public void getBoostTier() {
-        /* Guild.BoostTier */
+    public Guild.BoostTier getBoostTier() {
+        return internalGuild.getBoostTier();
     }
 
-    public void getCategories() {
-        /* Use getCategoryCache internally */
-        /* List<Category> */
+    public List<Category> getCategories() {
+        return internalGuild.getCategories();
     }
 
-    public void getCategoriesByName(String name, boolean ignoreCase) {
-        /* List<Category> */
+    public List<Category> getCategoriesByName(String name, boolean ignoreCase) {
+        return internalGuild.getCategoriesByName(name, ignoreCase);
     }
 
     public void getCategoryById(String id) {
