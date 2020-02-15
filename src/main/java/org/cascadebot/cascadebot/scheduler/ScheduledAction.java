@@ -103,7 +103,9 @@ public class ScheduledAction implements Runnable {
             } else {
                 TextChannel channel = CascadeBot.INS.getShardManager().getTextChannelById(action.channelId);
                 if (channel == null) return;
-                channel.sendMessage(builder.build()).queue();
+                MessageBuilder messageBuilder = new MessageBuilder(builder);
+                messageBuilder.setContent(user.getAsMention());
+                channel.sendMessage(messageBuilder.build()).queue();
             }
         });
 

@@ -15,10 +15,13 @@ import lombok.Setter;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.scheduler.ScheduledAction;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -80,6 +83,10 @@ public class GuildSettingsCore {
 
     @Setting(directlyEditable = false)
     private ConcurrentHashMap<String, Tag> tags = new ConcurrentHashMap<>();
+
+    @Setting(directlyEditable = false)
+    private List<ScheduledAction> scheduledActions = Collections.synchronizedList(new ArrayList<>());
+
 
     public GuildSettingsCore(long guildId) {
         this.guildId = guildId;
