@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 public class ScriptUser extends ScriptableObject {
 
+    public User internalUser;
+
     public ScriptUser() {
 
     }
@@ -59,8 +61,6 @@ public class ScriptUser extends ScriptableObject {
     public boolean isBot() {
         return internalUser.isBot();
     }
-
-    private
 
     @JSStaticFunction
     public static ScriptUser getUser(String id) {
