@@ -205,7 +205,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>delight-rhino-sandbox</artifactId>
-            <version>13b53def79</version>
+            <version>7bf1f8b</version>
         </dependency>
         <dependency>
             <groupId>com.github.CascadeBot</groupId>

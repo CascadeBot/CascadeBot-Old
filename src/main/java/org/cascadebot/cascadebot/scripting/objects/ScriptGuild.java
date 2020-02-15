@@ -2,13 +2,16 @@ package org.cascadebot.cascadebot.scripting.objects;
 
 import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Guild;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 import java.util.List;
 
 @AllArgsConstructor
-public class Guild {
+public class ScriptGuild extends ScriptableObject {
 
-    private final net.dv8tion.jda.api.entities.Guild internalGuild;
+    private final Guild internalGuild;
 
     public void getAfkChannel() {
         /* Channel */
@@ -121,7 +124,7 @@ public class Guild {
         /* Integer */
     }
 
-    public void getMember(User user) {
+    public void getMember(ScriptUser user) {
         /* Member */
     }
 
@@ -265,10 +268,13 @@ public class Guild {
         /* List<GuildVoiceStates> */
     }
 
-    public void isMember(User user) {
+    public void isMember(ScriptUser user) {
         /* boolean */
     }
 
-
+    @Override
+    public String getClassName() {
+        return "Guild";
+    }
 
 }
