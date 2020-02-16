@@ -68,8 +68,8 @@ public class ScriptGuild extends ScriptableObject {
         return internalGuild.getCategoryById(id);
     }
 
-    public SortedSnowflakeCacheView<TextChannel> getChannels() {
-        return internalGuild.getTextChannelCache();
+    public List<GuildChannel> getChannels() {
+        return internalGuild.getChannels();
     }
 
     public TextChannel getDefaultChannel() {
@@ -88,8 +88,8 @@ public class ScriptGuild extends ScriptableObject {
         return internalGuild.getEmoteById(id);
     }
 
-    public SnowflakeCacheView<Emote> getEmotes() {
-        return internalGuild.getEmoteCache();
+    public List<Emote> getEmotes() {
+        return internalGuild.getEmoteCache().asList();
     }
 
     public List<Emote> getEmotesByName(String name, boolean ignoreCase) {
@@ -236,8 +236,8 @@ public class ScriptGuild extends ScriptableObject {
         return internalGuild.getTextChannelById(id);
     }
 
-    public SortedSnowflakeCacheView<TextChannel> getTextChannels() {
-        return internalGuild.getTextChannelCache();
+    public List<TextChannel> getTextChannels() {
+        return internalGuild.getTextChannelCache().asList();
     }
 
     public List<TextChannel> getTextChannelsByName(String name, boolean ignoreCase) {
@@ -256,8 +256,8 @@ public class ScriptGuild extends ScriptableObject {
         return internalGuild.getVoiceChannelById(id);
     }
 
-    public SortedSnowflakeCacheView<VoiceChannel> getVoiceChannels() {
-        return internalGuild.getVoiceChannelCache();
+    public List<VoiceChannel> getVoiceChannels() {
+        return internalGuild.getVoiceChannelCache().asList();
     }
 
     public List<VoiceChannel> getVoiceChannelsByName(String name, boolean ignoreCase) {
