@@ -1,17 +1,27 @@
 package org.cascadebot.cascadebot.scripting.objects;
 
 import lombok.AllArgsConstructor;
+import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.StoreChannel;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.utils.cache.MemberCacheView;
 import net.dv8tion.jda.api.utils.cache.SnowflakeCacheView;
-import org.bukkit.block.data.type.Snow;
-import org.mozilla.javascript.Scriptable;
+import net.dv8tion.jda.api.utils.cache.SortedSnowflakeCacheView;
 import org.mozilla.javascript.ScriptableObject;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 public class ScriptGuild extends ScriptableObject {
@@ -54,226 +64,212 @@ public class ScriptGuild extends ScriptableObject {
         return internalGuild.getCategoriesByName(name, ignoreCase);
     }
 
-    public void getCategoryById(String id) {
-        /* Category */
+    public Category getCategoryById(String id) {
+        return internalGuild.getCategoryById(id);
     }
 
-    public void getChannels() {
-        /* Use getChannelCache internally */
-        /* List<GuildChannel> */
+    public SortedSnowflakeCacheView<TextChannel> getChannels() {
+        return internalGuild.getTextChannelCache();
     }
 
-    public void getDefaultChannel() {
-        /* TextChannel */
+    public TextChannel getDefaultChannel() {
+        return internalGuild.getDefaultChannel();
     }
 
-    public void getDefaultNotificationLevel() {
-        /* Guild.NotificationLevel */
+    public Guild.NotificationLevel getDefaultNotificationLevel() {
+        return internalGuild.getDefaultNotificationLevel();
     }
 
-    public void getDescription() {
-        /* String */
+    public String getDescription() {
+        return internalGuild.getDescription();
     }
 
-    public void getEmoteById(String id) {
-        /* Emote */
+    public Emote getEmoteById(String id) {
+        return internalGuild.getEmoteById(id);
     }
 
-    public void getEmotes() {
-        /* Use getEmoteCache internally */
-        /* List<Emote> */
+    public SnowflakeCacheView<Emote> getEmotes() {
+        return internalGuild.getEmoteCache();
     }
 
-    public void getEmotesByName(String name, boolean ignoreCase) {
-        /* List<Emote> */
+    public List<Emote> getEmotesByName(String name, boolean ignoreCase) {
+        return internalGuild.getEmotesByName(name, ignoreCase);
     }
 
-    public void getExplicitContentLevel() {
-        /* Guild.ExplicitContentLevel */
+    public Guild.ExplicitContentLevel getExplicitContentLevel() {
+        return internalGuild.getExplicitContentLevel();
     }
 
-    public void getFeatures() {
-        /* Set<String> */
+    public Set<String> getFeatures() {
+        return internalGuild.getFeatures();
     }
 
-    public void getGuildChannelById(String id) {
-        /* GuildChannel */
+    public GuildChannel getGuildChannelById(String id) {
+        return internalGuild.getGuildChannelById(id);
     }
 
-    public void getGuildChannelById(ChannelType type, String id) {
-        /* GuildChannel */
+    public GuildChannel getGuildChannelById(ChannelType type, String id) {
+        return internalGuild.getGuildChannelById(type, id);
     }
 
-    public void getIconId() {
-        /* String */
+    public String getIconId() {
+        return internalGuild.getIconId();
     }
 
-    public void getIconUrl() {
-        /* String */
+    public String getIconUrl() {
+        return internalGuild.getIconUrl();
     }
 
-    public void getMaxBitrate() {
-        /* Integer */
+    public Integer getMaxBitrate() {
+        return internalGuild.getMaxBitrate();
     }
 
-    public void getMaxEmotes() {
-        /* Integer */
+    public Integer getMaxEmotes() {
+        return internalGuild.getMaxEmotes();
     }
 
-    public void getMaxMembers() {
-        /* Integer */
+    public Integer getMaxMembers() {
+        return internalGuild.getMaxMembers();
     }
 
-    public void getMaxPresences() {
-        /* Integer */
+    public Integer getMaxPresences() {
+        return internalGuild.getMaxPresences();
     }
 
-    public void getMember(ScriptUser user) {
-        /* Member */
+    public Member getMember(User user) {
+        return internalGuild.getMember(user);
     }
 
-    public void getMemberById(String id) {
-        /* Member */
+    public Member getMemberById(String id) {
+        return internalGuild.getMemberById(id);
     }
 
-    public void getMemberByTag(String tag) {
-        /* Member */
+    public Member getMemberByTag(String tag) {
+        return internalGuild.getMemberByTag(tag);
     }
 
-    public void getMemberByTag(String username, String discriminator) {
-        /* Member */
+    public Member getMemberByTag(String username, String discriminator) {
+        return internalGuild.getMemberByTag(username, discriminator);
     }
 
-    public void getMembers() {
-        /* Use getMemberCache internally */
-        /* List<Member> */
+    public MemberCacheView getMembers() {
+        return internalGuild.getMemberCache();
     }
 
-    public void getMembersByEffectiveName(String name, boolean ignoreCase) {
-        /* List<Member> */
+    public List<Member> getMembersByEffectiveName(String name, boolean ignoreCase) {
+        return internalGuild.getMembersByEffectiveName(name, ignoreCase);
     }
 
-    public void getMembersByName(String name, boolean ignoreCase) {
-        /* List<Member> */
+    public List<Member> getMembersByName(String name, boolean ignoreCase) {
+        return internalGuild.getMembersByName(name, ignoreCase);
     }
 
-    public void getMembersByNickname(String name, boolean ignoreCase) {
-        /* List<Member> */
+    public List<Member> getMembersByNickname(String name, boolean ignoreCase) {
+        return internalGuild.getMembersByNickname(name, ignoreCase);
     }
 
-    public void getMembersWithRoles(List<String> roles) {
-        /* List<Member> */
+    public List<Member> getMembersWithRoles(Collection<Role> roles) {
+        return internalGuild.getMembersWithRoles(roles);
     }
 
-    public void getMembersWithRoles(/*List<Role> roles*/) {
-        /* List<Member> */
+    public String getName() {
+        return internalGuild.getName();
     }
 
-    public void getName() {
-        /* String */
+    public Member getOwner() {
+        return internalGuild.getOwner();
     }
 
-    public void getOwner() {
-        /* Member */
+    public String getOwnerId() {
+        return internalGuild.getOwnerId();
     }
 
-    public void getOwnerId() {
-        /* String */
+    public Role getPublicRole() {
+        return internalGuild.getPublicRole();
     }
 
-    public void getPublicRole() {
-        /* Role */
+    public Region getRegion() {
+        return internalGuild.getRegion();
     }
 
-    public void getRegion() {
-        /* Region */
+    public Guild.MFALevel getRequiredMFALevel() {
+        return internalGuild.getRequiredMFALevel();
     }
 
-    public void getRequiredMFALevel() {
-        /* Guild.MFALevel */
+    public Role getRoleById(String id) {
+        return internalGuild.getRoleById(id);
     }
 
-    public void getRoleById(String id) {
-        /* Role */
+    public SortedSnowflakeCacheView<Role> getRoles() {
+        return internalGuild.getRoleCache();
     }
 
-    public void getRoles() {
-        /* Use getRoleCache internally */
-        /* List<Role> */
+    public List<Role> getRolesByName(String name, boolean ignoreCase) {
+        return internalGuild.getRolesByName(name, ignoreCase);
     }
 
-    public void getRolesByName(String name, boolean ignoreCase) {
-        /* List<Role> */
+    public String getSplashId() {
+        return internalGuild.getSplashId();
     }
 
-    public void getSplashId() {
-        /* String */
+    public String getSplashUrl() {
+        return internalGuild.getSplashUrl();
     }
 
-    public void getSplashUrl() {
-        /* String */
+    public StoreChannel getStoreChannelById(String id) {
+        return internalGuild.getStoreChannelById(id);
     }
 
-    public void getStoreChannelById(String id) {
-        /* StoreChannel */
+    public List<StoreChannel> getStoreChannels() {
+        return internalGuild.getStoreChannels();
     }
 
-    public void getStoreChannels() {
-        /* Use cache internally
-        * List<StoreChannel> */
+    public List<StoreChannel> getStoreChannelsByName(String name, boolean ignoreCase) {
+        return internalGuild.getStoreChannelsByName(name, ignoreCase);
     }
 
-    public void getStoreChannelsByName(String name, boolean ignoreCase) {
-        /* Use cache internally
-        * List<StoreChannel> */
+    public TextChannel getSystemChannel() {
+        return internalGuild.getSystemChannel();
     }
 
-    public void getSystemChannel() {
-        /* TextChannel */
+    public TextChannel getTextChannelById(String id) {
+        return internalGuild.getTextChannelById(id);
     }
 
-    public void getTextChannelById(String id) {
-        /* TextChannel */
+    public SortedSnowflakeCacheView<TextChannel> getTextChannels() {
+        return internalGuild.getTextChannelCache();
     }
 
-    public void getTextChannels() {
-        /* Use cache internally
-        * List<TextChannel> */
+    public List<TextChannel> getTextChannelsByName(String name, boolean ignoreCase) {
+        return internalGuild.getTextChannelsByName(name, ignoreCase);
     }
 
-    public void getTextChannelsByName(String name, boolean ignoreCase) {
-        /* Use cache internally
-         * List<TextChannel> */
+    public String getVanityCode() {
+        return internalGuild.getVanityCode();
     }
 
-    public void getVanityCode() {
-        /* String */
+    public String getVanityUrl() {
+        return internalGuild.getVanityUrl();
     }
 
-    public void getVanityUrl() {
-        /* String */
+    public VoiceChannel getVoiceChannelById(String id) {
+        return internalGuild.getVoiceChannelById(id);
     }
 
-    public void getVoiceChannelById(String id) {
-        /* VoiceChannel */
+    public SortedSnowflakeCacheView<VoiceChannel> getVoiceChannels() {
+        return internalGuild.getVoiceChannelCache();
     }
 
-    public void getVoiceChannels() {
-        /* Use cache internally
-        List<VoiceChannel> */
+    public List<VoiceChannel> getVoiceChannelsByName(String name, boolean ignoreCase) {
+        return internalGuild.getVoiceChannelsByName(name, ignoreCase);
     }
 
-    public void getVoiceChannelsByName(String name, boolean ignoreCase) {
-        /* Use cache internally
-        List<VoiceChannel> */
+    public List<GuildVoiceState> getVoiceStates() {
+        return internalGuild.getVoiceStates();
     }
 
-    public void getVoiceStates() {
-        /* List<GuildVoiceStates> */
-    }
-
-    public void isMember(ScriptUser user) {
-        /* boolean */
+    public boolean isMember(User user) {
+        return internalGuild.isMember(user);
     }
 
     @Override
