@@ -81,7 +81,7 @@ public class QueueCommand implements ICommandMain {
 
     @Override
     public Set<ISubCommand> getSubCommands() {
-        return Set.of(new QueueSaveSubCommand(), new QueueLoadSubCommand());
+        return Set.of(new QueueSaveSubCommand(), new QueueLoadSubCommand(), new QueueMoveSubCommand(), new QueueRemoveSubCommand());
     }
 
 }
