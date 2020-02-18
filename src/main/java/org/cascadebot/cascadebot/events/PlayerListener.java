@@ -7,12 +7,16 @@ package org.cascadebot.cascadebot.events;
 
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEvent;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventListener;
+import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.event.IPlayerEventListener;
 import lavalink.client.player.event.PlayerEvent;
 import lavalink.client.player.event.TrackEndEvent;
+import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.music.CascadePlayer;
+import org.cascadebot.cascadebot.music.TrackData;
 
 import java.util.NoSuchElementException;
 
@@ -56,10 +60,18 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
                 }
                 // Take the next track in the queue, remove it from the queue and play it
                 AudioTrack audioTrack = player.getQueue().remove();
-                player.playTrack(audioTrack);
+                try {
+                    player.playTrack(audioTrack);
+                } catch (FriendlyException e) {
+                    Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()), "Failed to play audio track", e);
+                }
             } else if (player.getLoopMode().equals(CascadePlayer.LoopMode.SONG)) {
                 // Take the song that just finished and repeat it
-                player.playTrack(track.makeClone());
+                try {
+                    player.playTrack(track.makeClone());
+                } catch (FriendlyException e) {
+                    Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) track.getUserData()).getErrorChannelId()), "Failed to play audio track", e);
+                }
             }
         } catch (NoSuchElementException e) {
             // No more songs left in the queue

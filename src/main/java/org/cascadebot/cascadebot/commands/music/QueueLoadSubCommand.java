@@ -25,7 +25,7 @@ public class QueueLoadSubCommand implements ISubCommand {
             return;
         }
 
-        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, (result, tracks) -> {
+        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, context.getChannel().getIdLong(), (result, tracks) -> {
             switch (result) {
                 case LOADED_GUILD:
                 case LOADED_USER:
@@ -38,7 +38,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                             return;
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.USER, ((loadPlaylistResult, newTracks) -> {
+                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.USER, context.getChannel().getIdLong(), ((loadPlaylistResult, newTracks) -> {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }));
                     })));
@@ -47,7 +47,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                             return;
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
+                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.GUILD, context.getChannel().getIdLong(), ((loadPlaylistResult, newTracks) -> {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }));
                     })));
