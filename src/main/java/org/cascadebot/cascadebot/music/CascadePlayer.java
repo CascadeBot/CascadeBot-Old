@@ -248,6 +248,28 @@ public interface CascadePlayer extends IPlayer {
         }
     }
 
+    default void removeTrack(int index) {
+        List<AudioTrack> tracks = new ArrayList<>(queue);
+        tracks.remove(index);
+        queue.clear();
+        queue.addAll(tracks);
+    }
+
+    default void moveTrack(int track, int pos) {
+        List<AudioTrack> tracks = new ArrayList<>(queue);
+        AudioTrack trackToMove = tracks.remove(track);
+        if (pos - 1 > tracks.size()) {
+            pos = tracks.size();
+        }
+
+        if (pos == tracks.size()) {
+            tracks.add(trackToMove);
+            return;
+        }
+
+        tracks.add(pos, trackToMove);
+    }
+
     default void setGuild(Guild guild) {
         guildId.set(guild.getIdLong());
     }
