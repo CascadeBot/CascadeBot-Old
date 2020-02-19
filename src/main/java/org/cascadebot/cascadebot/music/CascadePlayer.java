@@ -262,17 +262,17 @@ public interface CascadePlayer extends IPlayer {
 
     default void moveTrack(int track, int pos) {
         List<AudioTrack> tracks = new ArrayList<>(queue);
-        AudioTrack trackToMove = tracks.remove(track);
-        if (pos - 1 > tracks.size()) {
-            pos = tracks.size();
-        }
-
-        if (pos == tracks.size()) {
+        AudioTrack trackToMove = tracks.get(track);
+        if (pos >= tracks.size()) {
+            // Moved to end of array
+            tracks.remove(track);
             tracks.add(trackToMove);
-            return;
         }
 
+        tracks.add(track, tracks.get(pos));
         tracks.add(pos, trackToMove);
+        queue.clear();
+        queue.addAll(tracks);
     }
 
     default void setGuild(Guild guild) {

@@ -16,6 +16,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.music.CascadePlayer;
+import org.cascadebot.cascadebot.music.MovableAudioTrack;
 import org.cascadebot.cascadebot.music.TrackData;
 
 import java.util.NoSuchElementException;

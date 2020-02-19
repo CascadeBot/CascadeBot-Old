@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.commands.music;
 
-import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -13,14 +12,14 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.music.MovableAudioTrack;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.move.MovableList;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class QueueMoveSubCommand implements ISubCommand {
 
@@ -53,165 +52,59 @@ public class QueueMoveSubCommand implements ISubCommand {
             context.getMusicPlayer().moveTrack(track, pos);
             context.getTypedMessaging().replySuccess("Moved track at position " + (track + 1) + " to position " + (pos + 1));
         } else {
-            AtomicInteger selected = new AtomicInteger(-1);
-            if (context.getArgs().length == 1) {
-                if (context.isArgInteger(0)) {
-                    int posStart = context.getArgAsInteger(0) - 1;
-                    if (posStart > 0 && posStart < context.getMusicPlayer().getQueue().size() - 1) {
-                        selected.set(posStart);
-                    }
-                }
-            }
-            AtomicBoolean movingTrack = new AtomicBoolean(selected.get() > -1);
-            AtomicInteger start = new AtomicInteger(selected.get());
-            if (!movingTrack.get()) {
-                selected.set(0);
-            }
-
-            List<AudioTrack> audioTracks = new ArrayList<>(context.getMusicPlayer().getQueue());
+            List<MovableAudioTrack> movableAudioTracks = context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList());;
+            MovableList<MovableAudioTrack> movableList = new MovableList<>(movableAudioTracks);
             ButtonGroup group = new ButtonGroup(context.getMember().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            //TODO I should probably move this code to a util in case this need to be used else where
             group.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
-                if (context.getMusicPlayer().getQueue().size() < audioTracks.size()) {
-                    int diff = context.getMusicPlayer().getQueue().size() - audioTracks.size();
-                    if (start.get() > -1) {
-                        start.addAndGet(-diff);
-                        if (start.get() < -1) start.set(-1);
-                    }
-                    selected.addAndGet(-diff);
-                    if (selected.get() < 0) {
-                        selected.set(0);
-                    }
-                }
-                audioTracks.clear();
-                audioTracks.addAll(context.getMusicPlayer().getQueue());
-                if (selected.get() == 0) {
-                    return;
-                }
-                int current = selected.getAndAdd(-1);
-                if (movingTrack.get()) {
-                    int newPos = selected.get();
-                    AudioTrack track = audioTracks.remove(current);
-                    audioTracks.add(newPos, track);
-                }
-                message.editMessage(getMoveEmbed(audioTracks, selected.get(), movingTrack.get()).build()).override(true).queue();
+                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
+                movableList.moveSelection(-1);
+                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
             }));
             group.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
-                if (context.getMusicPlayer().getQueue().size() < audioTracks.size()) {
-                    int diff = context.getMusicPlayer().getQueue().size() - audioTracks.size();
-                    if (start.get() > -1) {
-                        start.addAndGet(-diff);
-                        if (start.get() < -1) start.set(-1);
-                    }
-                    selected.addAndGet(-diff);
-                    if (selected.get() < 0) {
-                        selected.set(0);
-                    }
-                }
-                audioTracks.clear();
-                audioTracks.addAll(context.getMusicPlayer().getQueue());
-                if (selected.get() >= audioTracks.size() - 1) {
-                    return;
-                }
-                int current = selected.getAndAdd(1);
-                if (movingTrack.get()) {
-                    int newPos = selected.get();
-                    AudioTrack track = audioTracks.remove(current);
-                    audioTracks.add(newPos, track);
-                }
-                message.editMessage(getMoveEmbed(audioTracks, selected.get(), movingTrack.get()).build()).override(true).queue();
+                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
+                movableList.moveSelection(1);
+                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
             }));
             group.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
-                if (context.getMusicPlayer().getQueue().size() < audioTracks.size()) {
-                    int diff = context.getMusicPlayer().getQueue().size() - audioTracks.size();
-                    if (start.get() > -1) {
-                        start.addAndGet(-diff);
-                        if (start.get() < -1) start.set(-1);
-                    }
-                    selected.addAndGet(-diff);
-                    if (selected.get() < 0) {
-                        selected.set(0);
-                    }
-                }
-                audioTracks.clear();
-                audioTracks.addAll(context.getMusicPlayer().getQueue());
-
-                if (movingTrack.get()) {
-                    movingTrack.set(false);
-                    int trackPos = start.getAndSet(-1);
-                    context.getMusicPlayer().moveTrack(trackPos, selected.get());
+                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
+                if (movableList.isMoving()) {
+                    List<MovableAudioTrack> movedAudioTracks = movableList.confirmMove();
+                    context.getMusicPlayer().getQueue().clear();
+                    context.getMusicPlayer().getQueue().addAll(movedAudioTracks.stream().map(MovableAudioTrack::getTrack).collect(Collectors.toList()));
                 } else {
-                    movingTrack.set(true);
+                    movableList.startMovingItem();
                 }
-                message.editMessage(getMoveEmbed(audioTracks, selected.get(), movingTrack.get()).build()).override(true).queue();
+                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
             }));
             group.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
-                if (context.getMusicPlayer().getQueue().size() < audioTracks.size()) {
-                    int diff = context.getMusicPlayer().getQueue().size() - audioTracks.size();
-                    if (start.get() > -1) {
-                        start.addAndGet(-diff);
-                        if (start.get() < -1) start.set(-1);
-                    }
-                    selected.addAndGet(-diff);
-                    if (selected.get() < 0) {
-                        selected.set(0);
-                    }
-                }
-                audioTracks.clear();
-                audioTracks.addAll(context.getMusicPlayer().getQueue());
-
-                if (movingTrack.get()) {
-                    movingTrack.set(false);
-                    message.editMessage(getMoveEmbed(audioTracks, selected.get(), movingTrack.get()).build()).override(true).queue();
+                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
+                if (movableList.isMoving()) {
+                    movableList.cancelMovingItem();
+                    message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
                 } else {
                     message.delete().queue();
                 }
             }));
-            context.getUIMessaging().sendButtonedMessage(getMoveEmbed(audioTracks, selected.get(), movingTrack.get()).build(), group);
+            context.getUIMessaging().sendButtonedMessage(getMoveEmbed(movableList).build(), group);
         }
     }
 
-    public EmbedBuilder getMoveEmbed(List<AudioTrack> tracks, int selected, boolean isMoving) {
-        int currentPage = selected / 10 + 1;
-        int start = currentPage * 10 - 10;
-        int end = start + 9;
-
-        StringBuilder pageBuilder = new StringBuilder();
-
-        for (int i = start; i <= end; i++) {
-            if (i >= tracks.size()) {
-                break;
-            }
-            AudioTrack item = tracks.get(i);
-            if (i == selected) {
-                pageBuilder.append(UnicodeConstants.SMALL_ORANGE_DIAMOND).append(" ");
-            } else {
-                pageBuilder.append(UnicodeConstants.WHITE_SMALL_SQUARE).append(" ");
-            }
-            pageBuilder.append(i + 1).append(": ");
-            if (i == selected && isMoving) {
-                pageBuilder.append("**");
-            }
-            pageBuilder.append(item.getInfo().title).append('\n');
-            if (i == selected && isMoving) {
-                pageBuilder.append("**");
-            }
-        }
+    public EmbedBuilder getMoveEmbed(MovableList<MovableAudioTrack> list) {
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO);
         builder.setTitle("Queue Move");
-        builder.appendDescription(pageBuilder.toString());
+        builder.appendDescription(list.getFrontendText());
         return builder;
     }
 
@@ -227,7 +120,7 @@ public class QueueMoveSubCommand implements ISubCommand {
 
     @Override
     public String parent() {
-        return "move";
+        return "queue";
     }
 
 }
