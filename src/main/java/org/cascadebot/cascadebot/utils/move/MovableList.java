@@ -34,18 +34,22 @@ public class MovableList<T extends MovableItem> {
     public void notifyListChange(@NotNull List<T> newList) {
         Map<Integer, Integer> movedAmountMap = new HashMap<>();
         int newPos = 0;
-        for (T item: newList) {
+        for (T item : newList) {
             // Loop through all items and find the difference between item positions
             int oldPos = list.indexOf(item);
             if (oldPos != -1) {
                 // existing item
                 movedAmountMap.put(oldPos, newPos - oldPos);
-            } // we ignore new items as the user can never have a new item selected.
+            } // Ignore new items
             newPos++;
         }
-        if (selected != -1) { // TODO account for item being moved via this code
+        if (selected != -1) {
             if (movedAmountMap.containsKey(selected)) {
-                int newSelected = selected + movedAmountMap.get(selected);
+                int moveAmount = movedAmountMap.get(selected);
+                int newSelected = selected + moveAmount;
+                if (moving) {
+                    newSelected -= itemStart - selected;
+                }
                 selected = fitInArray(newSelected);
             } else {
                 // Selected item was removed
@@ -55,6 +59,9 @@ public class MovableList<T extends MovableItem> {
         if (itemStart != -1) {
             if (movedAmountMap.containsKey(itemStart)) {
                 int newItem = itemStart + movedAmountMap.get(itemStart);
+                if (moving) {
+                    newItem -= selected - itemStart;
+                }
                 itemStart = fitInArray(newItem);
             } else {
                 // Item being moved was removed
@@ -63,6 +70,9 @@ public class MovableList<T extends MovableItem> {
             }
         }
         list = newList;
+        if (moving) {
+            moveItem(itemStart, selected);
+        }
     }
 
     public void moveSelection(int amount) {
@@ -78,6 +88,7 @@ public class MovableList<T extends MovableItem> {
             throw new UnsupportedOperationException("Cannot start moving if you are already moving");
         }
         moving = true;
+        itemStart = selected;
     }
 
     public void cancelMovingItem() throws UnsupportedOperationException {
