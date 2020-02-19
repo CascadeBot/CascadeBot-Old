@@ -14,5 +14,6 @@ public class TrackData {
 
     private long userId;
     private long errorChannelId;
+    private long guildId;
 
 }

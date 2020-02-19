@@ -15,6 +15,7 @@ import lavalink.client.player.event.IPlayerEventListener;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -103,7 +104,7 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
         try {
             lavalinkPlayer.playTrack(audioTrack);
         } catch (FriendlyException e) {
-            Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()), "Failed to play audio track", e);
+            Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()), Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"), e);
         }
     }
 

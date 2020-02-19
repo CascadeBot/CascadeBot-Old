@@ -851,7 +851,8 @@
       "cannot_find_tracks": "We couldn't find any tracks to load!",
       "num_tracks": "{0} tracks",
       "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`",
-      "loaded_track": "Loaded track"
+      "loaded_track": "Loaded track",
+      "error": "Failed to play audio track"
     },
     "handler": {
       "error_searching": "Error searching from YouTube!",
