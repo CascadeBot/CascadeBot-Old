@@ -27,7 +27,7 @@ public class QueueMoveSubCommand implements ISubCommand {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length >= 2) {
             if (!context.isArgInteger(0) || !context.isArgInteger(1)) {
-                context.getTypedMessaging().replyDanger("Must use numbers to move tracks!");
+                context.getTypedMessaging().replyDanger(context.i18n("commands.queue.move.numbers"));
                 return;
             }
 
@@ -35,22 +35,22 @@ public class QueueMoveSubCommand implements ISubCommand {
             int pos = context.getArgAsInteger(1) - 1;
 
             if (track < 0 || track >= context.getMusicPlayer().getQueue().size()) {
-                context.getTypedMessaging().replyDanger("Cannot find track number " + (track + 1));
+                context.getTypedMessaging().replyDanger(context.i18n("commands.queue.track_number", track + 1));
                 return;
             }
 
             if (pos < 0) {
-                context.getTypedMessaging().replyDanger("Cannot move a track to a number less then 0");
+                context.getTypedMessaging().replyDanger(context.i18n("commands.queue.move.zero"));
                 return;
             }
 
             if (track == pos) {
-                context.getTypedMessaging().replyDanger("Cannot move track to its own position!");
+                context.getTypedMessaging().replyDanger(context.i18n("commands.queue.move.self"));
                 return;
             }
 
             context.getMusicPlayer().moveTrack(track, pos);
-            context.getTypedMessaging().replySuccess("Moved track at position " + (track + 1) + " to position " + (pos + 1));
+            context.getTypedMessaging().replySuccess(context.i18n("commands.queue.move.moved", track + 1, pos + 1));
         } else {
             List<MovableAudioTrack> movableAudioTracks = context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList());;
             MovableList<MovableAudioTrack> movableList = new MovableList<>(movableAudioTracks);

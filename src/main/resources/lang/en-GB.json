@@ -381,6 +381,7 @@
       "description": "Displays the current queue.",
       "aliases": ["playlist"],
       "no_tracks_playing": "There are no tracks playing!",
+      "track_number": "Cannot find track number {0}",
       "queue_time": "*There is `{0}` left in this queue*",
       "load": {
         "command": "load",
@@ -396,6 +397,20 @@
         "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it.",
         "playlist_overwrite": "Playlist already exists. Would you like to overwrite it?",
         "saved_playlist": "Saved playlist `{0}` in scope `{1}`."
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a song from the queue at the specified position",
+        "invalid_number": "`{0}` is not a number! You can only remove using the track number.",
+        "removed": "Removed track number {0} from the queue."
+      },
+      "move": {
+        "command": "move",
+        "description": "Moves items around in the queue",
+        "numbers": "Must use numbers to move tracks!",
+        "zero": "Cannot move a track to a number less then 0",
+        "self": "Cannot move track to its own position!",
+        "moved": "Moved track at position {0}} to position {1}"
       }
     },
     "resume": {
@@ -724,6 +739,14 @@
           "name": "queue.save.overwrite",
           "label": "Overwrite guild playlist"
         }
+      },
+      "remove": {
+        "name": "queue.remove",
+        "label": "Queue remove sub command"
+      },
+      "move": {
+        "name": "queue.move",
+        "label": "Queue move sub command"
       }
     },
     "resume": {

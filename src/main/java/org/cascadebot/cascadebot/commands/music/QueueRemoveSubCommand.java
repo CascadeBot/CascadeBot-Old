@@ -20,18 +20,18 @@ public class QueueRemoveSubCommand implements ISubCommand {
         }
 
         if (!context.isArgInteger(0)) {
-            context.getTypedMessaging().replyDanger("`" + context.getArg(0) + "` is not a number! You can only remove using the track number.");
+            context.getTypedMessaging().replyDanger(context.i18n("commands.queue.remove.invalid_number", context.getArg(0)));
             return;
         }
 
         int index = context.getArgAsInteger(0) - 1;
         if (index < 0 || index >= context.getMusicPlayer().getQueue().size()) {
-            context.getTypedMessaging().replyDanger("Cannot find track number " + (index + 1));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.queue.track_number", index + 1));
             return;
         }
 
         context.getMusicPlayer().removeTrack(index);
-        context.getTypedMessaging().replySuccess("Removed track number " + (index + 1) + " from the queue.");
+        context.getTypedMessaging().replySuccess(context.i18n("commands.queue.remove.removed", index + 1));
     }
 
     @Override
