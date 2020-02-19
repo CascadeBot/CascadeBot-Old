@@ -6,5 +6,7 @@
 package org.cascadebot.cascadebot.utils.move;
 
 public interface MovableItem {
+
     String getItemText();
+    
 }
