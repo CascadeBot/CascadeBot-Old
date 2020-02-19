@@ -270,8 +270,8 @@ public interface CascadePlayer extends IPlayer {
             tracks.add(trackToMove);
         }
 
-        tracks.add(track, tracks.get(pos));
-        tracks.add(pos, trackToMove);
+        tracks.set(track, tracks.get(pos));
+        tracks.set(pos, trackToMove);
         queue.clear();
         queue.addAll(tracks);
     }

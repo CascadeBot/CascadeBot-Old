@@ -43,7 +43,7 @@ public class MovableList<T extends MovableItem> {
             } // we ignore new items as the user can never have a new item selected.
             newPos++;
         }
-        if (selected != -1) {
+        if (selected != -1) { // TODO account for item being moved via this code
             if (movedAmountMap.containsKey(selected)) {
                 int newSelected = selected + movedAmountMap.get(selected);
                 selected = fitInArray(newSelected);
@@ -111,8 +111,8 @@ public class MovableList<T extends MovableItem> {
             list.add(itemToMove);
         }
 
-        list.add(start, list.get(end));
-        list.add(end, itemToMove);
+        list.set(start, list.get(end));
+        list.set(end, itemToMove);
     }
 
     private int fitInArray(int i) {
@@ -126,13 +126,24 @@ public class MovableList<T extends MovableItem> {
     }
 
     public String getFrontendText() {
-        int currentPage = selected / 10 + 1;
-        int start = currentPage * 10 - 10;
-        int end = start + 9;
+        int lowestTrack = selected - 5;
+        int highestTrack = selected + 4;
+        int lowestTrackDisplay = lowestTrack;
+        int highestTrackDisplay = highestTrack;
+
+        if (lowestTrack < 0) {
+            highestTrackDisplay += Math.abs(lowestTrack);
+            lowestTrackDisplay = 0;
+        }
+
+        if (highestTrack >= list.size() - 1) {
+            lowestTrackDisplay -= highestTrack - (list.size() - 2);
+            highestTrackDisplay = list.size() - 2;
+        }
 
         StringBuilder pageBuilder = new StringBuilder();
 
-        for (int i = start; i <= end; i++) {
+        for (int i = lowestTrackDisplay; i <= highestTrackDisplay + 1; i++) {
             if (i >= list.size()) {
                 break;
             }
