@@ -51,7 +51,7 @@ public class MovableList<T extends MovableItem> {
                 if (moving) {
                     newSelected -= itemStart - selectedPos;
                 }
-                selectedPos = fitInArray(newSelected);
+                selectedPos = Ints.constrainToRange(newSelected, 0, list.size() - 1);
             } else {
                 // Selected item was removed
                 selectedPos = 0;
