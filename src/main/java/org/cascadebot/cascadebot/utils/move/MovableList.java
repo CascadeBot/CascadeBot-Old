@@ -117,14 +117,18 @@ public class MovableList<T extends MovableItem> {
 
     private void moveItem(int source, int destination) {
         T itemToMove = list.get(source);
-        if (destination >= list.size()) {
-            // Moved to end of array
-            list.remove(source);
-            list.add(itemToMove);
-        }
 
-        list.set(source, list.get(destination));
-        list.set(destination, itemToMove);
+        if (source > destination) {
+            for (int i = source; i > destination; i--) {
+                list.set(i, list.get(i - 1));
+            }
+            list.set(destination, itemToMove);
+        } else {
+            for (int i = source; i  < destination; i++) {
+                list.set(i, list.get(i + 1));
+            }
+            list.set(destination, itemToMove);
+        }
     }
 
     public String getFrontendText() {
