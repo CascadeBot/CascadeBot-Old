@@ -280,6 +280,11 @@ public interface CascadePlayer extends IPlayer {
         guildId.set(guild.getIdLong());
     }
 
+    default void setQueue(Queue<AudioTrack> newQueue) {
+        queue.clear();
+        queue.addAll(newQueue);
+    }
+
     public enum LoopMode {
 
         DISABLED,
