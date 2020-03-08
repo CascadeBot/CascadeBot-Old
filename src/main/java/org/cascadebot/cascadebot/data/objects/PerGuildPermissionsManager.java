@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableSet;
 import net.dv8tion.jda.api.entities.Guild;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.PermissionNode;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
@@ -26,6 +27,12 @@ public class PerGuildPermissionsManager {
 
     public PermissionsManager getCascadePermissionManager() {
         return CascadeBot.INS.getPermissionsManager();
+    }
+
+    public PerGuildPermissionsManager(GuildData data) {
+        for (Map.Entry<String, Tag> entry : data.getCoreSettings().getTags().entrySet()) {
+            registerGuildPermission(entry.getValue().getInternalPermission());
+        }
     }
 
     public boolean registerGuildPermission(GuildPermission permission) {

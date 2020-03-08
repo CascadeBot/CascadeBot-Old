@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.data.objects.GuildPermission;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
@@ -35,7 +36,10 @@ public class TagCreateSubCommand implements ISubCommand {
             message += "\n\n" + context.i18n("commands.tag.create.warn_uppercase");
         }
 
-        context.getCoreSettings().addTag(context.getArg(0), new Tag(context.getMessage(1), "tag"));
+        Tag tag = new Tag(context.getMessage(1), "tag", context.getArg(0));
+
+        context.getCoreSettings().addTag(context.getArg(0), tag);
+        context.getData().getGuildPermissionsManager().registerGuildPermission(tag.getInternalPermission());
         context.getTypedMessaging().replySuccess(message);
     }
 

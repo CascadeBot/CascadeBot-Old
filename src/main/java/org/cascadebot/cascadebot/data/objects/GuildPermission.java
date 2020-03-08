@@ -11,7 +11,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class GuildPermission extends CascadePermission {
 
-    private GuildPermission(String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
+    protected GuildPermission(String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
         super(permissionRaw, defaultPerm, module, discordPerm);
 
     }
