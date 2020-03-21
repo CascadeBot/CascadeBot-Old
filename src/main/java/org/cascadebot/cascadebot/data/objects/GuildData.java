@@ -76,7 +76,7 @@ public class GuildData {
     private PageCache pageCache = new PageCache();
 
     @Transient
-    private PerGuildPermissionsManager guildPermissionsManager = new PerGuildPermissionsManager(this);
+    private PerGuildPermissionsManager guildPermissionsManager = new PerGuildPermissionsManager();
     //endregion
 
     private HashMap<Long, HashMap<Long, PersistentButtonGroup>> persistentButtons = new HashMap<>();

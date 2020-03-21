@@ -29,7 +29,8 @@ public class PerGuildPermissionsManager {
         return CascadeBot.INS.getPermissionsManager();
     }
 
-    public PerGuildPermissionsManager(GuildData data) {
+    // Method that registers all hte permissions after the data was loaded
+    public void registerPermissionsDataLoaded(GuildData data) {
         for (Map.Entry<String, Tag> entry : data.getCoreSettings().getTags().entrySet()) {
             registerGuildPermission(entry.getValue().getInternalPermission());
         }
