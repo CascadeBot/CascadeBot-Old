@@ -132,7 +132,7 @@ public class MusicHandler {
             guild.getAudioManager().setSendingHandler(new LavaPlayerAudioSendHandler(aPlayer));
         }
         player.setGuild(guild);
-        player.addListener(new PlayerListener(player));
+        player.addListener(new PlayerListener(player)); //TODO dispose of players after a while
         return player;
     }
 

@@ -16,6 +16,8 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -83,6 +85,10 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
             // This is happening after all the bands are ran through to make sure the bands are actually set before changing them client side
             for (Map.Entry<Integer, Float> entry : bands.entrySet()) {
                 currentBands.replace(entry.getKey(), entry.getValue());
+            }
+            GuildData data = GuildDataManager.getGuildData(lavalinkPlayer.getLink().getGuildIdLong());
+            if (data.getGuildMusic().isPreserveEqualizer()) {
+                data.getGuildMusic().setEqualizerBands(bands);
             }
         }
     }

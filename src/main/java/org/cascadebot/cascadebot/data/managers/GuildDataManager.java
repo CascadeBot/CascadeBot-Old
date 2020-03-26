@@ -29,12 +29,12 @@ public final class GuildDataManager {
                 GuildData dbData = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("_id", id)).first();
                 if (dbData == null) {
                     CascadeBot.LOGGER.debug("Attempted to load guild data for ID: " + id + ", none was found so creating new data object");
-                    GuildData data = new GuildData(id);
-                    GuildDataManager.insert(id, data);
-                    return data;
+                    dbData = new GuildData(id);
+                    GuildDataManager.insert(id, dbData);
+                } else {
+                    CascadeBot.LOGGER.debug("Loaded data from database for guild ID: " + id);
                 }
-
-                CascadeBot.LOGGER.debug("Loaded data from database for guild ID: " + id);
+                dbData.guildLoaded();
                 return dbData;
             });
 
