@@ -142,6 +142,10 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
     @Override
     public void setVolume(int volumeLevel) {
         lavalinkPlayer.setVolume(volumeLevel);
+        GuildData data = GuildDataManager.getGuildData(lavalinkPlayer.getLink().getGuildIdLong());
+        if (data.getGuildMusic().isPreserveVolume()) {
+            data.getGuildMusic().setVolume(volumeLevel);
+        }
     }
 
     @Override

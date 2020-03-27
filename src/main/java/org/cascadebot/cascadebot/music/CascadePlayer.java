@@ -285,7 +285,8 @@ public interface CascadePlayer extends IPlayer {
         queue.addAll(newQueue);
     }
 
-    //TODO find out how to override volume method
+    @Override
+    void setVolume(int i);
 
     public enum LoopMode {
 
