@@ -16,6 +16,7 @@ import org.cascadebot.cascadebot.permissions.PermissionsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -98,7 +99,7 @@ public class PerGuildPermissionsManager {
             }
             return permissions;
         } else {
-            Set<CascadePermission> permissions = getCascadePermissionManager().getPermissions();
+            Set<CascadePermission> permissions = new HashSet<>(getCascadePermissionManager().getPermissions());
             permissions.addAll(guildPermissions);
             return permissions;
         }
