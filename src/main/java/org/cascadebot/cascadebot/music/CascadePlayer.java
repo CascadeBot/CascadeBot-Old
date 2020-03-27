@@ -14,9 +14,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
 import org.cascadebot.cascadebot.data.objects.Playlist;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
 import java.util.ArrayList;
@@ -77,7 +79,11 @@ public interface CascadePlayer extends IPlayer {
         if (getPlayingTrack() != null) {
             queue.add(track);
         } else {
-            playTrack(track);
+            try {
+                playTrack(track);
+            } catch (FriendlyException e) {
+                Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) track.getUserData()).getErrorChannelId()), Language.i18n(((TrackData) track.getUserData()).getGuildId(), "music.misc.error"), e);
+            }
         }
     }
 
@@ -134,11 +140,11 @@ public interface CascadePlayer extends IPlayer {
         stopTrack();
     }
 
-    default void loadLink(String input, long requestUser, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
+    default void loadLink(String input, long requestUser, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks, long channel, long guild) {
         CascadeBot.INS.getMusicHandler().getPlayerManager().loadItem(input, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
-                audioTrack.setUserData(requestUser);
+                audioTrack.setUserData(new TrackData(requestUser, channel, guild));
                 resultTracks.accept(Collections.singletonList(audioTrack));
             }
 
@@ -146,7 +152,7 @@ public interface CascadePlayer extends IPlayer {
             public void playlistLoaded(AudioPlaylist audioPlaylist) {
                 List<AudioTrack> tracks = new ArrayList<>();
                 for (AudioTrack track : audioPlaylist.getTracks()) {
-                    track.setUserData(requestUser);
+                    track.setUserData(new TrackData(requestUser, channel, guild));
                     tracks.add(track);
                 }
                 resultTracks.accept(Collections.unmodifiableList(tracks));
@@ -164,7 +170,7 @@ public interface CascadePlayer extends IPlayer {
         });
     }
 
-    default void loadPlaylist(String name, Member sender, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
+    default void loadPlaylist(String name, Member sender, long channel, long guildId, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
         Playlist guild = PlaylistManager.getPlaylistByName(sender.getGuild().getIdLong(), PlaylistType.GUILD, name);
         Playlist user = PlaylistManager.getPlaylistByName(sender.getIdLong(), PlaylistType.USER, name);
         if (guild != null && user != null) {
@@ -172,17 +178,17 @@ public interface CascadePlayer extends IPlayer {
         } else if (guild != null) {
             loadLoadedPlaylist(guild, sender.getIdLong(), tracks -> {
                 consumer.accept(LoadPlaylistResult.LOADED_GUILD, tracks);
-            });
+            }, channel, guildId);
         } else if (user != null) {
             loadLoadedPlaylist(user, sender.getIdLong(), tracks -> {
                 consumer.accept(LoadPlaylistResult.LOADED_USER, tracks);
-            });
+            }, channel, guildId);
         } else {
             consumer.accept(LoadPlaylistResult.DOESNT_EXIST, null);
         }
     }
 
-    default void loadPlaylist(String name, Member sender, PlaylistType scope, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
+    default void loadPlaylist(String name, Member sender, PlaylistType scope, long channel, long guild, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
         LoadPlaylistResult result = LoadPlaylistResult.DOESNT_EXIST;
         long owner = 0;
         switch (scope) {
@@ -204,10 +210,10 @@ public interface CascadePlayer extends IPlayer {
         LoadPlaylistResult loadPlaylistResult = result;
         loadLoadedPlaylist(playlist, sender.getIdLong(), tracks -> {
             consumer.accept(loadPlaylistResult, tracks);
-        });
+        }, channel, guild);
     }
 
-    default void loadLoadedPlaylist(Playlist playlist, long reqUser, Consumer<List<AudioTrack>> loadedConsumer) {
+    default void loadLoadedPlaylist(Playlist playlist, long reqUser, Consumer<List<AudioTrack>> loadedConsumer, long channel, long guild) {
         List<AudioTrack> tracks = new ArrayList<>();
         for (String url : playlist.getTracks()) {
             loadLink(url, reqUser, noMatch -> {
@@ -219,7 +225,7 @@ public interface CascadePlayer extends IPlayer {
                 if (tracks.size() == playlist.getTracks().size()) {
                     loadedConsumer.accept(tracks);
                 }
-            });
+            }, channel, guild);
         }
     }
 
@@ -248,9 +254,39 @@ public interface CascadePlayer extends IPlayer {
         }
     }
 
+    default void removeTrack(int index) {
+        List<AudioTrack> tracks = new ArrayList<>(queue);
+        tracks.remove(index);
+        queue.clear();
+        queue.addAll(tracks);
+    }
+
+    default void moveTrack(int track, int pos) {
+        List<AudioTrack> tracks = new ArrayList<>(queue);
+        AudioTrack trackToMove = tracks.get(track);
+        if (pos >= tracks.size()) {
+            // Moved to end of array
+            tracks.remove(track);
+            tracks.add(trackToMove);
+        }
+
+        tracks.set(track, tracks.get(pos));
+        tracks.set(pos, trackToMove);
+        queue.clear();
+        queue.addAll(tracks);
+    }
+
     default void setGuild(Guild guild) {
         guildId.set(guild.getIdLong());
     }
+
+    default void setQueue(Queue<AudioTrack> newQueue) {
+        queue.clear();
+        queue.addAll(newQueue);
+    }
+
+    @Override
+    void setVolume(int i);
 
     public enum LoopMode {
 

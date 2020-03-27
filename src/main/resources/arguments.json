@@ -175,7 +175,7 @@
       ]
     }
   },
-  "queue*": {
+  "queue": {
     "load*": {
       "name*": {
         "_type": "required",
@@ -190,6 +190,19 @@
         "scope": {
           "_type": "optional"
         }
+      }
+    },
+    "move*": {
+      "pos1*": {
+        "_type": "optional",
+        "pos2": {
+          "_type": "optional"
+        }
+      }
+    },
+    "remove*": {
+      "pos": {
+        "_type": "required"
       }
     }
   },

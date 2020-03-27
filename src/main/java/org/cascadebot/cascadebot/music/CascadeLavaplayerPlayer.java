@@ -8,6 +8,8 @@ package org.cascadebot.cascadebot.music;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import lavalink.client.player.LavaplayerPlayerWrapper;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 
 public class CascadeLavaplayerPlayer extends LavaplayerPlayerWrapper implements CascadePlayer {
 
@@ -28,6 +30,14 @@ public class CascadeLavaplayerPlayer extends LavaplayerPlayerWrapper implements 
     @Override
     public VoiceChannel getConnectedChannel() {
         return getGuild().getAudioManager().getConnectedChannel();
+    }
+
+    public void setVolume(int volumeLevel) {
+        super.setVolume(volumeLevel);
+        GuildData data = GuildDataManager.getGuildData(getGuild().getIdLong());
+        if (data.getGuildMusic().isPreserveVolume()) {
+            data.getGuildMusic().setVolume(volumeLevel);
+        }
     }
 
 }
