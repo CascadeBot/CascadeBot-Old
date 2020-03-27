@@ -75,6 +75,7 @@ public class GuildData {
     //region Data Loaded Methods
     public void guildLoaded() {
         loadMusicSettings();
+        guildPermissionsManager.registerPermissionsDataLoaded(this);
     }
 
     private void loadMusicSettings() {
