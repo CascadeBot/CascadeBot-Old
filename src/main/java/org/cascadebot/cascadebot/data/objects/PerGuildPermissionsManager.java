@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 public class PerGuildPermissionsManager {
 
-    private HashMap<String, GuildPermission> guildPermissions = new HashMap<>();
+    private HashMap<String, CascadePermission> guildPermissions = new HashMap<>();
 
     public PermissionsManager getCascadePermissionManager() {
         return CascadeBot.INS.getPermissionsManager();
@@ -37,7 +37,7 @@ public class PerGuildPermissionsManager {
         }
     }
 
-    public boolean registerGuildPermission(GuildPermission permission) {
+    public boolean registerGuildPermission(CascadePermission permission) {
         if (guildPermissions.containsKey(permission.getPermissionRaw())) {
             return false;
         }

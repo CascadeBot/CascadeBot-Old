@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
-import org.cascadebot.cascadebot.data.objects.GuildPermission;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 

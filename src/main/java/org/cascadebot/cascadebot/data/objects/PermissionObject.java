@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 /**
  * Represents a data object that contains a per guild permission
@@ -17,7 +18,7 @@ public interface PermissionObject {
 
     Module cascadeModule();
 
-    default GuildPermission getInternalPermission() {
-        return new GuildPermission(getParent() + "." + getPermission(), false, cascadeModule());
+    default CascadePermission getInternalPermission() {
+        return new CascadePermission(getParent() + "." + getPermission(), false, cascadeModule());
     }
 }
