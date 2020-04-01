@@ -19,6 +19,6 @@ public interface PermissionObject {
     Module cascadeModule();
 
     default CascadePermission getInternalPermission() {
-        return new CascadePermission(getParent() + "." + getPermission(), false, cascadeModule());
+        return CascadePermission.of(getParent() + "." + getPermission(), false, cascadeModule());
     }
 }

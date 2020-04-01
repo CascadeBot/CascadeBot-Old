@@ -157,7 +157,7 @@ public class PermissionsManager {
     }
 
     public Map<String, CascadePermission> getPermissionMap() {
-        return permissions;
+        return Map.copyOf(permissions);
     }
 
 }

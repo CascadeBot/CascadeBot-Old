@@ -27,7 +27,7 @@ public class CascadePermission {
     private final Module module;
 
 
-    public CascadePermission(String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
+    private CascadePermission(String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
         this.permissionRaw = permissionRaw;
         this.defaultPerm = defaultPerm;
         this.module = module;
