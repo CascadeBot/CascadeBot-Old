@@ -26,6 +26,7 @@ public class CommandFilter {
     @Setter
     private FilterOperator operator;
 
+    private List<String> commands;
     private List<Long> channelIds;
     private List<Long> userIds;
     private List<Long> roleIds;
@@ -77,10 +78,27 @@ public class CommandFilter {
         return Collections.unmodifiableList(roleIds);
     }
 
-    public boolean evaluateFilter(TextChannel channel, Member member) {
-        boolean channelResult = channelIds.contains(channel.getIdLong());
-        boolean userResult = userIds.contains(member.getIdLong());
-        boolean roleResult = member.getRoles().stream().map(Role::getIdLong).anyMatch(id -> roleIds.contains(id));
+    public void addCommand(String command) {
+        if (commands == null) commands = Collections.synchronizedList(new ArrayList<>());
+        this.commands.add(command);
+    }
+
+    public boolean removeCommand(String command) {
+        if (commands == null) return false;
+        return this.commands.remove(command);
+    }
+
+    public List<String> getCommands() {
+        return Collections.unmodifiableList(commands);
+    }
+
+    public FilterResult evaluateFilter(String command, TextChannel channel, Member member) {
+
+        if (!commands.contains(command)) return FilterResult.NEUTRAL;
+
+        boolean channelResult = channelIds != null && channelIds.contains(channel.getIdLong());
+        boolean userResult = userIds != null && userIds.contains(member.getIdLong());
+        boolean roleResult = roleIds != null && member.getRoles().stream().map(Role::getIdLong).anyMatch(id -> roleIds.contains(id));
 
         boolean combinedResult;
 
@@ -90,7 +108,14 @@ public class CommandFilter {
             combinedResult = channelResult || userResult || roleResult;
         }
 
-        return ((type == FilterType.BLACKLIST) != combinedResult);
+        switch (type) {
+            case WHITELIST:
+                return combinedResult ? FilterResult.ALLOW : FilterResult.DENY;
+            case BLACKLIST:
+                return combinedResult ? FilterResult.DENY : FilterResult.ALLOW;
+        }
+
+        return FilterResult.NEUTRAL;
     }
 
 
@@ -107,6 +132,10 @@ public class CommandFilter {
      */
     public enum FilterOperator {
         AND, OR
+    }
+
+    public enum FilterResult {
+        ALLOW, DENY, NEUTRAL
     }
 
 }
