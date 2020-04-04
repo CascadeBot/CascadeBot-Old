@@ -97,18 +97,43 @@ public class CommandFilter {
 
     public FilterResult evaluateFilter(String command, TextChannel channel, Member member) {
 
-        if (!commands.contains(command)) return FilterResult.NEUTRAL;
+        if (!enabled) {
+            return FilterResult.NEUTRAL;
+        }
+        if (commands == null || !commands.contains(command)) {
+            return FilterResult.NEUTRAL;
+        }
 
-        boolean channelResult = channelIds != null && channelIds.contains(channel.getIdLong());
-        boolean userResult = userIds != null && userIds.contains(member.getIdLong());
-        boolean roleResult = roleIds != null && member.getRoles().stream().map(Role::getIdLong).anyMatch(id -> roleIds.contains(id));
+        FilterMatch channelMatch = FilterMatch.NEUTRAL;
+        // The channel condition is only considered if one or more channels have been added to the filter
+        if (channelIds != null && channelIds.size() != 0) {
+            channelMatch = channelIds.contains(channel.getIdLong()) ? FilterMatch.MATCH : FilterMatch.NOT_MATCH;
+        }
+
+        FilterMatch userMatch = FilterMatch.NEUTRAL;
+        // The user condition is only considered if one or more users have been added to the filter
+        if (userIds != null && userIds.size() != 0) {
+            userMatch = userIds.contains(member.getIdLong()) ? FilterMatch.MATCH : FilterMatch.NOT_MATCH;
+        }
+
+        FilterMatch roleMatch = FilterMatch.NEUTRAL;
+        // The role condition is only considered if one or more roles have been added to the filter
+        if (roleIds != null && roleIds.size() != 0) {
+            roleMatch = member.getRoles().stream().map(Role::getIdLong).anyMatch(id -> roleIds.contains(id)) ? FilterMatch.MATCH : FilterMatch.NOT_MATCH;
+        }
 
         boolean combinedResult;
 
-        if (operator == FilterOperator.AND){
-            combinedResult = channelResult && userResult && roleResult;
+        if (operator == FilterOperator.AND) {
+            // Check that all of the results are either MATCH or NEUTRAL
+            combinedResult = channelMatch != FilterMatch.NOT_MATCH &&
+                    userMatch != FilterMatch.NOT_MATCH &&
+                    roleMatch != FilterMatch.NOT_MATCH;
         } else {
-            combinedResult = channelResult || userResult || roleResult;
+            // Check that any of the results are either MATCH or NEUTRAL
+            combinedResult = channelMatch != FilterMatch.NOT_MATCH ||
+                    userMatch != FilterMatch.NOT_MATCH ||
+                    roleMatch != FilterMatch.NOT_MATCH;
         }
 
         switch (type) {
@@ -139,6 +164,10 @@ public class CommandFilter {
 
     public enum FilterResult {
         ALLOW, DENY, NEUTRAL
+    }
+
+    public enum FilterMatch {
+        MATCH, NOT_MATCH, NEUTRAL
     }
 
 }
