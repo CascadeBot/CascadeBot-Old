@@ -76,6 +76,9 @@ public class GuildSettingsCore {
     private Set<Module> enabledModules = Sets.newConcurrentHashSet(Module.getModules(ModuleFlag.DEFAULT));
 
     @Setting(directlyEditable = false)
+    private Set<CommandFilter> commandFilters = Sets.newConcurrentHashSet();
+
+    @Setting(directlyEditable = false)
     private String prefix = Config.INS.getDefaultPrefix();
 
     @Setting(directlyEditable = false)
