@@ -23,6 +23,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.CommandFilter;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.Messaging;
@@ -128,6 +129,14 @@ public class CommandListener extends ListenerAdapter {
             if (!isAuthorised(cmd, context)) {
                 return;
             }
+
+            if (!processFilters(cmd, context)) {
+                // TODO: Moderation log event
+                // TODO: Message for the end user?
+                context.getTypedMessaging().replyDanger("Message blocked");
+                return;
+            }
+
             if (args.length >= 1) {
                 if (processSubCommands(cmd, args, context)) {
                     return;
@@ -145,6 +154,15 @@ public class CommandListener extends ListenerAdapter {
                 }
             }
         }
+    }
+
+    private boolean processFilters(ICommandMain cmd, CommandContext context) {
+        for (CommandFilter filter : context.getCoreSettings().getCommandFilters()) {
+            if (filter.evaluateFilter(cmd.command(), context.getChannel(), context.getMember()) == CommandFilter.FilterResult.DENY)  {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean processSubCommands(ICommandMain cmd, String[] args, CommandContext parentCommandContext) {
