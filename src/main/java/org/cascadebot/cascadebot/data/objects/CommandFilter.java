@@ -14,26 +14,29 @@ import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommandFilter {
-    
+
     @Getter
     private String name;
 
     @Getter
     @Setter
-    private FilterType type;
+    private FilterType type = FilterType.BLACKLIST;
 
     @Getter
     @Setter
-    private FilterOperator operator;
+    private FilterOperator operator = FilterOperator.AND;
+
+    @Getter
+    @Setter
+    private boolean enabled = false;
 
     private List<String> commands;
     private List<Long> channelIds;
     private List<Long> userIds;
     private List<Long> roleIds;
 
-    public CommandFilter(String name, FilterType type) {
+    public CommandFilter(String name) {
         this.name = name;
-        this.type = type;
     }
 
     public void addChannel(long channelId) {
@@ -45,7 +48,7 @@ public class CommandFilter {
         if (channelIds == null) return false;
         return this.channelIds.remove(channelId);
     }
-    
+
     public List<Long> getChannelIds() {
         return Collections.unmodifiableList(channelIds);
     }
