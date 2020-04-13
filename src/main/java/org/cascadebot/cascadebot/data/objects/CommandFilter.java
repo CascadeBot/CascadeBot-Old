@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -146,6 +147,10 @@ public class CommandFilter {
         return FilterResult.NEUTRAL;
     }
 
+    public EmbedBuilder getFilterEmbed() {
+        return new EmbedBuilder();
+    }
+
 
     /**
      * Determines whether users who match this filter will be blocked or whitelisted
@@ -154,18 +159,23 @@ public class CommandFilter {
         WHITELIST, BLACKLIST
     }
 
-
     /**
-     * Determines whether the channel, roles and user properties all have to be matched or just one of them
+     * Determines whether the channel, roles and user properties all have to be matched or just one of them.
      */
     public enum FilterOperator {
         AND, OR
     }
 
+    /**
+     * Whether this filter explicitly allows or denies the user. Also has a neutral option which has no effect on the outcome.
+     */
     public enum FilterResult {
         ALLOW, DENY, NEUTRAL
     }
 
+    /**
+     * Whether the condition matches or not. Also has a neutral option which has no effect on the outcome.
+     */
     public enum FilterMatch {
         MATCH, NOT_MATCH, NEUTRAL
     }
