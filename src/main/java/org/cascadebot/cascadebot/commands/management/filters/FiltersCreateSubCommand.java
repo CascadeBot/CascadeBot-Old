@@ -20,34 +20,44 @@ public class FiltersCreateSubCommand implements ISubCommand {
             return;
         }
 
-        // Create only with name
+        var name = context.getArg(0);
+
+        if (context.getData().getCoreSettings().hasCommandFilter(name)) {
+            context.getTypedMessaging().replyDanger(context.i18n(
+                    "commands.filters.create.already_exists",
+                    name
+            ));
+            return;
+        }
+
+        // Args in the format "<name> [type]"
         if (context.getArgs().length == 1) {
-            var filter = new CommandFilter(context.getArg(0));
-            context.getData().getCoreSettings().getCommandFilters().add(filter);
-            context.getTypedMessaging().replySuccess(
-                    "Created command filter of type **%s** with the name `%s`",
+            var filter = new CommandFilter(name);
+            context.getData().getCoreSettings().addCommandFilter(filter);
+            context.getTypedMessaging().replySuccess(context.i18n(
+                    "commands.filters.create.created_filter",
                     FormatUtils.formatEnum(filter.getType(), context.getLocale()),
                     filter.getName()
-            );
+            ));
         } else {
             var type = context.getArg(1);
             if (EnumUtils.isValidEnumIgnoreCase(CommandFilter.FilterType.class, type)) {
-                var filter = new CommandFilter(context.getArg(0));
-                context.getData().getCoreSettings().getCommandFilters().add(filter);
+                var filter = new CommandFilter(name);
                 filter.setType(EnumUtils.getEnumIgnoreCase(CommandFilter.FilterType.class, type));
-                context.getTypedMessaging().replySuccess(
-                        "Created command filter of type **%s** with the name `%s`",
+                context.getData().getCoreSettings().addCommandFilter(filter);
+                context.getTypedMessaging().replySuccess(context.i18n(
+                        "commands.filters.create.created_filter",
                         FormatUtils.formatEnum(filter.getType(), context.getLocale()),
                         filter.getName()
-                );
+                ));
             } else {
-                context.getTypedMessaging().replyDanger(
-                        "The filter type `%s` does not exist! Please choose one of: %s",
+                context.getTypedMessaging().replyDanger(context.i18n(
+                        "commands.filters.create.type_invalid",
                         type,
                         Arrays.stream(CommandFilter.FilterType.values())
                                 .map(filterType -> "`" + FormatUtils.formatEnum(filterType, context.getLocale()) + "`")
                                 .collect(Collectors.joining(", "))
-                );
+                ));
             }
         }
     }
