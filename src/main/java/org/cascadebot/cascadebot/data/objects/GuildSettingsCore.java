@@ -136,4 +136,27 @@ public class GuildSettingsCore {
         return tags.remove(key) != null;
     }
 
+    public Set<CommandFilter> getCommandFilters() {
+        return Collections.unmodifiableSet(commandFilters);
+    }
+
+    public boolean hasCommandFilter(String name) {
+        return getCommandFilter(name) != null;
+    }
+
+    public CommandFilter getCommandFilter(String name) {
+        return commandFilters.stream()
+                .filter(filter -> filter.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public boolean addCommandFilter(CommandFilter filter) {
+        return commandFilters.add(filter);
+    }
+
+    public boolean removeCommandFilter(String name) {
+        return commandFilters.removeIf(filter -> filter.getName().equals(name));
+    }
+
 }
