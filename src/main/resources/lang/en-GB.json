@@ -549,6 +549,17 @@
       "embed_list_field": "List",
       "embed_position_field": "Position",
       "embed_item_field": "Item"
+    },
+    "filters": {
+      "command": "filters",
+      "description": "Create and manipulate command filters.",
+      "create": {
+        "command": "create",
+        "already_exists": "A filter with the name `{0}` already exists! Edit or delete the existing filter instead.",
+        "description": "Creates a command filter",
+        "created_filter": "Created command filter of type **{0}** with the name `{1}`",
+        "type_invalid": "The filter type `{0}` does not exist! Please choose one of: {1}"
+      }
     }
   },
   "permissions": {
@@ -1076,6 +1087,40 @@
     "item": "item",
     "list": "list",
     "words": "words",
+    "filter": "filter",
+    "type": "type",
+    "filters#users#add": {
+      "name": "add",
+      "description": "Adds or removes a user from the filter"
+    },
+    "filters#users#list": {
+      "name": "list",
+      "description": "Lists the users attached to this filter"
+    },
+    "filters#commands#add": {
+      "name": "add",
+      "description": "Adds or removes a command from the filter"
+    },
+    "filters#commands#list": {
+      "name": "list",
+      "description": "Lists the commands attached to this filter"
+    },
+    "filters#channels#add": {
+      "name": "add",
+      "description": "Adds or removes a channel from the filter"
+    },
+    "filters#channels#list": {
+      "name": "list",
+      "description": "Lists the channels attached to this filter"
+    },
+    "filters#roles#add": {
+      "name": "add",
+      "description": "Adds or removes a role from the filter"
+    },
+    "filters#roles#list": {
+      "name": "list",
+      "description": "Lists the roles attached to this filter"
+    },
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
