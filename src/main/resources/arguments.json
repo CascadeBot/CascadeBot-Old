@@ -450,5 +450,94 @@
     "amount": {
       "_type": "optional"
     }
+  },
+  "filters*": {
+    "channels*": {
+      "add*": {
+        "_aliases": ["remove"],
+        "filter*": {
+          "_type": "required",
+          "channel": {
+            "_type": "required"
+          }
+        }
+      },
+      "list": {}
+    },
+    "commands*": {
+      "add*": {
+        "_aliases": ["remove"],
+        "filter*": {
+          "_type": "required",
+          "command": {
+            "_type": "required"
+          }
+        }
+      },
+      "list": {}
+    },
+    "disable*": {
+      "filter": {
+        "_type": "required"
+      }
+    },
+    "enable*": {
+      "filter": {
+        "_type": "required"
+      }
+    },
+    "operator": {
+
+    },
+    "roles*": {
+      "add*": {
+        "_aliases": ["remove"],
+        "filter*": {
+          "_type": "required",
+          "role": {
+            "_type": "required"
+          }
+        }
+      },
+      "list": {
+
+      }
+    },
+    "type": {
+
+    },
+    "users*": {
+      "add*": {
+        "_aliases": ["remove"],
+        "filter*": {
+          "_type": "required",
+          "user": {
+            "_type": "required"
+          }
+        }
+      },
+      "list": {
+
+      }
+    },
+    "create*": {
+      "filter*": {
+        "_type": "required",
+        "type": {
+          "_type": "optional"
+        }
+      }
+    },
+    "delete*": {
+      "filter": {
+        "_type": "required"
+      }
+    },
+    "list": {
+
+    },
+    "filter": {
+      "_type": "required"
+    }
   }
 }
