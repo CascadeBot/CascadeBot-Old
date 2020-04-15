@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@EqualsAndHashCode
 public class CommandFilter {
 
     @Getter
@@ -31,22 +33,20 @@ public class CommandFilter {
     @Setter
     private boolean enabled = false;
 
-    private List<String> commands;
-    private List<Long> channelIds;
-    private List<Long> userIds;
-    private List<Long> roleIds;
+    private List<String> commands = Collections.synchronizedList(new ArrayList<>());
+    private List<Long> channelIds = Collections.synchronizedList(new ArrayList<>());
+    private List<Long> userIds = Collections.synchronizedList(new ArrayList<>());
+    private List<Long> roleIds = Collections.synchronizedList(new ArrayList<>());
 
     public CommandFilter(String name) {
         this.name = name;
     }
 
     public void addChannel(long channelId) {
-        if (channelIds == null) channelIds = Collections.synchronizedList(new ArrayList<>());
         this.channelIds.add(channelId);
     }
 
     public boolean removeChannel(long channelId) {
-        if (channelIds == null) return false;
         return this.channelIds.remove(channelId);
     }
 
@@ -55,12 +55,10 @@ public class CommandFilter {
     }
 
     public void addUser(long userId) {
-        if (userIds == null) userIds = Collections.synchronizedList(new ArrayList<>());
         this.userIds.add(userId);
     }
 
     public boolean removeUser(long userId) {
-        if (userIds == null) return false;
         return this.userIds.remove(userId);
     }
 
@@ -69,12 +67,10 @@ public class CommandFilter {
     }
 
     public void addRole(long roleId) {
-        if (roleIds == null) roleIds = Collections.synchronizedList(new ArrayList<>());
         this.roleIds.add(roleId);
     }
 
     public boolean removeRole(long roleId) {
-        if (roleIds == null) return false;
         return this.roleIds.remove(roleId);
     }
 
@@ -83,12 +79,10 @@ public class CommandFilter {
     }
 
     public void addCommand(String command) {
-        if (commands == null) commands = Collections.synchronizedList(new ArrayList<>());
         this.commands.add(command);
     }
 
     public boolean removeCommand(String command) {
-        if (commands == null) return false;
         return this.commands.remove(command);
     }
 
