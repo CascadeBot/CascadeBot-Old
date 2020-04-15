@@ -11,20 +11,21 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
 public class Argument {
 
     private final String id;
-    private final Set<Argument> subArgs;
+    private final List<Argument> subArgs;
     private final ArgumentType type;
     private final boolean displayAlone;
     private final Set<String> aliases;
 
-    Argument(String id, ArgumentType type, boolean displayAlone, Set<Argument> subArgs, Set<String> aliases) {
+    Argument(String id, ArgumentType type, boolean displayAlone, List<Argument> subArgs, Set<String> aliases) {
         this.id = id;
-        this.subArgs = Set.copyOf(subArgs);
+        this.subArgs = List.copyOf(subArgs);
         this.type = type;
         this.displayAlone = displayAlone;
         this.aliases = Set.copyOf(aliases);
