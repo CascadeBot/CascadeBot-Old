@@ -27,12 +27,14 @@ public class FiltersCommand implements ICommandMain {
                 new FiltersChannelsSubCommand(),
                 new FiltersCommandsSubCommand(),
                 new FiltersCreateSubCommand(),
+                new FiltersDeleteSubCommand(),
                 new FiltersDisableSubCommand(),
                 new FiltersEnableSubCommand(),
                 new FiltersOperatorSubCommand(),
                 new FiltersRolesSubCommand(),
                 new FiltersTypeSubCommand(),
-                new FiltersUsersSubCommand()
+                new FiltersUsersSubCommand(),
+                new FiltersListSubCommand()
         );
     }
 
