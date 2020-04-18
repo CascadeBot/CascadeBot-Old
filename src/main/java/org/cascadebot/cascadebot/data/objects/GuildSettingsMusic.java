@@ -21,10 +21,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GuildSettingsMusic {
 
     @Setting
-    private boolean preserveVolume = false;
+    private boolean preserveVolume = true; //TODO handle reverting tier
 
     @Setting
-    private boolean preserveEqualizer = false;
+    private boolean preserveEqualizer = true;
 
     private int volume = 100;
 
