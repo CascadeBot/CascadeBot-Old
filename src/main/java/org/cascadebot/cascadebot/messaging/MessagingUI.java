@@ -139,14 +139,16 @@ public class MessagingUI {
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
             String message = context.i18n("responses.no_cascade_perm_discord", permission.getPermission(context.getLocale()), discordPerms);
-            Messaging.sendDangerMessage(
+            Messaging.sendEmbedMessage(
+                    MessageType.DANGER,
                     context.getChannel(),
                     MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
                     context.getCoreSettings().isUseEmbedForMessages()
             ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         } else {
             String message = context.i18n("responses.no_cascade_perm", permission.getPermission(context.getLocale()));
-            Messaging.sendDangerMessage(
+            Messaging.sendEmbedMessage(
+                    MessageType.DANGER,
                     context.getChannel(),
                     MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
                     context.getCoreSettings().isUseEmbedForMessages()
