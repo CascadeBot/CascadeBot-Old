@@ -5,17 +5,13 @@
  
 
 package org.cascadebot.cascadebot.utils;
- 
-import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import com.google.gson.JsonElement;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
 
+import java.awt.Color;
+import java.io.IOException;
 import java.util.Random;
 
 @UtilityClass

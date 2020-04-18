@@ -19,7 +19,6 @@ import java.util.List;
 public class Playlist {
 
     @Id
-    private ObjectId playlistID = ObjectId.get();
     private ObjectId playlistId = ObjectId.get();
 
     private String name;

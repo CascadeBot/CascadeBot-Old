@@ -13,7 +13,6 @@ import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.IPlayer;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
@@ -136,7 +135,7 @@ public interface CascadePlayer extends IPlayer {
         stopTrack();
     }
 
-    default void loadLink(String input, long requestUser, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks, boolean allServices) {
+    default void loadLink(String input, TrackData trackData, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
         CascadeBot.INS.getMusicHandler().getPlayerManager().loadItem(input, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
@@ -146,7 +145,7 @@ public interface CascadePlayer extends IPlayer {
                         return;
                     }
                 }
-                audioTrack.setUserData(requestUser);
+                audioTrack.setUserData(trackData);
                 resultTracks.accept(Collections.singletonList(audioTrack));
             }
 
@@ -160,7 +159,7 @@ public interface CascadePlayer extends IPlayer {
                             break;
                         }
                     }
-                    track.setUserData(requestUser);
+                    track.setUserData(track);
                     tracks.add(track);
                 }
                 resultTracks.accept(Collections.unmodifiableList(tracks));
@@ -179,16 +178,16 @@ public interface CascadePlayer extends IPlayer {
     }
 
     default void loadPlaylist(String name, Member sender, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer, boolean allServices) {
-        Playlist guild = PlaylistManager.getPlaylistByName(sender.getGuild().getIdLong(), PlaylistType.GUILD, name);
-        Playlist user = PlaylistManager.getPlaylistByName(sender.getIdLong(), PlaylistType.USER, name);
+        Playlist guild = PlaylistManager.getPlaylistByName(getGuild().getIdLong(), PlaylistType.GUILD, name);
+        Playlist user = PlaylistManager.getPlaylistByName(trackData.getUserId(), PlaylistType.USER, name);
         if (guild != null && user != null) {
             consumer.accept(LoadPlaylistResult.EXISTS_IN_ALL_SCOPES, null);
         } else if (guild != null) {
-            loadLoadedPlaylist(guild, sender.getIdLong(), tracks -> {
+            loadLoadedPlaylist(guild, trackData, tracks -> {
                 consumer.accept(LoadPlaylistResult.LOADED_GUILD, tracks);
             }, allServices);
         } else if (user != null) {
-            loadLoadedPlaylist(user, sender.getIdLong(), tracks -> {
+            loadLoadedPlaylist(user, trackData, tracks -> {
                 consumer.accept(LoadPlaylistResult.LOADED_USER, tracks);
             }, allServices);
         } else {
@@ -202,11 +201,11 @@ public interface CascadePlayer extends IPlayer {
         switch (scope) {
             case GUILD:
                 result = LoadPlaylistResult.LOADED_GUILD;
-                owner = sender.getGuild().getIdLong();
+                owner = getGuild().getIdLong();
                 break;
             case USER:
                 result = LoadPlaylistResult.LOADED_USER;
-                owner = sender.getIdLong();
+                owner = trackData.getUserId();
                 break;
         }
         Playlist playlist = PlaylistManager.getPlaylistByName(owner, scope, name);
@@ -216,7 +215,7 @@ public interface CascadePlayer extends IPlayer {
         }
 
         LoadPlaylistResult loadPlaylistResult = result;
-        loadLoadedPlaylist(playlist, sender.getIdLong(), tracks -> {
+        loadLoadedPlaylist(playlist, trackData, tracks -> {
             consumer.accept(loadPlaylistResult, tracks);
         }, allServices);
     }
@@ -224,7 +223,7 @@ public interface CascadePlayer extends IPlayer {
     default void loadLoadedPlaylist(Playlist playlist, long reqUser, Consumer<List<AudioTrack>> loadedConsumer, boolean allServices) {
         List<AudioTrack> tracks = new ArrayList<>();
         for (String url : playlist.getTracks()) {
-            loadLink(url, reqUser, noMatch -> {
+            loadLink(url, trackData, noMatch -> {
                 playlist.removeTrack(url);
             }, exception -> {
                 playlist.removeTrack(url);
@@ -262,9 +261,39 @@ public interface CascadePlayer extends IPlayer {
         }
     }
 
+    default void removeTrack(int index) {
+        List<AudioTrack> tracks = new ArrayList<>(queue);
+        tracks.remove(index);
+        queue.clear();
+        queue.addAll(tracks);
+    }
+
+    default void moveTrack(int track, int pos) {
+        List<AudioTrack> tracks = new ArrayList<>(queue);
+        AudioTrack trackToMove = tracks.get(track);
+        if (pos >= tracks.size()) {
+            // Moved to end of array
+            tracks.remove(track);
+            tracks.add(trackToMove);
+        }
+
+        tracks.set(track, tracks.get(pos));
+        tracks.set(pos, trackToMove);
+        queue.clear();
+        queue.addAll(tracks);
+    }
+
     default void setGuild(Guild guild) {
         guildId.set(guild.getIdLong());
     }
+
+    default void setQueue(Queue<AudioTrack> newQueue) {
+        queue.clear();
+        queue.addAll(newQueue);
+    }
+
+    @Override
+    void setVolume(int i);
 
     public enum LoopMode {
 

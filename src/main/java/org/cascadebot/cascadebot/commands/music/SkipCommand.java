@@ -14,6 +14,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup;
@@ -23,7 +24,6 @@ import org.cascadebot.cascadebot.utils.votes.VoteResult;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class SkipCommand implements ICommandMain {
 
@@ -80,10 +80,12 @@ public class SkipCommand implements ICommandMain {
             return;
         }
 
-        if (Objects.equals(track.getUserData(), sender.getIdLong())) {
-            context.getMusicPlayer().skip();
-            context.getTypedMessaging().replySuccess(context.i18n("commands.skip.skipped_user_queued"));
-            return;
+        if (track.getUserData() instanceof TrackData) {
+            if (((TrackData) track.getUserData()).getUserId() == context.getMember().getIdLong()) {
+                context.getMusicPlayer().skip();
+                context.getTypedMessaging().replySuccess(context.i18n("commands.skip.skipped_user_queued"));
+                return;
+            }
         }
 
         VoteButtonGroupBuilder buttonGroupBuilder = new VoteButtonGroupBuilder(VoteMessageType.YES_NO);

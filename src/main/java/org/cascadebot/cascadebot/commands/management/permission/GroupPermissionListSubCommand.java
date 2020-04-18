@@ -5,9 +5,6 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;

@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
@@ -25,7 +26,7 @@ public class QueueLoadSubCommand implements ISubCommand {
             return;
         }
 
-        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, (result, tracks) -> {
+        context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), (result, tracks) -> {
             switch (result) {
                 case LOADED_GUILD:
                 case LOADED_USER:
@@ -38,7 +39,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                             return;
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.USER, ((loadPlaylistResult, newTracks) -> {
+                        context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), ((loadPlaylistResult, newTracks) -> {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }), context.getData().getGuildTier().hasFlag("music_services"));
                     })));
@@ -47,7 +48,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                             return;
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        context.getMusicPlayer().loadPlaylist(context.getArg(0), sender, PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
+                        context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
                             context.getUIMessaging().sendTracksFound(newTracks);
                         }), context.getData().getGuildTier().hasFlag("music_services"));
                     })));
