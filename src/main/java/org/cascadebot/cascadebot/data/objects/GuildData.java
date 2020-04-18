@@ -73,7 +73,7 @@ public class GuildData {
     //endregion
 
     //region Data Loaded Methods
-    public void guildLoaded() {
+    public void onGuildLoaded() {
         loadMusicSettings();
     }
 
