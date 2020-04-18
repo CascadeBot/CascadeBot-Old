@@ -9,7 +9,6 @@ import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 
 import java.util.Collections;

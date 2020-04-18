@@ -20,6 +20,8 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.language.Locale;
+import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer;
+import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
@@ -58,6 +60,7 @@ public class GuildData {
     private GuildPermissions guildPermissions = new GuildPermissions();
     private GuildSettingsUseful usefulSettings = new GuildSettingsUseful();
     private GuildSettingsModeration guildModeration = new GuildSettingsModeration();
+    private GuildSettingsMusic guildMusic = new GuildSettingsMusic();
 
     /*
         Eventually these will be used but they're commented out for now
@@ -66,6 +69,26 @@ public class GuildData {
 
     */
 
+    //endregion
+
+    //region Data Loaded Methods
+    public void onGuildLoaded() {
+        loadMusicSettings();
+    }
+
+    private void loadMusicSettings() {
+        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(guildId);
+        if (guildMusic.isPreserveVolume()) {
+            player.setVolume(guildMusic.getVolume());
+        }
+        if (guildMusic.isPreserveEqualizer()) {
+            if (CascadeBot.INS.getMusicHandler().isLavalinkEnabled()) {
+                if (player instanceof CascadeLavalinkPlayer) {
+                    ((CascadeLavalinkPlayer) player).setBands(guildMusic.getEqualizerBands());
+                }
+            }
+        }
+    }
     //endregion
 
     //region Transient fields

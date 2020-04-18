@@ -13,10 +13,8 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.music.KaraokeHandler;
-import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-import javax.xml.parsers.ParserConfigurationException;
 import java.util.concurrent.ExecutionException;
 
 public class KaraokeCommand implements ICommandMain {
