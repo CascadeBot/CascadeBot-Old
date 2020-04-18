@@ -201,7 +201,7 @@
       }
     },
     "move*": {
-      "source": {
+      "source*": {
         "_type": "optional",
         "destination": {
           "_type": "optional"
