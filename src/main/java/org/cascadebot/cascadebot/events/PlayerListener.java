@@ -12,6 +12,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.event.IPlayerEventListener;
 import lavalink.client.player.event.PlayerEvent;
 import lavalink.client.player.event.TrackEndEvent;
+import lavalink.client.player.event.TrackExceptionEvent;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.Messaging;
@@ -36,6 +37,8 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
     public void onEvent(PlayerEvent playerEvent) {
         if (playerEvent instanceof TrackEndEvent) {
             onEnd(((TrackEndEvent) playerEvent).getTrack());
+        } else if (playerEvent instanceof TrackExceptionEvent) {
+            onError(((TrackExceptionEvent) playerEvent).getException(), ((TrackExceptionEvent) playerEvent).getTrack());
         }
     }
 
@@ -43,6 +46,8 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
     public void onEvent(AudioEvent audioEvent) {
         if (audioEvent instanceof com.sedmelluq.discord.lavaplayer.player.event.TrackEndEvent) {
             onEnd(((com.sedmelluq.discord.lavaplayer.player.event.TrackEndEvent) audioEvent).track);
+        } else if (audioEvent instanceof com.sedmelluq.discord.lavaplayer.player.event.TrackExceptionEvent) {
+            onError(((com.sedmelluq.discord.lavaplayer.player.event.TrackExceptionEvent) audioEvent).exception, ((com.sedmelluq.discord.lavaplayer.player.event.TrackExceptionEvent) audioEvent).track);
         }
     }
 
@@ -65,14 +70,16 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
                 try {
                     player.playTrack(audioTrack);
                 } catch (FriendlyException e) {
-                    Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()), Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"), e);
+                    Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()),
+                            Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"), e);
                 }
             } else if (player.getLoopMode().equals(CascadePlayer.LoopMode.SONG)) {
                 // Take the song that just finished and repeat it
                 try {
                     player.playTrack(track.makeClone());
                 } catch (FriendlyException e) {
-                    Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) track.getUserData()).getErrorChannelId()), Language.i18n(((TrackData) track.getUserData()).getGuildId(), "music.misc.error"), e);
+                    Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) track.getUserData()).getErrorChannelId()),
+                            Language.i18n(((TrackData) track.getUserData()).getGuildId(), "music.misc.error"), e);
                 }
             }
         } catch (NoSuchElementException e) {
@@ -80,6 +87,11 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
             songPlayCount = 0;
             // TODO: Anything more to this?
         }
+    }
+
+    private void onError(Exception e, AudioTrack audioTrack) {
+        Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()),
+                Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"), e);
     }
 
 }
