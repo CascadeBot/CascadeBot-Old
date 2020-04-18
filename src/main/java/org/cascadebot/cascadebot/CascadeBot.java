@@ -131,7 +131,6 @@ public class CascadeBot {
 
 
     private void init() {
-        new Thread(new ConsoleReader()).start();
 
         GsonBuilder builder = new GsonBuilder();
         try {
