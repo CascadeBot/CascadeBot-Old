@@ -6,7 +6,6 @@
 package org.cascadebot.cascadebot.metrics;
 
 import io.prometheus.client.Counter;
-import io.prometheus.client.SimpleCollector;
 import io.prometheus.client.Summary;
 import io.prometheus.client.cache.caffeine.CacheMetricsCollector;
 import io.prometheus.client.exporter.HTTPServer;

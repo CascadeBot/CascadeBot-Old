@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.music;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import okhttp3.Call;
@@ -15,12 +14,8 @@ import okhttp3.Response;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.MDCException;
-import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.language.Language;
-import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
-import org.cascadebot.cascadebot.messaging.MessagingTyped;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
@@ -33,7 +28,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class KaraokeHandler {
 

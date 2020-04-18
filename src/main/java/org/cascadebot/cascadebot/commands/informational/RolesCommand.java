@@ -14,8 +14,6 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
-import java.util.Set;
-
 public class RolesCommand implements ICommandMain {
 
     @Override
