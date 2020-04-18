@@ -16,7 +16,6 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.shared.Regex;
 
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 
 public class JoinCommand implements ICommandMain {

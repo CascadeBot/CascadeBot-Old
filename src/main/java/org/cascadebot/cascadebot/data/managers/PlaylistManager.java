@@ -41,7 +41,7 @@ public final class PlaylistManager {
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, Playlist.class).insertOne(
                     playlist,
-                    new DebugLogCallback<>("Inserted new playlist with ID: " + playlist.getPlaylistID())
+                    new DebugLogCallback<>("Inserted new playlist with ID: " + playlist.getPlaylistId())
             );
         });
     }
@@ -49,9 +49,9 @@ public final class PlaylistManager {
     public static void replacePlaylist(Playlist playlist) {
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, Playlist.class).replaceOne(
-                    eq("_id", playlist.getPlaylistID()),
+                    eq("_id", playlist.getPlaylistId()),
                     playlist,
-                    new DebugLogCallback<>("Replaced Playlist with ID: " + playlist.getPlaylistID())
+                    new DebugLogCallback<>("Replaced Playlist with ID: " + playlist.getPlaylistId())
             );
         });
     }

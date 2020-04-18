@@ -35,7 +35,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -199,7 +198,7 @@ public class MessagingUI {
         }
     }
 
-    public void checkPlaylistOrSong(String input, List<AudioTrack> tracks, CommandContext context, boolean top) {
+    public void checkPlaylistOrSong(String input, List<AudioTrack> tracks, CommandContext context, boolean playTop) {
         if (tracks.size() > 1) {
 
             Matcher matcher = YOUTUBE_VIDEO_REGEX.matcher(input);
@@ -214,7 +213,7 @@ public class MessagingUI {
             ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
                 message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                if (top) {
+                if (playTop) {
                     context.getMusicPlayer().playTrack(selectedTrack);
                 } else {
                     context.getMusicPlayer().addTrack(selectedTrack);
@@ -223,7 +222,7 @@ public class MessagingUI {
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.PLAYLIST, (runner, channel, message) -> {
                 message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                if (top) {
+                if (playTop) {
                     List<AudioTrack> currentQueue = new ArrayList<>(context.getMusicPlayer().getQueue());
                     AudioTrack topTrack = tracks.remove(0);
                     currentQueue.addAll(0, tracks);

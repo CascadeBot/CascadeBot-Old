@@ -25,7 +25,7 @@ public class QueueMoveSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length >= 2) {
+        if (context.getArgs().length == 2) {
             if (!context.isArgInteger(0) || !context.isArgInteger(1)) {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.queue.move.numbers"));
                 return;
@@ -51,9 +51,14 @@ public class QueueMoveSubCommand implements ISubCommand {
 
             context.getMusicPlayer().moveTrack(track, pos);
             context.getTypedMessaging().replySuccess(context.i18n("commands.queue.move.moved", track + 1, pos + 1));
-        } else {
+        } else if (context.getArgs().length < 2) {
+            int start = 0;
+            if (context.getArgs().length == 1 && context.isArgInteger(0)) {
+                start = context.getArgAsInteger(0);
+            }
             List<MovableAudioTrack> movableAudioTracks = context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList());;
             MovableList<MovableAudioTrack> movableList = new MovableList<>(movableAudioTracks);
+            movableList.moveSelection(start);
             ButtonGroup group = new ButtonGroup(context.getMember().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             group.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
@@ -98,6 +103,8 @@ public class QueueMoveSubCommand implements ISubCommand {
                 }
             }));
             context.getUIMessaging().sendButtonedMessage(getMoveEmbed(movableList).build(), group);
+        } else {
+            context.getUIMessaging().replyUsage();
         }
     }
 

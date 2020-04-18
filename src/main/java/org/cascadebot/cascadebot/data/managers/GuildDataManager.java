@@ -34,7 +34,7 @@ public final class GuildDataManager {
                 } else {
                     CascadeBot.LOGGER.debug("Loaded data from database for guild ID: " + id);
                 }
-                dbData.guildLoaded();
+                dbData.onGuildLoaded();
                 return dbData;
             });
 

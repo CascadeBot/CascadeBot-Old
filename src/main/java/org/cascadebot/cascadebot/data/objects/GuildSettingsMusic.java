@@ -5,29 +5,26 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.cascadebot.cascadebot.commandmeta.Module;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SettingsContainer(module = Module.MUSIC)
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class GuildSettingsMusic {
 
     @Setting
-    private boolean preserveVolume = false;
+    private boolean preserveVolume = true; //TODO handle reverting tier
 
     @Setting
-    private boolean preserveEqualizer = false;
+    private boolean preserveEqualizer = true;
 
     private int volume = 100;
 
-    private Map<Integer, Float> equalizerBands = new HashMap<>();
+    private Map<Integer, Float> equalizerBands = new ConcurrentHashMap<>();
 
 }

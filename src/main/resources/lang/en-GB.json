@@ -346,6 +346,10 @@
       "could_not_find_matches": "We could not find music that matches: `{0}`",
       "encountered_error": "We encountered an error processing that! {0}"
     },
+    "playtop": {
+      "command": "playtop",
+      "description": "Plays a song immediately"
+    },
     "playing": {
       "command": "playing",
       "description": "Get playing music.",
@@ -1100,6 +1104,9 @@
     "item": "item",
     "list": "list",
     "words": "words",
+    "pos": "position",
+    "source": "source",
+    "destination": "destination",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."

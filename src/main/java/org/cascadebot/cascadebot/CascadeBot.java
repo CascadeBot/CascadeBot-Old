@@ -15,7 +15,6 @@ import com.google.gson.GsonBuilder;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
-import lavalink.client.io.jda.JDAVoiceInterceptor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
@@ -131,7 +130,6 @@ public class CascadeBot {
 
 
     private void init() {
-        new Thread(new ConsoleReader()).start();
 
         GsonBuilder builder = new GsonBuilder();
         try {

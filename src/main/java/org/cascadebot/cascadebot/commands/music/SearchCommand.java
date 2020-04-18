@@ -17,6 +17,7 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.MusicHandler;
+import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
@@ -53,14 +54,14 @@ public class SearchCommand implements ICommandMain {
                         return;
                     }
                     message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                    context.getMusicPlayer().loadLink(result.getUrl(), sender.getIdLong(), nothing -> {
+                    context.getMusicPlayer().loadLink(result.getUrl(), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), nothing -> {
                         context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                     }, exception -> {
                         context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);
                     }, audioTracks -> {
                         context.getMusicPlayer().addTracks(audioTracks);
                         context.getUIMessaging().sendTracksFound(audioTracks);
-                    }, context.getChannel().getIdLong(), context.getGuild().getIdLong());
+                    });
                 }));
                 messageBuilder.append(unicode).append("\u20E3").append(" - ").append(StringsUtil.truncate(result.getTitle(), 60)).append(" - ");
                 switch (result.getType()) {
@@ -92,14 +93,14 @@ public class SearchCommand implements ICommandMain {
                 for (int index = 0; index < searchResults.size(); index++) {
                     MusicHandler.SearchResult result = searchResults.get(index);
                     responses[index] = new EventWaiter.TextResponse(event -> {
-                        context.getMusicPlayer().loadLink(result.getUrl(), sender.getIdLong(), nothing -> {
+                        context.getMusicPlayer().loadLink(result.getUrl(), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), nothing -> {
                             context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                         }, exception -> {
                             context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);
                         }, audioTracks -> {
                             context.getMusicPlayer().addTracks(audioTracks);
                             context.getUIMessaging().sendTracksFound(audioTracks);
-                        }, context.getChannel().getIdLong(), context.getGuild().getIdLong());
+                        });
                     }, String.valueOf(index + 1));
                 }
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(), 30, TimeUnit.SECONDS, () -> {

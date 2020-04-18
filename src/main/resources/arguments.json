@@ -175,6 +175,14 @@
       ]
     }
   },
+  "playtop*": {
+    "url": {
+      "_type": "required",
+      "_aliases": [
+        "query"
+      ]
+    }
+  },
   "queue": {
     "load*": {
       "name*": {
@@ -193,9 +201,9 @@
       }
     },
     "move*": {
-      "pos1*": {
+      "source*": {
         "_type": "optional",
-        "pos2": {
+        "destination": {
           "_type": "optional"
         }
       }
