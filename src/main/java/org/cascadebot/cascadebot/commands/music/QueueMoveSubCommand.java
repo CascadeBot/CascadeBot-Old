@@ -53,7 +53,7 @@ public class QueueMoveSubCommand implements ISubCommand {
             context.getTypedMessaging().replySuccess(context.i18n("commands.queue.move.moved", track + 1, pos + 1));
         } else if (context.getArgs().length < 2) {
             int start = 0;
-            if (context.getArgs().length > 0 && context.isArgInteger(0)) {
+            if (context.getArgs().length == 1 && context.isArgInteger(0)) {
                 start = context.getArgAsInteger(0);
             }
             List<MovableAudioTrack> movableAudioTracks = context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList());;
