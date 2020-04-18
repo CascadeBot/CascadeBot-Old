@@ -79,11 +79,7 @@ public interface CascadePlayer extends IPlayer {
         if (getPlayingTrack() != null) {
             queue.add(track);
         } else {
-            try {
-                playTrack(track);
-            } catch (FriendlyException e) {
-                Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) track.getUserData()).getErrorChannelId()), Language.i18n(((TrackData) track.getUserData()).getGuildId(), "music.misc.error"), e);
-            }
+            playTrack(track);
         }
     }
 

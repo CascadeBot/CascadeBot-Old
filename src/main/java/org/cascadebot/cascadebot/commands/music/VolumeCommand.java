@@ -5,6 +5,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.Flag;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -48,6 +49,9 @@ public class VolumeCommand implements ICommandMain {
                             @Override
                             public void execute() {
                                 player.setVolume(volume);
+                                if (context.getData().getGuildMusic().isPreserveVolume()) {
+                                    context.getData().getGuildMusic().setVolume(volume);
+                                }
                                 context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
                             }
                         });
@@ -65,6 +69,9 @@ public class VolumeCommand implements ICommandMain {
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getVolume()));
         } else {
             player.setVolume(volume);
+            if (context.getData().getGuildMusic().isPreserveVolume()) {
+                context.getData().getGuildMusic().setVolume(volume);
+            }
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
         }
 

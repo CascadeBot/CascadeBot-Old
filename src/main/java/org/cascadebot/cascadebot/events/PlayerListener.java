@@ -13,9 +13,11 @@ import lavalink.client.player.event.IPlayerEventListener;
 import lavalink.client.player.event.PlayerEvent;
 import lavalink.client.player.event.TrackEndEvent;
 import lavalink.client.player.event.TrackExceptionEvent;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.Messaging;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.music.MovableAudioTrack;
@@ -67,20 +69,10 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
                 }
                 // Take the next track in the queue, remove it from the queue and play it
                 AudioTrack audioTrack = player.getQueue().remove();
-                try {
-                    player.playTrack(audioTrack);
-                } catch (FriendlyException e) {
-                    Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()),
-                            Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"), e);
-                }
+                player.playTrack(audioTrack);
             } else if (player.getLoopMode().equals(CascadePlayer.LoopMode.SONG)) {
                 // Take the song that just finished and repeat it
-                try {
-                    player.playTrack(track.makeClone());
-                } catch (FriendlyException e) {
-                    Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) track.getUserData()).getErrorChannelId()),
-                            Language.i18n(((TrackData) track.getUserData()).getGuildId(), "music.misc.error"), e);
-                }
+                player.playTrack(track.makeClone());
             }
         } catch (NoSuchElementException e) {
             // No more songs left in the queue
@@ -90,8 +82,10 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
     }
 
     private void onError(Exception e, AudioTrack audioTrack) {
-        Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()),
-                Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"), e);
+        EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+        embedBuilder.setTitle(Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"));
+        embedBuilder.appendDescription(e.getCause().getCause().getMessage());
+        Messaging.sendDangerMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()), embedBuilder);
     }
 
 }

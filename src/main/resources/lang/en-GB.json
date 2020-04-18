@@ -1104,6 +1104,9 @@
     "item": "item",
     "list": "list",
     "words": "words",
+    "pos": "position",
+    "source": "source",
+    "destination": "destination",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
@@ -1119,10 +1122,7 @@
     "guild#flag#list": {
       "name": "list",
       "description": "Lists all flags."
-    },
-    "pos": "position",
-    "source": "source",
-    "destination": "destination"
+    }
   },
   "utils": {
     "permission_command": {

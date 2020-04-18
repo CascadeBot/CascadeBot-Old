@@ -86,10 +86,6 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
             for (Map.Entry<Integer, Float> entry : bands.entrySet()) {
                 currentBands.replace(entry.getKey(), entry.getValue());
             }
-            GuildData data = GuildDataManager.getGuildData(lavalinkPlayer.getLink().getGuildIdLong());
-            if (data.getGuildMusic().isPreserveEqualizer()) {
-                data.getGuildMusic().setEqualizerBands(bands);
-            }
         }
     }
 
@@ -107,11 +103,7 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
 
     @Override
     public void playTrack(AudioTrack audioTrack) {
-        try {
-            lavalinkPlayer.playTrack(audioTrack);
-        } catch (FriendlyException e) {
-            Messaging.sendExceptionMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()), Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"), e);
-        }
+        lavalinkPlayer.playTrack(audioTrack);
     }
 
     @Override
@@ -142,10 +134,6 @@ public class CascadeLavalinkPlayer implements CascadePlayer {
     @Override
     public void setVolume(int volumeLevel) {
         lavalinkPlayer.setVolume(volumeLevel);
-        GuildData data = GuildDataManager.getGuildData(lavalinkPlayer.getLink().getGuildIdLong());
-        if (data.getGuildMusic().isPreserveVolume()) {
-            data.getGuildMusic().setVolume(volumeLevel);
-        }
     }
 
     @Override

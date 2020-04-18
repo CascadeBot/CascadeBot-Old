@@ -32,12 +32,4 @@ public class CascadeLavaplayerPlayer extends LavaplayerPlayerWrapper implements 
         return getGuild().getAudioManager().getConnectedChannel();
     }
 
-    public void setVolume(int volumeLevel) {
-        super.setVolume(volumeLevel);
-        GuildData data = GuildDataManager.getGuildData(getGuild().getIdLong());
-        if (data.getGuildMusic().isPreserveVolume()) {
-            data.getGuildMusic().setVolume(volumeLevel);
-        }
-    }
-
 }
