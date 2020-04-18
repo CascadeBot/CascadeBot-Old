@@ -235,8 +235,6 @@ public class MusicHandler {
         URI uri;
         String password;
 
-        //TODO maybe add port option?
-
     }
 
     @AllArgsConstructor
