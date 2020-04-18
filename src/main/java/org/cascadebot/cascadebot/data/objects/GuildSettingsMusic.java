@@ -13,11 +13,11 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SettingsContainer(module = Module.MUSIC)
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class GuildSettingsMusic {
 
     @Setting
@@ -28,6 +28,6 @@ public class GuildSettingsMusic {
 
     private int volume = 100;
 
-    private Map<Integer, Float> equalizerBands = new HashMap<>();
+    private Map<Integer, Float> equalizerBands = new ConcurrentHashMap<>();
 
 }
