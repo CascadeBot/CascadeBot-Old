@@ -7,7 +7,6 @@ package org.cascadebot.cascadebot.events;
 
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEvent;
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventListener;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.player.event.IPlayerEventListener;
 import lavalink.client.player.event.PlayerEvent;
@@ -20,7 +19,6 @@ import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.music.CascadePlayer;
-import org.cascadebot.cascadebot.music.MovableAudioTrack;
 import org.cascadebot.cascadebot.music.TrackData;
 
 import java.util.NoSuchElementException;

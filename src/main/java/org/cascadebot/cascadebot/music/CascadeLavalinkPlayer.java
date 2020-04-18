@@ -6,7 +6,6 @@
 package org.cascadebot.cascadebot.music;
 
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
-import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import lavalink.client.io.LavalinkSocket;
 import lavalink.client.io.jda.JdaLink;
@@ -15,10 +14,6 @@ import lavalink.client.player.event.IPlayerEventListener;
 import lombok.Getter;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.data.language.Language;
-import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.GuildData;
-import org.cascadebot.cascadebot.messaging.Messaging;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

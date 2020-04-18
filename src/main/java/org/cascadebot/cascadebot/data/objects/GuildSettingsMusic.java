@@ -5,13 +5,10 @@
 
 package org.cascadebot.cascadebot.data.objects;
 
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.cascadebot.cascadebot.commandmeta.Module;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
