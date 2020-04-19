@@ -67,7 +67,7 @@ public class QueueCommand implements ICommandMain {
             pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString() + context.i18n("commands.queue.queue_time", FormatUtils.formatLongTimeMills((long) player.getQueueLength())))));
         }
 
-        context.getUIMessaging().sendPagedMessage(pages);
+        context.getUiMessaging().sendPagedMessage(pages);
     }
 
     @Override

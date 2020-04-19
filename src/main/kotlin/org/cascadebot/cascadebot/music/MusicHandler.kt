@@ -41,20 +41,20 @@ import java.util.regex.Pattern
 import kotlin.collections.HashMap
 
 class MusicHandler {
-    private val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
-    private val typePattern = Pattern.compile("youtube#([A-z]+)")
+    val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
+    val typePattern = Pattern.compile("youtube#([A-z]+)")
 
-    private var youtubeSourceName: String? = null
+    val youtubeSourceName: String
+    val twitchSourceName: String
 
-    private var twitchSourceName: String? = null
-
-    private val players: MutableMap<Long, CascadePlayer?> = HashMap()
+    val players: MutableMap<Long, CascadePlayer> = HashMap()
     var musicJsonParser = JsonParser()
     var lavaLink: JdaLavalink? = null
         private set
 
     var lavalinkEnabled = false
-    fun buildMusic() {
+
+    init {
         AudioSourceManagers.registerRemoteSources(playerManager)
 
         val youtubeAudioSourceManager = YoutubeAudioSourceManager(false)
@@ -80,14 +80,11 @@ class MusicHandler {
     }
 
     fun getPlayer(guildId: Long): CascadePlayer? {
-        return players.computeIfAbsent(guildId) { id: Long? ->
-            val guild = CascadeBot.INS.shardManager.getGuildById(id!!)
-            if (guild != null) {
-                return@computeIfAbsent createPlayer(guild)
-            } else {
-                return@computeIfAbsent null
-            }
+        if (players.containsKey(guildId)) {
+            return players[guildId]
         }
+        val guild = CascadeBot.INS.shardManager.getGuildById(guildId)
+        return if (guild != null) createPlayer(guild) else null
     }
 
     private fun createPlayer(guild: Guild): CascadePlayer {

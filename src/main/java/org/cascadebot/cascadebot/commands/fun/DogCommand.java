@@ -39,7 +39,7 @@ public class DogCommand implements ICommandMain {
                     embedBuilder.setImage(getDogUrl());
                     message.editMessage(embedBuilder.build()).queue();
                 } else {
-                    context.getUIMessaging().replyImage(getDogUrl()).thenAccept(dogMessage -> {
+                    context.getUiMessaging().replyImage(getDogUrl()).thenAccept(dogMessage -> {
                         dogButtons.addButtonsToMessage(dogMessage);
                         dogButtons.setMessage(dogMessage.getIdLong());
                         context.getData().addButtonGroup(context.getChannel(), dogMessage, dogButtons);
@@ -51,7 +51,7 @@ public class DogCommand implements ICommandMain {
             }
         }));
         try {
-            context.getUIMessaging().replyImage(getDogUrl()).thenAccept(message -> {
+            context.getUiMessaging().replyImage(getDogUrl()).thenAccept(message -> {
                 dogButtons.addButtonsToMessage(message);
                 dogButtons.setMessage(message.getIdLong());
                 context.getData().addButtonGroup(context.getChannel(), message, dogButtons);

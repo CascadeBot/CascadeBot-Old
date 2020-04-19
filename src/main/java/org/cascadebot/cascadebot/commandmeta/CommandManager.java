@@ -67,9 +67,10 @@ public class CommandManager {
 
     public ICommandMain getCommand(String command, GuildData data) {
         for (ICommandMain cmd : commands) {
-            if (data.getCommandName(cmd).equals(command)) {
-                return cmd;
-            } else if (data.getCommandAliases(cmd).contains(command)) {
+//            if (data.getCommandName(cmd).equals(command)) {
+//                return cmd;
+//            } else
+            if (data.getCommandAliases(cmd).contains(command)) {
                 return cmd;
             }
         }

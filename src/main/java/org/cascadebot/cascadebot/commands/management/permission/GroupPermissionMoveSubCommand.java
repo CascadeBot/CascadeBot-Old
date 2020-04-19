@@ -24,43 +24,43 @@ public class GroupPermissionMoveSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getPermissions().getMode() == GuildPermissions.PermissionMode.MOST_RESTRICTIVE) {
+        if (context.getData().getPermissionSettings().getMode() == GuildPermissions.PermissionMode.MOST_RESTRICTIVE) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.groupperms.move.wrong_mode")); //TODO provide docs link
             return;
         }
 
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (context.getArgs().length > 1 && context.isArgInteger(1)) {
-                context.getData().getPermissions().moveGroup(group, context.getArgAsInteger(1));
+                context.getData().getPermissionSettings().moveGroup(group, context.getArgAsInteger(1));
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.move.moved", group.getName(), context.getArg(1)));
                 return;
             }
 
-            AtomicInteger currIndex = new AtomicInteger(context.getData().getPermissions().getGroups().indexOf(group));
+            AtomicInteger currIndex = new AtomicInteger(context.getData().getPermissionSettings().getGroups().indexOf(group));
             ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
                 if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
                     return;
                 }
-                context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() - 1);
+                context.getData().getPermissionSettings().moveGroup(context.getData().getPermissionSettings().getGroups().get(currIndex.get()), currIndex.get() - 1);
                 currIndex.addAndGet(-1);
-                message.editMessage(getGroupsList(group, context.getData().getPermissions().getGroups())).queue();
+                message.editMessage(getGroupsList(group, context.getData().getPermissionSettings().getGroups())).queue();
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
                 if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
                     return;
                 }
-                context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() + 1);
+                context.getData().getPermissionSettings().moveGroup(context.getData().getPermissionSettings().getGroups().get(currIndex.get()), currIndex.get() + 1);
                 currIndex.addAndGet(1);
-                message.editMessage(getGroupsList(group, context.getData().getPermissions().getGroups())).queue();
+                message.editMessage(getGroupsList(group, context.getData().getPermissionSettings().getGroups())).queue();
             }));
 
-            context.getUIMessaging().sendButtonedMessage(getGroupsList(group, context.getData().getPermissions().getGroups()), buttonGroup);
+            context.getUiMessaging().sendButtonedMessage(getGroupsList(group, context.getData().getPermissionSettings().getGroups()), buttonGroup);
         }, sender.getIdLong());
     }
 

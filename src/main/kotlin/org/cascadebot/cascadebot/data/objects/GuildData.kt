@@ -20,9 +20,9 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.HashMap
 
-class GuildData(@field:Id private val guildId: Long) {
+class GuildData(@field:Id val guildId: Long) {
 
-    constructor() : this(0L) {
+    private constructor() : this(0L) {
         // Private constructor for MongoDB
     }
 
@@ -34,7 +34,7 @@ class GuildData(@field:Id private val guildId: Long) {
     val guildCommandInfos: Map<Class<ICommandMain>, GuildCommandInfo>
         get() = Collections.unmodifiableMap(commandInfo)
 
-    private val enabledFlags: MutableSet<Flag> = Sets.newConcurrentHashSet()
+    val enabledFlags: MutableSet<Flag> = Sets.newConcurrentHashSet()
 
     val locale: Locale = Locale.getDefaultLocale()
 
@@ -43,7 +43,7 @@ class GuildData(@field:Id private val guildId: Long) {
     val usefulSettings = GuildSettingsUseful()
     val guildModeration = GuildSettingsModeration()
     val guildMusic = GuildSettingsMusic()
-    val permissions = GuildPermissions()
+    val permissionSettings = GuildPermissions()
     //endregion
 
     //region Transient fields

@@ -17,12 +17,12 @@ public class PurgeContainSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         if (!context.isArgInteger(0)) {
-            context.getUIMessaging().replyUsage(this);
+            context.getUiMessaging().replyUsage(this);
             return;
         }
 

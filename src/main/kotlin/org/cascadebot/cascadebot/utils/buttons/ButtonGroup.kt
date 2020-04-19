@@ -17,12 +17,12 @@ open class ButtonGroup(
 ) {
 
     // Default constructor for MongoDB
-    constructor() : this(-1, -1, -1)
+    private constructor() : this(-1, -1, -1)
 
     @Transient
     private val buttons: MutableList<Button> = ArrayList()
 
-    private var messageId: Long = 0
+    var messageId: Long = 0
 
     @Transient
     private var messageSentAction: Runnable? = null

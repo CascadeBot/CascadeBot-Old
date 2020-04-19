@@ -15,7 +15,7 @@ class GuildCommandInfo(var enabled: Boolean,
         private set
 
     // Private constructor for MongoDB
-    constructor() : this(true, "", "", mutableSetOf())
+    private constructor() : this(true, "", "", mutableSetOf())
 
     constructor(command: ICommandMain, locale: Locale) :
             this(

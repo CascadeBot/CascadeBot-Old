@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit
 object Messaging {
 
     @JvmStatic
+    @JvmOverloads
     fun sendMessage(type: MessageType, channel: MessageChannel, message: String, embed: Boolean = true): CompletableFuture<Message> {
         Metrics.INS.messagesSent.labels(type.name).inc()
         return if (embed) {
@@ -33,7 +34,8 @@ object Messaging {
     }
 
     @JvmStatic
-    fun sendEmbedMessage(type: MessageType, channel: MessageChannel, builder: EmbedBuilder, embed: Boolean): CompletableFuture<Message> {
+    @JvmOverloads
+    fun sendEmbedMessage(type: MessageType, channel: MessageChannel, builder: EmbedBuilder, embed: Boolean = true): CompletableFuture<Message> {
         return if (embed) {
             channel.sendMessage(builder.setColor(type.color).build()).submit()
         } else {

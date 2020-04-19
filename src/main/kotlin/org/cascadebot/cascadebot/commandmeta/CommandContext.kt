@@ -10,6 +10,7 @@ import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.objects.GuildData
+import org.cascadebot.cascadebot.data.objects.GuildSettingsCore
 import org.cascadebot.cascadebot.messaging.MessagingDirectMessage
 import org.cascadebot.cascadebot.messaging.MessagingTimed
 import org.cascadebot.cascadebot.messaging.MessagingTyped
@@ -18,21 +19,21 @@ import org.cascadebot.cascadebot.music.CascadePlayer
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
 class CommandContext(
-        val data: GuildData,
         val command: ICommandExecutable,
         val jda: JDA,
         val channel: TextChannel,
         val message: Message,
         val guild: Guild,
-        val member: Member,
+        val data: GuildData,
         val args: Array<String>,
+        val member: Member,
         var trigger: String,
         val mention: Boolean
 ) {
-    val messagingTyped = MessagingTyped(this)
-    val messagingTimed = MessagingTimed(this)
-    val messagingUI = MessagingUI(this)
-    val messagingDirectMessage = MessagingDirectMessage(this)
+    val typedMessaging = MessagingTyped(this)
+    val timedMessaging = MessagingTimed(this)
+    val uiMessaging = MessagingUI(this)
+    val directMessaging = MessagingDirectMessage(this)
 
     val locale: Locale
         get() = data.locale
@@ -49,15 +50,23 @@ class CommandContext(
     val selfMember: Member
         get() = guild.getMember(selfUser)!!
 
-    fun message(start: Int, end: Int = args.size): String {
+    @JvmOverloads
+    fun getMessage(start: Int, end: Int = args.size): String {
         return ArrayUtils.subarray(args, start, end).joinToString(" ")
     }
 
-    fun arg(index: Int): String = args[index]
+    fun getArg(index: Int): String = args[index]
 
     fun isArgInteger(index: Int): Boolean = args[index].toIntOrNull() == null
 
-    fun argAsInteger(index: Int): Int? = args[index].toIntOrNull()
+    fun getArgAsInteger(index: Int): Int? = args[index].toIntOrNull()
+
+    fun isArgLong(index: Int): Boolean = args[index].toLongOrNull() == null
+
+    fun getArgAsLong(index: Int): Long? = args[index].toLongOrNull()
+
+    @Deprecated("This is only here for Java interop. Should not be used in Kotlin!", ReplaceWith("data.coreSettings"))
+    fun getCoreSettings() : GuildSettingsCore = data.coreSettings
 
     /**
      * Tests for an argument of a particular id. This check it exists at the position and,
@@ -95,6 +104,10 @@ class CommandContext(
     fun reply(message: String) {
         require(!message.isBlank()) { "The message cannot be blank!" }
         channel.sendMessage(message).queue()
+    }
+
+    fun reply(embed: MessageEmbed) {
+        channel.sendMessage(embed).queue()
     }
 
     fun i18n(path: String, vararg args: Any): String {
@@ -157,15 +170,15 @@ class CommandContext(
             CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission)
             return false
         }
-        return data.permissions.hasPermission(member, channel, cascadePermission, data.coreSettings)
+        return data.permissionSettings.hasPermission(member, channel, cascadePermission, data.coreSettings)
     }
 
     fun hasPermission(permission: CascadePermission?): Boolean {
-        return permission != null && data.permissions.hasPermission(member, channel, permission, data.coreSettings)
+        return permission != null && data.permissionSettings.hasPermission(member, channel, permission, data.coreSettings)
     }
 
     fun hasPermission(member: Member?, channel: GuildChannel?, permission: CascadePermission?): Boolean {
-        return permission != null && data.permissions.hasPermission(member, channel, permission, data.coreSettings)
+        return permission != null && data.permissionSettings.hasPermission(member, channel, permission, data.coreSettings)
     }
 
     fun runOtherCommand(command: String?, sender: Member?, context: CommandContext) {
@@ -174,7 +187,7 @@ class CommandContext(
         if (hasPermission(commandMain.permission)) {
             commandMain.onCommand(member, context)
         } else {
-            context.messagingUI.sendPermissionError(commandMain.permission)
+            context.uiMessaging.sendPermissionError(commandMain.permission)
         }
     }
 

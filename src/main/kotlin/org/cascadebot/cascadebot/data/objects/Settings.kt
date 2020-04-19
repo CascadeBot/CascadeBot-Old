@@ -8,10 +8,10 @@ import java.util.concurrent.ConcurrentHashMap
 
 @SettingsContainer(module = Module.CORE)
 class GuildSettingsCore(guildId: Long) {
-    constructor() : this(0L) {
+
+    private constructor() : this(0L) {
         // Private constructor for MongoDB
     }
-
 
     @Setting
     var mentionPrefix = false

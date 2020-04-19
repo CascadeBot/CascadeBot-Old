@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.events;
 import io.prometheus.client.Summary;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -25,6 +24,7 @@ import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.Tag;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
@@ -49,7 +49,7 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (event.getAuthor().isBot() || event.getMessage().getType() != MessageType.DEFAULT || !event.getChannel().canTalk()) {
+        if (event.getAuthor().isBot() || event.getMessage().getType() != net.dv8tion.jda.api.entities.MessageType.DEFAULT || !event.getChannel().canTalk()) {
             return;
         }
 
@@ -82,7 +82,7 @@ public class CommandListener extends ListenerAdapter {
 
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-        } else if (guildData.getCoreSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
+        } else if (guildData.getCoreSettings().getMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
             commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
             isMention = true;
         } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCoreSettings().getPrefix())) {
@@ -116,9 +116,9 @@ public class CommandListener extends ListenerAdapter {
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.getModule().isPrivate() && !guildData.getCoreSettings().isModuleEnabled(cmd.getModule())) {
-                if (guildData.getCoreSettings().isShowModuleErrors() || Environment.isDevelopment()) {
+                if (guildData.getCoreSettings().getShowModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.getModule(), context.getLocale()), trigger), event.getAuthor());
-                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getCoreSettings().isUseEmbedForMessages());
+                    Messaging.sendEmbedMessage(MessageType.DANGER, event.getChannel(), builder, guildData.getCoreSettings().getUseEmbedForMessages());
                 }
                 // TODO: Modlog?
                 return;
@@ -134,10 +134,10 @@ public class CommandListener extends ListenerAdapter {
             }
             dispatchCommand(cmd, context);
         } else {
-            if (guildData.getCoreSettings().isAllowTagCommands()) {
+            if (guildData.getCoreSettings().getAllowTagCommands()) {
                 String tagName = trigger.toLowerCase();
-                if (guildData.getCoreSettings().hasTag(tagName)) {
-                    Tag tag = guildData.getCoreSettings().getTag(tagName);
+                if (guildData.getCoreSettings().getTags().containsKey(tagName)) {
+                    Tag tag = guildData.getCoreSettings().getTags().get(tagName);
 
                     context.reply(tag.formatTag(context)); //TODO perms for tags
                     CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", tagName, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
@@ -149,7 +149,7 @@ public class CommandListener extends ListenerAdapter {
     private boolean processSubCommands(ICommandMain cmd, String[] args, CommandContext parentCommandContext) {
         for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
-                CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.isMention());
+                CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.getMention());
                 if (!isAuthorised(cmd, subCommandContext)) {
                     return false;
                 }
@@ -192,8 +192,8 @@ public class CommandListener extends ListenerAdapter {
     private boolean isAuthorised(ICommandExecutable command, CommandContext context) {
         if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
             if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
-                if (context.getCoreSettings().isShowPermErrors()) {
-                    context.getUIMessaging().sendPermissionError(command.getPermission());
+                if (context.getCoreSettings().getShowPermErrors()) {
+                    context.getUiMessaging().sendPermissionError(command.getPermission());
                 }
             }
             return false;
@@ -202,7 +202,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void deleteMessages(ICommandExecutable command, CommandContext context) {
-        if (context.getCoreSettings().isDeleteCommand() && command.deleteMessages()) {
+        if (context.getCoreSettings().getDeleteCommand() && command.deleteMessages()) {
             if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
                 context.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
             } else {
