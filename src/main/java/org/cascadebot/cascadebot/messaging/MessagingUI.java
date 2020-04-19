@@ -25,6 +25,7 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
+import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import spark.utils.CollectionUtils;
 
 import java.io.File;
@@ -172,10 +173,10 @@ public class MessagingUI {
     }
 
     public void replyUsage(ICommandExecutable command) {
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.getUsage(command), context.getUser());
-        builder.setAuthor(context.i18n("responses.incorrect_usage_title_1"));
-        builder.setTitle(context.i18n("responses.incorrect_usage_title_2"));
-        context.getTypedMessaging().replyWarning(builder);
+        String usage = context.getUsage(command);
+        List<Page> pages = PageUtils.splitStringToEmbedPages(usage, context.i18n("responses.incorrect_usage_title_1"), 1000, '\n');
+        pages.addAll(command.additionalUsagePages());
+        sendPagedMessage(pages);
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {
