@@ -72,7 +72,7 @@ public enum Placeholder {
         if (args.length == 0) return "";
         int arg = NumberUtils.toInt(args[0], -1);
         if (arg == -1 || arg > context.getArgs().length - 1) return "";
-        else return context.getArg(arg);
+        else return context.arg(arg);
     });
     //endregion
 

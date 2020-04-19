@@ -38,7 +38,7 @@ class CommandContext(
         get() = data.locale
 
     val musicPlayer: CascadePlayer
-        get() = CascadeBot.INS.musicHandler.getPlayer(guild.idLong)
+        get() = CascadeBot.INS.musicHandler.getPlayer(guild.idLong)!!
 
     val user: User
         get() = member.user

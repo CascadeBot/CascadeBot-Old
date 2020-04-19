@@ -9,7 +9,6 @@ import org.cascadebot.cascadebot.*
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
-import org.cascadebot.cascadebot.exceptions.DiscordPermissionException
 import org.cascadebot.cascadebot.metrics.Metrics
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.PasteUtils

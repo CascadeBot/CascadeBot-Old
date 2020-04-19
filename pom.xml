@@ -171,6 +171,11 @@
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
             <groupId>de.bild.backend</groupId>
             <artifactId>polymorphia</artifactId>
             <version>2.5.0</version>
