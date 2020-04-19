@@ -15,7 +15,7 @@
         <lavalink.client.version>f9ab37f</lavalink.client.version>
         <kotlin.version>1.3.72</kotlin.version>
     </properties>
-
+         
     <build>
         <finalName>CascadeBot</finalName>
         <plugins>
@@ -284,7 +284,7 @@
             <artifactId>emoji-java</artifactId>
             <version>4.0.0</version>
         </dependency>
-
+ 
         <!-- Web -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
