@@ -1,7 +1,5 @@
 package org.cascadebot.cascadebot.data.objects
 
-import lombok.Getter
-import lombok.Setter
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -14,7 +12,7 @@ import org.cascadebot.cascadebot.messaging.Messaging.sendButtonedMessage
 import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
-import java.util.*
+import java.util.ArrayList
 
 class TodoList(ownerId: Long) {
 
