@@ -111,7 +111,7 @@ class CommandContext(
     }
 
     fun i18n(path: String, vararg args: Any): String {
-        return Language.i18n(guild.idLong, path, args)
+        return Language.i18n(guild.idLong, path, *args)
     }
 
     fun getUsage(): String? {
