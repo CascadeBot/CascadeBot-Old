@@ -31,7 +31,7 @@ data class Argument internal constructor(val id: String,
                 return command.command(locale)
             }
         }
-        return if (Language.getLanguage(locale).getElement("commands.$id").isPresent) {
+        return if (Language.getLanguage(locale)?.getElement("commands.$id")?.isPresent!!) {
             Language.i18n(locale, "commands.$id.command")
         } else Language.i18n(locale, "arguments." + id.replace(".", "#") + ".name")
     }
@@ -39,7 +39,7 @@ data class Argument internal constructor(val id: String,
     fun description(locale: Locale): String {
         if (type != ArgumentType.COMMAND) {
             val parent = CascadeBot.INS.argumentManager.getParent(id)
-            return if (parent != null) parent.description(locale) else ""
+            return parent?.description(locale) ?: ""
         }
         val sepCount = StringUtils.countMatches(id, '.')
         if (sepCount == 1) {
@@ -56,7 +56,7 @@ data class Argument internal constructor(val id: String,
                 return command.description(locale)
             }
         }
-        return if (Language.getLanguage(locale).getElement("commands.$id").isPresent) {
+        return if (Language.getLanguage(locale)?.getElement("commands.$id")?.isPresent!!) {
             Language.i18n(locale, "commands.$id.description")
         } else Language.i18n(locale, "arguments." + id.replace(".", "#") + ".description")
     }
