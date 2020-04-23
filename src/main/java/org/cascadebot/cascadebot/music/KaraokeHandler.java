@@ -11,7 +11,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
@@ -96,7 +96,7 @@ public class KaraokeHandler {
                         Node start = attrs.getNamedItem("start");
 
                         if (dur != null && start != null) {
-                            captions.addCaption(StringEscapeUtils.unescapeHtml(texts.item(i).getTextContent()), Double.parseDouble(start.getNodeValue()), Double.parseDouble(dur.getNodeValue()));
+                            captions.addCaption(StringEscapeUtils.unescapeHtml4(texts.item(i).getTextContent()), Double.parseDouble(start.getNodeValue()), Double.parseDouble(dur.getNodeValue()));
                         }
                     }
 
