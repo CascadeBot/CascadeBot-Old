@@ -53,7 +53,7 @@ class GuildData(@field:Id val guildId: Long) {
     val pageCache = PageCache()
     //endregion
 
-    val persistentButtons = HashMap<Long, HashMap<Long, PersistentButtonGroup>?>()
+    val persistentButtons = HashMap<Long, HashMap<Long, PersistentButtonGroup>>()
 
     //endregion
     //region Data Loaded Methods
