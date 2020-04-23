@@ -117,7 +117,7 @@ class MusicHandler {
      * @param channel The [TextChannel] to send any errors to
      * @return The list of tracks that where found
      */
-    fun searchTracks(search: String?, channel: TextChannel, searchResultConsumer: Consumer<List<SearchResult>?>) {
+    fun searchTracks(search: String, channel: TextChannel, searchResultConsumer: Consumer<List<SearchResult>>) {
         if (StringUtils.isBlank(Config.INS.youtubeKey)) {
             // TODO: Some way to disable searching?
             return
