@@ -57,7 +57,7 @@ class MusicHandler {
         AudioSourceManagers.registerRemoteSources(playerManager)
 
         val youtubeAudioSourceManager = YoutubeAudioSourceManager(false)
-        youtubeAudioSourceManager.configureRequests { config: RequestConfig? -> RequestConfig.copy(config).setCookieSpec(CookieSpecs.IGNORE_COOKIES).setConnectTimeout(5000).build() }
+        youtubeAudioSourceManager.configureRequests { RequestConfig.copy(it).setCookieSpec(CookieSpecs.IGNORE_COOKIES).setConnectTimeout(5000).build() }
         youtubeSourceName = youtubeAudioSourceManager.sourceName
         playerManager.registerSourceManager(youtubeAudioSourceManager)
 
@@ -68,7 +68,7 @@ class MusicHandler {
         playerManager.registerSourceManager(SoundCloudAudioSourceManager.createDefault())
         playerManager.registerSourceManager(BandcampAudioSourceManager())
         if (Config.INS.musicNodes.size > 0) {
-            lavaLink = JdaLavalink(Config.INS.botId.toString(), Config.INS.shardNum, Function { shardId: Int? -> CascadeBot.INS.shardManager.getShardById(shardId!!) })
+            lavaLink = JdaLavalink(Config.INS.botId.toString(), Config.INS.shardNum) { CascadeBot.INS.shardManager.getShardById(it!!) }
             for (musicNode in Config.INS.musicNodes) {
                 lavaLink!!.addNode(musicNode.uri, musicNode.password) //TODO give nodes a name
             }
@@ -107,7 +107,7 @@ class MusicHandler {
 
     fun purgeDisconnectedPlayers() {
         // Removes all players that are not connected to a channel unless they have supported us on Patreon
-        players.entries.removeIf { entry: Map.Entry<Long, CascadePlayer?> -> entry.value!!.connectedChannel == null && !GuildDataManager.getGuildData(entry.key).isFlagEnabled(Flag.MUSIC_SERVICES) }
+        players.entries.removeIf { it.value.connectedChannel == null && !GuildDataManager.getGuildData(it.key).isFlagEnabled(Flag.MUSIC_SERVICES) }
     }
 
     /**

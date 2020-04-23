@@ -118,7 +118,7 @@ object Messaging {
         require(pages.isNotEmpty()) { "The number of pages cannot be zero!" }
         if (pages.size == 1) {
             val future = channel.sendMessage(Language.i18n(channel.guild.idLong, "messaging.loading_page")).submit()
-            future.thenAccept { sentMessage: Message? -> pages[0].pageShow(sentMessage, 1, pages.size) }
+            future.thenAccept { pages[0].pageShow(it, 1, pages.size) }
             return future
         }
         val group = ButtonGroup(owner.idLong, channel.idLong, channel.guild.idLong)

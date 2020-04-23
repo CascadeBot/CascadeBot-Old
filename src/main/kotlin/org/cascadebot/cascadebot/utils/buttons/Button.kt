@@ -23,7 +23,7 @@ abstract class Button private constructor(var runnable: IButtonRunnable) {
 
     class UnicodeButton(val unicode: String, runnable: IButtonRunnable) : Button(runnable) {
         override fun addReaction(message: Message) {
-            message.addReaction(unicode).queue(null, Consumer { error: Throwable? -> CascadeBot.LOGGER.debug("Failed to add reaction!", error) })
+            message.addReaction(unicode).queue(null) { error -> CascadeBot.LOGGER.debug("Failed to add reaction!", error) }
         }
 
     }

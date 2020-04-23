@@ -82,9 +82,9 @@ class TodoList(ownerId: Long) {
         requireNotNull(channel) { "The channel should exist :(" }
         val buttonGroup = generateButtons(context.member.idLong, channel.idLong, context.guild.idLong)
         currentItem = 0
-        sendButtonedMessage(channel, todoListMessage, buttonGroup).thenAccept { message: Message ->
-            messageId = message.idLong
-            channelId = message.channel.idLong
+        sendButtonedMessage(channel, todoListMessage, buttonGroup).thenAccept {
+            messageId = it.idLong
+            channelId = it.channel.idLong
         }
     }
 
