@@ -48,7 +48,7 @@ class MusicHandler {
 
     val players: MutableMap<Long, CascadePlayer> = HashMap()
     var musicJsonParser = JsonParser()
-    var lavaLink: JdaLavalink? = null
+    lateinit var lavaLink: JdaLavalink
         private set
 
     var lavalinkEnabled = false
@@ -70,7 +70,7 @@ class MusicHandler {
         if (Config.INS.musicNodes.size > 0) {
             lavaLink = JdaLavalink(Config.INS.botId.toString(), Config.INS.shardNum) { CascadeBot.INS.shardManager.getShardById(it!!) }
             for (musicNode in Config.INS.musicNodes) {
-                lavaLink!!.addNode(musicNode.uri, musicNode.password) //TODO give nodes a name
+                lavaLink.addNode(musicNode.uri, musicNode.password) //TODO give nodes a name
             }
             lavalinkEnabled = true
         } else {
@@ -89,7 +89,7 @@ class MusicHandler {
     private fun createPlayer(guild: Guild): CascadePlayer {
         val player: CascadePlayer
         if (lavalinkEnabled) {
-            val link = lavaLink!!.getLink(guild)
+            val link = lavaLink.getLink(guild)
             player = CascadeLavalinkPlayer(link.player)
         } else {
             val aPlayer = createLavaplayerPlayer()
