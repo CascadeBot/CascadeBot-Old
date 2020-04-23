@@ -75,19 +75,3 @@ class GuildSettingsCore(guildId: Long) {
 
 
 }
-
-@SettingsContainer(module = Module.MUSIC)
-class GuildSettingsMusic {
-
-    // TODO: Handle reverting tier for preserve settings
-    @Setting
-    var preserveVolume = true
-
-    @Setting
-    var preserveEqualizer = true
-
-    var volume = 100
-
-    var equalizerBands: MutableMap<Int, Float> = ConcurrentHashMap();
-
-}
