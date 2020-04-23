@@ -26,7 +26,7 @@ public class PurgeCommand implements ICommandMain {
         }
 
         if (!context.isArgInteger(0)) {
-            context.getUiMessaging().replyUsage(this);
+            context.getUiMessaging().replyUsage();
             return;
         }
 

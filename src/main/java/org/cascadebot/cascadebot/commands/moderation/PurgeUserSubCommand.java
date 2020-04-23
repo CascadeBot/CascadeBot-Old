@@ -23,7 +23,7 @@ public class PurgeUserSubCommand implements ISubCommand {
         }
 
         if (!context.isArgInteger(0)) {
-            context.getUiMessaging().replyUsage(this);
+            context.getUiMessaging().replyUsage();
             return;
         }
 
