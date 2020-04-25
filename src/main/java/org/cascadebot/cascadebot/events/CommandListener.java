@@ -37,9 +37,11 @@ import org.slf4j.MDC;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CommandListener extends ListenerAdapter {
 
@@ -78,10 +80,11 @@ public class CommandListener extends ListenerAdapter {
         String prefix = guildData.getCoreSettings().getPrefix();
         boolean isMention = false;
 
-        String commandWithArgs;
+        String commandWithArgs = null;
         String trigger;
         String[] args;
 
+        // Check that the bot is even mentioned in the first place
         boolean messagesBot = false;
         for (Member member : event.getMessage().getMentionedMembers()) {
             if (member.getIdLong() == event.getGuild().getSelfMember().getIdLong()) {
@@ -91,12 +94,21 @@ public class CommandListener extends ListenerAdapter {
 
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-        } else if (guildData.getCoreSettings().isMentionPrefix() && messagesBot) {
-            commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length() + 1).trim();
-            isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCoreSettings().getPrefix())) {
+        }
+        if (guildData.getCoreSettings().isMentionPrefix() && messagesBot) {
+            List<String> split = new ArrayList<>(Arrays.asList(message.split(">")));
+            String start = split.remove(0);
+            start += ">";
+            // Make sure bot is mentioned at start of message
+            if (start.matches("<@!?" + event.getJDA().getSelfUser().getIdLong() + ">")) {
+                commandWithArgs = String.join(">", split).trim();
+                isMention = true;
+            }
+        }
+        if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCoreSettings().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
-        } else {
+        }
+        if (commandWithArgs == null) {
             return;
         }
 
