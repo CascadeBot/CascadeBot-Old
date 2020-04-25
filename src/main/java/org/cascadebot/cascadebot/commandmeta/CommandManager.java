@@ -59,7 +59,7 @@ public class CommandManager {
                 return cmd;
             }
         }
-        
+
         // Fallback to default if cannot find command
         for (ICommandMain cmd : commands) {
             if (cmd.command(data.getLocale()).equals(command)) {
