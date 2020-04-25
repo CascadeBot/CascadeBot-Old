@@ -35,13 +35,10 @@ import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.slf4j.MDC;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class CommandListener extends ListenerAdapter {
 
@@ -84,28 +81,14 @@ public class CommandListener extends ListenerAdapter {
         String trigger;
         String[] args;
 
-        // Check that the bot is even mentioned in the first place
-        boolean messagesBot = false;
-        for (Member member : event.getMessage().getMentionedMembers()) {
-            if (member.getIdLong() == event.getGuild().getSelfMember().getIdLong()) {
-                messagesBot = true;
-            }
-        }
-
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-        }
-        if (guildData.getCoreSettings().isMentionPrefix() && messagesBot) {
-            // Make sure bot is mentioned at start of message
-            if (message.matches("^<@!?" + event.getJDA().getSelfUser().getIdLong() + ">.*")) {
-                commandWithArgs = message.substring(message.indexOf('>') + 1).trim();
-                isMention = true;
-            }
-        }
-        if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCoreSettings().getPrefix())) {
+        } else if (guildData.getCoreSettings().isMentionPrefix() && message.matches("^<@!?" + event.getJDA().getSelfUser().getId() + ">.*")) {
+            commandWithArgs = message.substring(message.indexOf('>') + 1).trim();
+            isMention = true;
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCoreSettings().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
-        }
-        if (commandWithArgs == null) {
+        } else {
             return;
         }
 
