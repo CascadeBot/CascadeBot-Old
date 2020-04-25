@@ -98,7 +98,7 @@ public class CommandListener extends ListenerAdapter {
         if (guildData.getCoreSettings().isMentionPrefix() && messagesBot) {
             // Make sure bot is mentioned at start of message
             if (message.matches("^<@!?" + event.getJDA().getSelfUser().getIdLong() + ">.*")) {
-                commandWithArgs = message.substring(message.indexOf('>'));
+                commandWithArgs = message.substring(message.indexOf('>') + 1).trim();
                 isMention = true;
             }
         }
