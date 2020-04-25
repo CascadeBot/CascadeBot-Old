@@ -96,12 +96,9 @@ public class CommandListener extends ListenerAdapter {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
         }
         if (guildData.getCoreSettings().isMentionPrefix() && messagesBot) {
-            List<String> split = new ArrayList<>(Arrays.asList(message.split(">")));
-            String start = split.remove(0);
-            start += ">";
             // Make sure bot is mentioned at start of message
-            if (start.matches("<@!?" + event.getJDA().getSelfUser().getIdLong() + ">")) {
-                commandWithArgs = String.join(">", split).trim();
+            if (message.matches("^<@!?" + event.getJDA().getSelfUser().getIdLong() + ">.*")) {
+                commandWithArgs = message.substring(message.indexOf('>'));
                 isMention = true;
             }
         }
