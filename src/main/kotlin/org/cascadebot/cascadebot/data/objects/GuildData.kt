@@ -29,8 +29,8 @@ class GuildData(@field:Id val guildId: Long) {
     private val creationDate = Date()
     //endregion
 
-    private val commandInfo = ConcurrentHashMap<Class<ICommandMain>, GuildCommandInfo>()
-    val guildCommandInfos: Map<Class<ICommandMain>, GuildCommandInfo>
+    private val commandInfo = ConcurrentHashMap<Class<ICommandMain>, MutableSet<GuildCommandInfo>>()
+    val guildCommandInfos
         get() = Collections.unmodifiableMap(commandInfo)
 
     val enabledFlags: MutableSet<Flag> = Sets.newConcurrentHashSet()
@@ -78,7 +78,7 @@ class GuildData(@field:Id val guildId: Long) {
     //region Commands
     fun enableCommand(command: ICommandMain) {
         if (command.module.isPrivate) return
-        if (commandInfo.contains(command.javaClass) || !command.module.isDefault) {
+        if (commandInfo.contains(command.javaClass)) {
             getGuildCommandInfo(command).enabled = true
         }
     }
@@ -104,13 +104,13 @@ class GuildData(@field:Id val guildId: Long) {
 
     fun isCommandEnabled(command: ICommandMain): Boolean {
         return if (commandInfo.contains(command.javaClass)) {
-            commandInfo[command.javaClass]!!.enabled
-        } else command.module.isDefault
+            getGuildCommandInfo(command).enabled
+        } else coreSettings.isModuleEnabled(command.module)
     }
 
     fun getCommandAliases(command: ICommandMain): Set<String> {
         return if (commandInfo.contains(command.javaClass)) {
-            commandInfo[command.javaClass]!!.aliases
+            getGuildCommandInfo(command).aliases.applyChanges()
         } else command.getGlobalAliases(locale)
     }
 
@@ -122,9 +122,18 @@ class GuildData(@field:Id val guildId: Long) {
         return getGuildCommandInfo(command).aliases.remove(alias)
     }
 
-    @BsonIgnore
-    private fun getGuildCommandInfo(command: ICommandMain): GuildCommandInfo {
-        return commandInfo.computeIfAbsent(command.javaClass) { GuildCommandInfo(command, locale) }
+    private fun getGuildCommandInfoSet(command: ICommandMain): MutableSet<GuildCommandInfo> {
+        return commandInfo.computeIfAbsent(command.javaClass) {
+            mutableSetOf(GuildCommandInfo(command, locale))
+        }
+    }
+
+    private fun getGuildCommandInfo(command: ICommandMain, locale: Locale = this.locale): GuildCommandInfo {
+        return getGuildCommandInfoSet(command).find { it.locale == locale } ?: run {
+            val commandInfo = GuildCommandInfo(command, locale)
+            getGuildCommandInfoSet(command).add(commandInfo)
+            commandInfo
+        }
     }
 
     //endregion
