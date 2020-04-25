@@ -6,11 +6,9 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import com.google.common.collect.Sets;
-import jdk.jfr.Name;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.ModuleFlag;

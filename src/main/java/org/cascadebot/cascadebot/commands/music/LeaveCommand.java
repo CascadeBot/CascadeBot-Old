@@ -12,8 +12,6 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-import java.util.Set;
-
 public class LeaveCommand implements ICommandMain {
 
     @Override

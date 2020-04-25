@@ -1,6 +1,5 @@
 package org.cascadebot.cascadebot.data.objects;
 
-import de.bild.codec.annotations.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.EmbedBuilder;

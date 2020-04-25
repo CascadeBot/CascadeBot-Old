@@ -30,8 +30,10 @@ import spark.utils.CollectionUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -196,7 +198,7 @@ public class MessagingUI {
         }
     }
 
-    public void checkPlaylistOrSong(String input, List<AudioTrack> tracks, CommandContext context) {
+    public void checkPlaylistOrSong(String input, List<AudioTrack> tracks, CommandContext context, boolean playTop) {
         if (tracks.size() > 1) {
 
             Matcher matcher = YOUTUBE_VIDEO_REGEX.matcher(input);
@@ -211,12 +213,24 @@ public class MessagingUI {
             ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
                 message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                context.getMusicPlayer().addTrack(selectedTrack);
+                if (playTop) {
+                    context.getMusicPlayer().playTrack(selectedTrack);
+                } else {
+                    context.getMusicPlayer().addTrack(selectedTrack);
+                }
                 context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.PLAYLIST, (runner, channel, message) -> {
                 message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                context.getMusicPlayer().addTracks(tracks);
+                if (playTop) {
+                    List<AudioTrack> currentQueue = new ArrayList<>(context.getMusicPlayer().getQueue());
+                    AudioTrack topTrack = tracks.remove(0);
+                    currentQueue.addAll(0, tracks);
+                    context.getMusicPlayer().setQueue(new LinkedList<>(currentQueue));
+                    context.getMusicPlayer().playTrack(topTrack);
+                } else {
+                    context.getMusicPlayer().addTracks(tracks);
+                }
                 context.getUIMessaging().sendTracksFound(tracks);
             }));
 

@@ -5,12 +5,8 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.Set;
 import net.dv8tion.jda.api.entities.Member;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -26,7 +22,7 @@ public class UserPermissionRemoveSubCommand implements ISubCommand {
             return;
         }
 
-        Member member = DiscordUtils.getMember(context.getGuild(), context.getArg(0)); //TODO Switch these of over to the error handler in language
+        Member member = DiscordUtils.getMember(context.getGuild(), context.getArg(0));
         if (member == null) {
             context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
             return;

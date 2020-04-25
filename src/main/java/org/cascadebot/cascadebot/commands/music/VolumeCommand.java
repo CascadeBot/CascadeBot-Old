@@ -19,7 +19,7 @@ public class VolumeCommand implements ICommandMain {
     public void onCommand(Member sender, CommandContext context) {
         CascadePlayer player = context.getMusicPlayer();
         if (context.getArgs().length == 0) {
-            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.current_volume", player.getPlayer().getVolume()));
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.current_volume", player.getVolume()));
             return;
         }
 
@@ -47,8 +47,11 @@ public class VolumeCommand implements ICommandMain {
                         new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
-                                player.getPlayer().setVolume(volume);
-                                context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getPlayer().getVolume()));
+                                player.setVolume(volume);
+                                if (context.getData().getGuildMusic().isPreserveVolume()) {
+                                    context.getData().getGuildMusic().setVolume(volume);
+                                }
+                                context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
                             }
                         });
                 return;
@@ -61,11 +64,14 @@ public class VolumeCommand implements ICommandMain {
             return;
         }
 
-        if (volume == context.getMusicPlayer().getPlayer().getVolume()) {
-            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getPlayer().getVolume()));
+        if (volume == context.getMusicPlayer().getVolume()) {
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getVolume()));
         } else {
-            player.getPlayer().setVolume(volume);
-            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getPlayer().getVolume()));
+            player.setVolume(volume);
+            if (context.getData().getGuildMusic().isPreserveVolume()) {
+                context.getData().getGuildMusic().setVolume(volume);
+            }
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
         }
 
     }

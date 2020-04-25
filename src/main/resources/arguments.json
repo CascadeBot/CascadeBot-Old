@@ -175,7 +175,15 @@
       ]
     }
   },
-  "queue*": {
+  "playtop*": {
+    "url": {
+      "_type": "required",
+      "_aliases": [
+        "query"
+      ]
+    }
+  },
+  "queue": {
     "load*": {
       "name*": {
         "_type": "required",
@@ -190,6 +198,19 @@
         "scope": {
           "_type": "optional"
         }
+      }
+    },
+    "move*": {
+      "source*": {
+        "_type": "optional",
+        "destination": {
+          "_type": "optional"
+        }
+      }
+    },
+    "remove*": {
+      "pos": {
+        "_type": "required"
       }
     }
   },
@@ -214,9 +235,17 @@
       "_type": "required"
     }
   },
+  "karaoke": {
+    "_type": "command"
+  },
   "seek*": {
     "timestamp": {
       "_type": "required"
+    }
+  },
+  "equalizer": {
+    "reset": {
+      "_type": "command"
     }
   },
   "groupperms*": {

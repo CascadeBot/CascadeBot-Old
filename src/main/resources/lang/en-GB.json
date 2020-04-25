@@ -346,6 +346,10 @@
       "could_not_find_matches": "We could not find music that matches: `{0}`",
       "encountered_error": "We encountered an error processing that! {0}"
     },
+    "playtop": {
+      "command": "playtop",
+      "description": "Plays a song immediately"
+    },
     "playing": {
       "command": "playing",
       "description": "Get playing music.",
@@ -364,11 +368,24 @@
       "bad_format": "Incorrect format.",
       "success": "Successfully seeked to {0}"
     },
+    "karaoke": {
+      "command": "karaoke",
+      "description": "Send the current song's lyrics to a channel.",
+      "aliases": ["lyrics"],
+      "cannot_find": "There are no lyrics available for this song!",
+      "enabled_karaoke": "Successfully enabled karaoke!",
+      "disabled_karaoke": "Successfully disabled karaoke!",
+      "loading_karaoke": "Loading karaoke...",
+      "nothing_playing": "There is no song playing, so karaoke cannot be enabled!",
+      "no_lyrics_atm": "There are no lyrics available for this part of the song.",
+      "not_youtube": "The currently playing track isn't from YouTube, so we can't get lyrics for it."
+    },
     "queue": {
       "command": "queue",
       "description": "Displays the current queue.",
       "aliases": ["playlist"],
       "no_tracks_playing": "There are no tracks playing!",
+      "track_number": "Cannot find track number {0}",
       "queue_time": "*There is `{0}` left in this queue*",
       "load": {
         "command": "load",
@@ -384,6 +401,20 @@
         "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it.",
         "playlist_overwrite": "Playlist already exists. Would you like to overwrite it?",
         "saved_playlist": "Saved playlist `{0}` in scope `{1}`."
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a song from the queue at the specified position",
+        "invalid_number": "`{0}` is not a number! You can only remove using the track number.",
+        "removed": "Removed track number {0} from the queue."
+      },
+      "move": {
+        "command": "move",
+        "description": "Moves items around in the queue",
+        "numbers": "Must use numbers to move tracks!",
+        "zero": "Cannot move a track to a number less then 0",
+        "self": "Cannot move track to its own position!",
+        "moved": "Moved track at position {0}} to position {1}"
       }
     },
     "resume": {
@@ -446,6 +477,17 @@
       "volume_set": "Volume set to {0}%.",
       "volume_already_set": "Volume is already set to {0}%.",
       "volume_range": "Volume needs to be between 0% and 200%."
+    },
+    "equalizer": {
+      "command": "equalizer",
+      "description": "Allows you to control an equalizer",
+      "embed_title": "{0} channel Equalizer",
+      "not_lavalink": "The equalizer is only available when using lavalink",
+      "reset": {
+        "command": "reset",
+        "description": "Resets the equalizer",
+        "success": "Reset equalizer to default values"
+      }
     },
     "purge": {
       "contains": {
@@ -701,6 +743,14 @@
           "name": "queue.save.overwrite",
           "label": "Overwrite guild playlist"
         }
+      },
+      "remove": {
+        "name": "queue.remove",
+        "label": "Queue remove sub command"
+      },
+      "move": {
+        "name": "queue.move",
+        "label": "Queue move sub command"
       }
     },
     "resume": {
@@ -726,6 +776,10 @@
     "stop": {
       "name": "stop",
       "label": "Stop command"
+    },
+    "karaoke": {
+      "name": "karaoke",
+      "label": "Karaoke command"
     },
     "seek": {
       "name": "seek",
@@ -801,7 +855,8 @@
       "cannot_find_tracks": "We couldn't find any tracks to load!",
       "num_tracks": "{0} tracks",
       "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`",
-      "loaded_track": "Loaded track"
+      "loaded_track": "Loaded track",
+      "error": "Failed to play audio track"
     },
     "handler": {
       "error_searching": "Error searching from YouTube!",
@@ -1049,6 +1104,9 @@
     "item": "item",
     "list": "list",
     "words": "words",
+    "pos": "position",
+    "source": "source",
+    "destination": "destination",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
@@ -1073,16 +1131,167 @@
       "no_permissions": "No permissions!",
       "no_linked_roles": "No linked roles!"
     },
-    "color_command": {
-      "valid_rgb": "RGB values should be between 0 and 255!",
-      "valid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
-      "valid_decimal": "Please provide a valid decimal value! 0-16777215",
-      "valid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
+    "color": {
+      "invalid_rgb": "RGB values should be between 0 and 255!",
+      "invalid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
+      "invalid_decimal": "Please provide a valid decimal value! 0-16777215",
+      "invalid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
       "color_not_recognised": "Could not recognise colour from the given value!",
-      "embed_title": "Values for #{0}",
+      "embed_title": "Values for {0}",
       "rgb": "RGB",
       "decimal": "Decimal value",
-      "binary": "Binary value"
+      "binary": "Binary value",
+      "hex": "Hex",
+      "colors": {
+        "aliceblue": "Aliceblue",
+        "antiquewhite": "Antiquewhite",
+        "aqua": "Aqua",
+        "aquamarine": "Aquamarine",
+        "azure": "Azure",
+        "beige": "Beige",
+        "bisque": "Bisque",
+        "black": "Black",
+        "blanchedalmond": "Blanchedalmond",
+        "blue": "Blue",
+        "blueviolet": "Blueviolet",
+        "brown": "Brown",
+        "burlywood": "Burlywood",
+        "cadetblue": "Cadetblue",
+        "chartreuse": "Chartreuse",
+        "chocolate": "Chocolate",
+        "coral": "Coral",
+        "cornflowerblue": "Cornflowerblue",
+        "cornsilk": "Cornsilk",
+        "crimson": "Crimson",
+        "cyan": "Cyan",
+        "darkblue": "Darkblue",
+        "darkcyan": "Darkcyan",
+        "darkgoldenrod": "Darkgoldenrod",
+        "darkgray": "Darkgray",
+        "darkgreen": "Darkgreen",
+        "darkgrey": "Darkgrey",
+        "darkkhaki": "Darkkhaki",
+        "darkmagenta": "Darkmagenta",
+        "darkolivegreen": "Darkolivegreen",
+        "darkorange": "Darkorange",
+        "darkorchid": "Darkorchid",
+        "darkred": "Darkred",
+        "darksalmon": "Darksalmon",
+        "darkseagreen": "Darkseagreen",
+        "darkslateblue": "Darkslateblue",
+        "darkslategray": "Darkslategray",
+        "darkslategrey": "Darkslategrey",
+        "darkturquoise": "Darkturquoise",
+        "darkviolet": "Darkviolet",
+        "deeppink": "Deeppink",
+        "deepskyblue": "Deepskyblue",
+        "dimgray": "Dimgray",
+        "dimgrey": "Dimgrey",
+        "dodgerblue": "Dodgerblue",
+        "firebrick": "Firebrick",
+        "floralwhite": "Floralwhite",
+        "forestgreen": "Forestgreen",
+        "fuchsia": "Fuchsia",
+        "gainsboro": "Gainsboro",
+        "ghostwhite": "Ghostwhite",
+        "goldenrod": "Goldenrod",
+        "gold": "Gold",
+        "gray": "Gray",
+        "green": "Green",
+        "greenyellow": "Greenyellow",
+        "grey": "Grey",
+        "honeydew": "Honeydew",
+        "hotpink": "Hotpink",
+        "indianred": "Indianred",
+        "indigo": "Indigo",
+        "ivory": "Ivory",
+        "khaki": "Khaki",
+        "lavenderblush": "Lavenderblush",
+        "lavender": "Lavender",
+        "lawngreen": "Lawngreen",
+        "lemonchiffon": "Lemonchiffon",
+        "lightblue": "Lightblue",
+        "lightcoral": "Lightcoral",
+        "lightcyan": "Lightcyan",
+        "lightgoldenrodyellow": "Lightgoldenrodyellow",
+        "lightgray": "Lightgray",
+        "lightgreen": "Lightgreen",
+        "lightgrey": "Lightgrey",
+        "lightpink": "Lightpink",
+        "lightsalmon": "Lightsalmon",
+        "lightseagreen": "Lightseagreen",
+        "lightskyblue": "Lightskyblue",
+        "lightslategray": "Lightslategray",
+        "lightslategrey": "Lightslategrey",
+        "lightsteelblue": "Lightsteelblue",
+        "lightyellow": "Lightyellow",
+        "lime": "Lime",
+        "limegreen": "Limegreen",
+        "linen": "Linen",
+        "magenta": "Magenta",
+        "maroon": "Maroon",
+        "mediumaquamarine": "Mediumaquamarine",
+        "mediumblue": "Mediumblue",
+        "mediumorchid": "Mediumorchid",
+        "mediumpurple": "Mediumpurple",
+        "mediumseagreen": "Mediumseagreen",
+        "mediumslateblue": "Mediumslateblue",
+        "mediumspringgreen": "Mediumspringgreen",
+        "mediumturquoise": "Mediumturquoise",
+        "mediumvioletred": "Mediumvioletred",
+        "midnightblue": "Midnightblue",
+        "mintcream": "Mintcream",
+        "mistyrose": "Mistyrose",
+        "moccasin": "Moccasin",
+        "navajowhite": "Navajowhite",
+        "navy": "Navy",
+        "oldlace": "Oldlace",
+        "olive": "Olive",
+        "olivedrab": "Olivedrab",
+        "orange": "Orange",
+        "orangered": "Orangered",
+        "orchid": "Orchid",
+        "palegoldenrod": "Palegoldenrod",
+        "palegreen": "Palegreen",
+        "paleturquoise": "Paleturquoise",
+        "palevioletred": "Palevioletred",
+        "papayawhip": "Papayawhip",
+        "peachpuff": "Peachpuff",
+        "peru": "Peru",
+        "pink": "Pink",
+        "plum": "Plum",
+        "powderblue": "Powderblue",
+        "purple": "Purple",
+        "rebeccapurple": "Rebeccapurple",
+        "red": "Red",
+        "rosybrown": "Rosybrown",
+        "royalblue": "Royalblue",
+        "saddlebrown": "Saddlebrown",
+        "salmon": "Salmon",
+        "sandybrown": "Sandybrown",
+        "seagreen": "Seagreen",
+        "seashell": "Seashell",
+        "sienna": "Sienna",
+        "silver": "Silver",
+        "skyblue": "Skyblue",
+        "slateblue": "Slateblue",
+        "slategray": "Slategray",
+        "slategrey": "Slategrey",
+        "snow": "Snow",
+        "springgreen": "Springgreen",
+        "steelblue": "Steelblue",
+        "tan": "Tan",
+        "teal": "Teal",
+        "thistle": "Thistle",
+        "tomato": "Tomato",
+        "turquoise": "Turquoise",
+        "violet": "Violet",
+        "wheat": "Wheat",
+        "white": "White",
+        "whitesmoke": "Whitesmoke",
+        "yellow": "Yellow",
+        "yellowgreen": "Yellowgreen"
+      }
     }
   }
 }
