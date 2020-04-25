@@ -2,27 +2,22 @@ package org.cascadebot.cascadebot.data.objects
 
 import org.cascadebot.cascadebot.commandmeta.ICommandMain
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.utils.ChangeList
 
 class GuildCommandInfo(var enabled: Boolean,
-                       command: String,
-                       defaultCommand: String,
-                       var aliases: MutableSet<String>) {
-
-    lateinit var command: String
-        private set
-
-    lateinit var defaultCommand: String
-        private set
+                       val command: String,
+                       val locale: Locale,
+                       val aliases: ChangeList<String>) {
 
     // Private constructor for MongoDB
-    private constructor() : this(true, "", "", mutableSetOf())
+    private constructor() : this(true, "", Locale.getDefaultLocale(), ChangeList(setOf()))
 
     constructor(command: ICommandMain, locale: Locale) :
             this(
                     true,
-                    command.command(locale),
                     command.command(),
-                    command.getGlobalAliases(locale)
+                    locale,
+                    ChangeList(command.getGlobalAliases(locale))
             )
 
 }
