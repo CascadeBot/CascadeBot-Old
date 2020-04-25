@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.events;
 import io.prometheus.client.Summary;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -81,10 +82,17 @@ public class CommandListener extends ListenerAdapter {
         String trigger;
         String[] args;
 
+        boolean messagesBot = false;
+        for (Member member : event.getMessage().getMentionedMembers()) {
+            if (member.getIdLong() == event.getGuild().getSelfMember().getIdLong()) {
+                messagesBot = true;
+            }
+        }
+
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-        } else if (guildData.getCoreSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
-            commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
+        } else if (guildData.getCoreSettings().isMentionPrefix() && messagesBot) {
+            commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length() + 1).trim();
             isMention = true;
         } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCoreSettings().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
