@@ -16,19 +16,26 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashSet
 
-data class Tier(
-        val parent: String?,
-        var flags: MutableSet<Flag>,
-        val extras: List<TierExtra>
-) {
-    private constructor(): this(null, HashSet(), ArrayList())
+class Tier : FlagContainer {
+    var parent: String? = null
+    var extras: List<TierExtra> = ArrayList()
+
+    private constructor() {
+
+    }
 
     constructor(flags: MutableSet<Flag>) :
-        this (
-                null,
-                flags,
-                ArrayList()
-        )
+            this(
+                    null,
+                    flags,
+                    ArrayList()
+            )
+
+    constructor(parent: String?, flags: MutableSet<Flag>, extras: List<TierExtra>) {
+        this.parent = parent;
+        this.flags = flags;
+        this.extras = extras
+    }
 
     fun addFlag(flag: Flag) {
         flags.add(flag)
@@ -46,16 +53,12 @@ data class Tier(
         return flags
     }
 
-    fun getFlag(id: String): Flag? {
+    override fun getFlag(id: String): Flag? {
         var returnFlag = flags.stream().filter { flag: Flag? -> flag!!.id == id }.findFirst().orElse(null)
         if (parent != null && returnFlag == null) {
             returnFlag = tiers[parent]!!.getFlag(id)
         }
         return returnFlag
-    }
-
-    fun hasFlag(id: String): Boolean {
-        return getFlag(id) != null
     }
 
     fun isTierParent(tier: String): Boolean {

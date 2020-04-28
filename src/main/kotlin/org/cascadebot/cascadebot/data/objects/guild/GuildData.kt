@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.managers.CascadeUserDataManager
 import org.cascadebot.cascadebot.data.objects.donation.DataFlag
 import org.cascadebot.cascadebot.data.objects.donation.Flag
+import org.cascadebot.cascadebot.data.objects.donation.FlagContainer
 import org.cascadebot.cascadebot.data.objects.donation.Tier
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
@@ -167,7 +168,7 @@ class GuildData(@field:Id val guildId: Long) {
 
     //endregion
 
-    fun getGuildTier(): Tier? {
+    private fun getGuildTier(): Tier? {
         if (supporters.isEmpty()) {
             return Tier.getTier("default")
         }
@@ -200,7 +201,7 @@ class GuildData(@field:Id val guildId: Long) {
         return highestTierName
     }
 
-    fun getAllFlags(): List<Flag> {
+    fun getAllFlags(): FlagContainer {
         val flags = ArrayList(getGuildTier()?.getAllFlags()!!.toList());
         for (guildFlag in this.flags) {
             if (guildFlag !is DataFlag) {
@@ -244,7 +245,7 @@ class GuildData(@field:Id val guildId: Long) {
             }
         }
 
-        return flags
+        return FlagContainer(HashSet(flags));
     }
 
 }

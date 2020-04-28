@@ -70,7 +70,7 @@ public class PlayingCommand implements ICommandMain {
             return;
         }
         ButtonGroup buttonGroup = new ButtonGroup(sender.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-        if (context.getData().getGuildTier().hasFlag("music_controls")) {
+        if (context.getData().getAllFlags().hasFlag("music_controls")) {
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
                 if (context.hasPermission(runner, "volume")) {
                     int volume = context.getMusicPlayer().getVolume();

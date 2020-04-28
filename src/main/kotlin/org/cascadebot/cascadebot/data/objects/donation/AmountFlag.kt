@@ -11,9 +11,7 @@ import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.data.language.Locale
 
 class AmountFlag : DataFlag {
-    @Getter
-    @Setter
-    private var amount = 0
+    var amount = 0
 
     private constructor() : super() {}
     constructor(id: String?, scope: FlagScope?) : super(id, scope) {}

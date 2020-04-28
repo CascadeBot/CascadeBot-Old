@@ -41,7 +41,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), ((loadPlaylistResult, newTracks) -> {
                             context.getUiMessaging().sendTracksFound(newTracks);
-                        }), context.getData().getGuildTier().hasFlag("music_services"));
+                        }), context.getData().getAllFlags().hasFlag("music_services"));
                     })));
                     buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TWO, ((runner, channel, message) -> {
                         if (!runner.equals(buttonGroup.getOwner())) {
@@ -50,7 +50,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
                             context.getUiMessaging().sendTracksFound(newTracks);
-                        }), context.getData().getGuildTier().hasFlag("music_services"));
+                        }), context.getData().getAllFlags().hasFlag("music_services"));
                     })));
                     context.getUiMessaging().sendButtonedMessage(context.i18n("commands.queue.load.load_track"), buttonGroup);
                     break;
@@ -58,7 +58,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                     context.getTypedMessaging().replyDanger(context.i18n("commands.queue.load.cannot_find_playlist", context.getArg(0)));
                     break;
             }
-        }, context.getData().getGuildTier().hasFlag("music_services"));
+        }, context.getData().getAllFlags().hasFlag("music_services"));
     }
 
     @Override

@@ -27,7 +27,7 @@ public class DonateCommand implements ICommandCore {
         builder.addField("Patreon", context.i18n("commands.donate.embed_patreon"), true);
 
         pages.add(new PageObjects.EmbedPage(builder));
-        for (Map.Entry<String, Tier> tier : Tier.getTiers().entrySet()) {
+        for (Map.Entry<String, Tier> tier : Tier.Companion.getTiers().entrySet()) {
             if (tier.getKey().equals("default") || tier.getKey().equals("nitro")) {
                 continue;
             }

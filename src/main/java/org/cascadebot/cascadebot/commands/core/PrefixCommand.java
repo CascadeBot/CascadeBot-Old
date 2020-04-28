@@ -33,7 +33,11 @@ public class PrefixCommand implements ICommandCore {
                 return;
             }
 
-            AmountFlag prefixFlag = (AmountFlag) context.getData().getGuildTier().getFlag("prefix_length");
+            AmountFlag prefixFlag = (AmountFlag) context.getData().getAllFlags().getFlag("prefix_length");
+            if (prefixFlag == null) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.prefix.prefix_too_long"));
+                return;
+            }
             if (newPrefix.length() > prefixFlag.getAmount()) {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.prefix.prefix_too_long"));
                 return;

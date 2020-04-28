@@ -61,7 +61,7 @@ public class SearchCommand implements ICommandMain {
                     }, audioTracks -> {
                         context.getMusicPlayer().addTracks(audioTracks);
                         context.getUiMessaging().sendTracksFound(audioTracks);
-                    }, context.getData().getGuildTier().hasFlag("music_services"));
+                    }, context.getData().getAllFlags().hasFlag("music_services"));
                 }));
                 messageBuilder.append(unicode).append("\u20E3").append(" - ").append(StringsUtil.truncate(result.getTitle(), 60)).append(" - ");
                 switch (result.getType()) {
@@ -100,7 +100,7 @@ public class SearchCommand implements ICommandMain {
                         }, audioTracks -> {
                             context.getMusicPlayer().addTracks(audioTracks);
                             context.getUiMessaging().sendTracksFound(audioTracks);
-                        }, context.getData().getGuildTier().hasFlag("music_services"));
+                        }, context.getData().getAllFlags().hasFlag("music_services"));
                     }, String.valueOf(index + 1));
                 }
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(), 30, TimeUnit.SECONDS, () -> {

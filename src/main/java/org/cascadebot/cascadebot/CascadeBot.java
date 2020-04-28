@@ -202,7 +202,7 @@ public class CascadeBot {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
             }
 
-            Tier.parseTiers();
+            Tier.Companion.parseTiers();
 
             shardManager = defaultShardManagerBuilder.build();
         } catch (LoginException e) {

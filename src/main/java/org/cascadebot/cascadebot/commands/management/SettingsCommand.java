@@ -49,7 +49,7 @@ public class SettingsCommand implements ICommandMain {
                     Setting settingAnnotation = field.getAnnotation(Setting.class);
                     if (settingAnnotation != null) {
                         for (String flag : settingAnnotation.flagsRequired()) {
-                            if (!context.getData().getGuildTier().hasFlag(flag)) {
+                            if (!context.getData().getAllFlags().hasFlag(flag)) {
                                 String niceName = Language.i18n(context.getGuild().getIdLong(), "settings." + field.getDeclaringClass().getAnnotation(SettingsContainer.class).module().name().toLowerCase() + "." + field.getName() + ".nice_name");
                                 context.getTypedMessaging().replyDanger(context.i18n("commands.settings.cannot_edit", niceName));
                                 return;
