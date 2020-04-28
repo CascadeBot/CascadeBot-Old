@@ -559,6 +559,11 @@
         "description": "Creates a command filter",
         "created_filter": "Created command filter of type **{0}** with the name `{1}`",
         "type_invalid": "The filter type `{0}` does not exist! Please choose one of: {1}"
+      },
+      "delete": {
+        "command": "delete",
+        "doesnt_exist": "A filter with the name `{0}` doesn't exist! Please use `{1}` to list your filters!",
+
       }
     }
   },

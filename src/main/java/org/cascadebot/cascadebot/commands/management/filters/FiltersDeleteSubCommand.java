@@ -13,6 +13,15 @@ public class FiltersDeleteSubCommand implements ISubCommand {
             context.getUIMessaging().replyUsage();
             return;
         }
+
+        var name = context.getArg(0);
+
+        if (!context.getCoreSettings().hasCommandFilter(name)) {
+            context.getTypedMessaging().replyDanger(context.i18n(
+                    ""
+            ));
+        }
+
     }
 
     @Override
