@@ -76,14 +76,14 @@ public class CommandListener extends ListenerAdapter {
         String prefix = guildData.getCoreSettings().getPrefix();
         boolean isMention = false;
 
-        String commandWithArgs;
+        String commandWithArgs = null;
         String trigger;
         String[] args;
 
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-        } else if (guildData.getCoreSettings().getMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
-            commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
+        } else if (guildData.getCoreSettings().getMentionPrefix() && message.matches("^<@!?" + event.getJDA().getSelfUser().getId() + ">.*")) {
+            commandWithArgs = message.substring(message.indexOf('>') + 1).trim();
             isMention = true;
         } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCoreSettings().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
