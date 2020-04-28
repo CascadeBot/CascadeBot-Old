@@ -110,7 +110,7 @@ class GuildData(@field:Id val guildId: Long) {
 
     fun getCommandAliases(command: ICommandMain): Set<String> {
         return if (commandInfo.contains(command.javaClass)) {
-            getGuildCommandInfo(command).aliases.applyChanges()
+            getGuildCommandInfo(command).aliases.applyChanges(command.getGlobalAliases(locale))
         } else command.getGlobalAliases(locale)
     }
 

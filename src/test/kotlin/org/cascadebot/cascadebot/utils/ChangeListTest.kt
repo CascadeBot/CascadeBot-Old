@@ -9,7 +9,7 @@ class ChangeListTest {
 
     @Test
     fun `remove() removes from added list`() {
-        val changeList = ChangeList<String>(mutableSetOf())
+        val changeList = ChangeList<String>()
         changeList.add("element")
         changeList.remove("element")
 
@@ -19,7 +19,7 @@ class ChangeListTest {
 
     @Test
     fun `add() adds to removed list`() {
-        val changeList = ChangeList<String>(mutableSetOf())
+        val changeList = ChangeList<String>()
         changeList.remove("element")
         changeList.add("element")
 
@@ -29,18 +29,24 @@ class ChangeListTest {
 
     @Test
     fun `Remove from base collection`() {
-        val changeList = ChangeList(mutableSetOf("element", "different"))
+        val changeList = ChangeList<String>()
         changeList.remove("element")
         assertTrue(changeList.removedItems.contains("element"))
-        assertEquals(changeList.applyChanges(), setOf("different"))
+        assertEquals(
+                changeList.applyChanges(mutableSetOf("element", "different")),
+                setOf("different")
+        )
     }
 
     @Test
     fun `Add to base collection`() {
-        val changeList = ChangeList(mutableSetOf("different"))
+        val changeList = ChangeList<String>()
         changeList.add("element")
         assertTrue(changeList.addedItems.contains("element"))
-        assertEquals(changeList.applyChanges(), setOf("element", "different"))
+        assertEquals(
+                changeList.applyChanges(mutableSetOf("different")),
+                setOf("element", "different")
+        )
     }
 
 

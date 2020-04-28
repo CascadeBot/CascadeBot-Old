@@ -2,7 +2,7 @@ package org.cascadebot.cascadebot.utils
 
 import java.util.Collections
 
-class ChangeList<T>(val baseCollection: Set<T>) {
+class ChangeList<T>() {
 
     val addedItems
         get() = added.toSet()
@@ -14,19 +14,19 @@ class ChangeList<T>(val baseCollection: Set<T>) {
 
     fun add(element: T): Boolean {
         if (!removed.remove(element)) {
-            added.add(element)
+            return added.add(element)
         }
-        return !baseCollection.contains(element)
+        return true
     }
 
     fun remove(element: T): Boolean {
         if (!added.remove(element)) {
-            removed.add(element)
+            return removed.add(element)
         }
-        return baseCollection.contains(element)
+        return true
     }
 
-    fun applyChanges(): Set<T> {
+    fun applyChanges(baseCollection: Set<T>): Set<T> {
         val baseElements = baseCollection.toMutableSet()
         baseElements.addAll(added)
         baseElements.removeAll(removed)

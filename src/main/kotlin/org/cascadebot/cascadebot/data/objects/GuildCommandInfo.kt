@@ -10,14 +10,14 @@ class GuildCommandInfo(var enabled: Boolean,
                        val aliases: ChangeList<String>) {
 
     // Private constructor for MongoDB
-    private constructor() : this(true, "", Locale.getDefaultLocale(), ChangeList(setOf()))
+    private constructor() : this(true, "", Locale.getDefaultLocale(), ChangeList())
 
     constructor(command: ICommandMain, locale: Locale) :
             this(
                     true,
                     command.command(),
                     locale,
-                    ChangeList(command.getGlobalAliases(locale))
+                    ChangeList()
             )
 
 }
