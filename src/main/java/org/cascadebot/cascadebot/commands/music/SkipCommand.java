@@ -43,7 +43,7 @@ public class SkipCommand implements ICommandMain {
                     context.getMusicPlayer().skip();
                     context.getTypedMessaging().replySuccess(context.i18n("commands.skip.forcefully_skipped"));
                 } else {
-                    context.getUIMessaging().sendPermissionError("skip.force");
+                    context.getUiMessaging().sendPermissionError("skip.force");
                 }
                 return;
             }
@@ -121,7 +121,7 @@ public class SkipCommand implements ICommandMain {
         voteMap.put(context.getGuild().getIdLong(), buttonGroup);
         EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser())
                 .setTitle(context.i18n("commands.skip.skip_vote_title"));
-        context.getUIMessaging().sendButtonedMessage(skipVoteEmbed.build(), buttonGroup);
+        context.getUiMessaging().sendButtonedMessage(skipVoteEmbed.build(), buttonGroup);
         buttonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
         for (Member member : context.getMusicPlayer().getConnectedChannel().getMembers()) {
             buttonGroup.allowUser(member.getIdLong());

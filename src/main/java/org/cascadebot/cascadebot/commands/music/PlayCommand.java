@@ -25,7 +25,7 @@ public class PlayCommand implements ICommandMain {
             }, exception -> {
                 context.getTypedMessaging().replyException(context.i18n("commands.play.encountered_error"), exception);
             }, tracks -> {
-                context.getUIMessaging().checkPlaylistOrSong(context.getArg(0), tracks, context, false);
+                context.getUiMessaging().checkPlaylistOrSong(context.getArg(0), tracks, context, false);
             }, context.getData().getGuildTier().hasFlag("music_services"));
         } else {
             CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
@@ -37,7 +37,7 @@ public class PlayCommand implements ICommandMain {
                         context.getTypedMessaging().replyException(context.i18n("commands.play.encountered_error"), exception);
                     }, tracks -> {
                         context.getMusicPlayer().addTracks(tracks);
-                        context.getUIMessaging().sendTracksFound(tracks);
+                        context.getUiMessaging().sendTracksFound(tracks);
                     }, context.getData().getGuildTier().hasFlag("music_services"));
                 }
             });

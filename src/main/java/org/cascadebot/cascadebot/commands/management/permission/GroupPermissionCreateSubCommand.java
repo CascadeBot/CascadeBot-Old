@@ -17,11 +17,11 @@ public class GroupPermissionCreateSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
-        Group group = context.getData().getPermissions().createGroup(context.getArg(0));
+        Group group = context.getData().getPermissionSettings().createGroup(context.getArg(0));
         context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create.success", context.getArg(0), group.getId()));
     }
 

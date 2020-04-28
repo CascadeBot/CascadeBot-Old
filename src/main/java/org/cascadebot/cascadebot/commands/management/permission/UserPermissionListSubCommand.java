@@ -26,12 +26,12 @@ public class UserPermissionListSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         if (!context.getArg(1).equalsIgnoreCase("permissions") && !context.getArg(1).equalsIgnoreCase("groups")) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -41,7 +41,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
             return;
         }
 
-        User user = context.getData().getPermissions().getPermissionUser(member);
+        User user = context.getData().getPermissionSettings().getPermissionUser(member);
 
         if (context.getArg(1).equalsIgnoreCase("groups")) {
             StringBuilder groupsBuilder = new StringBuilder();
@@ -51,7 +51,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
             }
 
             for (String id : user.getGroupIds()) {
-                Group group = context.getData().getPermissions().getGroupById(id);
+                Group group = context.getData().getPermissionSettings().getGroupById(id);
                 groupsBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
             }
             List<String> pageContent = PageUtils.splitString(groupsBuilder.toString(), 1000, '\n');
@@ -62,7 +62,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
                 builder.setDescription("```\n" + content + "```");
                 pages.add(new PageObjects.EmbedPage(builder));
             }
-            context.getUIMessaging().sendPagedMessage(pages);
+            context.getUiMessaging().sendPagedMessage(pages);
         } else if (context.getArg(1).equalsIgnoreCase("permissions")) {
             if (user.getPermissions().isEmpty()) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.list.no_permissions"));
@@ -81,7 +81,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
                 builder.setDescription("```\n" + content + "```");
                 pages.add(new PageObjects.EmbedPage(builder));
             }
-            context.getUIMessaging().sendPagedMessage(pages);
+            context.getUiMessaging().sendPagedMessage(pages);
         }
     }
 

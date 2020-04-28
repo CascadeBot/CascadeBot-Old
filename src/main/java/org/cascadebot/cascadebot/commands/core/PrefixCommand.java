@@ -23,13 +23,13 @@ public class PrefixCommand implements ICommandCore {
                     context.getCoreSettings().setPrefix(Config.INS.getDefaultPrefix());
                     context.getTypedMessaging().replyInfo(context.i18n("commands.prefix.prefix_reset", Config.INS.getDefaultPrefix()));
                 } else {
-                    context.getUIMessaging().sendPermissionError("prefix.reset");
+                    context.getUiMessaging().sendPermissionError("prefix.reset");
                 }
                 return;
             }
 
             if (!context.hasPermission("prefix.set")) {
-                context.getUIMessaging().sendPermissionError("prefix.set");
+                context.getUiMessaging().sendPermissionError("prefix.set");
                 return;
             }
 

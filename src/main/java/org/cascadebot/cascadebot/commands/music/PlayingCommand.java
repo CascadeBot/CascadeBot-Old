@@ -128,7 +128,7 @@ public class PlayingCommand implements ICommandMain {
 
         buttonGroup.addButton(player.isPaused() ? playButton : pauseButton);
 
-        context.getUIMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
+        context.getUiMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
 
     }
 
@@ -147,7 +147,7 @@ public class PlayingCommand implements ICommandMain {
         embedBuilder.addField(Language.i18n(guildId, "words.status"), player.isPaused() ? UnicodeConstants.PAUSE + " " + Language.i18n(guildId, "words.paused") : UnicodeConstants.PLAY + " " + Language.i18n(guildId, "words.playing"), true);
 
         if (!track.getInfo().isStream) {
-            embedBuilder.addField(Language.i18n(guildId, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildId).getCoreSettings().isUseEmbedForMessages()), false);
+            embedBuilder.addField(Language.i18n(guildId, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildId).getCoreSettings().getUseEmbedForMessages()), false);
         }
 
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getTrackPosition()) + " / " +

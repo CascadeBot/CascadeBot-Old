@@ -102,9 +102,9 @@ public class QueueMoveSubCommand implements ISubCommand {
                     message.delete().queue();
                 }
             }));
-            context.getUIMessaging().sendButtonedMessage(getMoveEmbed(movableList).build(), group);
+            context.getUiMessaging().sendButtonedMessage(getMoveEmbed(movableList).build(), group);
         } else {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
         }
     }
 

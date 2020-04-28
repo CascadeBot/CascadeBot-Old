@@ -32,7 +32,7 @@ public class SearchCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -60,7 +60,7 @@ public class SearchCommand implements ICommandMain {
                         context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);
                     }, audioTracks -> {
                         context.getMusicPlayer().addTracks(audioTracks);
-                        context.getUIMessaging().sendTracksFound(audioTracks);
+                        context.getUiMessaging().sendTracksFound(audioTracks);
                     }, context.getData().getGuildTier().hasFlag("music_services"));
                 }));
                 messageBuilder.append(unicode).append("\u20E3").append(" - ").append(StringsUtil.truncate(result.getTitle(), 60)).append(" - ");
@@ -80,7 +80,7 @@ public class SearchCommand implements ICommandMain {
             embedBuilder.setDescription(messageBuilder.toString());
 
             try {
-                context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+                context.getUiMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
             } catch (PermissionException e) {
                 embedBuilder.appendDescription("\n\n" + context.i18n("responses.type_one_of"));
                 for (int index = 1; index <= searchResults.size(); index++) {
@@ -99,7 +99,7 @@ public class SearchCommand implements ICommandMain {
                             context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);
                         }, audioTracks -> {
                             context.getMusicPlayer().addTracks(audioTracks);
-                            context.getUIMessaging().sendTracksFound(audioTracks);
+                            context.getUiMessaging().sendTracksFound(audioTracks);
                         }, context.getData().getGuildTier().hasFlag("music_services"));
                     }, String.valueOf(index + 1));
                 }

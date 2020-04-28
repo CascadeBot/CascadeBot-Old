@@ -24,15 +24,15 @@ public class GroupPermissionListSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getPermissions().getGroups().isEmpty()) {
+        if (context.getData().getPermissionSettings().getGroups().isEmpty()) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.list.no_groups"));
             return;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < context.getData().getPermissions().getGroups().size(); i++) {
-            Group group = context.getData().getPermissions().getGroups().get(i);
-            if (context.getData().getPermissions().getMode().equals(GuildPermissions.PermissionMode.HIERARCHICAL)) {
+        for (int i = 0; i < context.getData().getPermissionSettings().getGroups().size(); i++) {
+            Group group = context.getData().getPermissionSettings().getGroups().get(i);
+            if (context.getData().getPermissionSettings().getMode().equals(GuildPermissions.PermissionMode.HIERARCHICAL)) {
                 stringBuilder.append(i).append(": ");
             }
             stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
@@ -44,7 +44,7 @@ public class GroupPermissionListSubCommand implements ISubCommand {
             pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(pageContent)));
         }
 
-        context.getUIMessaging().sendPagedMessage(pages);
+        context.getUiMessaging().sendPagedMessage(pages);
     }
 
     @Override

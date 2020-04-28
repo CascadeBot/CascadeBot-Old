@@ -18,7 +18,7 @@ public class GroupPermissionSwitchSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        GuildPermissions.PermissionMode mode = context.getData().getGuildPermissions().getMode();
+        GuildPermissions.PermissionMode mode = context.getData().getPermissionSettings().getMode();
         if (context.getArgs().length > 1) {
             mode = EnumUtils.getEnumIgnoreCase(GuildPermissions.PermissionMode.class, context.getArg(0));
             if (mode == null) {
@@ -36,7 +36,7 @@ public class GroupPermissionSwitchSubCommand implements ISubCommand {
             }
         }
 
-        context.getData().getPermissions().setMode(mode);
+        context.getData().getPermissionSettings().setMode(mode);
         context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.switch.success", FormatUtils.formatEnum(mode, context.getLocale())));
     }
 

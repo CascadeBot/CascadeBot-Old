@@ -19,7 +19,7 @@ public class RandomChoiceSubCommand implements ISubCommand {
         if (context.getArgs().length > 1) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.random.random_choice_result", RandomUtils.randomChoice(context.getArgs())));
         } else {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
         }
     }
 
