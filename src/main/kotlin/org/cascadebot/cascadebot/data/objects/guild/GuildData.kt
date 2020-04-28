@@ -9,6 +9,8 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.managers.CascadeUserDataManager
+import org.cascadebot.cascadebot.data.objects.donation.DataFlag
+import org.cascadebot.cascadebot.data.objects.donation.Flag
 import org.cascadebot.cascadebot.data.objects.donation.Tier
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
@@ -17,7 +19,9 @@ import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 import org.cascadebot.cascadebot.utils.pagination.PageCache
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.collections.HashSet
 import kotlin.collections.set
 
 
@@ -57,7 +61,8 @@ class GuildData(@field:Id val guildId: Long) {
 
     //endregion
 
-    private val usersForTiers: Set<Long> = HashSet()
+    private val supporters: Set<Long> = HashSet()
+    private val flags: Set<Flag> = HashSet();
 
     //region Data Loaded Methods
     fun onGuildLoaded() {
@@ -163,13 +168,16 @@ class GuildData(@field:Id val guildId: Long) {
     //endregion
 
     fun getGuildTier(): Tier? {
-        if (usersForTiers.isEmpty()) {
+        if (supporters.isEmpty()) {
             return Tier.getTier("default")
         }
         var highest = Tier.getTier("default")
         var highestTierName = "default"
-        for (id in usersForTiers) {
+        for (id in supporters) {
             val user = CascadeUserDataManager.getUser(id)
+            if (user.blackList.contains(guildId)) {
+                continue;
+            }
             if (user.tier.isTierParent(highestTierName)) {
                 highest = user.tier
                 highestTierName = user.tierName
@@ -179,17 +187,64 @@ class GuildData(@field:Id val guildId: Long) {
     }
 
     fun getGuildTierName(): String? {
-        if (usersForTiers.isEmpty()) {
+        if (supporters.isEmpty()) {
             return "default"
         }
         var highestTierName = "default"
-        for (id in usersForTiers) {
+        for (id in supporters) {
             val user = CascadeUserDataManager.getUser(id)
             if (user.tier.isTierParent(highestTierName)) {
                 highestTierName = user.tierName
             }
         }
         return highestTierName
+    }
+
+    fun getAllFlags(): List<Flag> {
+        val flags = ArrayList(getGuildTier()?.getAllFlags()!!.toList());
+        for (guildFlag in this.flags) {
+            if (guildFlag !is DataFlag) {
+                continue;
+            }
+            if (getGuildTier()?.hasFlag(guildFlag.id)!!) {
+                val compareFlag: Flag? = getGuildTier()?.getFlag(guildFlag.id)
+                if (compareFlag !is DataFlag) {
+                    continue;
+                }
+                if (guildFlag > compareFlag) {
+                    flags.remove(compareFlag);
+                    flags.add(guildFlag);
+                }
+            } else {
+                flags.add(guildFlag)
+            }
+        }
+
+        for (id in supporters) {
+            val user = CascadeUserDataManager.getUser(id)
+            if (user.blackList.contains(guildId)) {
+                continue;
+            }
+            for (userFlag in user.flags) {
+                if (userFlag !is DataFlag) {
+                    continue;
+                }
+                if (getGuildTier()?.hasFlag(userFlag.id)!!) {
+                    val compareFlag: Flag? = getGuildTier()?.getFlag(userFlag.id)
+                    if (compareFlag !is DataFlag) {
+                        continue;
+                    }
+                    if (userFlag > compareFlag) {
+                        flags.remove(compareFlag);
+                        flags.add(userFlag);
+                    }
+                } else {
+                    flags.add(userFlag)
+                }
+            }
+        }
+
+        return flags
     }
 
 }
