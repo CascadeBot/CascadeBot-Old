@@ -1,7 +1,7 @@
 package org.cascadebot.cascadebot.data.objects.donation
 
 open class FlagContainer {
-    var flags: MutableSet<Flag> = HashSet();
+    var flags: MutableSet<Flag> = mutableSetOf();
 
     constructor() {
 
@@ -12,8 +12,7 @@ open class FlagContainer {
     }
 
     open fun getFlag(id: String): Flag? {
-        var returnFlag = flags.stream().filter { flag: Flag? -> flag!!.id == id }.findFirst().orElse(null)
-        return returnFlag
+        return flags.stream().filter { flag: Flag -> flag.id == id }.findFirst().orElse(null)
     }
 
     fun hasFlag(id: String): Boolean {

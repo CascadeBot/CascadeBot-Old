@@ -8,14 +8,14 @@ open class Flag (
         val scope: FlagScope
 ) {
 
-    constructor() : this ("stuff", FlagScope.GUILD)
+    constructor() : this ("", FlagScope.GUILD)
 
-    fun getName(locale: Locale?): String {
-        return getLanguage(locale!!)!!.getString("flags.$id.name").orElse("No language string defined")
+    fun getName(locale: Locale): String {
+        return getLanguage(locale)!!.getString("flags.$id.name").orElse("No language string defined")
     }
 
-    open fun getDescription(locale: Locale?): String? {
-        return getLanguage(locale!!)!!.getString("flags.$id.description").orElse("No language string defined")
+    open fun getDescription(locale: Locale): String {
+        return getLanguage(locale)!!.getString("flags.$id.description").orElse("No language string defined")
     }
 
     enum class FlagScope {

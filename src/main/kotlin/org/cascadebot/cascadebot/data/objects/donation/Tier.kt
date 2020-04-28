@@ -12,17 +12,13 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Language.getLanguage
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.objects.donation.Flag.FlagScope
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
+import java.util.HashMap
 
 class Tier : FlagContainer {
     var parent: String? = null
-    var extras: List<TierExtra> = ArrayList()
+    var extras: MutableList<TierExtra> = mutableListOf()
 
-    private constructor() {
-
-    }
+    private constructor()
 
     constructor(flags: MutableSet<Flag>) :
             this(
@@ -31,9 +27,9 @@ class Tier : FlagContainer {
                     ArrayList()
             )
 
-    constructor(parent: String?, flags: MutableSet<Flag>, extras: List<TierExtra>) {
-        this.parent = parent;
-        this.flags = flags;
+    constructor(parent: String?, flags: MutableSet<Flag>, extras: MutableList<TierExtra>) {
+        this.parent = parent
+        this.flags = flags
         this.extras = extras
     }
 
@@ -46,7 +42,7 @@ class Tier : FlagContainer {
     }
 
     fun getAllFlags(): Set<Flag> {
-        val flags: MutableSet<Flag> = HashSet(flags)
+        val flags = flags.toMutableSet()
         if (getParent() != null) {
             flags.addAll(getParent()!!.getAllFlags())
         }
@@ -54,7 +50,7 @@ class Tier : FlagContainer {
     }
 
     override fun getFlag(id: String): Flag? {
-        var returnFlag = flags.stream().filter { flag: Flag? -> flag!!.id == id }.findFirst().orElse(null)
+        var returnFlag = flags.stream().filter { flag: Flag -> flag.id == id }.findFirst().orElse(null)
         if (parent != null && returnFlag == null) {
             returnFlag = tiers[parent]!!.getFlag(id)
         }
@@ -77,14 +73,10 @@ class Tier : FlagContainer {
      * @param idsUsed This parameter should be null. It's used for when calling parent method. It stores flags that have been used already.
      * @return The guild benefits gave in this tier
      */
-    fun getGuildTierString(locale: Locale?, idsUsed: MutableList<String?>?): String {
-        var idsUsed = idsUsed
-        if (idsUsed == null) {
-            idsUsed = ArrayList()
-        }
+    fun getGuildTierString(locale: Locale, idsUsed: MutableList<String>): String {
         val tierStringBuilder = StringBuilder()
-        for (flag in flags!!) {
-            if (!idsUsed.contains(flag!!.id)) {
+        for (flag in flags) {
+            if (!idsUsed.contains(flag.id)) {
                 if (flag.scope == FlagScope.GUILD) {
                     idsUsed.add(flag.id)
                     tierStringBuilder.append(" - **").append(flag.getName(locale)).append(":** ").append(flag.getDescription(locale)).append('\n')
@@ -93,14 +85,16 @@ class Tier : FlagContainer {
         }
         for (extra in extras) {
             if (extra.scope == FlagScope.GUILD) { //Ignore t-shirt related extra stuff as that isn't a guild thing.
-                val extraStr = getLanguage(locale!!)!!.getString(extra.path).orElse("No language string defined")
+                val extraStr = getLanguage(locale)!!.getString(extra.path).orElse("No language string defined")
                 tierStringBuilder.append(" - ").append(extraStr).append('\n')
             }
         }
         if (parent != null && parent != "default") {
-            tierStringBuilder.append('\n')
-            tierStringBuilder.append("**__Inherited from ").append(parent).append(":__**\n")
-            tierStringBuilder.append(tiers[parent]!!.getGuildTierString(locale, idsUsed))
+            tierStringBuilder.apply {
+                append('\n')
+                append("**__Inherited from ").append(parent).append(":__**\n")
+                append(tiers[parent]!!.getGuildTierString(locale, idsUsed))
+            }
         }
         return tierStringBuilder.toString()
     }
@@ -112,7 +106,7 @@ class Tier : FlagContainer {
         @Getter
         val scope: FlagScope?
 
-        protected constructor() {
+        private constructor() {
             path = null
             scope = null
         }
@@ -161,29 +155,27 @@ class Tier : FlagContainer {
             val flags: MutableSet<Flag> = HashSet()
             if (flagsEle.isJsonArray) {
                 for (jsonElement in flagsEle.asJsonArray) {
-                    val `object` = jsonElement.asJsonObject
-                    val name = `object`["name"].asString
-                    val scopeStr = `object`["scope"].asString
-                    var scope: FlagScope? = null
-                    when (scopeStr) {
-                        "user" -> scope = FlagScope.USER
-                        "guild" -> scope = FlagScope.GUILD
+                    val jsonObject = jsonElement.asJsonObject
+                    val name = jsonObject["name"].asString
+                    val scope = when (jsonObject["scope"].asString) {
+                        "user" -> FlagScope.USER
+                        "guild" -> FlagScope.GUILD
+                        else -> FlagScope.USER
                     }
-                    if (`object`.has("type")) {
-                        val type = `object`["type"].asString
-                        when (type) {
-                            "amount" -> flags.add(AmountFlag(name, scope).parseFlagData(`object`["data"].asJsonObject))
-                            "time" -> flags.add(TimeFlag(name, scope).parseFlagData(`object`["data"].asJsonObject))
+                    if (jsonObject.has("type")) {
+                        when (jsonObject["type"].asString) {
+                            "amount" -> flags.add(AmountFlag(name, scope).parseFlagData(jsonObject["data"].asJsonObject))
+                            "time" -> flags.add(TimeFlag(name, scope).parseFlagData(jsonObject["data"].asJsonObject))
                         }
                     } else {
-                        flags.add(Flag(name, scope!!))
+                        flags.add(Flag(name, scope))
                     }
                 }
             }
             return Tier(parent, flags, extras)
         }
 
-        fun getTier(id: String?): Tier? {
+        fun getTier(id: String): Tier? {
             return tiers[id]
         }
     }
