@@ -58,12 +58,12 @@ class GuildData(@field:Id val guildId: Long) {
     val pageCache = PageCache()
     //endregion
 
-    val persistentButtons = HashMap<Long, HashMap<Long, PersistentButtonGroup>>()
+    val persistentButtons = mutableMapOf<Long, HashMap<Long, PersistentButtonGroup>>()
 
     //endregion
 
-    private val supporters: Set<Long> = HashSet()
-    private val flags: Set<Flag> = HashSet();
+    private val supporters: MutableSet<Long> = mutableSetOf()
+    private val flags: MutableSet<Flag> = mutableSetOf()
 
     //region Data Loaded Methods
     fun onGuildLoaded() {
@@ -177,7 +177,7 @@ class GuildData(@field:Id val guildId: Long) {
         for (id in supporters) {
             val user = CascadeUserDataManager.getUser(id)
             if (user.blackList.contains(guildId)) {
-                continue;
+                continue
             }
             if (user.tier.isTierParent(highestTierName)) {
                 highest = user.tier
@@ -202,19 +202,19 @@ class GuildData(@field:Id val guildId: Long) {
     }
 
     fun getAllFlags(): FlagContainer {
-        val flags = ArrayList(getGuildTier()?.getAllFlags()!!.toList());
+        val flags = ArrayList(getGuildTier()?.getAllFlags()!!.toList())
         for (guildFlag in this.flags) {
             if (guildFlag !is DataFlag) {
-                continue;
+                continue
             }
             if (getGuildTier()?.hasFlag(guildFlag.id)!!) {
                 val compareFlag: Flag? = getGuildTier()?.getFlag(guildFlag.id)
                 if (compareFlag !is DataFlag) {
-                    continue;
+                    continue
                 }
                 if (guildFlag > compareFlag) {
-                    flags.remove(compareFlag);
-                    flags.add(guildFlag);
+                    flags.remove(compareFlag)
+                    flags.add(guildFlag)
                 }
             } else {
                 flags.add(guildFlag)
@@ -224,20 +224,20 @@ class GuildData(@field:Id val guildId: Long) {
         for (id in supporters) {
             val user = CascadeUserDataManager.getUser(id)
             if (user.blackList.contains(guildId)) {
-                continue;
+                continue
             }
             for (userFlag in user.flags) {
                 if (userFlag !is DataFlag) {
-                    continue;
+                    continue
                 }
                 if (getGuildTier()?.hasFlag(userFlag.id)!!) {
                     val compareFlag: Flag? = getGuildTier()?.getFlag(userFlag.id)
                     if (compareFlag !is DataFlag) {
-                        continue;
+                        continue
                     }
                     if (userFlag > compareFlag) {
-                        flags.remove(compareFlag);
-                        flags.add(userFlag);
+                        flags.remove(compareFlag)
+                        flags.add(userFlag)
                     }
                 } else {
                     flags.add(userFlag)
@@ -245,7 +245,7 @@ class GuildData(@field:Id val guildId: Long) {
             }
         }
 
-        return FlagContainer(HashSet(flags));
+        return FlagContainer(HashSet(flags))
     }
 
 }
