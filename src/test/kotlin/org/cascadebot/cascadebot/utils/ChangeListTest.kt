@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class ChangeListTest {
 
     @Test
-    fun `Remove removes from added list`() {
+    fun `remove() removes from added list`() {
         val changeList = ChangeList<String>(mutableSetOf())
         changeList.add("element")
         changeList.remove("element")
@@ -19,7 +19,7 @@ class ChangeListTest {
     }
 
     @Test
-    fun `Add adds to removed list`() {
+    fun `add() adds to removed list`() {
         val changeList = ChangeList<String>(mutableSetOf())
         changeList.remove("element")
         changeList.add("element")
