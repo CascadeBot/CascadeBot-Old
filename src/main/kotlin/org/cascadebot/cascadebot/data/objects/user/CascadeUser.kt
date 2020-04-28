@@ -5,19 +5,20 @@
 package org.cascadebot.cascadebot.data.objects.user
 
 import de.bild.codec.annotations.Id
-import lombok.AccessLevel
-import lombok.Getter
-import lombok.NoArgsConstructor
 import org.cascadebot.cascadebot.data.objects.donation.Flag
 import org.cascadebot.cascadebot.data.objects.donation.Tier
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 class CascadeUser(@field:Id private val userId: Long) {
+
+    private constructor() : this(0L) {
+        // Private constructor for MongoDB
+    }
+
     val tierName = "default"
     val tier: Tier
         get() = Tier.getTier(tierName)!!
 
-    val blackList: List<Long> = ArrayList();
-    val flags: List<Flag> = ArrayList();
+    val blackList: MutableList<Long> = mutableListOf();
+    val flags: MutableList<Flag> = mutableListOf();
 
 }
