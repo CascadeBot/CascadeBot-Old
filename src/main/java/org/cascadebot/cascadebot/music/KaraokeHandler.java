@@ -11,10 +11,11 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.tools.ant.filters.StringInputStream;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +54,7 @@ public class KaraokeHandler {
         try {
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
+            Messaging.sendMessage(MessageType.DANGER, channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
             CascadeBot.LOGGER.error("Error in karaoke handler", e);
         }
         Request request = new Request.Builder().url("https://video.google.com/timedtext?lang=" + language + "&v=" + trackId).build();
@@ -69,7 +70,7 @@ public class KaraokeHandler {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) {
                 if (response.body() == null || response.code() != 200) {
-                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
+                    Messaging.sendMessage(MessageType.DANGER, channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
                     return;
                 }
 
@@ -81,7 +82,7 @@ public class KaraokeHandler {
                 }
 
                 if (body.equals("")) {
-                    Messaging.sendDangerMessage(channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
+                    Messaging.sendMessage(MessageType.DANGER, channel, Language.i18n(channel.getGuild().getIdLong(), "commands.karaoke.cannot_find"));
                     return;
                 }
 
@@ -95,7 +96,7 @@ public class KaraokeHandler {
                         Node start = attrs.getNamedItem("start");
 
                         if (dur != null && start != null) {
-                            captions.addCaption(StringEscapeUtils.unescapeHtml(texts.item(i).getTextContent()), Double.parseDouble(start.getNodeValue()), Double.parseDouble(dur.getNodeValue()));
+                            captions.addCaption(StringEscapeUtils.unescapeHtml4(texts.item(i).getTextContent()), Double.parseDouble(start.getNodeValue()), Double.parseDouble(dur.getNodeValue()));
                         }
                     }
 

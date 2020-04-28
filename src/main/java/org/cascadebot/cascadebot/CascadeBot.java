@@ -168,8 +168,7 @@ public class CascadeBot {
             );
         }
 
-        musicHandler = new MusicHandler(this);
-        musicHandler.buildMusic();
+        musicHandler = new MusicHandler();
 
         eventWaiter = new EventWaiter();
         gson = builder.create();
@@ -194,9 +193,9 @@ public class CascadeBot {
                     .setBulkDeleteSplittingEnabled(false)
                     .setEnableShutdownHook(false);
 
-            if (musicHandler.isLavalinkEnabled()) {
-                defaultShardManagerBuilder.addEventListeners(musicHandler.getLavalink());
-                defaultShardManagerBuilder.setVoiceDispatchInterceptor(musicHandler.getLavalink().getVoiceInterceptor());
+            if (musicHandler.getLavalinkEnabled()) {
+                defaultShardManagerBuilder.addEventListeners(musicHandler.getLavaLink());
+                defaultShardManagerBuilder.setVoiceDispatchInterceptor(musicHandler.getLavaLink().getVoiceInterceptor());
             } else {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
             }

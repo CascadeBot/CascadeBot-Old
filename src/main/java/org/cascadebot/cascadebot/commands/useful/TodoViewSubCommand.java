@@ -17,7 +17,7 @@ public class TodoViewSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -70,7 +70,7 @@ public class TodoViewSubCommand implements ISubCommand {
             pages.add(new PageObjects.EmbedPage(builder));
         }
 
-        context.getUIMessaging().sendPagedMessage(pages);
+        context.getUiMessaging().sendPagedMessage(pages);
     }
 
     @Override

@@ -25,13 +25,13 @@ import java.util.function.Consumer;
 public class PermissionCommandUtils {
 
     public static void tryGetGroupFromString(CommandContext context, String s, Consumer<Group> groupConsumer, long sender) {
-        Group groupById = context.getData().getPermissions().getGroupById(s);
+        Group groupById = context.getData().getPermissionSettings().getGroupById(s);
         if (groupById != null) {
             groupConsumer.accept(groupById);
             return;
         }
 
-        List<Group> groupList = context.getData().getPermissions().getGroupsByName(s);
+        List<Group> groupList = context.getData().getPermissionSettings().getGroupsByName(s);
         if (groupList.size() == 1) {
             groupConsumer.accept(groupList.get(0));
             return;
@@ -134,7 +134,7 @@ public class PermissionCommandUtils {
         }
 
         groupsEmbed.setDescription(groupsBuilder.toString());
-        context.getUIMessaging().sendButtonedMessage(groupsEmbed.build(), firstPageButtons);
+        context.getUiMessaging().sendButtonedMessage(groupsEmbed.build(), firstPageButtons);
     }
 
     private static void handleSwitchButtons(Member member, Message message, MessageEmbed embedToSwitchTo, ButtonGroup buttonsToSwitchTo, CommandContext context) {

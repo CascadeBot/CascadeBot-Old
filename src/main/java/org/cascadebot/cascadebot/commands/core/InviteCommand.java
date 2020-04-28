@@ -16,9 +16,9 @@ public class InviteCommand implements ICommandCore {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (Environment.isProduction()) {
-            context.getDirectMessageMessaging().replyDM(CascadeBot.getInvite(), true);
+            context.getDirectMessaging().replyDM(CascadeBot.getInvite(), true);
         } else {
-            context.getDirectMessageMessaging().replyDM("https://www.youtube.com/watch?v=ARJ8cAGm6JE");
+            context.getDirectMessaging().replyDM("https://www.youtube.com/watch?v=ARJ8cAGm6JE");
         }
     }
 
