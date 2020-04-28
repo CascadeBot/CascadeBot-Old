@@ -12,24 +12,22 @@ import org.cascadebot.cascadebot.messaging.Messaging.sendButtonedMessage
 import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
-import java.util.ArrayList
 
-class TodoList(ownerId: Long) {
+class TodoList(var ownerId: Long) {
 
-    val items: MutableList<TodoListItem> = ArrayList()
+    val items: MutableList<TodoListItem> = mutableListOf()
     var messageId: Long = -1
     var channelId: Long = -1
     var currentItem = 0
-    var ownerId: Long = 0
 
     //List of users id who are able to access this list
-    private val users: MutableList<Long> = ArrayList()
+    private val users: MutableList<Long> = mutableListOf()
 
     private constructor() : this(0) {
         //Constructor for mongodb
     }
 
-    fun addTodoItem(text: String?): Int {
+    fun addTodoItem(text: String): Int {
         val item = TodoListItem(text)
         items.add(item)
         return items.indexOf(item)
@@ -69,17 +67,14 @@ class TodoList(ownerId: Long) {
     fun edit(context: CommandContext) {
         if (messageId == -1L || channelId == -1L) return
         val originalChannel = context.guild.getTextChannelById(channelId)
-        if (originalChannel != null && originalChannel.idLong == channelId) {
-            val message = originalChannel.retrieveMessageById(messageId).complete()
-            if (message != null) {
-                message.editMessage(todoListMessage).queue()
-                doCheckToggle(message)
+        originalChannel?.let {
+            if (it.idLong == channelId) {
+                it.retrieveMessageById(messageId).complete()?.editMessage(todoListMessage)?.queue()
             }
         }
     }
 
-    fun send(context: CommandContext, channel: TextChannel?) {
-        requireNotNull(channel) { "The channel should exist :(" }
+    fun send(context: CommandContext, channel: TextChannel) {
         val buttonGroup = generateButtons(context.member.idLong, channel.idLong, context.guild.idLong)
         currentItem = 0
         sendButtonedMessage(channel, todoListMessage, buttonGroup).thenAccept {
@@ -89,16 +84,16 @@ class TodoList(ownerId: Long) {
     }
 
     private fun generateButtons(memberId: Long, channelId: Long, guildId: Long): PersistentButtonGroup {
-        val buttonGroup = PersistentButtonGroup(memberId, channelId, guildId)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_LEFT)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_UP)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_DOWN)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_RIGHT)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_CHECK)
-        return buttonGroup
+        return PersistentButtonGroup(memberId, channelId, guildId).apply {
+            addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_LEFT)
+            addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_UP)
+            addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_DOWN)
+            addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_RIGHT)
+            addPersistentButton(PersistentButton.TODO_BUTTON_CHECK)
+        }
     }
 
-    fun addUncheckButton(message: Message?) {
+    fun addUncheckButton(message: Message) {
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
             val data = GuildDataManager.getGuildData(channel.guild.idLong)
@@ -108,7 +103,7 @@ class TodoList(ownerId: Long) {
         }
     }
 
-    fun addCheckButton(message: Message?) {
+    fun addCheckButton(message: Message) {
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
             val data = GuildDataManager.getGuildData(channel.guild.idLong)
@@ -118,7 +113,7 @@ class TodoList(ownerId: Long) {
         }
     }
 
-    fun doCheckToggle(message: Message?) {
+    fun doCheckToggle(message: Message) {
         val item = items[this.currentItem]
         if (item.done) {
             addUncheckButton(message)
@@ -139,7 +134,7 @@ class TodoList(ownerId: Long) {
                 if (i >= this.items.size) {
                     break
                 }
-                val item: TodoListItem = this.items.get(i)
+                val item: TodoListItem = this.items[i]
                 if (i == pos) {
                     pageBuilder.append(UnicodeConstants.SMALL_ORANGE_DIAMOND).append(" ")
                 } else {
