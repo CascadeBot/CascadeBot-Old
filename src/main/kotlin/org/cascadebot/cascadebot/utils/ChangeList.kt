@@ -5,23 +5,23 @@ import java.util.Collections
 class ChangeList<T>(val baseCollection: Set<T>) {
 
     val addedItems
-        get() = added.toList()
+        get() = added.toSet()
     val removedItems
-        get() = removed.toList()
+        get() = removed.toSet()
 
     private val added = Collections.synchronizedSet<T>(HashSet())
     private val removed = Collections.synchronizedSet<T>(HashSet())
 
     fun add(element: T): Boolean {
-        if (!added.remove(element)) {
-            removed.add(element)
+        if (!removed.remove(element)) {
+            added.add(element)
         }
         return !baseCollection.contains(element)
     }
 
     fun remove(element: T): Boolean {
-        if (!removed.remove(element)) {
-            added.add(element)
+        if (!added.remove(element)) {
+            removed.add(element)
         }
         return baseCollection.contains(element)
     }
