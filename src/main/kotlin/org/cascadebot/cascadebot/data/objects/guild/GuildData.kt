@@ -1,23 +1,25 @@
-package org.cascadebot.cascadebot.data.objects
+package org.cascadebot.cascadebot.data.objects.guild
 
-import com.google.common.collect.Sets
 import de.bild.codec.annotations.Id
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
-import org.bson.codecs.pojo.annotations.BsonIgnore
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.ICommandMain
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.data.managers.CascadeUserDataManager
+import org.cascadebot.cascadebot.data.objects.donation.Tier
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 import org.cascadebot.cascadebot.utils.pagination.PageCache
-import java.util.Collections
-import java.util.Date
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.collections.HashMap
+import kotlin.collections.set
+
 
 class GuildData(@field:Id val guildId: Long) {
 
@@ -32,8 +34,6 @@ class GuildData(@field:Id val guildId: Long) {
     private val commandInfo = ConcurrentHashMap<Class<ICommandMain>, MutableSet<GuildCommandInfo>>()
     val guildCommandInfos
         get() = Collections.unmodifiableMap(commandInfo)
-
-    val enabledFlags: MutableSet<Flag> = Sets.newConcurrentHashSet()
 
     val locale: Locale = Locale.getDefaultLocale()
 
@@ -56,6 +56,9 @@ class GuildData(@field:Id val guildId: Long) {
     val persistentButtons = HashMap<Long, HashMap<Long, PersistentButtonGroup>>()
 
     //endregion
+
+    private val usersForTiers: Set<Long> = HashSet()
+
     //region Data Loaded Methods
     fun onGuildLoaded() {
         loadMusicSettings()
@@ -74,6 +77,7 @@ class GuildData(@field:Id val guildId: Long) {
             }
         }
     }
+    //endregion
 
     //region Commands
     fun enableCommand(command: ICommandMain) {
@@ -137,17 +141,6 @@ class GuildData(@field:Id val guildId: Long) {
     }
 
     //endregion
-    fun enableFlag(flag: Flag): Boolean {
-        return enabledFlags.add(flag)
-    }
-
-    fun disableFlag(flag: Flag): Boolean {
-        return enabledFlags.remove(flag)
-    }
-
-    fun isFlagEnabled(flag: Flag): Boolean {
-        return enabledFlags.contains(flag)
-    }
 
     fun addButtonGroup(channel: MessageChannel, message: Message, group: ButtonGroup) {
         group.setMessage(message.idLong)
@@ -169,5 +162,34 @@ class GuildData(@field:Id val guildId: Long) {
 
     //endregion
 
+    fun getGuildTier(): Tier? {
+        if (usersForTiers.isEmpty()) {
+            return Tier.getTier("default")
+        }
+        var highest = Tier.getTier("default")
+        var highestTierName = "default"
+        for (id in usersForTiers) {
+            val user = CascadeUserDataManager.getUser(id)
+            if (user.tier.isTierParent(highestTierName)) {
+                highest = user.tier
+                highestTierName = user.tierName
+            }
+        }
+        return highest
+    }
+
+    fun getGuildTierName(): String? {
+        if (usersForTiers.isEmpty()) {
+            return "default"
+        }
+        var highestTierName = "default"
+        for (id in usersForTiers) {
+            val user = CascadeUserDataManager.getUser(id)
+            if (user.tier.isTierParent(highestTierName)) {
+                highestTierName = user.tierName
+            }
+        }
+        return highestTierName
+    }
 
 }

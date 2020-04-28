@@ -1,6 +1,8 @@
-package org.cascadebot.cascadebot.data.objects
+package org.cascadebot.cascadebot.data.objects.guild
 
 import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.data.objects.Setting
+import org.cascadebot.cascadebot.data.objects.SettingsContainer
 import java.util.concurrent.ConcurrentHashMap
 
 @SettingsContainer(module = Module.MUSIC)

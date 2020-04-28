@@ -24,7 +24,6 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
-import org.cascadebot.cascadebot.data.objects.Flag
 import org.cascadebot.cascadebot.events.PlayerListener
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.Messaging
@@ -107,7 +106,7 @@ class MusicHandler {
 
     fun purgeDisconnectedPlayers() {
         // Removes all players that are not connected to a channel unless they have supported us on Patreon
-        players.entries.removeIf { it.value.connectedChannel == null && !GuildDataManager.getGuildData(it.key).isFlagEnabled(Flag.MUSIC_SERVICES) }
+        //players.entries.removeIf { it.value.connectedChannel == null && !GuildDataManager.getGuildData(it.key).isFlagEnabled(Flag.MUSIC_SERVICES) }
     }
 
     /**

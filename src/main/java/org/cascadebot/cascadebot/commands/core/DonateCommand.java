@@ -38,7 +38,7 @@ public class DonateCommand implements ICommandCore {
             ));
         }
 
-        context.getUIMessaging().sendPagedMessage(pages);
+        context.getUiMessaging().sendPagedMessage(pages);
     }
 
     @Override

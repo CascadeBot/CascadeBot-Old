@@ -6,8 +6,6 @@
 package org.cascadebot.cascadebot.music;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
-import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
@@ -17,7 +15,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
 import org.cascadebot.cascadebot.data.objects.Playlist;
-import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.data.objects.guild.PlaylistType;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package org.cascadebot.cascadebot.data.objects
+package org.cascadebot.cascadebot.data.objects.guild
 
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message

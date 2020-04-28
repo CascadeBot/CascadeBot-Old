@@ -1,4 +1,4 @@
-package org.cascadebot.cascadebot.data.objects
+package org.cascadebot.cascadebot.data.objects.guild
 
 import org.cascadebot.cascadebot.commandmeta.ICommandMain
 import org.cascadebot.cascadebot.data.language.Locale

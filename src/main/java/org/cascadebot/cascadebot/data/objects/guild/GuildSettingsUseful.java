@@ -2,7 +2,6 @@ package org.cascadebot.cascadebot.data.objects.guild;
 
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.SettingsContainer;
-import org.cascadebot.cascadebot.data.objects.TodoList;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
