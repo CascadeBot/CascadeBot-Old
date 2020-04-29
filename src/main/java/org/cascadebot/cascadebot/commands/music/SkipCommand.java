@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.TrackData;
@@ -19,7 +20,6 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroupBuilder;
-import org.cascadebot.cascadebot.utils.votes.VoteMessageType;
 import org.cascadebot.cascadebot.utils.votes.VoteResult;
 
 import java.util.HashMap;

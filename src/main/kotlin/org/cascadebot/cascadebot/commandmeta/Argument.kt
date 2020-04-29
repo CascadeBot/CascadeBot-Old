@@ -4,12 +4,13 @@ import org.apache.commons.lang3.StringUtils
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.data.objects.ArgumentType
 
 data class Argument internal constructor(val id: String,
-                                    val type: ArgumentType,
-                                    val displayAlone: Boolean,
-                                    val subArgs: Set<Argument>,
-                                    val aliases: Set<String>
+                                         val type: ArgumentType,
+                                         val displayAlone: Boolean,
+                                         val subArgs: Set<Argument>,
+                                         val aliases: Set<String>
 ) {
 
     fun name(locale: Locale): String {
