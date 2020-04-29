@@ -16,7 +16,6 @@ import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.permissions.objects.Group;
-import org.cascadebot.cascadebot.permissions.objects.PermissionAction;
 import org.cascadebot.cascadebot.permissions.objects.Result;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.shared.SecurityLevel;
@@ -209,13 +208,6 @@ public class GuildPermissions {
     public void moveGroup(Group group, int position) throws IndexOutOfBoundsException {
         groups.remove(group);
         groups.add(position, group);
-    }
-
-    public enum PermissionMode {
-
-        HIERARCHICAL,
-        MOST_RESTRICTIVE
-
     }
 
 }

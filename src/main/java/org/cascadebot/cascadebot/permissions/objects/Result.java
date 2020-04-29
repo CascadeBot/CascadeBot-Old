@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.permissions.objects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import org.cascadebot.cascadebot.data.objects.PermissionAction;
 
 @ToString
 @EqualsAndHashCode

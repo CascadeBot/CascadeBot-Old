@@ -2,7 +2,6 @@ package org.cascadebot.cascadebot.data.objects
 
 import com.google.common.collect.Sets
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.commandmeta.ModuleFlag
 import org.cascadebot.cascadebot.data.Config
 import java.util.concurrent.ConcurrentHashMap
 

@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.Getter;
+import org.cascadebot.cascadebot.data.objects.ModuleFlag;
 
 import java.util.Arrays;
 import java.util.EnumSet;
