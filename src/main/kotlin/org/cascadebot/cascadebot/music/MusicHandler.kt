@@ -25,6 +25,7 @@ import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.data.objects.Flag
+import org.cascadebot.cascadebot.data.objects.SearchResultType
 import org.cascadebot.cascadebot.events.PlayerListener
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.Messaging
@@ -36,7 +37,6 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import java.util.ArrayList
 import java.util.function.Consumer
-import java.util.function.Function
 import java.util.regex.Pattern
 
 class MusicHandler {
@@ -189,9 +189,5 @@ class MusicHandler {
     class MusicNode(val uri: URI, val password: String)
 
     class SearchResult(val type: SearchResultType, val url: String, val title: String)
-
-    enum class SearchResultType {
-        VIDEO, PLAYLIST
-    }
 
 }

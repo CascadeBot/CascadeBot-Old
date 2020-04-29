@@ -15,6 +15,7 @@ import lavalink.client.player.event.TrackExceptionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.objects.LoopMode;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
@@ -56,8 +57,8 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
         songPlayCount++;
         Metrics.INS.tracksPlayed.inc();
         try {
-            if (player.getLoopMode().equals(CascadePlayer.LoopMode.DISABLED) || player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
-                if (player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
+            if (player.getLoopMode().equals(LoopMode.DISABLED) || player.getLoopMode().equals(LoopMode.PLAYLIST)) {
+                if (player.getLoopMode().equals(LoopMode.PLAYLIST)) {
                     // Add the track to the end of the queue to be repeated
                     player.getQueue().add(track.makeClone());
                     if (player.isShuffleEnabled()) {
@@ -69,7 +70,7 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
                 // Take the next track in the queue, remove it from the queue and play it
                 AudioTrack audioTrack = player.getQueue().remove();
                 player.playTrack(audioTrack);
-            } else if (player.getLoopMode().equals(CascadePlayer.LoopMode.SONG)) {
+            } else if (player.getLoopMode().equals(LoopMode.SONG)) {
                 // Take the song that just finished and repeat it
                 player.playTrack(track.makeClone());
             }
