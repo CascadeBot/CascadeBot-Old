@@ -332,7 +332,7 @@
       "description": "Changes between loop modes.",
       "looping_disabled": "Looping has been disabled!",
       "looping_set": "Set to loop the current **{0}**!",
-      "not_valid_mode": "`{0}` is not a valid loop mode! Valid modes are: {0}"
+      "not_valid_mode": "`{0}` is not a valid loop mode! Valid modes are: {1}"
     },
     "pause": {
       "command": "pause",
