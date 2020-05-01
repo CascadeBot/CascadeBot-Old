@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.bson.types.ObjectId;
-import org.cascadebot.cascadebot.data.objects.guild.PlaylistType;
 
 import java.util.List;
 

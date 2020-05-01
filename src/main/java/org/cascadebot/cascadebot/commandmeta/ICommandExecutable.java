@@ -8,10 +8,7 @@ package org.cascadebot.cascadebot.commandmeta;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
-import org.cascadebot.cascadebot.data.objects.donation.Flag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-
-import java.util.Set;
 
 public interface ICommandExecutable {
 

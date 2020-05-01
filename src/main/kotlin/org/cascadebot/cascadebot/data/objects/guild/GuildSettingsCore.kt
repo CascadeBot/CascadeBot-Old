@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.data.objects.guild
 import com.google.common.collect.Sets
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
+import org.cascadebot.cascadebot.data.objects.ModuleFlag
 import org.cascadebot.cascadebot.data.objects.Setting
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
 import org.cascadebot.cascadebot.data.objects.Tag

@@ -3,9 +3,7 @@ package org.cascadebot.cascadebot.data.objects.donation
 open class FlagContainer {
     var flags: MutableSet<Flag> = mutableSetOf();
 
-    constructor() {
-
-    }
+    constructor()
 
     constructor(flags: MutableSet<Flag>) {
         this.flags = flags

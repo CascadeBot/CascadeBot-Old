@@ -23,9 +23,7 @@ import org.apache.http.client.config.RequestConfig
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Language
-import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.data.objects.SearchResultType
-import org.cascadebot.cascadebot.data.objects.Flag
 import org.cascadebot.cascadebot.events.PlayerListener
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.Messaging
@@ -35,9 +33,13 @@ import java.io.IOException
 import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.util.ArrayList
+import java.util.*
 import java.util.function.Consumer
 import java.util.regex.Pattern
+import kotlin.collections.HashMap
+import kotlin.collections.List
+import kotlin.collections.MutableList
+import kotlin.collections.MutableMap
 
 class MusicHandler {
     val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()

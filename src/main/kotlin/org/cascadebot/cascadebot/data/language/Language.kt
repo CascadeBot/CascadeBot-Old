@@ -8,7 +8,7 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.ShutdownHandler
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.utils.FormatUtils
-import java.util.EnumMap
+import java.util.*
 
 object Language {
 

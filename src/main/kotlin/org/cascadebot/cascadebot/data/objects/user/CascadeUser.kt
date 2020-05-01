@@ -10,9 +10,7 @@ import org.cascadebot.cascadebot.data.objects.donation.Tier
 
 class CascadeUser(@field:Id private val userId: Long) {
 
-    private constructor() : this(0L) {
-        // Private constructor for MongoDB
-    }
+    private constructor() : this(0L)
 
     val tierName = "default"
     val tier: Tier

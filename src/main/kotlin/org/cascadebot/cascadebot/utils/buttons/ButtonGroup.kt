@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.TextChannel
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.utils.buttons.Button.EmoteButton
 import org.cascadebot.cascadebot.utils.buttons.Button.UnicodeButton
-import java.util.ArrayList
+import java.util.*
 
 open class ButtonGroup(
         val ownerId: Long,

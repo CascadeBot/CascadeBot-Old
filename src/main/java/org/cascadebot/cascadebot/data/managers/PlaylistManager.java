@@ -9,7 +9,7 @@ import com.mongodb.client.MongoIterable;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
 import org.cascadebot.cascadebot.data.objects.Playlist;
-import org.cascadebot.cascadebot.data.objects.guild.PlaylistType;
+import org.cascadebot.cascadebot.data.objects.PlaylistType;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;

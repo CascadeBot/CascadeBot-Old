@@ -6,13 +6,21 @@ package org.cascadebot.cascadebot.data.objects.donation
 
 import com.google.gson.JsonArray
 import io.github.binaryoverload.JSONConfig
-import lombok.Getter
 import org.apache.commons.lang3.StringUtils
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Language.getLanguage
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.objects.donation.Flag.FlagScope
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashSet
+import kotlin.collections.MutableList
+import kotlin.collections.MutableMap
+import kotlin.collections.MutableSet
+import kotlin.collections.Set
+import kotlin.collections.mutableListOf
+import kotlin.collections.set
+import kotlin.collections.toMutableSet
 
 class Tier : FlagContainer {
     var parent: String? = null
@@ -100,10 +108,7 @@ class Tier : FlagContainer {
     }
 
     class TierExtra {
-        @Getter
         val path: String?
-
-        @Getter
         val scope: FlagScope?
 
         private constructor() {

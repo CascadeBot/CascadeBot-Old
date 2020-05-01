@@ -2,7 +2,6 @@ package org.cascadebot.cascadebot.utils.buttons
 
 import net.dv8tion.jda.api.entities.Message
 import org.cascadebot.cascadebot.CascadeBot
-import java.util.function.Consumer
 
 abstract class Button private constructor(var runnable: IButtonRunnable) {
     abstract fun addReaction(message: Message)
