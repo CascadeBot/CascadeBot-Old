@@ -3,7 +3,9 @@ package org.cascadebot.cascadebot.data.objects
 import com.google.common.collect.Sets
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
+import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
+
 
 @SettingsContainer(module = Module.CORE)
 class GuildSettingsCore(guildId: Long) {
@@ -72,5 +74,20 @@ class GuildSettingsCore(guildId: Long) {
 
     //endregion
 
+    fun getTag(key: String?): Tag? {
+        return tags[key]
+    }
+
+    fun hasTag(key: String?): Boolean {
+        return tags.containsKey(key)
+    }
+
+    fun addTag(key: String?, tag: Tag?) {
+        tags[key!!] = tag!!
+    }
+
+    fun removeTag(key: String?): Boolean {
+        return tags.remove(key) != null
+    }
 
 }
