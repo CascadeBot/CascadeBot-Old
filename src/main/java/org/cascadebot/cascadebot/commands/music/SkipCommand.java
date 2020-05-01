@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.TrackData;
@@ -19,7 +20,6 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroupBuilder;
-import org.cascadebot.cascadebot.utils.votes.VoteMessageType;
 import org.cascadebot.cascadebot.utils.votes.VoteResult;
 
 import java.util.HashMap;
@@ -43,7 +43,7 @@ public class SkipCommand implements ICommandMain {
                     context.getMusicPlayer().skip();
                     context.getTypedMessaging().replySuccess(context.i18n("commands.skip.forcefully_skipped"));
                 } else {
-                    context.getUIMessaging().sendPermissionError("skip.force");
+                    context.getUiMessaging().sendPermissionError("skip.force");
                 }
                 return;
             }
@@ -121,7 +121,7 @@ public class SkipCommand implements ICommandMain {
         voteMap.put(context.getGuild().getIdLong(), buttonGroup);
         EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser())
                 .setTitle(context.i18n("commands.skip.skip_vote_title"));
-        context.getUIMessaging().sendButtonedMessage(skipVoteEmbed.build(), buttonGroup);
+        context.getUiMessaging().sendButtonedMessage(skipVoteEmbed.build(), buttonGroup);
         buttonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
         for (Member member : context.getMusicPlayer().getConnectedChannel().getMembers()) {
             buttonGroup.allowUser(member.getIdLong());

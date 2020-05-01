@@ -18,7 +18,7 @@ public class UserPermissionRemoveSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -28,7 +28,7 @@ public class UserPermissionRemoveSubCommand implements ISubCommand {
             return;
         }
 
-        User user = context.getData().getPermissions().getPermissionUser(member);
+        User user = context.getData().getPermissionSettings().getPermissionUser(member);
 
         if (user.removePermission(context.getArg(1))) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));

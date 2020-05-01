@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.commands.developer;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
@@ -16,7 +17,7 @@ public class GuildLeaveSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         // TODO: Leave other guilds
-        Messaging.sendSuccessMessage(context.getChannel(), "Goodbye!")
+        Messaging.sendMessage(MessageType.SUCCESS, context.getChannel(), "Goodbye!")
                 .thenAccept(message -> context.getGuild().leave().queue());
     }
 

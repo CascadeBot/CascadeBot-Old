@@ -22,7 +22,7 @@ public class QueueLoadSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -30,7 +30,7 @@ public class QueueLoadSubCommand implements ISubCommand {
             switch (result) {
                 case LOADED_GUILD:
                 case LOADED_USER:
-                    context.getUIMessaging().sendTracksFound(tracks);
+                    context.getUiMessaging().sendTracksFound(tracks);
                     break;
                 case EXISTS_IN_ALL_SCOPES:
                     ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
@@ -40,7 +40,7 @@ public class QueueLoadSubCommand implements ISubCommand {
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), ((loadPlaylistResult, newTracks) -> {
-                            context.getUIMessaging().sendTracksFound(newTracks);
+                            context.getUiMessaging().sendTracksFound(newTracks);
                         }));
                     })));
                     buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TWO, ((runner, channel, message) -> {
@@ -49,10 +49,10 @@ public class QueueLoadSubCommand implements ISubCommand {
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
-                            context.getUIMessaging().sendTracksFound(newTracks);
+                            context.getUiMessaging().sendTracksFound(newTracks);
                         }));
                     })));
-                    context.getUIMessaging().sendButtonedMessage(context.i18n("commands.queue.load.load_track"), buttonGroup);
+                    context.getUiMessaging().sendButtonedMessage(context.i18n("commands.queue.load.load_track"), buttonGroup);
                     break;
                 case DOESNT_EXIST:
                     context.getTypedMessaging().replyDanger(context.i18n("commands.queue.load.cannot_find_playlist", context.getArg(0)));

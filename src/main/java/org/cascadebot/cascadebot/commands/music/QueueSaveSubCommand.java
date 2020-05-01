@@ -10,8 +10,8 @@ import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.data.objects.SavePlaylistResult;
 import org.cascadebot.cascadebot.messaging.MessageType;
-import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
 
@@ -22,7 +22,7 @@ public class QueueSaveSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -52,7 +52,7 @@ public class QueueSaveSubCommand implements ISubCommand {
 
         long lambdaOwner = owner;
         PlaylistType lambdaScope = scope;
-        CascadePlayer.SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
+        SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
         switch (result) {
             case ALREADY_EXISTS:
                 if (lambdaScope.equals(PlaylistType.GUILD)) {

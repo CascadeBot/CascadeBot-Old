@@ -19,7 +19,7 @@ public class UserPermissionAddSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -29,7 +29,7 @@ public class UserPermissionAddSubCommand implements ISubCommand {
             return;
         }
 
-        User user = context.getData().getPermissions().getPermissionUser(member);
+        User user = context.getData().getPermissionSettings().getPermissionUser(member);
 
         if (!context.getData().getGuildPermissionsManager().isValidPermission(context.getArg(1))) {
             context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));

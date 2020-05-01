@@ -28,7 +28,7 @@ public class MessagingTyped {
      */
     public void replyInfo(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendInfoMessage(context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.INFO, context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
@@ -55,7 +55,7 @@ public class MessagingTyped {
      */
     public void replyInfo(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendInfoMessage(context.getChannel(), builder, context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.INFO, context.getChannel(), builder, context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
@@ -68,7 +68,7 @@ public class MessagingTyped {
      */
     public void replyWarning(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendWarningMessage(context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.WARNING, context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
@@ -95,7 +95,7 @@ public class MessagingTyped {
      */
     public void replyWarning(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendWarningMessage(context.getChannel(), builder, context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.WARNING, context.getChannel(), builder, context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
@@ -108,7 +108,7 @@ public class MessagingTyped {
      */
     public void replySuccess(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendSuccessMessage(context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.SUCCESS, context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
@@ -133,7 +133,7 @@ public class MessagingTyped {
      */
     public void replySuccess(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendSuccessMessage(context.getChannel(), builder, context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.SUCCESS, context.getChannel(), builder, context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
@@ -146,7 +146,7 @@ public class MessagingTyped {
      */
     public void replyModeration(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendModerationMessage(context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.MODERATION, context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
@@ -173,7 +173,7 @@ public class MessagingTyped {
      */
     public void replyModeration(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendModerationMessage(context.getChannel(), builder, context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.MODERATION, context.getChannel(), builder, context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
@@ -186,7 +186,7 @@ public class MessagingTyped {
      */
     public void replyDanger(String message) {
         Checks.notBlank(message, "message");
-        Messaging.sendDangerMessage(context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.DANGER, context.getChannel(), MessagingObjects.getStandardMessageEmbed(message, context.getUser()), context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
@@ -213,7 +213,7 @@ public class MessagingTyped {
      */
     public void replyDanger(EmbedBuilder builder) {
         Checks.notNull(builder, "build");
-        Messaging.sendDangerMessage(context.getChannel(), builder, context.getCoreSettings().isUseEmbedForMessages());
+        Messaging.sendEmbedMessage(MessageType.DANGER, context.getChannel(), builder, context.getCoreSettings().getUseEmbedForMessages());
     }
 
     /**
