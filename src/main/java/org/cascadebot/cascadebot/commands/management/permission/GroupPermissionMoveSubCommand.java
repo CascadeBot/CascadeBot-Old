@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.guild.GuildPermissions;
+import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
@@ -24,7 +25,7 @@ public class GroupPermissionMoveSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getPermissionSettings().getMode() == GuildPermissions.PermissionMode.MOST_RESTRICTIVE) {
+        if (context.getData().getPermissionSettings().getMode() == PermissionMode.MOST_RESTRICTIVE) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.groupperms.move.wrong_mode")); //TODO provide docs link
             return;
         }

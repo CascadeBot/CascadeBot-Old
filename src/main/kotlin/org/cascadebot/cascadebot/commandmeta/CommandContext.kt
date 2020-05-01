@@ -19,6 +19,7 @@ import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.objects.guild.GuildData
 import org.cascadebot.cascadebot.data.objects.guild.GuildSettingsCore
+import org.cascadebot.cascadebot.data.objects.ArgumentType
 import org.cascadebot.cascadebot.messaging.MessagingDirectMessage
 import org.cascadebot.cascadebot.messaging.MessagingTimed
 import org.cascadebot.cascadebot.messaging.MessagingTyped

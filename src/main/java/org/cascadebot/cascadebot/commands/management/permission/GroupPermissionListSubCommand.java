@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.guild.GuildPermissions;
+import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.pagination.Page;
@@ -32,7 +33,7 @@ public class GroupPermissionListSubCommand implements ISubCommand {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < context.getData().getPermissionSettings().getGroups().size(); i++) {
             Group group = context.getData().getPermissionSettings().getGroups().get(i);
-            if (context.getData().getPermissionSettings().getMode().equals(GuildPermissions.PermissionMode.HIERARCHICAL)) {
+            if (context.getData().getPermissionSettings().getMode().equals(PermissionMode.HIERARCHICAL)) {
                 stringBuilder.append(i).append(": ");
             }
             stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");

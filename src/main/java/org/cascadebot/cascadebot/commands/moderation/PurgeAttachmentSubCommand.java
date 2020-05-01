@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.commands.moderation;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
 
@@ -26,7 +27,7 @@ public class PurgeAttachmentSubCommand implements ISubCommand {
             return;
         }
 
-        PurgeUtils.purge(context, PurgeUtils.Criteria.ATTACHMENT, context.getArgAsInteger(0), null);
+        PurgeUtils.purge(context, PurgeCriteria.ATTACHMENT, context.getArgAsInteger(0), null);
     }
 
     @Override

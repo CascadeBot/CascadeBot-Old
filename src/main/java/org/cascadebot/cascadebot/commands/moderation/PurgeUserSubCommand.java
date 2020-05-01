@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.commands.moderation;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
@@ -34,7 +35,7 @@ public class PurgeUserSubCommand implements ISubCommand {
             return;
         }
 
-        PurgeUtils.purge(context, PurgeUtils.Criteria.USER, context.getArgAsInteger(0), targetMember.getUser().getId());
+        PurgeUtils.purge(context, PurgeCriteria.USER, context.getArgAsInteger(0), targetMember.getUser().getId());
     }
 
     @Override
