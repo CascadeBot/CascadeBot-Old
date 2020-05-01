@@ -33,13 +33,9 @@ import java.io.IOException
 import java.net.URI
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import java.util.*
+import java.util.ArrayList
 import java.util.function.Consumer
 import java.util.regex.Pattern
-import kotlin.collections.HashMap
-import kotlin.collections.List
-import kotlin.collections.MutableList
-import kotlin.collections.MutableMap
 
 class MusicHandler {
     val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()

@@ -11,16 +11,8 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Language.getLanguage
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.objects.donation.Flag.FlagScope
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashSet
-import kotlin.collections.MutableList
-import kotlin.collections.MutableMap
-import kotlin.collections.MutableSet
-import kotlin.collections.Set
-import kotlin.collections.mutableListOf
+import java.util.HashMap
 import kotlin.collections.set
-import kotlin.collections.toMutableSet
 
 class Tier : FlagContainer {
     var parent: String? = null

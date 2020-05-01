@@ -1,10 +1,6 @@
 package org.cascadebot.cascadebot.utils
 
-import java.util.*
-import kotlin.collections.HashSet
-import kotlin.collections.Set
-import kotlin.collections.toMutableSet
-import kotlin.collections.toSet
+import java.util.Collections
 
 class ChangeList<T>() {
 
