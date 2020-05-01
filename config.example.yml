@@ -112,3 +112,7 @@ haste:
 web:
   # The secret to use when authenticating with the site/wrapper
   secret_key:
+
+patreon:
+  url: ''
+  key: ''

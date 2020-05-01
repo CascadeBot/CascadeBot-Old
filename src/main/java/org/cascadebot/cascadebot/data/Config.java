@@ -83,6 +83,9 @@ public class Config {
 
     private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
 
+    public String patreonServiceUrl;
+    public String patreonServiceKey;
+
     private Config(String file) throws IOException {
         config = new File(file);
         initConfig();
@@ -240,6 +243,9 @@ public class Config {
         }
 
         youtubeKey = config.getString("music_keys.youtube");
+
+        patreonServiceUrl = warnOnDefault(config, "patreon.url", null);
+        patreonServiceKey = config.getString("patreon.key");
 
         LOG.info("Finished loading configuration!");
 
