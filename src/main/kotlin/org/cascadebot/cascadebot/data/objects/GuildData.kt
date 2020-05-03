@@ -5,7 +5,6 @@ import de.bild.codec.annotations.Id
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
-import org.bson.codecs.pojo.annotations.BsonIgnore
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.ICommandMain
 import org.cascadebot.cascadebot.commandmeta.Module
@@ -38,11 +37,11 @@ class GuildData(@field:Id val guildId: Long) {
     val locale: Locale = Locale.getDefaultLocale()
 
     //region Guild data containers
-    val coreSettings = GuildSettingsCore(guildId)
+    val coreSettings = GuildSettingsCore()
     val usefulSettings = GuildSettingsUseful()
-    val guildModeration = GuildSettingsModeration()
-    val guildMusic = GuildSettingsMusic()
+    val moderationSettings = GuildSettingsModeration()
     val permissionSettings = GuildPermissions()
+    val musicSettings = GuildSettingsMusic()
     //endregion
 
     //region Transient fields
@@ -63,13 +62,13 @@ class GuildData(@field:Id val guildId: Long) {
 
     private fun loadMusicSettings() {
         val player = CascadeBot.INS.musicHandler.getPlayer(guildId)!!
-        if (guildMusic.preserveVolume) {
-            player.volume = guildMusic.volume
+        if (musicSettings.preserveVolume) {
+            player.volume = musicSettings.volume
         }
-        if (guildMusic.preserveEqualizer) {
+        if (musicSettings.preserveEqualizer) {
             if (CascadeBot.INS.musicHandler.lavalinkEnabled) {
                 if (player is CascadeLavalinkPlayer) {
-                    player.setBands(guildMusic.equalizerBands)
+                    player.setBands(musicSettings.equalizerBands)
                 }
             }
         }
