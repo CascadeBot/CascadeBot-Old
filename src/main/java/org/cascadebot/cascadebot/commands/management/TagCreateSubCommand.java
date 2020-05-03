@@ -35,7 +35,9 @@ public class TagCreateSubCommand implements ISubCommand {
             message += "\n\n" + context.i18n("commands.tag.create.warn_uppercase");
         }
 
-        context.getData().getManagement().getTags().put(context.getArg(0), new Tag(context.getMessage(1), "tag"));
+        Tag tag = new Tag(context.getMessage(1), "tag", context.getArg(0));
+        context.getData().getCoreSettings().addTag(context.getArg(0), tag);
+        context.getData().getPermissionsManager().registerGuildPermission(tag.getInternalPermission());
         context.getTypedMessaging().replySuccess(message);
     }
 

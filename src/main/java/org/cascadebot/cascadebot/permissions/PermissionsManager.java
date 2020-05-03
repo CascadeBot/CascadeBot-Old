@@ -107,11 +107,7 @@ public class PermissionsManager {
     }
 
     public boolean isValidPermission(String permission) {
-        return isValidPermission(null, permission);
-    }
-
-    public boolean isValidPermission(Guild guild, String permission) {
-        Set<CascadePermission> permissions = getPermissions(guild);
+        Set<CascadePermission> permissions = getPermissions();
         if (permission.contains("*")) {
             PermissionNode node = new PermissionNode(permission);
             for (CascadePermission perm : permissions) {
@@ -132,14 +128,10 @@ public class PermissionsManager {
     }
 
     public Set<CascadePermission> getPermissions() {
-        return getPermissions(null);
+        return getPermissions(false);
     }
 
-    public Set<CascadePermission> getPermissions(Guild guild) {
-        return getPermissions(guild, false);
-    }
-
-    public Set<CascadePermission> getPermissions(Guild guild, boolean defaultOnly) {
+    public Set<CascadePermission> getPermissions(boolean defaultOnly) {
         if (defaultOnly) {
             return defaultPermissions;
         } else {
@@ -162,6 +154,10 @@ public class PermissionsManager {
 
     public SecurityLevel getUserSecurityLevel(long userId) {
         return Security.getLevelById(userId, DiscordUtils.getAllOfficialRoleIds(userId));
+    }
+
+    public Map<String, CascadePermission> getPermissionMap() {
+        return Map.copyOf(permissions);
     }
 
 }

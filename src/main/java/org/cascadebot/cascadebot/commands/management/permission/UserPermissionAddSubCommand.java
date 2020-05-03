@@ -31,7 +31,7 @@ public class UserPermissionAddSubCommand implements ISubCommand {
 
         User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
 
-        if (!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getGuild(), context.getArg(1))) {
+        if (!context.getData().getPermissionsManager().isValidPermission(context.getArg(1))) {
             context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
             return;
         }

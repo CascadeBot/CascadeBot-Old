@@ -5,8 +5,10 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.ICommandMain
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
+import java.util.Collections
 import org.cascadebot.cascadebot.data.language.Locale
 import java.util.concurrent.ConcurrentHashMap
+
 
 @SettingsContainer(module = Module.CORE)
 class GuildSettingsCore {
@@ -76,6 +78,9 @@ class GuildSettingsCore {
             getGuildCommandInfo(command).enabled = true
         }
     }
+    fun getTag(key: String): Tag? {
+        return tags[key]
+    }
 
     fun enableCommandByModule(module: Module) {
         if (module.isPrivate) return
@@ -132,5 +137,17 @@ class GuildSettingsCore {
 
     //endregion
 
+
+    fun hasTag(key: String): Boolean {
+        return tags.containsKey(key)
+    }
+
+    fun addTag(key: String, tag: Tag) {
+        tags[key] = tag
+    }
+
+    fun removeTag(key: String): Boolean {
+        return tags.remove(key) != null
+    }
 
 }
