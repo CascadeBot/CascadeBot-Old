@@ -3,13 +3,15 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.data.objects;
+package org.cascadebot.cascadebot.data.objects.guild;
 
 import com.google.common.collect.ImmutableSet;
 import net.dv8tion.jda.api.entities.Guild;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.Tag;
+import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.PermissionNode;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;

@@ -60,6 +60,9 @@ class GuildData(@field:Id val guildId: Long) {
 
     @Transient
     val pageCache = PageCache()
+
+    @Transient
+    val permissionsManager = PerGuildPermissionsManager()
     //endregion
 
     val persistentButtons = mutableMapOf<Long, HashMap<Long, PersistentButtonGroup>>()
@@ -72,6 +75,7 @@ class GuildData(@field:Id val guildId: Long) {
     //region Data Loaded Methods
     fun onGuildLoaded() {
         loadMusicSettings()
+        permissionsManager.registerPermissions(this)
     }
 
     private fun loadMusicSettings() {

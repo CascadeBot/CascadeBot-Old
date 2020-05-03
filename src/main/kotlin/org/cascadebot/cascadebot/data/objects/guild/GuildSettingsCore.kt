@@ -76,5 +76,22 @@ class GuildSettingsCore(guildId: Long) {
 
     //endregion
 
+    //region Tags
+    fun getTag(key: String): Tag? {
+        return tags[key]
+    }
+
+    fun hasTag(key: String): Boolean {
+        return tags.containsKey(key)
+    }
+
+    fun addTag(key: String, tag: Tag) {
+        tags[key] = tag
+    }
+
+    fun removeTag(key: String): Boolean {
+        return tags.remove(key) != null
+    }
+    //endregion
 
 }
