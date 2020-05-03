@@ -26,6 +26,7 @@ object ScheduledActionManager {
     @JvmOverloads
     fun registerScheduledAction(action: ScheduledAction, new: Boolean = true): Duration {
         require(!scheduledActions.containsKey(action)) { "You cannot register duplicate scheduled actions! Action: $action" }
+        require(action.type.verifyDataType(action.data)) { "The type of data is no valid for this action type! Expected: ${action.type.expectedClass.simpleName}, Actual: ${action.data::class.simpleName}" }
         val schedule = executor.schedule(action, action.delay, TimeUnit.MILLISECONDS)
         if (new) saveScheduledAction(action)
         scheduledActions[action] = schedule
