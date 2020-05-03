@@ -51,7 +51,15 @@ class ScheduledActionManager {
             CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledAction::class.java)
                     .find(eq("guildId", guildId))
 
-    fun getScheduledActions() =
-            CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledAction::class.java).find()
+    @JvmStatic
+    @JvmOverloads
+    fun loadAndRegister(guildId: Long? = null) {
+        var count = 0
+        getScheduledActions(guildId).forEach {
+            registerScheduledAction(it, false)
+            count++
+        }
+        CascadeBot.LOGGER.info("Loaded $count scheduled actions!")
+    }
 
 }
