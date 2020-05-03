@@ -63,7 +63,16 @@ data class ScheduledAction(
 
     interface ActionData
 
-    class ModerationActionData(val targetId: Long) : ActionData
-    class ReminderActionData(val reminder: String, val isDM: Boolean = false) : ActionData
+    class ModerationActionData(val targetId: Long) : ActionData {
+        // Mongo Constructor
+        @Suppress("unused")
+        private constructor() : this(0L)
+    }
+
+    class ReminderActionData(val reminder: String, val isDM: Boolean = false) : ActionData {
+        // Mongo Constructor
+        @Suppress("unused")
+        private constructor() : this("ugh", false)
+    }
 
 }
