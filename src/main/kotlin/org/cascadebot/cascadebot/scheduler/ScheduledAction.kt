@@ -20,7 +20,7 @@ data class ScheduledAction(
     val id: ObjectId = ObjectId()
 
     val delay: Long
-        get() = ChronoUnit.MILLIS.between(Instant.now(), executionTime)
+        get() = ChronoUnit.MILLIS.between(Instant.now(), executionTime).coerceAtLeast(0L)
 
     // Default constructor for MongoDB serialisation
     private constructor() : this(
