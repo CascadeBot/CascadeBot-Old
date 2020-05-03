@@ -5,35 +5,35 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.GuildPermissions;
+import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GroupPermissionListSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getPermissions().getGroups().isEmpty()) {
+        if (context.getData().getPermissionSettings().getGroups().isEmpty()) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.list.no_groups"));
             return;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < context.getData().getPermissions().getGroups().size(); i++) {
-            Group group = context.getData().getPermissions().getGroups().get(i);
-            if (context.getData().getPermissions().getMode().equals(GuildPermissions.PermissionMode.HIERARCHICAL)) {
+        for (int i = 0; i < context.getData().getPermissionSettings().getGroups().size(); i++) {
+            Group group = context.getData().getPermissionSettings().getGroups().get(i);
+            if (context.getData().getPermissionSettings().getMode().equals(PermissionMode.HIERARCHICAL)) {
                 stringBuilder.append(i).append(": ");
             }
             stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
@@ -45,7 +45,7 @@ public class GroupPermissionListSubCommand implements ISubCommand {
             pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(pageContent)));
         }
 
-        context.getUIMessaging().sendPagedMessage(pages);
+        context.getUiMessaging().sendPagedMessage(pages);
     }
 
     @Override

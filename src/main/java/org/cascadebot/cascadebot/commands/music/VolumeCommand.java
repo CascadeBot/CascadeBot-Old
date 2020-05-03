@@ -27,7 +27,7 @@ public class VolumeCommand implements ICommandMain {
         if (context.isArgInteger(0)) {
             volume = context.getArgAsInteger(0);
         } else {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -48,12 +48,15 @@ public class VolumeCommand implements ICommandMain {
                             @Override
                             public void execute() {
                                 player.setVolume(volume);
+                                if (context.getData().getGuildMusic().getPreserveVolume()) {
+                                    context.getData().getGuildMusic().setVolume(volume);
+                                }
                                 context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
                             }
                         });
                 return;
             } else {
-                context.getUIMessaging().sendPermissionError("volume.extreme");
+                context.getUiMessaging().sendPermissionError("volume.extreme");
                 return;
             }
         } else if (volume > 200) {
@@ -65,6 +68,9 @@ public class VolumeCommand implements ICommandMain {
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getVolume()));
         } else {
             player.setVolume(volume);
+            if (context.getData().getGuildMusic().getPreserveVolume()) {
+                context.getData().getGuildMusic().setVolume(volume);
+            }
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
         }
 

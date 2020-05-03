@@ -6,14 +6,12 @@ import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.TodoList;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-import java.util.regex.Pattern;
-
 public class TodoCreateSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 

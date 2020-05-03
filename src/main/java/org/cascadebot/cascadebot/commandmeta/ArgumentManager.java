@@ -12,6 +12,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
+import org.cascadebot.cascadebot.data.objects.ArgumentType;
 
 import java.util.ArrayList;
 import java.util.HashSet;

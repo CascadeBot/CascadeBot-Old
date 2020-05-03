@@ -16,7 +16,6 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.shared.Regex;
 
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 
 public class JoinCommand implements ICommandMain {
@@ -43,10 +42,10 @@ public class JoinCommand implements ICommandMain {
         }
 
         if (!context.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT)) {
-            context.getUIMessaging().sendBotDiscordPermError(Permission.VOICE_CONNECT);
+            context.getUiMessaging().sendBotDiscordPermError(Permission.VOICE_CONNECT);
             return;
         } else if (!context.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_SPEAK)) {
-            context.getUIMessaging().sendBotDiscordPermError(Permission.VOICE_SPEAK);
+            context.getUiMessaging().sendBotDiscordPermError(Permission.VOICE_SPEAK);
             return;
         }
 
@@ -56,7 +55,7 @@ public class JoinCommand implements ICommandMain {
                 return;
             } else {
                 if (!context.hasPermission("join.other")) {
-                    context.getUIMessaging().sendPermissionError("join.other");
+                    context.getUiMessaging().sendPermissionError("join.other");
                     return;
                 }
             }

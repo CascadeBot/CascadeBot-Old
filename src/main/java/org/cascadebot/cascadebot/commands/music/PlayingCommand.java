@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -15,8 +16,10 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
+import org.cascadebot.cascadebot.data.objects.LoopMode;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
+import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
@@ -41,14 +44,14 @@ public class PlayingCommand implements ICommandMain {
 
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
-            handleRepeat(buttonGroup, CascadePlayer.LoopMode.PLAYLIST, message);
+            handleRepeat(buttonGroup, LoopMode.PLAYLIST, message);
         }
     });
 
     private Button.UnicodeButton repeatOne = new Button.UnicodeButton(UnicodeConstants.REPEAT_ONCE, (runner, channel, message) -> {
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
-            handleRepeat(buttonGroup, CascadePlayer.LoopMode.SONG, message);
+            handleRepeat(buttonGroup, LoopMode.SONG, message);
         }
     });
 
@@ -56,7 +59,7 @@ public class PlayingCommand implements ICommandMain {
 
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
-            handleRepeat(buttonGroup, CascadePlayer.LoopMode.DISABLED, message);
+            handleRepeat(buttonGroup, LoopMode.DISABLED, message);
         }
     });
 
@@ -127,7 +130,7 @@ public class PlayingCommand implements ICommandMain {
 
         buttonGroup.addButton(player.isPaused() ? playButton : pauseButton);
 
-        context.getUIMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
+        context.getUiMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
 
     }
 
@@ -146,20 +149,32 @@ public class PlayingCommand implements ICommandMain {
         embedBuilder.addField(Language.i18n(guildId, "words.status"), player.isPaused() ? UnicodeConstants.PAUSE + " " + Language.i18n(guildId, "words.paused") : UnicodeConstants.PLAY + " " + Language.i18n(guildId, "words.playing"), true);
 
         if (!track.getInfo().isStream) {
-            embedBuilder.addField(Language.i18n(guildId, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildId).getCoreSettings().isUseEmbedForMessages()), false);
+            embedBuilder.addField(Language.i18n(guildId, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildId).getCoreSettings().getUseEmbedForMessages()), false);
         }
 
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getTrackPosition()) + " / " +
                 (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
         embedBuilder.addField(Language.i18n(guildId, "words.volume"), player.getVolume() + "%", true);
         embedBuilder.addField(Language.i18n(guildId, "commands.playing.loop_mode"), FormatUtils.formatEnum(player.getLoopMode(), Language.getGuildLocale(guildId)), true);
-        if (track.getUserData() instanceof Long) { //TODO find out why user data sometimes gets set to null.
-            embedBuilder.addField(Language.i18n(guildId, "words.requested_by"), CascadeBot.INS.getShardManager().getUserById((Long) track.getUserData()).getAsTag(), true);
+        if (track.getUserData() instanceof TrackData) { //TODO find out why user data sometimes gets set to null.
+            long id = ((TrackData) track.getUserData()).getUserId();
+            User user = CascadeBot.INS.getShardManager().getUserById(id);
+            if (user != null) {
+                embedBuilder.addField(Language.i18n(guildId, "words.requested_by"), user.getAsTag(), true);
+            }
         }
         AudioTrack next = player.getQueue().peek();
         if (next != null) {
-            embedBuilder.addField(Language.i18n(guildId, "commands.playing.up_next"), "**" + next.getInfo().title + "**\n" + Language.i18n(guildId, "words.requested_by") +
-                    CascadeBot.INS.getShardManager().getUserById((Long) next.getUserData()).getAsTag(), false);
+            StringBuilder nextSongBuilder = new StringBuilder();
+            nextSongBuilder.append("**").append(next.getInfo().title).append("**");
+            if (next.getUserData() instanceof TrackData) {
+                long id = ((TrackData) next.getUserData()).getUserId();
+                User user = CascadeBot.INS.getShardManager().getUserById(id);
+                if (user != null) {
+                    nextSongBuilder.append('\n').append(Language.i18n(guildId, "words.requested_by")).append(user.getAsTag());
+                }
+            }
+            embedBuilder.addField(Language.i18n(guildId, "commands.playing.up_next"), nextSongBuilder.toString(), false);
         }
 
         return embedBuilder.build();
@@ -179,7 +194,7 @@ public class PlayingCommand implements ICommandMain {
         buttonMessage.editMessage(getSongEmbed(player, buttonGroup.getGuildId())).queue();
     }
 
-    public void handleRepeat(ButtonGroup buttonGroup, CascadePlayer.LoopMode mode, Message buttonMessage) {
+    public void handleRepeat(ButtonGroup buttonGroup, LoopMode mode, Message buttonMessage) {
         CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
         switch (mode) {
             case DISABLED:

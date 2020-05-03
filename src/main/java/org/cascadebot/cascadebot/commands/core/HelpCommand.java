@@ -1,19 +1,15 @@
 package org.cascadebot.cascadebot.commands.core;
 
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bukkit.command.Command;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandCore;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
-import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
 import java.util.Arrays;
@@ -26,14 +22,14 @@ public class HelpCommand implements ICommandCore {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.getUIMessaging().sendPagedMessage(
+            context.getUiMessaging().sendPagedMessage(
                     Arrays.stream(Module.values())
                     /*
                      * Filters based on the two conditions:
                      * 1. The module should *not* be private (i.e. a dev module)
                      * 2. Either: The setting "helpShowAllModules" is set to true *or
                      */
-                    .filter(module -> !module.isPrivate() && (context.getCoreSettings().isHelpShowAllModules() || context.getCoreSettings().isModuleEnabled(module)))
+                    .filter(module -> !module.isPrivate() && (context.getCoreSettings().getHelpShowAllModules() || context.getCoreSettings().isModuleEnabled(module)))
                     .map(module -> getModulePages(module, context))
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList())
@@ -42,14 +38,14 @@ public class HelpCommand implements ICommandCore {
             String input = context.getArg(0);
             if (EnumUtils.isValidEnumIgnoreCase(Module.class, input)) {
                 Module module = EnumUtils.getEnumIgnoreCase(Module.class, input);
-                if (context.getCoreSettings().isHelpShowAllModules() || context.getCoreSettings().isModuleEnabled(module)) {
-                    context.getUIMessaging().sendPagedMessage(getModulePages(module, context));
+                if (context.getCoreSettings().getHelpShowAllModules() || context.getCoreSettings().isModuleEnabled(module)) {
+                    context.getUiMessaging().sendPagedMessage(getModulePages(module, context));
                 } else {
                     context.getTypedMessaging().replyDanger(context.i18n("commands.help.module_not_enabled"));
                 }
             }
         } else {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
         }
     }
 
@@ -67,7 +63,7 @@ public class HelpCommand implements ICommandCore {
              * 2. If the setting "helpHideCommandsNoPermission" is set to false, the command will always display regardless of permission
              * 3. If the sender of the help command has the permission for the command
              */
-            if (commandMain.getPermission() == null || !context.getCoreSettings().isHelpHideCommandsNoPermission() || context.hasPermission(commandMain.getPermission())) {
+            if (commandMain.getPermission() == null || !context.getCoreSettings().getHelpHideCommandsNoPermission() || context.hasPermission(commandMain.getPermission())) {
                 stringBuilder.append("`")
                         .append(context.getCoreSettings().getPrefix())
                         .append(commandMain.command(context.getLocale()))

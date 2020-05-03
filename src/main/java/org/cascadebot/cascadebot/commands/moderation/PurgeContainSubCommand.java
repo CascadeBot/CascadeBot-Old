@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.commands.moderation;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
 
@@ -17,16 +18,16 @@ public class PurgeContainSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         if (!context.isArgInteger(0)) {
-            context.getUIMessaging().replyUsage(this);
+            context.getUiMessaging().replyUsage();
             return;
         }
 
-        PurgeUtils.purge(context, PurgeUtils.Criteria.TOKEN, context.getArgAsInteger(0), context.getMessage(1));
+        PurgeUtils.purge(context, PurgeCriteria.TOKEN, context.getArgAsInteger(0), context.getMessage(1));
     }
 
     @Override

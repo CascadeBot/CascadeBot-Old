@@ -17,6 +17,7 @@ import org.cascadebot.cascadebot.CSSColor;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
+import org.cascadebot.cascadebot.data.objects.ColorErrorType;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 
@@ -55,7 +56,7 @@ public class ColorUtils {
                 return new Color(Integer.parseInt(matcher.group(1)), Integer.parseInt(matcher.group(2)),
                         Integer.parseInt(matcher.group(3)));
             } catch (IllegalArgumentException e) {
-                throw new ColorException(ColorException.ColorErrorType.RGB);
+                throw new ColorException(ColorErrorType.RGB);
             }
         }
 
@@ -63,7 +64,7 @@ public class ColorUtils {
             try {
                 return Color.decode(matcher.group());
             } catch (NumberFormatException e) {
-                throw new ColorException(ColorException.ColorErrorType.HEX);
+                throw new ColorException(ColorErrorType.HEX);
             }
         }
 
@@ -71,7 +72,7 @@ public class ColorUtils {
             try {
                 return Color.decode(matcher.group());
             } catch (NumberFormatException e) {
-                throw new ColorException(ColorException.ColorErrorType.DECIMAL);
+                throw new ColorException(ColorErrorType.DECIMAL);
             }
         }
 
@@ -79,11 +80,11 @@ public class ColorUtils {
             try {
                 return Color.decode(String.valueOf(Integer.parseUnsignedInt(matcher.group(), 2)));
             } catch (NumberFormatException e) {
-                throw new ColorException(ColorException.ColorErrorType.BINARY);
+                throw new ColorException(ColorErrorType.BINARY);
             }
         }
 
-        throw new ColorException(ColorException.ColorErrorType.UNRECOGNISED);
+        throw new ColorException(ColorErrorType.UNRECOGNISED);
     }
 
     public static MessageEmbed getColorEmbed(Color color, CommandContext context) {
@@ -120,10 +121,6 @@ public class ColorUtils {
                     return Language.i18n(locale, "utils.color.color_not_recognised");
             }
             return null;
-        }
-
-        public enum ColorErrorType {
-            RGB, BINARY, HEX, DECIMAL, UNRECOGNISED
         }
 
     }

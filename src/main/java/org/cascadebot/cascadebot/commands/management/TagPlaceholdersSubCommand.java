@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.Placeholder;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
@@ -59,7 +58,7 @@ public class TagPlaceholdersSubCommand implements ISubCommand {
             pageList.add(new PageObjects.EmbedPage(builder));
         }
 
-        context.getUIMessaging().sendPagedMessage(pageList);
+        context.getUiMessaging().sendPagedMessage(pageList);
     }
 
     @Override
