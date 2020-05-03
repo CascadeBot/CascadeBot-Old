@@ -5,8 +5,6 @@ import org.bson.types.ObjectId
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import kotlin.reflect.KClass
-import kotlin.reflect.full.isSubclassOf
 
 data class ScheduledAction(
         val type: ActionType,
@@ -51,14 +49,6 @@ data class ScheduledAction(
         } finally {
             ScheduledActionManager.deleteScheduledAction(this.id)
         }
-    }
-
-    enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (ScheduledAction) -> Unit) {
-        UNMUTE(ModerationActionData::class, { action -> TODO() }),
-        UNBAN(ModerationActionData::class, { action -> TODO() }),
-        REMINDER(ReminderActionData::class, { action -> TODO() });
-
-        fun verifyDataType(data: ActionData) = data::class.isSubclassOf(expectedClass)
     }
 
     interface ActionData
