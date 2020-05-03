@@ -179,15 +179,15 @@ class CommandContext(
             CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission)
             return false
         }
-        return data.permissionSettings.hasPermission(member, channel, cascadePermission, data.coreSettings)
+        return data.managementSettings.permissions.hasPermission(member, channel, cascadePermission, data.coreSettings)
     }
 
     fun hasPermission(permission: CascadePermission?): Boolean {
-        return permission != null && data.permissionSettings.hasPermission(member, channel, permission, data.coreSettings)
+        return permission != null && data.managementSettings.permissions.hasPermission(member, channel, permission, data.coreSettings)
     }
 
     fun hasPermission(member: Member?, channel: GuildChannel?, permission: CascadePermission?): Boolean {
-        return permission != null && data.permissionSettings.hasPermission(member, channel, permission, data.coreSettings)
+        return permission != null && data.managementSettings.permissions.hasPermission(member, channel, permission, data.coreSettings)
     }
 
     fun runOtherCommand(command: String?, sender: Member?, context: CommandContext) {

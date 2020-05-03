@@ -30,9 +30,6 @@ class GuildSettingsCore {
     var adminsHaveAllPerms = true
 
     @Setting
-    var allowTagCommands = true
-
-    @Setting
     var helpHideCommandsNoPermission = true
 
     @Setting
@@ -48,10 +45,6 @@ class GuildSettingsCore {
 
     @Setting(directlyEditable = false)
     private val enabledModules: MutableSet<Module> = Sets.newConcurrentHashSet(Module.getModules(ModuleFlag.DEFAULT))
-
-    @Setting(directlyEditable = false)
-    val tags: ConcurrentHashMap<String, Tag> = ConcurrentHashMap()
-
 
     //region Modules
     fun enableModule(module: Module): Boolean {
