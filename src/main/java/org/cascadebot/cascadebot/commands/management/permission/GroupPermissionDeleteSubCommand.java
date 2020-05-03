@@ -17,7 +17,7 @@ public class GroupPermissionDeleteSubCommand implements ISubCommand {
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
-            if (context.getData().getPermissionSettings().deleteGroup(group.getId())) {
+            if (context.getData().getManagement().getPermissions().deleteGroup(group.getId())) {
                 // If the group existed to delete and has been successfully deleted.
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.delete.success", group.getName(), group.getId()));
             } else {

@@ -273,7 +273,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
     })),
     SKIP_BUTTON_FORCE(Button.UnicodeButton(UnicodeConstants.FAST_FORWARD,  IButtonRunnable { runner: Member?, channel: TextChannel, message: Message ->
         val data = GuildDataManager.getGuildData(channel.guild.idLong)
-        if (!data.permissionSettings.hasPermission(runner, channel, CascadeBot.INS.permissionsManager.getPermission("skip.force"), data.core)) {
+        if (!data.management.permissions.hasPermission(runner, channel, CascadeBot.INS.permissionsManager.getPermission("skip.force"), data.core)) {
             return@IButtonRunnable
         }
         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE))
