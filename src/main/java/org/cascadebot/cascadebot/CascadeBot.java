@@ -32,6 +32,7 @@ import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.CascadeUserDataManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.donation.Tier;
+import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
@@ -72,6 +73,7 @@ public class CascadeBot {
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
+
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
@@ -219,6 +221,7 @@ public class CascadeBot {
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
+        ScheduledActionManager.loadAndRegister();
 
         Metrics.INS.cacheMetrics.addCache("guilds", GuildDataManager.getGuilds());
         Metrics.INS.cacheMetrics.addCache("users", CascadeUserDataManager.getUsers());
