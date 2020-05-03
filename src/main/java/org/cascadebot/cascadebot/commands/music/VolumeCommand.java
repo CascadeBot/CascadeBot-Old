@@ -48,8 +48,8 @@ public class VolumeCommand implements ICommandMain {
                             @Override
                             public void execute() {
                                 player.setVolume(volume);
-                                if (context.getData().getMusicSettings().getPreserveVolume()) {
-                                    context.getData().getMusicSettings().setVolume(volume);
+                                if (context.getData().getMusic().getPreserveVolume()) {
+                                    context.getData().getMusic().setVolume(volume);
                                 }
                                 context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
                             }
@@ -68,8 +68,8 @@ public class VolumeCommand implements ICommandMain {
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getVolume()));
         } else {
             player.setVolume(volume);
-            if (context.getData().getMusicSettings().getPreserveVolume()) {
-                context.getData().getMusicSettings().setVolume(volume);
+            if (context.getData().getMusic().getPreserveVolume()) {
+                context.getData().getMusic().setVolume(volume);
             }
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
         }

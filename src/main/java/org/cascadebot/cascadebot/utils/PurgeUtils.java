@@ -44,7 +44,7 @@ public class PurgeUtils {
                 break;
             }
             
-            if (!context.getData().getModerationSettings().isPurgePinnedMessages() && message.isPinned()) {
+            if (!context.getData().getModeration().isPurgePinnedMessages() && message.isPinned()) {
                     continue;
             }
 

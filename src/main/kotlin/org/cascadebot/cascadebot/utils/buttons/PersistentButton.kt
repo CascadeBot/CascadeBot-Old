@@ -14,7 +14,7 @@ import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup
 
 enum class PersistentButton(@field:Transient val button: Button) {
     TODO_BUTTON_CHECK(Button.UnicodeButton(UnicodeConstants.TICK,  IButtonRunnable { runner: Member, channel: TextChannel, message: Message ->
-        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).usefulSettings.getTodoListByMessage(message.idLong)
+        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
         if (!todoList.canUserEdit(runner.idLong)) {
             return@IButtonRunnable
         }
@@ -24,7 +24,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
         message.editMessage(todoList.todoListMessage).queue()
     })),
     TODO_BUTTON_UNCHECK(Button.UnicodeButton(UnicodeConstants.WHITE_HALLOW_SQUARE,  IButtonRunnable { runner: Member, channel: TextChannel, message: Message ->
-        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).usefulSettings.getTodoListByMessage(message.idLong)
+        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
         if (!todoList.canUserEdit(runner.idLong)) {
             return@IButtonRunnable
         }
@@ -34,7 +34,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
         message.editMessage(todoList.todoListMessage).queue()
     })),
     TODO_BUTTON_NAVIGATE_LEFT(Button.UnicodeButton(UnicodeConstants.BACKWARD_ARROW, IButtonRunnable { runner: Member, channel: TextChannel, message: Message ->
-        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).usefulSettings.getTodoListByMessage(message.idLong)
+        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
         if (!todoList.canUserEdit(runner.idLong)) {
             return@IButtonRunnable
         }
@@ -49,7 +49,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
         todoList.doCheckToggle(message)
     })),
     TODO_BUTTON_NAVIGATE_RIGHT(Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW,  IButtonRunnable { runner: Member, channel: TextChannel, message: Message ->
-        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).usefulSettings.getTodoListByMessage(message.idLong)
+        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
         if (!todoList.canUserEdit(runner.idLong)) {
             return@IButtonRunnable
         }
@@ -64,7 +64,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
         todoList.doCheckToggle(message)
     })),
     TODO_BUTTON_NAVIGATE_UP(Button.UnicodeButton(UnicodeConstants.ARROW_UP,  IButtonRunnable { runner: Member, channel: TextChannel, message: Message ->
-        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).usefulSettings.getTodoListByMessage(message.idLong)
+        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
         if (!todoList.canUserEdit(runner.idLong)) {
             return@IButtonRunnable
         }
@@ -77,7 +77,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
         todoList.doCheckToggle(message)
     })),
     TODO_BUTTON_NAVIGATE_DOWN(Button.UnicodeButton(UnicodeConstants.ARROW_DOWN,  IButtonRunnable { runner: Member, channel: TextChannel, message: Message ->
-        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).usefulSettings.getTodoListByMessage(message.idLong)
+        val todoList = GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
         if (!todoList.canUserEdit(runner.idLong)) {
             return@IButtonRunnable
         }
@@ -273,7 +273,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
     })),
     SKIP_BUTTON_FORCE(Button.UnicodeButton(UnicodeConstants.FAST_FORWARD,  IButtonRunnable { runner: Member?, channel: TextChannel, message: Message ->
         val data = GuildDataManager.getGuildData(channel.guild.idLong)
-        if (!data.permissionSettings.hasPermission(runner, channel, CascadeBot.INS.permissionsManager.getPermission("skip.force"), data.coreSettings)) {
+        if (!data.permissionSettings.hasPermission(runner, channel, CascadeBot.INS.permissionsManager.getPermission("skip.force"), data.core)) {
             return@IButtonRunnable
         }
         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE))

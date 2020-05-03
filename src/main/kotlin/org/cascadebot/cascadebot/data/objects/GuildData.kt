@@ -6,17 +6,13 @@ import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import org.cascadebot.cascadebot.CascadeBot
-import org.cascadebot.cascadebot.commandmeta.ICommandMain
-import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 import org.cascadebot.cascadebot.utils.pagination.PageCache
-import java.util.Collections
 import java.util.Date
-import java.util.concurrent.ConcurrentHashMap
 
 class GuildData(@field:Id val guildId: Long) {
 
@@ -32,14 +28,14 @@ class GuildData(@field:Id val guildId: Long) {
 
     // TODO: Keep this here or remove it? It just serves as an accessor for the actual locale
     val locale: Locale
-        get() = coreSettings.locale
+        get() = core.locale
 
     //region Guild data containers
-    val coreSettings = GuildSettingsCore()
-    val usefulSettings = GuildSettingsUseful()
-    val moderationSettings = GuildSettingsModeration()
-    val managementSettings = GuildSettingsManagement()
-    val musicSettings = GuildSettingsMusic()
+    val core = GuildSettingsCore()
+    val useful = GuildSettingsUseful()
+    val moderation = GuildSettingsModeration()
+    val management = GuildSettingsManagement()
+    val music = GuildSettingsMusic()
     //endregion
 
     //region Transient fields
@@ -60,13 +56,13 @@ class GuildData(@field:Id val guildId: Long) {
 
     private fun loadMusicSettings() {
         val player = CascadeBot.INS.musicHandler.getPlayer(guildId)!!
-        if (musicSettings.preserveVolume) {
-            player.volume = musicSettings.volume
+        if (music.preserveVolume) {
+            player.volume = music.volume
         }
-        if (musicSettings.preserveEqualizer) {
+        if (music.preserveEqualizer) {
             if (CascadeBot.INS.musicHandler.lavalinkEnabled) {
                 if (player is CascadeLavalinkPlayer) {
-                    player.setBands(musicSettings.equalizerBands)
+                    player.setBands(music.equalizerBands)
                 }
             }
         }
