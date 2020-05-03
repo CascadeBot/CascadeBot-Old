@@ -9,7 +9,7 @@ import org.cascadebot.cascadebot.data.objects.ArgumentType
 data class Argument internal constructor(val id: String,
                                          val type: ArgumentType,
                                          val displayAlone: Boolean,
-                                         val subArgs: Set<Argument>,
+                                         val subArgs: List<Argument>,
                                          val aliases: Set<String>
 ) {
 
