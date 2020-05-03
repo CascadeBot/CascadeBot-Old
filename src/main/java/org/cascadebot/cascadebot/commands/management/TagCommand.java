@@ -26,12 +26,12 @@ public class TagCommand implements ICommandMain {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        if (!context.getData().getManagement().getTags().containsKey(context.getArg(0))) {
+        if (!context.getData().getManagement().hasTag(context.getArg(0))) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
         }
 
-        Tag tag = context.getData().getManagement().getTags().get(tagName);
+        Tag tag = context.getData().getManagement().getTag(tagName);
         context.reply(tag.formatTag(context));
     }
 

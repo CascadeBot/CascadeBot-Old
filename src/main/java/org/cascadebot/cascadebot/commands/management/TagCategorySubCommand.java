@@ -20,7 +20,7 @@ public class TagCategorySubCommand implements ISubCommand {
             return;
         }
 
-        Tag tag = context.getData().getManagement().getTags().get(context.getArg(0));
+        Tag tag = context.getData().getManagement().getTag(context.getArg(0));
 
         String tagName = context.getArg(0).toLowerCase();
         String category = context.getArg(1).toLowerCase();

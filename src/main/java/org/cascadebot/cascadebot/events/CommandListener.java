@@ -136,8 +136,8 @@ public class CommandListener extends ListenerAdapter {
         } else {
             if (guildData.getManagement().getAllowTagCommands()) {
                 String tagName = trigger.toLowerCase();
-                if (guildData.getManagement().getTags().containsKey(tagName)) {
-                    Tag tag = guildData.getManagement().getTags().get(tagName);
+                if (guildData.getManagement().hasTag(tagName)) {
+                    Tag tag = guildData.getManagement().getTag(tagName);
 
                     context.reply(tag.formatTag(context)); //TODO perms for tags
                     CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", tagName, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
