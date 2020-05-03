@@ -11,14 +11,14 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 /**
  * Represents a data object that contains a per guild permission
  */
-public interface PermissionObject {
-    String getPermission();
+public abstract class PermissionObject {
+    abstract String getPermission();
 
-    String getParent();
+    abstract String getParent();
 
-    Module cascadeModule();
+    abstract Module cascadeModule();
 
-    default CascadePermission getInternalPermission() {
+    public CascadePermission getInternalPermission() {
         return CascadePermission.of(getParent() + "." + getPermission(), false, cascadeModule());
     }
 }
