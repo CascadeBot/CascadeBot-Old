@@ -6,7 +6,6 @@ import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.objects.ModuleFlag
 import org.cascadebot.cascadebot.data.objects.Setting
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
-import org.cascadebot.cascadebot.data.objects.Tag
 import java.util.concurrent.ConcurrentHashMap
 
 @SettingsContainer(module = Module.CORE)

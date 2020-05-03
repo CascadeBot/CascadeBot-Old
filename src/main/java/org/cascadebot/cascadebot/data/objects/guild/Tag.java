@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.data.objects;
+package org.cascadebot.cascadebot.data.objects.guild;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,6 +13,8 @@ import lombok.Setter;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.objects.Placeholder;
+import org.cascadebot.cascadebot.data.objects.guild.PermissionObject;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

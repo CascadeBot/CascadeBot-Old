@@ -23,7 +23,7 @@ import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.Tag;
+import org.cascadebot.cascadebot.data.objects.guild.Tag;
 import org.cascadebot.cascadebot.data.objects.guild.GuildData;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
