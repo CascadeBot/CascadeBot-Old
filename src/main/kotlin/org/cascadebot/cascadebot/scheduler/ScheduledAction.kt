@@ -2,7 +2,7 @@ package org.cascadebot.cascadebot.scheduler
 
 import de.bild.codec.annotations.Id
 import org.bson.types.ObjectId
-import java.time.OffsetDateTime
+import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -44,7 +44,11 @@ data class ScheduledAction(
             this(type, data, guildId, channelId, userId, creationTime, creationTime.plus(delay, ChronoUnit.MILLIS)!!)
 
     override fun run() {
-        type.dataConsumer(this)
+        try {
+            type.dataConsumer(this)
+        } finally {
+            ScheduledActionManager.deleteScheduledAction(this.id)
+        }
     }
 
     enum class ActionType(val dataConsumer: (ScheduledAction) -> Unit) {
