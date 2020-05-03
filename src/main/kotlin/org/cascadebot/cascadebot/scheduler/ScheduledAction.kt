@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.scheduler
 
+import de.bild.codec.annotations.Id
 import org.bson.types.ObjectId
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
@@ -14,6 +15,7 @@ data class ScheduledAction(
         val executionTime: OffsetDateTime
 ) : Runnable {
 
+    @Id
     val id: ObjectId = ObjectId()
 
     val delay: Long
