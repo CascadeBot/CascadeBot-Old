@@ -14,8 +14,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.PlaylistManager;
+import org.cascadebot.cascadebot.data.objects.LoadPlaylistResult;
+import org.cascadebot.cascadebot.data.objects.LoopMode;
 import org.cascadebot.cascadebot.data.objects.Playlist;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.data.objects.SavePlaylistResult;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
 import java.util.ArrayList;
@@ -281,29 +284,5 @@ public interface CascadePlayer extends IPlayer {
     @Override
     void setVolume(int i);
 
-    public enum LoopMode {
-
-        DISABLED,
-        PLAYLIST,
-        SONG
-
-    }
-
-    public enum SavePlaylistResult {
-
-        ALREADY_EXISTS,
-        OVERWRITE,
-        NEW
-
-    }
-
-    public enum LoadPlaylistResult {
-
-        LOADED_GUILD,
-        LOADED_USER,
-        EXISTS_IN_ALL_SCOPES,
-        DOESNT_EXIST
-
-    }
 
 }

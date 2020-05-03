@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.music.KaraokeHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -28,10 +29,10 @@ public class KaraokeCommand implements ICommandMain {
         }
 
         if (!context.getMusicPlayer()
-                   .getPlayingTrack()
-                   .getSourceManager()
-                   .getSourceName()
-                   .equals(CascadeBot.INS.getMusicHandler().getYoutubeSourceName())) {
+                .getPlayingTrack()
+                .getSourceManager()
+                .getSourceName()
+                .equals(CascadeBot.INS.getMusicHandler().getYoutubeSourceName())) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.karaoke.not_youtube"));
         }
 
@@ -42,7 +43,7 @@ public class KaraokeCommand implements ICommandMain {
         }
 
         try {
-            Message message = Messaging.sendInfoMessage(context.getChannel(), context.i18n("commands.karaoke.loading_karaoke")).get();
+            Message message = Messaging.sendMessage(MessageType.INFO, context.getChannel(), context.i18n("commands.karaoke.loading_karaoke")).get();
             KaraokeHandler.getSongLyrics(context.getMusicPlayer().getPlayingTrack().getIdentifier(), context.getChannel(), context.getGuild().getIdLong(), message, context.getData().getLocale().getLanguage());
             context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.enabled_karaoke"));
         } catch (InterruptedException | ExecutionException e) {
@@ -64,4 +65,5 @@ public class KaraokeCommand implements ICommandMain {
     public CascadePermission getPermission() {
         return CascadePermission.of("karaoke", true);
     }
+
 }

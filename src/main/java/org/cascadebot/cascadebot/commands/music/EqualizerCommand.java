@@ -33,7 +33,7 @@ public class EqualizerCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (!CascadeBot.INS.getMusicHandler().isLavalinkEnabled()) {
+        if (!CascadeBot.INS.getMusicHandler().getLavalinkEnabled()) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
             return;
         }
@@ -82,7 +82,7 @@ public class EqualizerCommand implements ICommandMain {
             }
 
             player.setBand(currentBand.get(), ((float) gain) / 20f);
-            if (context.getData().getGuildMusic().isPreserveEqualizer()) {
+            if (context.getData().getGuildMusic().getPreserveEqualizer()) {
                 context.getData().getGuildMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
             }
 
@@ -100,13 +100,13 @@ public class EqualizerCommand implements ICommandMain {
             }
 
             player.setBand(currentBand.get(), ((float) gain) / 20f);
-            if (context.getData().getGuildMusic().isPreserveEqualizer()) {
+            if (context.getData().getGuildMusic().getPreserveEqualizer()) {
                 context.getData().getGuildMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
             }
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
-        context.getUIMessaging().sendButtonedMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), context.getUser(), context).build(), buttonGroup);
+        context.getUiMessaging().sendButtonedMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), context.getUser(), context).build(), buttonGroup);
     }
 
     private String getEqualizerString(Map<Integer, Float> bands, int currentBand) {

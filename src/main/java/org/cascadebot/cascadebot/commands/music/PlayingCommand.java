@@ -16,6 +16,7 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
+import org.cascadebot.cascadebot.data.objects.LoopMode;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.music.TrackData;
@@ -43,14 +44,14 @@ public class PlayingCommand implements ICommandMain {
 
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
-            handleRepeat(buttonGroup, CascadePlayer.LoopMode.PLAYLIST, message);
+            handleRepeat(buttonGroup, LoopMode.PLAYLIST, message);
         }
     });
 
     private Button.UnicodeButton repeatOne = new Button.UnicodeButton(UnicodeConstants.REPEAT_ONCE, (runner, channel, message) -> {
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
-            handleRepeat(buttonGroup, CascadePlayer.LoopMode.SONG, message);
+            handleRepeat(buttonGroup, LoopMode.SONG, message);
         }
     });
 
@@ -58,7 +59,7 @@ public class PlayingCommand implements ICommandMain {
 
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             ButtonGroup buttonGroup = GuildDataManager.getGuildData(channel.getGuild().getIdLong()).getButtonsCache().get(channel.getIdLong()).get(message.getIdLong());
-            handleRepeat(buttonGroup, CascadePlayer.LoopMode.DISABLED, message);
+            handleRepeat(buttonGroup, LoopMode.DISABLED, message);
         }
     });
 
@@ -129,7 +130,7 @@ public class PlayingCommand implements ICommandMain {
 
         buttonGroup.addButton(player.isPaused() ? playButton : pauseButton);
 
-        context.getUIMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
+        context.getUiMessaging().sendButtonedMessage(getSongEmbed(context.getMusicPlayer(), context.getGuild().getIdLong()), buttonGroup);
 
     }
 
@@ -148,7 +149,7 @@ public class PlayingCommand implements ICommandMain {
         embedBuilder.addField(Language.i18n(guildId, "words.status"), player.isPaused() ? UnicodeConstants.PAUSE + " " + Language.i18n(guildId, "words.paused") : UnicodeConstants.PLAY + " " + Language.i18n(guildId, "words.playing"), true);
 
         if (!track.getInfo().isStream) {
-            embedBuilder.addField(Language.i18n(guildId, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildId).getCoreSettings().isUseEmbedForMessages()), false);
+            embedBuilder.addField(Language.i18n(guildId, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildId).getCoreSettings().getUseEmbedForMessages()), false);
         }
 
         embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getTrackPosition()) + " / " +
@@ -193,7 +194,7 @@ public class PlayingCommand implements ICommandMain {
         buttonMessage.editMessage(getSongEmbed(player, buttonGroup.getGuildId())).queue();
     }
 
-    public void handleRepeat(ButtonGroup buttonGroup, CascadePlayer.LoopMode mode, Message buttonMessage) {
+    public void handleRepeat(ButtonGroup buttonGroup, LoopMode mode, Message buttonMessage) {
         CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
         switch (mode) {
             case DISABLED:

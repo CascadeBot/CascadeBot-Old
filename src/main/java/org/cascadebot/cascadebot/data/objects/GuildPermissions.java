@@ -16,7 +16,6 @@ import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.permissions.objects.Group;
-import org.cascadebot.cascadebot.permissions.objects.PermissionAction;
 import org.cascadebot.cascadebot.permissions.objects.Result;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.shared.SecurityLevel;
@@ -66,7 +65,7 @@ public class GuildPermissions {
         // If the user is owner then they have all perms, obsv..
         if (member.isOwner()) return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         // By default all members with the administrator perm have access to all perms; this can be turned off
-        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.isAdminsHaveAllPerms()) {
+        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.getAdminsHaveAllPerms()) {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         }
 
@@ -209,13 +208,6 @@ public class GuildPermissions {
     public void moveGroup(Group group, int position) throws IndexOutOfBoundsException {
         groups.remove(group);
         groups.add(position, group);
-    }
-
-    public enum PermissionMode {
-
-        HIERARCHICAL,
-        MOST_RESTRICTIVE
-
     }
 
 }

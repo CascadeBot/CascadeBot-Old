@@ -15,6 +15,8 @@ import lavalink.client.player.event.TrackExceptionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.objects.LoopMode;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
@@ -55,8 +57,8 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
         songPlayCount++;
         Metrics.INS.tracksPlayed.inc();
         try {
-            if (player.getLoopMode().equals(CascadePlayer.LoopMode.DISABLED) || player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
-                if (player.getLoopMode().equals(CascadePlayer.LoopMode.PLAYLIST)) {
+            if (player.getLoopMode().equals(LoopMode.DISABLED) || player.getLoopMode().equals(LoopMode.PLAYLIST)) {
+                if (player.getLoopMode().equals(LoopMode.PLAYLIST)) {
                     // Add the track to the end of the queue to be repeated
                     player.getQueue().add(track.makeClone());
                     if (player.isShuffleEnabled()) {
@@ -68,7 +70,7 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
                 // Take the next track in the queue, remove it from the queue and play it
                 AudioTrack audioTrack = player.getQueue().remove();
                 player.playTrack(audioTrack);
-            } else if (player.getLoopMode().equals(CascadePlayer.LoopMode.SONG)) {
+            } else if (player.getLoopMode().equals(LoopMode.SONG)) {
                 // Take the song that just finished and repeat it
                 player.playTrack(track.makeClone());
             }
@@ -83,7 +85,7 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         embedBuilder.setTitle(Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"));
         embedBuilder.appendDescription(e.getCause().getCause().getMessage());
-        Messaging.sendDangerMessage(CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()), embedBuilder);
+        Messaging.sendEmbedMessage(MessageType.DANGER, CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()), embedBuilder);
     }
 
 }

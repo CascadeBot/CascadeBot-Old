@@ -58,7 +58,7 @@ public class TagPlaceholdersSubCommand implements ISubCommand {
             pageList.add(new PageObjects.EmbedPage(builder));
         }
 
-        context.getUIMessaging().sendPagedMessage(pageList);
+        context.getUiMessaging().sendPagedMessage(pageList);
     }
 
     @Override
