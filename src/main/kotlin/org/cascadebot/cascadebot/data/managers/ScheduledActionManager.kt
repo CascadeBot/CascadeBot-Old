@@ -2,6 +2,7 @@ package org.cascadebot.cascadebot.data.managers
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import com.mongodb.client.model.Filters.eq
+import org.bson.types.ObjectId
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
 import org.cascadebot.cascadebot.scheduler.ScheduledAction
@@ -20,11 +21,10 @@ class ScheduledActionManager {
             ThreadFactoryBuilder().setNameFormat("scheduled-action-%d").build()
     )
 
-
-    fun registerScheduledAction(action: ScheduledAction): Duration {
+    fun registerScheduledAction(action: ScheduledAction, new: Boolean = true): Duration {
         require(!scheduledActions.containsKey(action)) { "You cannot register duplicate scheduled actions! Action: $action" }
         val schedule = executor.schedule(action, action.delay, TimeUnit.MILLISECONDS)
-        saveScheduledAction(action)
+        if (new) saveScheduledAction(action)
         scheduledActions[action] = schedule
         return Duration.between(action.creationTime, action.executionTime)
     }
@@ -38,8 +38,20 @@ class ScheduledActionManager {
         }
     }
 
+    fun deleteScheduledAction(id: ObjectId) {
+        CascadeBot.INS.databaseManager.runAsyncTask {
+            it.getCollection(COLLECTION, ScheduledAction::class.java).deleteOne(
+                    eq("_id", id),
+                    DebugLogCallback("Deleted scheduled action! Id: $id")
+            )
+        }
+    }
+
     fun getScheduledActions(guildId: Long) =
             CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledAction::class.java)
                     .find(eq("guildId", guildId))
+
+    fun getScheduledActions() =
+            CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledAction::class.java).find()
 
 }
