@@ -6,11 +6,7 @@ import org.cascadebot.cascadebot.data.Config
 import java.util.concurrent.ConcurrentHashMap
 
 @SettingsContainer(module = Module.CORE)
-class GuildSettingsCore(guildId: Long) {
-
-    private constructor() : this(0L) {
-        // Private constructor for MongoDB
-    }
+class GuildSettingsCore {
 
     @Setting
     var mentionPrefix = false
