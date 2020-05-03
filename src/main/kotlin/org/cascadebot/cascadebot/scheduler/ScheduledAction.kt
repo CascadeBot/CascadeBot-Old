@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.scheduler
 import de.bild.codec.annotations.Id
 import org.bson.types.ObjectId
 import java.time.OffsetDateTime
+import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 data class ScheduledAction(
@@ -11,8 +12,8 @@ data class ScheduledAction(
         val guildId: Long,
         val channelId: Long,
         val userId: Long,
-        val creationTime: OffsetDateTime,
-        val executionTime: OffsetDateTime
+        val creationTime: Instant,
+        val executionTime: Instant
 ) : Runnable {
 
     @Id
@@ -28,7 +29,7 @@ data class ScheduledAction(
             0L,
             0L,
             0L,
-            OffsetDateTime.now(),
+            Instant.now(),
             0L
     )
 
@@ -38,7 +39,7 @@ data class ScheduledAction(
             guildId: Long,
             channelId: Long,
             userId: Long,
-            creationTime: OffsetDateTime,
+            creationTime: Instant,
             delay: Long) :
             this(type, data, guildId, channelId, userId, creationTime, creationTime.plus(delay, ChronoUnit.MILLIS)!!)
 
