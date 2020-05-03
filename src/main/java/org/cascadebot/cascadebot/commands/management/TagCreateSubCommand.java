@@ -37,7 +37,7 @@ public class TagCreateSubCommand implements ISubCommand {
 
         Tag tag = new Tag(context.getMessage(1), "tag", context.getArg(0));
         context.getData().getCoreSettings().addTag(context.getArg(0), tag);
-        context.getData().getGuildPermissionsManager().registerGuildPermission(tag.getInternalPermission());
+        context.getData().getPermissionsManager().registerGuildPermission(tag.getInternalPermission());
         context.getTypedMessaging().replySuccess(message);
     }
 
