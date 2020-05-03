@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.data.managers
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder
+import com.mongodb.client.FindIterable
 import com.mongodb.client.model.Filters.eq
 import org.bson.types.ObjectId
 import org.cascadebot.cascadebot.CascadeBot
@@ -11,7 +12,7 @@ import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-class ScheduledActionManager {
+object ScheduledActionManager {
 
     private val COLLECTION: String = "scheduled_actions"
 
@@ -21,6 +22,8 @@ class ScheduledActionManager {
             ThreadFactoryBuilder().setNameFormat("scheduled-action-%d").build()
     )
 
+    @JvmStatic
+    @JvmOverloads
     fun registerScheduledAction(action: ScheduledAction, new: Boolean = true): Duration {
         require(!scheduledActions.containsKey(action)) { "You cannot register duplicate scheduled actions! Action: $action" }
         val schedule = executor.schedule(action, action.delay, TimeUnit.MILLISECONDS)
@@ -47,9 +50,10 @@ class ScheduledActionManager {
         }
     }
 
-    fun getScheduledActions(guildId: Long) =
-            CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledAction::class.java)
-                    .find(eq("guildId", guildId))
+    private fun getScheduledActions(guildId: Long? = null): FindIterable<ScheduledAction> {
+        val collection = CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledAction::class.java)
+        return if (guildId == null) collection.find() else collection.find(eq("guildId", guildId))
+    }
 
     @JvmStatic
     @JvmOverloads
