@@ -5,7 +5,6 @@ import de.bild.codec.annotations.Id
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
-import org.bson.codecs.pojo.annotations.BsonIgnore
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.ICommandMain
 import org.cascadebot.cascadebot.commandmeta.Module
@@ -51,6 +50,9 @@ class GuildData(@field:Id val guildId: Long) {
 
     @Transient
     val pageCache = PageCache()
+
+    @Transient
+    val permissionsManager = PerGuildPermissionsManager()
     //endregion
 
     val persistentButtons = HashMap<Long, HashMap<Long, PersistentButtonGroup>>()
@@ -59,6 +61,7 @@ class GuildData(@field:Id val guildId: Long) {
     //region Data Loaded Methods
     fun onGuildLoaded() {
         loadMusicSettings()
+        permissionsManager.registerPermissions(this)
     }
 
     private fun loadMusicSettings() {

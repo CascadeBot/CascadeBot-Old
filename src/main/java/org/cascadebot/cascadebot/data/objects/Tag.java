@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
+import org.cascadebot.cascadebot.commandmeta.Module;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,11 +21,12 @@ import java.util.regex.Pattern;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class Tag {
+public class Tag extends PermissionObject {
 
     // https://regex101.com/r/hlsgVW/1
     private static final Pattern TAG_PATTERN = Pattern.compile("\\{([A-z]+)(?::((?:,?\\w+)+))?}");
 
+    private String name;
     private String content;
     private String category;
 
@@ -48,4 +50,18 @@ public class Tag {
         return message;
     }
 
+    @Override
+    public String getPermission() {
+        return category + "." + name;
+    }
+
+    @Override
+    public String getParent() {
+        return "tag";
+    }
+
+    @Override
+    public Module cascadeModule() {
+        return Module.MANAGEMENT;
+    }
 }
