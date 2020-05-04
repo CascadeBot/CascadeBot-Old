@@ -82,8 +82,8 @@ public class EqualizerCommand implements ICommandMain {
             }
 
             player.setBand(currentBand.get(), ((float) gain) / 20f);
-            if (context.getData().getGuildMusic().getPreserveEqualizer()) {
-                context.getData().getGuildMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
+            if (context.getData().getMusic().getPreserveEqualizer()) {
+                context.getData().getMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
             }
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
@@ -100,8 +100,8 @@ public class EqualizerCommand implements ICommandMain {
             }
 
             player.setBand(currentBand.get(), ((float) gain) / 20f);
-            if (context.getData().getGuildMusic().getPreserveEqualizer()) {
-                context.getData().getGuildMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
+            if (context.getData().getMusic().getPreserveEqualizer()) {
+                context.getData().getMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
             }
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();

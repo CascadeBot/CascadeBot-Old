@@ -18,7 +18,7 @@ public class TodoCreateSubCommand implements ISubCommand {
         // Warn if the original argument contains uppercase letters
         boolean warnUppercase = !context.getArg(0).equals(context.getArg(0).toLowerCase());
         String todoName = context.getArg(0).toLowerCase();
-        TodoList todoList = context.getData().getUsefulSettings().createTodoList(todoName, context.getMember().getIdLong());
+        TodoList todoList = context.getData().getUseful().createTodoList(todoName, context.getMember().getIdLong());
 
         if (todoList == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.create.list_exists"));

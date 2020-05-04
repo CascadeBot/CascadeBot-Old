@@ -27,7 +27,7 @@ public class PerGuildPermissionsManager {
 
     // Method that registers all hte permissions after the data was loaded
     public void registerPermissions(GuildData data) {
-        for (Map.Entry<String, Tag> entry : data.getCoreSettings().getTags().entrySet()) {
+        for (Map.Entry<String, Tag> entry : data.getManagement().getTags().entrySet()) {
             registerGuildPermission(entry.getValue().getInternalPermission());
         }
     }
