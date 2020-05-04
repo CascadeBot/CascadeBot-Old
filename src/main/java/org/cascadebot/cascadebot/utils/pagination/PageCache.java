@@ -20,6 +20,8 @@ public class PageCache extends HashMap<Long, PageCache.Pages> {
 
         int currentPage;
 
+        boolean missingButtons = true;
+
         Pages(List<Page> pages) {
             this.pages = pages;
             currentPage = 1;
@@ -41,6 +43,13 @@ public class PageCache extends HashMap<Long, PageCache.Pages> {
             return pages.size();
         }
 
+        public boolean isMissingButtons() {
+            return missingButtons;
+        }
+
+        public void setMissingButtons(boolean missingButtons) {
+            this.missingButtons = missingButtons;
+        }
     }
 
 }

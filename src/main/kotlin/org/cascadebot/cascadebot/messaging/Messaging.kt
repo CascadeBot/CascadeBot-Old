@@ -25,6 +25,7 @@ import org.cascadebot.cascadebot.utils.buttons.Button.UnicodeButton
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
 import org.cascadebot.cascadebot.utils.buttons.IButtonRunnable
 import org.cascadebot.cascadebot.utils.pagination.Page
+import org.cascadebot.cascadebot.utils.pagination.PageCache
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
 
@@ -113,6 +114,68 @@ object Messaging {
         return sendButtonedMessage(channel, MessageBuilder().setEmbed(embed).build(), buttonGroup)
     }
 
+    private val firstPageButton = UnicodeButton(UnicodeConstants.REWIND, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
+        val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+        handlePage(textChannel, message, 1, pageGroup!!)
+    })
+
+    private val prevPageButton = UnicodeButton(UnicodeConstants.BACKWARD_ARROW, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
+        val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+        val newPage = pageGroup!!.currentPage - 1
+        handlePage(textChannel, message, newPage, pageGroup)
+    })
+
+    private val nextPageButton = UnicodeButton(UnicodeConstants.FORWARD_ARROW, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
+        val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+        val newPage = pageGroup!!.currentPage + 1
+        handlePage(textChannel, message, newPage, pageGroup)
+    })
+
+    private val lastPageButton = UnicodeButton(UnicodeConstants.FAST_FORWARD, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
+        val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+        handlePage(textChannel, message, pageGroup!!.pages, pageGroup)
+    })
+
+    private fun handlePage(textChannel: TextChannel, message: Message, newPage: Int, pageGroup: PageCache.Pages) {
+        if (newPage < 1 || newPage > pageGroup.pages) {
+            return
+        }
+        pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.pages)
+        pageGroup.currentPage = newPage
+
+        val group = GuildDataManager.getGuildData(textChannel.guild.idLong).buttonsCache[textChannel.idLong]?.get(message.idLong)
+
+        if (newPage == 1) {
+            group?.removeButton(firstPageButton)
+            group?.removeButton(prevPageButton)
+            if (pageGroup.isMissingButtons) {
+                group?.addButton(nextPageButton)
+            }
+            pageGroup.isMissingButtons = true
+        } else if (newPage == pageGroup.pages) {
+            group?.removeButton(lastPageButton)
+            group?.removeButton(nextPageButton)
+            pageGroup.isMissingButtons = true
+            if (pageGroup.isMissingButtons) {
+                group?.addButton(prevPageButton)
+            }
+        } else if (pageGroup.isMissingButtons) {
+            group?.removeButton(firstPageButton)
+            group?.removeButton(prevPageButton)
+            group?.removeButton(nextPageButton)
+            group?.removeButton(lastPageButton)
+            if (pageGroup.pages > 2) {
+                group?.addButton(firstPageButton)
+            }
+            group?.addButton(prevPageButton)
+            group?.addButton(nextPageButton)
+            if (pageGroup.pages > 2) {
+                group?.addButton(lastPageButton)
+            }
+            pageGroup.isMissingButtons = false
+        }
+    }
+
     @JvmStatic
     fun sendPagedMessage(channel: TextChannel, owner: Member, pages: List<Page>): CompletableFuture<Message>? {
         require(pages.isNotEmpty()) { "The number of pages cannot be zero!" }
@@ -122,32 +185,10 @@ object Messaging {
             return future
         }
         val group = ButtonGroup(owner.idLong, channel.idLong, channel.guild.idLong)
-        group.addButton(UnicodeButton(UnicodeConstants.REWIND, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
-            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-            pageGroup!!.getPage(1).pageShow(message, 1, pageGroup.pages)
-            pageGroup.currentPage = 1
-        }))
-        group.addButton(UnicodeButton(UnicodeConstants.BACKWARD_ARROW, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
-            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-            val newPage = pageGroup!!.currentPage - 1
-            if (newPage >= 1) {
-                pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.pages)
-                pageGroup.currentPage = newPage
-            }
-        }))
-        group.addButton(UnicodeButton(UnicodeConstants.FORWARD_ARROW, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
-            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-            val newPage = pageGroup!!.currentPage + 1
-            if (newPage <= pageGroup.pages) {
-                pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.pages)
-                pageGroup.currentPage = newPage
-            }
-        }))
-        group.addButton(UnicodeButton(UnicodeConstants.FAST_FORWARD, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
-            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-            pageGroup!!.getPage(pageGroup.pages).pageShow(message, pageGroup.pages, pageGroup.pages)
-            pageGroup.currentPage = pageGroup.pages
-        }))
+        group.addButton(nextPageButton)
+        if (pages.size > 2) {
+            group.addButton(lastPageButton)
+        }
         val future = channel.sendMessage(Language.i18n(channel.guild.idLong, "messaging.loading_page")).submit()
         future.thenAccept { sentMessage: Message ->
             pages[0].pageShow(sentMessage, 1, pages.size)

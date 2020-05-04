@@ -176,7 +176,7 @@ public class MessagingUI {
 
     public void replyUsage(ICommandExecutable command) {
         String usage = context.getUsage(command);
-        List<Page> pages = PageUtils.splitStringToEmbedPages(usage, context.i18n("responses.incorrect_usage_title_1"), 1000, '\n');
+        List<Page> pages = PageUtils.splitStringToEmbedPages(usage, context.i18n("commands.usage.title", command.command()), 1000, '\n');
         pages.addAll(command.additionalUsagePages());
         sendPagedMessage(pages);
     }

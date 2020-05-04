@@ -31,9 +31,7 @@ public class UsageCommand implements ICommandCore {
             return;
         }
 
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.getUsage(command), context.getUser());
-        builder.setTitle(context.i18n("commands.usage.title", command.command(context.getLocale())));
-        context.getTypedMessaging().replyInfo(builder);
+        context.getUiMessaging().replyUsage(command);
     }
 
     @Override

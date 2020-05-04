@@ -123,10 +123,12 @@ class CommandContext(
         return Language.i18n(guild.idLong, path, *args)
     }
 
+    @Deprecated("Use reply Usage instead", ReplaceWith("replyUsage"))
     fun getUsage(): String? {
         return getUsage(command)
     }
 
+    @Deprecated("Use reply Usage instead", ReplaceWith("replyUsage"))
     fun getUsage(command: ICommandExecutable): String? {
         val parentArg = CascadeBot.INS.argumentManager.getArgument(command.absoluteCommand)
         return if (parentArg != null) {
@@ -139,6 +141,10 @@ class CommandContext(
         } else {
             "`" + data.coreSettings.prefix + command.command(locale) + "` - " + command.description(locale)
         }
+    }
+
+    fun replyUsage() {
+        uiMessaging.replyUsage()
     }
 
     /**
