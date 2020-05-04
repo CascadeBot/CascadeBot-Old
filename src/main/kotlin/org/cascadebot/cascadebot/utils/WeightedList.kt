@@ -21,8 +21,17 @@ class WeightedList<T : Any> {
     @JvmOverloads
     fun add(item: T, weight: Int = 1) {
         totalWeight += lock.write {
-            internalList.add(Pair(item, weight))
-            weight
+            val existingItem = internalList.find { it.first == item }
+            return@write if (existingItem != null) {
+                remove(item)
+                val newWeight = existingItem.second + weight
+                // Create a new pair with the existing weight + the new weight
+                internalList.add(Pair(item, newWeight))
+                newWeight
+            } else {
+                internalList.add(Pair(item, weight))
+                weight
+            }
         }
     }
 
