@@ -62,7 +62,7 @@ object Language {
             if (languages[locale]!!.getString(path).isPresent) {
                 val format = MessageFormat(languages[locale]!!.getString(path).get(), locale.uLocale)
                 var message = format.format(args)
-                message = FormatUtils.formatPrefix(GuildDataManager.getGuildData(guildId).coreSettings.prefix, message)
+                message = FormatUtils.formatPrefix(GuildDataManager.getGuildData(guildId).core.prefix, message)
                 FormatUtils.formatUnicode(message)
             } else {
                 CascadeBot.LOGGER.warn("Cannot find a language string matching the path '{}'", path)

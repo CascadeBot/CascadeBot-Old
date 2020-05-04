@@ -1,18 +1,16 @@
 package org.cascadebot.cascadebot.data.objects
 
 import com.google.common.collect.Sets
+import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.commandmeta.ICommandMain
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
-import java.util.Collections
+import org.cascadebot.cascadebot.data.language.Locale
 import java.util.concurrent.ConcurrentHashMap
 
 
 @SettingsContainer(module = Module.CORE)
-class GuildSettingsCore(guildId: Long) {
-
-    private constructor() : this(0L) {
-        // Private constructor for MongoDB
-    }
+class GuildSettingsCore {
 
     @Setting
     var mentionPrefix = false
@@ -33,23 +31,21 @@ class GuildSettingsCore(guildId: Long) {
     var adminsHaveAllPerms = true
 
     @Setting
-    var allowTagCommands = true
-
-    @Setting
     var helpHideCommandsNoPermission = true
 
     @Setting
     var helpShowAllModules = false
+
+    var locale: Locale = Locale.getDefaultLocale()
+
+    @Setting(directlyEditable = false)
+    private val commandInfo = ConcurrentHashMap<Class<ICommandMain>, MutableSet<GuildCommandInfo>>()
 
     @Setting(directlyEditable = false)
     var prefix: String = Config.INS.defaultPrefix
 
     @Setting(directlyEditable = false)
     private val enabledModules: MutableSet<Module> = Sets.newConcurrentHashSet(Module.getModules(ModuleFlag.DEFAULT))
-
-    @Setting(directlyEditable = false)
-    val tags: ConcurrentHashMap<String, Tag> = ConcurrentHashMap()
-
 
     //region Modules
     fun enableModule(module: Module): Boolean {
@@ -74,20 +70,67 @@ class GuildSettingsCore(guildId: Long) {
 
     //endregion
 
-    fun getTag(key: String): Tag? {
-        return tags[key]
+    //region Commands
+    fun enableCommand(command: ICommandMain) {
+        if (command.module.isPrivate) return
+        if (commandInfo.contains(command.javaClass)) {
+            getGuildCommandInfo(command).enabled = true
+        }
     }
 
-    fun hasTag(key: String): Boolean {
-        return tags.containsKey(key)
+    fun enableCommandByModule(module: Module) {
+        if (module.isPrivate) return
+        for (command in CascadeBot.INS.commandManager.getCommandsByModule(module)) {
+            enableCommand(command)
+        }
     }
 
-    fun addTag(key: String, tag: Tag) {
-        tags[key] = tag
+    fun disableCommand(command: ICommandMain) {
+        if (command.module.isPrivate) return
+        getGuildCommandInfo(command).enabled = false
     }
 
-    fun removeTag(key: String): Boolean {
-        return tags.remove(key) != null
+    fun disableCommandByModule(module: Module) {
+        if (module.isPrivate) return
+        for (command in CascadeBot.INS.commandManager.getCommandsByModule(module)) {
+            disableCommand(command)
+        }
     }
+
+    fun isCommandEnabled(command: ICommandMain): Boolean {
+        return if (commandInfo.contains(command.javaClass)) {
+            getGuildCommandInfo(command).enabled
+        } else isModuleEnabled(command.module)
+    }
+
+    fun getCommandAliases(command: ICommandMain): Set<String> {
+        return if (commandInfo.contains(command.javaClass)) {
+            getGuildCommandInfo(command).aliases.applyChanges(command.getGlobalAliases(locale))
+        } else command.getGlobalAliases(locale)
+    }
+
+    fun addAlias(command: ICommandMain, alias: String): Boolean {
+        return getGuildCommandInfo(command).aliases.add(alias)
+    }
+
+    fun removeAlias(command: ICommandMain, alias: String): Boolean {
+        return getGuildCommandInfo(command).aliases.remove(alias)
+    }
+
+    private fun getGuildCommandInfoSet(command: ICommandMain): MutableSet<GuildCommandInfo> {
+        return commandInfo.computeIfAbsent(command.javaClass) {
+            mutableSetOf(GuildCommandInfo(command, locale))
+        }
+    }
+
+    private fun getGuildCommandInfo(command: ICommandMain, locale: Locale = this.locale): GuildCommandInfo {
+        return getGuildCommandInfoSet(command).find { it.locale == locale } ?: run {
+            val commandInfo = GuildCommandInfo(command, locale)
+            getGuildCommandInfoSet(command).add(commandInfo)
+            commandInfo
+        }
+    }
+
+    //endregion
 
 }

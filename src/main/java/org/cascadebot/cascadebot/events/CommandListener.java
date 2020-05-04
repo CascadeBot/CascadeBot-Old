@@ -73,7 +73,7 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String prefix = guildData.getCoreSettings().getPrefix();
+        String prefix = guildData.getCore().getPrefix();
         boolean isMention = false;
 
         String commandWithArgs = null;
@@ -82,10 +82,10 @@ public class CommandListener extends ListenerAdapter {
 
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-        } else if (guildData.getCoreSettings().getMentionPrefix() && message.matches("^<@!?" + event.getJDA().getSelfUser().getId() + ">.*")) {
+        } else if (guildData.getCore().getMentionPrefix() && message.matches("^<@!?" + event.getJDA().getSelfUser().getId() + ">.*")) {
             commandWithArgs = message.substring(message.indexOf('>') + 1).trim();
             isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCoreSettings().getPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCore().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
         } else {
             return;
@@ -115,10 +115,10 @@ public class CommandListener extends ListenerAdapter {
         CommandContext context = new CommandContext(cmd, event.getJDA(), event.getChannel(), event.getMessage(), event.getGuild(), guildData, args, event.getMember(), trigger, isMention);
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
-            if (!cmd.getModule().isPrivate() && !guildData.getCoreSettings().isModuleEnabled(cmd.getModule())) {
-                if (guildData.getCoreSettings().getShowModuleErrors() || Environment.isDevelopment()) {
+            if (!cmd.getModule().isPrivate() && !guildData.getCore().isModuleEnabled(cmd.getModule())) {
+                if (guildData.getCore().getShowModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.getModule(), context.getLocale()), trigger), event.getAuthor());
-                    Messaging.sendEmbedMessage(MessageType.DANGER, event.getChannel(), builder, guildData.getCoreSettings().getUseEmbedForMessages());
+                    Messaging.sendEmbedMessage(MessageType.DANGER, event.getChannel(), builder, guildData.getCore().getUseEmbedForMessages());
                 }
                 // TODO: Modlog?
                 return;
@@ -134,10 +134,10 @@ public class CommandListener extends ListenerAdapter {
             }
             dispatchCommand(cmd, context);
         } else {
-            if (guildData.getCoreSettings().getAllowTagCommands()) {
+            if (guildData.getManagement().getAllowTagCommands()) {
                 String tagName = trigger.toLowerCase();
-                if (guildData.getCoreSettings().getTags().containsKey(tagName)) {
-                    Tag tag = guildData.getCoreSettings().getTags().get(tagName);
+                if (guildData.getManagement().hasTag(tagName)) {
+                    Tag tag = guildData.getManagement().getTag(tagName);
 
                     context.reply(tag.formatTag(context)); //TODO perms for tags
                     CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", tagName, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));

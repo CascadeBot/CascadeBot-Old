@@ -24,12 +24,12 @@ public class TagRawSubCommand implements ISubCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        if (!context.getCoreSettings().getTags().containsKey(tagName)) {
+        if (!context.getData().getManagement().hasTag(tagName)) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
         }
 
-        Tag tag = context.getCoreSettings().getTags().get(tagName);
+        Tag tag = context.getData().getManagement().getTag(tagName);
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(context.i18n("words.tag") + ": " + tagName);
         builder.setDescription("```" + tag.getContent() + "```");
