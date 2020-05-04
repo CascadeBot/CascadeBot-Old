@@ -25,7 +25,7 @@ public class GroupPermissionInfoSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -71,7 +71,7 @@ public class GroupPermissionInfoSubCommand implements ISubCommand {
                 }
             }
 
-            context.getUIMessaging().sendPagedMessage(pageList);
+            context.getUiMessaging().sendPagedMessage(pageList);
         }, sender.getIdLong());
     }
 

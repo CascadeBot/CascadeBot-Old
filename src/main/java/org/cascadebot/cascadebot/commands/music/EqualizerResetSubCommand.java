@@ -20,7 +20,7 @@ public class EqualizerResetSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (!CascadeBot.INS.getMusicHandler().isLavalinkEnabled()) {
+        if (!CascadeBot.INS.getMusicHandler().getLavalinkEnabled()) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
             return;
         }

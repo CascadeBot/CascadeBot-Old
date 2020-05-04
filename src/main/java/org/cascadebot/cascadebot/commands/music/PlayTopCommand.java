@@ -23,14 +23,14 @@ public class PlayTopCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
         } else if (context.getArgs().length == 1 && context.getArg(0).startsWith("http")) {
             context.getMusicPlayer().loadLink(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), input -> {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.play.could_not_find_matches", input));
             }, exception -> {
                 context.getTypedMessaging().replyException(context.i18n("commands.play.encountered_error"), exception);
             }, tracks -> {
-                context.getUIMessaging().checkPlaylistOrSong(context.getArg(0), tracks, context, true);
+                context.getUiMessaging().checkPlaylistOrSong(context.getArg(0), tracks, context, true);
             });
         } else {
             CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
@@ -46,7 +46,7 @@ public class PlayTopCommand implements ICommandMain {
                         currentQueue.addAll(0, tracks);
                         context.getMusicPlayer().setQueue(new LinkedList<>(currentQueue));
                         context.getMusicPlayer().playTrack(topTrack);
-                        context.getUIMessaging().sendTracksFound(tracks);
+                        context.getUiMessaging().sendTracksFound(tracks);
                     });
                 }
             });

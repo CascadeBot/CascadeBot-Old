@@ -18,7 +18,7 @@ public class GuildCommand implements ICommandRestricted {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.getUIMessaging().replyUsage();
+        context.getUiMessaging().replyUsage();
     }
 
     @Override
