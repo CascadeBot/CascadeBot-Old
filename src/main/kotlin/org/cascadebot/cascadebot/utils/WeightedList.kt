@@ -1,6 +1,5 @@
 package org.cascadebot.cascadebot.utils
 
-import java.util.ArrayList
 import java.util.Random
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
@@ -12,7 +11,7 @@ class WeightedList<T> {
         val random: Random = Random()
     }
 
-    private val internalList: MutableList<Pair<T, Int>> = ArrayList()
+    private val internalList: MutableList<Pair<T, Int>> = mutableListOf()
     private val lock = ReentrantReadWriteLock()
     var totalWeight = 0
         private set
