@@ -123,10 +123,12 @@ class CommandContext(
         return Language.i18n(guild.idLong, path, *args)
     }
 
+    @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
     fun getUsage(): String? {
         return getUsage(command)
     }
 
+    @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
     fun getUsage(command: ICommandExecutable): String? {
         val parentArg = CascadeBot.INS.argumentManager.getArgument(command.absoluteCommand)
         return if (parentArg != null) {
