@@ -13,9 +13,10 @@ class WeightedList<T : Any> {
 
     private val internalList: MutableList<Pair<T, Int>> = mutableListOf()
     private val lock = ReentrantReadWriteLock()
-    var totalWeight = 0
-        private set
-        get() = lock.read { totalWeight }
+    private var _totalWeight = 0;
+    var totalWeight
+        set(newWeight) = lock.write { _totalWeight = newWeight }
+        get() = lock.read { _totalWeight }
 
     @JvmOverloads
     fun add(item: T, weight: Int = 1) {
