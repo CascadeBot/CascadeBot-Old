@@ -10,7 +10,10 @@ import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.pagination.Page;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public interface ICommandExecutable {
@@ -63,6 +66,10 @@ public interface ICommandExecutable {
 
     default Set<Flag> getFlags() {
         return Set.of();
+    }
+
+    default List<Page> additionalUsagePages() {
+        return new ArrayList<>();
     }
 
 }
