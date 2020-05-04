@@ -77,7 +77,7 @@ public class GeneralEventListener extends ListenerAdapter {
 
     @Override
     public void onRoleDelete(RoleDeleteEvent event) {
-        for (Group group : GuildDataManager.getGuildData(event.getGuild().getIdLong()).getPermissionSettings().getGroups()) {
+        for (Group group : GuildDataManager.getGuildData(event.getGuild().getIdLong()).getManagement().getPermissions().getGroups()) {
             group.unlinkRole(event.getRole().getIdLong());
         }
     }

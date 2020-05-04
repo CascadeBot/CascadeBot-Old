@@ -41,7 +41,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
             return;
         }
 
-        User user = context.getData().getPermissionSettings().getPermissionUser(member);
+        User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
 
         if (context.getArg(1).equalsIgnoreCase("groups")) {
             StringBuilder groupsBuilder = new StringBuilder();
@@ -51,7 +51,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
             }
 
             for (String id : user.getGroupIds()) {
-                Group group = context.getData().getPermissionSettings().getGroupById(id);
+                Group group = context.getData().getManagement().getPermissions().getGroupById(id);
                 groupsBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
             }
             List<String> pageContent = PageUtils.splitString(groupsBuilder.toString(), 1000, '\n');

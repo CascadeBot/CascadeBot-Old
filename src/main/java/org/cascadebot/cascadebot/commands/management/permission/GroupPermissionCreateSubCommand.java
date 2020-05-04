@@ -21,7 +21,7 @@ public class GroupPermissionCreateSubCommand implements ISubCommand {
             return;
         }
 
-        Group group = context.getData().getPermissionSettings().createGroup(context.getArg(0));
+        Group group = context.getData().getManagement().getPermissions().createGroup(context.getArg(0));
         context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create.success", context.getArg(0), group.getId()));
     }
 

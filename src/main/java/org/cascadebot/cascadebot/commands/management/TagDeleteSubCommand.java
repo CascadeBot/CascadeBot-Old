@@ -21,7 +21,7 @@ public class TagDeleteSubCommand implements ISubCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        if (context.getCoreSettings().getTags().remove(tagName) != null) {
+        if (context.getData().getManagement().removeTag(tagName)) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.tag.delete.successfully_deleted_tag"));
         } else {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", tagName));
