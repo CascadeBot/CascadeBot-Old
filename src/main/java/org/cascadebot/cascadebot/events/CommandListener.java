@@ -118,7 +118,7 @@ public class CommandListener extends ListenerAdapter {
             if (!StringUtils.isBlank(cmd.getRequiredFlag())) {
                 if (!guildData.getAllFlags().hasFlag(cmd.getRequiredFlag())) {
                     EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(org.cascadebot.cascadebot.messaging.MessageType.WARNING, event.getAuthor());
-                    builder.appendDescription(Language.i18n(guildData.getLocale(), "command_meta.donate", guildData.getCoreSettings().getPrefix()));
+                    builder.appendDescription(Language.i18n(guildData.getLocale(), "command_meta.donate", guildData.getCore().getPrefix()));
                     event.getChannel().sendMessage(builder.build()).queue();
                     return;
                 }
@@ -165,7 +165,7 @@ public class CommandListener extends ListenerAdapter {
                 if (!StringUtils.isBlank(subCommand.getRequiredFlag())) {
                     if (!parentCommandContext.getData().getAllFlags().hasFlag(subCommand.getRequiredFlag())) {
                         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(org.cascadebot.cascadebot.messaging.MessageType.WARNING, parentCommandContext.getUser());
-                        builder.appendDescription(Language.i18n(parentCommandContext.getData().getLocale(), "command_meta.donate", parentCommandContext.getData().getCoreSettings().getPrefix()));
+                        builder.appendDescription(Language.i18n(parentCommandContext.getData().getLocale(), "command_meta.donate", parentCommandContext.getData().getCore().getPrefix()));
                         parentCommandContext.getChannel().sendMessage(builder.build()).queue();
                         return false;
                     }
