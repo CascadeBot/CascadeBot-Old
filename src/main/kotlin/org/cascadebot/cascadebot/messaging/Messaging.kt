@@ -116,64 +116,32 @@ object Messaging {
 
     private val firstPageButton = UnicodeButton(UnicodeConstants.REWIND, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
         val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-        handlePage(textChannel, message, 1, pageGroup!!)
+        handlePage(message, 1, pageGroup!!)
     })
 
     private val prevPageButton = UnicodeButton(UnicodeConstants.BACKWARD_ARROW, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
         val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
         val newPage = pageGroup!!.currentPage - 1
-        handlePage(textChannel, message, newPage, pageGroup)
+        handlePage(message, newPage, pageGroup)
     })
 
     private val nextPageButton = UnicodeButton(UnicodeConstants.FORWARD_ARROW, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
         val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
         val newPage = pageGroup!!.currentPage + 1
-        handlePage(textChannel, message, newPage, pageGroup)
+        handlePage(message, newPage, pageGroup)
     })
 
     private val lastPageButton = UnicodeButton(UnicodeConstants.FAST_FORWARD, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
         val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-        handlePage(textChannel, message, pageGroup!!.pages, pageGroup)
+        handlePage(message, pageGroup!!.pages, pageGroup)
     })
 
-    private fun handlePage(textChannel: TextChannel, message: Message, newPage: Int, pageGroup: PageCache.Pages) {
+    private fun handlePage(message: Message, newPage: Int, pageGroup: PageCache.Pages) {
         if (newPage < 1 || newPage > pageGroup.pages) {
             return
         }
         pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.pages)
         pageGroup.currentPage = newPage
-
-        val group = GuildDataManager.getGuildData(textChannel.guild.idLong).buttonsCache[textChannel.idLong]?.get(message.idLong)
-
-        if (newPage == 1) {
-            group?.removeButton(firstPageButton)
-            group?.removeButton(prevPageButton)
-            if (pageGroup.isMissingButtons) {
-                group?.addButton(nextPageButton)
-            }
-            pageGroup.isMissingButtons = true
-        } else if (newPage == pageGroup.pages) {
-            group?.removeButton(lastPageButton)
-            group?.removeButton(nextPageButton)
-            pageGroup.isMissingButtons = true
-            if (pageGroup.isMissingButtons) {
-                group?.addButton(prevPageButton)
-            }
-        } else if (pageGroup.isMissingButtons) {
-            group?.removeButton(firstPageButton)
-            group?.removeButton(prevPageButton)
-            group?.removeButton(nextPageButton)
-            group?.removeButton(lastPageButton)
-            if (pageGroup.pages > 2) {
-                group?.addButton(firstPageButton)
-            }
-            group?.addButton(prevPageButton)
-            group?.addButton(nextPageButton)
-            if (pageGroup.pages > 2) {
-                group?.addButton(lastPageButton)
-            }
-            pageGroup.isMissingButtons = false
-        }
     }
 
     @JvmStatic
@@ -185,6 +153,10 @@ object Messaging {
             return future
         }
         val group = ButtonGroup(owner.idLong, channel.idLong, channel.guild.idLong)
+        if (pages.size > 2) {
+            group.addButton(firstPageButton)
+        }
+        group.addButton(prevPageButton)
         group.addButton(nextPageButton)
         if (pages.size > 2) {
             group.addButton(lastPageButton)
