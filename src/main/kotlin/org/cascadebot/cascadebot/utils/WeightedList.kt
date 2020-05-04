@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
-class WeightedList<T> {
+class WeightedList<T : Any> {
 
     companion object {
         val random: Random = Random()
@@ -30,7 +30,7 @@ class WeightedList<T> {
             val iterator = internalList.iterator()
             while (iterator.hasNext()) {
                 val nextPair = iterator.next()
-                if (nextPair.first!! == item) {
+                if (nextPair.first == item) {
                     totalWeight -= nextPair.second
                     iterator.remove()
                 }
