@@ -13,45 +13,31 @@ class WeightedList<T : Any> {
 
     private val internalList: MutableList<Pair<T, Int>> = mutableListOf()
     private val lock = ReentrantReadWriteLock()
-    private var _totalWeight = 0;
-    var totalWeight
-        set(newWeight) = lock.write { _totalWeight = newWeight }
-        get() = lock.read { _totalWeight }
+    val totalWeight
+        get() = lock.read { internalList.sumBy { it.second } }
 
     @JvmOverloads
     fun add(item: T, weight: Int = 1) {
-        totalWeight += lock.write {
-            val existingItem = internalList.find { it.first == item }
-            return@write if (existingItem != null) {
-                remove(item)
-                val newWeight = existingItem.second + weight
-                // Create a new pair with the existing weight + the new weight
-                internalList.add(Pair(item, newWeight))
-                newWeight
-            } else {
-                internalList.add(Pair(item, weight))
-                weight
-            }
+        val existingItem = internalList.find { it.first == item }
+        if (existingItem != null) {
+            remove(item)
+            val newWeight = existingItem.second + weight
+            // Create a new pair with the existing weight + the new weight
+            internalList.add(Pair(item, newWeight))
+        } else {
+            internalList.add(Pair(item, weight))
         }
     }
 
     fun remove(item: T) {
         lock.write {
-            val iterator = internalList.iterator()
-            while (iterator.hasNext()) {
-                val nextPair = iterator.next()
-                if (nextPair.first == item) {
-                    totalWeight -= nextPair.second
-                    iterator.remove()
-                }
-            }
+            internalList.removeIf { it.first == item }
         }
     }
 
     fun remove(position: Int) {
         lock.write {
-            val pair = internalList.removeAt(position)
-            totalWeight -= pair.second
+            internalList.removeAt(position)
         }
     }
 
@@ -72,6 +58,8 @@ class WeightedList<T : Any> {
     // Gets a number between 1 and totalWeight (Inclusive)
     val randomItem: T?
         get() = lock.read {
+            if (totalWeight == 0) return@read null
+
             // Gets a number between 1 and totalWeight (Inclusive)
             var selection: Int = random.nextInt(totalWeight) + 1
             for (weightedItem: Pair<T, Int> in internalList) {
