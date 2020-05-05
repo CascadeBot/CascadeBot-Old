@@ -73,7 +73,7 @@ class GeneralEventListener : ListenerAdapter() {
             greetings.welcomeChannel?.let {
                 // .randomItem should only return null if there are no messages so it can be ignored
                 // TODO Formatting
-                greetings.welcomeMessages.randomItem?.let { message -> it.sendMessage(message) }
+                greetings.welcomeMessages.randomItem?.let { message -> it.sendMessage(message).queue() }
             } ?: run { greetings.welcomeChannel = null }
         }
     }
@@ -85,7 +85,7 @@ class GeneralEventListener : ListenerAdapter() {
             greetings.goodbyeChannel?.let {
                 // .randomItem should only return null if there are no messages so it can be ignored
                 // TODO Formatting
-                greetings.goodbyeMessages.randomItem?.let { message -> it.sendMessage(message) }
+                greetings.goodbyeMessages.randomItem?.let { message -> it.sendMessage(message).queue() }
             } ?: run { greetings.goodbyeChannel = null }
         }
     }
