@@ -6,17 +6,13 @@ import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import org.cascadebot.cascadebot.CascadeBot
-import org.cascadebot.cascadebot.commandmeta.ICommandMain
-import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 import org.cascadebot.cascadebot.utils.pagination.PageCache
-import java.util.Collections
 import java.util.Date
-import java.util.concurrent.ConcurrentHashMap
 
 class GuildData(@field:Id val guildId: Long) {
 
@@ -28,20 +24,18 @@ class GuildData(@field:Id val guildId: Long) {
     private val creationDate = Date()
     //endregion
 
-    private val commandInfo = ConcurrentHashMap<Class<ICommandMain>, MutableSet<GuildCommandInfo>>()
-    val guildCommandInfos
-        get() = Collections.unmodifiableMap(commandInfo)
-
     val enabledFlags: MutableSet<Flag> = Sets.newConcurrentHashSet()
 
-    val locale: Locale = Locale.getDefaultLocale()
+    // TODO: Keep this here or remove it? It just serves as an accessor for the actual locale
+    val locale: Locale
+        get() = core.locale
 
     //region Guild data containers
-    val coreSettings = GuildSettingsCore(guildId)
-    val usefulSettings = GuildSettingsUseful()
-    val guildModeration = GuildSettingsModeration()
-    val guildMusic = GuildSettingsMusic()
-    val permissionSettings = GuildPermissions()
+    val core = GuildSettingsCore()
+    val useful = GuildSettingsUseful()
+    val moderation = GuildSettingsModeration()
+    val management = GuildSettingsManagement()
+    val music = GuildSettingsMusic()
     //endregion
 
     //region Transient fields
@@ -66,80 +60,18 @@ class GuildData(@field:Id val guildId: Long) {
 
     private fun loadMusicSettings() {
         val player = CascadeBot.INS.musicHandler.getPlayer(guildId)!!
-        if (guildMusic.preserveVolume) {
-            player.volume = guildMusic.volume
+        if (music.preserveVolume) {
+            player.volume = music.volume
         }
-        if (guildMusic.preserveEqualizer) {
+        if (music.preserveEqualizer) {
             if (CascadeBot.INS.musicHandler.lavalinkEnabled) {
                 if (player is CascadeLavalinkPlayer) {
-                    player.setBands(guildMusic.equalizerBands)
+                    player.setBands(music.equalizerBands)
                 }
             }
         }
     }
 
-    //region Commands
-    fun enableCommand(command: ICommandMain) {
-        if (command.module.isPrivate) return
-        if (commandInfo.contains(command.javaClass)) {
-            getGuildCommandInfo(command).enabled = true
-        }
-    }
-
-    fun enableCommandByModule(module: Module) {
-        if (module.isPrivate) return
-        for (command in CascadeBot.INS.commandManager.getCommandsByModule(module)) {
-            enableCommand(command)
-        }
-    }
-
-    fun disableCommand(command: ICommandMain) {
-        if (command.module.isPrivate) return
-        getGuildCommandInfo(command).enabled = false
-    }
-
-    fun disableCommandByModule(module: Module) {
-        if (module.isPrivate) return
-        for (command in CascadeBot.INS.commandManager.getCommandsByModule(module)) {
-            disableCommand(command)
-        }
-    }
-
-    fun isCommandEnabled(command: ICommandMain): Boolean {
-        return if (commandInfo.contains(command.javaClass)) {
-            getGuildCommandInfo(command).enabled
-        } else coreSettings.isModuleEnabled(command.module)
-    }
-
-    fun getCommandAliases(command: ICommandMain): Set<String> {
-        return if (commandInfo.contains(command.javaClass)) {
-            getGuildCommandInfo(command).aliases.applyChanges(command.getGlobalAliases(locale))
-        } else command.getGlobalAliases(locale)
-    }
-
-    fun addAlias(command: ICommandMain, alias: String): Boolean {
-        return getGuildCommandInfo(command).aliases.add(alias)
-    }
-
-    fun removeAlias(command: ICommandMain, alias: String): Boolean {
-        return getGuildCommandInfo(command).aliases.remove(alias)
-    }
-
-    private fun getGuildCommandInfoSet(command: ICommandMain): MutableSet<GuildCommandInfo> {
-        return commandInfo.computeIfAbsent(command.javaClass) {
-            mutableSetOf(GuildCommandInfo(command, locale))
-        }
-    }
-
-    private fun getGuildCommandInfo(command: ICommandMain, locale: Locale = this.locale): GuildCommandInfo {
-        return getGuildCommandInfoSet(command).find { it.locale == locale } ?: run {
-            val commandInfo = GuildCommandInfo(command, locale)
-            getGuildCommandInfoSet(command).add(commandInfo)
-            commandInfo
-        }
-    }
-
-    //endregion
     fun enableFlag(flag: Flag): Boolean {
         return enabledFlags.add(flag)
     }

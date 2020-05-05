@@ -40,7 +40,6 @@ public class PageCache extends HashMap<Long, PageCache.Pages> {
         public int getPages() {
             return pages.size();
         }
-
     }
 
 }

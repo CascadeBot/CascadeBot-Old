@@ -25,15 +25,15 @@ public class GroupPermissionListSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getPermissionSettings().getGroups().isEmpty()) {
+        if (context.getData().getManagement().getPermissions().getGroups().isEmpty()) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.list.no_groups"));
             return;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < context.getData().getPermissionSettings().getGroups().size(); i++) {
-            Group group = context.getData().getPermissionSettings().getGroups().get(i);
-            if (context.getData().getPermissionSettings().getMode().equals(PermissionMode.HIERARCHICAL)) {
+        for (int i = 0; i < context.getData().getManagement().getPermissions().getGroups().size(); i++) {
+            Group group = context.getData().getManagement().getPermissions().getGroups().get(i);
+            if (context.getData().getManagement().getPermissions().getMode().equals(PermissionMode.HIERARCHICAL)) {
                 stringBuilder.append(i).append(": ");
             }
             stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");

@@ -18,7 +18,7 @@ public class TodoAddSubCommand implements ISubCommand {
         }
 
         String todoName = context.getArg(0).toLowerCase();
-        TodoList todoList = context.getData().getUsefulSettings().getTodoList(todoName);
+        TodoList todoList = context.getData().getUseful().getTodoList(todoName);
 
         if (todoList == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", todoName));
@@ -31,7 +31,7 @@ public class TodoAddSubCommand implements ISubCommand {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit", owner.getAsMention()));
             } else {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit_no_owner"));
-                context.getData().getUsefulSettings().deleteTodoList(todoName);
+                context.getData().getUseful().deleteTodoList(todoName);
             }
             return;
         }

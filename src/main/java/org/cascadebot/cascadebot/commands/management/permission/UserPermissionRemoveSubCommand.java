@@ -28,7 +28,7 @@ public class UserPermissionRemoveSubCommand implements ISubCommand {
             return;
         }
 
-        User user = context.getData().getPermissionSettings().getPermissionUser(member);
+        User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
 
         if (user.removePermission(context.getArg(1))) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));

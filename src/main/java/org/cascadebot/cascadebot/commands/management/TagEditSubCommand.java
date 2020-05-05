@@ -22,7 +22,7 @@ public class TagEditSubCommand implements ISubCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        Tag tag = context.getCoreSettings().getTags().get(tagName);
+        Tag tag = context.getData().getManagement().getTag(tagName);
         if (tag == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;

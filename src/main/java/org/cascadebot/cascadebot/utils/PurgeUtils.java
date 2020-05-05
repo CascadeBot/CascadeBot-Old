@@ -7,7 +7,6 @@
 package org.cascadebot.cascadebot.utils;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
 
@@ -45,7 +44,7 @@ public class PurgeUtils {
                 break;
             }
             
-            if (!context.getData().getGuildModeration().isPurgePinnedMessages() && message.isPinned()) {
+            if (!context.getData().getModeration().isPurgePinnedMessages() && message.isPinned()) {
                     continue;
             }
 

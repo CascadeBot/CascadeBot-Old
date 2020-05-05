@@ -26,7 +26,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
 
         if (module != null) {
             try {
-                if (context.getData().getCoreSettings().disableModule(module)) {
+                if (context.getData().getCore().disableModule(module)) {
                     // If module wasn't already disabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", module.toString()));
                 } else {

@@ -75,7 +75,7 @@ class CommandContext(
     fun getArgAsLong(index: Int): Long? = args[index].toLongOrNull()
 
     @Deprecated("This is only here for Java interop. Should not be used in Kotlin!", ReplaceWith("data.coreSettings"))
-    fun getCoreSettings() : GuildSettingsCore = data.coreSettings
+    fun getCoreSettings() : GuildSettingsCore = data.core
 
     /**
      * Tests for an argument of a particular id. This check it exists at the position and,
@@ -123,10 +123,12 @@ class CommandContext(
         return Language.i18n(guild.idLong, path, *args)
     }
 
+    @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
     fun getUsage(): String? {
         return getUsage(command)
     }
 
+    @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
     fun getUsage(command: ICommandExecutable): String? {
         val parentArg = CascadeBot.INS.argumentManager.getArgument(command.absoluteCommand)
         return if (parentArg != null) {
@@ -134,10 +136,10 @@ class CommandContext(
             if (command is ISubCommand) {
                 parent = command.parent()
             }
-            val commandString: String = data.coreSettings.prefix + if (parent == null) "" else "$parent "
+            val commandString: String = data.core.prefix + if (parent == null) "" else "$parent "
             parentArg.getUsageString(locale, commandString)
         } else {
-            "`" + data.coreSettings.prefix + command.command(locale) + "` - " + command.description(locale)
+            "`" + data.core.prefix + command.command(locale) + "` - " + command.description(locale)
         }
     }
 
@@ -179,15 +181,15 @@ class CommandContext(
             CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission)
             return false
         }
-        return data.permissionSettings.hasPermission(member, channel, cascadePermission, data.coreSettings)
+        return data.management.permissions.hasPermission(member, channel, cascadePermission, data.core)
     }
 
     fun hasPermission(permission: CascadePermission?): Boolean {
-        return permission != null && data.permissionSettings.hasPermission(member, channel, permission, data.coreSettings)
+        return permission != null && data.management.permissions.hasPermission(member, channel, permission, data.core)
     }
 
     fun hasPermission(member: Member?, channel: GuildChannel?, permission: CascadePermission?): Boolean {
-        return permission != null && data.permissionSettings.hasPermission(member, channel, permission, data.coreSettings)
+        return permission != null && data.management.permissions.hasPermission(member, channel, permission, data.core)
     }
 
     fun runOtherCommand(command: String?, sender: Member?, context: CommandContext) {
