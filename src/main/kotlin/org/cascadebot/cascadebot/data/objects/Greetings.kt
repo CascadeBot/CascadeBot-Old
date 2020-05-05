@@ -26,10 +26,10 @@ class Greetings {
         }
 
     val welcomeEnabled: Boolean
-        get() = welcomeChannelId == null
+        get() = welcomeChannelId != null
 
     val goodbyeEnabled: Boolean
-        get() = goodbyeChannelId == null
+        get() = goodbyeChannelId != null
 
 
 
