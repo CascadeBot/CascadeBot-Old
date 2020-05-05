@@ -92,7 +92,7 @@ public class EvalCommand implements ICommandRestricted {
                 String codeToRun = imports + " " + code;
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
                 if (results.isBlank()) results = "Empty result!";
-                PasteUtils.pasteIfLong(results, 2048, context::reply);
+                PasteUtils.pasteIfLong(results, 1950, context::reply);
             } catch (ScriptException e) {
                 context.getTypedMessaging().replyDanger("Error running script: %s \n**%s** \n```swift\n%s```" ,PasteUtils.paste(PasteUtils.getStackTrace(e)), e.getClass().getName(), e.getMessage());
             }
