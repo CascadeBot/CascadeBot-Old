@@ -11,6 +11,7 @@ class GuildSettingsManagement {
 
     val tags: ConcurrentHashMap<String, Tag> = ConcurrentHashMap()
     val permissions = GuildPermissions()
+    val greetings = Greetings()
 
     fun getTag(key: String): Tag? {
         return tags[key]
