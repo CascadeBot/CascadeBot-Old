@@ -28,7 +28,7 @@ import org.cascadebot.cascadebot.music.CascadePlayer
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
 class CommandContext(
-        val command: ICommandExecutable,
+        val command: ICommandExecutable?,
         val jda: JDA,
         val channel: TextChannel,
         val message: Message,
@@ -99,7 +99,7 @@ class CommandContext(
             to check the arg length explicitly.
          */
         if (args.size < requiredArgsCount) return false
-        val argId = command.absoluteCommand + "." + id
+        val argId = (command?.absoluteCommand ?: "") + "." + id
         val argument = CascadeBot.INS.argumentManager.getArgument(argId) ?: return false
         // If the argument doesn't exist, it can't be valid!
         if (argument.type != ArgumentType.COMMAND) {
@@ -125,7 +125,7 @@ class CommandContext(
 
     @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
     fun getUsage(): String? {
-        return getUsage(command)
+        return getUsage(this.command!!)
     }
 
     @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
