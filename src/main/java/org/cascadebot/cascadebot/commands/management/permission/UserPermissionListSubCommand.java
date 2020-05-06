@@ -5,15 +5,9 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import org.cascadebot.cascadebot.commandmeta.Argument;
-import org.cascadebot.cascadebot.commandmeta.ArgumentType;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -24,17 +18,20 @@ import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserPermissionListSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         if (!context.getArg(1).equalsIgnoreCase("permissions") && !context.getArg(1).equalsIgnoreCase("groups")) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -44,7 +41,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
             return;
         }
 
-        User user = context.getData().getPermissions().getPermissionUser(member);
+        User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
 
         if (context.getArg(1).equalsIgnoreCase("groups")) {
             StringBuilder groupsBuilder = new StringBuilder();
@@ -54,7 +51,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
             }
 
             for (String id : user.getGroupIds()) {
-                Group group = context.getData().getPermissions().getGroupById(id);
+                Group group = context.getData().getManagement().getPermissions().getGroupById(id);
                 groupsBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
             }
             List<String> pageContent = PageUtils.splitString(groupsBuilder.toString(), 1000, '\n');
@@ -65,7 +62,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
                 builder.setDescription("```\n" + content + "```");
                 pages.add(new PageObjects.EmbedPage(builder));
             }
-            context.getUIMessaging().sendPagedMessage(pages);
+            context.getUiMessaging().sendPagedMessage(pages);
         } else if (context.getArg(1).equalsIgnoreCase("permissions")) {
             if (user.getPermissions().isEmpty()) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.list.no_permissions"));
@@ -84,7 +81,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
                 builder.setDescription("```\n" + content + "```");
                 pages.add(new PageObjects.EmbedPage(builder));
             }
-            context.getUIMessaging().sendPagedMessage(pages);
+            context.getUiMessaging().sendPagedMessage(pages);
         }
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PageCache extends HashMap<Long, PageCache.Pages> {
 
-    public void put(List<Page> pages, long messageId) {
+    public void put(long messageId, List<Page> pages) {
         this.put(messageId, new Pages(pages));
     }
 
@@ -40,7 +40,6 @@ public class PageCache extends HashMap<Long, PageCache.Pages> {
         public int getPages() {
             return pages.size();
         }
-
     }
 
 }

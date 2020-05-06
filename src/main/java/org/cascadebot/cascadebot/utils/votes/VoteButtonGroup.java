@@ -9,7 +9,7 @@ import com.google.common.collect.Sets;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ import java.util.TimerTask;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
-public class VoteButtonGroup extends ButtonGroup {
+public class VoteButtonGroup extends PersistentButtonGroup {
 
     private Map<Long, Object> votes = new HashMap<>();
 

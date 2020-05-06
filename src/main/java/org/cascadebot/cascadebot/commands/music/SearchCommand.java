@@ -17,6 +17,7 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.MusicHandler;
+import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
@@ -31,11 +32,17 @@ public class SearchCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
+
+            if (searchResults.size() == 0) {
+                context.getTypedMessaging().replyInfo(context.i18n("commands.search.found_result", searchResults.size()));
+                return;
+            }
+
             ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             int i = 0;
             StringBuilder messageBuilder = new StringBuilder();
@@ -47,13 +54,13 @@ public class SearchCommand implements ICommandMain {
                         return;
                     }
                     message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                    context.getMusicPlayer().loadLink(result.getUrl(), sender.getIdLong(), nothing -> {
+                    context.getMusicPlayer().loadLink(result.getUrl(), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), nothing -> {
                         context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                     }, exception -> {
                         context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);
                     }, audioTracks -> {
                         context.getMusicPlayer().addTracks(audioTracks);
-                        context.getUIMessaging().sendTracksFound(audioTracks);
+                        context.getUiMessaging().sendTracksFound(audioTracks);
                     });
                 }));
                 messageBuilder.append(unicode).append("\u20E3").append(" - ").append(StringsUtil.truncate(result.getTitle(), 60)).append(" - ");
@@ -68,12 +75,12 @@ public class SearchCommand implements ICommandMain {
                 messageBuilder.append('\n');
             }
 
-            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO);
-            embedBuilder.setTitle(context.i18n("commands.search.multiple_results"));
+            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
+            embedBuilder.setTitle(context.i18n("commands.search.found_result", searchResults.size()));
             embedBuilder.setDescription(messageBuilder.toString());
 
             try {
-                context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+                context.getUiMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
             } catch (PermissionException e) {
                 embedBuilder.appendDescription("\n\n" + context.i18n("responses.type_one_of"));
                 for (int index = 1; index <= searchResults.size(); index++) {
@@ -86,18 +93,18 @@ public class SearchCommand implements ICommandMain {
                 for (int index = 0; index < searchResults.size(); index++) {
                     MusicHandler.SearchResult result = searchResults.get(index);
                     responses[index] = new EventWaiter.TextResponse(event -> {
-                        context.getMusicPlayer().loadLink(result.getUrl(), sender.getIdLong(), nothing -> {
+                        context.getMusicPlayer().loadLink(result.getUrl(), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), nothing -> {
                             context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                         }, exception -> {
                             context.getTypedMessaging().replyException(context.i18n("commands.search.error_loading_track"), exception);
                         }, audioTracks -> {
                             context.getMusicPlayer().addTracks(audioTracks);
-                            context.getUIMessaging().sendTracksFound(audioTracks);
+                            context.getUiMessaging().sendTracksFound(audioTracks);
                         });
                     }, String.valueOf(index + 1));
                 }
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(), 30, TimeUnit.SECONDS, () -> {
-                    context.getTypedMessaging().replyWarning(context.i18n("commands.search.search_timed_out", context.getMessage(0 )));
+                    context.getTypedMessaging().replyWarning(context.i18n("commands.search.search_timed_out", context.getMessage(0)));
                 }, responses);
             }
 

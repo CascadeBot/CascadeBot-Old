@@ -16,18 +16,22 @@ public class TagCategorySubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
-        Tag tag = context.getCoreSettings().getTag(context.getArg(0));
+        Tag tag = context.getData().getManagement().getTag(context.getArg(0));
+
+        String tagName = context.getArg(0).toLowerCase();
+        String category = context.getArg(1).toLowerCase();
+
         if (tag == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
         }
 
-        tag.setCategory(context.getArg(1));
-        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.category.successfully_set_tag", context.getArg(0), context.getArg(1)));
+        tag.setCategory(category);
+        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.category.successfully_set_tag", tagName, category));
     }
 
     @Override

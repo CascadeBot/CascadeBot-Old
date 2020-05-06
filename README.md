@@ -1,4 +1,4 @@
-[![banner](https://user-images.githubusercontent.com/15330699/59555486-e9215980-8faa-11e9-95a2-cc2f1ec214a3.png)](https://cascadebot.org)
+[![banner](https://user-images.githubusercontent.com/47500195/69008142-9e668d80-090c-11ea-9913-42b62ed978db.png)](https://cascadebot.org)
 
 <p align="center">
     <a href="https://github.com/CascadeBot/CascadeBot/blob/dev/LICENSE"><img src="https://img.shields.io/github/license/cascadebot/cascadebot.svg?style=flat-square" alt="GitHub License"></a>
@@ -21,6 +21,7 @@ We are very lucky to have open source licenses for the following software:
  - <a href="https://www.ej-technologies.com/products/jprofiler/overview.html"><img src="https://www.ej-technologies.com/images/product_banners/jprofiler_small.png"></a> An amazing Java profiler that's helped fix many issues!
  - <a href="https://jetbrains.com"><img src="https://user-images.githubusercontent.com/15330699/61329582-9212dc80-a815-11e9-9d97-9daabd7a50d5.png" width=30> <img src="https://user-images.githubusercontent.com/15330699/61329579-8fb08280-a815-11e9-95f4-daa6eb9bc213.png" width=30></a> The amazing software suite from JetBrains; the core software we develop on day-in day-out
  - <a href="https://crowdin.com"><img src="https://user-images.githubusercontent.com/15330699/61329884-40b71d00-a816-11e9-9de8-d4de90d4e77b.png" height=30></a> The fantastic translation and localisation platform that makes our lives just that little bit easier!
+ - <a href="https://gitbook.com"><img src="https://user-images.githubusercontent.com/15330699/67477190-778ca280-f651-11e9-8e83-b4f374fe83d1.png" height=30></a> An amazing documentation platform!
 ## 👋🏻 About
 
 Cascade Bot is a Discord bot that aims to be as customisable as possible as well as providing server administrators with the tools to run their Discord server!

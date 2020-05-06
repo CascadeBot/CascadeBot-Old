@@ -18,18 +18,20 @@ public class TagRawSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
-        if (!context.getCoreSettings().hasTag(context.getArg(0))) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", context.getArg(0)));
+        String tagName = context.getArg(0).toLowerCase();
+
+        if (!context.getData().getManagement().hasTag(tagName)) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
         }
 
-        Tag tag = context.getCoreSettings().getTag(context.getArg(0));
+        Tag tag = context.getData().getManagement().getTag(tagName);
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-        builder.setTitle(context.i18n("words.tag") + ": " + context.getArg(0));
+        builder.setTitle(context.i18n("words.tag") + ": " + tagName);
         builder.setDescription("```" + tag.getContent() + "```");
         builder.addField(context.i18n("words.category"), tag.getCategory(), true);
 

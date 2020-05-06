@@ -34,12 +34,12 @@ public class ConfirmUtils {
     private static ListMultimap<String, ConfirmRunnable> confirmedMap = ArrayListMultimap.create();
 
     //region Confirm Action
-    public static boolean confirmAction(long userId, String actionKey, TextChannel channel, MessageType type, String message, long buttonDelay, long expiry, ConfirmRunnable action) {
+    public static boolean confirmAction(long userId, String actionKey, TextChannel channel, MessageType type, String message, long buttonDelay, long expiry, boolean isCancellable, ConfirmRunnable action) {
         GuildData guildData = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
-        boolean useEmbed = guildData.getCoreSettings().isUseEmbedForMessages();
+        boolean useEmbed = guildData.getCore().getUseEmbedForMessages();
         Message sentMessage;
         try {
-            sentMessage = Messaging.sendMessageTypeMessage(channel, type, message, useEmbed).get();
+            sentMessage = Messaging.sendMessage(type, channel, message, useEmbed).get();
             action.userId = userId;
             action.message = sentMessage;
             confirmedMap.put(actionKey, action);
@@ -60,6 +60,12 @@ public class ConfirmUtils {
                     if (runner.getIdLong() != action.userId) return;
                     action.run();
                 }));
+                if (isCancellable) {
+                    group.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, ((runner, channel1, message1) -> {
+                        confirmedMap.remove(actionKey, action);
+                        sentMessage.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    })));
+                }
                 group.addButtonsToMessage(sentMessage);
                 group.setMessage(sentMessage.getIdLong());
                 guildData.addButtonGroup(channel, sentMessage, group);
@@ -74,7 +80,7 @@ public class ConfirmUtils {
         return true;
     }
 
-    public static void confirmAction(long userId, String actionKey, TextChannel channel, MessageType type, String message, ConfirmRunnable action) {
+    public static void confirmAction(long userId, String actionKey, TextChannel channel, MessageType type, String message, boolean isCancellable, ConfirmRunnable action) {
         confirmAction(
                 userId,
                 actionKey,
@@ -83,11 +89,12 @@ public class ConfirmUtils {
                 message,
                 TimeUnit.SECONDS.toMillis(2),
                 TimeUnit.MINUTES.toMillis(1),
+                isCancellable,
                 action
         );
     }
 
-    public static void confirmAction(long userId, String actionKey, TextChannel channel, String message, ConfirmRunnable action) {
+    public static void confirmAction(long userId, String actionKey, TextChannel channel, String message, boolean isCancellable, ConfirmRunnable action) {
         confirmAction(
                 userId,
                 actionKey,
@@ -96,6 +103,7 @@ public class ConfirmUtils {
                 message,
                 TimeUnit.SECONDS.toMillis(2),
                 TimeUnit.MINUTES.toMillis(1),
+                isCancellable,
                 action
         );
     }

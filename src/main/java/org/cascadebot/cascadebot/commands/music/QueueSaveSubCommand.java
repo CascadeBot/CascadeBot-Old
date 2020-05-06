@@ -10,8 +10,8 @@ import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.cascadebot.data.objects.SavePlaylistResult;
 import org.cascadebot.cascadebot.messaging.MessageType;
-import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
 
@@ -22,7 +22,7 @@ public class QueueSaveSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -35,7 +35,7 @@ public class QueueSaveSubCommand implements ISubCommand {
             }
         }
 
-        if (context.getMusicPlayer().getPlayer().getPlayingTrack() == null & context.getMusicPlayer().getQueue().size() == 0) {
+        if (context.getMusicPlayer().getPlayingTrack() == null & context.getMusicPlayer().getQueue().size() == 0) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.queue.save.nothing_to_save"));
             return;
         }
@@ -52,7 +52,7 @@ public class QueueSaveSubCommand implements ISubCommand {
 
         long lambdaOwner = owner;
         PlaylistType lambdaScope = scope;
-        CascadePlayer.SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
+        SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
         switch (result) {
             case ALREADY_EXISTS:
                 if (lambdaScope.equals(PlaylistType.GUILD)) {
@@ -62,7 +62,7 @@ public class QueueSaveSubCommand implements ISubCommand {
                     }
                 }
                 ConfirmUtils.confirmAction(sender.getIdLong(), "overwrite", context.getChannel(), MessageType.WARNING,
-                        context.i18n("commands.save.already_exists"), TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(10), new ConfirmUtils.ConfirmRunnable() {
+                        context.i18n("commands.save.already_exists"), TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(10), true,  new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
                                 context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
@@ -89,12 +89,6 @@ public class QueueSaveSubCommand implements ISubCommand {
     @Override
     public CascadePermission getPermission() {
         return CascadePermission.of("queue.save", true);
-    }
-
-    @Deprecated(forRemoval = true)
-    @Override
-    public String description() {
-        return null;
     }
 
 }

@@ -15,7 +15,6 @@ import com.google.gson.GsonBuilder;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
-import lavalink.client.io.jda.JDAVoiceInterceptor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
@@ -31,6 +30,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
@@ -70,6 +70,7 @@ public class CascadeBot {
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
+
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
@@ -131,7 +132,6 @@ public class CascadeBot {
 
 
     private void init() {
-        new Thread(new ConsoleReader()).start();
 
         GsonBuilder builder = new GsonBuilder();
         try {
@@ -170,8 +170,7 @@ public class CascadeBot {
             );
         }
 
-        musicHandler = new MusicHandler(this);
-        musicHandler.buildMusic();
+        musicHandler = new MusicHandler();
 
         eventWaiter = new EventWaiter();
         gson = builder.create();
@@ -196,9 +195,9 @@ public class CascadeBot {
                     .setBulkDeleteSplittingEnabled(false)
                     .setEnableShutdownHook(false);
 
-            if (MusicHandler.isLavalinkEnabled()) {
-                defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
-                defaultShardManagerBuilder.setVoiceDispatchInterceptor(MusicHandler.getLavalink().getVoiceInterceptor());
+            if (musicHandler.getLavalinkEnabled()) {
+                defaultShardManagerBuilder.addEventListeners(musicHandler.getLavaLink());
+                defaultShardManagerBuilder.setVoiceDispatchInterceptor(musicHandler.getLavaLink().getVoiceInterceptor());
             } else {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
             }
@@ -216,6 +215,7 @@ public class CascadeBot {
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
+        ScheduledActionManager.loadAndRegister();
 
         Metrics.INS.cacheMetrics.addCache("guilds", GuildDataManager.getGuilds());
 

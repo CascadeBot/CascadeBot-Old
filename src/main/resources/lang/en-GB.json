@@ -1,7 +1,14 @@
 {
   "commands": {
     "invite": {
+      "command": "invite",
       "description": "Returns the bot invite link, to invite the bot to other Discord guilds."
+    },
+    "help": {
+      "command": "help",
+      "description": "This is the help command; what else did you expect?",
+      "module_not_enabled": "That module isn't enabled for this guild!",
+      "no_access_to_module": "You don't have access to any commands in this module!"
     },
     "prefix": {
       "command": "prefix",
@@ -40,22 +47,19 @@
     "color": {
       "command": "colour",
       "description": "Gives information about a provided colour.",
-      "aliases": ["color"],
-      "valid_rgb": "RGB values should be between 0 and 255!",
-      "valid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
-      "valid_decimal": "Please provide a valid decimal value! 0-16777215",
-      "valid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
-      "color_not_recognised": "Could not recognise colour from the given value!",
-      "embed_title": "Values for #{0}",
-      "rgb": "RGB",
-      "decimal": "Decimal value",
-      "binary": "Binary value"
+      "aliases": ["color"]
     },
     "random": {
       "command": "random",
       "description": "Returns a random number",
       "numbers_only": "The range needs to be a integer value!",
-      "random_result": "Random number is `{0}`"
+      "no_negatives": "Negative numbers are not allowed",
+      "random_result": "Random number is `{0}`",
+      "random_choice_result": "Result is `{0}`!",
+      "choice": {
+        "command": "choice",
+        "description": "Return a random word of your chosen list"
+      }
     },
     "roles": {
       "command": "roles",
@@ -65,6 +69,11 @@
       "header_name": "Role Name",
       "header_members": "No. Users",
       "header_color": "Colour"
+    },
+    "joke": {
+      "command": "joke",
+      "description": "Returns a random joke.",
+      "error_loading": "We were not able to load a joke."
     },
     "serverinfo": {
       "command": "serverinfo",
@@ -251,7 +260,9 @@
       "create": {
         "command": "create",
         "description": "Creates a tag.",
-        "successfully_created_tag": "Successfully created tag with name `{0}`."
+        "tag_already_exists": "The tag `{0}` already exists!",
+        "successfully_created_tag": "Successfully created tag with name `{0}`.",
+        "warn_uppercase": "|warning| The tag name has been converted to lowercase since tags are case insensitive!"
       },
       "delete": {
         "command": "delete",
@@ -321,7 +332,7 @@
       "description": "Changes between loop modes.",
       "looping_disabled": "Looping has been disabled!",
       "looping_set": "Set to loop the current **{0}**!",
-      "not_valid_mode": "`{0}` is not a valid loop mode! Valid modes are: {0}"
+      "not_valid_mode": "`{0}` is not a valid loop mode! Valid modes are: {1}"
     },
     "pause": {
       "command": "pause",
@@ -335,6 +346,10 @@
       "could_not_find_matches": "We could not find music that matches: `{0}`",
       "encountered_error": "We encountered an error processing that! {0}"
     },
+    "playtop": {
+      "command": "playtop",
+      "description": "Plays a song immediately"
+    },
     "playing": {
       "command": "playing",
       "description": "Get playing music.",
@@ -343,11 +358,35 @@
       "loop_mode": "Loop mode",
       "up_next": "Up next"
     },
+    "seek": {
+      "command": "seek",
+      "description": "Seeks to a timestamp within a song.",
+      "no_music_playing": "You are not listening to any music!",
+      "music_is_stream": "You can't seek on a livestream!",
+      "negative_value": "You cannot seek to a negative value!",
+      "duration_shorter": "The timestamp you are trying to seek to is longer than the song duration!",
+      "bad_format": "Incorrect format.",
+      "success": "Successfully seeked to {0}"
+    },
+    "karaoke": {
+      "command": "karaoke",
+      "description": "Send the current song's lyrics to a channel.",
+      "aliases": ["lyrics"],
+      "cannot_find": "There are no lyrics available for this song!",
+      "enabled_karaoke": "Successfully enabled karaoke!",
+      "disabled_karaoke": "Successfully disabled karaoke!",
+      "loading_karaoke": "Loading karaoke...",
+      "nothing_playing": "There is no song playing, so karaoke cannot be enabled!",
+      "no_lyrics_atm": "There are no lyrics available for this part of the song.",
+      "not_youtube": "The currently playing track isn't from YouTube, so we can't get lyrics for it."
+    },
     "queue": {
       "command": "queue",
       "description": "Displays the current queue.",
       "aliases": ["playlist"],
       "no_tracks_playing": "There are no tracks playing!",
+      "track_number": "Cannot find track number {0}",
+      "queue_time": "*There is `{0}` left in this queue*",
       "load": {
         "command": "load",
         "description": "Loads a playlist.",
@@ -362,6 +401,20 @@
         "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it.",
         "playlist_overwrite": "Playlist already exists. Would you like to overwrite it?",
         "saved_playlist": "Saved playlist `{0}` in scope `{1}`."
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a song from the queue at the specified position",
+        "invalid_number": "`{0}` is not a number! You can only remove using the track number.",
+        "removed": "Removed track number {0} from the queue."
+      },
+      "move": {
+        "command": "move",
+        "description": "Moves items around in the queue",
+        "numbers": "Must use numbers to move tracks!",
+        "zero": "Cannot move a track to a number less then 0",
+        "self": "Cannot move track to its own position!",
+        "moved": "Moved track at position {0}} to position {1}"
       }
     },
     "resume": {
@@ -376,7 +429,7 @@
       "aliases": ["find"],
       "cannot_find_video": "Couldn't find video!",
       "error_loading_track": "Error loading track",
-      "multiple_results": "We found multiple results for this search!",
+      "found_result": "We found {0, plural, offset:1\n =0 {no results}\n =1 {one result}\n other {multiple results}} for this search!",
       "search_timed_out": "The search for `{0}` has timed out!"
     },
     "shuffle": {
@@ -405,7 +458,8 @@
       "added_vote": "A skip vote is already running but don't worry! We added your vote automatically!",
       "skipped_user_queued": "Skipped currently playing song because you queued it.",
       "skipping": "Skipping song!",
-      "not_skipping": "Not skipping song!"
+      "not_skipping": "Not skipping song!",
+      "skip_vote_title": "Skip vote"
     },
     "stop": {
       "command": "stop",
@@ -423,6 +477,97 @@
       "volume_set": "Volume set to {0}%.",
       "volume_already_set": "Volume is already set to {0}%.",
       "volume_range": "Volume needs to be between 0% and 200%."
+    },
+    "equalizer": {
+      "command": "equalizer",
+      "description": "Allows you to control an equalizer",
+      "embed_title": "{0} channel Equalizer",
+      "not_lavalink": "The equalizer is only available when using lavalink",
+      "reset": {
+        "command": "reset",
+        "description": "Resets the equalizer",
+        "success": "Reset equalizer to default values"
+      }
+    },
+    "purge": {
+      "contains": {
+        "name": "contains",
+        "description": "Cleans messages containing a value"
+      },
+      "link": {
+        "name": "link",
+        "description": "Cleans messages containing a link"
+      },
+      "attachment": {
+        "name": "attachment",
+        "description": "Cleans all messages containing an attachment"
+      },
+      "user": {
+        "name": "user",
+        "description": "Cleans all messages sent by an user"
+      },
+      "bot": {
+        "name": "bot",
+        "description": "Cleans all messages from bots"
+      },
+      "name": "purge",
+      "description": "Cleans all messages",
+      "successfully_done": "Successfully cleaned {0} messages!",
+      "restriction_time": "Found a message older than 2 weeks\nDue to Discord limits, we won't be able to clean it.",
+      "failed_clear": "No messages were purged with this criteria"
+    },
+    "todo": {
+      "command": "todo",
+      "description": "Create and manipulates todo lists",
+      "add": {
+        "command": "add",
+        "description": "Adds an item to a todo list",
+        "embed_title": "Added item to todo list"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes an item from a todo list",
+        "embed_title": "Removed item from todo list",
+        "not_number": "You can only remove an item by number!",
+        "item_does_not_exist": "Cannot remove an item that doesn't exist!",
+        "deleted": "You have removed all the items in the todo list meaning that the list has now been deleted!"
+      },
+      "create": {
+        "command": "create",
+        "description": "Creates a todo list",
+        "list_exists": "A todo list with that name already exists!",
+        "created": "Created todo list with name `{0}`",
+        "warn_uppercase": "|warning| The todo-list name has been converted to lowercase since todo-lists are case insensitive!"
+      },
+      "view": {
+        "command": "view",
+        "description": "Views a todo list contents"
+      },
+      "adduser": {
+        "command": "adduser",
+        "description": "Add a user to a todo list you own",
+        "added": "Added user {0} to the todo list {1}"
+      },
+      "removeuser": {
+        "command": "removeuser",
+        "description": "Remove a user from a todo list you own",
+        "removed": "Removed user {0} from the todo list {1}"
+      },
+      "send": {
+        "command": "send",
+        "description": "Sends the todo list for checking items off, and actually using the list",
+        "cannot_find_channel": "Couldn't find channel `{0}`"
+      },
+      "owner_only": "Only the owner of a todo list can add or remove users from the list!",
+      "cannot_edit": "You cannot edit this todo list. If you want to edit this contact {0}",
+      "cannot_edit_no_owner": "You cannot edit this todo list and the owner has left the guild so the todo list has been deleted",
+      "list_does_not_exist": "Todo list {0} doesn't exist",
+      "list_already_sent": "This todo list has already been sent, and therefor is no longer editable",
+      "no_items": "The todo list doesn't have any items!",
+      "user_not_found": "Couldn't find user `{0}`",
+      "embed_list_field": "List",
+      "embed_position_field": "Position",
+      "embed_item_field": "Item"
     }
   },
   "permissions": {
@@ -598,6 +743,14 @@
           "name": "queue.save.overwrite",
           "label": "Overwrite guild playlist"
         }
+      },
+      "remove": {
+        "name": "queue.remove",
+        "label": "Queue remove sub command"
+      },
+      "move": {
+        "name": "queue.move",
+        "label": "Queue move sub command"
       }
     },
     "resume": {
@@ -624,6 +777,14 @@
       "name": "stop",
       "label": "Stop command"
     },
+    "karaoke": {
+      "name": "karaoke",
+      "label": "Karaoke command"
+    },
+    "seek": {
+      "name": "seek",
+      "label": "Seek command"
+    },
     "volume": {
       "name": "volume",
       "label": "Volume command",
@@ -635,6 +796,42 @@
     "flags": {
       "name": "flags",
       "label": "Flags command"
+    },
+    "purge": {
+      "name": "purge",
+      "label": "Purge command"
+    },
+    "todo": {
+      "name": "todo",
+      "label": "Todo Command",
+      "add": {
+        "name": "todo.add",
+        "label": "Todo add sub command"
+      },
+      "remove": {
+        "name": "todo.remove",
+        "label": "Todo remove sub command"
+      },
+      "create": {
+        "name": "todo.create",
+        "label": "Todo create sub command"
+      },
+      "adduser": {
+        "name": "todo.add.user",
+        "label": "Todo adduser sub command"
+      },
+      "removeuser": {
+        "name": "todo.remove.user",
+        "label": "Todo removeuser sub command"
+      },
+      "view": {
+        "name": "todo.view",
+        "label": "Todo view sub command"
+      },
+      "send": {
+        "name": "todo.send",
+        "label": "Todo send sub command"
+      }
     }
   },
   "moderation_manager": {
@@ -658,7 +855,8 @@
       "cannot_find_tracks": "We couldn't find any tracks to load!",
       "num_tracks": "{0} tracks",
       "loaded_tracks": "Loaded `{0}` tracks with a total length of `{1}`",
-      "loaded_track": "Loaded track"
+      "loaded_track": "Loaded track",
+      "error": "Failed to play audio track"
     },
     "handler": {
       "error_searching": "Error searching from YouTube!",
@@ -722,7 +920,8 @@
       "informational": "informational",
       "moderation": "moderation",
       "fun": "fun",
-      "developer": "developer"
+      "developer": "developer",
+      "useful": "useful"
     },
     "permissionmode":{
       "most_restrictive": "most restrictive",
@@ -834,6 +1033,14 @@
         "nice_name": "Enabled modules",
         "description": "The modules whose commands are allowed to be ran on the server."
       },
+      "helpHideCommandsNoPermission": {
+        "nice_name": "Hide command when the user doesn't have permissions",
+        "description": "Whether to hide a command from the help menu if the user doesn't have permission to run it."
+      },
+      "helpShowAllModules": {
+        "nice_name": "Show all modules in the help menu",
+        "description": "Whether to show all modules in the help menu even if they are disabled."
+      },
       "prefix": {
         "nice_name": "Prefix",
         "description": "The prefix for all commands directed at the bot. It is recommended to make sure that this doesn't conflict with other bots."
@@ -891,6 +1098,15 @@
     "channel": "channel",
     "prefix": "prefix",
     "command": "command",
+    "timestamp": "timestamp",
+    "amount": "amount",
+    "token": "token",
+    "item": "item",
+    "list": "list",
+    "words": "words",
+    "pos": "position",
+    "source": "source",
+    "destination": "destination",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
@@ -914,7 +1130,168 @@
       "too_many_groups": "There are more than 5 groups with the same name! Please use a group ID instead.",
       "no_permissions": "No permissions!",
       "no_linked_roles": "No linked roles!"
-
+    },
+    "color": {
+      "invalid_rgb": "RGB values should be between 0 and 255!",
+      "invalid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
+      "invalid_decimal": "Please provide a valid decimal value! 0-16777215",
+      "invalid_binary": "Please enter a valid binary value!\n0-111111111111111111111111",
+      "color_not_recognised": "Could not recognise colour from the given value!",
+      "embed_title": "Values for {0}",
+      "rgb": "RGB",
+      "decimal": "Decimal value",
+      "binary": "Binary value",
+      "hex": "Hex",
+      "colors": {
+        "aliceblue": "Aliceblue",
+        "antiquewhite": "Antiquewhite",
+        "aqua": "Aqua",
+        "aquamarine": "Aquamarine",
+        "azure": "Azure",
+        "beige": "Beige",
+        "bisque": "Bisque",
+        "black": "Black",
+        "blanchedalmond": "Blanchedalmond",
+        "blue": "Blue",
+        "blueviolet": "Blueviolet",
+        "brown": "Brown",
+        "burlywood": "Burlywood",
+        "cadetblue": "Cadetblue",
+        "chartreuse": "Chartreuse",
+        "chocolate": "Chocolate",
+        "coral": "Coral",
+        "cornflowerblue": "Cornflowerblue",
+        "cornsilk": "Cornsilk",
+        "crimson": "Crimson",
+        "cyan": "Cyan",
+        "darkblue": "Darkblue",
+        "darkcyan": "Darkcyan",
+        "darkgoldenrod": "Darkgoldenrod",
+        "darkgray": "Darkgray",
+        "darkgreen": "Darkgreen",
+        "darkgrey": "Darkgrey",
+        "darkkhaki": "Darkkhaki",
+        "darkmagenta": "Darkmagenta",
+        "darkolivegreen": "Darkolivegreen",
+        "darkorange": "Darkorange",
+        "darkorchid": "Darkorchid",
+        "darkred": "Darkred",
+        "darksalmon": "Darksalmon",
+        "darkseagreen": "Darkseagreen",
+        "darkslateblue": "Darkslateblue",
+        "darkslategray": "Darkslategray",
+        "darkslategrey": "Darkslategrey",
+        "darkturquoise": "Darkturquoise",
+        "darkviolet": "Darkviolet",
+        "deeppink": "Deeppink",
+        "deepskyblue": "Deepskyblue",
+        "dimgray": "Dimgray",
+        "dimgrey": "Dimgrey",
+        "dodgerblue": "Dodgerblue",
+        "firebrick": "Firebrick",
+        "floralwhite": "Floralwhite",
+        "forestgreen": "Forestgreen",
+        "fuchsia": "Fuchsia",
+        "gainsboro": "Gainsboro",
+        "ghostwhite": "Ghostwhite",
+        "goldenrod": "Goldenrod",
+        "gold": "Gold",
+        "gray": "Gray",
+        "green": "Green",
+        "greenyellow": "Greenyellow",
+        "grey": "Grey",
+        "honeydew": "Honeydew",
+        "hotpink": "Hotpink",
+        "indianred": "Indianred",
+        "indigo": "Indigo",
+        "ivory": "Ivory",
+        "khaki": "Khaki",
+        "lavenderblush": "Lavenderblush",
+        "lavender": "Lavender",
+        "lawngreen": "Lawngreen",
+        "lemonchiffon": "Lemonchiffon",
+        "lightblue": "Lightblue",
+        "lightcoral": "Lightcoral",
+        "lightcyan": "Lightcyan",
+        "lightgoldenrodyellow": "Lightgoldenrodyellow",
+        "lightgray": "Lightgray",
+        "lightgreen": "Lightgreen",
+        "lightgrey": "Lightgrey",
+        "lightpink": "Lightpink",
+        "lightsalmon": "Lightsalmon",
+        "lightseagreen": "Lightseagreen",
+        "lightskyblue": "Lightskyblue",
+        "lightslategray": "Lightslategray",
+        "lightslategrey": "Lightslategrey",
+        "lightsteelblue": "Lightsteelblue",
+        "lightyellow": "Lightyellow",
+        "lime": "Lime",
+        "limegreen": "Limegreen",
+        "linen": "Linen",
+        "magenta": "Magenta",
+        "maroon": "Maroon",
+        "mediumaquamarine": "Mediumaquamarine",
+        "mediumblue": "Mediumblue",
+        "mediumorchid": "Mediumorchid",
+        "mediumpurple": "Mediumpurple",
+        "mediumseagreen": "Mediumseagreen",
+        "mediumslateblue": "Mediumslateblue",
+        "mediumspringgreen": "Mediumspringgreen",
+        "mediumturquoise": "Mediumturquoise",
+        "mediumvioletred": "Mediumvioletred",
+        "midnightblue": "Midnightblue",
+        "mintcream": "Mintcream",
+        "mistyrose": "Mistyrose",
+        "moccasin": "Moccasin",
+        "navajowhite": "Navajowhite",
+        "navy": "Navy",
+        "oldlace": "Oldlace",
+        "olive": "Olive",
+        "olivedrab": "Olivedrab",
+        "orange": "Orange",
+        "orangered": "Orangered",
+        "orchid": "Orchid",
+        "palegoldenrod": "Palegoldenrod",
+        "palegreen": "Palegreen",
+        "paleturquoise": "Paleturquoise",
+        "palevioletred": "Palevioletred",
+        "papayawhip": "Papayawhip",
+        "peachpuff": "Peachpuff",
+        "peru": "Peru",
+        "pink": "Pink",
+        "plum": "Plum",
+        "powderblue": "Powderblue",
+        "purple": "Purple",
+        "rebeccapurple": "Rebeccapurple",
+        "red": "Red",
+        "rosybrown": "Rosybrown",
+        "royalblue": "Royalblue",
+        "saddlebrown": "Saddlebrown",
+        "salmon": "Salmon",
+        "sandybrown": "Sandybrown",
+        "seagreen": "Seagreen",
+        "seashell": "Seashell",
+        "sienna": "Sienna",
+        "silver": "Silver",
+        "skyblue": "Skyblue",
+        "slateblue": "Slateblue",
+        "slategray": "Slategray",
+        "slategrey": "Slategrey",
+        "snow": "Snow",
+        "springgreen": "Springgreen",
+        "steelblue": "Steelblue",
+        "tan": "Tan",
+        "teal": "Teal",
+        "thistle": "Thistle",
+        "tomato": "Tomato",
+        "turquoise": "Turquoise",
+        "violet": "Violet",
+        "wheat": "Wheat",
+        "white": "White",
+        "whitesmoke": "Whitesmoke",
+        "yellow": "Yellow",
+        "yellowgreen": "Yellowgreen"
+      }
     }
   }
 }

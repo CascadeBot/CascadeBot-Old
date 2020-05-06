@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.events;
 import io.prometheus.client.Summary;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -25,6 +24,7 @@ import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.Tag;
+import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
@@ -34,7 +34,6 @@ import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.slf4j.MDC;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -50,7 +49,7 @@ public class CommandListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        if (event.getAuthor().isBot() || event.getMessage().getType() != MessageType.DEFAULT || !event.getChannel().canTalk()) {
+        if (event.getAuthor().isBot() || event.getMessage().getType() != net.dv8tion.jda.api.entities.MessageType.DEFAULT || !event.getChannel().canTalk()) {
             return;
         }
 
@@ -74,19 +73,19 @@ public class CommandListener extends ListenerAdapter {
             return;
         }
 
-        String prefix = guildData.getCoreSettings().getPrefix();
+        String prefix = guildData.getCore().getPrefix();
         boolean isMention = false;
 
-        String commandWithArgs;
+        String commandWithArgs = null;
         String trigger;
         String[] args;
 
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-        } else if (guildData.getCoreSettings().isMentionPrefix() && message.startsWith(event.getJDA().getSelfUser().getAsMention())) {
-            commandWithArgs = message.substring(event.getJDA().getSelfUser().getAsMention().length()).trim();
+        } else if (guildData.getCore().getMentionPrefix() && message.matches("^<@!?" + event.getJDA().getSelfUser().getId() + ">.*")) {
+            commandWithArgs = message.substring(message.indexOf('>') + 1).trim();
             isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCoreSettings().getPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCore().getPrefix())) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
         } else {
             return;
@@ -96,8 +95,7 @@ public class CommandListener extends ListenerAdapter {
         MDC.put("cascade.mention_prefix", String.valueOf(isMention));
 
         trigger = commandWithArgs.split(" ")[0];
-        commandWithArgs = commandWithArgs.substring(trigger.length()).trim();
-        args = splitArgs(commandWithArgs);
+        args = ArrayUtils.remove(commandWithArgs.split(" "), 0);
 
         MDC.put("cascade.trigger", trigger);
         MDC.put("cascade.args", Arrays.toString(args));
@@ -112,79 +110,15 @@ public class CommandListener extends ListenerAdapter {
         }
     }
 
-    public String[] splitArgs(String input) {
-        final char NONE = 0;        
-        char quoteType = NONE; // Whether the current position is surrounded by quotes or not and what type
-        char bracketType = NONE;
-        int splitFrom = NONE; // We initially start the first split from NONE to the first space
-        var args = new ArrayList<String>();
-        for (int pos = NONE; pos < input.length(); pos++) {
-            char charAtPos = input.charAt(pos);
-            if (charAtPos == ' ') {
-                // If we are in a quote or bracket scope then we want to ignore this space
-                if (quoteType != NONE || bracketType != NONE) {
-                    continue;
-                }
-                int splitTo = pos;
-
-                if (input.charAt(pos - 1) == '"' || input.charAt(pos - 1) == '\'') {
-                    splitTo = pos - 1; // If we are splitting after a quote, don't include the quote in the split
-                }
-                args.add(input.substring(splitFrom, splitTo));
-                splitFrom = pos + 1; // Set the next split start to be after
-            } else if (pos == input.length() - 1) {
-                int splitTo = input.length();
-                // If the end character is a quote, we want to split before the quote to not include it.
-                if (quoteType != NONE && input.charAt(pos) == quoteType) {
-                    splitTo = pos;
-                }
-                args.add(input.substring(splitFrom, splitTo));
-                // End of string so do nothing else
-            } else if (charAtPos == '"' || charAtPos == '\'') {
-                if (bracketType != NONE) continue;
-                // If we are not already in quotes AND [the quote is at the start OR it has a space before it] AND there is a quote to close the scope
-                if (quoteType == NONE && (pos == 0 || input.charAt(pos - 1) == ' ') && input.substring(pos + 1).indexOf(charAtPos) != -1) {
-                    splitFrom += 1; // Start the split after the first quote
-                    quoteType = charAtPos;
-                } else if (quoteType == charAtPos) {
-                    quoteType = NONE;
-                }
-            } else if (charAtPos == '(' || charAtPos == '{' || charAtPos == '[') {
-                // If we are not in a bracket scope AND there is a closing bracket
-                if (bracketType == NONE && input.substring(pos + 1).indexOf(getClosingBracket(charAtPos)) != -1) {
-                    bracketType = charAtPos;
-                }
-            } else if (charAtPos == ')' || charAtPos == '}' || charAtPos == ']') {
-                if (getClosingBracket(bracketType) == charAtPos) {
-                    bracketType = NONE;
-                }
-            }
-
-        }
-        return args.toArray(String[]::new);
-    }
-
-    private static char getClosingBracket(char opening) {
-        if (opening == '(') {
-            return ')';
-        } else if (opening == '{') {
-            return '}';
-        } else if (opening == '[') {
-            return ']';
-        } else {
-            return '\u0000';
-        }
-    }
-
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
         ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         CommandContext context = new CommandContext(cmd, event.getJDA(), event.getChannel(), event.getMessage(), event.getGuild(), guildData, args, event.getMember(), trigger, isMention);
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
-            if (!cmd.getModule().isPrivate() && !guildData.getCoreSettings().isModuleEnabled(cmd.getModule())) {
-                if (guildData.getCoreSettings().isShowModuleErrors() || Environment.isDevelopment()) {
+            if (!cmd.getModule().isPrivate() && !guildData.getCore().isModuleEnabled(cmd.getModule())) {
+                if (guildData.getCore().getShowModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.getModule(), context.getLocale()), trigger), event.getAuthor());
-                    Messaging.sendDangerMessage(event.getChannel(), builder, guildData.getCoreSettings().isUseEmbedForMessages());
+                    Messaging.sendEmbedMessage(MessageType.DANGER, event.getChannel(), builder, guildData.getCore().getUseEmbedForMessages());
                 }
                 // TODO: Modlog?
                 return;
@@ -200,12 +134,13 @@ public class CommandListener extends ListenerAdapter {
             }
             dispatchCommand(cmd, context);
         } else {
-            if (guildData.getCoreSettings().isAllowTagCommands()) {
-                if (guildData.getCoreSettings().getTags().containsKey(trigger)) {
-                    Tag tag = guildData.getCoreSettings().getTag(trigger);
+            if (guildData.getManagement().getAllowTagCommands()) {
+                String tagName = trigger.toLowerCase();
+                if (guildData.getManagement().hasTag(tagName)) {
+                    Tag tag = guildData.getManagement().getTag(tagName);
 
                     context.reply(tag.formatTag(context)); //TODO perms for tags
-                    CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", trigger, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
+                    CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", tagName, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
                 }
             }
         }
@@ -214,7 +149,7 @@ public class CommandListener extends ListenerAdapter {
     private boolean processSubCommands(ICommandMain cmd, String[] args, CommandContext parentCommandContext) {
         for (ICommandExecutable subCommand : cmd.getSubCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
-                CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.isMention());
+                CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.getMention());
                 if (!isAuthorised(cmd, subCommandContext)) {
                     return false;
                 }
@@ -257,8 +192,8 @@ public class CommandListener extends ListenerAdapter {
     private boolean isAuthorised(ICommandExecutable command, CommandContext context) {
         if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
             if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
-                if (context.getCoreSettings().isShowPermErrors()) {
-                    context.getUIMessaging().sendPermissionError(command.getPermission());
+                if (context.getCoreSettings().getShowPermErrors()) {
+                    context.getUiMessaging().sendPermissionError(command.getPermission());
                 }
             }
             return false;
@@ -267,7 +202,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void deleteMessages(ICommandExecutable command, CommandContext context) {
-        if (context.getCoreSettings().isDeleteCommand() && command.deleteMessages()) {
+        if (context.getCoreSettings().getDeleteCommand() && command.deleteMessages()) {
             if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
                 context.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
             } else {

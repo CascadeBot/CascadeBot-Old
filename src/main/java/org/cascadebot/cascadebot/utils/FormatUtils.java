@@ -6,12 +6,16 @@
 package org.cascadebot.cascadebot.utils;
 
 import com.ibm.icu.text.DateFormat;
+import com.ibm.icu.text.MeasureFormat;
 import com.ibm.icu.text.SimpleDateFormat;
+import com.ibm.icu.util.Measure;
+import com.ibm.icu.util.MeasureUnit;
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.internal.utils.Checks;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -92,6 +96,7 @@ public class FormatUtils {
 
     private static String getFooter(String footer, int padding, int... sizes) {
         StringBuilder sb = new StringBuilder();
+        footer = " " + footer;
         sb.append("|");
         int total = 0;
         for (int i = 0; i < sizes.length; i++) {
@@ -138,10 +143,14 @@ public class FormatUtils {
                 sb.append(field.getValue()).append("\n\n");
             }
         }
+
         if (inline != null) {
             sb.append(getFormattedInlineFields(inline)).append("\n\n");
         }
-        sb.append("_").append(embed.getFooter().getText()).append("_");
+
+        if (embed.getFooter() != null) {
+            sb.append("_").append(embed.getFooter().getText()).append("_");
+        }
 
         return sb.toString();
     }
@@ -195,6 +204,30 @@ public class FormatUtils {
         return SimpleDateFormat.getDateTimeInstance(DateFormat.RELATIVE_LONG, DateFormat.LONG, locale.getULocale()).format(new Date(dateTime.toEpochSecond() * 1000));
     }
 
+    /**
+     * Formats a time string using the ICU library in the order hours, minutes and seconds.
+     * This only supports up to hours and down to seconds. If there are more than 24 hours, it will just be displayed as such and will not overflow.
+     * <br/><br/>
+     * The short form is like so: 1h 12m 23s.<br/>
+     * The long form is like so: 1 hour, 12 minutes, 23 seconds.
+     * <br/><br/>
+     * Both forms follow the relative locale's time formatting rules.
+     *
+     * @param millis The time to be formatted in milliseconds.
+     * @param locale The locale for the time to be formatted in.
+     * @param isShort Whether to display in short form or not.
+     * @return The formatted string
+     */
+    public static String formatTime(long millis, Locale locale, boolean isShort) {
+        Checks.notNegative(millis, "time");
+        long hours = TimeUnit.MILLISECONDS.toHours(millis);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - (hours * 60);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) - (hours * 60 * 60) - (minutes * 60);
+
+        MeasureFormat format = MeasureFormat.getInstance(locale.getULocale(), (isShort ? MeasureFormat.FormatWidth.NARROW : MeasureFormat.FormatWidth.WIDE));
+        return format.formatMeasures(new Measure(hours, MeasureUnit.HOUR), new Measure(minutes, MeasureUnit.MINUTE), new Measure(seconds, MeasureUnit.SECOND));
+    }
+
     @Deprecated
     public static <T extends Enum> String formatEnum(T theEnum) {
         return StringUtils.capitalize(theEnum.name().toLowerCase().replace("_", " "));
@@ -212,8 +245,8 @@ public class FormatUtils {
         Matcher matcher = UNICODE_REGEX.matcher(stringToFormat);
         String formatted = stringToFormat;
         while (matcher.find()) {
-            // If matching a normal @<emoji>@ otherwise it's a
-            // global emote @g:<emote>@
+            // If matching a normal |<emoji>| otherwise it's a
+            // global emote |g:<emote>|
             if (matcher.group(1) == null) {
                 Emoji emoji = EmojiManager.getForAlias(matcher.group(2).toLowerCase());
                 if (emoji != null) {

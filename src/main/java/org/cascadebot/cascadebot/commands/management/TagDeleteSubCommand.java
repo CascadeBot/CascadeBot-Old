@@ -15,14 +15,16 @@ public class TagDeleteSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
-        if (context.getCoreSettings().removeTag(context.getArg(0))) {
+        String tagName = context.getArg(0).toLowerCase();
+
+        if (context.getData().getManagement().removeTag(tagName)) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.tag.delete.successfully_deleted_tag"));
         } else {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", context.getArg(0)));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", tagName));
         }
     }
 

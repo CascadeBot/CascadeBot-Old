@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.commandmeta;
 import lombok.Getter;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.cascadebot.cascadebot.ShutdownHandler;
-import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.ReflectionUtils;
 import org.slf4j.Logger;
@@ -53,23 +52,18 @@ public class CommandManager {
         return null;
     }
 
-    public ICommandMain getCommand(String command, Locale locale) {
+    public ICommandMain getCommand(String command, GuildData data) {
         for (ICommandMain cmd : commands) {
-            if (cmd.command(locale).equals(command)) {
-                return cmd;
-            } else if (cmd.getGlobalAliases(locale).contains(command)) {
+            if (data.getCore().getCommandAliases(cmd).contains(command)) {
                 return cmd;
             }
         }
-        // Fallback to default if cannot find command
-        return getCommand(command);
-    }
 
-    public ICommandMain getCommand(String command, GuildData data) {
+        // Fallback to default if cannot find command
         for (ICommandMain cmd : commands) {
-            if (data.getCommandName(cmd).equals(command)) {
+            if (cmd.command(data.getLocale()).equals(command)) {
                 return cmd;
-            } else if (data.getCommandAliases(cmd).contains(command)) {
+            } else if (cmd.getGlobalAliases(data.getLocale()).contains(command)) {
                 return cmd;
             }
         }

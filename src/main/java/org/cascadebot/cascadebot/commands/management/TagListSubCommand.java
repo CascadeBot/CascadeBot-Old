@@ -17,7 +17,7 @@ public class TagListSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        Map<String, Tag> tags = context.getCoreSettings().getTags();
+        Map<String, Tag> tags = context.getData().getManagement().getTags();
 
         if (tags.size() == 0) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.tag.list.no_tags_found"));

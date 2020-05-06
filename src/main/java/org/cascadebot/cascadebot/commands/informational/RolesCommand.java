@@ -14,8 +14,6 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
-import java.util.Set;
-
 public class RolesCommand implements ICommandMain {
 
     @Override
@@ -37,7 +35,7 @@ public class RolesCommand implements ICommandMain {
                     role.getColor() == null ? context.i18n("words.default") : "#" + Integer.toHexString(role.getColor().getRGB()));
         }
 
-        context.getUIMessaging().sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
+        context.getUiMessaging().sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
     }
 
     @Override

@@ -12,8 +12,6 @@ import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-import java.util.Set;
-
 public class LeaveCommand implements ICommandMain {
 
     @Override
@@ -24,9 +22,9 @@ public class LeaveCommand implements ICommandMain {
             return;
         }
 
-        if (!sender.getVoiceState().inVoiceChannel() || sender.getVoiceState().getChannel().equals(voiceChannel)) {
+        if (!sender.getVoiceState().inVoiceChannel() || !sender.getVoiceState().getChannel().equals(voiceChannel)) {
             if (!context.hasPermission("leave.other")) {
-                context.getUIMessaging().sendPermissionError("leave.other");
+                context.getUiMessaging().sendPermissionError("leave.other");
                 return;
             }
         }

@@ -5,13 +5,10 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -20,12 +17,15 @@ import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GroupPermissionInfoSubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -71,7 +71,7 @@ public class GroupPermissionInfoSubCommand implements ISubCommand {
                 }
             }
 
-            context.getUIMessaging().sendPagedMessage(pageList);
+            context.getUiMessaging().sendPagedMessage(pageList);
         }, sender.getIdLong());
     }
 

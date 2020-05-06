@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.Getter;
+import org.cascadebot.cascadebot.data.objects.ModuleFlag;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -38,6 +39,10 @@ public enum Module {
      * This is a bit of a random module containing smaller commands.
      */
     FUN,
+    /**
+     * This is a module for containing useful stuff that doesn't really fit into any other module.
+     */
+    USEFUL,
     /**
      * All our special commands :D
      */

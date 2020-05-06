@@ -9,8 +9,8 @@ import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -75,11 +75,24 @@ public class DiscordUtils {
             return null;
         }
         User user = users.size() != 1 ? null : users.get(0);
-        if (user == null && Regex.ID.matcher(search).matches() && retrieve) {
-            try {
-                user = CascadeBot.INS.getShardManager().retrieveUserById(Long.valueOf(search)).complete();
-            } catch (ErrorResponseException | NumberFormatException e) {
-                user = null;
+        if (user == null && retrieve) {
+            Matcher userId = Regex.ID.matcher(search);
+            Matcher userMention = Regex.USER_MENTION.matcher(search);
+
+            long id = -1;
+
+            if (userId.matches()) {
+                id = Long.parseLong(userId.group(0));
+            } else if (userMention.matches()) {
+                id = Long.parseLong(userMention.group(1));
+            }
+
+            if (id != -1) {
+                try {
+                    user = CascadeBot.INS.getShardManager().retrieveUserById(id).complete();
+                } catch (ErrorResponseException | NumberFormatException ignored) {
+                    // If we can't retrieve the user or the id isn't formatted correctly then just ignore, the user is returned as null
+                }
             }
         }
         return user;
@@ -94,8 +107,22 @@ public class DiscordUtils {
         return CascadeBot.INS.getShardManager().getGuildById(guildId);
     }
 
-    public static MessageChannel getTextChannelById(Long channelId) {
+    public static TextChannel getTextChannelById(Long channelId) {
         return CascadeBot.INS.getShardManager().getTextChannelById(channelId);
+    }
+
+    public static TextChannel getTextChannel(Guild guild, String search) {
+        List<TextChannel> channels = FinderUtil.findTextChannels(search, guild);
+        if (channels.size() > 1) {
+           return null;
+        }
+
+        TextChannel channel = channels.size() != 1 ? null : channels.get(0);
+        if (channel == null && Regex.ID.matcher(search).matches()) {
+            channel = getTextChannelById(Long.valueOf(search));
+        }
+
+        return channel;
     }
 
     //region Roles
