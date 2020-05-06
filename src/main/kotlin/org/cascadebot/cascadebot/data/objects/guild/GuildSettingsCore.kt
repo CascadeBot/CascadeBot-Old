@@ -40,14 +40,9 @@ class GuildSettingsCore {
     var helpShowAllModules = false
 
     var locale: Locale = Locale.getDefaultLocale()
-
-    @Setting(directlyEditable = false)
-    private val commandInfo = ConcurrentHashMap<Class<ICommandMain>, MutableSet<GuildCommandInfo>>()
-
-    @Setting(directlyEditable = false)
     var prefix: String = Config.INS.defaultPrefix
 
-    @Setting(directlyEditable = false)
+    private val commandInfo = ConcurrentHashMap<Class<ICommandMain>, MutableSet<GuildCommandInfo>>()
     private val enabledModules: MutableSet<Module> = Sets.newConcurrentHashSet(Module.getModules(ModuleFlag.DEFAULT))
 
     //region Modules

@@ -117,8 +117,7 @@ public class SettingsCommand implements ICommandMain {
         }
         Map<String, Field> settings = new HashMap<>();
         Arrays.stream(classForScanning.getFields())
-                .filter(field -> field.getAnnotation(Setting.class) != null &&
-                        field.getAnnotation(Setting.class).directlyEditable())
+                .filter(field -> field.getAnnotation(Setting.class) != null)
                 .forEach(setting -> settings.put(setting.getName(), setting));
         return settings;
     }

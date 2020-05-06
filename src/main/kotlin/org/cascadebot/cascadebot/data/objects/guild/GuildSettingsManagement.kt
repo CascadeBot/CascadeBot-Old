@@ -11,10 +11,7 @@ class GuildSettingsManagement {
     @Setting
     var allowTagCommands = true
 
-    @Setting(directlyEditable = false)
     val tags: ConcurrentHashMap<String, Tag> = ConcurrentHashMap()
-
-    @Setting(directlyEditable = false)
     val permissions = GuildPermissions()
 
     fun getTag(key: String): Tag? {
