@@ -73,12 +73,16 @@ class Tier : FlagContainer {
      * @param idsUsed This parameter should be null. It's used for when calling parent method. It stores flags that have been used already.
      * @return The guild benefits gave in this tier
      */
-    fun getGuildTierString(locale: Locale, idsUsed: MutableList<String>): String {
+    fun getGuildTierString(locale: Locale, idsUsed: MutableList<String>?): String {
         val tierStringBuilder = StringBuilder()
+        var localIds = idsUsed
+        if (localIds == null) {
+            localIds = ArrayList()
+        }
         for (flag in flags) {
-            if (!idsUsed.contains(flag.id)) {
+            if (!localIds.contains(flag.id)) {
                 if (flag.scope == FlagScope.GUILD) {
-                    idsUsed.add(flag.id)
+                    localIds.add(flag.id)
                     tierStringBuilder.append(" - **").append(flag.getName(locale)).append(":** ").append(flag.getDescription(locale)).append('\n')
                 }
             }
