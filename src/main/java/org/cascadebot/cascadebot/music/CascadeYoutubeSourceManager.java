@@ -45,7 +45,7 @@ public class CascadeYoutubeSourceManager extends YoutubeAudioSourceManager {
                 return 0;
             }
         });
-        this.httpInterfaceManager.setHttpContextFilter(new YoutubeIpRotatorFilter(new YoutubeHttpContextFilter(), true, new RotatingNanoIpRoutePlanner(new ArrayList<>()), 5));
+        this.httpInterfaceManager.setHttpContextFilter(new YoutubeIpRotatorFilter(new YoutubeHttpContextFilter(), true, new RotatingNanoIpRoutePlanner(ipBlocks), 5));
     }
 
     @Override
