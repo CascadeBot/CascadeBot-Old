@@ -7,6 +7,7 @@ import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterface;
 import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterfaceManager;
 import com.sedmelluq.lava.extensions.youtuberotator.YoutubeIpRotatorFilter;
 import com.sedmelluq.lava.extensions.youtuberotator.planner.RotatingNanoIpRoutePlanner;
+import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.IpBlock;
 import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv4Block;
 
 import java.net.InetAddress;
@@ -20,7 +21,7 @@ public class CascadeYoutubeSourceManager extends YoutubeAudioSourceManager {
     public CascadeYoutubeSourceManager(boolean allowSearch, List<InetAddress> addressList) {
         super(allowSearch);
         this.httpInterfaceManager = HttpClientTools.createDefaultThreadLocalManager();
-        List<Ipv4Block> ipBlocks = new ArrayList<>();
+        List<IpBlock> ipBlocks = new ArrayList<>();
         for (InetAddress address : addressList) {
             ipBlocks.add(new Ipv4Block(address.getHostAddress()));
         }
