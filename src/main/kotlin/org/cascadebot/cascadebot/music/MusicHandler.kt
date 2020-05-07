@@ -56,7 +56,11 @@ class MusicHandler {
     init {
         AudioSourceManagers.registerRemoteSources(playerManager)
 
-        val youtubeAudioSourceManager = YoutubeAudioSourceManager(false)
+        val youtubeAudioSourceManager = if (Config.INS.rotatingIps.size > 0) {
+            CascadeYoutubeSourceManager(true, Config.INS.rotatingIps)
+        } else {
+            YoutubeAudioSourceManager(true)
+        }
         youtubeAudioSourceManager.configureRequests { RequestConfig.copy(it).setCookieSpec(CookieSpecs.IGNORE_COOKIES).setConnectTimeout(5000).build() }
         youtubeSourceName = youtubeAudioSourceManager.sourceName
         playerManager.registerSourceManager(youtubeAudioSourceManager)

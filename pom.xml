@@ -164,6 +164,10 @@
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>bintray-sedmelluq</id>
+            <url>https://dl.bintray.com/sedmelluq/com.sedmelluq</url>
+        </repository>
     </repositories>
 
 
@@ -247,6 +251,17 @@
             <groupId>com.sedmelluq</groupId>
             <artifactId>lavaplayer</artifactId>
             <version>${lavaplayer.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sedmelluq</groupId>
+            <artifactId>lavaplayer-ext-youtube-rotator</artifactId>
+            <version>0.2.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.sedmelluq</groupId>
+                    <artifactId>lavaplayer</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.sedmelluq</groupId>

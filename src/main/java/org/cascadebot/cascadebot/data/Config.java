@@ -9,6 +9,7 @@ import ch.qos.logback.classic.Level;
 import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import com.google.common.collect.HashMultimap;
+import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.IpBlock;
 import lombok.Getter;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
@@ -82,6 +86,8 @@ public class Config {
     private String youtubeKey;
 
     private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
+
+    private List<InetAddress> rotatingIps = new ArrayList<>();
 
     private Config(String file) throws IOException {
         config = new File(file);
@@ -228,6 +234,13 @@ public class Config {
                 } catch (URISyntaxException e) {
                     LOG.warn("Invalid url for node provided", e);
                 }
+            }
+        }
+
+        if (config.contains("ips")) {
+            List<String> rotatingIps = (List<String>) config.getList("ips");
+            for (String ip : rotatingIps) {
+                this.rotatingIps.add(InetAddress.getByName(ip));
             }
         }
 
