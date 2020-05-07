@@ -18,14 +18,10 @@ public class CascadeYoutubeSourceManager extends YoutubeAudioSourceManager {
 
     private final HttpInterfaceManager httpInterfaceManager;
 
-    public CascadeYoutubeSourceManager(boolean allowSearch, List<InetAddress> addressList) {
+    public CascadeYoutubeSourceManager(boolean allowSearch, List<IpBlock> addressList) {
         super(allowSearch);
         this.httpInterfaceManager = HttpClientTools.createDefaultThreadLocalManager();
-        List<IpBlock> ipBlocks = new ArrayList<>();
-        for (InetAddress address : addressList) {
-            ipBlocks.add(new Ipv4Block(address.getHostAddress()));
-        }
-        this.httpInterfaceManager.setHttpContextFilter(new YoutubeIpRotatorFilter(new YoutubeHttpContextFilter(), true, new RotatingNanoIpRoutePlanner(ipBlocks), 5));
+        this.httpInterfaceManager.setHttpContextFilter(new YoutubeIpRotatorFilter(new YoutubeHttpContextFilter(), true, new RotatingNanoIpRoutePlanner(addressList), 5));
     }
 
     @Override

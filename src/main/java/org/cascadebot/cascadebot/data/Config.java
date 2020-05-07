@@ -10,6 +10,8 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import com.google.common.collect.HashMultimap;
 import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.IpBlock;
+import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv4Block;
+import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv6Block;
 import lombok.Getter;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,11 +42,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Getter
 public class Config {
 
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);
+
+    private static final Pattern ipv4Regex = Pattern.compile("([0-9]{1,3}.){4}/[0-9]{1,2}");
+    private static final Pattern ipv6Regex = Pattern.compile("([0-f]{0,4}:){2,8}[0-f]{0,4}/[0-9]{1,2}");
 
     public static Config INS;
 
@@ -87,7 +93,7 @@ public class Config {
 
     private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
 
-    private List<InetAddress> rotatingIps = new ArrayList<>();
+    private List<IpBlock> rotatingIps = new ArrayList<>();
 
     private Config(String file) throws IOException {
         config = new File(file);
@@ -240,7 +246,13 @@ public class Config {
         if (config.contains("ips")) {
             List<String> rotatingIps = (List<String>) config.getList("ips");
             for (String ip : rotatingIps) {
-                this.rotatingIps.add(InetAddress.getByName(ip));
+                if (ipv4Regex.matcher(ip).matches()) {
+                    this.rotatingIps.add(new Ipv4Block(ip));
+                } else if (ipv6Regex.matcher(ip).matches()) {
+                    this.rotatingIps.add(new Ipv6Block(ip));
+                } else {
+                    LOG.warn("Ip " + ip + " is not a valid ip in cidr notation!");
+                }
             }
         }
 
@@ -366,6 +378,10 @@ public class Config {
 
     public int getPrometheusPort() {
         return prometheusPort;
+    }
+
+    public List<IpBlock> getRotatingIps() {
+        return rotatingIps;
     }
 
 }
