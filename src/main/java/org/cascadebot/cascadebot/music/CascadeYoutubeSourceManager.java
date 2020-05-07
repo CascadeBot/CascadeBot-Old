@@ -7,13 +7,11 @@ import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterface;
 import com.sedmelluq.discord.lavaplayer.tools.io.HttpInterfaceManager;
 import com.sedmelluq.lava.extensions.youtuberotator.YoutubeIpRotatorFilter;
 import com.sedmelluq.lava.extensions.youtuberotator.planner.RotatingNanoIpRoutePlanner;
-import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.IpBlock;
+import com.sedmelluq.lava.extensions.youtuberotator.tools.ip.Ipv4Block;
 
-import java.math.BigInteger;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class CascadeYoutubeSourceManager extends YoutubeAudioSourceManager {
 
@@ -22,29 +20,10 @@ public class CascadeYoutubeSourceManager extends YoutubeAudioSourceManager {
     public CascadeYoutubeSourceManager(boolean allowSearch, List<InetAddress> addressList) {
         super(allowSearch);
         this.httpInterfaceManager = HttpClientTools.createDefaultThreadLocalManager();
-        List<IpBlock<InetAddress>> ipBlocks = new ArrayList<>();
-        Random random = new Random();
-        ipBlocks.add(new IpBlock<>() {
-            @Override
-            public InetAddress getRandomAddress() {
-                return addressList.get(random.nextInt(addressList.size() - 1));
-            }
-
-            @Override
-            public Class<InetAddress> getType() {
-                return InetAddress.class;
-            }
-
-            @Override
-            public BigInteger getSize() {
-                return BigInteger.valueOf(addressList.size());
-            }
-
-            @Override
-            public int getMaskBits() {
-                return 0;
-            }
-        });
+        List<Ipv4Block> ipBlocks = new ArrayList<>();
+        for (InetAddress address : addressList) {
+            ipBlocks.add(new Ipv4Block(address.getHostAddress()));
+        }
         this.httpInterfaceManager.setHttpContextFilter(new YoutubeIpRotatorFilter(new YoutubeHttpContextFilter(), true, new RotatingNanoIpRoutePlanner(ipBlocks), 5));
     }
 
