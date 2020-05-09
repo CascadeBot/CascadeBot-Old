@@ -19,9 +19,9 @@ abstract class Placeholder<T>(val key: String) {
 
 }
 
-class StaticPlaceholder<T>(key: String, val mapping: (T) -> String?) : Placeholder<T>(key)
+class StaticPlaceholder<T>(key: String, val mapping: StaticPlaceholder<T>.(T) -> String?) : Placeholder<T>(key)
 
-class ArgsPlaceholder<T>(key: String, val mapping: (T, List<String>) -> String?) : Placeholder<T>(key) {
+class ArgsPlaceholder<T>(key: String, val mapping: ArgsPlaceholder<T>.(T, List<String>) -> String?) : Placeholder<T>(key) {
 
     val args: MutableMap<String, List<String>> = mutableMapOf()
 

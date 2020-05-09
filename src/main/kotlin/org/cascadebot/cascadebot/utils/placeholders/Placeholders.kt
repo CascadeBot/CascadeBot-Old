@@ -9,11 +9,11 @@ class Placeholders<T> {
 
     private val placeholders: MutableList<Placeholder<T>> = mutableListOf()
 
-    fun addStaticPlaceholder(key: String, mapping: (T) -> String?) {
+    fun staticPlaceholder(key: String, mapping: StaticPlaceholder<T>.(T) -> String?) {
         placeholders.add(StaticPlaceholder(key, mapping))
     }
 
-    fun addArgsPlaceholder(key: String, mapping: (T, List<String>) -> String?) {
+    fun argsPlaceholder(key: String, mapping: ArgsPlaceholder<T>.(T, List<String>) -> String?) {
         placeholders.add(ArgsPlaceholder(key, mapping))
     }
 
