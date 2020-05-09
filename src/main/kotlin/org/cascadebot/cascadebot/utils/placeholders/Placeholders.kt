@@ -1,5 +1,9 @@
 package org.cascadebot.cascadebot.utils.placeholders
 
+import org.cascadebot.cascadebot.commandmeta.CommandContext
+import org.cascadebot.cascadebot.utils.FormatUtils
+import java.time.OffsetDateTime
+
 class Placeholders<T> {
 
     companion object {
@@ -50,3 +54,45 @@ class Placeholders<T> {
 }
 
 fun <T> placeholders(init: Placeholders<T>.() -> Unit): Placeholders<T> = Placeholders<T>().apply(init)
+
+val tags = placeholders<CommandContext> {
+    argsPlaceholder("server") { context, args ->
+        if (args.size != 1) return@argsPlaceholder context.guild.name
+        when (true) {
+            isArg("id", args[0]) -> context.guild.id
+            isArg("region", args[0]) -> context.guild.region.name
+            isArg("owner", args[0]) -> context.guild.owner!!.user.asTag
+            isArg("member_count", args[0]) -> context.guild.memberCache.size().toString()
+            else -> null
+        }
+    }
+    argsPlaceholder("sender") { context, args ->
+        if (args.size != 1) return@argsPlaceholder context.user.asTag
+        when (true) {
+            isArg("id", args[0]) -> context.member.id
+            isArg("nickname", args[0]) -> context.member.nickname ?: "No nickname!"
+            isArg("name", args[0]) -> context.user.name
+            isArg("mention", args[0]) -> context.user.asMention
+            else -> null
+        }
+    }
+    argsPlaceholder("channel") { context, args ->
+        if (args.size != 1) return@argsPlaceholder context.channel.name
+        when (true) {
+            isArg("id", args[0]) -> context.channel.id
+            isArg("mention", args[0]) -> context.channel.asMention
+            isArg("topic", args[0]) -> context.channel.topic
+            isArg("creation", args[0]) -> FormatUtils.formatDateTime(context.channel.timeCreated, context.locale)
+            isArg("parent", args[0]) -> if (context.channel.parent == null) "No channel parent" else context.channel.parent!!.name
+            else -> null
+        }
+    }
+    staticPlaceholder("time") { context -> FormatUtils.formatDateTime(OffsetDateTime.now(), context.locale) }
+    argsPlaceholder("args") { context, args ->
+        if (args.isEmpty()) return@argsPlaceholder null
+        val argNum = args[0].toIntOrNull() ?: -1
+        if (argNum in 0..context.args.size) return@argsPlaceholder null
+
+        context.getArg(argNum)
+    }
+}
