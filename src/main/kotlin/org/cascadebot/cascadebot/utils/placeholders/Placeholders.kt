@@ -20,26 +20,30 @@ class Placeholders<T> {
     fun formatMessage(message: String, input: T): String {
         val toReplace = mutableMapOf<String, String>()
         for (matchResult in placeholderRegex.findAll(message)) {
-            if (matchResult.groupValues[2].isNotEmpty()) {
-                placeholders.find { matchResult.groupValues[1] in it.localisedKeys.values }?.let { placeholder ->
-                    if (placeholder is ArgsPlaceholder<T>) {
-                        placeholder.mapping(input, matchResult.groupValues[2].split(","))?.let {
+            placeholders.find { matchResult.groupValues[1] in it.localisedKeys.values }?.let { placeholder ->
+                when (placeholder) {
+                    is StaticPlaceholder<T> -> {
+                        placeholder.mapping(placeholder, input)?.let {
                             toReplace[matchResult.groupValues[0]] = it
                         }
                     }
-                }
-            } else {
-                placeholders.find { matchResult.groupValues[1] in it.localisedKeys.values }?.let { placeholder ->
-                    if (placeholder is StaticPlaceholder<T>) {
-                        placeholder.mapping(input)?.let {
+                    is ArgsPlaceholder<T> -> {
+                        val args = if (matchResult.groupValues[2].isNotEmpty()) {
+                            matchResult.groupValues[2].split(",")
+                        } else {
+                            listOf()
+                        }
+
+                        placeholder.mapping(placeholder, input, args)?.let {
                             toReplace[matchResult.groupValues[0]] = it
                         }
                     }
+                    else -> error("Invalid Placeholder type: ${placeholder::class.simpleName}")
                 }
             }
         }
         var newMessage = message
-        toReplace.forEach { newMessage = message.replace(it.key, it.value) }
+        toReplace.forEach { newMessage = newMessage.replace(it.key, it.value) }
         return newMessage
     }
 
