@@ -45,7 +45,7 @@ class Greetings {
             builder.replace(Regex("\\{user_mention}", RegexOption.IGNORE_CASE), event.user.asMention)
             builder.replace(Regex("\\{time}", RegexOption.IGNORE_CASE), FormatUtils.formatDateTime(OffsetDateTime.now()))
             builder.replace(Regex("\\{member_count}", RegexOption.IGNORE_CASE), event.guild.memberCache.size().toString())
-            builder.toString()
+            return@let builder.toString()
         }
     }
     fun getRandomGoodbyeMsg(event: GuildMemberLeaveEvent): String? {
