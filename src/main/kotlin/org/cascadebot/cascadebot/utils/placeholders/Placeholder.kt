@@ -10,9 +10,9 @@ abstract class Placeholder<T>(val key: String) {
             val element = it.value.getElement("placeholders.$key")
             if (element.isEmpty) return@mapValues key
             if (element.get().isJsonObject) {
-                return@mapValues element.get().asJsonObject["key"].asString
+                return@mapValues element.get().asJsonObject["key"]?.asString ?: key
             } else {
-                return@mapValues element.get().asString
+                return@mapValues if (element.get().asString.isBlank()) key else element.get().asString
             }
         }
     }
