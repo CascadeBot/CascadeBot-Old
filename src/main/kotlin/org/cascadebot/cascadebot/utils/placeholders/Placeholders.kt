@@ -24,7 +24,7 @@ class Placeholders<T> {
     fun formatMessage(message: String, input: T): String {
         val toReplace = mutableMapOf<String, String>()
         for (matchResult in placeholderRegex.findAll(message)) {
-            placeholders.find { matchResult.groupValues[1] in it.localisedKeys.values }?.let { placeholder ->
+            placeholders.find { it.localisedInfo.values.any { info -> info.key == matchResult.groupValues[1] } }?.let { placeholder ->
                 when (placeholder) {
                     is StaticPlaceholder<T> -> {
                         placeholder.mapping(placeholder, input)?.let {
