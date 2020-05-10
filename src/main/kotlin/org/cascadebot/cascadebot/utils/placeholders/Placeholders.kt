@@ -58,7 +58,7 @@ fun <T> placeholders(init: Placeholders<T>.() -> Unit): Placeholders<T> = Placeh
 val tags = placeholders<CommandContext> {
     argsPlaceholder("server") { context, args ->
         if (args.size != 1) return@argsPlaceholder context.guild.name
-        when (true) {
+        when {
             isArg("id", args[0]) -> context.guild.id
             isArg("region", args[0]) -> context.guild.region.name
             isArg("owner", args[0]) -> context.guild.owner!!.user.asTag
@@ -68,7 +68,7 @@ val tags = placeholders<CommandContext> {
     }
     argsPlaceholder("sender") { context, args ->
         if (args.size != 1) return@argsPlaceholder context.user.asTag
-        when (true) {
+        when {
             isArg("id", args[0]) -> context.member.id
             isArg("nickname", args[0]) -> context.member.nickname ?: "No nickname!"
             isArg("name", args[0]) -> context.user.name
@@ -78,7 +78,7 @@ val tags = placeholders<CommandContext> {
     }
     argsPlaceholder("channel") { context, args ->
         if (args.size != 1) return@argsPlaceholder context.channel.name
-        when (true) {
+        when {
             isArg("id", args[0]) -> context.channel.id
             isArg("mention", args[0]) -> context.channel.asMention
             isArg("topic", args[0]) -> context.channel.topic
