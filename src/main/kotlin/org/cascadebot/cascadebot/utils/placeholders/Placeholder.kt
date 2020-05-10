@@ -5,17 +5,22 @@ import org.cascadebot.cascadebot.data.language.Locale
 
 abstract class Placeholder<T>(val key: String) {
 
-    val localisedKeys: Map<Locale, String> by lazy {
+    val localisedInfo: Map<Locale, PlaceholderInfo> by lazy {
         Language.getLanguages().mapValues {
             val element = it.value.getElement("placeholders.$key")
-            if (element.isEmpty) return@mapValues key
+            if (element.isEmpty) return@mapValues PlaceholderInfo(key)
             if (element.get().isJsonObject) {
-                return@mapValues element.get().asJsonObject["key"]?.asString ?: key
+                return@mapValues PlaceholderInfo(
+                        it.value.getString("placeholders.$key.key").orElse(key),
+                        it.value.getString("placeholders.$key.description").orElse(null)
+                )
             } else {
-                return@mapValues if (element.get().asString.isBlank()) key else element.get().asString
+                error("Could not parse placeholder!")
             }
         }
     }
+
+    data class PlaceholderInfo(val key: String, val description: String? = null)
 
 }
 
