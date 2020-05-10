@@ -283,7 +283,7 @@
       "placeholders": {
         "command": "placeholders",
         "description": "Lists all available placeholders.",
-        "header": "To use placeholders in tags you wrap the placeholder in `{}` (example: `{server_name}`). If a place holder requires more options (like args) you use this format `{placeholder:option1,option2}` (example: `{args:0}`)."
+        "header": "To use placeholders in tags you wrap the placeholder in `'{}'` (example: `'{server}'`). If a place holder requires more options (like args) you use this format `'{placeholder:option1,option2}'` (example: `'{args:0}'`)."
       },
       "raw": {
         "command": "raw",
