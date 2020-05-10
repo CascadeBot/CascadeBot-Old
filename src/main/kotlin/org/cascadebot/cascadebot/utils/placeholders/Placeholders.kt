@@ -1,5 +1,7 @@
 package org.cascadebot.cascadebot.utils.placeholders
 
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
+import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.utils.FormatUtils
 import java.time.OffsetDateTime
@@ -96,3 +98,6 @@ val tags = placeholders<CommandContext> {
         context.getArg(argNum)
     }
 }
+
+val welcomes = placeholders<GuildMemberJoinEvent> {}
+val goodbyes = placeholders<GuildMemberLeaveEvent> {}
