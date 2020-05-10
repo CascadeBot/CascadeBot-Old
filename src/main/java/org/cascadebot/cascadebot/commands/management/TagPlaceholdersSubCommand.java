@@ -31,7 +31,8 @@ public class TagPlaceholdersSubCommand implements ISubCommand {
                     .append('`')
                     .append(placeholder.getLocalisedInfo().get(context.getLocale()).getKey())
                     .append("` - ")
-                    .append(placeholder.getLocalisedInfo().get(context.getLocale()).getDescription());
+                    .append(placeholder.getLocalisedInfo().get(context.getLocale()).getDescription())
+                    .append("\n");
         }
 
         List<Page> pageList = PageUtils.splitStringToStringPages(placeholderBuilder.toString(), 1000, '\n');
