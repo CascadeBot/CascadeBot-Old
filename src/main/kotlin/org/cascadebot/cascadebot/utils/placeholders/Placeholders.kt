@@ -13,20 +13,23 @@ class Placeholders<T> {
         val placeholderRegex = Regex("\\{([\\p{Ll}_-]+)(?::((?:[\\p{Ll}0-9_-]+,?)+))?}")
     }
 
-    private val placeholders: MutableList<Placeholder<T>> = mutableListOf()
+    private val _placeholders: MutableList<Placeholder<T>> = mutableListOf()
+    val placeholders: List<Placeholder<T>>
+        get() = _placeholders.toList()
 
     fun staticPlaceholder(key: String, mapping: StaticPlaceholder<T>.(T) -> String?) {
-        placeholders.add(StaticPlaceholder(key, mapping))
+        _placeholders.add(StaticPlaceholder(key, mapping))
     }
 
     fun argsPlaceholder(key: String, mapping: ArgsPlaceholder<T>.(T, List<String>) -> String?) {
-        placeholders.add(ArgsPlaceholder(key, mapping))
+        _placeholders.add(ArgsPlaceholder(key, mapping))
     }
 
+    // TODO: Use locale!
     fun formatMessage(message: String, input: T): String {
         val toReplace = mutableMapOf<String, String>()
         for (matchResult in placeholderRegex.findAll(message)) {
-            placeholders.find { it.localisedInfo.values.any { info -> info.key == matchResult.groupValues[1] } }?.let { placeholder ->
+            _placeholders.find { it.localisedInfo.values.any { info -> info.key == matchResult.groupValues[1] } }?.let { placeholder ->
                 when (placeholder) {
                     is StaticPlaceholder<T> -> {
                         placeholder.mapping(placeholder, input)?.let {
