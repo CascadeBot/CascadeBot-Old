@@ -16,6 +16,7 @@ import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.utils.FormatUtils
+import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 
 class GeneralEventListener : ListenerAdapter() {
 
@@ -71,9 +72,10 @@ class GeneralEventListener : ListenerAdapter() {
         val greetings = guildData.management.greetings
         if (greetings.welcomeEnabled) {
             greetings.welcomeChannel?.let {
-                // .randomItem should only return null if there are no messages so it can be ignored
-                // TODO Formatting
-                greetings.welcomeMessages.randomItem?.let { message -> it.sendMessage(message).queue() }
+                // .randomItem should only return null if there are no messages so if is null we want an error
+                greetings.welcomeMessages.randomItem!!.let {
+                    PlaceholderObjects.welcomes.formatMessage(it, event)
+                }.let { message -> it.sendMessage(message).queue() }
             } ?: run { greetings.welcomeChannel = null }
         }
     }
@@ -83,9 +85,10 @@ class GeneralEventListener : ListenerAdapter() {
         val greetings = guildData.management.greetings
         if (greetings.goodbyeEnabled) {
             greetings.goodbyeChannel?.let {
-                // .randomItem should only return null if there are no messages so it can be ignored
-                // TODO Formatting
-                greetings.goodbyeMessages.randomItem?.let { message -> it.sendMessage(message).queue() }
+                // .randomItem should only return null if there are no messages so if is null we want an error
+                greetings.goodbyeMessages.randomItem!!.let {
+                    PlaceholderObjects.goodbyes.formatMessage(it, event)
+                }.let { message -> it.sendMessage(message).queue() }
             } ?: run { greetings.goodbyeChannel = null }
         }
     }
