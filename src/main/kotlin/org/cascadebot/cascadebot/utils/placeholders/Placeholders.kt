@@ -1,12 +1,16 @@
 package org.cascadebot.cascadebot.utils.placeholders
 
+import net.dv8tion.jda.api.events.guild.member.GenericGuildMemberEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import org.cascadebot.cascadebot.commandmeta.CommandContext
+import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.utils.FormatUtils
+import java.time.Duration
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 
-class Placeholders<T> {
+class Placeholders<T>(var key: String) {
 
     companion object {
         // https://regex101.com/r/LxMI0R/3
@@ -18,11 +22,11 @@ class Placeholders<T> {
         get() = _placeholders.toList()
 
     fun staticPlaceholder(key: String, mapping: StaticPlaceholder<T>.(T) -> String?) {
-        _placeholders.add(StaticPlaceholder(key, mapping))
+        _placeholders.add(StaticPlaceholder("${this.key}.$key", mapping))
     }
 
     fun argsPlaceholder(key: String, mapping: ArgsPlaceholder<T>.(T, List<String>) -> String?) {
-        _placeholders.add(ArgsPlaceholder(key, mapping))
+        _placeholders.add(ArgsPlaceholder("${this.key}.$key", mapping))
     }
 
     // TODO: Use locale!
@@ -58,9 +62,9 @@ class Placeholders<T> {
 
 }
 
-fun <T> placeholders(init: Placeholders<T>.() -> Unit): Placeholders<T> = Placeholders<T>().apply(init)
+fun <T> placeholders(parentKey: String, init: Placeholders<T>.() -> Unit): Placeholders<T> = Placeholders<T>(parentKey).apply(init)
 
-val tags = placeholders<CommandContext> {
+val tags = placeholders<CommandContext>("tags") {
     argsPlaceholder("server") { context, args ->
         if (args.size != 1) return@argsPlaceholder context.guild.name
         when {
@@ -77,6 +81,7 @@ val tags = placeholders<CommandContext> {
             isArg("id", args[0]) -> context.member.id
             isArg("nickname", args[0]) -> context.member.nickname ?: "No nickname!"
             isArg("name", args[0]) -> context.user.name
+            isArg("full_name", args[0]) -> context.user.asTag
             isArg("mention", args[0]) -> context.user.asMention
             else -> null
         }
@@ -102,5 +107,36 @@ val tags = placeholders<CommandContext> {
     }
 }
 
-val welcomes = placeholders<GuildMemberJoinEvent> {}
-val goodbyes = placeholders<GuildMemberLeaveEvent> {}
+val greetingsCommon: Placeholders<GenericGuildMemberEvent>.()->Unit = {
+    argsPlaceholder("server") { event, args ->
+        if (args.size != 1) return@argsPlaceholder event.guild.name
+        when {
+            isArg("id", args[0]) -> event.guild.id
+            isArg("owner", args[0]) -> event.guild.owner!!.user.asTag
+            isArg("member_count", args[0]) -> event.guild.memberCache.size().toString()
+            else -> null
+        }
+    }
+    argsPlaceholder("user") { event, args ->
+        if (args.size != 1) return@argsPlaceholder event.user.asTag
+        when {
+            isArg("id", args[0]) -> event.user.id
+            isArg("name", args[0]) -> event.user.name
+            isArg("full_name", args[0]) -> event.user.asTag
+            isArg("mention", args[0]) -> event.user.asMention
+            else -> null
+        }
+    }
+    staticPlaceholder("time") { event -> FormatUtils.formatDateTime(OffsetDateTime.now(), Language.getGuildLocale(event.guild.idLong)) }
+}
+
+@Suppress("UNCHECKED_CAST")
+val welcomes = placeholders<GuildMemberJoinEvent>("welcomes") {
+    greetingsCommon(this as Placeholders<GenericGuildMemberEvent>)
+}
+
+@Suppress("UNCHECKED_CAST")
+val goodbyes = placeholders<GuildMemberJoinEvent>("goodbyes") {
+    greetingsCommon(this as Placeholders<GenericGuildMemberEvent>)
+    staticPlaceholder("time_in_guild") { event -> Duration.between(event.member.timeJoined, OffsetDateTime.now()).toString()}
+}
