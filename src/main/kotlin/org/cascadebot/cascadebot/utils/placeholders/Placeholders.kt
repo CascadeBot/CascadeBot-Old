@@ -7,7 +7,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.utils.FormatUtils
 import java.time.Duration
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 
 class Placeholders<T>(var key: String) {
@@ -64,79 +63,86 @@ class Placeholders<T>(var key: String) {
 
 fun <T> placeholders(parentKey: String, init: Placeholders<T>.() -> Unit): Placeholders<T> = Placeholders<T>(parentKey).apply(init)
 
-val tags = placeholders<CommandContext>("tags") {
-    argsPlaceholder("server") { context, args ->
-        if (args.size != 1) return@argsPlaceholder context.guild.name
-        when {
-            isArg("id", args[0]) -> context.guild.id
-            isArg("region", args[0]) -> context.guild.region.name
-            isArg("owner", args[0]) -> context.guild.owner!!.user.asTag
-            isArg("member_count", args[0]) -> context.guild.memberCache.size().toString()
-            else -> null
-        }
-    }
-    argsPlaceholder("sender") { context, args ->
-        if (args.size != 1) return@argsPlaceholder context.user.asTag
-        when {
-            isArg("id", args[0]) -> context.member.id
-            isArg("nickname", args[0]) -> context.member.nickname ?: "No nickname!"
-            isArg("name", args[0]) -> context.user.name
-            isArg("full_name", args[0]) -> context.user.asTag
-            isArg("mention", args[0]) -> context.user.asMention
-            else -> null
-        }
-    }
-    argsPlaceholder("channel") { context, args ->
-        if (args.size != 1) return@argsPlaceholder context.channel.name
-        when {
-            isArg("id", args[0]) -> context.channel.id
-            isArg("mention", args[0]) -> context.channel.asMention
-            isArg("topic", args[0]) -> context.channel.topic
-            isArg("creation", args[0]) -> FormatUtils.formatDateTime(context.channel.timeCreated, context.locale)
-            isArg("parent", args[0]) -> if (context.channel.parent == null) "No channel parent" else context.channel.parent!!.name
-            else -> null
-        }
-    }
-    staticPlaceholder("time") { context -> FormatUtils.formatDateTime(OffsetDateTime.now(), context.locale) }
-    argsPlaceholder("args") { context, args ->
-        if (args.isEmpty()) return@argsPlaceholder null
-        val argNum = args[0].toIntOrNull() ?: -1
-        if (argNum in 0..context.args.size) return@argsPlaceholder null
+object PlaceholderObjects {
 
-        context.getArg(argNum)
-    }
-}
+    @JvmStatic
+    val tags = placeholders<CommandContext>("tags") {
+        argsPlaceholder("server") { context, args ->
+            if (args.size != 1) return@argsPlaceholder context.guild.name
+            when {
+                isArg("id", args[0]) -> context.guild.id
+                isArg("region", args[0]) -> context.guild.region.name
+                isArg("owner", args[0]) -> context.guild.owner!!.user.asTag
+                isArg("member_count", args[0]) -> context.guild.memberCache.size().toString()
+                else -> null
+            }
+        }
+        argsPlaceholder("sender") { context, args ->
+            if (args.size != 1) return@argsPlaceholder context.user.asTag
+            when {
+                isArg("id", args[0]) -> context.member.id
+                isArg("nickname", args[0]) -> context.member.nickname ?: "No nickname!"
+                isArg("name", args[0]) -> context.user.name
+                isArg("full_name", args[0]) -> context.user.asTag
+                isArg("mention", args[0]) -> context.user.asMention
+                else -> null
+            }
+        }
+        argsPlaceholder("channel") { context, args ->
+            if (args.size != 1) return@argsPlaceholder context.channel.name
+            when {
+                isArg("id", args[0]) -> context.channel.id
+                isArg("mention", args[0]) -> context.channel.asMention
+                isArg("topic", args[0]) -> context.channel.topic
+                isArg("creation", args[0]) -> FormatUtils.formatDateTime(context.channel.timeCreated, context.locale)
+                isArg("parent", args[0]) -> if (context.channel.parent == null) "No channel parent" else context.channel.parent!!.name
+                else -> null
+            }
+        }
+        staticPlaceholder("time") { context -> FormatUtils.formatDateTime(OffsetDateTime.now(), context.locale) }
+        argsPlaceholder("args") { context, args ->
+            if (args.isEmpty()) return@argsPlaceholder null
+            val argNum = args[0].toIntOrNull() ?: -1
+            if (argNum in 0..context.args.size) return@argsPlaceholder null
 
-val greetingsCommon: Placeholders<GenericGuildMemberEvent>.()->Unit = {
-    argsPlaceholder("server") { event, args ->
-        if (args.size != 1) return@argsPlaceholder event.guild.name
-        when {
-            isArg("id", args[0]) -> event.guild.id
-            isArg("owner", args[0]) -> event.guild.owner!!.user.asTag
-            isArg("member_count", args[0]) -> event.guild.memberCache.size().toString()
-            else -> null
+            context.getArg(argNum)
         }
     }
-    argsPlaceholder("user") { event, args ->
-        if (args.size != 1) return@argsPlaceholder event.user.asTag
-        when {
-            isArg("id", args[0]) -> event.user.id
-            isArg("name", args[0]) -> event.user.name
-            isArg("full_name", args[0]) -> event.user.asTag
-            isArg("mention", args[0]) -> event.user.asMention
-            else -> null
+
+    private val greetingsCommon: Placeholders<GenericGuildMemberEvent>.() -> Unit = {
+        argsPlaceholder("server") { event, args ->
+            if (args.size != 1) return@argsPlaceholder event.guild.name
+            when {
+                isArg("id", args[0]) -> event.guild.id
+                isArg("owner", args[0]) -> event.guild.owner!!.user.asTag
+                isArg("member_count", args[0]) -> event.guild.memberCache.size().toString()
+                else -> null
+            }
         }
+        argsPlaceholder("user") { event, args ->
+            if (args.size != 1) return@argsPlaceholder event.user.asTag
+            when {
+                isArg("id", args[0]) -> event.user.id
+                isArg("name", args[0]) -> event.user.name
+                isArg("full_name", args[0]) -> event.user.asTag
+                isArg("mention", args[0]) -> event.user.asMention
+                else -> null
+            }
+        }
+        staticPlaceholder("time") { event -> FormatUtils.formatDateTime(OffsetDateTime.now(), Language.getGuildLocale(event.guild.idLong)) }
     }
-    staticPlaceholder("time") { event -> FormatUtils.formatDateTime(OffsetDateTime.now(), Language.getGuildLocale(event.guild.idLong)) }
-}
 
-@Suppress("UNCHECKED_CAST")
-val welcomes = placeholders<GuildMemberJoinEvent>("welcomes") {
-    greetingsCommon(this as Placeholders<GenericGuildMemberEvent>)
-}
+    @JvmStatic
+    @Suppress("UNCHECKED_CAST")
+    val welcomes = placeholders<GuildMemberJoinEvent>("welcomes") {
+        greetingsCommon(this as Placeholders<GenericGuildMemberEvent>)
+    }
 
-@Suppress("UNCHECKED_CAST")
-val goodbyes = placeholders<GuildMemberJoinEvent>("goodbyes") {
-    greetingsCommon(this as Placeholders<GenericGuildMemberEvent>)
-    staticPlaceholder("time_in_guild") { event -> Duration.between(event.member.timeJoined, OffsetDateTime.now()).toString()}
+    @JvmStatic
+    @Suppress("UNCHECKED_CAST")
+    val goodbyes = placeholders<GuildMemberLeaveEvent>("goodbyes") {
+        greetingsCommon(this as Placeholders<GenericGuildMemberEvent>)
+        staticPlaceholder("time_in_guild") { event -> Duration.between(event.member.timeJoined, OffsetDateTime.now()).toString() }
+    }
+
 }

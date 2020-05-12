@@ -15,6 +15,7 @@ import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import org.cascadebot.cascadebot.utils.placeholders.Placeholder;
+import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholdersKt;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class TagPlaceholdersSubCommand implements ISubCommand {
         String header = context.i18n("commands.tag.placeholders.header");
         StringBuilder placeholderBuilder = new StringBuilder();
 
-        for (Placeholder<CommandContext> placeholder : PlaceholdersKt.getTags().getPlaceholders()) {
+        for (Placeholder<CommandContext> placeholder : PlaceholderObjects.getTags().getPlaceholders()) {
             placeholderBuilder
                     .append('`')
                     .append(placeholder.getLocalisedInfo().get(context.getLocale()).getKey())

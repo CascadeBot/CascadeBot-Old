@@ -10,12 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.utils.placeholders.PlaceholdersKt;
+import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Setter
@@ -32,7 +30,7 @@ public class Tag extends PermissionObject {
     private String category;
 
     public String formatTag(CommandContext commandContext) {
-        return PlaceholdersKt.getTags().formatMessage(content, commandContext);
+        return PlaceholderObjects.getTags().formatMessage(content, commandContext);
     }
 
     @Override
