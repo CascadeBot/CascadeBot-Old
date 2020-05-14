@@ -112,15 +112,3 @@ haste:
 web:
   # The secret to use when authenticating with the site/wrapper
   secret_key:
-
-# The redis server to connect to. If you don't specify a redis server then the bot will not log messages for modlog
-redis:
-  host: '127.0.0.1'
-  port: 7379
-  password: ''
-
-# If this is specified all sub fields are required to have encryption
-encryption_key:
-  key: 'AES key, 256 bit recommended'
-  iv: '64 bit iv key'
-  mac: '128 bit mac key'
