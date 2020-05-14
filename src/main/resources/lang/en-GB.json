@@ -290,6 +290,18 @@
         "description": "Displays a tag's content and category."
       }
     },
+    "autorole": {
+      "command": "autorole",
+      "description": "Lists the roles that will be added to new members of the server.",
+      "add": {
+        "command": "add",
+        "description": "Adds a role to the AutoRole list."
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a role from the AutoRole list."
+      }
+    },
     "ban": {
       "command": "ban",
       "description": "Bans or forcebans the specified user.",
@@ -1079,6 +1091,7 @@
     "permission": "permission",
     "position": "position",
     "role": "role",
+    "roles": "roles",
     "mode": "mode",
     "tag": "tag",
     "category": "category",
