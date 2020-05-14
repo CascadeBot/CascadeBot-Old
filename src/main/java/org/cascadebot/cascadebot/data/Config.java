@@ -83,6 +83,14 @@ public class Config {
 
     private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
 
+    private String redisHost;
+    private int redisPort;
+    private String redisPassword;
+
+    private byte[] encryptKey;
+    private byte[] ivSpec;
+    private byte[] mac;
+
     private Config(String file) throws IOException {
         config = new File(file);
         initConfig();
@@ -240,6 +248,41 @@ public class Config {
         }
 
         youtubeKey = config.getString("music_keys.youtube");
+
+        redisHost = config.getString("redis.host");
+        redisPort = config.getInt("port", 7379);
+        redisPassword = config.getString("redis.password");
+
+        String stringKey = config.getString("encryption_key.key");
+        byte[] keyBytes = stringKey.getBytes();
+        if (keyBytes.length != 16 && keyBytes.length != 24 && keyBytes.length != 32) {
+            CascadeBot.LOGGER.warn("Encryption key invalid size! must be 128, 192, or 265 bits!");
+        } else {
+            this.encryptKey = keyBytes;
+        }
+
+        String stringIv = config.getString("encryption_key.iv");
+        byte[] ivBytes = stringIv.getBytes();
+        if (ivBytes.length != 8) {
+            CascadeBot.LOGGER.warn("Encryption iv invalid size! must be 64 bits!");
+        } else {
+            this.ivSpec = ivBytes;
+        }
+
+        String stringMac = config.getString("encryption_key.mac");
+        byte[] macBytes = stringMac.getBytes();
+        if (macBytes.length != 16) {
+            CascadeBot.LOGGER.warn("Encryption mac invalid size! must be 128, 192, or 265 bits!");
+        } else {
+            this.mac = macBytes;
+        }
+
+        if (encryptKey == null || ivSpec == null || mac == null) {
+            CascadeBot.LOGGER.warn("One of the required encryption values are null, or wrong size. Encryption will not work!");
+            encryptKey = null;
+            ivSpec = null;
+            mac = null;
+        }
 
         LOG.info("Finished loading configuration!");
 
