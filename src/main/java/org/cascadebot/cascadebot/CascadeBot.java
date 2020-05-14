@@ -35,6 +35,7 @@ import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
 import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
+import org.cascadebot.cascadebot.events.MessageEventListener;
 import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
@@ -48,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
@@ -149,6 +151,13 @@ public class CascadeBot {
             if (Config.INS.getRedisPassword() != null) {
                 redisClient.auth(Config.INS.getRedisPassword());
             }
+            try {
+                redisClient.ping("Hello!");
+                LOGGER.info("Redis connected!");
+            } catch (JedisConnectionException e) {
+                LOGGER.warn("Failed to connect to redis", e);
+                redisClient = null;
+            }
         }
 
         // Sends a message to break up the status log flow to see what events apply to each bot run
@@ -209,6 +218,10 @@ public class CascadeBot {
                 defaultShardManagerBuilder.setVoiceDispatchInterceptor(musicHandler.getLavaLink().getVoiceInterceptor());
             } else {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
+            }
+
+            if (redisClient != null) {
+                defaultShardManagerBuilder.addEventListeners(new MessageEventListener());
             }
 
             shardManager = defaultShardManagerBuilder.build();
@@ -325,6 +338,10 @@ public class CascadeBot {
 
     public long getUptime() {
         return System.currentTimeMillis() - startupTime;
+    }
+
+    public Jedis getRedisClient() {
+        return redisClient;
     }
 
 }

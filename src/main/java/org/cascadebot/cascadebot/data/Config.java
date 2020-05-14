@@ -250,7 +250,7 @@ public class Config {
         youtubeKey = config.getString("music_keys.youtube");
 
         redisHost = config.getString("redis.host");
-        redisPort = config.getInt("port", 7379);
+        redisPort = config.getInt("redis.port", 6379);
         redisPassword = config.getString("redis.password");
 
         String stringKey = config.getString("encryption_key.key");
