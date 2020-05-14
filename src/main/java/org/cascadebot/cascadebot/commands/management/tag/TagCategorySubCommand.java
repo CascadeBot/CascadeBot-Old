@@ -3,34 +3,40 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.management;
+package org.cascadebot.cascadebot.commands.management.tag;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-public class TagDeleteSubCommand implements ISubCommand {
+public class TagCategorySubCommand implements ISubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length < 1) {
+        if (context.getArgs().length < 2) {
             context.getUiMessaging().replyUsage();
             return;
         }
 
-        String tagName = context.getArg(0).toLowerCase();
+        Tag tag = context.getData().getManagement().getTag(context.getArg(0));
 
-        if (context.getData().getManagement().removeTag(tagName)) {
-            context.getTypedMessaging().replySuccess(context.i18n("commands.tag.delete.successfully_deleted_tag"));
-        } else {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", tagName));
+        String tagName = context.getArg(0).toLowerCase();
+        String category = context.getArg(1).toLowerCase();
+
+        if (tag == null) {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
+            return;
         }
+
+        tag.setCategory(category);
+        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.category.successfully_set_tag", tagName, category));
     }
 
     @Override
     public String command() {
-        return "delete";
+        return "category";
     }
 
     @Override
@@ -40,7 +46,7 @@ public class TagDeleteSubCommand implements ISubCommand {
 
     @Override
     public CascadePermission getPermission() {
-        return CascadePermission.of("tag.delete", false);
+        return CascadePermission.of("tag.category", false);
     }
 
 }
