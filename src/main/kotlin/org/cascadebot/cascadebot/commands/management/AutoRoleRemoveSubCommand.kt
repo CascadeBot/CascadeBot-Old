@@ -32,7 +32,7 @@ class AutoRoleRemoveSubCommand : ISubCommand {
             }
         }
 
-        context.data.management.autoRoles.addAll(roles.map { it.idLong })
+        context.data.management.autoRoles.removeAll(roles.map { it.idLong })
 
         if (roles.isEmpty()) {
             if (errorInputs.isNotEmpty()) {
@@ -43,11 +43,11 @@ class AutoRoleRemoveSubCommand : ISubCommand {
             }
         } else {
             if (errorInputs.isEmpty()) {
-                context.typedMessaging.replySuccess("Successfully added all of the roles to AutoRole!\n" +
-                        "Added roles: ${roles.joinToString(" "){ it.asMention }}")
+                context.typedMessaging.replySuccess("Successfully removed all of the roles from AutoRole!\n" +
+                        "Removed roles: ${roles.joinToString(" "){ it.asMention }}")
             } else {
-                context.typedMessaging.replyWarning("Successfully added some of the roles to AutoRole!\n" +
-                        "Added roles: ${roles.joinToString(" "){ it.asMention }}\n" +
+                context.typedMessaging.replyWarning("Successfully removed some of the roles from AutoRole!\n" +
+                        "Removed roles: ${roles.joinToString(" "){ it.asMention }}\n" +
                         "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
             }
         }
