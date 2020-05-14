@@ -115,6 +115,20 @@
       }
     }
   },
+  "autorole": {
+    "add*": {
+      "roles": {
+        "_type": "required",
+        "_vararg": true
+      }
+    },
+    "remove*": {
+      "roles": {
+        "_type": "required",
+        "_vararg": true
+      }
+    }
+  },
   "color*": {
     "value": {
       "_type": "required"
