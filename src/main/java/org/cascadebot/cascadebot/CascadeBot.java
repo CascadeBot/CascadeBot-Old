@@ -47,6 +47,7 @@ import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import redis.clients.jedis.Jedis;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
@@ -74,6 +75,7 @@ public class CascadeBot {
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
+    private Jedis redisClient;
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
@@ -140,6 +142,13 @@ public class CascadeBot {
             LOGGER.error("Error reading config file", e);
             ShutdownHandler.exitWithError();
             return;
+        }
+
+        if (Config.INS.getRedisHost() != null) {
+            redisClient = new Jedis(Config.INS.getRedisHost(), Config.INS.getRedisPort());
+            if (Config.INS.getRedisPassword() != null) {
+                redisClient.auth(Config.INS.getRedisPassword());
+            }
         }
 
         // Sends a message to break up the status log flow to see what events apply to each bot run
