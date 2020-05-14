@@ -33,7 +33,7 @@ public class CryptUtils {
         mac.init(hmacKey);
 
         byte[] encryptBytes = encrypt.getBytes(StandardCharsets.UTF_8);
-        byte[] encrypted = new byte[cipher.getOutputSize(encrypt.length() + mac.getMacLength())];
+        byte[] encrypted = new byte[cipher.getOutputSize(encryptBytes.length + mac.getMacLength())];
 
         int cypherLength = cipher.update(encryptBytes, 0, encryptBytes.length, encrypted, 0);
 
@@ -73,6 +73,32 @@ public class CryptUtils {
 
         return decryptedString;
 
+    }
+
+    public static EncryptResults encryptString(byte[] key, byte[] iv, String encrypt) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, ShortBufferException {
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+        Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
+        cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, new IvParameterSpec(iv));
+
+        byte[] encryptBytes = encrypt.getBytes();
+        byte[] encrypted = new byte[cipher.getOutputSize(encryptBytes.length)];
+
+        int cypherLength = cipher.update(encryptBytes, 0, encryptBytes.length, encrypted, 0);
+        cypherLength += cipher.doFinal(encrypted, cypherLength);
+
+        return new EncryptResults(encrypted, cypherLength);
+    }
+
+    public static String decryptString(byte[] key, byte[] iv, byte[] decrypt, int cypherLength) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, ShortBufferException {
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+        Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
+        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, new IvParameterSpec(iv));
+
+        byte[] decrypted = new byte[cypherLength];
+        int decryptLength = cipher.update(decrypt, 0, decrypt.length, decrypted, 0);
+        cipher.doFinal(decrypted, decryptLength);
+
+        return new String(decrypted);
     }
 
     public static class EncryptResults {
