@@ -9,10 +9,8 @@ import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.ISubCommand
-import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
-import org.cascadebot.shared.Regex
 
 class AutoRoleAddSubCommand : ISubCommand {
 
@@ -21,7 +19,7 @@ class AutoRoleAddSubCommand : ISubCommand {
             context.uiMessaging.replyUsage()
             return
         }
-        val roles: MutableList<Role> = mutableListOf()
+        val roles: MutableSet<Role> = mutableSetOf()
         val errorInputs: MutableList<String> = mutableListOf()
         for (arg in context.args) {
             val role = DiscordUtils.getRole(arg, context.guild)
@@ -35,19 +33,16 @@ class AutoRoleAddSubCommand : ISubCommand {
         context.data.management.autoRoles.addAll(roles.map { it.idLong })
 
         if (roles.isEmpty()) {
-            if (errorInputs.isNotEmpty()) {
-                context.typedMessaging.replyDanger("Could not parse any of arguments to a role! Please enter role IDs or role mentions!\n" +
-                        "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
-            } else {
-                context.typedMessaging.replyDanger("This shouldn't happen...! Something went wrong!")
-            }
+            require(errorInputs.isNotEmpty()) { "Error inputs should contain data if no roles have been successfully parsed!" }
+            context.typedMessaging.replyDanger("Could not parse any of arguments to a role! Please enter role IDs or role mentions!\n" +
+                    "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
         } else {
             if (errorInputs.isEmpty()) {
                 context.typedMessaging.replySuccess("Successfully added all of the roles to AutoRole!\n" +
-                        "Added roles: ${roles.joinToString(" "){ it.asMention }}")
+                        "Added roles: ${roles.joinToString(" ") { it.asMention }}")
             } else {
                 context.typedMessaging.replyWarning("Successfully added some of the roles to AutoRole!\n" +
-                        "Added roles: ${roles.joinToString(" "){ it.asMention }}\n" +
+                        "Added roles: ${roles.joinToString(" ") { it.asMention }}\n" +
                         "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
             }
         }

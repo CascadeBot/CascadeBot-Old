@@ -9,10 +9,8 @@ import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.ISubCommand
-import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
-import org.cascadebot.shared.Regex
 
 class AutoRoleRemoveSubCommand : ISubCommand {
 
@@ -35,19 +33,16 @@ class AutoRoleRemoveSubCommand : ISubCommand {
         context.data.management.autoRoles.removeAll(roles.map { it.idLong })
 
         if (roles.isEmpty()) {
-            if (errorInputs.isNotEmpty()) {
-                context.typedMessaging.replyDanger("Could not parse any of arguments to a role! Please enter role IDs or role mentions!\n" +
-                        "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
-            } else {
-                context.typedMessaging.replyDanger("This shouldn't happen...! Something went wrong!")
-            }
+            require(errorInputs.isNotEmpty()) { "Error inputs should contain data if no roles have been successfully parsed!" }
+            context.typedMessaging.replyDanger("Could not parse any of arguments to a role! Please enter role IDs or role mentions!\n" +
+                    "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
         } else {
             if (errorInputs.isEmpty()) {
                 context.typedMessaging.replySuccess("Successfully removed all of the roles from AutoRole!\n" +
-                        "Removed roles: ${roles.joinToString(" "){ it.asMention }}")
+                        "Removed roles: ${roles.joinToString(" ") { it.asMention }}")
             } else {
                 context.typedMessaging.replyWarning("Successfully removed some of the roles from AutoRole!\n" +
-                        "Removed roles: ${roles.joinToString(" "){ it.asMention }}\n" +
+                        "Removed roles: ${roles.joinToString(" ") { it.asMention }}\n" +
                         "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
             }
         }
