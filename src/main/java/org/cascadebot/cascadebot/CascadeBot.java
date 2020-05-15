@@ -41,6 +41,7 @@ import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
+import org.cascadebot.cascadebot.runnables.MessageReceivedRunnable;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
@@ -78,6 +79,8 @@ public class CascadeBot {
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
     private Jedis redisClient;
+
+    private MessageReceivedRunnable messageReceivedRunnable;
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
@@ -175,6 +178,9 @@ public class CascadeBot {
         if (Config.INS.isPrettyJson()) {
             builder.setPrettyPrinting();
         }
+
+        messageReceivedRunnable = new MessageReceivedRunnable();
+        new Thread(messageReceivedRunnable, "messageHandleThread").start();
 
         if (Config.INS.getConnectionString() != null) {
             databaseManager = new DatabaseManager(Config.INS.getConnectionString());
@@ -344,4 +350,7 @@ public class CascadeBot {
         return redisClient;
     }
 
+    public MessageReceivedRunnable getMessageReceivedRunnable() {
+        return messageReceivedRunnable;
+    }
 }
