@@ -28,7 +28,7 @@ import org.cascadebot.cascadebot.music.CascadePlayer
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
 class CommandContext(
-        val command: ICommandExecutable?,
+        val command: ExecutableCommand?,
         val jda: JDA,
         val channel: TextChannel,
         val message: Message,
@@ -129,11 +129,11 @@ class CommandContext(
     }
 
     @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
-    fun getUsage(command: ICommandExecutable): String? {
+    fun getUsage(command: ExecutableCommand): String? {
         val parentArg = CascadeBot.INS.argumentManager.getArgument(command.absoluteCommand)
         return if (parentArg != null) {
             var parent: String? = null
-            if (command is ISubCommand) {
+            if (command is SubCommand) {
                 parent = command.parent()
             }
             val commandString: String = data.core.prefix + if (parent == null) "" else "$parent "
@@ -195,10 +195,10 @@ class CommandContext(
     fun runOtherCommand(command: String?, sender: Member?, context: CommandContext) {
         val commandMain = CascadeBot.INS.commandManager.getCommandByDefault(command)
                 ?: throw IllegalArgumentException("Cannot find that command!")
-        if (hasPermission(commandMain.permission)) {
+        if (hasPermission(commandMain.permission())) {
             commandMain.onCommand(member, context)
         } else {
-            context.uiMessaging.sendPermissionError(commandMain.permission)
+            context.uiMessaging.sendPermissionError(commandMain.permission())
         }
     }
 
