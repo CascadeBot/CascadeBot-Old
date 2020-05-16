@@ -85,8 +85,7 @@ class GeneralEventListener : ListenerAdapter() {
         }
 
         val iterator = guildData.management.autoRoles.iterator()
-        while (iterator.hasNext()) {
-            val nextRoleId = iterator.next()
+        for (nextRoleId in iterator) {
             val role = event.guild.getRoleById(nextRoleId)
             if (role != null) {
                 event.guild.addRoleToMember(event.member, role).queue(null, null)
