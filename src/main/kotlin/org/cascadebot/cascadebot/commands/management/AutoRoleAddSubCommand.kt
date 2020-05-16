@@ -33,7 +33,7 @@ class AutoRoleAddSubCommand : ISubCommand {
         context.data.management.autoRoles.addAll(roles.map { it.idLong })
 
         if (roles.isEmpty()) {
-            require(errorInputs.isNotEmpty()) { "Error inputs should contain data if no roles have been successfully parsed!" }
+            check(errorInputs.isNotEmpty()) { "Error inputs should contain data if no roles have been successfully parsed!" }
             context.typedMessaging.replyDanger("Could not parse any of arguments to a role! Please enter role IDs or role mentions!\n" +
                     "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
         } else {
