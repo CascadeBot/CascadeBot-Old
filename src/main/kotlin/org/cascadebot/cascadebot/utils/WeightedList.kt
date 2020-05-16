@@ -55,6 +55,9 @@ class WeightedList<T : Any> {
     val itemsAndWeighting: List<Pair<T, Int>>
         get() = lock.read { internalList.toList() }
 
+    val size: Int
+        get() = lock.read { internalList.size}
+
     // Gets a number between 1 and totalWeight (Inclusive)
     val randomItem: T?
         get() = lock.read {
@@ -77,7 +80,4 @@ class WeightedList<T : Any> {
         }
     }
 
-    fun size(): Int {
-        return lock.read { internalList.size }
-    }
 }
