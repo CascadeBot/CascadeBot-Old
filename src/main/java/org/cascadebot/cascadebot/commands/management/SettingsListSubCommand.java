@@ -3,7 +3,7 @@ package org.cascadebot.cascadebot.commands.management;
 import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.SettingsContainer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
@@ -14,7 +14,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public class SettingsListSubCommand implements ISubCommand {
+public class SettingsListSubCommand extends SubCommand {
 
     private List<Class<?>> settingsClasses;
 
@@ -56,7 +56,7 @@ public class SettingsListSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return null;
     }
 

@@ -21,7 +21,7 @@ abstract class ExecutableCommand {
 
     val absoluteCommand: String
         get() = when (this) {
-            is ISubCommand -> this.parent() + "." + command()
+            is SubCommand -> this.parent() + "." + command()
             else -> command()
         }
 
