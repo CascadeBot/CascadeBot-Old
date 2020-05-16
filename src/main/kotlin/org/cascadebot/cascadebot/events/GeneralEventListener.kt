@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2020 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
+
 package org.cascadebot.cascadebot.events
 
 import net.dv8tion.jda.api.JDA
@@ -77,6 +82,17 @@ class GeneralEventListener : ListenerAdapter() {
                     PlaceholderObjects.welcomes.formatMessage(it, event)
                 }.let { message -> it.sendMessage(message).queue() }
             } ?: run { greetings.welcomeChannel = null }
+        }
+
+        val iterator = guildData.management.autoRoles.iterator()
+        while (iterator.hasNext()) {
+            val nextRoleId = iterator.next()
+            val role = event.guild.getRoleById(nextRoleId)
+            if (role != null) {
+                event.guild.addRoleToMember(event.member, role).queue(null, null)
+            } else {
+                iterator.remove()
+            }
         }
     }
 
