@@ -7,6 +7,7 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.utils.ChangeList
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.WeightedList
+import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 import java.lang.StringBuilder
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -32,32 +33,20 @@ class Greetings {
         }
 
     val welcomeEnabled: Boolean
-        get() = welcomeChannelId != null
+        get() = welcomeChannelId != null && welcomeMessages.size > 0
 
     val goodbyeEnabled: Boolean
-        get() = goodbyeChannelId != null
+        get() = goodbyeChannelId != null && goodbyeMessages.size > 0
 
     fun getRandomWelcomeMsg(event: GuildMemberJoinEvent): String? {
         return welcomeMessages.randomItem?.let {
-            val builder = StringBuilder(it)
-            builder.replace(Regex("\\{guild_name}", RegexOption.IGNORE_CASE), event.guild.name)
-            builder.replace(Regex("\\{user_name}", RegexOption.IGNORE_CASE), event.user.name)
-            builder.replace(Regex("\\{user_mention}", RegexOption.IGNORE_CASE), event.user.asMention)
-            builder.replace(Regex("\\{time}", RegexOption.IGNORE_CASE), FormatUtils.formatDateTime(OffsetDateTime.now()))
-            builder.replace(Regex("\\{member_count}", RegexOption.IGNORE_CASE), event.guild.memberCache.size().toString())
-            return@let builder.toString()
+            PlaceholderObjects.welcomes.formatMessage(it, event)
         }
     }
+
     fun getRandomGoodbyeMsg(event: GuildMemberLeaveEvent): String? {
         return goodbyeMessages.randomItem?.let {
-            val builder = StringBuilder(it)
-            builder.replace(Regex("\\{guild_name}", RegexOption.IGNORE_CASE), event.guild.name)
-            builder.replace(Regex("\\{user_name}", RegexOption.IGNORE_CASE), event.user.name)
-            builder.replace(Regex("\\{user_mention}", RegexOption.IGNORE_CASE), event.user.asMention)
-            builder.replace(Regex("\\{time}", RegexOption.IGNORE_CASE), FormatUtils.formatDateTime(OffsetDateTime.now()))
-            builder.replace(Regex("\\{member_count}", RegexOption.IGNORE_CASE), event.guild.memberCache.size().toString())
-            builder.replace(Regex("\\{time_in_guild}", RegexOption.IGNORE_CASE), Duration.between(event.member.timeJoined, OffsetDateTime.now()).toString())
-            builder.toString()
+            PlaceholderObjects.goodbyes.formatMessage(it, event)
         }
     }
 
