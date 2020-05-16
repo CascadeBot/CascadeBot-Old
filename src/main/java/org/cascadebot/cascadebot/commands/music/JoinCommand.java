@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.shared.Regex;
@@ -18,7 +18,7 @@ import org.cascadebot.shared.Regex;
 import java.util.List;
 import java.util.regex.Matcher;
 
-public class JoinCommand implements ICommandMain {
+public class JoinCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -65,7 +65,7 @@ public class JoinCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MUSIC;
     }
 
@@ -75,7 +75,7 @@ public class JoinCommand implements ICommandMain {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("join", true);
     }
 

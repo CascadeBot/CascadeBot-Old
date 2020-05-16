@@ -8,15 +8,15 @@ package org.cascadebot.cascadebot.commands.fun;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.RandomUtils;
 
 import java.util.Set;
 
-public class RandomCommand implements ICommandMain {
+public class RandomCommand extends MainCommand {
 
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 0) {
@@ -43,17 +43,17 @@ public class RandomCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.FUN;
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("random", true);
     }
 
     @Override
-    public Set<ISubCommand> getSubCommands() {
+    public Set<SubCommand> subCommands() {
         return Set.of(new RandomChoiceSubCommand(), new RandomColorSubCommand());
     }
 

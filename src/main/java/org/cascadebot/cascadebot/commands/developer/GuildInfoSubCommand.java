@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -23,7 +23,7 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class GuildInfoSubCommand implements ISubCommand {
+public class GuildInfoSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -74,7 +74,7 @@ public class GuildInfoSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return null;
     }
 

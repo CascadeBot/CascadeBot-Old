@@ -2,7 +2,7 @@ package org.cascadebot.cascadebot.data.objects
 
 import com.google.common.collect.Sets
 import org.cascadebot.cascadebot.CascadeBot
-import org.cascadebot.cascadebot.commandmeta.ICommandMain
+import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Locale
@@ -39,7 +39,7 @@ class GuildSettingsCore {
     var locale: Locale = Locale.getDefaultLocale()
     var prefix: String = Config.INS.defaultPrefix
 
-    private val commandInfo = ConcurrentHashMap<Class<ICommandMain>, MutableSet<GuildCommandInfo>>()
+    private val commandInfo = ConcurrentHashMap<Class<MainCommand>, MutableSet<GuildCommandInfo>>()
     private val enabledModules: MutableSet<Module> = Sets.newConcurrentHashSet(Module.getModules(ModuleFlag.DEFAULT))
 
     //region Modules
@@ -66,8 +66,8 @@ class GuildSettingsCore {
     //endregion
 
     //region Commands
-    fun enableCommand(command: ICommandMain) {
-        if (command.module.isPrivate) return
+    fun enableCommand(command: MainCommand) {
+        if (command.module().isPrivate) return
         if (commandInfo.contains(command.javaClass)) {
             getGuildCommandInfo(command).enabled = true
         }
@@ -80,8 +80,8 @@ class GuildSettingsCore {
         }
     }
 
-    fun disableCommand(command: ICommandMain) {
-        if (command.module.isPrivate) return
+    fun disableCommand(command: MainCommand) {
+        if (command.module().isPrivate) return
         getGuildCommandInfo(command).enabled = false
     }
 
@@ -92,33 +92,33 @@ class GuildSettingsCore {
         }
     }
 
-    fun isCommandEnabled(command: ICommandMain): Boolean {
+    fun isCommandEnabled(command: MainCommand): Boolean {
         return if (commandInfo.contains(command.javaClass)) {
             getGuildCommandInfo(command).enabled
-        } else isModuleEnabled(command.module)
+        } else isModuleEnabled(command.module())
     }
 
-    fun getCommandAliases(command: ICommandMain): Set<String> {
+    fun getCommandAliases(command: MainCommand): Set<String> {
         return if (commandInfo.contains(command.javaClass)) {
-            getGuildCommandInfo(command).aliases.applyChanges(command.getGlobalAliases(locale))
-        } else command.getGlobalAliases(locale)
+            getGuildCommandInfo(command).aliases.applyChanges(command.globalAliases(locale))
+        } else command.globalAliases(locale)
     }
 
-    fun addAlias(command: ICommandMain, alias: String): Boolean {
+    fun addAlias(command: MainCommand, alias: String): Boolean {
         return getGuildCommandInfo(command).aliases.add(alias)
     }
 
-    fun removeAlias(command: ICommandMain, alias: String): Boolean {
+    fun removeAlias(command: MainCommand, alias: String): Boolean {
         return getGuildCommandInfo(command).aliases.remove(alias)
     }
 
-    private fun getGuildCommandInfoSet(command: ICommandMain): MutableSet<GuildCommandInfo> {
+    private fun getGuildCommandInfoSet(command: MainCommand): MutableSet<GuildCommandInfo> {
         return commandInfo.computeIfAbsent(command.javaClass) {
             mutableSetOf(GuildCommandInfo(command, locale))
         }
     }
 
-    private fun getGuildCommandInfo(command: ICommandMain, locale: Locale = this.locale): GuildCommandInfo {
+    private fun getGuildCommandInfo(command: MainCommand, locale: Locale = this.locale): GuildCommandInfo {
         return getGuildCommandInfoSet(command).find { it.locale == locale } ?: run {
             val commandInfo = GuildCommandInfo(command, locale)
             getGuildCommandInfoSet(command).add(commandInfo)

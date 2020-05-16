@@ -5,8 +5,8 @@ import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandCore;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.CoreCommand;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HelpCommand implements ICommandCore {
+public class HelpCommand extends CoreCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -56,14 +56,14 @@ public class HelpCommand implements ICommandCore {
 
     private List<Page> getModulePages(Module module, CommandContext context) {
         StringBuilder stringBuilder = new StringBuilder();
-        for (ICommandMain commandMain : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
+        for (MainCommand commandMain : CascadeBot.INS.getCommandManager().getCommandsByModule(module)) {
             /*
              * Allows a permission to be displayed under one of the three conditions:
              * 1. If there is no permission for the command, it will always be displayed
              * 2. If the setting "helpHideCommandsNoPermission" is set to false, the command will always display regardless of permission
              * 3. If the sender of the help command has the permission for the command
              */
-            if (commandMain.getPermission() == null || !context.getCoreSettings().getHelpHideCommandsNoPermission() || context.hasPermission(commandMain.getPermission())) {
+            if (commandMain.permission() == null || !context.getCoreSettings().getHelpHideCommandsNoPermission() || context.hasPermission(commandMain.permission())) {
                 stringBuilder.append("`")
                         .append(context.getCoreSettings().getPrefix())
                         .append(commandMain.command(context.getLocale()))

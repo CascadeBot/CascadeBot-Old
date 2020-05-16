@@ -11,14 +11,14 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
 import org.cascadebot.shared.SecurityLevel;
 
-public class ShutdownCommand implements ICommandRestricted {
+public class ShutdownCommand extends RestrictedCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -71,12 +71,12 @@ public class ShutdownCommand implements ICommandRestricted {
     }
 
     @Override
-    public SecurityLevel getCommandLevel() {
+    public SecurityLevel commandLevel() {
         return SecurityLevel.OWNER;
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.DEVELOPER;
     }
 
