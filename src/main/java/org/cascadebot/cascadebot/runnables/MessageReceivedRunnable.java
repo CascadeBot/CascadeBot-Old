@@ -32,7 +32,7 @@ public class MessageReceivedRunnable implements Runnable {
                 String message = "";
                 if (Config.INS.getEncryptKey() != null) {
                     try {
-                        CryptUtils.EncryptResults results = CryptUtils.encryptString(Config.INS.getEncryptKey(), Config.INS.getIvSpec(), Config.INS.getMac(), event.getMessage().getContentRaw());
+                        byte[] results = CryptUtils.encryptString(Config.INS.getEncryptKey(), Config.INS.getIvSpec(), event.getMessage().getContentRaw());
                         JsonObject jsonObject = new JsonObject();
                         jsonObject.add("sender", new JsonPrimitive(event.getMember().getIdLong()));
                         jsonObject.add("content", CascadeBot.getGSON().toJsonTree(results));

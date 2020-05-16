@@ -22,9 +22,9 @@ public class CryptUtilsTest {
         byte[] iv = "u8x/A?D*G-KaPdSg".getBytes();
         String input = "This is a test!";
 
-        CryptUtils.EncryptResults encryptResults = CryptUtils.encryptString(key, iv, hashKey, input);
+        byte[] encryptResults = CryptUtils.encryptString(key, iv, hashKey, input);
 
-        String decrypt = CryptUtils.decryptString(key, iv, hashKey, encryptResults.getEncrypted(), encryptResults.getCryptBytes());
+        String decrypt = CryptUtils.decryptString(key, iv, hashKey, encryptResults);
         assertEquals(input, decrypt);
     }
 
@@ -36,12 +36,11 @@ public class CryptUtilsTest {
             byte[] iv = "u8x/A?D*G-KaPdSg".getBytes();
             String input = "This is a test!";
 
-            CryptUtils.EncryptResults encryptResults = CryptUtils.encryptString(key, iv, hashKey, input);
+            byte[] encryptResults = CryptUtils.encryptString(key, iv, hashKey, input);
 
-            byte[] tampered = encryptResults.getEncrypted();
-            tampered[9] ^= '0' ^ 9;
+            encryptResults[9] ^= '0' ^ 9;
 
-            CryptUtils.decryptString(key, iv, hashKey, tampered, encryptResults.getEncrypted().length);
+            CryptUtils.decryptString(key, iv, hashKey, encryptResults);
         });
     }
 
@@ -51,9 +50,24 @@ public class CryptUtilsTest {
         byte[] iv = "u8x/A?D*G-KaPdSg".getBytes();
         String input = "This is a test!";
 
-        CryptUtils.EncryptResults encryptResults = CryptUtils.encryptString(key, iv, input);
+        byte[] encryptResults = CryptUtils.encryptString(key, iv, input);
 
-        String decrypt = CryptUtils.decryptString(key, iv, encryptResults.getEncrypted(), encryptResults.getCryptBytes());
+        String decrypt = CryptUtils.decryptString(key, iv, encryptResults);
         assertEquals(input, decrypt);
+    }
+
+    @Test
+    public void testEncryptDecryptNoHmacTamper() throws NoSuchPaddingException, ShortBufferException, InvalidKeyException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
+        byte[] key = "eThWmZq4t7wbzbCbFbJbNcRfUjXn2r5u".getBytes();
+        byte[] iv = "u8x/A?D*G-KaPdSg".getBytes();
+        String input = "This is a test!";
+
+        byte[] encryptResults = CryptUtils.encryptString(key, iv, input);
+
+        encryptResults[9] ^= '0' ^ 9;
+
+        assertThrows(BadPaddingException.class, () -> {
+            CryptUtils.decryptString(key, iv, encryptResults);
+        });
     }
 }
