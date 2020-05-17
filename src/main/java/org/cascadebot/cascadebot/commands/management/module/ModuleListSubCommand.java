@@ -8,14 +8,14 @@ package org.cascadebot.cascadebot.commands.management.module;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class ModuleListSubCommand implements ISubCommand {
+public class ModuleListSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -38,7 +38,7 @@ public class ModuleListSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("module.list", false, Permission.MANAGE_SERVER);
     }
 

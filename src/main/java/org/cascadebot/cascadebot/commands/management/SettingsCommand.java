@@ -9,9 +9,9 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.objects.Setting;
 import org.cascadebot.cascadebot.data.objects.SettingsContainer;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SettingsCommand implements ICommandMain {
+public class SettingsCommand extends MainCommand {
 
     private static List<Class<?>> settingsClasses = new ArrayList<>();
 
@@ -87,17 +87,17 @@ public class SettingsCommand implements ICommandMain {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("settings", false, Permission.MANAGE_SERVER);
     }
 
     @Override
-    public Set<ISubCommand> getSubCommands() {
+    public Set<SubCommand> subCommands() {
         return Set.of(new SettingsListSubCommand(settingsClasses));
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MANAGEMENT;
     }
 

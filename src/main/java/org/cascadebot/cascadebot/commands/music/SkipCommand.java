@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.messaging.MessageType;
@@ -25,7 +25,7 @@ import org.cascadebot.cascadebot.utils.votes.VoteResult;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SkipCommand implements ICommandMain {
+public class SkipCommand extends MainCommand {
 
     public static Map<Long, VoteButtonGroup> voteMap = new HashMap<>();
 
@@ -134,12 +134,12 @@ public class SkipCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MUSIC;
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("skip", true);
     }
 

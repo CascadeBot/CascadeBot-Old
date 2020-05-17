@@ -21,7 +21,7 @@ data class Argument internal constructor(val id: String,
         if (sepCount == 1) {
             val command = CascadeBot.INS.commandManager.getCommand(id.substring(0, id.lastIndexOf('.')))
             if (command != null) {
-                val subCommand = command.subCommands.stream().filter { it.command() == id.substring(id.lastIndexOf('.') + 1) }.findFirst().orElse(null)
+                val subCommand = command.subCommands().stream().filter { it.command() == id.substring(id.lastIndexOf('.') + 1) }.findFirst().orElse(null)
                 if (subCommand != null) {
                     return subCommand.command(locale)
                 }
@@ -46,15 +46,17 @@ data class Argument internal constructor(val id: String,
         if (sepCount == 1) {
             val command = CascadeBot.INS.commandManager.getCommand(id.substring(0, id.lastIndexOf('.')))
             if (command != null) {
-                val subCommand = command.subCommands.stream().filter { it.command() == id.substring(id.lastIndexOf('.') + 1) }.findFirst().orElse(null)
+                val subCommand = command.subCommands().firstOrNull { it.command() == id.substring(id.lastIndexOf('.') + 1) }
                 if (subCommand != null) {
-                    return subCommand.description(locale)
+                    // Only return description if it is not null
+                    subCommand.description(locale)?.also { return it }
                 }
             }
         } else if (sepCount == 0) {
             val command = CascadeBot.INS.commandManager.getCommand(id)
             if (command != null) {
-                return command.description(locale)
+                // Only return description if it is not null
+                command.description(locale)?.also { return it }
             }
         }
         return if (Language.getLanguage(locale)?.getElement("commands.$id")?.isPresent!!) {

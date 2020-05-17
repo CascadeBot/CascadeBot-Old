@@ -8,9 +8,9 @@ package org.cascadebot.cascadebot.commands.core;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.Constants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandCore;
+import org.cascadebot.cascadebot.commandmeta.CoreCommand;
 
-public class SupportCommand implements ICommandCore {
+public class SupportCommand extends CoreCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
