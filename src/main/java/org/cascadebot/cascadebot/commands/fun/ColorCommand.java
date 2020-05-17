@@ -13,16 +13,23 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 
+import java.awt.Color;
+
 public class ColorCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length != 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
-        context.reply(ColorUtils.getColor(context.getMessage(0), context));
+        try {
+            Color color = ColorUtils.getColor(context.getArg(0), context);
+            context.reply(ColorUtils.getColorEmbed(color, context));
+        } catch (ColorUtils.ColorException e) {
+            context.getTypedMessaging().replyDanger(e.getI18nMessage(context.getLocale()));
+        }
 
     }
 

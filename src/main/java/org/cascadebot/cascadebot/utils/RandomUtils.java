@@ -5,15 +5,14 @@
  
 
 package org.cascadebot.cascadebot.utils;
- 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 import com.google.gson.JsonElement;
 import lombok.Getter;
 import lombok.experimental.UtilityClass;
+
+import java.awt.Color;
+import java.io.IOException;
+import java.util.Random;
 
 @UtilityClass
 public class RandomUtils {
@@ -32,12 +31,8 @@ public class RandomUtils {
         return (choices[random.nextInt(choices.length)]);
     }
 
-    public static String randomColor() {
-        StringBuilder result = new StringBuilder("#");
-        for (int i = 0; i < 6; i++) {
-            result.append(randomChoice(characters));
-        }
-        return result.toString();
+    public static Color randomColor() {
+        return Color.getHSBColor(random.nextFloat(), random.nextFloat(), random.nextFloat());
     }
 
     public String randomJoke() throws IOException, IllegalArgumentException {

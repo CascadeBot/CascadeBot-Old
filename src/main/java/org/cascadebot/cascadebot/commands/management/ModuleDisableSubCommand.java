@@ -18,7 +18,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
         String selectedModule = context.getArg(0).toUpperCase();
@@ -26,7 +26,7 @@ public class ModuleDisableSubCommand implements ISubCommand {
 
         if (module != null) {
             try {
-                if (context.getData().getCoreSettings().disableModule(module)) {
+                if (context.getData().getCore().disableModule(module)) {
                     // If module wasn't already disabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", module.toString()));
                 } else {

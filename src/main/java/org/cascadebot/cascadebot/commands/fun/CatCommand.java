@@ -38,7 +38,7 @@ public class CatCommand implements ICommandMain {
                         embedBuilder.setImage(getCatUrl());
                         message.editMessage(embedBuilder.build()).queue();
                     } else {
-                        context.getUIMessaging().replyImage(getCatUrl()).thenAccept(catMessage -> {
+                        context.getUiMessaging().replyImage(getCatUrl()).thenAccept(catMessage -> {
                             catButtons.addButtonsToMessage(catMessage);
                             catButtons.setMessage(catMessage.getIdLong());
                             context.getData().addButtonGroup(context.getChannel(), catMessage, catButtons);
@@ -50,7 +50,7 @@ public class CatCommand implements ICommandMain {
                 }
             }));
         try {
-            context.getUIMessaging().replyImage(getCatUrl()).thenAccept(message -> {
+            context.getUiMessaging().replyImage(getCatUrl()).thenAccept(message -> {
                 catButtons.addButtonsToMessage(message);
                 catButtons.setMessage(message.getIdLong());
                 context.getData().addButtonGroup(context.getChannel(), message, catButtons);

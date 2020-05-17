@@ -16,13 +16,13 @@ public class TagEditSubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         String tagName = context.getArg(0).toLowerCase();
 
-        Tag tag = context.getCoreSettings().getTag(tagName);
+        Tag tag = context.getData().getManagement().getTag(tagName);
         if (tag == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;

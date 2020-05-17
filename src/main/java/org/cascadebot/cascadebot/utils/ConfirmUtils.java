@@ -36,10 +36,10 @@ public class ConfirmUtils {
     //region Confirm Action
     public static boolean confirmAction(long userId, String actionKey, TextChannel channel, MessageType type, String message, long buttonDelay, long expiry, boolean isCancellable, ConfirmRunnable action) {
         GuildData guildData = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
-        boolean useEmbed = guildData.getCoreSettings().isUseEmbedForMessages();
+        boolean useEmbed = guildData.getCore().getUseEmbedForMessages();
         Message sentMessage;
         try {
-            sentMessage = Messaging.sendMessageTypeMessage(channel, type, message, useEmbed).get();
+            sentMessage = Messaging.sendMessage(type, channel, message, useEmbed).get();
             action.userId = userId;
             action.message = sentMessage;
             confirmedMap.put(actionKey, action);

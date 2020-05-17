@@ -20,18 +20,18 @@ public class TagCommand implements ICommandMain {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         String tagName = context.getArg(0).toLowerCase();
 
-        if (!context.getCoreSettings().hasTag(context.getArg(0))) {
+        if (!context.getData().getManagement().hasTag(context.getArg(0))) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
         }
 
-        Tag tag = context.getCoreSettings().getTag(tagName);
+        Tag tag = context.getData().getManagement().getTag(tagName);
         context.reply(tag.formatTag(context));
     }
 

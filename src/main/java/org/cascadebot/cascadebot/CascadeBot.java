@@ -15,7 +15,6 @@ import com.google.gson.GsonBuilder;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
-import lavalink.client.io.jda.JDAVoiceInterceptor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
@@ -31,15 +30,18 @@ import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GeneralEventListener;
 import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
+import org.cascadebot.cascadebot.events.MessageEventListener;
 import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
+import org.cascadebot.cascadebot.runnables.MessageReceivedRunnable;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
@@ -47,6 +49,8 @@ import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
@@ -70,9 +74,13 @@ public class CascadeBot {
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
+
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
+    private Jedis redisClient;
+
+    private MessageReceivedRunnable messageReceivedRunnable;
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
@@ -131,7 +139,6 @@ public class CascadeBot {
 
 
     private void init() {
-        new Thread(new ConsoleReader()).start();
 
         GsonBuilder builder = new GsonBuilder();
         try {
@@ -140,6 +147,20 @@ public class CascadeBot {
             LOGGER.error("Error reading config file", e);
             ShutdownHandler.exitWithError();
             return;
+        }
+
+        if (Config.INS.getRedisHost() != null) {
+            redisClient = new Jedis(Config.INS.getRedisHost(), Config.INS.getRedisPort());
+            if (Config.INS.getRedisPassword() != null) {
+                redisClient.auth(Config.INS.getRedisPassword());
+            }
+            try {
+                redisClient.ping("Hello!");
+                LOGGER.info("Redis connected!");
+            } catch (JedisConnectionException e) {
+                LOGGER.warn("Failed to connect to redis", e);
+                redisClient = null;
+            }
         }
 
         // Sends a message to break up the status log flow to see what events apply to each bot run
@@ -158,6 +179,9 @@ public class CascadeBot {
             builder.setPrettyPrinting();
         }
 
+        messageReceivedRunnable = new MessageReceivedRunnable();
+        new Thread(messageReceivedRunnable, "messageHandleThread").start();
+
         if (Config.INS.getConnectionString() != null) {
             databaseManager = new DatabaseManager(Config.INS.getConnectionString());
         } else {
@@ -170,8 +194,7 @@ public class CascadeBot {
             );
         }
 
-        musicHandler = new MusicHandler(this);
-        musicHandler.buildMusic();
+        musicHandler = new MusicHandler();
 
         eventWaiter = new EventWaiter();
         gson = builder.create();
@@ -196,11 +219,15 @@ public class CascadeBot {
                     .setBulkDeleteSplittingEnabled(false)
                     .setEnableShutdownHook(false);
 
-            if (MusicHandler.isLavalinkEnabled()) {
-                defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
-                defaultShardManagerBuilder.setVoiceDispatchInterceptor(MusicHandler.getLavalink().getVoiceInterceptor());
+            if (musicHandler.getLavalinkEnabled()) {
+                defaultShardManagerBuilder.addEventListeners(musicHandler.getLavaLink());
+                defaultShardManagerBuilder.setVoiceDispatchInterceptor(musicHandler.getLavaLink().getVoiceInterceptor());
             } else {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
+            }
+
+            if (redisClient != null) {
+                defaultShardManagerBuilder.addEventListeners(new MessageEventListener());
             }
 
             shardManager = defaultShardManagerBuilder.build();
@@ -216,6 +243,7 @@ public class CascadeBot {
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
+        ScheduledActionManager.loadAndRegister();
 
         Metrics.INS.cacheMetrics.addCache("guilds", GuildDataManager.getGuilds());
 
@@ -318,4 +346,11 @@ public class CascadeBot {
         return System.currentTimeMillis() - startupTime;
     }
 
+    public Jedis getRedisClient() {
+        return redisClient;
+    }
+
+    public MessageReceivedRunnable getMessageReceivedRunnable() {
+        return messageReceivedRunnable;
+    }
 }

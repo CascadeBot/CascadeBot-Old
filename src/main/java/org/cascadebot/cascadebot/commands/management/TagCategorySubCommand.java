@@ -16,11 +16,11 @@ public class TagCategorySubCommand implements ISubCommand {
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
-        Tag tag = context.getCoreSettings().getTag(context.getArg(0));
+        Tag tag = context.getData().getManagement().getTag(context.getArg(0));
 
         String tagName = context.getArg(0).toLowerCase();
         String category = context.getArg(1).toLowerCase();

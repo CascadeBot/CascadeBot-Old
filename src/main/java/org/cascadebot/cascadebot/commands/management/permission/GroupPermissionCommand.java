@@ -5,19 +5,25 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.Set;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ICommandMain;
 import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.pagination.Page;
+import org.cascadebot.cascadebot.utils.pagination.PageObjects;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class GroupPermissionCommand implements ICommandMain {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.getUIMessaging().replyUsage();
+        context.getUiMessaging().replyUsage();
     }
 
     @Override
@@ -45,5 +51,15 @@ public class GroupPermissionCommand implements ICommandMain {
         return Set.of(new GroupPermissionCreateSubCommand(), new GroupPermissionDeleteSubCommand(), new GroupPermissionAddSubCommand(), new GroupPermissionRemoveSubCommand(),
                 new GroupPermissionLinkRoleSubCommand(), new GroupPermissionUnlinkRoleSubCommand(), new GroupPermissionMoveSubCommand(),
                 new GroupPermissionSwitchSubCommand(), new GroupPermissionListSubCommand(), new GroupPermissionInfoSubCommand());
+    }
+
+    @Override
+    public List<Page> additionalUsagePages() {
+        List<Page> extraPages = new ArrayList<>();
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.setTitle("Test");
+        builder.setDescription("This is a test embed");
+        extraPages.add(new PageObjects.EmbedPage(builder));
+        return extraPages;
     }
 }
