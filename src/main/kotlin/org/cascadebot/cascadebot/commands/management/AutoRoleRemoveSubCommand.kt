@@ -8,11 +8,11 @@ package org.cascadebot.cascadebot.commands.management
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.ISubCommand
+import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 
-class AutoRoleRemoveSubCommand : ISubCommand {
+class AutoRoleRemoveSubCommand : SubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isEmpty()) {
@@ -53,6 +53,6 @@ class AutoRoleRemoveSubCommand : ISubCommand {
 
     override fun command(): String = "add"
 
-    override fun getPermission(): CascadePermission? = null
+    override fun permission(): CascadePermission? = null
 
 }
