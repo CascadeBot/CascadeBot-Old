@@ -14,6 +14,7 @@ import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.entities.Emote;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.internal.utils.Checks;
 import org.apache.commons.lang3.StringUtils;
@@ -213,8 +214,8 @@ public class FormatUtils {
      * <br/><br/>
      * Both forms follow the relative locale's time formatting rules.
      *
-     * @param millis The time to be formatted in milliseconds.
-     * @param locale The locale for the time to be formatted in.
+     * @param millis  The time to be formatted in milliseconds.
+     * @param locale  The locale for the time to be formatted in.
      * @param isShort Whether to display in short form or not.
      * @return The formatted string
      */
@@ -285,6 +286,17 @@ public class FormatUtils {
         long mins = TimeUnit.MILLISECONDS.toMinutes(time) - (hours * 60);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(time) - (TimeUnit.MILLISECONDS.toMinutes(time) * 60);
         return String.format("%02d:%02d:%02d", hours, mins, seconds);
+    }
+
+    public static String getVerificationLevelString(Guild.VerificationLevel verificationLevel) {
+        switch (verificationLevel.getKey()) {
+            case 4:
+                return "(\u256F\u00B0\u25A1\u00B0\uFF09\u256F\uFE35 \u253B\u2501\u253B"; // (╯°□°）╯︵ ┻━┻
+            case 5:
+                return "\u253B\u2501\u253B \uFF90\u30FD(\u0CA0\u76CA\u0CA0)\u30CE\u5F61\u253B\u2501\u253B"; // ┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻
+            default:
+                return verificationLevel.name();
+        }
     }
 
 }
