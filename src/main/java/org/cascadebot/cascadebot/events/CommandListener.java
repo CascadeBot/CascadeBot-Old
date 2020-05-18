@@ -16,9 +16,9 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.MDCException;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
-import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
+import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
@@ -111,13 +111,13 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
-        ICommandMain cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
+        MainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
         CommandContext context = new CommandContext(cmd, event.getJDA(), event.getChannel(), event.getMessage(), event.getGuild(), guildData, args, event.getMember(), trigger, isMention);
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
-            if (!cmd.getModule().isPrivate() && !guildData.getCore().isModuleEnabled(cmd.getModule())) {
+            if (!cmd.module().isPrivate() && !guildData.getCore().isModuleEnabled(cmd.module())) {
                 if (guildData.getCore().getShowModuleErrors() || Environment.isDevelopment()) {
-                    EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.getModule(), context.getLocale()), trigger), event.getAuthor());
+                    EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.module(), context.getLocale()), trigger), event.getAuthor());
                     Messaging.sendEmbedMessage(MessageType.DANGER, event.getChannel(), builder, guildData.getCore().getUseEmbedForMessages());
                 }
                 // TODO: Modlog?
@@ -146,8 +146,8 @@ public class CommandListener extends ListenerAdapter {
         }
     }
 
-    private boolean processSubCommands(ICommandMain cmd, String[] args, CommandContext parentCommandContext) {
-        for (ICommandExecutable subCommand : cmd.getSubCommands()) {
+    private boolean processSubCommands(MainCommand cmd, String[] args, CommandContext parentCommandContext) {
+        for (ExecutableCommand subCommand : cmd.subCommands()) {
             if (subCommand.command().equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.getMention());
                 if (!isAuthorised(cmd, subCommandContext)) {
@@ -159,17 +159,17 @@ public class CommandListener extends ListenerAdapter {
         return false;
     }
 
-    private boolean dispatchCommand(final ICommandExecutable command, final CommandContext context) {
+    private boolean dispatchCommand(final ExecutableCommand command, final CommandContext context) {
         COMMAND_POOL.submit(() -> {
             MDC.put("cascade.sender", context.getMember().toString());
             MDC.put("cascade.guild", context.getGuild().toString());
             MDC.put("cascade.channel", context.getChannel().toString());
             MDC.put("cascade.shard_info", context.getJda().getShardInfo().getShardString());
-            MDC.put("cascade.command", command.command() + (command instanceof ICommandMain ? "" : " (Sub-command)"));
+            MDC.put("cascade.command", command.command() + (command instanceof MainCommand ? "" : " (Sub-command)"));
             MDC.put("cascade.trigger", context.getTrigger());
             MDC.put("cascade.args", Arrays.toString(context.getArgs()));
 
-            CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}", (command instanceof ICommandMain ? "" : "Sub"), command.command(), (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"), context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
+            CascadeBot.LOGGER.info("{}Command {}{} executed by {} with args: {}", (command instanceof MainCommand ? "" : "Sub"), command.command(), (command.command().equalsIgnoreCase(context.getTrigger()) ? "" : " (Trigger: " + context.getTrigger() + ")"), context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
 
             Metrics.INS.commandsExecuted.labels(command.getClass().getSimpleName()).inc();
             Summary.Timer commandTimer = Metrics.INS.commandExecutionTime.labels(command.getClass().getSimpleName()).startTimer();
@@ -189,11 +189,11 @@ public class CommandListener extends ListenerAdapter {
         return true;
     }
 
-    private boolean isAuthorised(ICommandExecutable command, CommandContext context) {
+    private boolean isAuthorised(ExecutableCommand command, CommandContext context) {
         if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
-            if (!(command instanceof ICommandRestricted)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
+            if (!(command instanceof RestrictedCommand)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
                 if (context.getCoreSettings().getShowPermErrors()) {
-                    context.getUiMessaging().sendPermissionError(command.getPermission());
+                    context.getUiMessaging().sendPermissionError(command.permission());
                 }
             }
             return false;
@@ -201,7 +201,7 @@ public class CommandListener extends ListenerAdapter {
         return true;
     }
 
-    private void deleteMessages(ICommandExecutable command, CommandContext context) {
+    private void deleteMessages(ExecutableCommand command, CommandContext context) {
         if (context.getCoreSettings().getDeleteCommand() && command.deleteMessages()) {
             if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
                 context.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));

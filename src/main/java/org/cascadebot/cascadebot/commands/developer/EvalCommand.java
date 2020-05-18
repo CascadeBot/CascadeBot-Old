@@ -8,8 +8,8 @@ package org.cascadebot.cascadebot.commands.developer;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
 import org.cascadebot.cascadebot.permissions.PermissionNode;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.shared.SecurityLevel;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
-public class EvalCommand implements ICommandRestricted {
+public class EvalCommand extends RestrictedCommand {
 
     private ScriptEngineManager manager = new ScriptEngineManager();
 
@@ -105,7 +105,7 @@ public class EvalCommand implements ICommandRestricted {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.DEVELOPER;
     }
 
@@ -115,7 +115,7 @@ public class EvalCommand implements ICommandRestricted {
     }
 
     @Override
-    public SecurityLevel getCommandLevel() {
+    public SecurityLevel commandLevel() {
         return SecurityLevel.DEVELOPER;
     }
 
