@@ -605,11 +605,18 @@ public class ModlogEventListener extends ListenerAdapter {
 
     //region Username updates
     public void onUserUpdateName(UserUpdateNameEvent event) {
-
+        // TODO propagate to guilds
+        List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+        embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", event.getOldName()));
+        embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Name", event.getNewName()));
+        ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_NAME_UPDATED, event.getUser(), event.getUser(), embedFieldList);
     }
 
     public void onUserUpdateDiscriminator(UserUpdateDiscriminatorEvent event) {
-
+        List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+        embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Discriminator", event.getOldDiscriminator()));
+        embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Discriminator", event.getNewDiscriminator()));
+        ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_NAME_UPDATED, event.getUser(), event.getUser(), embedFieldList);
     }
     //endregion
 
