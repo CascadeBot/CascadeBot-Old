@@ -13,12 +13,9 @@ import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.IPermissionHolder;
-import net.dv8tion.jda.api.entities.ISnowflake;
-import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.channel.category.CategoryCreateEvent;
 import net.dv8tion.jda.api.events.channel.category.CategoryDeleteEvent;
 import net.dv8tion.jda.api.events.channel.category.GenericCategoryEvent;
@@ -77,6 +74,14 @@ import net.dv8tion.jda.api.events.guild.update.GuildUpdateVerificationLevelEvent
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.events.role.GenericRoleEvent;
+import net.dv8tion.jda.api.events.role.RoleCreateEvent;
+import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
+import net.dv8tion.jda.api.events.role.update.RoleUpdateColorEvent;
+import net.dv8tion.jda.api.events.role.update.RoleUpdateHoistedEvent;
+import net.dv8tion.jda.api.events.role.update.RoleUpdateMentionableEvent;
+import net.dv8tion.jda.api.events.role.update.RoleUpdateNameEvent;
+import net.dv8tion.jda.api.events.role.update.RoleUpdatePermissionsEvent;
+import net.dv8tion.jda.api.events.role.update.RoleUpdatePositionEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -111,7 +116,7 @@ public class ModlogEventListener extends ListenerAdapter {
     public void onGenericEmote(GenericEmoteEvent event) {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         Emote emote = event.getEmote();
-        event.getGuild().retrieveAuditLogs().queue(auditLogEntries -> {
+        event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             User user = null;
             if (entry.getType().equals(ActionType.EMOTE_UPDATE) || entry.getType().equals(ActionType.EMOTE_CREATE) || entry.getType().equals(ActionType.EMOTE_DELETE)) {
@@ -147,7 +152,7 @@ public class ModlogEventListener extends ListenerAdapter {
     public void onGenericGuildMember(GenericGuildMemberEvent event) {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         User user = event.getMember().getUser();
-        event.getGuild().retrieveAuditLogs().queue(auditLogEntries -> {
+        event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent;
@@ -191,7 +196,7 @@ public class ModlogEventListener extends ListenerAdapter {
     public void onGuildBan(GuildBanEvent event) {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         User user = event.getUser();
-        event.getGuild().retrieveAuditLogs().queue(auditLogEntries -> {
+        event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent = ModlogEvent.GUILD_USER_BANNED;
@@ -209,7 +214,7 @@ public class ModlogEventListener extends ListenerAdapter {
     public void onGuildUnban(GuildUnbanEvent event) {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         User user = event.getUser();
-        event.getGuild().retrieveAuditLogs().queue(auditLogEntries -> {
+        event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent = ModlogEvent.GUILD_USER_UNBANNED;
@@ -236,7 +241,7 @@ public class ModlogEventListener extends ListenerAdapter {
         if (affected == null) {
             return;
         }
-        event.getGuild().retrieveAuditLogs().queue(auditLogEntries -> {
+        event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             ModlogEvent modlogEvent;
             User responsible;
@@ -297,7 +302,7 @@ public class ModlogEventListener extends ListenerAdapter {
     public void onGenericGuildUpdate(GenericGuildUpdateEvent event) {
         Guild affected = event.getEntity();
         GuildData guildData = GuildDataManager.getGuildData(affected.getIdLong());
-        event.getGuild().retrieveAuditLogs().queue(auditLogEntries -> {
+        event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
@@ -446,7 +451,7 @@ public class ModlogEventListener extends ListenerAdapter {
     private void handleChannelCreateEvents(Guild guild, ChannelType type, GuildChannel channel) {
         ModlogEvent event = ModlogEvent.CHANNEL_CREATED;
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+        guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
@@ -461,7 +466,7 @@ public class ModlogEventListener extends ListenerAdapter {
     private void handleChannelDeleteEvents(Guild guild, ChannelType type, GuildChannel channel) {
         ModlogEvent event = ModlogEvent.CHANNEL_DELETED;
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+        guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
@@ -476,7 +481,7 @@ public class ModlogEventListener extends ListenerAdapter {
     private void handleChannelUpdateNameEvents(Guild guild, ChannelType type, String oldName, GuildChannel channel) {
         ModlogEvent event = ModlogEvent.CHANNEL_NAME_UPDATED;
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+        guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
@@ -492,7 +497,7 @@ public class ModlogEventListener extends ListenerAdapter {
     private void handleChannelUpdatePermissionsEvents(Guild guild, ChannelType type, List<IPermissionHolder> changedPermissionHolders, GuildChannel channel) {
         ModlogEvent event = ModlogEvent.CHANNEL_PERMISSIONS_UPDATED;
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+        guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
@@ -536,7 +541,7 @@ public class ModlogEventListener extends ListenerAdapter {
     private void handleChannelUpdatePositionEvents(Guild guild, ChannelType type, int oldPos, GuildChannel channel) {
         ModlogEvent event = ModlogEvent.CHANNEL_POSITION_UPDATED;
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+        guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
@@ -552,7 +557,50 @@ public class ModlogEventListener extends ListenerAdapter {
     //endregion
 
     public void onGenericRole(GenericRoleEvent event) {
-
+        GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
+        event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            ModlogEvent modlogEvent;
+            if (entry.getType().equals(ActionType.ROLE_CREATE) || entry.getType().equals(ActionType.ROLE_DELETE) || entry.getType().equals(ActionType.ROLE_UPDATE)) {
+                responsible = entry.getUser();
+            }
+            Role affected = event.getRole();
+            if (event instanceof RoleCreateEvent) {
+                modlogEvent = ModlogEvent.ROLE_CREATED;
+            } else if (event instanceof RoleDeleteEvent) {
+                modlogEvent = ModlogEvent.ROLE_DELETED;
+            } else if (event instanceof RoleUpdateColorEvent) {
+                modlogEvent = ModlogEvent.ROLE_COLOR_UPDATED;
+                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Color", ((RoleUpdateColorEvent) event).getOldColor().toString())); // TODO properly show color
+                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Color", ((RoleUpdateColorEvent) event).getNewColor().toString()));
+            } else if (event instanceof RoleUpdateHoistedEvent) {
+                modlogEvent = ModlogEvent.ROLE_HOIST_UPDATED;
+                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Hoisted", String.valueOf(!((RoleUpdateHoistedEvent) event).wasHoisted())));
+            } else if (event instanceof RoleUpdateMentionableEvent) {
+                modlogEvent = ModlogEvent.ROLE_MENTIONABLE_UPDATED;
+                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Mentionable", String.valueOf(!((RoleUpdateMentionableEvent) event).wasMentionable())));
+            } else if (event instanceof RoleUpdateNameEvent) {
+                modlogEvent = ModlogEvent.ROLE_NAME_UPDATED;
+                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", ((RoleUpdateNameEvent) event).getOldName()));
+                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Name", ((RoleUpdateNameEvent) event).getNewName()));
+            } else if (event instanceof RoleUpdatePermissionsEvent) {
+                modlogEvent = ModlogEvent.ROLE_PERMISSIONS_UPDATED;
+                EnumSet<Permission> oldPermissions = ((RoleUpdatePermissionsEvent) event).getOldPermissions();
+                EnumSet<Permission> newPermissions = ((RoleUpdatePermissionsEvent) event).getNewPermissions();
+                ListChanges<Permission> permissionListChanges = new ListChanges<>(oldPermissions, newPermissions);
+                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added Permissions", permissionListChanges.getAdded().stream().map(permission -> permission.getName()).collect(Collectors.joining("\n"))));
+                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed Permissions", permissionListChanges.getRemoved().stream().map(permission -> permission.getName()).collect(Collectors.joining("\n"))));
+            } else if (event instanceof RoleUpdatePositionEvent) {
+                modlogEvent = ModlogEvent.ROLE_POSITION_UPDATED;
+                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Position", String.valueOf(((RoleUpdatePositionEvent) event).getOldPosition())));
+                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Position", String.valueOf(((RoleUpdatePositionEvent) event).getNewPosition())));
+            } else {
+                return;
+            }
+            ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
+        });
     }
 
     //region Username updates
