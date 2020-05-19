@@ -4,17 +4,45 @@ import club.minnced.discord.webhook.send.WebhookEmbed;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogChange;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.IPermissionHolder;
+import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.entities.Invite;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.events.channel.category.CategoryCreateEvent;
+import net.dv8tion.jda.api.events.channel.category.CategoryDeleteEvent;
 import net.dv8tion.jda.api.events.channel.category.GenericCategoryEvent;
+import net.dv8tion.jda.api.events.channel.category.update.CategoryUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.category.update.CategoryUpdatePermissionsEvent;
+import net.dv8tion.jda.api.events.channel.category.update.CategoryUpdatePositionEvent;
 import net.dv8tion.jda.api.events.channel.store.GenericStoreChannelEvent;
+import net.dv8tion.jda.api.events.channel.store.StoreChannelCreateEvent;
+import net.dv8tion.jda.api.events.channel.store.StoreChannelDeleteEvent;
+import net.dv8tion.jda.api.events.channel.store.update.StoreChannelUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.store.update.StoreChannelUpdatePermissionsEvent;
+import net.dv8tion.jda.api.events.channel.store.update.StoreChannelUpdatePositionEvent;
 import net.dv8tion.jda.api.events.channel.text.GenericTextChannelEvent;
+import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
+import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
+import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdatePermissionsEvent;
+import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdatePositionEvent;
 import net.dv8tion.jda.api.events.channel.voice.GenericVoiceChannelEvent;
+import net.dv8tion.jda.api.events.channel.voice.VoiceChannelCreateEvent;
+import net.dv8tion.jda.api.events.channel.voice.VoiceChannelDeleteEvent;
+import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdatePermissionsEvent;
+import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdatePositionEvent;
 import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
 import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
 import net.dv8tion.jda.api.events.emote.GenericEmoteEvent;
@@ -60,6 +88,7 @@ import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -70,7 +99,9 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -101,10 +132,10 @@ public class ModlogEventListener extends ListenerAdapter {
                 List<Role> newRoles = ((EmoteUpdateRolesEvent) event).getNewRoles();
                 ListChanges<Role> roleListChanges = new ListChanges<>(oldRoles, newRoles);
                 embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added Roles",
-                        roleListChanges.added.stream().map(role -> role.getName() + " (" + role.getId() + ")")
+                        roleListChanges.getAdded().stream().map(role -> role.getName() + " (" + role.getId() + ")")
                                 .collect(Collectors.joining("\n"))));
                 embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed Roles",
-                        roleListChanges.removed.stream().map(role -> role.getName() + " (" + role.getId() + ")")
+                        roleListChanges.getRemoved().stream().map(role -> role.getName() + " (" + role.getId() + ")")
                                 .collect(Collectors.joining("\n"))));
             } else {
                 return;
@@ -296,8 +327,8 @@ public class ModlogEventListener extends ListenerAdapter {
                 modlogEvent = ModlogEvent.GUILD_UPDATE_EXPLICIT_FILTER;
             } else if (event instanceof GuildUpdateFeaturesEvent) {
                 ListChanges<String> featuresChanged = new ListChanges<>(((GuildUpdateFeaturesEvent) event).getOldFeatures(), ((GuildUpdateFeaturesEvent) event).getNewFeatures());
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added Features", String.join("\n", featuresChanged.added)));
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed Features", String.join("\n", featuresChanged.removed)));
+                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added Features", String.join("\n", featuresChanged.getAdded())));
+                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed Features", String.join("\n", featuresChanged.getRemoved())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_FEATURES;
             } else if (event instanceof GuildUpdateIconEvent) {
                 embedFieldList.add(new WebhookEmbed.EmbedField(false, "Old Image", ((GuildUpdateIconEvent) event).getOldIconUrl()));
@@ -352,21 +383,173 @@ public class ModlogEventListener extends ListenerAdapter {
         });
     }
 
-    public void onGenericStoreChannel(GenericStoreChannelEvent event) {
-
+    //region Channels
+    public void onGenericStoreChannel(@NotNull GenericStoreChannelEvent event) {
+        if (event instanceof StoreChannelCreateEvent) {
+            handleChannelCreateEvents(event.getChannel().getGuild(), ChannelType.STORE, event.getChannel());
+        } else if (event instanceof StoreChannelDeleteEvent) {
+            handleChannelDeleteEvents(event.getChannel().getGuild(), ChannelType.STORE, event.getChannel());
+        } else if (event instanceof StoreChannelUpdateNameEvent) {
+            handleChannelUpdateNameEvents(event.getChannel().getGuild(), ChannelType.STORE, ((StoreChannelUpdateNameEvent) event).getOldName(), event.getChannel());
+        } else if (event instanceof StoreChannelUpdatePermissionsEvent) {
+            handleChannelUpdatePermissionsEvents(event.getChannel().getGuild(), ChannelType.STORE, ((StoreChannelUpdatePermissionsEvent) event).getChangedPermissionHolders(), event.getChannel());
+        } else if (event instanceof StoreChannelUpdatePositionEvent) {
+            handleChannelUpdatePositionEvents(event.getChannel().getGuild(), ChannelType.STORE, ((StoreChannelUpdatePositionEvent) event).getOldPosition(), event.getChannel());
+        }
     }
 
-    public void onGenericTextChannel(GenericTextChannelEvent event) {
-
+    public void onGenericTextChannel(@NotNull GenericTextChannelEvent event) {
+        if (event instanceof TextChannelCreateEvent) {
+            handleChannelCreateEvents(event.getGuild(), ChannelType.TEXT, event.getChannel());
+        } else if (event instanceof TextChannelDeleteEvent) {
+            handleChannelDeleteEvents(event.getGuild(), ChannelType.TEXT, event.getChannel());
+        } else if (event instanceof TextChannelUpdateNameEvent) {
+            handleChannelUpdateNameEvents(event.getGuild(), ChannelType.TEXT, ((TextChannelUpdateNameEvent) event).getOldName(), event.getChannel());
+        } else if (event instanceof TextChannelUpdatePermissionsEvent) {
+            ((TextChannelUpdatePermissionsEvent) event).getChangedPermissionHolders();
+            handleChannelUpdatePermissionsEvents(event.getGuild(), ChannelType.TEXT, ((TextChannelUpdatePermissionsEvent) event).getChangedPermissionHolders(), event.getChannel());
+        } else if (event instanceof TextChannelUpdatePositionEvent) {
+            handleChannelUpdatePositionEvents(event.getGuild(), ChannelType.TEXT, ((TextChannelUpdatePositionEvent) event).getOldPosition(), event.getChannel());
+        }
     }
 
-    public void onGenericVoiceChannel(GenericVoiceChannelEvent event) {
-
+    public void onGenericVoiceChannel(@NotNull GenericVoiceChannelEvent event) {
+        if (event instanceof VoiceChannelCreateEvent) {
+            handleChannelCreateEvents(event.getGuild(), ChannelType.VOICE, event.getChannel());
+        } else if (event instanceof VoiceChannelDeleteEvent) {
+            handleChannelDeleteEvents(event.getGuild(), ChannelType.VOICE, event.getChannel());
+        } else if (event instanceof VoiceChannelUpdateNameEvent) {
+            handleChannelUpdateNameEvents(event.getGuild(), ChannelType.VOICE, ((VoiceChannelUpdateNameEvent) event).getOldName(), event.getChannel());
+        } else if (event instanceof VoiceChannelUpdatePermissionsEvent) {
+            handleChannelUpdatePermissionsEvents(event.getGuild(), ChannelType.VOICE, ((VoiceChannelUpdatePermissionsEvent) event).getChangedPermissionHolders(), event.getChannel());
+        } else if (event instanceof VoiceChannelUpdatePositionEvent) {
+            handleChannelUpdatePositionEvents(event.getGuild(), ChannelType.VOICE, ((VoiceChannelUpdatePositionEvent) event).getOldPosition(), event.getChannel());
+        }
     }
 
-    public void onGenericCategory(GenericCategoryEvent event) {
-
+    public void onGenericCategory(@NotNull GenericCategoryEvent event) {
+        if (event instanceof CategoryCreateEvent) {
+            handleChannelCreateEvents(event.getGuild(), ChannelType.CATEGORY, event.getCategory());
+        } else if (event instanceof CategoryDeleteEvent) {
+            handleChannelDeleteEvents(event.getGuild(), ChannelType.CATEGORY, event.getCategory());
+        } else if (event instanceof CategoryUpdateNameEvent) {
+            handleChannelUpdateNameEvents(event.getGuild(), ChannelType.CATEGORY, ((CategoryUpdateNameEvent) event).getOldName(), event.getCategory());
+        } else if (event instanceof CategoryUpdatePermissionsEvent) {
+            handleChannelUpdatePermissionsEvents(event.getGuild(), ChannelType.CATEGORY, ((CategoryUpdatePermissionsEvent) event).getChangedPermissionHolders(), event.getCategory());
+        } else if (event instanceof CategoryUpdatePositionEvent) {
+            handleChannelUpdatePositionEvents(event.getGuild(), ChannelType.CATEGORY, ((CategoryUpdatePositionEvent) event).getOldPosition(), event.getCategory());
+        }
     }
+    //endregion
+
+    //region Channel handlers
+    private void handleChannelCreateEvents(Guild guild, ChannelType type, GuildChannel channel) {
+        ModlogEvent event = ModlogEvent.CHANNEL_CREATED;
+        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            if (entry.getType().equals(ActionType.CHANNEL_CREATE)) {
+                responsible = entry.getUser();
+            }
+            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
+            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+        });
+    }
+
+    private void handleChannelDeleteEvents(Guild guild, ChannelType type, GuildChannel channel) {
+        ModlogEvent event = ModlogEvent.CHANNEL_DELETED;
+        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            if (entry.getType().equals(ActionType.CHANNEL_DELETE)) {
+                responsible = entry.getUser();
+            }
+            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
+            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+        });
+    }
+
+    private void handleChannelUpdateNameEvents(Guild guild, ChannelType type, String oldName, GuildChannel channel) {
+        ModlogEvent event = ModlogEvent.CHANNEL_NAME_UPDATED;
+        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+                responsible = entry.getUser();
+            }
+            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
+            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", oldName));
+            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+        });
+    }
+
+    private void handleChannelUpdatePermissionsEvents(Guild guild, ChannelType type, List<IPermissionHolder> changedPermissionHolders, GuildChannel channel) {
+        ModlogEvent event = ModlogEvent.CHANNEL_PERMISSIONS_UPDATED;
+        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE) || entry.getType().equals(ActionType.CHANNEL_OVERRIDE_UPDATE)) {
+                responsible = entry.getUser();
+                Map<String, AuditLogChange> auditLogChangeMap = entry.getChanges();
+                for (Map.Entry<String, AuditLogChange> auditLogChangeEntry : auditLogChangeMap.entrySet()) {
+                    AuditLogChange value = auditLogChangeEntry.getValue();
+                    EnumSet<Permission> oldPermissions = Permission.getPermissions(((Integer) value.getOldValue()).longValue());
+                    EnumSet<Permission> newPermissions = Permission.getPermissions(((Integer) value.getNewValue()).longValue());
+                    ListChanges<Permission> permissionListChanges = new ListChanges<>(oldPermissions, newPermissions);
+                    String change = "unknown";
+                    switch (auditLogChangeEntry.getKey()) {
+                        case "allow":
+                            change = "Allowed";
+                            break;
+                        case "deny":
+                            change = "Denied";
+                            break;
+                    }
+                    String affectedType = entry.getOptionByName("type");
+                    long affectedId = entry.getTargetIdLong();
+                    String affected = "unknown";
+                    switch (affectedType) {
+                        case "role":
+                            affected = CascadeBot.INS.getShardManager().getRoleById(affectedId).getName();
+                            break;
+                        case "user":
+                            affected = CascadeBot.INS.getShardManager().getUserById(affectedId).getAsTag();
+                            break;
+                    }
+                    embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added " + change + " Permissions to " + affected, permissionListChanges.getAdded().stream().map(permission -> permission.getName()).collect(Collectors.joining("\n"))));
+                    embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed " + change + " Permissions to " + affected, permissionListChanges.getRemoved().stream().map(permission -> permission.getName()).collect(Collectors.joining("\n"))));
+                }
+            }
+            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
+            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+        });
+    }
+
+    private void handleChannelUpdatePositionEvents(Guild guild, ChannelType type, int oldPos, GuildChannel channel) {
+        ModlogEvent event = ModlogEvent.CHANNEL_POSITION_UPDATED;
+        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+        guild.retrieveAuditLogs().queue(auditLogEntries -> {
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+                responsible = entry.getUser();
+            }
+            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
+            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Position", String.valueOf(oldPos)));
+            embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Position", String.valueOf(channel.getPosition())));
+            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+        });
+    }
+    //endregion
 
     public void onGenericRole(GenericRoleEvent event) {
 
