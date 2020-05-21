@@ -10,11 +10,14 @@ import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.ISnowflake
+import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
+import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.moderation.ModlogEvent
+import java.net.URL
 import java.util.ArrayList
 import java.util.Collections
 import java.util.function.Consumer
@@ -25,7 +28,7 @@ class GuildSettingsModeration() {
     @Setting
     public val purgePinnedMessages: Boolean = false
 
-    private val modlogEvents: MutableList<ChannelModlogEventsInfo> = ArrayList()
+    private val modlogEvents: MutableMap<Long, ChannelModlogEventsInfo> = HashMap()
 
     fun sendModlogEvent(modlogEventStore: ModlogEventStore) {
         val eventsInfo: List<ChannelModlogEventsInfo> = getEventInfoForEvent(modlogEventStore.trigger)
@@ -37,35 +40,34 @@ class GuildSettingsModeration() {
 
     private fun getEventInfoForEvent(event: ModlogEvent): List<ChannelModlogEventsInfo> {
         val channelModlogEventsInfos: MutableList<ChannelModlogEventsInfo> = ArrayList()
-        for (channelModlogEventsInfo in modlogEvents) {
-            if (channelModlogEventsInfo.getEvents().contains(event)) {
-                channelModlogEventsInfos.add(channelModlogEventsInfo)
+        for (entry in modlogEvents) {
+            if (entry.value.getEvents().contains(event)) {
+                channelModlogEventsInfos.add(entry.value)
             }
         }
         return channelModlogEventsInfos
     }
 
     fun getModlogEvents(): List<ChannelModlogEventsInfo> {
-        return modlogEvents
+        return modlogEvents.map { entry -> entry.value }
     }
 
     fun buildWebhookClients() {
-        for (channelModlogEventsInfo in modlogEvents) {
-            channelModlogEventsInfo.buildWebhookClient()
+        for (entry in modlogEvents) {
+            entry.value.buildWebhookClient()
         }
     }
 
-    fun createModlogEventsInfo(channel: TextChannel, consumer: Consumer<ChannelModlogEventsInfo>) {
-        channel.createWebhook("Cascade-modlog").queue { webhook ->
-            val eventsInfo = ChannelModlogEventsInfo(channel.idLong, webhook.idLong, webhook.token!!)
-            modlogEvents.add(eventsInfo)
+    private fun createModlogEventsInfo(channel: TextChannel, consumer: Consumer<ChannelModlogEventsInfo>) {
+        channel.createWebhook("Cascade-modlog").setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
+            val eventsInfo = ChannelModlogEventsInfo(webhook.idLong, webhook.token!!)
+            modlogEvents.put(channel.idLong, eventsInfo)
             consumer.accept(eventsInfo)
         }
     }
 
     class ChannelModlogEventsInfo {
         private val events: MutableList<ModlogEvent> = ArrayList()
-        private var channelId: Long = 0
         private var webhookId: Long = 0
         private var webhookToken: String = ""
 
@@ -74,8 +76,7 @@ class GuildSettingsModeration() {
         private var webhookClient: WebhookClient? = null
 
         private constructor() {}
-        constructor(channelId: Long, webhookId: Long, webhookToken: String) {
-            this.channelId = channelId
+        constructor(webhookId: Long, webhookToken: String) {
             this.webhookId = webhookId
             this.webhookToken = webhookToken
             buildWebhookClient()
