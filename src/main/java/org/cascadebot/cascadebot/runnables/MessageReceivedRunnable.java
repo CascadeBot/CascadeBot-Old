@@ -29,6 +29,9 @@ public class MessageReceivedRunnable implements Runnable {
         while (!ShutdownHandler.SHUTDOWN_LOCK.get()) {
             try {
                 GuildMessageReceivedEvent event = queue.take();
+                if (event.getMember() == null) {
+                    return;
+                }
                 String message = "";
                 if (Config.INS.getEncryptKey() != null) {
                     try {

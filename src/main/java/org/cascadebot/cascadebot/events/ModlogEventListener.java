@@ -146,6 +146,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, user, emote, embedFieldList);
+            guildData.getModeration().sendModlogEvent(eventStore);
         });
     }
 
@@ -189,6 +190,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
+            guildData.getModeration().sendModlogEvent(eventStore);
         });
     }
 
@@ -208,6 +210,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 }
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
+            guildData.getModeration().sendModlogEvent(eventStore);
         });
     }
 
@@ -223,6 +226,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 responsible = entry.getUser();
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
+            guildData.getModeration().sendModlogEvent(eventStore);
         });
     }
     //endregion
@@ -253,6 +257,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 responsible = affected;
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
+            guildData.getModeration().sendModlogEvent(eventStore);
         });
     }
 
@@ -272,6 +277,7 @@ public class ModlogEventListener extends ListenerAdapter {
         }
         ModlogEvent modlogEvent = ModlogEvent.GUILD_MESSAGE_UPDATED;
         ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, null, affected, embedFieldList);
+        guildData.getModeration().sendModlogEvent(eventStore);
     }
 
     private String getMessageFromJson(JsonObject jsonObject) {
@@ -385,6 +391,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
+            guildData.getModeration().sendModlogEvent(eventStore);
         });
     }
 
@@ -460,6 +467,7 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
     }
 
@@ -475,6 +483,7 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
     }
 
@@ -491,6 +500,7 @@ public class ModlogEventListener extends ListenerAdapter {
             embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
             embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", oldName));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
     }
 
@@ -535,6 +545,7 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
     }
 
@@ -552,6 +563,7 @@ public class ModlogEventListener extends ListenerAdapter {
             embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Position", String.valueOf(oldPos)));
             embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Position", String.valueOf(channel.getPosition())));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
     }
     //endregion
@@ -600,6 +612,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
     }
 
@@ -616,7 +629,7 @@ public class ModlogEventListener extends ListenerAdapter {
         List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
         embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Discriminator", event.getOldDiscriminator()));
         embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Discriminator", event.getNewDiscriminator()));
-        ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_NAME_UPDATED, event.getUser(), event.getUser(), embedFieldList);
+        ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_DISCRIMINATOR_UPDATED, event.getUser(), event.getUser(), embedFieldList);
     }
     //endregion
 
