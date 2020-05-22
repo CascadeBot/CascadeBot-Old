@@ -24,6 +24,7 @@ import org.cascadebot.cascadebot.utils.StringsUtil;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -32,18 +33,22 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public interface CascadePlayer extends IPlayer {
 
-    Queue<AudioTrack> queue = new LinkedList<>();
+    Deque<AudioTrack> queue = new LinkedList<>();
 
     AtomicLong guildId = new AtomicLong();
 
     AtomicReference<LoopMode> loopMode = new AtomicReference<>(LoopMode.DISABLED);
     AtomicBoolean shuffleEnabled = new AtomicBoolean(false);
 
+    Deque<List<String>> undoList = new LinkedList<>();
+
     default double getQueueLength() {
-        double queueLength = getPlayingTrack().getDuration() - getTrackPosition();
+        double queueLength = 0;
+        if (getPlayingTrack() != null) queueLength += getPlayingTrack().getDuration() - getTrackPosition();
         for (AudioTrack track : queue) {
             queueLength += track.getDuration();
         }
@@ -84,7 +89,36 @@ public interface CascadePlayer extends IPlayer {
     }
 
     default void addTracks(Collection<AudioTrack> tracks) {
-        tracks.forEach(this::addTrack);
+        tracks.forEach(track -> {
+            if (getPlayingTrack() != null) {
+                queue.add(track);
+            } else {
+                playTrack(track);
+            }
+        });
+    }
+
+    default void addUndoTrack(AudioTrack track) {
+        addUndoTracks(Collections.singletonList(track));
+    }
+
+    default void addUndoTracks(Collection<AudioTrack> tracks) {
+        if (undoList.size() == 5) undoList.removeFirst();
+        undoList.push(tracks.stream().map(AudioTrack::getIdentifier).collect(Collectors.toList()));
+    }
+
+    default boolean undo() {
+        var undoAction = undoList.pollLast();
+        if (undoAction == null) return false;
+        var iterator = queue.descendingIterator();
+        while (iterator.hasNext()) {
+            AudioTrack track = iterator.next();
+            if (undoAction.contains(track.getIdentifier())) {
+                iterator.remove();
+                undoAction.remove(track.getIdentifier());
+            }
+        }
+        return true;
     }
 
     default void loopMode(LoopMode loopMode) {
