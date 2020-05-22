@@ -11,7 +11,7 @@
     <properties>
         <build.number>DEV</build.number>
         <jda.version>4.0.0_39</jda.version>
-        <lavaplayer.version>1.3.47</lavaplayer.version>
+        <lavaplayer.version>1.3.49</lavaplayer.version>
         <lavalink.client.version>f9ab37f</lavalink.client.version>
         <kotlin.version>1.3.72</kotlin.version>
     </properties>
