@@ -302,6 +302,15 @@
         "description": "Removes a role from the AutoRole list."
       }
     },
+    "welcome": {
+      "command": "welcome",
+      "description": "Lists the welcome messages for this server.",
+      "add": {
+        "success_title": "Added welcome message!",
+        "success_text_1": "Added the message: ",
+        "success_text_2": "There {0,plural,one{is} other{are}} currently {0} welcome {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
+      }
+    },
     "ban": {
       "command": "ban",
       "description": "Bans or forcebans the specified user.",
