@@ -49,6 +49,17 @@ class WeightedList<T : Any> {
         return lock.read { internalList[position].first }
     }
 
+    fun get(obj: T): Pair<T, Int>? {
+        return lock.read { internalList.find { it.first == obj }}
+    }
+
+    fun indexOf(obj: T): Int {
+        lock.read {
+            internalList.forEachIndexed { index, pair -> if (pair.first == obj) return index }
+        }
+        return -1
+    }
+
     val items: List<T>
         get() = lock.read { internalList.map { it.first }.toList() }
 
