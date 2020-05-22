@@ -84,8 +84,14 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
     private void onError(Exception e, AudioTrack audioTrack) {
         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         embedBuilder.setTitle(Language.i18n(((TrackData) audioTrack.getUserData()).getGuildId(), "music.misc.error"));
-        embedBuilder.appendDescription(e.getCause().getCause().getMessage());
+        String message = getExceptionMessage(e);
+        embedBuilder.appendDescription(message);
         Messaging.sendEmbedMessage(MessageType.DANGER, CascadeBot.INS.getShardManager().getTextChannelById(((TrackData) audioTrack.getUserData()).getErrorChannelId()), embedBuilder);
+    }
+
+    private String getExceptionMessage(Throwable e) {
+        if (e.getCause() != null) return getExceptionMessage(e.getCause());
+        return e.getMessage();
     }
 
 }
