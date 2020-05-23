@@ -1,46 +1,47 @@
 package org.cascadebot.cascadebot.messaging
 
+import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.UnicodeConstants
 import java.awt.Color
 import java.time.LocalDateTime
 import java.time.temporal.TemporalAccessor
 
-class EmbedBuilder(val type : MessageType) {
-    private var titleBuilder : TitleBuilder? = null
-    private var authorBuilder : AuthorBuilder? = null
-    private var footerBuilder : FooterBuilder? = null
-    private var fieldBuilders : MutableList<FieldBuilder> = mutableListOf()
+class EmbedBuilder(val type: MessageType, val user: User? = null) {
+    private var titleBuilder: TitleBuilder? = null
+    private var authorBuilder: AuthorBuilder? = null
+    private var footerBuilder: FooterBuilder? = null
+    private var fieldBuilders: MutableList<FieldBuilder> = mutableListOf()
 
-    var description : String? = null
-    var imageUrl : String? = null
-    var thumbnailUrl : String? = null
-    var timestamp : TemporalAccessor? = null
-    var color : Color? = null
+    var description: String? = null
+    var imageUrl: String? = null
+    var thumbnailUrl: String? = null
+    var timestamp: TemporalAccessor? = null
+    var color: Color? = null
 
     class TitleBuilder {
-        var name : String? = null
-        var url : String? = null
+        var name: String? = null
+        var url: String? = null
 
-        fun build() : String {
+        fun build(): String {
             return "yeet"
         }
     }
 
     class AuthorBuilder {
-        var name : String? = null
-        var url : String? = null
-        var iconUrl : String? = null
+        var name: String? = null
+        var url: String? = null
+        var iconUrl: String? = null
     }
 
     class FieldBuilder {
-        var name : String? = null
-        var value : String? = null
+        var name: String? = null
+        var value: String? = null
         var inline = false
     }
 
     class FooterBuilder {
-        var text : String? = null
-        var iconUrl : String? = null
+        var text: String? = null
+        var iconUrl: String? = null
     }
 
     fun title(init: TitleBuilder.() -> Unit) {
@@ -54,6 +55,7 @@ class EmbedBuilder(val type : MessageType) {
     fun field(init: FieldBuilder.() -> Unit) {
         fieldBuilders.add(FieldBuilder().apply(init))
     }
+
     fun footer(init: FooterBuilder.() -> Unit) {
         footerBuilder = FooterBuilder().apply(init)
     }
@@ -66,8 +68,9 @@ class EmbedBuilder(val type : MessageType) {
         })
     }
 
-    fun build () : net.dv8tion.jda.api.EmbedBuilder {
-        val embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(type)
+    fun build(): net.dv8tion.jda.api.EmbedBuilder {
+        val embedBuilder = user?.let { MessagingObjects.getMessageTypeEmbedBuilder(type, it) }
+                ?: MessagingObjects.getMessageTypeEmbedBuilder(type)
         for (builder in fieldBuilders) {
             embedBuilder.addField(
                     builder.name,
@@ -88,14 +91,14 @@ class EmbedBuilder(val type : MessageType) {
     }
 }
 
-fun embed(type : MessageType, init : EmbedBuilder.() -> Unit) : net.dv8tion.jda.api.EmbedBuilder = EmbedBuilder(type).apply(init).build()
+fun embed(type: MessageType, user: User? = null, init: EmbedBuilder.() -> Unit): net.dv8tion.jda.api.EmbedBuilder = EmbedBuilder(type, user).apply(init).build()
 
 /*
 ====================================
 Full embed type-safe builder example
 ====================================
  */
-fun getEmbed() : net.dv8tion.jda.api.EmbedBuilder {
+fun getEmbed(): net.dv8tion.jda.api.EmbedBuilder {
     return embed(type = MessageType.INFO) {
         title {
             name = "title"
