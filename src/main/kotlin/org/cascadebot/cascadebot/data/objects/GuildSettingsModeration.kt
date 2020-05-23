@@ -23,7 +23,15 @@ import java.util.Collections
 import java.util.function.Consumer
 
 @SettingsContainer(module = Module.MODERATION)
-class GuildSettingsModeration() {
+class GuildSettingsModeration {
+
+    var guildData: GuildData? = null
+
+    constructor(guildData: GuildData) {
+        this.guildData = guildData
+    }
+
+    constructor()
 
     @Setting
     public val purgePinnedMessages: Boolean = false
@@ -33,7 +41,7 @@ class GuildSettingsModeration() {
     fun sendModlogEvent(modlogEventStore: ModlogEventStore) {
         val eventsInfo: List<ChannelModlogEventsInfo> = getEventInfoForEvent(modlogEventStore.trigger)
         for (eventInfo in eventsInfo) {
-            eventInfo.sendEvent(modlogEventStore);
+            guildData?.let { eventInfo.sendEvent(it, modlogEventStore) };
         }
         // TODO add to list for dashboard
     }
@@ -98,7 +106,7 @@ class GuildSettingsModeration() {
             events.remove(event)
         }
 
-        fun sendEvent(modlogEventStore: ModlogEventStore) {
+        fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {
             val webhookEmbedBuilder = WebhookEmbedBuilder()
             webhookEmbedBuilder.setTitle(EmbedTitle(modlogEventStore.trigger.name, null))
             val affected: ISnowflake = modlogEventStore.affected;
@@ -127,7 +135,7 @@ class GuildSettingsModeration() {
                 webhookEmbedBuilder.addField(EmbedField(true, "Affected $affectedType", affectedStr))
             }
             for (embedField in modlogEventStore.extraInfo) {
-                webhookEmbedBuilder.addField(embedField)
+                webhookEmbedBuilder.addField(embedField.getLocalizedEmbedField(guildData.locale))
             }
             webhookEmbedBuilder.setColor(modlogEventStore.trigger.messageType.color.rgb)
             if (modlogEventStore.responsible != null) {

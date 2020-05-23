@@ -1293,5 +1293,33 @@
         "yellowgreen": "Yellowgreen"
       }
     }
+  },
+  "modlog": {
+    "general": {
+      "old_name": "Old Name",
+      "variable": "{0}",
+      "responsible": "Responsible",
+      "reason": "Reason",
+      "added_roles": "Added Roles",
+      "removed_roles": "Removed Roles"
+    },
+    "member": {
+      "old_nick": "Old Nickname",
+      "new_nick": "New Nickname"
+    },
+    "message": {
+      "message": "Message",
+      "old_message": "Old Message",
+      "new_message": "New Message"
+    },
+    "guild": {
+      "old_channel": "Old Channel",
+      "new_channel": "New Channel",
+      "timeout": "{0} seconds",
+      "old_timeout": "Old Value",
+      "new_timeout": "New Value",
+      "old_image": "Old Image",
+      "new_image": "New Image"
+    }
   }
 }

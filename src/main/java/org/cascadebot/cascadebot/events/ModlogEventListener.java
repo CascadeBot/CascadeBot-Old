@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.entities.IPermissionHolder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.channel.category.CategoryCreateEvent;
 import net.dv8tion.jda.api.events.channel.category.CategoryDeleteEvent;
 import net.dv8tion.jda.api.events.channel.category.GenericCategoryEvent;
@@ -93,6 +94,7 @@ import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
+import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.BadPaddingException;
@@ -122,7 +124,7 @@ public class ModlogEventListener extends ListenerAdapter {
             if (entry.getType().equals(ActionType.EMOTE_UPDATE) || entry.getType().equals(ActionType.EMOTE_CREATE) || entry.getType().equals(ActionType.EMOTE_DELETE)) {
                 user = auditLogEntries.get(0).getUser();
             }
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent;
             if (event instanceof EmoteAddedEvent) {
                 modlogEvent = ModlogEvent.EMOTE_CREATED;
@@ -130,18 +132,24 @@ public class ModlogEventListener extends ListenerAdapter {
                 modlogEvent = ModlogEvent.EMOTE_DELETED;
             } else if (event instanceof EmoteUpdateNameEvent) {
                 modlogEvent = ModlogEvent.EMOTE_UPDATED_NAME;
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", ((EmoteUpdateNameEvent) event).getOldName()));
+                LanguageEmbedField languageEmbedField = new LanguageEmbedField(true, "modlog.general.old_name", "modlog.general.variable");
+                languageEmbedField.addValueObjects(((EmoteUpdateNameEvent) event).getOldName());
+                embedFieldList.add(languageEmbedField
+                        //new WebhookEmbed.EmbedField(true, "Old Name", ((EmoteUpdateNameEvent) event).getOldName())
+                );
             } else if (event instanceof EmoteUpdateRolesEvent) {
                 modlogEvent = ModlogEvent.EMOTE_UPDATED_ROLES;
                 List<Role> oldRoles = ((EmoteUpdateRolesEvent) event).getOldRoles();
                 List<Role> newRoles = ((EmoteUpdateRolesEvent) event).getNewRoles();
                 ListChanges<Role> roleListChanges = new ListChanges<>(oldRoles, newRoles);
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added Roles",
-                        roleListChanges.getAdded().stream().map(role -> role.getName() + " (" + role.getId() + ")")
-                                .collect(Collectors.joining("\n"))));
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed Roles",
-                        roleListChanges.getRemoved().stream().map(role -> role.getName() + " (" + role.getId() + ")")
-                                .collect(Collectors.joining("\n"))));
+                LanguageEmbedField addedRolesEmbed = new LanguageEmbedField(false, "modlog.general.added_roles", "modlog.general.variable");
+                addedRolesEmbed.addValueObjects(roleListChanges.getAdded().stream().map(role -> role.getName() + " (" + role.getId() + ")")
+                        .collect(Collectors.joining("\n")));
+                LanguageEmbedField removedRolesEmbed = new LanguageEmbedField(false, "modlog.general.removed_roles", "modlog.general.variable");
+                removedRolesEmbed.addValueObjects( roleListChanges.getRemoved().stream().map(role -> role.getName() + " (" + role.getId() + ")")
+                        .collect(Collectors.joining("\n")));
+                embedFieldList.add(addedRolesEmbed);
+                embedFieldList.add(removedRolesEmbed);
             } else {
                 return;
             }
@@ -155,16 +163,20 @@ public class ModlogEventListener extends ListenerAdapter {
         User user = event.getMember().getUser();
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent;
             User responsible = null;
             if (event instanceof GuildMemberJoinEvent) {
                 modlogEvent = ModlogEvent.GUILD_MEMBER_JOINED;
             } else if (event instanceof GuildMemberLeaveEvent) {
                 if (entry.getType().equals(ActionType.KICK)) {
-                    embedFieldList.add(new WebhookEmbed.EmbedField(true, "Responsible", Objects.requireNonNull(entry.getUser()).getAsTag()));
+                    LanguageEmbedField respLanguageEmbedField = new LanguageEmbedField(true, "modlog.general.responsible", "modlog.general.variable");
+                    respLanguageEmbedField.addValueObjects(Objects.requireNonNull(entry.getUser()).getAsTag());
+                    embedFieldList.add(respLanguageEmbedField);
                     if (entry.getReason() != null) {
-                        embedFieldList.add(new WebhookEmbed.EmbedField(false, "Reason", entry.getReason()));
+                        LanguageEmbedField reasonEmbedField = new LanguageEmbedField(false, "modlog.general.reason", "modlog.general.variable");
+                        respLanguageEmbedField.addValueObjects(entry.getReason());
+                        embedFieldList.add(reasonEmbedField);
                     }
                     modlogEvent = ModlogEvent.GUILD_MEMBER_KICKED;
                 } else { //TODO not assume leave if audit log entry for kick was not found.
@@ -175,16 +187,28 @@ public class ModlogEventListener extends ListenerAdapter {
                     responsible = entry.getUser();
                 }
                 modlogEvent = ModlogEvent.GUILD_MEMBER_ROLE_ADDED;
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added Roles", ((GuildMemberRoleAddEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n"))));
+                LanguageEmbedField addedRolesEmbedField = new LanguageEmbedField(false, "modlog.general.added_roles", "modlog.general.variable");
+                addedRolesEmbedField.addValueObjects(((GuildMemberRoleAddEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n")));
+                embedFieldList.add(addedRolesEmbedField);
             } else if (event instanceof GuildMemberRoleRemoveEvent) {
                 if (entry.getType().equals(ActionType.MEMBER_ROLE_UPDATE)) {
                     responsible = entry.getUser();
                 }
                 modlogEvent = ModlogEvent.GUILD_MEMBER_ROLE_REMOVED;
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed Roles", ((GuildMemberRoleRemoveEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n"))));
+                LanguageEmbedField removedRolesEmbedField = new LanguageEmbedField(false, "modlog.general.removed_roles", "modlog.general.variable");
+                removedRolesEmbedField.addValueObjects(((GuildMemberRoleRemoveEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n")));
+                embedFieldList.add(removedRolesEmbedField);
             } else if (event instanceof GuildMemberUpdateNicknameEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Nickname", ((GuildMemberUpdateNicknameEvent) event).getOldValue()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Nickname", ((GuildMemberUpdateNicknameEvent) event).getNewValue()));
+                if (((GuildMemberUpdateNicknameEvent) event).getOldValue() != null) {
+                    LanguageEmbedField oldNickEmbedField = new LanguageEmbedField(true, "modlog.member.old_nick", "modlog.general.variable");
+                    oldNickEmbedField.addValueObjects(((GuildMemberUpdateNicknameEvent) event).getOldValue());
+                    embedFieldList.add(oldNickEmbedField);
+                }
+                if (((GuildMemberUpdateNicknameEvent) event).getNewValue() != null) {
+                    LanguageEmbedField newNickEmbedField = new LanguageEmbedField(true, "modlog.member.new_nick", "modlog.general.variable");
+                    newNickEmbedField.addValueObjects(((GuildMemberUpdateNicknameEvent) event).getNewValue());
+                    embedFieldList.add(newNickEmbedField);
+                }
                 modlogEvent = ModlogEvent.GUILD_MEMBER_NICKNAME_UPDATED;
             } else {
                 return;
@@ -200,13 +224,15 @@ public class ModlogEventListener extends ListenerAdapter {
         User user = event.getUser();
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent = ModlogEvent.GUILD_USER_BANNED;
             User responsible = null;
             if (entry.getType().equals(ActionType.BAN)) {
                 responsible = entry.getUser();
                 if (entry.getReason() != null) {
-                    embedFieldList.add(new WebhookEmbed.EmbedField(false, "Reason", entry.getReason()));
+                    LanguageEmbedField reasonEmbedField = new LanguageEmbedField(false, "modlog.general.reason", "modlog.general.variable");
+                    reasonEmbedField.addValueObjects(entry.getReason());
+                    embedFieldList.add(reasonEmbedField);
                 }
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
@@ -219,7 +245,7 @@ public class ModlogEventListener extends ListenerAdapter {
         User user = event.getUser();
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent = ModlogEvent.GUILD_USER_UNBANNED;
             User responsible = null;
             if (entry.getType().equals(ActionType.UNBAN)) {
@@ -240,8 +266,10 @@ public class ModlogEventListener extends ListenerAdapter {
         JsonObject jsonObject = new JsonParser().parse(messageJson).getAsJsonObject();
         long messageSender = jsonObject.get("sender").getAsLong();
         User affected = CascadeBot.INS.getClient().getUserById(messageSender);
-        List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new WebhookEmbed.EmbedField(false, "Message", getMessageFromJson(jsonObject)));
+        List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+        LanguageEmbedField messageEmbedField = new LanguageEmbedField(false, "modlog.message.message", "modlog.general.variable");
+        messageEmbedField.addValueObjects(getMessageFromJson(jsonObject));
+        embedFieldList.add(messageEmbedField);
         if (affected == null) {
             return;
         }
@@ -269,9 +297,12 @@ public class ModlogEventListener extends ListenerAdapter {
         JsonObject jsonObject = new JsonParser().parse(messageJson).getAsJsonObject();
         long messageSender = jsonObject.get("sender").getAsLong();
         User affected = CascadeBot.INS.getClient().getUserById(messageSender);
-        List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new WebhookEmbed.EmbedField(false, "Old Message", getMessageFromJson(jsonObject)));
-        embedFieldList.add(new WebhookEmbed.EmbedField(false, "New Message", message.getContentRaw()));
+        List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+        LanguageEmbedField oldEmbedField = new LanguageEmbedField(false, "modlog.message.old_message", "modlog.general.variable");
+        oldEmbedField.addValueObjects(getMessageFromJson(jsonObject));
+        LanguageEmbedField newEmbedField = new LanguageEmbedField(false, "modlog.message.new_message", "modlog.general.variable");
+        newEmbedField.addValueObjects(message.getContentRaw());
+        embedFieldList.add(newEmbedField);
         if (affected == null) {
             return;
         }
@@ -310,19 +341,25 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(affected.getIdLong());
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
             ModlogEvent modlogEvent;
             if (entry.getType().equals(ActionType.GUILD_UPDATE)) {
                 responsible = entry.getUser();
             }
             if (event instanceof GuildUpdateAfkChannelEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Channel", ((GuildUpdateAfkChannelEvent) event).getOldAfkChannel().getName()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Channel", ((GuildUpdateAfkChannelEvent) event).getNewAfkChannel().getName()));
+                VoiceChannel oldChannel = ((GuildUpdateAfkChannelEvent) event).getOldAfkChannel();
+                if (oldChannel != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_channel", "modlog.general.variable", oldChannel.getName()));
+                }
+                VoiceChannel newChannel = ((GuildUpdateAfkChannelEvent) event).getNewAfkChannel();
+                if (newChannel != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_channel", "modlog.general.variable", oldChannel.getName()));
+                }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_AFK_CHANNEL;
             } else if (event instanceof GuildUpdateAfkTimeoutEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Value", ((GuildUpdateAfkTimeoutEvent) event).getOldAfkTimeout().getSeconds() + " seconds"));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Value", ((GuildUpdateAfkTimeoutEvent) event).getNewAfkTimeout().getSeconds() + " seconds"));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_timeout", "modlog.guild.timeout", String.valueOf(((GuildUpdateAfkTimeoutEvent) event).getOldAfkTimeout().getSeconds())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_timeout", "modlog.guild.timeout", String.valueOf(((GuildUpdateAfkTimeoutEvent) event).getNewAfkTimeout().getSeconds())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_AFK_TIMEOUT;
             } else if (event instanceof GuildUpdateBannerEvent) {
                 embedFieldList.add(new WebhookEmbed.EmbedField(false, "Old Image", ((GuildUpdateBannerEvent) event).getOldBannerUrl()));
@@ -359,7 +396,6 @@ public class ModlogEventListener extends ListenerAdapter {
                 modlogEvent = ModlogEvent.GUILD_UPDATE_MFA_LEVEL;
             } else if (event instanceof GuildUpdateNameEvent) {
                 embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", ((GuildUpdateNameEvent) event).getOldName()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Name", ((GuildUpdateNameEvent) event).getNewName()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_NAME;
             } else if (event instanceof GuildUpdateNotificationLevelEvent) {
                 embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Level", ((GuildUpdateNotificationLevelEvent) event).getOldNotificationLevel().name()));
@@ -460,7 +496,7 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_CREATE)) {
                 responsible = entry.getUser();
@@ -492,7 +528,7 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
                 responsible = entry.getUser();
@@ -509,7 +545,7 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE) || entry.getType().equals(ActionType.CHANNEL_OVERRIDE_UPDATE)) {
                 responsible = entry.getUser();
@@ -554,7 +590,7 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
                 responsible = entry.getUser();
@@ -572,7 +608,7 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
             ModlogEvent modlogEvent;
             if (entry.getType().equals(ActionType.ROLE_CREATE) || entry.getType().equals(ActionType.ROLE_DELETE) || entry.getType().equals(ActionType.ROLE_UPDATE)) {
@@ -619,14 +655,14 @@ public class ModlogEventListener extends ListenerAdapter {
     //region Username updates
     public void onUserUpdateName(UserUpdateNameEvent event) {
         // TODO propagate to guilds
-        List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+        List<LanguageEmbedField> embedFieldList = new ArrayList<>();
         embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", event.getOldName()));
         embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Name", event.getNewName()));
         ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_NAME_UPDATED, event.getUser(), event.getUser(), embedFieldList);
     }
 
     public void onUserUpdateDiscriminator(UserUpdateDiscriminatorEvent event) {
-        List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+        List<LanguageEmbedField> embedFieldList = new ArrayList<>();
         embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Discriminator", event.getOldDiscriminator()));
         embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Discriminator", event.getNewDiscriminator()));
         ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_DISCRIMINATOR_UPDATED, event.getUser(), event.getUser(), embedFieldList);
