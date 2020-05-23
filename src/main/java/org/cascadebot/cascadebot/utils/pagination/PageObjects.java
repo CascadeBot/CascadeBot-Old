@@ -22,12 +22,12 @@ public class PageObjects {
 
     public static class EmbedPage implements Page {
 
-        EmbedBuilder embed;
-        boolean numbersInEmbed;
+        private final EmbedBuilder embed;
+        private final boolean numbersInEmbed;
 
         public EmbedPage(EmbedBuilder embed) {
             this.embed = embed;
-            numbersInEmbed = true;
+            this.numbersInEmbed = true;
         }
 
         public EmbedPage(EmbedBuilder embed, boolean numbersInEmbed) {
