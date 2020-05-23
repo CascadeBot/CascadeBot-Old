@@ -35,9 +35,9 @@ class WeightedList<T : Any> {
         }
     }
 
-    fun remove(position: Int) {
-        lock.write {
-            internalList.removeAt(position)
+    fun remove(position: Int): T {
+        return lock.write {
+            internalList.removeAt(position).first
         }
     }
 
