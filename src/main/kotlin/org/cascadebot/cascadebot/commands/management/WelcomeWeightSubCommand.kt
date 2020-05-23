@@ -12,6 +12,9 @@ import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
+import org.cascadebot.cascadebot.utils.pagination.Page
+import org.cascadebot.cascadebot.utils.pagination.PageObjects
+import kotlin.math.round
 
 class WelcomeWeightSubCommand : SubCommand() {
 
@@ -22,7 +25,28 @@ class WelcomeWeightSubCommand : SubCommand() {
         }
 
         if (context.args.isEmpty()) {
-            TODO("Weight info")
+            val welcomeMessages = context.data.management.greetings.welcomeMessages
+            val pages = mutableListOf<Page>()
+            for (item in welcomeMessages.itemsAndWeighting) {
+                pages.add(PageObjects.EmbedPage(embed(MessageType.INFO, context.user) {
+                    title { name = "Welcome message weights" }
+                    field {
+                        name = "Message"
+                        value = item.first
+                    }
+                    field {
+                        name = "Weight"
+                        value = item.second.toString()
+                        inline = true
+                    }
+                    field {
+                        name = "View Chance"
+                        value = round((item.second.toDouble() / welcomeMessages.totalWeight.toDouble()) * 100).toInt().toString() + "%"
+                        inline = true
+                    }
+                }))
+            }
+            context.uiMessaging.sendPagedMessage(pages)
         } else {
             val welcomeMessages = context.data.management.greetings.welcomeMessages
             if (welcomeMessages.size == 0) {
@@ -35,10 +59,10 @@ class WelcomeWeightSubCommand : SubCommand() {
                 return
             }
 
-            val index = context.getArgAsInteger(0)!!
+            val index = context.getArgAsInteger(0)!! - 1
             val weight = context.getArgAsInteger(1)!!
 
-            if (index < 1 || index > welcomeMessages.size) {
+            if (index < 0 || index >= welcomeMessages.size) {
                 context.typedMessaging.replyDanger("The message index must be between `1` and `${welcomeMessages.size}`")
                 return
             }
@@ -52,7 +76,7 @@ class WelcomeWeightSubCommand : SubCommand() {
 
             if (oldWeight == weight) {
                 context.typedMessaging.replyInfo(embed(MessageType.INFO, context.user) {
-                    title { name = "Message weight already the same!"}
+                    title { name = "Message weight already the same!" }
                     description = "The message weight for the message below is already set to `$weight`!\n```\n${welcomeMessages[index].first}\n```"
                     field {
                         name = "Proportion"
