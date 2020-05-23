@@ -23,14 +23,14 @@ class WelcomeChannelSubCommand : SubCommand() {
 
         if (context.args.isEmpty()) {
             context.typedMessaging.replyInfo(embed(MessageType.INFO, context.user) {
-                description = {
+                description = run {
                     val greetings = context.data.management.greetings
                     if (greetings.welcomeChannel != null) {
                         "The current welcome channel is: ${greetings.welcomeChannel?.asMention}"
                     } else {
                         "There is no welcome channel set!"
                     }
-                }()
+                }
             })
         } else {
             if (context.getArg(0).equals("clear", true)) {
