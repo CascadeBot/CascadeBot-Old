@@ -28,6 +28,6 @@ class WelcomeCommand : MainCommand() {
 
     override fun permission(): CascadePermission = CascadePermission.of("welcome", false)
 
-    override fun subCommands(): Set<SubCommand> = setOf(WelcomeAddSubCommand(), WelcomeChannelSubCommand(), WelcomeClearSubCommand(), WelcomeRemoveSubCommand())
+    override fun subCommands(): Set<SubCommand> = setOf(WelcomeAddSubCommand(), WelcomeChannelSubCommand(), WelcomeClearSubCommand(), WelcomeRemoveSubCommand(), WelcomeWeightSubCommand())
 
 }
