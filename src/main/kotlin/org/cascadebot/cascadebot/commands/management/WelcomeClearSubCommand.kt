@@ -8,12 +8,40 @@ package org.cascadebot.cascadebot.commands.management
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.cascadebot.cascadebot.utils.ConfirmUtils
 
 class WelcomeClearSubCommand : SubCommand() {
 
+    private val actionKey = "welcome-clear"
+
     override fun onCommand(sender: Member, context: CommandContext) {
-        TODO("Not yet implemented")
+        if (context.args.isNotEmpty()) {
+            context.uiMessaging.replyUsage()
+            return
+        }
+
+        if (ConfirmUtils.hasConfirmedAction(actionKey, context.user.idLong)) {
+            ConfirmUtils.completeAction(actionKey, context.user.idLong)
+            return
+        }
+
+        ConfirmUtils.confirmAction(context.user.idLong,
+                actionKey,
+                context.channel,
+                MessageType.WARNING,
+                "Running this command will clear **all** messages and the channel for welcome messages! To confirm this action, run the command again or click the button below within 1 minute.",
+                true,
+                object : ConfirmUtils.ConfirmRunnable() {
+                    override fun execute() {
+                        context.data.management.greetings.welcomeMessages.clear()
+                        context.data.management.greetings.welcomeChannel = null
+                        context.typedMessaging.replySuccess("The welcome messages and the channel for welcome messages have been cleared!")
+                    }
+                }
+        )
+
     }
 
     override fun command(): String = "clear"
