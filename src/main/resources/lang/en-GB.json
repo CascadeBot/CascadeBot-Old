@@ -1131,6 +1131,14 @@
       "no_permissions": "No permissions!",
       "no_linked_roles": "No linked roles!"
     },
+    "verification_level": {
+      "none": "None",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "(╯°□°）╯︵ ┻━┻",
+      "very_high": "┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻",
+      "unknown": "Unknown"
+    },
     "color": {
       "invalid_rgb": "RGB values should be between 0 and 255!",
       "invalid_hex_code": "Please provide a valid hex value! #000000-#FFFFFF",
@@ -1319,7 +1327,55 @@
       "old_timeout": "Old Value",
       "new_timeout": "New Value",
       "old_image": "Old Image",
-      "new_image": "New Image"
+      "new_image": "New Image",
+      "old_description": "Old Description",
+      "new_description": "New Description",
+      "content_filter": {
+        "old": "Old Filter",
+        "new": "New Filter",
+        "off": "Off",
+        "no_role": "No Role",
+        "all": "All",
+        "unknown": "unknown"
+      },
+      "add_feature": "Added Features",
+      "removed_feature": "Removed Features",
+      "old_max_members": "Old Max Members",
+      "new_max_members": "New Max Members",
+      "members": "{0} members",
+      "old_presences": "Old Max Presences",
+      "new_presences": "New Max Presences",
+      "presences": "{0} presences",
+      "mfa": {
+        "old": "Old MFA Level",
+        "new": "New MFA Level",
+        "none": "None",
+        "two_factor_auth": "2fa Required",
+        "unknown": "Unknown"
+      },
+      "notification": {
+        "old": "Old Level",
+        "new": "New Level",
+        "all_messages": "All Messages",
+        "mentions_only": "Mentions Only",
+        "unknown": "Unknown"
+      },
+      "old_region": "Old Region",
+      "new_region": "New Region",
+      "old_splash": "Old Splash",
+      "new_splash": "New Splash",
+      "old_sys": "Old System Channel",
+      "new_sys": "New System Channel",
+      "vanity_code": {
+        "old": "Old Vanity Code",
+        "new": "New Vanity Code"
+      },
+      "vanity_url": {
+        "old": "Old Vanity Url",
+        "new": "New Vanity Url"
+      },
+      "old_verification": "Old Verification Level",
+      "new_verification": "New Verification Level"
     }
   }
 }

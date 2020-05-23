@@ -288,15 +288,8 @@ public class FormatUtils {
         return String.format("%02d:%02d:%02d", hours, mins, seconds);
     }
 
-    public static String getVerificationLevelString(Guild.VerificationLevel verificationLevel) {
-        switch (verificationLevel.getKey()) {
-            case 4:
-                return "(\u256F\u00B0\u25A1\u00B0\uFF09\u256F\uFE35 \u253B\u2501\u253B"; // (╯°□°）╯︵ ┻━┻
-            case 5:
-                return "\u253B\u2501\u253B \uFF90\u30FD(\u0CA0\u76CA\u0CA0)\u30CE\u5F61\u253B\u2501\u253B"; // ┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻
-            default:
-                return verificationLevel.name();
-        }
+    public static String getVerificationLevelString(Locale locale, Guild.VerificationLevel verificationLevel) {
+        return Language.i18n(locale, "utils.verification_level." + verificationLevel.name().toLowerCase());
     }
 
 }

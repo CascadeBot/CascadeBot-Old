@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.IPermissionHolder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.channel.category.CategoryCreateEvent;
@@ -54,6 +55,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
+import net.dv8tion.jda.api.events.guild.override.GenericPermissionOverrideEvent;
 import net.dv8tion.jda.api.events.guild.update.GenericGuildUpdateEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateAfkChannelEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateAfkTimeoutEvent;
@@ -97,6 +99,7 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nonnull;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -362,66 +365,96 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_timeout", "modlog.guild.timeout", String.valueOf(((GuildUpdateAfkTimeoutEvent) event).getNewAfkTimeout().getSeconds())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_AFK_TIMEOUT;
             } else if (event instanceof GuildUpdateBannerEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Old Image", ((GuildUpdateBannerEvent) event).getOldBannerUrl()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "New Image", ((GuildUpdateBannerEvent) event).getNewBannerIdUrl()));
+                if (((GuildUpdateBannerEvent) event).getOldBannerUrl() != null) {
+                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.old_image", "modlog.general.variable", ((GuildUpdateBannerEvent) event).getOldBannerUrl()));
+                }
+                if (((GuildUpdateBannerEvent) event).getNewBannerIdUrl() != null) {
+                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.new_image", "modlog.general.variable", ((GuildUpdateBannerEvent) event).getNewBannerIdUrl()));
+                }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_BANNER;
             } else if (event instanceof GuildUpdateDescriptionEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Old Description", ((GuildUpdateDescriptionEvent) event).getOldDescription()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "New Description", ((GuildUpdateDescriptionEvent) event).getNewDescription()));
+                if (((GuildUpdateDescriptionEvent) event).getOldDescription() != null) {
+                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.old_description", "modlog.general.variable", ((GuildUpdateDescriptionEvent) event).getOldDescription()));
+                }
+                if (((GuildUpdateDescriptionEvent) event).getNewDescription() != null) {
+                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.new_description", "modlog.general.variable", ((GuildUpdateDescriptionEvent) event).getNewDescription()));
+                }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_DESCRIPTION;
             } else if (event instanceof GuildUpdateExplicitContentLevelEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Filter", ((GuildUpdateExplicitContentLevelEvent) event).getOldLevel().name()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Filter", ((GuildUpdateExplicitContentLevelEvent) event).getNewLevel().name()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.content_filter.old", "modlog.guild.content_filter." + ((GuildUpdateExplicitContentLevelEvent) event).getOldLevel().name().toLowerCase()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.content_filter.new", "modlog.guild.content_filter." + ((GuildUpdateExplicitContentLevelEvent) event).getNewLevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_EXPLICIT_FILTER;
             } else if (event instanceof GuildUpdateFeaturesEvent) {
                 ListChanges<String> featuresChanged = new ListChanges<>(((GuildUpdateFeaturesEvent) event).getOldFeatures(), ((GuildUpdateFeaturesEvent) event).getNewFeatures());
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added Features", String.join("\n", featuresChanged.getAdded())));
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed Features", String.join("\n", featuresChanged.getRemoved())));
+                embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.add_feature", "modlog.general.variable", String.join("\n", featuresChanged.getAdded())));
+                embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.removed_feature", "modlog.general.variable", String.join("\n", featuresChanged.getRemoved())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_FEATURES;
             } else if (event instanceof GuildUpdateIconEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Old Image", ((GuildUpdateIconEvent) event).getOldIconUrl()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "New Image", ((GuildUpdateIconEvent) event).getNewIconUrl()));
+                if (((GuildUpdateIconEvent) event).getOldIconUrl() != null) {
+                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.old_image", "modlog.general.variable", ((GuildUpdateIconEvent) event).getOldIconUrl()));
+                }
+                if (((GuildUpdateIconEvent) event).getNewIconUrl() != null) {
+                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.new_image", "modlog.general.variable", ((GuildUpdateIconEvent) event).getNewIconUrl()));
+                }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_ICON;
             } else if (event instanceof GuildUpdateMaxMembersEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Max Members", ((GuildUpdateMaxMembersEvent) event).getOldMaxMembers() + " members"));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Max Members", ((GuildUpdateMaxMembersEvent) event).getNewMaxMembers() + " members"));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_max_members", "modlog.guild.members", String.valueOf(((GuildUpdateMaxMembersEvent) event).getOldMaxMembers())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_max_members", "modlog.guild.members", String.valueOf(((GuildUpdateMaxMembersEvent) event).getNewMaxMembers())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_MAX_MEMBERS;
             } else if (event instanceof GuildUpdateMaxPresencesEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Max Presences", ((GuildUpdateMaxPresencesEvent) event).getOldMaxPresences() + " presences"));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Max Presences", ((GuildUpdateMaxPresencesEvent) event).getNewMaxPresences() + " presences"));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_presences", "modlog.guild.presences", String.valueOf(((GuildUpdateMaxPresencesEvent) event).getOldMaxPresences())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_presences", "modlog.guild.presences", String.valueOf(((GuildUpdateMaxPresencesEvent) event).getNewMaxPresences())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_MAX_PRESENCES;
             } else if (event instanceof GuildUpdateMFALevelEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old MFA Level", ((GuildUpdateMFALevelEvent) event).getOldMFALevel().name()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New MFA Level", ((GuildUpdateMFALevelEvent) event).getNewMFALevel().name()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.mfa.old", "modlog.guild.mfa." + ((GuildUpdateMFALevelEvent) event).getOldMFALevel().name().toLowerCase()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.mfa.new", "modlog.guild.mfa." + ((GuildUpdateMFALevelEvent) event).getNewMFALevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_MFA_LEVEL;
             } else if (event instanceof GuildUpdateNameEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", ((GuildUpdateNameEvent) event).getOldName()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_name", "modlog.general.variable", ((GuildUpdateNameEvent) event).getOldName()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_NAME;
             } else if (event instanceof GuildUpdateNotificationLevelEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Level", ((GuildUpdateNotificationLevelEvent) event).getOldNotificationLevel().name()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Level", ((GuildUpdateNotificationLevelEvent) event).getNewNotificationLevel().name()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.notification.old", "modlog.guild.notification." + ((GuildUpdateNotificationLevelEvent) event).getOldNotificationLevel().name().toLowerCase()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.notification.new", "modlog.guild.notification." + ((GuildUpdateNotificationLevelEvent) event).getNewNotificationLevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_NOTIFICATION_LEVEL;
             } else if (event instanceof GuildUpdateRegionEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Region", ((GuildUpdateRegionEvent) event).getOldRegion().getName()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Region", ((GuildUpdateRegionEvent) event).getNewRegion().getName()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_region", "modlog.general.variable", ((GuildUpdateRegionEvent) event).getOldRegion().getName()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_region", "modlog.general.variable", ((GuildUpdateRegionEvent) event).getNewRegion().getName()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_REGION;
             } else if (event instanceof GuildUpdateSplashEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Old Splash", ((GuildUpdateSplashEvent) event).getOldSplashUrl()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "New Splash", ((GuildUpdateSplashEvent) event).getNewSplashUrl()));
+                if (((GuildUpdateSplashEvent) event).getOldSplashUrl() != null) {
+                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.old_splash", "modlog.general.variable", ((GuildUpdateSplashEvent) event).getOldSplashUrl()));
+                }
+                if (((GuildUpdateSplashEvent) event).getNewSplashUrl() != null) {
+                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.new_splash", "modlog.general.variable", ((GuildUpdateSplashEvent) event).getNewSplashUrl()));
+                }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_SPLASH;
             } else if (event instanceof GuildUpdateSystemChannelEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old System Channel", ((GuildUpdateSystemChannelEvent) event).getOldSystemChannel().getName()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New System Channel", ((GuildUpdateSystemChannelEvent) event).getNewSystemChannel().getName()));
+                TextChannel oldSystemChannel = ((GuildUpdateSystemChannelEvent) event).getOldSystemChannel();
+                if (oldSystemChannel != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_sys", "modlog.general.variable", oldSystemChannel.getName()));
+                }
+                TextChannel newSystemChannel = ((GuildUpdateSystemChannelEvent) event).getNewSystemChannel();
+                if (newSystemChannel != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_sys", "modlog.general.variable", newSystemChannel.getName()));
+                }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_SYSTEM_CHANNEL;
             } else if (event instanceof GuildUpdateVanityCodeEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Vanity Code", ((GuildUpdateVanityCodeEvent) event).getOldVanityCode()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Vanity Url", ((GuildUpdateVanityCodeEvent) event).getOldVanityUrl()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Vanity Code", ((GuildUpdateVanityCodeEvent) event).getNewVanityCode()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Vanity Url", ((GuildUpdateVanityCodeEvent) event).getNewVanityUrl()));
+                if (((GuildUpdateVanityCodeEvent) event).getOldVanityCode() != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.vanity_code.old", "modlog.general.variable", ((GuildUpdateVanityCodeEvent) event).getOldVanityCode()));
+                }
+                if (((GuildUpdateVanityCodeEvent) event).getOldVanityUrl() != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.vanity_url.old", "modlog.general.variable", ((GuildUpdateVanityCodeEvent) event).getOldVanityUrl()));
+                }
+                if (((GuildUpdateVanityCodeEvent) event).getNewVanityCode() != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.vanity_code.new", "modlog.general.variable", ((GuildUpdateVanityCodeEvent) event).getNewVanityCode()));
+                }
+                if (((GuildUpdateVanityCodeEvent) event).getNewVanityUrl() != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.vanity_url.new", "modlog.general.variable", ((GuildUpdateVanityCodeEvent) event).getNewVanityUrl()));
+                }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_VANITY_CODE;
             } else if (event instanceof GuildUpdateVerificationLevelEvent) {
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Verification Level", FormatUtils.getVerificationLevelString(((GuildUpdateVerificationLevelEvent) event).getOldVerificationLevel())));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Verification Level", FormatUtils.getVerificationLevelString(((GuildUpdateVerificationLevelEvent) event).getNewVerificationLevel())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_verification", "utils.verification_level." + ((GuildUpdateVerificationLevelEvent) event).getOldVerificationLevel().name().toLowerCase()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_verification", "utils.verification_level." + ((GuildUpdateVerificationLevelEvent) event).getNewVerificationLevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_VERIFICATION_LEVEL;
             } else {
                 return;
@@ -439,8 +472,6 @@ public class ModlogEventListener extends ListenerAdapter {
             handleChannelDeleteEvents(event.getChannel().getGuild(), ChannelType.STORE, event.getChannel());
         } else if (event instanceof StoreChannelUpdateNameEvent) {
             handleChannelUpdateNameEvents(event.getChannel().getGuild(), ChannelType.STORE, ((StoreChannelUpdateNameEvent) event).getOldName(), event.getChannel());
-        } else if (event instanceof StoreChannelUpdatePermissionsEvent) {
-            handleChannelUpdatePermissionsEvents(event.getChannel().getGuild(), ChannelType.STORE, ((StoreChannelUpdatePermissionsEvent) event).getChangedPermissionHolders(), event.getChannel());
         } else if (event instanceof StoreChannelUpdatePositionEvent) {
             handleChannelUpdatePositionEvents(event.getChannel().getGuild(), ChannelType.STORE, ((StoreChannelUpdatePositionEvent) event).getOldPosition(), event.getChannel());
         }
@@ -453,9 +484,6 @@ public class ModlogEventListener extends ListenerAdapter {
             handleChannelDeleteEvents(event.getGuild(), ChannelType.TEXT, event.getChannel());
         } else if (event instanceof TextChannelUpdateNameEvent) {
             handleChannelUpdateNameEvents(event.getGuild(), ChannelType.TEXT, ((TextChannelUpdateNameEvent) event).getOldName(), event.getChannel());
-        } else if (event instanceof TextChannelUpdatePermissionsEvent) {
-            ((TextChannelUpdatePermissionsEvent) event).getChangedPermissionHolders();
-            handleChannelUpdatePermissionsEvents(event.getGuild(), ChannelType.TEXT, ((TextChannelUpdatePermissionsEvent) event).getChangedPermissionHolders(), event.getChannel());
         } else if (event instanceof TextChannelUpdatePositionEvent) {
             handleChannelUpdatePositionEvents(event.getGuild(), ChannelType.TEXT, ((TextChannelUpdatePositionEvent) event).getOldPosition(), event.getChannel());
         }
@@ -468,8 +496,6 @@ public class ModlogEventListener extends ListenerAdapter {
             handleChannelDeleteEvents(event.getGuild(), ChannelType.VOICE, event.getChannel());
         } else if (event instanceof VoiceChannelUpdateNameEvent) {
             handleChannelUpdateNameEvents(event.getGuild(), ChannelType.VOICE, ((VoiceChannelUpdateNameEvent) event).getOldName(), event.getChannel());
-        } else if (event instanceof VoiceChannelUpdatePermissionsEvent) {
-            handleChannelUpdatePermissionsEvents(event.getGuild(), ChannelType.VOICE, ((VoiceChannelUpdatePermissionsEvent) event).getChangedPermissionHolders(), event.getChannel());
         } else if (event instanceof VoiceChannelUpdatePositionEvent) {
             handleChannelUpdatePositionEvents(event.getGuild(), ChannelType.VOICE, ((VoiceChannelUpdatePositionEvent) event).getOldPosition(), event.getChannel());
         }
@@ -482,12 +508,15 @@ public class ModlogEventListener extends ListenerAdapter {
             handleChannelDeleteEvents(event.getGuild(), ChannelType.CATEGORY, event.getCategory());
         } else if (event instanceof CategoryUpdateNameEvent) {
             handleChannelUpdateNameEvents(event.getGuild(), ChannelType.CATEGORY, ((CategoryUpdateNameEvent) event).getOldName(), event.getCategory());
-        } else if (event instanceof CategoryUpdatePermissionsEvent) {
-            handleChannelUpdatePermissionsEvents(event.getGuild(), ChannelType.CATEGORY, ((CategoryUpdatePermissionsEvent) event).getChangedPermissionHolders(), event.getCategory());
         } else if (event instanceof CategoryUpdatePositionEvent) {
             handleChannelUpdatePositionEvents(event.getGuild(), ChannelType.CATEGORY, ((CategoryUpdatePositionEvent) event).getOldPosition(), event.getCategory());
         }
     }
+
+    public void onGenericPermissionOverride(GenericPermissionOverrideEvent event) {
+        
+    }
+
     //endregion
 
     //region Channel handlers
