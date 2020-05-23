@@ -99,4 +99,10 @@ class WeightedList<T : Any> {
         }
     }
 
+    fun clear() {
+        lock.write {
+            internalList.clear()
+        }
+    }
+
 }
