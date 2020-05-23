@@ -45,8 +45,16 @@ class WeightedList<T : Any> {
         return lock.read { internalList[position].second }
     }
 
-    operator fun get(position: Int): T {
-        return lock.read { internalList[position].first }
+    fun setItemWeight(position: Int, weight: Int) {
+        lock.write { internalList[position] = internalList[position].copy(second = weight) }
+    }
+
+    operator fun get(position: Int): Pair<T, Int> {
+        return lock.read { internalList[position] }
+    }
+
+    operator fun set(position: Int, value: T) {
+        lock.write { internalList[position] = internalList[position].copy(first = value) }
     }
 
     fun get(obj: T): Pair<T, Int>? {
