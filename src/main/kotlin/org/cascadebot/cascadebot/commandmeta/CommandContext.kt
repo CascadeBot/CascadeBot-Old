@@ -66,11 +66,11 @@ class CommandContext(
 
     fun getArg(index: Int): String = args[index]
 
-    fun isArgInteger(index: Int): Boolean = args[index].toIntOrNull() == null
+    fun isArgInteger(index: Int): Boolean = args[index].toIntOrNull() != null
 
     fun getArgAsInteger(index: Int): Int? = args[index].toIntOrNull()
 
-    fun isArgLong(index: Int): Boolean = args[index].toLongOrNull() == null
+    fun isArgLong(index: Int): Boolean = args[index].toLongOrNull() != null
 
     fun getArgAsLong(index: Int): Long? = args[index].toLongOrNull()
 
