@@ -6,7 +6,7 @@ import java.awt.Color
 import java.time.LocalDateTime
 import java.time.temporal.TemporalAccessor
 
-class EmbedBuilder(val type: MessageType, val user: User? = null) {
+class EmbedBuilder(type: MessageType, private val requestedBy: User? = null) {
     private var titleBuilder: TitleBuilder? = null
     private var authorBuilder: AuthorBuilder? = null
     private var footerBuilder: FooterBuilder? = null
@@ -16,15 +16,11 @@ class EmbedBuilder(val type: MessageType, val user: User? = null) {
     var imageUrl: String? = null
     var thumbnailUrl: String? = null
     var timestamp: TemporalAccessor? = null
-    var color: Color? = null
+    var color: Color? = type.color
 
     class TitleBuilder {
         var name: String? = null
         var url: String? = null
-
-        fun build(): String {
-            return "yeet"
-        }
     }
 
     class AuthorBuilder {
@@ -69,8 +65,7 @@ class EmbedBuilder(val type: MessageType, val user: User? = null) {
     }
 
     fun build(): net.dv8tion.jda.api.EmbedBuilder {
-        val embedBuilder = user?.let { MessagingObjects.getMessageTypeEmbedBuilder(type, it) }
-                ?: MessagingObjects.getMessageTypeEmbedBuilder(type)
+        val embedBuilder = net.dv8tion.jda.api.EmbedBuilder()
         for (builder in fieldBuilders) {
             embedBuilder.addField(
                     builder.name,
@@ -80,7 +75,9 @@ class EmbedBuilder(val type: MessageType, val user: User? = null) {
         }
         titleBuilder?.let { embedBuilder.setTitle(it.name, it.url) }
         authorBuilder?.let { embedBuilder.setAuthor(it.name, it.url, it.iconUrl) }
-        footerBuilder?.let { embedBuilder.setFooter(it.text, it.iconUrl) }
+        footerBuilder?.let { embedBuilder.setFooter(it.text, it.iconUrl) } ?: requestedBy?.also {
+            embedBuilder.setFooter("Requested by " + it.asTag, it.effectiveAvatarUrl)
+        }
 
         embedBuilder.setDescription(description)
         embedBuilder.setImage(imageUrl)
