@@ -31,13 +31,13 @@ class WelcomeClearSubCommand : SubCommand() {
                 actionKey,
                 context.channel,
                 MessageType.WARNING,
-                "Running this command will clear **all** messages and the channel for welcome messages! To confirm this action, run the command again or click the button below within 1 minute.",
+                context.i18n("commands.welcome.clear.confirm_warning"),
                 true,
                 object : ConfirmUtils.ConfirmRunnable() {
                     override fun execute() {
                         context.data.management.greetings.welcomeMessages.clear()
                         context.data.management.greetings.welcomeChannel = null
-                        context.typedMessaging.replySuccess("The welcome messages and the channel for welcome messages have been cleared!")
+                        context.typedMessaging.replySuccess(context.i18n("commands.welcome.clear.clear_success"))
                     }
                 }
         )
