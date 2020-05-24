@@ -6,11 +6,11 @@ import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.objects.ArgumentType
 
-data class Argument internal constructor(val id: String,
-                                         val type: ArgumentType,
-                                         val displayAlone: Boolean,
-                                         val subArgs: Set<Argument>,
-                                         val aliases: Set<String>
+data class Argument(val id: String,
+                    val type: ArgumentType,
+                    val displayAlone: Boolean,
+                    val subArgs: List<Argument>,
+                    val aliases: Set<String>
 ) {
 
     fun name(locale: Locale): String {
