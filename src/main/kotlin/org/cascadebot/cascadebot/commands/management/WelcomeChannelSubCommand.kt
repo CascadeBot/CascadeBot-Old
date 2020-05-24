@@ -29,7 +29,7 @@ class WelcomeChannelSubCommand : SubCommand() {
                 }
             })
         } else {
-            if (context.getArg(0).equals(context.i18n("arguments.welcome#channel#clear.name"), true)) {
+            if (context.testForArg("clear")) {
                 context.data.management.greetings.welcomeChannel = null
                 context.typedMessaging.replySuccess(context.i18n("commands.welcome.channel.clear_success"))
                 return
