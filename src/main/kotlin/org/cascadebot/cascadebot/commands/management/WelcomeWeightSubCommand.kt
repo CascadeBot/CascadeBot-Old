@@ -15,6 +15,7 @@ import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import kotlin.math.round
+import kotlin.math.roundToInt
 
 class WelcomeWeightSubCommand : SubCommand() {
 
@@ -29,18 +30,18 @@ class WelcomeWeightSubCommand : SubCommand() {
             val pages = mutableListOf<Page>()
             for (item in welcomeMessages.itemsAndWeighting) {
                 pages.add(PageObjects.EmbedPage(embed(MessageType.INFO, context.user) {
-                    title { name = "Welcome message weights" }
+                    title { name = context.i18n("commands.welcome.weight.embed_title") }
                     field {
-                        name = "Message"
+                        name = context.i18n("commands.welcome.weight.embed_message")
                         value = item.first
                     }
                     field {
-                        name = "Weight"
+                        name = context.i18n("commands.welcome.weight.embed_weight")
                         value = item.second.toString()
                         inline = true
                     }
                     field {
-                        name = "View Chance"
+                        name = context.i18n("commands.welcome.weight.proportion_title")
                         value = round((item.second.toDouble() / welcomeMessages.totalWeight.toDouble()) * 100).toInt().toString() + "%"
                         inline = true
                     }
@@ -50,12 +51,12 @@ class WelcomeWeightSubCommand : SubCommand() {
         } else {
             val welcomeMessages = context.data.management.greetings.welcomeMessages
             if (welcomeMessages.size == 0) {
-                context.typedMessaging.replyDanger("There are no welcome messages for this server!")
+                context.typedMessaging.replyDanger(context.i18n("commands.welcome.no_messages"))
                 return
             }
 
             if (!context.isArgInteger(0) || !context.isArgInteger(1)) {
-                context.typedMessaging.replyDanger("The message index and weight both need to be whole numbers!")
+                context.typedMessaging.replyDanger(context.i18n("commands.welcome.weight.input_whole"))
                 return
             }
 
@@ -63,12 +64,12 @@ class WelcomeWeightSubCommand : SubCommand() {
             val weight = context.getArgAsInteger(1)!!
 
             if (index < 0 || index >= welcomeMessages.size) {
-                context.typedMessaging.replyDanger("The message index must be between `1` and `${welcomeMessages.size}`")
+                context.typedMessaging.replyDanger(context.i18n("commands.welcome.invalid_message_index", welcomeMessages.size))
                 return
             }
 
             if (weight < 1) {
-                context.typedMessaging.replyDanger("The weight must be 1 or more!")
+                context.typedMessaging.replyDanger(context.i18n("commands.welcome.weight.weight_range"))
                 return
             }
 
@@ -76,11 +77,11 @@ class WelcomeWeightSubCommand : SubCommand() {
 
             if (oldWeight == weight) {
                 context.typedMessaging.replyInfo(embed(MessageType.INFO, context.user) {
-                    title { name = "Message weight already the same!" }
-                    description = "The message weight for the message below is already set to `$weight`!\n```\n${welcomeMessages[index].first}\n```"
+                    title { name = context.i18n("commands.welcome.weight.same_weight_title") }
+                    description = context.i18n("commands.welcome.weight.same_weight_text", weight, welcomeMessages[index].first)
                     field {
-                        name = "Proportion"
-                        value = "This message will be shown ${FormatUtils.round(welcomeMessages.getItemProportion(index) * 100, 0).toInt()}% of the time!"
+                        name = context.i18n("commands.welcome.weight.proportion_title")
+                        value = context.i18n("commands.welcome.weight.proportion_text", (welcomeMessages.getItemProportion(index) * 100).roundToInt())
                     }
                 })
                 return
@@ -90,22 +91,22 @@ class WelcomeWeightSubCommand : SubCommand() {
 
             context.typedMessaging.replySuccess(embed(MessageType.SUCCESS, context.user) {
                 title {
-                    name = "Set the message weight!"
+                    name = context.i18n("commands.welcome.weight.set_weight_title")
                 }
-                description = "Successfully set the weight of the message: \n```\n${welcomeMessages[index].first}\n```"
+                description = context.i18n("commands.welcome.weight.set_weight_text", welcomeMessages[index].first)
                 field {
-                    name = "Old weight"
+                    name = context.i18n("commands.welcome.weight.old_weight")
                     value = oldWeight.toString()
                     inline = true
                 }
                 field {
-                    name = "New weight"
+                    name = context.i18n("commands.welcome.weight.new_weight")
                     value = weight.toString()
                     inline = true
                 }
                 field {
-                    name = "Proportion"
-                    value = "This message will be shown ${FormatUtils.round(welcomeMessages.getItemProportion(index) * 100, 0).toInt()}% of the time!"
+                    name = context.i18n("commands.welcome.weight.proportion_title")
+                    value = context.i18n("commands.welcome.weight.proportion_text", (welcomeMessages.getItemProportion(index) * 100).roundToInt())
                 }
             })
 

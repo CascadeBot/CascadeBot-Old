@@ -307,6 +307,8 @@
       "description": "Lists the welcome messages for this server.",
       "current_channel": "The current welcome channel is: {0}",
       "no_channel_set": "There is no welcome channel set!",
+      "invalid_message_index": "The message index must be between `1` and `{0}`",
+      "no_messages": "There are no welcome messages for this server!",
       "add": {
         "command": "add",
         "description": "Adds a welcome message to the server.",
@@ -319,13 +321,34 @@
         "description": "Gets or sets the welcome channel for the server.",
         "clear_success": "Successfully cleared the welcome channel!",
         "invalid_channel": "Please specify a valid channel!",
-        "set_success": "Successfully set the welcome channel to: {0}"
+        "set_success": "Successfully set the welcome channel to: {0}",
+        "clear": {
+          "command": "clear",
+          "description": "Clears the welcome channel for this server."
+        }
       },
       "clear": {
         "command": "clear",
         "description": "Clears all welcome messages and the welcome channel.",
         "confirm_warning": "Running this command will clear **all** messages and the channel for welcome messages! To confirm this action, run the command again or click the button below within 1 minute.",
         "clear_success": "The welcome messages and the channel for welcome messages have been cleared!"
+      },
+      "weight": {
+        "command": "weight",
+        "description": "Allows viewing and setting of welcome message weights.",
+        "embed_title": "Welcome message weights",
+        "embed_message": "Message",
+        "embed_weight": "Weight",
+        "weight_range": "The weight must be 1 or more!",
+        "input_whole": "The message index and weight both need to be whole numbers!",
+        "same_weight_title": "Message weight already the same!",
+        "same_weight_text": "The message weight is already set to `{0}`! Message: \n```\n{1}\n```",
+        "proportion_title": "Message chance",
+        "proportion_text": "This message will be shown {0}% of the time!",
+        "set_weight_title": "Set the message weight!",
+        "set_weight_text": "Successfully set the weight of the message: \n```\n{0}\n```",
+        "old_weight": "Old Weight",
+        "new_weight": "New Weight"
       }
     },
     "ban": {
@@ -1146,6 +1169,9 @@
     "pos": "position",
     "source": "source",
     "destination": "destination",
+    "message": "message",
+    "index": "index",
+    "weight": "weight",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
@@ -1153,10 +1179,6 @@
     "userperms#list#user#groups": {
       "name": "groups",
       "description": "Lists the groups a user has."
-    },
-    "welcome#channel#clear": {
-      "name": "clear",
-      "description": "Clears the welcome channel for this server."
     },
     "guild#save#all": {
       "name": "all",
