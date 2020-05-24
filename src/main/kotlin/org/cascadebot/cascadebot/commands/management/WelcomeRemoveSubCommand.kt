@@ -21,14 +21,14 @@ class WelcomeRemoveSubCommand : SubCommand() {
         }
 
         if (!context.isArgInteger(0)) {
-            context.typedMessaging.replyDanger("The index needs to be a number!")
+            context.typedMessaging.replyDanger(context.i18n("commands.welcome.remove.message_index_number"))
             return
         }
 
         val index = context.getArgAsInteger(0)!! - 1
         val welcomeMessages = context.data.management.greetings.welcomeMessages
         if (index < 0 || index >= welcomeMessages.size) {
-            context.typedMessaging.replyDanger("The message index must be between `1` and `${welcomeMessages.size}`")
+            context.typedMessaging.replyDanger(context.i18n("commands.welcome.invalid_message_index", welcomeMessages.size))
             return
         }
 
@@ -36,9 +36,9 @@ class WelcomeRemoveSubCommand : SubCommand() {
 
         context.typedMessaging.replySuccess(embed(MessageType.INFO, context.user) {
             title {
-                name = "Deleted welcome message!"
+                name = context.i18n("commands.welcome.remove.remove_success_title")
             }
-            description = "This message has been deleted!\n```\n$message\n```"
+            description = context.i18n("commands.welcome.remove.remove_success_text", message)
         })
     }
 

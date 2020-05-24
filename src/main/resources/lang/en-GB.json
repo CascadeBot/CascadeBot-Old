@@ -349,6 +349,13 @@
         "set_weight_text": "Successfully set the weight of the message: \n```\n{0}\n```",
         "old_weight": "Old Weight",
         "new_weight": "New Weight"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a welcome message from this server.",
+        "message_index_number": "The message index must be a whole number!",
+        "remove_success_title": "Removed welcome message!",
+        "remove_success_text": "This message has been removed!\n```\n{0}\n```"
       }
     },
     "ban": {
