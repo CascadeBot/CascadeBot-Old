@@ -305,10 +305,22 @@
     "welcome": {
       "command": "welcome",
       "description": "Lists the welcome messages for this server.",
+      "current_channel": "The current welcome channel is: {0}",
+      "no_channel_set": "There is no welcome channel set!",
       "add": {
+        "command": "add",
+        "description": "Adds a welcome message to the server.",
         "success_title": "Added welcome message!",
         "success_text_1": "Added the message: ",
         "success_text_2": "There {0,plural,one{is} other{are}} currently {0} welcome {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
+      },
+      "channel": {
+        "command": "channel",
+        "description": "Gets or sets the welcome channel for the server.",
+        "clear_success": "Successfully cleared the welcome channel!",
+        "invalid_channel": "Please specify a valid channel!",
+        "set_success": "Successfully set the welcome channel to: {0}"
+      },
       "clear": {
         "command": "clear",
         "description": "Clears all welcome messages and the welcome channel.",
@@ -1141,6 +1153,10 @@
     "userperms#list#user#groups": {
       "name": "groups",
       "description": "Lists the groups a user has."
+    },
+    "welcome#channel#clear": {
+      "name": "clear",
+      "description": "Clears the welcome channel for this server."
     },
     "guild#save#all": {
       "name": "all",
