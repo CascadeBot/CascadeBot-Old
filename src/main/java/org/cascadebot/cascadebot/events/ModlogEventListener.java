@@ -1,18 +1,15 @@
 package org.cascadebot.cascadebot.events;
 
-import club.minnced.discord.webhook.send.WebhookEmbed;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
-import net.dv8tion.jda.api.audit.AuditLogChange;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
-import net.dv8tion.jda.api.entities.IPermissionHolder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -22,25 +19,21 @@ import net.dv8tion.jda.api.events.channel.category.CategoryCreateEvent;
 import net.dv8tion.jda.api.events.channel.category.CategoryDeleteEvent;
 import net.dv8tion.jda.api.events.channel.category.GenericCategoryEvent;
 import net.dv8tion.jda.api.events.channel.category.update.CategoryUpdateNameEvent;
-import net.dv8tion.jda.api.events.channel.category.update.CategoryUpdatePermissionsEvent;
 import net.dv8tion.jda.api.events.channel.category.update.CategoryUpdatePositionEvent;
 import net.dv8tion.jda.api.events.channel.store.GenericStoreChannelEvent;
 import net.dv8tion.jda.api.events.channel.store.StoreChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.store.StoreChannelDeleteEvent;
 import net.dv8tion.jda.api.events.channel.store.update.StoreChannelUpdateNameEvent;
-import net.dv8tion.jda.api.events.channel.store.update.StoreChannelUpdatePermissionsEvent;
 import net.dv8tion.jda.api.events.channel.store.update.StoreChannelUpdatePositionEvent;
 import net.dv8tion.jda.api.events.channel.text.GenericTextChannelEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateNameEvent;
-import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdatePermissionsEvent;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdatePositionEvent;
 import net.dv8tion.jda.api.events.channel.voice.GenericVoiceChannelEvent;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelDeleteEvent;
 import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateNameEvent;
-import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdatePermissionsEvent;
 import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdatePositionEvent;
 import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
 import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
@@ -99,11 +92,9 @@ import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
-import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -116,7 +107,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -362,7 +352,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 }
                 VoiceChannel newChannel = ((GuildUpdateAfkChannelEvent) event).getNewAfkChannel();
                 if (newChannel != null) {
-                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_channel", "modlog.general.variable", oldChannel.getName()));
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_channel", "modlog.general.variable", newChannel.getName()));
                 }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_AFK_CHANNEL;
             } else if (event instanceof GuildUpdateAfkTimeoutEvent) {
@@ -373,8 +363,8 @@ public class ModlogEventListener extends ListenerAdapter {
                 if (((GuildUpdateBannerEvent) event).getOldBannerUrl() != null) {
                     embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.old_image", "modlog.general.variable", ((GuildUpdateBannerEvent) event).getOldBannerUrl()));
                 }
-                if (((GuildUpdateBannerEvent) event).getNewBannerIdUrl() != null) {
-                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.new_image", "modlog.general.variable", ((GuildUpdateBannerEvent) event).getNewBannerIdUrl()));
+                if (((GuildUpdateBannerEvent) event).getNewBannerUrl() != null) {
+                    embedFieldList.add(new LanguageEmbedField(false, "modlog.guild.new_image", "modlog.general.variable", ((GuildUpdateBannerEvent) event).getNewBannerUrl()));
                 }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_BANNER;
             } else if (event instanceof GuildUpdateDescriptionEvent) {
