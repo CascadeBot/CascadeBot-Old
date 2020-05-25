@@ -1309,7 +1309,9 @@
       "responsible": "Responsible",
       "reason": "Reason",
       "added_roles": "Added Roles",
-      "removed_roles": "Removed Roles"
+      "removed_roles": "Removed Roles",
+      "old_pos": "Old Position",
+      "new_pos": "New Position"
     },
     "member": {
       "old_nick": "Old Nickname",
@@ -1376,6 +1378,39 @@
       },
       "old_verification": "Old Verification Level",
       "new_verification": "New Verification Level"
+    },
+    "channel": {
+      "type": {
+        "name": "Type",
+        "text": "Text",
+        "private": "Private",
+        "voice": "Voice",
+        "group": "Group",
+        "category": "Category",
+        "store": "Store",
+        "unknown": "Unknown"
+      },
+      "perm": {
+        "added_allow": "Added Allowed permission to {0}",
+        "removed_allow": "Removed Allowed permission from {0}",
+        "update_allow": "New Allowed permission for {0}",
+        "added_deny": "Added Denied permission to {0}",
+        "removed_deny": "Removed Denied permission from {0}",
+        "update_deny": "New Denied permission for {0}",
+        "old_allow": "Old Allowed permission for {0}",
+        "old_deny": "Old Denied permissions for {0}"
+      }
+    },
+    "role": {
+      "old_color": "Old Color",
+      "new_color": "New Color",
+      "hoisted": "Hoisted",
+      "mention": "Mentionable",
+      "added_perm": "Added Permissions",
+      "removed_perm": "Removed Permissions"
+    },
+    "user": {
+      "old_discrim": "Old Discriminator"
     }
   }
 }

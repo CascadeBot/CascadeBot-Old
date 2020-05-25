@@ -56,6 +56,9 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.events.guild.override.GenericPermissionOverrideEvent;
+import net.dv8tion.jda.api.events.guild.override.PermissionOverrideCreateEvent;
+import net.dv8tion.jda.api.events.guild.override.PermissionOverrideDeleteEvent;
+import net.dv8tion.jda.api.events.guild.override.PermissionOverrideUpdateEvent;
 import net.dv8tion.jda.api.events.guild.update.GenericGuildUpdateEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateAfkChannelEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateAfkTimeoutEvent;
@@ -94,6 +97,7 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
+import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.LanguageEmbedField;
@@ -104,6 +108,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
+import java.awt.Color;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -514,7 +519,57 @@ public class ModlogEventListener extends ListenerAdapter {
     }
 
     public void onGenericPermissionOverride(GenericPermissionOverrideEvent event) {
-        
+        ModlogEvent modlogEvent = ModlogEvent.CHANNEL_PERMISSIONS_UPDATED;
+        Guild guild = event.getGuild();
+        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+        guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE) || entry.getType().equals(ActionType.CHANNEL_OVERRIDE_UPDATE)) {
+                responsible = entry.getUser();
+            }
+            String permissionsHolderName;
+            if (event.getPermissionHolder() instanceof User) {
+                permissionsHolderName = ((User) event.getPermissionHolder()).getName();
+            } else if (event.getPermissionHolder() instanceof Role) {
+                permissionsHolderName = ((Role) event.getPermissionHolder()).getName();
+            } else {
+                permissionsHolderName = "";
+            }
+
+            String allowedPath;
+            String deniedPath;
+            if (event instanceof PermissionOverrideCreateEvent) {
+                allowedPath = "modlog.channel.perm.added_allow";
+                deniedPath = "modlog.channel.perm.added_deny";
+            } else if (event instanceof PermissionOverrideDeleteEvent) {
+                allowedPath = "modlog.channel.perm.removed_allow";
+                deniedPath = "modlog.channel.perm.removed_deny";
+            } else if (event instanceof PermissionOverrideUpdateEvent) {
+                allowedPath = "modlog.channel.perm.update_allow";
+                deniedPath = "modlog.channel.perm.update_deny";
+                LanguageEmbedField oldAllowed = new LanguageEmbedField(false, "modlog.channel.perm.old_allow", "modlog.general.variable",
+                        ((PermissionOverrideUpdateEvent) event).getOldAllow().stream().map(Permission::getName).collect(Collectors.joining("\n")));
+                oldAllowed.addTitleObjects(permissionsHolderName);
+                LanguageEmbedField oldDenied = new LanguageEmbedField(false, "modlog.channel.perm.old_allow", "modlog.general.variable",
+                        ((PermissionOverrideUpdateEvent) event).getOldDeny().stream().map(Permission::getName).collect(Collectors.joining("\n")));
+                oldDenied.addTitleObjects(permissionsHolderName);
+                embedFieldList.add(oldAllowed);
+                embedFieldList.add(oldDenied);
+            } else {
+                return;
+            }
+            LanguageEmbedField allowed = new LanguageEmbedField(false, allowedPath, "modlog.general.variable", event.getPermissionOverride().getAllowed().stream().map(Permission::getName).collect(Collectors.joining("\n")));
+            allowed.addTitleObjects(permissionsHolderName);
+            LanguageEmbedField denied = new LanguageEmbedField(false, deniedPath, "modlog.general.variable", event.getPermissionOverride().getDenied().stream().map(Permission::getName).collect(Collectors.joining("\n")));
+            denied.addTitleObjects(permissionsHolderName);
+            embedFieldList.add(allowed);
+            embedFieldList.add(denied);
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + event.getChannelType().name().toLowerCase()));
+            ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, event.getChannel(), embedFieldList);
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
+        });
     }
 
     //endregion
@@ -530,7 +585,7 @@ public class ModlogEventListener extends ListenerAdapter {
             if (entry.getType().equals(ActionType.CHANNEL_CREATE)) {
                 responsible = entry.getUser();
             }
-            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
@@ -541,12 +596,12 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            List<WebhookEmbed.EmbedField> embedFieldList = new ArrayList<>();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_DELETE)) {
                 responsible = entry.getUser();
             }
-            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
@@ -562,53 +617,8 @@ public class ModlogEventListener extends ListenerAdapter {
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
                 responsible = entry.getUser();
             }
-            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
-            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", oldName));
-            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
-        });
-    }
-
-    private void handleChannelUpdatePermissionsEvents(Guild guild, ChannelType type, List<IPermissionHolder> changedPermissionHolders, GuildChannel channel) {
-        ModlogEvent event = ModlogEvent.CHANNEL_PERMISSIONS_UPDATED;
-        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-        guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
-            AuditLogEntry entry = auditLogEntries.get(0);
-            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-            User responsible = null;
-            if (entry.getType().equals(ActionType.CHANNEL_UPDATE) || entry.getType().equals(ActionType.CHANNEL_OVERRIDE_UPDATE)) {
-                responsible = entry.getUser();
-                Map<String, AuditLogChange> auditLogChangeMap = entry.getChanges();
-                for (Map.Entry<String, AuditLogChange> auditLogChangeEntry : auditLogChangeMap.entrySet()) {
-                    AuditLogChange value = auditLogChangeEntry.getValue();
-                    EnumSet<Permission> oldPermissions = Permission.getPermissions(((Integer) value.getOldValue()).longValue());
-                    EnumSet<Permission> newPermissions = Permission.getPermissions(((Integer) value.getNewValue()).longValue());
-                    ListChanges<Permission> permissionListChanges = new ListChanges<>(oldPermissions, newPermissions);
-                    String change = "unknown";
-                    switch (auditLogChangeEntry.getKey()) {
-                        case "allow":
-                            change = "Allowed";
-                            break;
-                        case "deny":
-                            change = "Denied";
-                            break;
-                    }
-                    String affectedType = entry.getOptionByName("type");
-                    long affectedId = entry.getTargetIdLong();
-                    String affected = "unknown";
-                    switch (affectedType) {
-                        case "role":
-                            affected = CascadeBot.INS.getShardManager().getRoleById(affectedId).getName();
-                            break;
-                        case "user":
-                            affected = CascadeBot.INS.getShardManager().getUserById(affectedId).getAsTag();
-                            break;
-                    }
-                    embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added " + change + " Permissions to " + affected, permissionListChanges.getAdded().stream().map(permission -> permission.getName()).collect(Collectors.joining("\n"))));
-                    embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed " + change + " Permissions to " + affected, permissionListChanges.getRemoved().stream().map(permission -> permission.getName()).collect(Collectors.joining("\n"))));
-                }
-            }
-            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_name", "modlog.general.variable", oldName));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
@@ -624,9 +634,9 @@ public class ModlogEventListener extends ListenerAdapter {
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
                 responsible = entry.getUser();
             }
-            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Type", type.name()));
-            embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Position", String.valueOf(oldPos)));
-            embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Position", String.valueOf(channel.getPosition())));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.old_pos", "modlog.general.variable", String.valueOf(oldPos)));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.new_pos", "modlog.general.variable", String.valueOf(channel.getPosition())));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
@@ -650,29 +660,34 @@ public class ModlogEventListener extends ListenerAdapter {
                 modlogEvent = ModlogEvent.ROLE_DELETED;
             } else if (event instanceof RoleUpdateColorEvent) {
                 modlogEvent = ModlogEvent.ROLE_COLOR_UPDATED;
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Color", ((RoleUpdateColorEvent) event).getOldColor().toString())); // TODO properly show color
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Color", ((RoleUpdateColorEvent) event).getNewColor().toString()));
+                Color oldColor = ((RoleUpdateColorEvent) event).getOldColor();
+                if (oldColor != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.role.old_color", "modlog.general.variable", ColorUtils.getHex(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue())));
+                }
+                Color newColor = ((RoleUpdateColorEvent) event).getNewColor();
+                if (newColor != null) {
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.role.new_color", "modlog.general.variable", ColorUtils.getHex(newColor.getRed(), newColor.getGreen(), newColor.getBlue())));
+                }
             } else if (event instanceof RoleUpdateHoistedEvent) {
                 modlogEvent = ModlogEvent.ROLE_HOIST_UPDATED;
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Hoisted", String.valueOf(!((RoleUpdateHoistedEvent) event).wasHoisted())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.role.hoisted", "modlog.general.variable", String.valueOf(!((RoleUpdateHoistedEvent) event).wasHoisted())));
             } else if (event instanceof RoleUpdateMentionableEvent) {
                 modlogEvent = ModlogEvent.ROLE_MENTIONABLE_UPDATED;
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Mentionable", String.valueOf(!((RoleUpdateMentionableEvent) event).wasMentionable())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.role.mention", "modlog.general.variable", String.valueOf(!((RoleUpdateMentionableEvent) event).wasMentionable())));
             } else if (event instanceof RoleUpdateNameEvent) {
                 modlogEvent = ModlogEvent.ROLE_NAME_UPDATED;
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", ((RoleUpdateNameEvent) event).getOldName()));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Name", ((RoleUpdateNameEvent) event).getNewName()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_name", "modlog.general.variable", ((RoleUpdateNameEvent) event).getOldName()));
             } else if (event instanceof RoleUpdatePermissionsEvent) {
                 modlogEvent = ModlogEvent.ROLE_PERMISSIONS_UPDATED;
                 EnumSet<Permission> oldPermissions = ((RoleUpdatePermissionsEvent) event).getOldPermissions();
                 EnumSet<Permission> newPermissions = ((RoleUpdatePermissionsEvent) event).getNewPermissions();
                 ListChanges<Permission> permissionListChanges = new ListChanges<>(oldPermissions, newPermissions);
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Added Permissions", permissionListChanges.getAdded().stream().map(permission -> permission.getName()).collect(Collectors.joining("\n"))));
-                embedFieldList.add(new WebhookEmbed.EmbedField(false, "Removed Permissions", permissionListChanges.getRemoved().stream().map(permission -> permission.getName()).collect(Collectors.joining("\n"))));
+                embedFieldList.add(new LanguageEmbedField(false, "modlog.role.added_perm", "modlog.general.variable", permissionListChanges.getAdded().stream().map(Permission::getName).collect(Collectors.joining("\n"))));
+                embedFieldList.add(new LanguageEmbedField(false, "modlog.role.removed_perm", "modlog.general.variable", permissionListChanges.getRemoved().stream().map(Permission::getName).collect(Collectors.joining("\n"))));
             } else if (event instanceof RoleUpdatePositionEvent) {
                 modlogEvent = ModlogEvent.ROLE_POSITION_UPDATED;
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Position", String.valueOf(((RoleUpdatePositionEvent) event).getOldPosition())));
-                embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Position", String.valueOf(((RoleUpdatePositionEvent) event).getNewPosition())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_pos", "modlog.general.variable", String.valueOf(((RoleUpdatePositionEvent) event).getOldPosition())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.general.new_pos", "modlog.general.variable", String.valueOf(((RoleUpdatePositionEvent) event).getNewPosition())));
             } else {
                 return;
             }
@@ -685,16 +700,22 @@ public class ModlogEventListener extends ListenerAdapter {
     public void onUserUpdateName(UserUpdateNameEvent event) {
         // TODO propagate to guilds
         List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Name", event.getOldName()));
-        embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Name", event.getNewName()));
+        embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_name", "modlog.general.variable", event.getOldName()));
         ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_NAME_UPDATED, event.getUser(), event.getUser(), embedFieldList);
+        for (Guild guild : CascadeBot.INS.getClient().getMutualGuilds(event.getUser())) {
+            GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
+        }
     }
 
     public void onUserUpdateDiscriminator(UserUpdateDiscriminatorEvent event) {
         List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new WebhookEmbed.EmbedField(true, "Old Discriminator", event.getOldDiscriminator()));
-        embedFieldList.add(new WebhookEmbed.EmbedField(true, "New Discriminator", event.getNewDiscriminator()));
+        embedFieldList.add(new LanguageEmbedField(true, "modlog.user.old_discrim", "modlog.general.variable", event.getOldDiscriminator()));
         ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_DISCRIMINATOR_UPDATED, event.getUser(), event.getUser(), embedFieldList);
+        for (Guild guild : CascadeBot.INS.getClient().getMutualGuilds(event.getUser())) {
+            GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
+        }
     }
     //endregion
 
