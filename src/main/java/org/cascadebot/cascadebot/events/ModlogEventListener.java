@@ -539,23 +539,31 @@ public class ModlogEventListener extends ListenerAdapter {
             } else if (event instanceof PermissionOverrideUpdateEvent) {
                 allowedPath = "modlog.channel.perm.update_allow";
                 deniedPath = "modlog.channel.perm.update_deny";
-                LanguageEmbedField oldAllowed = new LanguageEmbedField(false, "modlog.channel.perm.old_allow", "modlog.general.variable",
-                        ((PermissionOverrideUpdateEvent) event).getOldAllow().stream().map(Permission::getName).collect(Collectors.joining("\n")));
-                oldAllowed.addTitleObjects(permissionsHolderName);
-                LanguageEmbedField oldDenied = new LanguageEmbedField(false, "modlog.channel.perm.old_allow", "modlog.general.variable",
-                        ((PermissionOverrideUpdateEvent) event).getOldDeny().stream().map(Permission::getName).collect(Collectors.joining("\n")));
-                oldDenied.addTitleObjects(permissionsHolderName);
-                embedFieldList.add(oldAllowed);
-                embedFieldList.add(oldDenied);
+                if (((PermissionOverrideUpdateEvent) event).getOldAllow().size() > 0) {
+                    LanguageEmbedField oldAllowed = new LanguageEmbedField(false, "modlog.channel.perm.old_allow", "modlog.general.variable",
+                            ((PermissionOverrideUpdateEvent) event).getOldAllow().stream().map(Permission::getName).collect(Collectors.joining("\n")));
+                    oldAllowed.addTitleObjects(permissionsHolderName);
+                    embedFieldList.add(oldAllowed);
+                }
+                if (((PermissionOverrideUpdateEvent) event).getOldDeny().size() > 0) {
+                    LanguageEmbedField oldDenied = new LanguageEmbedField(false, "modlog.channel.perm.old_allow", "modlog.general.variable",
+                            ((PermissionOverrideUpdateEvent) event).getOldDeny().stream().map(Permission::getName).collect(Collectors.joining("\n")));
+                    oldDenied.addTitleObjects(permissionsHolderName);
+                    embedFieldList.add(oldDenied);
+                }
             } else {
                 return;
             }
-            LanguageEmbedField allowed = new LanguageEmbedField(false, allowedPath, "modlog.general.variable", event.getPermissionOverride().getAllowed().stream().map(Permission::getName).collect(Collectors.joining("\n")));
-            allowed.addTitleObjects(permissionsHolderName);
-            LanguageEmbedField denied = new LanguageEmbedField(false, deniedPath, "modlog.general.variable", event.getPermissionOverride().getDenied().stream().map(Permission::getName).collect(Collectors.joining("\n")));
-            denied.addTitleObjects(permissionsHolderName);
-            embedFieldList.add(allowed);
-            embedFieldList.add(denied);
+            if (event.getPermissionOverride().getAllowed().size() > 0) {
+                LanguageEmbedField allowed = new LanguageEmbedField(false, allowedPath, "modlog.general.variable", event.getPermissionOverride().getAllowed().stream().map(Permission::getName).collect(Collectors.joining("\n")));
+                allowed.addTitleObjects(permissionsHolderName);
+                embedFieldList.add(allowed);
+            }
+            if (event.getPermissionOverride().getDenied().size() > 0) {
+                LanguageEmbedField denied = new LanguageEmbedField(false, deniedPath, "modlog.general.variable", event.getPermissionOverride().getDenied().stream().map(Permission::getName).collect(Collectors.joining("\n")));
+                denied.addTitleObjects(permissionsHolderName);
+                embedFieldList.add(denied);
+            }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + event.getChannelType().name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, event.getChannel(), embedFieldList);
             guildData.getModeration().sendModlogEvent(modlogEventStore);

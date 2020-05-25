@@ -9,6 +9,7 @@ import club.minnced.discord.webhook.send.WebhookEmbedBuilder
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.entities.Role
@@ -16,19 +17,23 @@ import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.data.database.DebugLogCallback
+import org.cascadebot.cascadebot.data.database.IAsyncMongoTask
+import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.moderation.ModlogEvent
 import java.net.URL
 import java.util.ArrayList
 import java.util.Collections
+import java.util.Date
 import java.util.function.Consumer
 
 @SettingsContainer(module = Module.MODERATION)
 class GuildSettingsModeration {
 
-    var guildData: GuildData? = null
+    var guildId: Long = 0
 
-    constructor(guildData: GuildData) {
-        this.guildData = guildData
+    constructor(guildId: Long) {
+        this.guildId = guildId;
     }
 
     constructor()
@@ -41,9 +46,9 @@ class GuildSettingsModeration {
     fun sendModlogEvent(modlogEventStore: ModlogEventStore) {
         val eventsInfo: List<ChannelModlogEventsInfo> = getEventInfoForEvent(modlogEventStore.trigger)
         for (eventInfo in eventsInfo) {
-            guildData?.let { eventInfo.sendEvent(it, modlogEventStore) };
+            eventInfo.sendEvent(GuildDataManager.getGuildData(guildId), modlogEventStore);
         }
-        // TODO add to list for dashboard
+        CascadeBot.INS.databaseManager.runAsyncTask { database -> database.getCollection("modlog", MongoModlogEventObject::class.java).insertOne(MongoModlogEventObject(guildId, modlogEventStore, "default" /* TODO change to actual time */), DebugLogCallback("Inserted Event")) }
     }
 
     private fun getEventInfoForEvent(event: ModlogEvent): List<ChannelModlogEventsInfo> {
@@ -141,7 +146,11 @@ class GuildSettingsModeration {
                 }
                 is Guild -> {
                     affectedType = "Guild"
-                    null
+                    affected.name
+                }
+                is GuildChannel -> {
+                    affectedType = "Channel"
+                    affected.name
                 }
                 else -> null
             }
@@ -153,9 +162,27 @@ class GuildSettingsModeration {
             }
             webhookEmbedBuilder.setColor(modlogEventStore.trigger.messageType.color.rgb)
             if (modlogEventStore.responsible != null) {
-                webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible.name + " (" + modlogEventStore.responsible.id + ")", null))
+                webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible!!.name + " (" + modlogEventStore.responsible!!.id + ")", null))
             }
             webhookClient?.send(webhookEmbedBuilder.build());
         }
+    }
+    
+    class MongoModlogEventObject {
+        
+        private var guildId: Long = 0;
+        private var modlogEventStore: ModlogEventStore? = null
+
+        private var createdDate: Date = Date()
+        private var tier: String = ""
+        
+        private constructor()
+        
+        constructor(guildId: Long, modlogEventStore: ModlogEventStore, tier: String) {
+            this.guildId = guildId
+            this.modlogEventStore = modlogEventStore
+            this.tier = tier
+        }
+        
     }
 }

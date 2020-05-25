@@ -20,9 +20,11 @@ class LanguageEmbedField {
         this.inline = inline;
         this.titleLanguagePath = titleLanguagePath
         this.valueLanguagePath = valueLanguagePath
-        this.titleLanguageObjects.addAll(valueLanguageObjects)
+        this.valueLanguageObjects.addAll(valueLanguageObjects)
         // TODO add checks for if language string exists
     }
+
+    constructor()
 
     fun addTitleObjects(vararg titleLanguageObjects: String) {
         this.titleLanguageObjects.addAll(titleLanguageObjects)

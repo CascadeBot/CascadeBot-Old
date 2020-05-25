@@ -33,7 +33,7 @@ class GuildData(@field:Id val guildId: Long) {
     //region Guild data containers
     val core = GuildSettingsCore()
     val useful = GuildSettingsUseful()
-    val moderation = GuildSettingsModeration()
+    val moderation = GuildSettingsModeration(guildId)
     val management = GuildSettingsManagement()
     val music = GuildSettingsMusic()
     //endregion

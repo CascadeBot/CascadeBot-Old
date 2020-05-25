@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,7 @@ public class DatabaseManager {
                     "org.cascadebot.cascadebot.utils.buttons",
                     "org.cascadebot.cascadebot.scheduler",
                     "org.cascadebot.shared"
-            ).build())
+            ).register(LanguageEmbedField.class).build())
     );
 
     @Getter
