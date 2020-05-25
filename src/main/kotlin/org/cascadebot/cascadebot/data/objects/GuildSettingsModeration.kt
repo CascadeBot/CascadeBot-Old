@@ -66,6 +66,20 @@ class GuildSettingsModeration {
         }
     }
 
+    fun enableEvent(channel: TextChannel, event: ModlogEvent) {
+        if (modlogEvents.containsKey(channel.idLong)) {
+            modlogEvents[channel.idLong]?.addEvent(event)
+        } else {
+            createModlogEventsInfo(channel, Consumer { it.addEvent(event) })
+        }
+    }
+
+    fun enableEventByCategory(channel: TextChannel, category: ModlogEvent.Category) {
+        for (modlogEvent in ModlogEvent.getEventsFromCategory(category)) {
+            enableEvent(channel, modlogEvent)
+        }
+    }
+
     private fun createModlogEventsInfo(channel: TextChannel, consumer: Consumer<ChannelModlogEventsInfo>) {
         channel.createWebhook("Cascade-modlog").setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
             val eventsInfo = ChannelModlogEventsInfo(webhook.idLong, webhook.token!!)

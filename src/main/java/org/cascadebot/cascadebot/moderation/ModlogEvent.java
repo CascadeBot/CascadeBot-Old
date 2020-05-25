@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.moderation;
 
+import kotlin.jvm.JvmStatic;
 import lombok.Getter;
 import org.cascadebot.cascadebot.messaging.MessageType;
 
@@ -147,6 +148,10 @@ public enum ModlogEvent {
     ModlogEvent(MessageType messageType, Category... categories) {
         this.categories = Arrays.asList(categories);
         this.messageType = messageType;
+    }
+
+    public static List<ModlogEvent> getEventsFromCategory(Category category) {
+        return modlogCategoryMap.get(category);
     }
 
     public List<Category> getCategories() {
