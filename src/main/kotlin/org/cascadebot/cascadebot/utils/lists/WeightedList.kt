@@ -1,5 +1,11 @@
-package org.cascadebot.cascadebot.utils
+/*
+ * Copyright (c) 2020 CascadeBot. All rights reserved.
+ * Licensed under the MIT license.
+ */
 
+package org.cascadebot.cascadebot.utils.lists
+
+import org.cascadebot.cascadebot.utils.WeightPair
 import java.util.Random
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
@@ -8,70 +14,72 @@ import kotlin.concurrent.write
 class WeightedList<T : Any> {
 
     companion object {
+        @Transient
         val random: Random = Random()
     }
 
-    private val internalList: MutableList<Pair<T, Int>> = mutableListOf()
+    private val internalList: MutableList<WeightPair<T>> = mutableListOf()
+    @Transient
     private val lock = ReentrantReadWriteLock()
     val totalWeight
-        get() = lock.read { internalList.sumBy { it.second } }
+        get() = lock.read { internalList.sumBy { it.weight } }
 
     @JvmOverloads
     fun add(item: T, weight: Int = 1) {
-        val existingItem = internalList.find { it.first == item }
+        val existingItem = internalList.find { it.item == item }
         if (existingItem != null) {
             remove(item)
-            val newWeight = existingItem.second + weight
+            val newWeight = existingItem.weight + weight
             // Create a new pair with the existing weight + the new weight
-            internalList.add(Pair(item, newWeight))
+            internalList.add(WeightPair(item, newWeight))
         } else {
-            internalList.add(Pair(item, weight))
+            internalList.add(WeightPair(item, weight))
         }
     }
 
     fun remove(item: T) {
         lock.write {
-            internalList.removeIf { it.first == item }
+            internalList.removeIf { it.item == item }
         }
     }
 
-    fun remove(position: Int): T {
+    fun remove(position: Int): T? {
         return lock.write {
-            internalList.removeAt(position).first
+            internalList.removeAt(position).item
         }
     }
 
     fun getItemWeight(position: Int): Int {
-        return lock.read { internalList[position].second }
+        return lock.read { internalList[position].weight }
     }
 
     fun setItemWeight(position: Int, weight: Int) {
-        lock.write { internalList[position] = internalList[position].copy(second = weight) }
+        lock.write { internalList[position] = internalList[position].copy(weight = weight) }
     }
 
-    operator fun get(position: Int): Pair<T, Int> {
+    operator fun get(position: Int): WeightPair<T> {
         return lock.read { internalList[position] }
     }
 
     operator fun set(position: Int, value: T) {
-        lock.write { internalList[position] = internalList[position].copy(first = value) }
+        lock.write { internalList[position] = internalList[position].copy(item = value) }
     }
 
-    fun get(obj: T): Pair<T, Int>? {
-        return lock.read { internalList.find { it.first == obj }}
+    fun get(obj: T): WeightPair<T>? {
+        return lock.read { internalList.find { it.item == obj }}
     }
 
     fun indexOf(obj: T): Int {
         lock.read {
-            internalList.forEachIndexed { index, pair -> if (pair.first == obj) return index }
+            internalList.forEachIndexed { index, pair -> if (pair.item == obj) return index }
         }
         return -1
     }
 
     val items: List<T>
-        get() = lock.read { internalList.map { it.first }.toList() }
+        get() = lock.read { internalList.mapNotNull { it.item }.toList() }
 
-    val itemsAndWeighting: List<Pair<T, Int>>
+    val itemsAndWeighting: List<WeightPair<T>>
         get() = lock.read { internalList.toList() }
 
     val size: Int
@@ -84,10 +92,10 @@ class WeightedList<T : Any> {
 
             // Gets a number between 1 and totalWeight (Inclusive)
             var selection: Int = random.nextInt(totalWeight) + 1
-            for (weightedItem: Pair<T, Int> in internalList) {
-                selection -= weightedItem.second
+            for (weightedItem: WeightPair<T> in internalList) {
+                selection -= weightedItem.weight
                 if (selection <= 0) {
-                    return weightedItem.first
+                    return weightedItem.item
                 }
             }
             null

@@ -21,11 +21,11 @@ class Placeholders<T>(var key: String) {
         get() = _placeholders.toList()
 
     fun staticPlaceholder(key: String, mapping: StaticPlaceholder<T>.(T) -> String?) {
-        _placeholders.add(StaticPlaceholder("${this.key}.$key", mapping))
+        _placeholders.add(StaticPlaceholder(key, "${this.key}.$key", mapping))
     }
 
     fun argsPlaceholder(key: String, mapping: ArgsPlaceholder<T>.(T, List<String>) -> String?) {
-        _placeholders.add(ArgsPlaceholder("${this.key}.$key", mapping))
+        _placeholders.add(ArgsPlaceholder(key,"${this.key}.$key", mapping))
     }
 
     // TODO: Use locale!
@@ -52,6 +52,21 @@ class Placeholders<T>(var key: String) {
                     }
                     else -> error("Invalid Placeholder type: ${placeholder::class.simpleName}")
                 }
+            }
+        }
+        var newMessage = message
+        toReplace.forEach { newMessage = newMessage.replace(it.key, it.value) }
+        return newMessage
+    }
+
+    fun highlightMessage(message: String): String {
+        val toReplace = mutableMapOf<String, String>()
+        for (matchResult in placeholderRegex.findAll(message)) {
+            val placeholder = _placeholders.find { it.localisedInfo.values.any { info -> info.key == matchResult.groupValues[1] } }
+            if (placeholder != null) {
+                matchResult.groupValues[0].also { toReplace[it] = "**$it**" }
+            } else {
+                matchResult.groupValues[0].also { toReplace[it] = "~~$it~~" }
             }
         }
         var newMessage = message

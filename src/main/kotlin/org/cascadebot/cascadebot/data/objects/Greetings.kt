@@ -4,13 +4,8 @@ import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import org.cascadebot.cascadebot.CascadeBot
-import org.cascadebot.cascadebot.utils.ChangeList
-import org.cascadebot.cascadebot.utils.FormatUtils
-import org.cascadebot.cascadebot.utils.WeightedList
+import org.cascadebot.cascadebot.utils.lists.WeightedList
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
-import java.lang.StringBuilder
-import java.time.Duration
-import java.time.OffsetDateTime
 
 class Greetings {
 

@@ -38,7 +38,7 @@ class WelcomeRemoveSubCommand : SubCommand() {
             title {
                 name = context.i18n("commands.welcome.remove.remove_success_title")
             }
-            description = context.i18n("commands.welcome.remove.remove_success_text", message)
+            description = context.i18n("commands.welcome.remove.remove_success_text", message ?: "Message unavailable!")
         })
     }
 

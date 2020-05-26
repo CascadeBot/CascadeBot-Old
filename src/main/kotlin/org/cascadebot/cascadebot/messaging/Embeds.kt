@@ -5,6 +5,7 @@ import org.cascadebot.cascadebot.UnicodeConstants
 import java.awt.Color
 import java.time.LocalDateTime
 import java.time.temporal.TemporalAccessor
+import net.dv8tion.jda.api.EmbedBuilder as JDAEmbedBuilder
 
 class EmbedBuilder(type: MessageType, private val requestedBy: User? = null) {
     private var titleBuilder: TitleBuilder? = null
@@ -64,7 +65,7 @@ class EmbedBuilder(type: MessageType, private val requestedBy: User? = null) {
         })
     }
 
-    fun build(): net.dv8tion.jda.api.EmbedBuilder {
+    fun build(): JDAEmbedBuilder {
         val embedBuilder = net.dv8tion.jda.api.EmbedBuilder()
         for (builder in fieldBuilders) {
             embedBuilder.addField(
@@ -88,14 +89,14 @@ class EmbedBuilder(type: MessageType, private val requestedBy: User? = null) {
     }
 }
 
-fun embed(type: MessageType, user: User? = null, init: EmbedBuilder.() -> Unit): net.dv8tion.jda.api.EmbedBuilder = EmbedBuilder(type, user).apply(init).build()
+fun embed(type: MessageType, user: User? = null, init: EmbedBuilder.() -> Unit): JDAEmbedBuilder = EmbedBuilder(type, user).apply(init).build()
 
 /*
 ====================================
 Full embed type-safe builder example
 ====================================
  */
-fun getEmbed(): net.dv8tion.jda.api.EmbedBuilder {
+fun getEmbed(): JDAEmbedBuilder {
     return embed(type = MessageType.INFO) {
         title {
             name = "title"

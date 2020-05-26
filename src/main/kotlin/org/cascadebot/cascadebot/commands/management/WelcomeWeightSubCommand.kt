@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import kotlin.math.round
@@ -33,16 +32,16 @@ class WelcomeWeightSubCommand : SubCommand() {
                     title { name = context.i18n("commands.welcome.weight.embed_title") }
                     field {
                         name = context.i18n("commands.welcome.weight.embed_message")
-                        value = item.first
+                        value = item.item
                     }
                     field {
                         name = context.i18n("commands.welcome.weight.embed_weight")
-                        value = item.second.toString()
+                        value = item.weight.toString()
                         inline = true
                     }
                     field {
                         name = context.i18n("commands.welcome.weight.proportion_title")
-                        value = round((item.second.toDouble() / welcomeMessages.totalWeight.toDouble()) * 100).toInt().toString() + "%"
+                        value = round((item.weight.toDouble() / welcomeMessages.totalWeight.toDouble()) * 100).toInt().toString() + "%"
                         inline = true
                     }
                 }))
@@ -78,7 +77,8 @@ class WelcomeWeightSubCommand : SubCommand() {
             if (oldWeight == weight) {
                 context.typedMessaging.replyInfo(embed(MessageType.INFO, context.user) {
                     title { name = context.i18n("commands.welcome.weight.same_weight_title") }
-                    description = context.i18n("commands.welcome.weight.same_weight_text", weight, welcomeMessages[index].first)
+                    description = context.i18n("commands.welcome.weight.same_weight_text", weight, welcomeMessages[index].item
+                            ?: "Message unavailable!")
                     field {
                         name = context.i18n("commands.welcome.weight.proportion_title")
                         value = context.i18n("commands.welcome.weight.proportion_text", (welcomeMessages.getItemProportion(index) * 100).roundToInt())
@@ -93,7 +93,7 @@ class WelcomeWeightSubCommand : SubCommand() {
                 title {
                     name = context.i18n("commands.welcome.weight.set_weight_title")
                 }
-                description = context.i18n("commands.welcome.weight.set_weight_text", welcomeMessages[index].first)
+                description = context.i18n("commands.welcome.weight.set_weight_text", welcomeMessages[index].item ?: "Message unavailable!")
                 field {
                     name = context.i18n("commands.welcome.weight.old_weight")
                     value = oldWeight.toString()
