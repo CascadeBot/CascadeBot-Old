@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.utils.lists.WeightedList
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 
@@ -35,13 +36,13 @@ class Greetings {
 
     fun getRandomWelcomeMsg(event: GuildMemberJoinEvent): String? {
         return welcomeMessages.randomItem?.let {
-            PlaceholderObjects.welcomes.formatMessage(it, event)
+            PlaceholderObjects.welcomes.formatMessage(Language.getGuildLocale(event.guild.idLong), it, event)
         }
     }
 
     fun getRandomGoodbyeMsg(event: GuildMemberLeaveEvent): String? {
         return goodbyeMessages.randomItem?.let {
-            PlaceholderObjects.goodbyes.formatMessage(it, event)
+            PlaceholderObjects.goodbyes.formatMessage(Language.getGuildLocale(event.guild.idLong), it, event)
         }
     }
 

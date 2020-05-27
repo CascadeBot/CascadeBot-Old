@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.UnicodeConstants
 import org.cascadebot.cascadebot.data.Config
+import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.utils.FormatUtils
@@ -79,7 +80,7 @@ class GeneralEventListener : ListenerAdapter() {
             greetings.welcomeChannel?.let {
                 // .randomItem should only return null if there are no messages so if is null we want an error
                 greetings.welcomeMessages.randomItem!!.let {
-                    PlaceholderObjects.welcomes.formatMessage(it, event)
+                    PlaceholderObjects.welcomes.formatMessage(guildData.core.locale, it, event)
                 }.let { message -> it.sendMessage(message).queue() }
             } ?: run { greetings.welcomeChannel = null }
         }
@@ -102,7 +103,7 @@ class GeneralEventListener : ListenerAdapter() {
             greetings.goodbyeChannel?.let {
                 // .randomItem should only return null if there are no messages so if is null we want an error
                 greetings.goodbyeMessages.randomItem!!.let {
-                    PlaceholderObjects.goodbyes.formatMessage(it, event)
+                    PlaceholderObjects.goodbyes.formatMessage(guildData.core.locale, it, event)
                 }.let { message -> it.sendMessage(message).queue() }
             } ?: run { greetings.goodbyeChannel = null }
         }

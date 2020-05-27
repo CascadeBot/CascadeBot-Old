@@ -30,7 +30,7 @@ public class Tag extends PermissionObject {
     private String category;
 
     public String formatTag(CommandContext commandContext) {
-        return PlaceholderObjects.getTags().formatMessage(content, commandContext);
+        return PlaceholderObjects.getTags().formatMessage(commandContext.getLocale(), content, commandContext);
     }
 
     @Override

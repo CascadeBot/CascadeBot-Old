@@ -24,20 +24,22 @@ abstract class Placeholder<T>(val key: String, val absoluteKey: String) {
 
 }
 
-class StaticPlaceholder<T>(key: String, absoluteKey: String, val mapping: StaticPlaceholder<T>.(T) -> String?) : Placeholder<T>(key, absoluteKey)
+class PlaceholderContext<T>(val item: T, val locale: Locale)
 
-class ArgsPlaceholder<T>(key: String, absoluteKey: String, val noArg: Boolean, val validArgs: List<String>, val mapping: ArgsPlaceholder<T>.(T, List<String>) -> String?) : Placeholder<T>(key, absoluteKey) {
+class StaticPlaceholder<T>(key: String, absoluteKey: String, val mapping: StaticPlaceholder<T>.(PlaceholderContext<T>) -> String?) : Placeholder<T>(key, absoluteKey)
 
-    val args: MutableMap<String, List<String>> = mutableMapOf()
+class ArgsPlaceholder<T>(key: String, absoluteKey: String, val mapping: ArgsPlaceholder<T>.(PlaceholderContext<T>, List<String>) -> String?) : Placeholder<T>(key, absoluteKey) {
 
-    fun isArg(argKey: String, test: String): Boolean {
-        if (argKey in args) return test.toLowerCase() in args[argKey]!!
-        val argsList = mutableListOf<String>()
-        for (value in Language.getLanguages().values) {
-            argsList.add(value.getString("placeholders.$absoluteKey.$argKey").orElse(argKey))
+    val args: MutableMap<String, Map<Locale, String>> = mutableMapOf()
+
+    fun isArg(locale: Locale, argKey: String, test: String): Boolean {
+        if (argKey in args && locale in args[argKey]!!) return args[argKey]!!.getOrElse(locale) { argKey }.equals(test, ignoreCase = true)
+        val argsList = mutableMapOf<Locale, String>()
+        for ((langLocale, config) in Language.getLanguages()) {
+            argsList[langLocale] = config.getString("placeholders.$absoluteKey.$argKey").orElse(argKey)
         }
-        args[argKey] = argsList.toList()
-        return argsList.contains(test.toLowerCase())
+        args[argKey] = argsList.toMap()
+        return argsList[locale].equals(test, ignoreCase = true) || isArg(Locale.getDefaultLocale(), argKey, test)
     }
 
 }

@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.language.Language
+import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.utils.FormatUtils
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -20,22 +21,22 @@ class Placeholders<T>(var key: String) {
     val placeholders: List<Placeholder<T>>
         get() = _placeholders.toList()
 
-    fun staticPlaceholder(key: String, mapping: StaticPlaceholder<T>.(T) -> String?) {
+    fun staticPlaceholder(key: String, mapping: StaticPlaceholder<T>.(PlaceholderContext<T>) -> String?) {
         _placeholders.add(StaticPlaceholder(key, "${this.key}.$key", mapping))
     }
 
-    fun argsPlaceholder(key: String, mapping: ArgsPlaceholder<T>.(T, List<String>) -> String?) {
+    fun argsPlaceholder(key: String, mapping: ArgsPlaceholder<T>.(PlaceholderContext<T>, List<String>) -> String?) {
         _placeholders.add(ArgsPlaceholder(key,"${this.key}.$key", mapping))
     }
 
     // TODO: Use locale!
-    fun formatMessage(message: String, input: T): String {
+    fun formatMessage(locale: Locale, message: String, input: T): String {
         val toReplace = mutableMapOf<String, String>()
         for (matchResult in placeholderRegex.findAll(message)) {
             _placeholders.find { it.localisedInfo.values.any { info -> info.key == matchResult.groupValues[1] } }?.let { placeholder ->
                 when (placeholder) {
                     is StaticPlaceholder<T> -> {
-                        placeholder.mapping(placeholder, input)?.let {
+                        placeholder.mapping(placeholder, PlaceholderContext(input, locale))?.let {
                             toReplace[matchResult.groupValues[0]] = it
                         }
                     }
@@ -46,7 +47,7 @@ class Placeholders<T>(var key: String) {
                             listOf()
                         }
 
-                        placeholder.mapping(placeholder, input, args)?.let {
+                        placeholder.mapping(placeholder, PlaceholderContext(input, locale), args)?.let {
                             toReplace[matchResult.groupValues[0]] = it
                         }
                     }
@@ -64,7 +65,7 @@ class Placeholders<T>(var key: String) {
         for (matchResult in placeholderRegex.findAll(message)) {
             val placeholder = _placeholders.find { it.localisedInfo.values.any { info -> info.key == matchResult.groupValues[1] } }
             if (placeholder != null) {
-                matchResult.groupValues[0].also { toReplace[it] = "**$it**" }
+                matchResult.groupValues[0].also { toReplace[it] = "`$it`" }
             } else {
                 matchResult.groupValues[0].also { toReplace[it] = "~~$it~~" }
             }
@@ -83,34 +84,34 @@ object PlaceholderObjects {
     @JvmStatic
     val tags = placeholders<CommandContext>("tags") {
         argsPlaceholder("server") { context, args ->
-            if (args.size != 1) return@argsPlaceholder context.guild.name
+            if (args.size != 1) return@argsPlaceholder context.item.guild.name
             when {
-                isArg("id", args[0]) -> context.guild.id
-                isArg("region", args[0]) -> context.guild.region.name
-                isArg("owner", args[0]) -> context.guild.owner!!.user.asTag
-                isArg("member_count", args[0]) -> context.guild.memberCache.size().toString()
+                isArg(context.locale, "id", args[0]) -> context.item.guild.id
+                isArg(context.locale, "region", args[0]) -> context.item.guild.region.name
+                isArg(context.locale, "owner", args[0]) -> context.item.guild.owner!!.user.asTag
+                isArg(context.locale, "member_count", args[0]) -> context.item.guild.memberCache.size().toString()
                 else -> null
             }
         }
         argsPlaceholder("sender") { context, args ->
-            if (args.size != 1) return@argsPlaceholder context.user.asTag
+            if (args.size != 1) return@argsPlaceholder context.item.user.asTag
             when {
-                isArg("id", args[0]) -> context.member.id
-                isArg("nickname", args[0]) -> context.member.nickname ?: "No nickname!"
-                isArg("name", args[0]) -> context.user.name
-                isArg("full_name", args[0]) -> context.user.asTag
-                isArg("mention", args[0]) -> context.user.asMention
+                isArg(context.locale, "id", args[0]) -> context.item.member.id
+                isArg(context.locale, "nickname", args[0]) -> context.item.member.nickname ?: "No nickname!"
+                isArg(context.locale, "name", args[0]) -> context.item.user.name
+                isArg(context.locale, "full_name", args[0]) -> context.item.user.asTag
+                isArg(context.locale, "mention", args[0]) -> context.item.user.asMention
                 else -> null
             }
         }
         argsPlaceholder("channel") { context, args ->
-            if (args.size != 1) return@argsPlaceholder context.channel.name
+            if (args.size != 1) return@argsPlaceholder context.item.channel.name
             when {
-                isArg("id", args[0]) -> context.channel.id
-                isArg("mention", args[0]) -> context.channel.asMention
-                isArg("topic", args[0]) -> context.channel.topic
-                isArg("creation", args[0]) -> FormatUtils.formatDateTime(context.channel.timeCreated, context.locale)
-                isArg("parent", args[0]) -> if (context.channel.parent == null) "No channel parent" else context.channel.parent!!.name
+                isArg(context.locale, "id", args[0]) -> context.item.channel.id
+                isArg(context.locale, "mention", args[0]) -> context.item.channel.asMention
+                isArg(context.locale, "topic", args[0]) -> context.item.channel.topic
+                isArg(context.locale, "creation", args[0]) -> FormatUtils.formatDateTime(context.item.channel.timeCreated, context.locale)
+                isArg(context.locale, "parent", args[0]) -> if (context.item.channel.parent == null) "No channel parent" else context.item.channel.parent!!.name
                 else -> null
             }
         }
@@ -118,33 +119,33 @@ object PlaceholderObjects {
         argsPlaceholder("args") { context, args ->
             if (args.isEmpty()) return@argsPlaceholder null
             val argNum = args[0].toIntOrNull() ?: -1
-            if (argNum in 0..context.args.size) return@argsPlaceholder null
+            if (argNum in 0..context.item.args.size) return@argsPlaceholder null
 
-            context.getArg(argNum)
+            context.item.getArg(argNum)
         }
     }
 
     private val greetingsCommon: Placeholders<GenericGuildMemberEvent>.() -> Unit = {
-        argsPlaceholder("server") { event, args ->
-            if (args.size != 1) return@argsPlaceholder event.guild.name
+        argsPlaceholder("server") { context, args ->
+            if (args.size != 1) return@argsPlaceholder context.item.guild.name
             when {
-                isArg("id", args[0]) -> event.guild.id
-                isArg("owner", args[0]) -> event.guild.owner!!.user.asTag
-                isArg("member_count", args[0]) -> event.guild.memberCache.size().toString()
+                isArg(context.locale, "id", args[0]) -> context.item.guild.id
+                isArg(context.locale, "owner", args[0]) -> context.item.guild.owner!!.user.asTag
+                isArg(context.locale, "member_count", args[0]) -> context.item.guild.memberCache.size().toString()
                 else -> null
             }
         }
-        argsPlaceholder("user") { event, args ->
-            if (args.size != 1) return@argsPlaceholder event.user.asTag
+        argsPlaceholder("user") { context, args ->
+            if (args.size != 1) return@argsPlaceholder context.item.user.asTag
             when {
-                isArg("id", args[0]) -> event.user.id
-                isArg("name", args[0]) -> event.user.name
-                isArg("full_name", args[0]) -> event.user.asTag
-                isArg("mention", args[0]) -> event.user.asMention
+                isArg(context.locale, "id", args[0]) -> context.item.user.id
+                isArg(context.locale, "name", args[0]) -> context.item.user.name
+                isArg(context.locale, "full_name", args[0]) -> context.item.user.asTag
+                isArg(context.locale, "mention", args[0]) -> context.item.user.asMention
                 else -> null
             }
         }
-        staticPlaceholder("time") { event -> FormatUtils.formatDateTime(OffsetDateTime.now(), Language.getGuildLocale(event.guild.idLong)) }
+        staticPlaceholder("time") { context -> FormatUtils.formatDateTime(OffsetDateTime.now(), Language.getGuildLocale(context.item.guild.idLong)) }
     }
 
     @JvmStatic
@@ -157,7 +158,7 @@ object PlaceholderObjects {
     @Suppress("UNCHECKED_CAST")
     val goodbyes = placeholders<GuildMemberLeaveEvent>("goodbyes") {
         greetingsCommon(this as Placeholders<GenericGuildMemberEvent>)
-        staticPlaceholder("time_in_guild") { event -> Duration.between(event.member.timeJoined, OffsetDateTime.now()).toString() }
+        staticPlaceholder("time_in_guild") { context -> Duration.between(context.item.member.timeJoined, OffsetDateTime.now()).toString() }
     }
 
 }
