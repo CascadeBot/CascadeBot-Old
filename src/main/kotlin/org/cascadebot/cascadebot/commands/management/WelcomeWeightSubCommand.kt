@@ -31,16 +31,16 @@ class WelcomeWeightSubCommand : SubCommand() {
                 pages.add(PageObjects.EmbedPage(embed(MessageType.INFO, context.user) {
                     title { name = context.i18n("commands.welcome.weight.embed_title") }
                     field {
-                        name = context.i18n("commands.welcome.weight.embed_message")
+                        name = context.i18n("commands.welcome.embed_message")
                         value = item.item
                     }
                     field {
-                        name = context.i18n("commands.welcome.weight.embed_weight")
+                        name = context.i18n("commands.welcome.embed_weight")
                         value = item.weight.toString()
                         inline = true
                     }
                     field {
-                        name = context.i18n("commands.welcome.weight.proportion_title")
+                        name = context.i18n("commands.welcome.proportion_title")
                         value = round((item.weight.toDouble() / welcomeMessages.totalWeight.toDouble()) * 100).toInt().toString() + "%"
                         inline = true
                     }
@@ -80,7 +80,7 @@ class WelcomeWeightSubCommand : SubCommand() {
                     description = context.i18n("commands.welcome.weight.same_weight_text", weight, welcomeMessages[index].item
                             ?: "Message unavailable!")
                     field {
-                        name = context.i18n("commands.welcome.weight.proportion_title")
+                        name = context.i18n("commands.welcome.proportion_title")
                         value = context.i18n("commands.welcome.weight.proportion_text", (welcomeMessages.getItemProportion(index) * 100).roundToInt())
                     }
                 })
@@ -105,7 +105,7 @@ class WelcomeWeightSubCommand : SubCommand() {
                     inline = true
                 }
                 field {
-                    name = context.i18n("commands.welcome.weight.proportion_title")
+                    name = context.i18n("commands.welcome.proportion_title")
                     value = context.i18n("commands.welcome.weight.proportion_text", (welcomeMessages.getItemProportion(index) * 100).roundToInt())
                 }
             })

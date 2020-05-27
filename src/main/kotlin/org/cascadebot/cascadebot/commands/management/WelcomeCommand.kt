@@ -34,26 +34,26 @@ class WelcomeCommand : MainCommand() {
         val items = welcomeMessages.itemsAndWeighting
 
         val overviewPage = PageObjects.EmbedPage(embed(MessageType.INFO) {
-            title { name = "Welcome messages" }
+            title { name = context.i18n("commands.welcome.messages_title") }
             field {
                 name = "Message count"
                 value = welcomeMessages.size.toString()
                 inline = true
             }
             field {
-                name = "Total weight"
+                name = context.i18n("commands.welcome.embed_total_weight")
                 value = welcomeMessages.totalWeight.toString()
                 inline = true
             }
             field {
-                name = "Quick overview"
+                name = context.i18n("commands.welcome.embed_quick_overview")
                 value = run {
                     var result = ""
                     for ((item, weight) in items.take(10)) {
                         if (item == null) continue
                         result += item.truncate(25).padEnd(25) + " - " + (weight.toDouble() / totalWeight.toDouble()).toPercentage() + "\n"
                     }
-                    if (items.size > 10) result += "...and ${items.size - 10} more."
+                    if (items.size > 10) result += context.i18n("commands.welcome.quick_overview_more", items.size - 10)
                     result
                 }
             }
@@ -64,21 +64,20 @@ class WelcomeCommand : MainCommand() {
         for ((message, weight) in items) {
             check(message != null) { "The message should never be null!" }
             pages.add(PageObjects.EmbedPage(embed(MessageType.INFO) {
-                title { name = "Welcome messages" }
+                title { name = context.i18n("commands.welcome.messages_title") }
                 field {
-                    name = "Message"
+                    name = context.i18n("commands.welcome.embed_message")
                     value = PlaceholderObjects.welcomes.highlightMessage(message)
                 }
                 field {
-                    name = "Message chance"
+                    name = context.i18n("commands.welcome.proportion_title")
                     value = (weight.toDouble() / totalWeight.toDouble()).toPercentage()
                     inline = true
                 }
                 field {
-                    name = "Weight"
+                    name = context.i18n("commands.welcome.embed_weight")
                     value = weight.toString()
                     inline = true
-
                 }
             }))
         }
