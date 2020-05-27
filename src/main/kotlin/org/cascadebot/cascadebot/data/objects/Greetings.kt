@@ -14,7 +14,6 @@ class Greetings {
     var goodbyeMessages: WeightedList<String> = WeightedList()
 
     private var welcomeChannelId: Long? = null
-    private var goodbyeChannelId: Long? = null
 
     var welcomeChannel: TextChannel?
         get() = welcomeChannelId?.let(CascadeBot.INS.shardManager::getTextChannelById)
@@ -22,17 +21,11 @@ class Greetings {
             welcomeChannelId = channel?.idLong
         }
 
-    var goodbyeChannel: TextChannel?
-        get() = goodbyeChannelId?.let(CascadeBot.INS.shardManager::getTextChannelById)
-        set(channel) {
-            goodbyeChannelId = channel?.idLong
-        }
-
     val welcomeEnabled: Boolean
         get() = welcomeChannelId != null && welcomeMessages.size > 0
 
     val goodbyeEnabled: Boolean
-        get() = goodbyeChannelId != null && goodbyeMessages.size > 0
+        get() = goodbyeMessages.size > 0
 
     fun getRandomWelcomeMsg(event: GuildMemberJoinEvent): String? {
         return welcomeMessages.randomItem?.let {

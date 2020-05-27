@@ -362,6 +362,53 @@
         "remove_success_text": "This message has been removed!\n```\n{0}\n```"
       }
     },
+    "goodbye": {
+      "command": "goodbye",
+      "description": "Lists the goodbye messages for this server.",
+      "invalid_message_index": "The message index must be between `1` and `{0}`",
+      "no_messages": "There are no goodbye messages for this server!",
+      "proportion_title": "Message chance",
+      "embed_message": "Message",
+      "embed_weight": "Weight",
+      "embed_total_weight": "Total weight",
+      "embed_quick_overview": "Quick overview",
+      "quick_overview_more": "...and {0} more.",
+      "messages_title": "Goodbye messages",
+      "add": {
+        "command": "add",
+        "description": "Adds a goodbye message to the server.",
+        "success_title": "Added goodbye message!",
+        "success_text_1": "Added the message: ",
+        "success_text_2": "There {0,plural,one{is} other{are}} currently {0} goodbye {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
+      },
+      "clear": {
+        "command": "clear",
+        "description": "Clears all goodbye messages.",
+        "confirm_warning": "Running this command will clear **all** messages! To confirm this action, run the command again or click the button below within 1 minute.",
+        "clear_success": "The goodbye messages have been cleared!"
+      },
+      "weight": {
+        "command": "weight",
+        "description": "Allows viewing and setting of goodbye message weights.",
+        "embed_title": "Goodbye message weights",
+        "weight_range": "The weight must be 1 or more!",
+        "input_whole": "The message index and weight both need to be whole numbers!",
+        "same_weight_title": "Message weight already the same!",
+        "same_weight_text": "The message weight is already set to `{0}`! Message: \n```\n{1}\n```",
+        "proportion_text": "This message will be shown {0}% of the time!",
+        "set_weight_title": "Set the message weight!",
+        "set_weight_text": "Successfully set the weight of the message: \n```\n{0}\n```",
+        "old_weight": "Old Weight",
+        "new_weight": "New Weight"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a goodbye message from this server.",
+        "message_index_number": "The message index must be a whole number!",
+        "remove_success_title": "Removed goodbye message!",
+        "remove_success_text": "This message has been removed!\n```\n{0}\n```"
+      }
+    },
     "ban": {
       "command": "ban",
       "description": "Bans or forcebans the specified user.",

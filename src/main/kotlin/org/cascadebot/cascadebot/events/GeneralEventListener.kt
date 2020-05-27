@@ -14,15 +14,17 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
+import net.dv8tion.jda.api.requests.ErrorResponse
 import org.apache.commons.lang3.StringUtils
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.UnicodeConstants
 import org.cascadebot.cascadebot.data.Config
-import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.messaging.MessageType
+import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
+import java.util.function.Consumer
 
 class GeneralEventListener : ListenerAdapter() {
 
@@ -100,12 +102,12 @@ class GeneralEventListener : ListenerAdapter() {
         val guildData = GuildDataManager.getGuildData(event.guild.idLong)
         val greetings = guildData.management.greetings
         if (greetings.goodbyeEnabled) {
-            greetings.goodbyeChannel?.let {
-                // .randomItem should only return null if there are no messages so if is null we want an error
-                greetings.goodbyeMessages.randomItem!!.let {
-                    PlaceholderObjects.goodbyes.formatMessage(guildData.core.locale, it, event)
-                }.let { message -> it.sendMessage(message).queue() }
-            } ?: run { greetings.goodbyeChannel = null }
+            // .randomItem should only return null if there are no messages so if is null we want an error
+            greetings.goodbyeMessages.randomItem!!.let {
+                PlaceholderObjects.goodbyes.formatMessage(guildData.core.locale, it, event)
+            }.let { message ->
+                event.user.takeUnless { it.isFake }?.openPrivateChannel()?.queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER))
+            }
         }
     }
 

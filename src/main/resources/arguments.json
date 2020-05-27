@@ -155,6 +155,32 @@
       }
     }
   },
+  "goodbye": {
+    "add*": {
+      "message": {
+        "_type": "required"
+      }
+    },
+    "remove*": {
+      "index": {
+        "_type": "required"
+      }
+    },
+    "channel": {
+      "channel": {
+        "_type": "required"
+      },
+      "clear": {}
+    },
+    "weight": {
+      "index*": {
+        "_type": "required",
+        "weight": {
+          "_type": "required"
+        }
+      }
+    }
+  },
   "color*": {
     "value": {
       "_type": "required"
