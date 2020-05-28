@@ -71,11 +71,20 @@ class GuildSettingsModeration {
         }
     }
 
-    fun enableEvent(channel: TextChannel, event: ModlogEvent) {
+    fun enableEvent(channel: TextChannel, event: ModlogEvent): Boolean {
         if (modlogEvents.containsKey(channel.idLong)) {
-            modlogEvents[channel.idLong]?.addEvent(event)
+            return modlogEvents[channel.idLong]!!.addEvent(event)
         } else {
             createModlogEventsInfo(channel, Consumer { it.addEvent(event) })
+            return true
+        }
+    }
+
+    fun disableEvent(channel: TextChannel, event: ModlogEvent): Boolean {
+        if (modlogEvents.containsKey(channel.idLong)) {
+            return modlogEvents[channel.idLong]!!.removeEvent(event)
+        } else {
+            return false
         }
     }
 
@@ -94,7 +103,7 @@ class GuildSettingsModeration {
     }
 
     class ChannelModlogEventsInfo {
-        private val events: MutableList<ModlogEvent> = ArrayList()
+        private val events: MutableSet<ModlogEvent> = LinkedHashSet()
         private var webhookId: Long = 0
         private var webhookToken: String = ""
 
@@ -114,15 +123,15 @@ class GuildSettingsModeration {
         }
 
         fun getEvents(): List<ModlogEvent> {
-            return Collections.unmodifiableList(events)
+            return ArrayList(events)
         }
 
-        fun addEvent(event: ModlogEvent) {
-            events.add(event)
+        fun addEvent(event: ModlogEvent): Boolean {
+            return events.add(event)
         }
 
-        fun removeEvent(event: ModlogEvent) {
-            events.remove(event)
+        fun removeEvent(event: ModlogEvent): Boolean {
+            return events.remove(event)
         }
 
         fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {

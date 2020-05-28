@@ -42,7 +42,9 @@ class ModlogEventStore {
             else -> "unknown"
         }
 
-        responsibleId = responsible!!.idLong
+        if (responsible != null) {
+            responsibleId = responsible.idLong
+        }
     }
 
     constructor()

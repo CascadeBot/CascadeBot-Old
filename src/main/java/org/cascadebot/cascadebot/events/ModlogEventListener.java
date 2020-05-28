@@ -288,6 +288,9 @@ public class ModlogEventListener extends ListenerAdapter {
     }
 
     public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
+        if (event.getAuthor().isBot()) {
+            return;
+        }
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         Message message = event.getMessage();
         String messageJson = CascadeBot.INS.getRedisClient().get("message:" + message.getId());
