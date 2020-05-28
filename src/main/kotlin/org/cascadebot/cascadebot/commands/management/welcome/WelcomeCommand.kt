@@ -61,22 +61,22 @@ class WelcomeCommand : MainCommand() {
 
         val pages: MutableList<PageObjects.EmbedPage> = mutableListOf(overviewPage)
 
-        for ((message, weight) in items) {
-            check(message != null) { "The message should never be null!" }
+        for ((index, weightPair) in items.withIndex()) {
+            check(weightPair.item != null) { "The message should never be null!" }
             pages.add(PageObjects.EmbedPage(embed(MessageType.INFO) {
-                title { name = context.i18n("commands.welcome.messages_title") }
+                title { name = context.i18n("commands.welcome.message_title", index + 1)}
                 field {
                     name = context.i18n("commands.welcome.embed_message")
-                    value = PlaceholderObjects.welcomes.highlightMessage(message)
+                    value = PlaceholderObjects.welcomes.highlightMessage(weightPair.item)
                 }
                 field {
                     name = context.i18n("commands.welcome.proportion_title")
-                    value = (weight.toDouble() / totalWeight.toDouble()).toPercentage()
+                    value = (weightPair.weight.toDouble() / totalWeight.toDouble()).toPercentage()
                     inline = true
                 }
                 field {
                     name = context.i18n("commands.welcome.embed_weight")
-                    value = weight.toString()
+                    value = weightPair.weight.toString()
                     inline = true
                 }
             }))
