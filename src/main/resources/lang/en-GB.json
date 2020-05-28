@@ -316,6 +316,7 @@
       "embed_quick_overview": "Quick overview",
       "quick_overview_more": "...and {0} more.",
       "messages_title": "Welcome messages",
+      "message_title": "Welcome message #{0}",
       "add": {
         "command": "add",
         "description": "Adds a welcome message to the server.",
