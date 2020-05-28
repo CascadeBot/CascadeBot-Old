@@ -80,11 +80,15 @@ class GeneralEventListener : ListenerAdapter() {
         val greetings = guildData.management.greetings
         if (greetings.welcomeEnabled) {
             greetings.welcomeChannel?.let {
-                // .randomItem should only return null if there are no messages so if is null we want an error
-                greetings.welcomeMessages.randomItem!!.let {
-                    PlaceholderObjects.welcomes.formatMessage(guildData.core.locale, it, event)
-                }.let { message -> it.sendMessage(message).queue() }
+                greetings.getRandomWelcomeMsg(event)?.let { message -> it.sendMessage(message).queue() }
             } ?: run { greetings.welcomeChannel = null }
+        }
+
+        if (greetings.welcomeDMEnabled) {
+            greetings.getRandomWelcomeDMMsg(event)?.let { message ->
+                event.user.takeUnless { it.isFake }
+                        ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER))}
+            }
         }
 
         val iterator = guildData.management.autoRoles.iterator()
@@ -102,11 +106,9 @@ class GeneralEventListener : ListenerAdapter() {
         val guildData = GuildDataManager.getGuildData(event.guild.idLong)
         val greetings = guildData.management.greetings
         if (greetings.goodbyeEnabled) {
-            // .randomItem should only return null if there are no messages so if is null we want an error
-            greetings.goodbyeMessages.randomItem!!.let {
-                PlaceholderObjects.goodbyes.formatMessage(guildData.core.locale, it, event)
-            }.let { message ->
-                event.user.takeUnless { it.isFake }?.openPrivateChannel()?.queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER))
+            greetings.getRandomGoodbyeMsg(event)?.let { message ->
+                event.user.takeUnless { it.isFake }
+                        ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER))}
             }
         }
     }

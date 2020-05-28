@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 class Greetings {
 
     var welcomeMessages: WeightedList<String> = WeightedList()
+    var welcomeDMMessages: WeightedList<String> = WeightedList()
     var goodbyeMessages: WeightedList<String> = WeightedList()
 
     private var welcomeChannelId: Long? = null
@@ -24,11 +25,20 @@ class Greetings {
     val welcomeEnabled: Boolean
         get() = welcomeChannelId != null && welcomeMessages.size > 0
 
+    val welcomeDMEnabled: Boolean
+        get() = welcomeDMMessages.size > 0
+
     val goodbyeEnabled: Boolean
         get() = goodbyeMessages.size > 0
 
     fun getRandomWelcomeMsg(event: GuildMemberJoinEvent): String? {
         return welcomeMessages.randomItem?.let {
+            PlaceholderObjects.welcomes.formatMessage(Language.getGuildLocale(event.guild.idLong), it, event)
+        }
+    }
+
+    fun getRandomWelcomeDMMsg(event: GuildMemberJoinEvent): String? {
+        return welcomeDMMessages.randomItem?.let {
             PlaceholderObjects.welcomes.formatMessage(Language.getGuildLocale(event.guild.idLong), it, event)
         }
     }
