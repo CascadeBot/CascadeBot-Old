@@ -27,7 +27,7 @@ import org.cascadebot.cascadebot.messaging.MessagingUI
 import org.cascadebot.cascadebot.music.CascadePlayer
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
-class CommandContext(
+data class CommandContext(
         val command: ExecutableCommand?,
         val jda: JDA,
         val channel: TextChannel,
