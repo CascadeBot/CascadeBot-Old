@@ -1,6 +1,5 @@
 package org.cascadebot.cascadebot.scripting.objects;
 
-import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.Region;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -15,18 +14,19 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.utils.cache.MemberCacheView;
-import net.dv8tion.jda.api.utils.cache.SnowflakeCacheView;
 import net.dv8tion.jda.api.utils.cache.SortedSnowflakeCacheView;
-import org.mozilla.javascript.ScriptableObject;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-@AllArgsConstructor
-public class ScriptGuild extends ScriptableObject {
+public class ScriptGuild {
 
-    private final Guild internalGuild;
+    public Guild internalGuild;
+
+    public ScriptGuild() {
+
+    }
 
     public GuildChannel getAfkChannel() {
         return internalGuild.getAfkChannel();
@@ -270,11 +270,6 @@ public class ScriptGuild extends ScriptableObject {
 
     public boolean isMember(User user) {
         return internalGuild.isMember(user);
-    }
-
-    @Override
-    public String getClassName() {
-        return "Guild";
     }
 
 }

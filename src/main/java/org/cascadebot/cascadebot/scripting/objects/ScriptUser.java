@@ -1,19 +1,14 @@
 package org.cascadebot.cascadebot.scripting.objects;
 
-import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.scripting.ScriptContext;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.annotations.JSFunction;
 import org.mozilla.javascript.annotations.JSStaticFunction;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ScriptUser extends ScriptableObject {
+public class ScriptUser {
 
     public User internalUser;
 
@@ -53,7 +48,6 @@ public class ScriptUser extends ScriptableObject {
         return internalUser.getMutualGuilds().stream().map(Guild::getName).collect(Collectors.toList());
     }
 
-    @JSFunction
     public String getName() {
         return internalUser.getName();
     }
@@ -62,24 +56,15 @@ public class ScriptUser extends ScriptableObject {
         return internalUser.isBot();
     }
 
-    @JSStaticFunction
     public static ScriptUser getUser(String id) {
         User user = CascadeBot.INS.getShardManager().getUserById(id);
         if (user == null) {
             return null;
         } else {
-            return new ScriptUser();
+            ScriptUser scriptUser = new ScriptUser();
+            scriptUser.internalUser = user;
+            return scriptUser;
         }
-    }
-
-    @Override
-    public String getClassName() {
-        return "User";
-    }
-
-    @Override
-    public Object getDefaultValue(Class<?> typeHint) {
-        return "[object ScriptUser]";
     }
 
 }
