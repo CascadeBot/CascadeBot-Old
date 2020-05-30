@@ -17,7 +17,7 @@ import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
@@ -174,7 +174,7 @@ public class MessagingUI {
         replyUsage(context.getCommand());
     }
 
-    public void replyUsage(ICommandExecutable command) {
+    public void replyUsage(ExecutableCommand command) {
         String usage = context.getUsage(command);
         List<Page> pages = PageUtils.splitStringToEmbedPages(usage, context.i18n("commands.usage.title", command.command()), 1000, '\n');
         pages.addAll(command.additionalUsagePages());
@@ -237,7 +237,7 @@ public class MessagingUI {
                 context.getUiMessaging().sendTracksFound(tracks);
             }));
 
-            String message = context.i18n("music.misc.load_options",selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
+            String message = context.i18n("music.misc.load_options", selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
 
             EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
             embedBuilder.setTitle(context.i18n("music.misc.load_options_title"));

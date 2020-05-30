@@ -7,13 +7,13 @@ package org.cascadebot.cascadebot.commands.management;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Map;
 
-public class TagListSubCommand implements ISubCommand {
+public class TagListSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -42,7 +42,7 @@ public class TagListSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("tag.list", false);
     }
 

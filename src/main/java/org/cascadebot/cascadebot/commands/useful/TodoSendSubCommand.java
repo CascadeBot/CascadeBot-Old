@@ -3,12 +3,12 @@ package org.cascadebot.cascadebot.commands.useful;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.TodoList;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
-public class TodoSendSubCommand implements ISubCommand {
+public class TodoSendSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -61,7 +61,7 @@ public class TodoSendSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("todo.send", true);
     }
 

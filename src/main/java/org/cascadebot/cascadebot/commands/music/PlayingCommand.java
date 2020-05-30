@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
@@ -26,7 +26,7 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
-public class PlayingCommand implements ICommandMain {
+public class PlayingCommand extends MainCommand {
 
     private Button.UnicodeButton playButton = new Button.UnicodeButton(UnicodeConstants.PLAY, (runner, channel, message) -> {
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("resume"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
@@ -215,7 +215,7 @@ public class PlayingCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MUSIC;
     }
 
@@ -225,7 +225,7 @@ public class PlayingCommand implements ICommandMain {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("playing", true);
     }
 

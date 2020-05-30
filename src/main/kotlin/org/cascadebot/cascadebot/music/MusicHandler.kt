@@ -97,6 +97,7 @@ class MusicHandler {
             guild.audioManager.sendingHandler = LavaPlayerAudioSendHandler(aPlayer)
         }
         player.guild = guild
+        players[guild.idLong] = player
         player.addListener(PlayerListener(player)) //TODO dispose of players after a while
         return player
     }

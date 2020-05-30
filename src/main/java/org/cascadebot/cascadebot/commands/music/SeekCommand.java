@@ -3,14 +3,14 @@ package org.cascadebot.cascadebot.commands.music;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.ParserUtils;
 
-public class SeekCommand implements ICommandMain {
+public class SeekCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -54,7 +54,7 @@ public class SeekCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MUSIC;
     }
 
@@ -64,7 +64,7 @@ public class SeekCommand implements ICommandMain {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("seek", true);
     }
 

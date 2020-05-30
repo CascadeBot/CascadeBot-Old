@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
-public class QueueLoadSubCommand implements ISubCommand {
+public class QueueLoadSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -72,7 +72,7 @@ public class QueueLoadSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("queue.load", true);
     }
 
