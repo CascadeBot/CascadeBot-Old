@@ -153,6 +153,28 @@
           "_type": "required"
         }
       }
+    },
+    "clear": {},
+    "dm": {
+      "add*": {
+        "message": {
+          "_type": "required"
+        }
+      },
+      "remove*": {
+        "index": {
+          "_type": "required"
+        }
+      },
+      "weight": {
+        "index*": {
+          "_type": "required",
+          "weight": {
+            "_type": "required"
+          }
+        }
+      },
+      "clear": {}
     }
   },
   "goodbye": {

@@ -36,9 +36,9 @@ class WelcomeRemoveSubCommand : SubCommand() {
 
         context.typedMessaging.replySuccess(embed(MessageType.INFO, context.user) {
             title {
-                name = context.i18n("commands.welcome.remove.remove_success_title")
+                name = context.i18n("commands.welcome.remove.success_title")
             }
-            description = context.i18n("commands.welcome.remove.remove_success_text", message ?: "Message unavailable!")
+            description = context.i18n("commands.welcome.remove.success_text", message ?: "Message unavailable!")
         })
     }
 

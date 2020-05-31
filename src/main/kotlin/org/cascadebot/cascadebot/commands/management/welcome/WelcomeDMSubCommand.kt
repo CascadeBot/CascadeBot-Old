@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.cascadebot.cascadebot.utils.ConfirmUtils
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
@@ -18,6 +19,8 @@ import kotlin.math.round
 import kotlin.math.roundToInt
 
 class WelcomeDMSubCommand : SubCommand() {
+
+    val actionKey = "dm-welcome-clear"
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isEmpty()) {
@@ -56,11 +59,11 @@ class WelcomeDMSubCommand : SubCommand() {
 
         context.typedMessaging.replySuccess(embed(MessageType.SUCCESS) {
             title {
-                name = context.i18n(TODO("commands.welcome.add.success_title"))
+                name = context.i18n("commands.welcome.dm.add.success_title")
             }
-            description = "${context.i18n(TODO("commands.welcome.add.success_text_1"))}\n" +
+            description = "${context.i18n("commands.welcome.dm.add.success_text_1")}\n" +
                     "```\n$message\n```\n" +
-                    context.i18n(TODO("commands.welcome.add.success_text_2"), welcomeMessages.size, FormatUtils.round(proportion * 100, 0).toInt())
+                    context.i18n("commands.welcome.dm.add.success_text_2", welcomeMessages.size, FormatUtils.round(proportion * 100, 0).toInt())
         })
     }
 
@@ -75,18 +78,18 @@ class WelcomeDMSubCommand : SubCommand() {
             val pages = mutableListOf<Page>()
             for (item in welcomeMessages.itemsAndWeighting) {
                 pages.add(PageObjects.EmbedPage(embed(MessageType.INFO, context.user) {
-                    title { name = context.i18n(TODO("commands.welcome.weight.embed_title")) }
+                    title { name = context.i18n("commands.welcome.dm.weight.embed_title") }
                     field {
-                        name = context.i18n(TODO("commands.welcome.embed_message"))
+                        name = context.i18n("commands.welcome.embed_message")
                         value = item.item
                     }
                     field {
-                        name = context.i18n(TODO("commands.welcome.embed_weight"))
+                        name = context.i18n("commands.welcome.embed_weight")
                         value = item.weight.toString()
                         inline = true
                     }
                     field {
-                        name = context.i18n(TODO("commands.welcome.proportion_title"))
+                        name = context.i18n("commands.welcome.proportion_title")
                         value = round((item.weight.toDouble() / welcomeMessages.totalWeight.toDouble()) * 100).toInt().toString() + "%"
                         inline = true
                     }
@@ -96,12 +99,12 @@ class WelcomeDMSubCommand : SubCommand() {
         } else {
             val welcomeMessages = context.data.management.greetings.welcomeMessages
             if (welcomeMessages.size == 0) {
-                context.typedMessaging.replyDanger(context.i18n(TODO("commands.welcome.no_messages")))
+                context.typedMessaging.replyDanger(context.i18n("commands.welcome.no_messages"))
                 return
             }
 
             if (!context.isArgInteger(0) || !context.isArgInteger(1)) {
-                context.typedMessaging.replyDanger(context.i18n(TODO("commands.welcome.weight.input_whole")))
+                context.typedMessaging.replyDanger(context.i18n("commands.welcome.weight.input_whole"))
                 return
             }
 
@@ -109,12 +112,12 @@ class WelcomeDMSubCommand : SubCommand() {
             val weight = context.getArgAsInteger(1)!!
 
             if (index < 0 || index >= welcomeMessages.size) {
-                context.typedMessaging.replyDanger(context.i18n(TODO("commands.welcome.invalid_message_index"),  welcomeMessages.size))
+                context.typedMessaging.replyDanger(context.i18n("commands.welcome.invalid_message_index",  welcomeMessages.size))
                 return
             }
 
             if (weight < 1) {
-                context.typedMessaging.replyDanger(context.i18n(TODO("commands.welcome.weight.weight_range")))
+                context.typedMessaging.replyDanger(context.i18n("commands.welcome.weight.weight_range"))
                 return
             }
 
@@ -122,12 +125,12 @@ class WelcomeDMSubCommand : SubCommand() {
 
             if (oldWeight == weight) {
                 context.typedMessaging.replyInfo(embed(MessageType.INFO, context.user) {
-                    title { name = context.i18n(TODO("commands.welcome.weight.same_weight_title")) }
+                    title { name = context.i18n("commands.welcome.weight.same_weight_title") }
                     description = context.i18n("commands.welcome.weight.same_weight_text", weight, welcomeMessages[index].item
                             ?: "Message unavailable!")
                     field {
-                        name = context.i18n(TODO("commands.welcome.proportion_title"))
-                        value = context.i18n(TODO("commands.welcome.weight.proportion_text"),  (welcomeMessages.getItemProportion(index) * 100).roundToInt())
+                        name = context.i18n("commands.welcome.proportion_title")
+                        value = context.i18n("commands.welcome.weight.proportion_text",  (welcomeMessages.getItemProportion(index) * 100).roundToInt())
                     }
                 })
                 return
@@ -160,11 +163,58 @@ class WelcomeDMSubCommand : SubCommand() {
     }
 
     private fun remove(context: CommandContext) {
-        TODO("Not yet implemented")
+        if (context.args.size != 1) {
+            context.uiMessaging.replyUsage()
+            return
+        }
+
+        if (!context.isArgInteger(0)) {
+            context.typedMessaging.replyDanger(context.i18n("commands.welcome.remove.message_index_number"))
+            return
+        }
+
+        val index = context.getArgAsInteger(0)!! - 1
+        val welcomeMessages = context.data.management.greetings.welcomeMessages
+        if (index < 0 || index >= welcomeMessages.size) {
+            context.typedMessaging.replyDanger(context.i18n("commands.welcome.invalid_message_index", welcomeMessages.size))
+            return
+        }
+
+        val message = welcomeMessages.remove(index)
+
+        context.typedMessaging.replySuccess(embed(MessageType.INFO, context.user) {
+            title {
+                name = context.i18n("commands.welcome.dm.remove.success_title")
+            }
+            description = context.i18n("commands.welcome.remove.success_text", message ?: "Message unavailable!")
+        })
     }
 
     private fun clear(context: CommandContext) {
-        TODO("Not yet implemented")
+        if (context.args.isNotEmpty()) {
+            context.uiMessaging.replyUsage()
+            return
+        }
+
+        if (ConfirmUtils.hasConfirmedAction(actionKey, context.user.idLong)) {
+            ConfirmUtils.completeAction(actionKey, context.user.idLong)
+            return
+        }
+
+        ConfirmUtils.confirmAction(context.user.idLong,
+                actionKey,
+                context.channel,
+                MessageType.WARNING,
+                context.i18n("commands.welcome.dm.clear.confirm_warning"),
+                true,
+                object : ConfirmUtils.ConfirmRunnable() {
+                    override fun execute() {
+                        context.data.management.greetings.welcomeMessages.clear()
+                        context.data.management.greetings.welcomeChannel = null
+                        context.typedMessaging.replySuccess(context.i18n("commands.welcome.dm.clear.clear_success"))
+                    }
+                }
+        )
     }
 
 }
