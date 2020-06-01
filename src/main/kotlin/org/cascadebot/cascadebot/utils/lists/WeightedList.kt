@@ -6,14 +6,14 @@
 package org.cascadebot.cascadebot.utils.lists
 
 import org.cascadebot.cascadebot.utils.WeightPair
-import java.util.Random
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
+import kotlin.random.Random
 
 class WeightedList<T : Any>(seed: Long? = null) {
 
-    val random: Random = if (seed == null) Random() else Random(seed)
+    val random: Random = if (seed == null) Random.Default else Random(seed)
 
     private val internalList: MutableList<WeightPair<T>> = mutableListOf()
     @Transient
@@ -110,4 +110,8 @@ class WeightedList<T : Any>(seed: Long? = null) {
         }
     }
 
+}
+
+fun <T : Any> WeightedList<List<T>>.randomListItem(): T? {
+    return this.randomItem?.random(this.random)
 }
