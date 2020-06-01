@@ -93,6 +93,7 @@ import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.LanguageEmbedField;
+import org.cascadebot.cascadebot.utils.SerializableMessage;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.BadPaddingException;
@@ -259,14 +260,16 @@ public class ModlogEventListener extends ListenerAdapter {
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         String messageID = event.getMessageId();
-        String messageJson = CascadeBot.INS.getRedisClient().get("message:" + messageID);
+        String messageString = CascadeBot.INS.getRedisClient().get("message:" + messageID);
         CascadeBot.INS.getRedisClient().del("message:" + messageID);
-        JsonObject jsonObject = new JsonParser().parse(messageJson).getAsJsonObject();
-        long messageSender = jsonObject.get("sender").getAsLong();
-        User affected = CascadeBot.INS.getClient().getUserById(messageSender);
+        SerializableMessage message = getMessageFromString(messageString);
+        if (message == null) {
+            return;
+        }
+        User affected = CascadeBot.INS.getClient().getUserById(message.getAuthorId());
         List<LanguageEmbedField> embedFieldList = new ArrayList<>();
         LanguageEmbedField messageEmbedField = new LanguageEmbedField(false, "modlog.message.message", "modlog.general.variable");
-        messageEmbedField.addValueObjects(getMessageFromJson(jsonObject));
+        messageEmbedField.addValueObjects(message.getContent());
         embedFieldList.add(messageEmbedField);
         if (affected == null) {
             return;
@@ -293,29 +296,28 @@ public class ModlogEventListener extends ListenerAdapter {
         }
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         Message message = event.getMessage();
-        String messageJson = CascadeBot.INS.getRedisClient().get("message:" + message.getId());
+        String messageString = CascadeBot.INS.getRedisClient().get("message:" + message.getId());
         CascadeBot.INS.getRedisClient().del("message:" + message.getId());
-        JsonObject jsonObject = new JsonParser().parse(messageJson).getAsJsonObject();
-        long messageSender = jsonObject.get("sender").getAsLong();
-        User affected = CascadeBot.INS.getClient().getUserById(messageSender);
+        SerializableMessage oldMessage = getMessageFromString(messageString);
+        if (oldMessage == null) {
+            return;
+        }
+        User affected = message.getAuthor();
         List<LanguageEmbedField> embedFieldList = new ArrayList<>();
         LanguageEmbedField oldEmbedField = new LanguageEmbedField(false, "modlog.message.old_message", "modlog.general.variable");
-        oldEmbedField.addValueObjects(getMessageFromJson(jsonObject));
+        oldEmbedField.addValueObjects(oldMessage.getContent());
         LanguageEmbedField newEmbedField = new LanguageEmbedField(false, "modlog.message.new_message", "modlog.general.variable");
         newEmbedField.addValueObjects(message.getContentRaw());
         embedFieldList.add(newEmbedField);
-        if (affected == null) {
-            return;
-        }
         ModlogEvent modlogEvent = ModlogEvent.GUILD_MESSAGE_UPDATED;
         ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, null, affected, embedFieldList);
         guildData.getModeration().sendModlogEvent(eventStore);
     }
 
-    private String getMessageFromJson(JsonObject jsonObject) {
+    private SerializableMessage getMessageFromString(String messageString) {
         String message;
         if (Config.INS.getEncryptKey() != null) {
-            JsonArray bytesJsonArray = jsonObject.get("content").getAsJsonArray();
+            JsonArray bytesJsonArray = new JsonParser().parse(messageString).getAsJsonArray();
             byte[] messageBytes = new byte[bytesJsonArray.size()];
             for (int i = 0; i < bytesJsonArray.size(); i++) {
                 messageBytes[i] = bytesJsonArray.get(i).getAsByte();
@@ -325,15 +327,15 @@ public class ModlogEventListener extends ListenerAdapter {
             } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | ShortBufferException e) {
                 e.printStackTrace();
                 // TODO log these
-                return "";
+                return null;
             } catch (BadPaddingException e) {
                 e.printStackTrace();
-                return "";
+                return null;
             }
         } else {
-            message = jsonObject.get("content").getAsString();
+            message = messageString;
         }
-        return message;
+        return CascadeBot.getGSON().fromJson(message, SerializableMessage.class);
     }
     //endregion
 

@@ -2,6 +2,7 @@ package org.cascadebot.cascadebot.data.objects
 
 import club.minnced.discord.webhook.WebhookClient
 import club.minnced.discord.webhook.WebhookClientBuilder
+import club.minnced.discord.webhook.exception.HttpException
 import club.minnced.discord.webhook.send.WebhookEmbed
 import club.minnced.discord.webhook.send.WebhookEmbed.EmbedField
 import club.minnced.discord.webhook.send.WebhookEmbed.EmbedTitle
@@ -61,8 +62,8 @@ class GuildSettingsModeration {
         return channelModlogEventsInfos
     }
 
-    fun getModlogEvents(): List<ChannelModlogEventsInfo> {
-        return modlogEvents.map { entry -> entry.value }
+    fun getModlogEvents(): Map<Long, ChannelModlogEventsInfo> {
+        return modlogEvents
     }
 
     fun buildWebhookClients() {
@@ -95,23 +96,26 @@ class GuildSettingsModeration {
     }
 
     private fun createModlogEventsInfo(channel: TextChannel, consumer: Consumer<ChannelModlogEventsInfo>) {
+        val eventsInfo = ChannelModlogEventsInfo()
+        modlogEvents.put(channel.idLong, eventsInfo)
         channel.createWebhook("Cascade-modlog").setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
-            val eventsInfo = ChannelModlogEventsInfo(webhook.idLong, webhook.token!!)
-            modlogEvents.put(channel.idLong, eventsInfo)
+            eventsInfo.webhookId = webhook.idLong
+            eventsInfo.webhookToken = webhook.token!!
+            eventsInfo.buildWebhookClient()
             consumer.accept(eventsInfo)
         }
     }
 
     class ChannelModlogEventsInfo {
         private val events: MutableSet<ModlogEvent> = LinkedHashSet()
-        private var webhookId: Long = 0
-        private var webhookToken: String = ""
+        internal var webhookId: Long = 0
+        internal var webhookToken: String = ""
 
         @Transient
         @kotlin.jvm.Transient
         private var webhookClient: WebhookClient? = null
 
-        private constructor() {}
+        internal constructor() {}
         constructor(webhookId: Long, webhookToken: String) {
             this.webhookId = webhookId
             this.webhookToken = webhookToken
@@ -132,6 +136,10 @@ class GuildSettingsModeration {
 
         fun removeEvent(event: ModlogEvent): Boolean {
             return events.remove(event)
+        }
+
+        fun getWebhookId() : Long {
+            return webhookId
         }
 
         fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {
@@ -173,7 +181,11 @@ class GuildSettingsModeration {
             if (modlogEventStore.responsible != null) {
                 webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible!!.name + " (" + modlogEventStore.responsible!!.id + ")", null))
             }
-            webhookClient?.send(webhookEmbedBuilder.build());
+            try {
+                webhookClient?.send(webhookEmbedBuilder.build())
+            } catch (ignored: HttpException) {
+                // TODO not ignore
+            }
         }
     }
     

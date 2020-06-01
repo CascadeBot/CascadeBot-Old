@@ -263,8 +263,8 @@ public class Config {
 
         String stringIv = config.getString("encryption_key.iv");
         byte[] ivBytes = stringIv.getBytes();
-        if (ivBytes.length != 8) {
-            CascadeBot.LOGGER.warn("Encryption iv invalid size! must be 64 bits!");
+        if (ivBytes.length != 16) {
+            CascadeBot.LOGGER.warn("Encryption iv invalid size! must be 128 bits!");
         } else {
             this.ivSpec = ivBytes;
         }
