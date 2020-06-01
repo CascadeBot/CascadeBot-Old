@@ -11,12 +11,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
 
-class WeightedList<T : Any> {
+class WeightedList<T : Any>(seed: Long? = null) {
 
-    companion object {
-        @Transient
-        val random: Random = Random()
-    }
+    val random: Random = if (seed == null) Random() else Random(seed)
 
     private val internalList: MutableList<WeightPair<T>> = mutableListOf()
     @Transient
