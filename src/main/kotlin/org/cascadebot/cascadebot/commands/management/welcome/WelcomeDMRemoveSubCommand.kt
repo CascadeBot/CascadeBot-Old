@@ -12,7 +12,7 @@ import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
-class WelcomeRemoveSubCommand : SubCommand() {
+class WelcomeDMRemoveSubCommand : SubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.size != 1) {
@@ -26,7 +26,7 @@ class WelcomeRemoveSubCommand : SubCommand() {
         }
 
         val index = context.getArgAsInteger(0)!! - 1
-        val welcomeMessages = context.data.management.greetings.welcomeMessages
+        val welcomeMessages = context.data.management.greetings.welcomeDMMessages
         if (index < 0 || index >= welcomeMessages.size) {
             context.typedMessaging.replyDanger(context.i18n("commands.welcome.invalid_message_index", welcomeMessages.size))
             return
@@ -36,7 +36,7 @@ class WelcomeRemoveSubCommand : SubCommand() {
 
         context.typedMessaging.replySuccess(embed(MessageType.INFO, context.user) {
             title {
-                name = context.i18n("commands.welcome.remove.success_title")
+                name = context.i18n("commands.welcomedm.remove.success_title")
             }
             description = context.i18n("commands.welcome.remove.success_text", message ?: "Message unavailable!")
         })
@@ -44,8 +44,8 @@ class WelcomeRemoveSubCommand : SubCommand() {
 
     override fun command(): String = "remove"
 
-    override fun parent(): String = "welcome"
+    override fun parent(): String = "welcomedm"
 
-    override fun permission(): CascadePermission? = CascadePermission.of("welcome.remove", false)
+    override fun permission(): CascadePermission = CascadePermission.of("welcomedm.remove", false)
 
 }

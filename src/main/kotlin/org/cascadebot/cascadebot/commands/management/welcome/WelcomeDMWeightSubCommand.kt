@@ -11,74 +11,25 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import org.cascadebot.cascadebot.utils.ConfirmUtils
-import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import kotlin.math.round
 import kotlin.math.roundToInt
 
-class WelcomeDMSubCommand : SubCommand() {
-
-    val actionKey = "dm-welcome-clear"
+class WelcomeDMWeightSubCommand : SubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
-        if (context.args.isEmpty()) {
-            TODO("Show welcome commands")
-        }
-
-        val subContext = context.copy(args = context.args.copyOfRange(1, context.args.size))
-        when {
-            context.testForArg("add") -> add(subContext)
-            context.testForArg("clear") -> clear(subContext)
-            context.testForArg("remove") -> remove(subContext)
-            context.testForArg("weight") -> weight(subContext)
-            else -> context.uiMessaging.replyUsage()
-        }
-    }
-
-    override fun command(): String = "dm"
-
-    override fun parent(): String = "welcome"
-
-    override fun permission(): CascadePermission? = CascadePermission.of("welcome.dm", false)
-
-    private fun add(context: CommandContext) {
-        if (context.args.isEmpty()) {
-            context.uiMessaging.replyUsage()
-            return
-        }
-
-        val message = context.getMessage(0)
-
-        val welcomeMessages = context.data.management.greetings.welcomeDMMessages
-        welcomeMessages.add(message)
-
-        val index = welcomeMessages.indexOf(message)
-        val proportion = welcomeMessages.getItemProportion(index)
-
-        context.typedMessaging.replySuccess(embed(MessageType.SUCCESS) {
-            title {
-                name = context.i18n("commands.welcome.dm.add.success_title")
-            }
-            description = "${context.i18n("commands.welcome.dm.add.success_text_1")}\n" +
-                    "```\n$message\n```\n" +
-                    context.i18n("commands.welcome.dm.add.success_text_2", welcomeMessages.size, FormatUtils.round(proportion * 100, 0).toInt())
-        })
-    }
-
-    private fun weight(context: CommandContext) {
         if (context.args.size == 1 || context.args.size > 2) {
             context.uiMessaging.replyUsage()
             return
         }
 
         if (context.args.isEmpty()) {
-            val welcomeMessages = context.data.management.greetings.welcomeMessages
+            val welcomeMessages = context.data.management.greetings.welcomeDMMessages
             val pages = mutableListOf<Page>()
             for (item in welcomeMessages.itemsAndWeighting) {
                 pages.add(PageObjects.EmbedPage(embed(MessageType.INFO, context.user) {
-                    title { name = context.i18n("commands.welcome.dm.weight.embed_title") }
+                    title { name = context.i18n("commands.welcomedm.weight.embed_title") }
                     field {
                         name = context.i18n("commands.welcome.embed_message")
                         value = item.item
@@ -97,7 +48,7 @@ class WelcomeDMSubCommand : SubCommand() {
             }
             context.uiMessaging.sendPagedMessage(pages)
         } else {
-            val welcomeMessages = context.data.management.greetings.welcomeMessages
+            val welcomeMessages = context.data.management.greetings.welcomeDMMessages
             if (welcomeMessages.size == 0) {
                 context.typedMessaging.replyDanger(context.i18n("commands.welcome.no_messages"))
                 return
@@ -162,59 +113,10 @@ class WelcomeDMSubCommand : SubCommand() {
         }
     }
 
-    private fun remove(context: CommandContext) {
-        if (context.args.size != 1) {
-            context.uiMessaging.replyUsage()
-            return
-        }
+    override fun command(): String = "weight"
 
-        if (!context.isArgInteger(0)) {
-            context.typedMessaging.replyDanger(context.i18n("commands.welcome.remove.message_index_number"))
-            return
-        }
+    override fun parent(): String = "welcomedm"
 
-        val index = context.getArgAsInteger(0)!! - 1
-        val welcomeMessages = context.data.management.greetings.welcomeMessages
-        if (index < 0 || index >= welcomeMessages.size) {
-            context.typedMessaging.replyDanger(context.i18n("commands.welcome.invalid_message_index", welcomeMessages.size))
-            return
-        }
-
-        val message = welcomeMessages.remove(index)
-
-        context.typedMessaging.replySuccess(embed(MessageType.INFO, context.user) {
-            title {
-                name = context.i18n("commands.welcome.dm.remove.success_title")
-            }
-            description = context.i18n("commands.welcome.remove.success_text", message ?: "Message unavailable!")
-        })
-    }
-
-    private fun clear(context: CommandContext) {
-        if (context.args.isNotEmpty()) {
-            context.uiMessaging.replyUsage()
-            return
-        }
-
-        if (ConfirmUtils.hasConfirmedAction(actionKey, context.user.idLong)) {
-            ConfirmUtils.completeAction(actionKey, context.user.idLong)
-            return
-        }
-
-        ConfirmUtils.confirmAction(context.user.idLong,
-                actionKey,
-                context.channel,
-                MessageType.WARNING,
-                context.i18n("commands.welcome.dm.clear.confirm_warning"),
-                true,
-                object : ConfirmUtils.ConfirmRunnable() {
-                    override fun execute() {
-                        context.data.management.greetings.welcomeMessages.clear()
-                        context.data.management.greetings.welcomeChannel = null
-                        context.typedMessaging.replySuccess(context.i18n("commands.welcome.dm.clear.clear_success"))
-                    }
-                }
-        )
-    }
+    override fun permission(): CascadePermission = CascadePermission.of("welcomedm.weight", false)
 
 }

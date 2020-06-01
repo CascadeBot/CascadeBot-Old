@@ -12,9 +12,9 @@ import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.ConfirmUtils
 
-class WelcomeClearSubCommand : SubCommand() {
+class WelcomeDMClearSubCommand : SubCommand() {
 
-    private val actionKey = "welcome-clear"
+    private val actionKey = "dm-welcome-clear"
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isNotEmpty()) {
@@ -31,23 +31,22 @@ class WelcomeClearSubCommand : SubCommand() {
                 actionKey,
                 context.channel,
                 MessageType.WARNING,
-                context.i18n("commands.welcome.clear.confirm_warning"),
+                context.i18n("commands.welcome.dm.clear.confirm_warning"),
                 true,
                 object : ConfirmUtils.ConfirmRunnable() {
                     override fun execute() {
-                        context.data.management.greetings.welcomeMessages.clear()
+                        context.data.management.greetings.welcomeDMMessages.clear()
                         context.data.management.greetings.welcomeChannel = null
-                        context.typedMessaging.replySuccess(context.i18n("commands.welcome.clear.clear_success"))
+                        context.typedMessaging.replySuccess(context.i18n("commands.welcome.dm.clear.clear_success"))
                     }
                 }
         )
-
     }
 
     override fun command(): String = "clear"
 
-    override fun parent(): String = "welcome"
+    override fun parent(): String = "welcomedm"
 
-    override fun permission(): CascadePermission? = CascadePermission.of("welcome.clear", false)
+    override fun permission(): CascadePermission = CascadePermission.of("welcomedm.clear", false)
 
 }

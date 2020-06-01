@@ -311,10 +311,10 @@
       "no_messages": "There are no welcome messages for this server!",
       "proportion_title": "Message chance",
       "embed_message": "Message",
+      "embed_message_count": "Message count",
       "embed_weight": "Weight",
       "embed_total_weight": "Total weight",
       "embed_quick_overview": "Quick overview",
-      "quick_overview_more": "...and {0} more.",
       "messages_title": "Welcome messages",
       "message_title": "Welcome message #{0}",
       "add": {
@@ -361,33 +361,36 @@
         "message_index_number": "The message index must be a whole number!",
         "success_title": "Removed a welcome message!",
         "success_text": "This message has been removed!\n```\n{0}\n```"
+      }
+    },
+    "welcomedm": {
+      "command": "welcomedm",
+      "description": "Lists the DM welcome messages for this server.",
+      "overview_messages_title": "DM welcome messages",
+      "index_message_title": "DM welcome message #{0}",
+      "no_messages": "There are no DM welcome messages for this server!",
+      "add": {
+        "command": "add",
+        "description": "Adds a DM welcome message to the server.",
+        "success_title": "Added a DM welcome message!",
+        "success_text_1": "Added the message: ",
+        "success_text_2": "There {0,plural,one{is} other{are}} currently {0} DM welcome {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
       },
-      "dm": {
-        "command": "dm",
-        "description": "Lists the DM welcome messages for this server.",
-        "add": {
-          "command": "add",
-          "description": "Adds a DM welcome message to the server.",
-          "success_title": "Added a DM welcome message!",
-          "success_text_1": "Added the message: ",
-          "success_text_2": "There {0,plural,one{is} other{are}} currently {0} DM welcome {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
-        },
-        "weight": {
-          "command": "weight",
-          "description": "Allows viewing and setting of DM welcome message weights.",
-          "embed_title": "DM welcome message weights"
-        },
-        "remove": {
-          "command": "remove",
-          "description": "Removes a DM welcome message from this server.",
-          "success_title": "Removed a DM welcome message!"
-        },
-        "clear": {
-          "command": "clear",
-          "description": "Clears all DM welcome messages.",
-          "confirm_warning": "Running this command will clear **all** DM messages! To confirm this action, run the command again or click the button below within 1 minute.",
-          "clear_success": "The welcome DM messages have been cleared!"
-        }
+      "weight": {
+        "command": "weight",
+        "description": "Allows viewing and setting of DM welcome message weights.",
+        "embed_title": "DM welcome message weights"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a DM welcome message from this server.",
+        "success_title": "Removed a DM welcome message!"
+      },
+      "clear": {
+        "command": "clear",
+        "description": "Clears all DM welcome messages.",
+        "confirm_warning": "Running this command will clear **all** DM messages! To confirm this action, run the command again or click the button below within 1 minute.",
+        "clear_success": "The welcome DM messages have been cleared!"
       }
     },
     "goodbye": {
@@ -1040,7 +1043,8 @@
     "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
     "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!",
     "permission_not_exist": "`{0}` isn't a valid permission",
-    "cannot_find_role_matching": "Could not find role {0}"
+    "cannot_find_role_matching": "Could not find role {0}",
+    "more_in_list": "...and {0} more."
   },
   "statuses": {
     "streaming": "Streaming",

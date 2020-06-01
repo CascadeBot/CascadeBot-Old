@@ -19,40 +19,44 @@ import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 import org.cascadebot.cascadebot.utils.toPercentage
 import org.cascadebot.cascadebot.utils.truncate
 
-class WelcomeCommand : MainCommand() {
+class WelcomeDMCommand : MainCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isNotEmpty()) {
             context.uiMessaging.replyUsage()
             return
         }
-        val welcomeMessages = context.data.management.greetings.welcomeMessages
+        val welcomeMessages = context.data.management.greetings.welcomeDMMessages
 
         val totalWeight = welcomeMessages.totalWeight
         val items = welcomeMessages.itemsAndWeighting
 
         val overviewPage = PageObjects.EmbedPage(embed(MessageType.INFO) {
-            title { name = context.i18n("commands.welcome.messages_title") }
-            field {
-                name = "Message count"
-                value = welcomeMessages.size.toString()
-                inline = true
-            }
-            field {
-                name = context.i18n("commands.welcome.embed_total_weight")
-                value = welcomeMessages.totalWeight.toString()
-                inline = true
-            }
-            field {
-                name = context.i18n("commands.welcome.embed_quick_overview")
-                value = run {
-                    var result = ""
-                    for ((item, weight) in items.take(10)) {
-                        if (item == null) continue
-                        result += item.truncate(25).padEnd(25) + " - " + (weight.toDouble() / totalWeight.toDouble()).toPercentage() + "\n"
+            title { name = context.i18n("commands.welcomedm.overview_messages_title") }
+            if (items.isEmpty()) {
+                description = context.i18n("commands.welcomedm.no_messages")
+            } else {
+                field {
+                    name = context.i18n("commands.welcome.embed_message_count")
+                    value = welcomeMessages.size.toString()
+                    inline = true
+                }
+                field {
+                    name = context.i18n("commands.welcome.embed_total_weight")
+                    value = welcomeMessages.totalWeight.toString()
+                    inline = true
+                }
+                field {
+                    name = context.i18n("commands.welcome.embed_quick_overview")
+                    value = run {
+                        var result = ""
+                        for ((item, weight) in items.take(10)) {
+                            if (item == null) continue
+                            result += item.truncate(25).padEnd(25) + " - " + (weight.toDouble() / totalWeight.toDouble()).toPercentage() + "\n"
+                        }
+                        if (items.size > 10) result += context.i18n("responses.more_in_list", items.size - 10)
+                        result
                     }
-                    if (items.size > 10) result += context.i18n("responses.more_in_list", items.size - 10)
-                    result
                 }
             }
         })
@@ -62,7 +66,7 @@ class WelcomeCommand : MainCommand() {
         for ((index, weightPair) in items.withIndex()) {
             check(weightPair.item != null) { "The message should never be null!" }
             pages.add(PageObjects.EmbedPage(embed(MessageType.INFO) {
-                title { name = context.i18n("commands.welcome.message_title", index + 1)}
+                title { name = context.i18n("commands.welcomedm.index_message_title", index + 1) }
                 field {
                     name = context.i18n("commands.welcome.embed_message")
                     value = PlaceholderObjects.welcomes.highlightMessage(weightPair.item)
@@ -84,12 +88,18 @@ class WelcomeCommand : MainCommand() {
         context.uiMessaging.sendPagedMessage(pages as List<Page>)
     }
 
-    override fun command(): String = "welcome"
+    override fun command(): String = "welcomedm"
+
+    override fun subCommands(): Set<SubCommand> =
+            setOf(
+                    WelcomeDMAddSubCommand(),
+                    WelcomeDMRemoveSubCommand(),
+                    WelcomeDMClearSubCommand(),
+                    WelcomeDMWeightSubCommand()
+            )
 
     override fun module(): Module = Module.MANAGEMENT
 
-    override fun permission(): CascadePermission = CascadePermission.of("welcome", false)
-
-    override fun subCommands(): Set<SubCommand> = setOf(WelcomeAddSubCommand(), WelcomeChannelSubCommand(), WelcomeClearSubCommand(), WelcomeRemoveSubCommand(), WelcomeWeightSubCommand())
+    override fun permission(): CascadePermission = CascadePermission.of("welcomedm", false)
 
 }

@@ -13,7 +13,7 @@ import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
 
-class WelcomeAddSubCommand : SubCommand() {
+class WelcomeDMAddSubCommand : SubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isEmpty()) {
@@ -23,7 +23,7 @@ class WelcomeAddSubCommand : SubCommand() {
 
         val message = context.getMessage(0)
 
-        val welcomeMessages = context.data.management.greetings.welcomeMessages
+        val welcomeMessages = context.data.management.greetings.welcomeDMMessages
         welcomeMessages.add(message)
 
         val index = welcomeMessages.indexOf(message)
@@ -31,19 +31,18 @@ class WelcomeAddSubCommand : SubCommand() {
 
         context.typedMessaging.replySuccess(embed(MessageType.SUCCESS) {
             title {
-                name = context.i18n("commands.welcome.add.success_title")
+                name = context.i18n("commands.welcomedm.add.success_title")
             }
-            description = "${context.i18n("commands.welcome.add.success_text_1")}\n" +
+            description = "${context.i18n("commands.welcomedm.add.success_text_1")}\n" +
                     "```\n$message\n```\n" +
-                    context.i18n("commands.welcome.add.success_text_2", welcomeMessages.size, FormatUtils.round(proportion * 100, 0).toInt())
+                    context.i18n("commands.welcomedm.add.success_text_2", welcomeMessages.size, FormatUtils.round(proportion * 100, 0).toInt())
         })
-
     }
 
     override fun command(): String = "add"
 
-    override fun parent(): String = "welcome"
+    override fun parent(): String = "welcomedm"
 
-    override fun permission(): CascadePermission? = CascadePermission.of("welcome.add", false)
+    override fun permission(): CascadePermission = CascadePermission.of("welcomedm.add", false)
 
 }

@@ -154,28 +154,28 @@
         }
       }
     },
-    "clear": {},
-    "dm": {
-      "add*": {
-        "message": {
+    "clear": {}
+  },
+  "welcomedm": {
+    "add*": {
+      "message": {
+        "_type": "required"
+      }
+    },
+    "remove*": {
+      "index": {
+        "_type": "required"
+      }
+    },
+    "weight": {
+      "index*": {
+        "_type": "required",
+        "weight": {
           "_type": "required"
         }
-      },
-      "remove*": {
-        "index": {
-          "_type": "required"
-        }
-      },
-      "weight": {
-        "index*": {
-          "_type": "required",
-          "weight": {
-            "_type": "required"
-          }
-        }
-      },
-      "clear": {}
-    }
+      }
+    },
+    "clear": {}
   },
   "goodbye": {
     "add*": {
