@@ -92,6 +92,7 @@ public class EvalCommand extends RestrictedCommand {
                 String codeToRun = imports + " " + code;
                 String results = String.valueOf(scriptEngine.eval(codeToRun));
                 if (results.isBlank()) results = "Empty result!";
+                // The value of 1950 is the max limit of 2000 characters with a 50 character buffer
                 PasteUtils.pasteIfLong(results, 1950, context::reply);
             } catch (ScriptException e) {
                 context.getTypedMessaging().replyDanger("Error running script: %s \n**%s** \n```swift\n%s```" ,PasteUtils.paste(PasteUtils.getStackTrace(e)), e.getClass().getName(), e.getMessage());
