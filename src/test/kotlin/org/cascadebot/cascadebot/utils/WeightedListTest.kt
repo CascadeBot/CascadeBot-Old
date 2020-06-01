@@ -71,8 +71,7 @@ class WeightedListTest {
         "100,0.05",
         "1000,0.025",
         "10000,0.01",
-        "100000,0.005",
-        "1000000,0.0025"
+        "100000,0.005"
     )
     fun `Test random selection`(repeatCount: Int, threshold: Double) {
         val list = WeightedList<String>()
