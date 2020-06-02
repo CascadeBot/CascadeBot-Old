@@ -13,6 +13,7 @@ import kotlin.random.Random
 
 class WeightedList<T : Any>(seed: Long? = null) {
 
+    @Transient
     val random: Random = if (seed == null) Random.Default else Random(seed)
 
     private val internalList: MutableList<WeightPair<T>> = mutableListOf()
