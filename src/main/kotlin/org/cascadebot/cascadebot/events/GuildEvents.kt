@@ -5,9 +5,6 @@
 
 package org.cascadebot.cascadebot.events
 
-import net.dv8tion.jda.api.JDA
-import net.dv8tion.jda.api.events.ReadyEvent
-import net.dv8tion.jda.api.events.StatusChangeEvent
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
@@ -17,44 +14,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.ErrorResponse
 import org.apache.commons.lang3.StringUtils
 import org.cascadebot.cascadebot.CascadeBot
-import org.cascadebot.cascadebot.UnicodeConstants
 import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
-import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.utils.DiscordUtils
-import org.cascadebot.cascadebot.utils.FormatUtils
-import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 import java.util.function.Consumer
 
-class GeneralEventListener : ListenerAdapter() {
-
-    override fun onReady(event: ReadyEvent) {
-        val shardManager = CascadeBot.INS.shardManager
-        if (shardManager.shards.size == shardManager.shardsTotal) {
-            CascadeBot.INS.run()
-            Config.INS.eventWebhook.send(
-                    MessageType.SUCCESS.emoji + " All shards ready!"
-            )
-        }
-    }
-
-    override fun onStatusChange(event: StatusChangeEvent) {
-        @Suppress("NON_EXHAUSTIVE_WHEN")
-        when (event.newStatus) {
-            JDA.Status.CONNECTED,
-            JDA.Status.DISCONNECTED,
-            JDA.Status.RECONNECT_QUEUED,
-            JDA.Status.ATTEMPTING_TO_RECONNECT,
-            JDA.Status.SHUTTING_DOWN,
-            JDA.Status.SHUTDOWN,
-            JDA.Status.FAILED_TO_LOGIN -> Config.INS.eventWebhook.send(String.format(
-                    UnicodeConstants.ROBOT + " Status Update: `%s` to `%s` on shard: `%d`",
-                    FormatUtils.formatEnum(event.oldStatus),
-                    FormatUtils.formatEnum(event.newStatus),
-                    event.jda.shardInfo.shardId
-            ))
-        }
-    }
+class GuildEvents : ListenerAdapter() {
 
     override fun onGuildJoin(event: GuildJoinEvent) {
         if (!StringUtils.isBlank(Config.INS.guildWelcomeMessage)) {
@@ -87,7 +52,7 @@ class GeneralEventListener : ListenerAdapter() {
         if (greetings.welcomeDMEnabled) {
             greetings.getRandomWelcomeDMMsg(event)?.let { message ->
                 event.user.takeUnless { it.isFake }
-                        ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER))}
+                        ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
             }
         }
 
@@ -108,7 +73,7 @@ class GeneralEventListener : ListenerAdapter() {
         if (greetings.goodbyeEnabled) {
             greetings.getRandomGoodbyeMsg(event)?.let { message ->
                 event.user.takeUnless { it.isFake }
-                        ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER))}
+                        ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
             }
         }
     }
