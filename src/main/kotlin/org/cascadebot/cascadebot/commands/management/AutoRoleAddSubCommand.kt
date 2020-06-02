@@ -34,16 +34,16 @@ class AutoRoleAddSubCommand : SubCommand() {
 
         if (roles.isEmpty()) {
             check(errorInputs.isNotEmpty()) { "Error inputs should contain data if no roles have been successfully parsed!" }
-            context.typedMessaging.replyDanger("Could not parse any of arguments to a role! Please enter role IDs or role mentions!\n" +
-                    "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
+            context.typedMessaging.replyDanger(context.i18n("commands.autorole.parse_failed") + "\n" +
+                    context.i18n("commands.autorole.add.inputs_unparsed") + " ${errorInputs.joinToString(", ") { "`$it`" }}")
         } else {
             if (errorInputs.isEmpty()) {
-                context.typedMessaging.replySuccess("Successfully added all of the roles to AutoRole!\n" +
-                        "Added roles: ${roles.joinToString(" ") { it.asMention }}")
+                context.typedMessaging.replySuccess(context.i18n("commands.autorole.add.add_success") + "\n" +
+                        context.i18n("commands.autorole.add.inputs_unparsed") + " ${roles.joinToString(" ") { it.asMention }}")
             } else {
-                context.typedMessaging.replyWarning("Successfully added some of the roles to AutoRole!\n" +
-                        "Added roles: ${roles.joinToString(" ") { it.asMention }}\n" +
-                        "Inputs that could not be parsed: ${errorInputs.joinToString(", ") { "`$it`" }}")
+                context.typedMessaging.replyWarning(context.i18n("commands.autorole.add.add_success") + "\n" +
+                        context.i18n("commands.autorole.add.added_roles") + " ${roles.joinToString(" ") { it.asMention }}\n" +
+                        context.i18n("commands.autorole.add.inputs_unparsed") + " ${errorInputs.joinToString(", ") { "`$it`" }}")
             }
         }
 

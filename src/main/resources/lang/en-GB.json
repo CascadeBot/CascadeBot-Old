@@ -293,13 +293,20 @@
     "autorole": {
       "command": "autorole",
       "description": "Lists the roles that will be added to new members of the server.",
+      "inputs_unparsed": "Inputs that could not be parsed:",
+      "parse_failed": "Could not parse any of arguments to a role! Please enter role IDs or role mentions!",
+      "autorole_description": "The roles listed below will automatically be assigned to users when they join.",
       "add": {
         "command": "add",
-        "description": "Adds a role to the AutoRole list."
+        "description": "Adds a role to the AutoRole list.",
+        "add_success": "Successfully added the roles to AutoRole!",
+        "added_roles": "Added roles:"
       },
       "remove": {
         "command": "remove",
-        "description": "Removes a role from the AutoRole list."
+        "description": "Removes a role from the AutoRole list.",
+        "remove_success": "Successfully removed the roles from AutoRole!",
+        "removed_roles": "Removed roles:"
       }
     },
     "welcome": {
@@ -1117,6 +1124,7 @@
   },
   "words": {
     "permission": "Permission",
+    "autorole": "AutoRole",
     "permissions": "Permissions",
     "subcommand": "Subcommand",
     "command": "Command",
@@ -1140,7 +1148,8 @@
     "length": "Length",
     "flags": "Flags",
     "default": "Default",
-    "linked_roles": "Linked roles"
+    "linked_roles": "Linked roles",
+    "roles": "Roles"
   },
   "messaging": {
     "loading_page": "Paged message loading...",

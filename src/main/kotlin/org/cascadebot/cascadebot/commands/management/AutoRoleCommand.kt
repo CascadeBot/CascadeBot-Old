@@ -31,11 +31,11 @@ class AutoRoleCommand : MainCommand() {
             }
         }
         val embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.user)
-        embedBuilder.setTitle("AutoRole")
+        embedBuilder.setTitle(context.i18n("words.autorole"))
         embedBuilder.setDescription("""
-            The roles listed below will automatically be assigned to users when they join.
+            ${context.i18n("commands.autorole.autorole_description")}
             
-            Roles: $autoRoles
+            ${context.i18n("words.roles")}: $autoRoles
         """.trimIndent())
 
         context.typedMessaging.replyInfo(embedBuilder)
