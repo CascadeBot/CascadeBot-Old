@@ -53,6 +53,6 @@ class AutoRoleAddSubCommand : SubCommand() {
 
     override fun command(): String = "add"
 
-    override fun permission(): CascadePermission? = null
+    override fun permission(): CascadePermission = CascadePermission.of("autorole.add", false)
 
 }
