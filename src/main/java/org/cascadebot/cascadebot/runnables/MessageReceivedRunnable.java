@@ -40,6 +40,9 @@ public class MessageReceivedRunnable implements Runnable {
                 if (event.getMember() == null) {
                     return;
                 }
+                if (CascadeBot.INS.getRedisClient() == null) {
+                    return;
+                }
                 SerializableMessage serializableMessage = SerializableMessage.createSerializeMessageFromJda(event.getMessage());
                 String messageJson = CascadeBot.getGSON().toJson(serializableMessage);
                 String message = "";

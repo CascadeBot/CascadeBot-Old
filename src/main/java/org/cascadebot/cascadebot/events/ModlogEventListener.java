@@ -255,6 +255,9 @@ public class ModlogEventListener extends ListenerAdapter {
 
     //region Message
     public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
+        if (CascadeBot.INS.getRedisClient() == null) {
+            return;
+        }
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         String messageID = event.getMessageId();
         String messageString = CascadeBot.INS.getRedisClient().get("message:" + messageID);
@@ -292,6 +295,9 @@ public class ModlogEventListener extends ListenerAdapter {
     }
 
     public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
+        if (CascadeBot.INS.getRedisClient() == null) {
+            return;
+        }
         if (event.getAuthor().isBot()) {
             return;
         }

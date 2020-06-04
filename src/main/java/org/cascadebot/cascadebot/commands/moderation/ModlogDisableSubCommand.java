@@ -41,7 +41,7 @@ public class ModlogDisableSubCommand extends SubCommand {
         List<String> failed = new ArrayList<>();
         for (String event : events) {
             if (EnumUtils.isValidEnum(ModlogEvent.class, event.toUpperCase())) {
-                modlogEvents.add(ModlogEvent.valueOf(event.toUpperCase()));
+                modlogEvents.add(ModlogEvent.valueOf(event.toUpperCase()));  // TODO reverse language to get event
             } else if (EnumUtils.isValidEnum(ModlogEvent.Category.class, event.toUpperCase())){
                 ModlogEvent.Category category = ModlogEvent.Category.valueOf(event.toUpperCase());
                 List<ModlogEvent> additionalEvents = ModlogEvent.getEventsFromCategory(category);

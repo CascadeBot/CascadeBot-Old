@@ -254,27 +254,33 @@ public class Config {
         redisPassword = config.getString("redis.password");
 
         String stringKey = config.getString("encryption_key.key");
-        byte[] keyBytes = stringKey.getBytes();
-        if (keyBytes.length != 16 && keyBytes.length != 24 && keyBytes.length != 32) {
-            CascadeBot.LOGGER.warn("Encryption key invalid size! must be 128, 192, or 265 bits!");
-        } else {
-            this.encryptKey = keyBytes;
+        if (stringKey != null) {
+            byte[] keyBytes = stringKey.getBytes();
+            if (keyBytes.length != 16 && keyBytes.length != 24 && keyBytes.length != 32) {
+                CascadeBot.LOGGER.warn("Encryption key invalid size! must be 128, 192, or 265 bits!");
+            } else {
+                this.encryptKey = keyBytes;
+            }
         }
 
         String stringIv = config.getString("encryption_key.iv");
-        byte[] ivBytes = stringIv.getBytes();
-        if (ivBytes.length != 16) {
-            CascadeBot.LOGGER.warn("Encryption iv invalid size! must be 128 bits!");
-        } else {
-            this.ivSpec = ivBytes;
+        if (stringIv != null) {
+            byte[] ivBytes = stringIv.getBytes();
+            if (ivBytes.length != 16) {
+                CascadeBot.LOGGER.warn("Encryption iv invalid size! must be 128 bits!");
+            } else {
+                this.ivSpec = ivBytes;
+            }
         }
 
         String stringMac = config.getString("encryption_key.mac");
-        byte[] macBytes = stringMac.getBytes();
-        if (macBytes.length != 16) {
-            CascadeBot.LOGGER.warn("Encryption mac invalid size! must be 128, 192, or 265 bits!");
-        } else {
-            this.mac = macBytes;
+        if (stringMac != null) {
+            byte[] macBytes = stringMac.getBytes();
+            if (macBytes.length != 16) {
+                CascadeBot.LOGGER.warn("Encryption mac invalid size! must be 128, 192, or 265 bits!");
+            } else {
+                this.mac = macBytes;
+            }
         }
 
         if (encryptKey == null || ivSpec == null || mac == null) {
