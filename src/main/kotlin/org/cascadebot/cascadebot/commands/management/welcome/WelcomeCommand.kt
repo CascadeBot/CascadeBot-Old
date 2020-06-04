@@ -34,7 +34,7 @@ class WelcomeCommand : MainCommand() {
         val overviewPage = PageObjects.EmbedPage(embed(MessageType.INFO) {
             title { name = context.i18n("commands.welcome.messages_title") }
             field {
-                name = "Message count"
+                name = context.i18n("commands.welcome.embed_message_count")
                 value = welcomeMessages.size.toString()
                 inline = true
             }
