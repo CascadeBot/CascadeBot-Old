@@ -926,6 +926,368 @@
     "permissionmode":{
       "most_restrictive": "most restrictive",
       "hierarchical": "hierarchical"
+    },
+    "moldogevent": {
+      "emote_created": {
+        "select": "emote_created",
+        "display": "Emote created"
+      },
+      "emote_deleted": {
+        "select": "emote_deleted",
+        "display": "Emote deleted"
+      },
+      "emote_updated_name": {
+        "select": "emote_updated_name",
+        "display": "Emote updated name"
+      },
+      "emote_updated_roles": {
+        "select": "emote_updated_roles",
+        "display": "Emote updated roles"
+      },
+      "guild_member_joined": {
+        "select": "guild_member_joined",
+        "display": "Guild member joined"
+      },
+      "guild_member_left": {
+        "select": "guild_member_left",
+        "display": "Guild member left"
+      },
+      "guild_member_kicked": {
+        "select": "guild_member_kicked",
+        "display": "Guild member kicked"
+      },
+      "guild_member_role_added": {
+        "select": "guild_member_role_added",
+        "display": "Guild member role added"
+      },
+      "guild_member_role_removed": {
+        "select": "guild_member_role_removed",
+        "display": "Guild member role removed"
+      },
+      "guild_member_nickname_updated": {
+        "select": "guild_member_nickname_updated",
+        "display": "Guild member nickname updated"
+      },
+      "guild_user_banned": {
+        "select": "guild_user_banned",
+        "display": "Guild user banned"
+      },
+      "guild_user_unbanned": {
+        "select": "guild_user_unbanned",
+        "display": "Guild user unbanned"
+      },
+      "guild_message_deleted": {
+        "select": "guild_message_deleted",
+        "display": "Guild message deleted"
+      },
+      "guild_message_deleted_self": {
+        "select": "guild_message_deleted_self",
+        "display": "Guild message deleted self"
+      },
+      "guild_message_updated": {
+        "select": "guild_message_updated",
+        "display": "Guild message updated"
+      },
+      "guild_boost_count_updated": {
+        "select": "guild_boost_count_updated",
+        "display": "Guild boost count updated"
+      },
+      "guild_boost_tier_updated": {
+        "select": "guild_boost_tier_updated",
+        "display": "Guild boost tier updated"
+      },
+      "guild_update_afk_channel": {
+        "select": "guild_update_afk_channel",
+        "display": "Guild update afk channel"
+      },
+      "guild_update_afk_timeout": {
+        "select": "guild_update_afk_timeout",
+        "display": "Guild update afk timeout"
+      },
+      "guild_update_banner": {
+        "select": "guild_update_banner",
+        "display": "Guild update banner"
+      },
+      "guild_update_description": {
+        "select": "guild_update_description",
+        "display": "Guild update description"
+      },
+      "guild_update_explicit_filter": {
+        "select": "guild_update_explicit_filter",
+        "display": "Guild update explicit filter"
+      },
+      "guild_update_features": {
+        "select": "guild_update_features",
+        "display": "Guild update features"
+      },
+      "guild_update_icon": {
+        "select": "guild_update_icon",
+        "display": "Guild update icon"
+      },
+      "guild_update_max_members": {
+        "select": "guild_update_max_members",
+        "display": "Guild update max members"
+      },
+      "guild_update_max_presences": {
+        "select": "guild_update_max_presences",
+        "display": "Guild update max presences"
+      },
+      "guild_update_mfa_level": {
+        "select": "guild_update_mfa_level",
+        "display": "Guild update mfa level"
+      },
+      "guild_update_name": {
+        "select": "guild_update_name",
+        "display": "Guild update name"
+      },
+      "guild_update_notification_level": {
+        "select": "guild_update_notification_level",
+        "display": "Guild update notification level"
+      },
+      "guild_update_region": {
+        "select": "guild_update_region",
+        "display": "Guild update region"
+      },
+      "guild_update_splash": {
+        "select": "guild_update_splash",
+        "display": "Guild update splash"
+      },
+      "guild_update_system_channel": {
+        "select": "guild_update_system_channel",
+        "display": "Guild update system channel"
+      },
+      "guild_update_vanity_code": {
+        "select": "guild_update_vanity_code",
+        "display": "Guild update vanity code"
+      },
+      "guild_update_verification_level": {
+        "select": "guild_update_verification_level",
+        "display": "Guild update verification level"
+      },
+      "voice_deafen": {
+        "select": "voice_deafen",
+        "display": "Voice deafen"
+      },
+      "voice_mute": {
+        "select": "voice_mute",
+        "display": "Voice mute"
+      },
+      "voice_server_deafen": {
+        "select": "voice_server_deafen",
+        "display": "Voice server deafen"
+      },
+      "voice_server_mute": {
+        "select": "voice_server_mute",
+        "display": "Voice server mute"
+      },
+      "voice_join": {
+        "select": "voice_join",
+        "display": "Voice join"
+      },
+      "voice_leave": {
+        "select": "voice_leave",
+        "display": "Voice leave"
+      },
+      "voice_move": {
+        "select": "voice_move",
+        "display": "Voice move"
+      },
+      "voice_disconnect": {
+        "select": "voice_disconnect",
+        "display": "Voice disconnect"
+      },
+      "role_created": {
+        "select": "role_created",
+        "display": "Role created"
+      },
+      "role_deleted": {
+        "select": "role_deleted",
+        "display": "Role deleted"
+      },
+      "role_color_updated": {
+        "select": "role_color_updated",
+        "display": "Role color updated"
+      },
+      "role_hoist_updated": {
+        "select": "role_hoist_updated",
+        "display": "Role hoist updated"
+      },
+      "role_mentionable_updated": {
+        "select": "role_mentionable_updated",
+        "display": "Role mentionable updated"
+      },
+      "role_name_updated": {
+        "select": "role_name_updated",
+        "display": "Role name updated"
+      },
+      "role_permissions_updated": {
+        "select": "role_permissions_updated",
+        "display": "Role permissions updated"
+      },
+      "role_position_updated": {
+        "select": "role_position_updated",
+        "display": "Role position updated"
+      },
+      "user_discriminator_updated": {
+        "select": "user_discriminator_updated",
+        "display": "User discriminator updated"
+      },
+      "user_name_updated": {
+        "select": "user_name_updated",
+        "display": "User name updated"
+      },
+      "channel_created": {
+        "select": "channel_created",
+        "display": "Channel created"
+      },
+      "channel_deleted": {
+        "select": "channel_deleted",
+        "display": "Channel deleted"
+      },
+      "channel_name_updated": {
+        "select": "channel_name_updated",
+        "display": "Channel name updated"
+      },
+      "channel_permissions_updated": {
+        "select": "channel_permissions_updated",
+        "display": "Channel permissions updated"
+      },
+      "channel_position_updated": {
+        "select": "channel_position_updated",
+        "display": "Channel position updated"
+      },
+      "channel_parent_updated": {
+        "select": "channel_parent_updated",
+        "display": "Channel parent updated"
+      },
+      "voice_channel_bitrate_updated": {
+        "select": "voice_channel_bitrate_updated",
+        "display": "Voice channel bitrate updated"
+      },
+      "voice_channel_user_limit_updated": {
+        "select": "voice_channel_user_limit_updated",
+        "display": "Voice channel user limit updated"
+      },
+      "text_channel_nsfw_updated": {
+        "select": "text_channel_nsfw_updated",
+        "display": "Text channel nsfw updated"
+      },
+      "text_channel_slowmode_updated": {
+        "select": "text_channel_slowmode_updated",
+        "display": "Text channel slowmode updated"
+      },
+      "text_channel_topic_updated": {
+        "select": "text_channel_topic_updated",
+        "display": "Text channel topic updated"
+      },
+      "cascade_permissions_group_created": {
+        "select": "cascade_permissions_group_created",
+        "display": "Cascade permissions group created"
+      },
+      "cascade_permissions_group_deleted": {
+        "select": "cascade_permissions_group_deleted",
+        "display": "Cascade permissions group deleted"
+      },
+      "cascade_permissions_group_permission_add": {
+        "select": "cascade_permissions_group_permission_add",
+        "display": "Cascade permissions group permission add"
+      },
+      "cascade_permissions_group_permission_remove": {
+        "select": "cascade_permissions_group_permission_remove",
+        "display": "Cascade permissions group permission remove"
+      },
+      "cascade_permissions_group_link": {
+        "select": "cascade_permissions_group_link",
+        "display": "Cascade permissions group link"
+      },
+      "cascade_permissions_user_permission_add": {
+        "select": "cascade_permissions_user_permission_add",
+        "display": "Cascade permissions user permission add"
+      },
+      "cascade_permissions_user_permission_remove": {
+        "select": "cascade_permissions_user_permission_remove",
+        "display": "Cascade permissions user permission remove"
+      },
+      "cascade_permissions_user_group_add": {
+        "select": "cascade_permissions_user_group_add",
+        "display": "Cascade permissions user group add"
+      },
+      "cascade_permissions_user_group_remove": {
+        "select": "cascade_permissions_user_group_remove",
+        "display": "Cascade permissions user group remove"
+      },
+      "cascade_settings_updated": {
+        "select": "cascade_settings_updated",
+        "display": "Cascade settings updated"
+      },
+      "cascade_module_updated": {
+        "select": "cascade_module_updated",
+        "display": "Cascade module updated"
+      },
+      "cascade_command_run": {
+        "select": "cascade_command_run",
+        "display": "Cascade command run"
+      },
+      "cascade_command_run_error": {
+        "select": "cascade_command_run_error",
+        "display": "Cascade command run error"
+      },
+      "cascade_playlist_created": {
+        "select": "cascade_playlist_created",
+        "display": "Cascade playlist created"
+      },
+      "cascade_playlist_deleted": {
+        "select": "cascade_playlist_deleted",
+        "display": "Cascade playlist deleted"
+      },
+      "cascade_temp_mute": {
+        "select": "cascade_temp_mute",
+        "display": "Cascade temp mute"
+      },
+      "cascade_temp_ban": {
+        "select": "cascade_temp_ban",
+        "display": "Cascade temp ban"
+      },
+      "cascade_soft_ban": {
+        "select": "cascade_soft_ban",
+        "display": "Cascade soft ban"
+      },
+      "cascade_purge": {
+        "select": "cascade_purge",
+        "display": "Cascade purge"
+      },
+      "cascade_whitelist": {
+        "select": "cascade_whitelist",
+        "display": "Cascade whitelist"
+      },
+      "cascade_blacklist": {
+        "select": "cascade_blacklist",
+        "display": "Cascade blacklist"
+      },
+      "cascade_script_created": {
+        "select": "cascade_script_created",
+        "display": "Cascade script created"
+      },
+      "cascade_script_deleted": {
+        "select": "cascade_script_deleted",
+        "display": "Cascade script deleted"
+      },
+      "cascade_script_updated": {
+        "select": "cascade_script_updated",
+        "display": "Cascade script updated"
+      },
+      "cascade_tag_created": {
+        "select": "cascade_tag_created",
+        "display": "Cascade tag created"
+      },
+      "cascade_tag_deleted": {
+        "select": "cascade_tag_deleted",
+        "display": "Cascade tag deleted"
+      },
+      "cascade_tag_updated": {
+        "select": "cascade_tag_updated",
+        "display": "Cascade tag updated"
+      }
     }
   },
   "game_types": {

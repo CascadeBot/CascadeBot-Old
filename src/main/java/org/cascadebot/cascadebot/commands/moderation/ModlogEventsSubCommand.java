@@ -5,9 +5,11 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
@@ -30,7 +32,7 @@ public class ModlogEventsSubCommand extends SubCommand {
             if (category.equals(ModlogEvent.Category.ALL)) {
                 continue;
             }
-            List<String> pageValues = PageUtils.splitString(categoryListEntry.getValue().stream().map(event -> event.name().toLowerCase()).collect(Collectors.joining("\n")), 1000, '\n');
+            List<String> pageValues = PageUtils.splitString(categoryListEntry.getValue().stream().map(event -> Language.i18n(context.getLocale(), "enums.moldogevent." + event.name().toLowerCase() + ".select")).collect(Collectors.joining("\n")), 1000, '\n');
             int subPage = 1;
             for (String pageValue: pageValues) {
                 EmbedBuilder embedBuilder = new EmbedBuilder()

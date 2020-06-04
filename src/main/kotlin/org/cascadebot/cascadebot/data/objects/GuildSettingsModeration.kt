@@ -19,12 +19,12 @@ import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
-import org.cascadebot.cascadebot.data.database.IAsyncMongoTask
+import org.cascadebot.cascadebot.data.language.Language
+import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.moderation.ModlogEvent
 import java.net.URL
 import java.util.ArrayList
-import java.util.Collections
 import java.util.Date
 import java.util.function.Consumer
 
@@ -162,7 +162,7 @@ class GuildSettingsModeration {
 
         fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {
             val webhookEmbedBuilder = WebhookEmbedBuilder()
-            webhookEmbedBuilder.setTitle(EmbedTitle(modlogEventStore.trigger.name, null))
+            webhookEmbedBuilder.setTitle(EmbedTitle(i18n(guildData.locale, "enums.moldogevent." + modlogEventStore.trigger.name.toLowerCase() + ".display"), null))
             val affected: ISnowflake = modlogEventStore.affected;
             var affectedType = ""
             val affectedStr = when (affected) {

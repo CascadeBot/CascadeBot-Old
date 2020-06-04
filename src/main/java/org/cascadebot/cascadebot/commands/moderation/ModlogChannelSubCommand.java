@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Webhook;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.objects.GuildSettingsModeration;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
@@ -59,7 +60,7 @@ public class ModlogChannelSubCommand extends SubCommand {
                         }
                     }
                 }
-                String eventsListString = channelModlogEventsInfo.getValue().getEvents().stream().limit(numEvents).map(Enum::name).collect(Collectors.joining(", "));
+                String eventsListString = channelModlogEventsInfo.getValue().getEvents().stream().limit(numEvents).map(event -> Language.i18n(context.getLocale(), "enums.moldogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining(", "));
                 if (someEvents) {
                     eventsListString += ", and " + (channelModlogEventsInfo.getValue().getEvents().size() - 3) + " more";
                 }
@@ -162,7 +163,7 @@ public class ModlogChannelSubCommand extends SubCommand {
             context.getTypedMessaging().replySuccess("Successfully deleted channel!");
         } else if (context.getArg(0).equalsIgnoreCase("info")) {
             GuildSettingsModeration.ChannelModlogEventsInfo channelModlogEventsInfo = context.getData().getModeration().getModlogEvents().get(channel.getIdLong());
-            String events = channelModlogEventsInfo.getEvents().stream().map(ModlogEvent::name).collect(Collectors.joining("\n"));
+            String events = channelModlogEventsInfo.getEvents().stream().map(event -> Language.i18n(context.getLocale(), "enums.moldogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining("\n"));
             context.getUiMessaging().sendPagedMessage(PageUtils.splitStringToEmbedPages(events, "Events for channel " + channel.getName(), 1000, '\n'));
         } else {
             context.getUiMessaging().replyUsage();
