@@ -29,6 +29,6 @@ public class ModlogCommand extends MainCommand {
     }
 
     public Set<SubCommand> subCommands() {
-        return Set.of(new ModlogEnableSubCommand(), new ModlogDisableSubCommand());
+        return Set.of(new ModlogEnableSubCommand(), new ModlogDisableSubCommand(), new ModlogEventsSubCommand(), new ModlogChannelSubCommand());
     }
 }

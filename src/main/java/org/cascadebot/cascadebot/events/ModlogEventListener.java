@@ -113,7 +113,6 @@ import java.util.stream.Collectors;
 
 public class ModlogEventListener extends ListenerAdapter {
 
-    //TODO move everything over to using language paths instead of hard coded string
     public void onGenericEmote(GenericEmoteEvent event) {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         Emote emote = event.getEmote();
@@ -133,9 +132,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 modlogEvent = ModlogEvent.EMOTE_UPDATED_NAME;
                 LanguageEmbedField languageEmbedField = new LanguageEmbedField(true, "modlog.general.old_name", "modlog.general.variable");
                 languageEmbedField.addValueObjects(((EmoteUpdateNameEvent) event).getOldName());
-                embedFieldList.add(languageEmbedField
-                        //new WebhookEmbed.EmbedField(true, "Old Name", ((EmoteUpdateNameEvent) event).getOldName())
-                );
+                embedFieldList.add(languageEmbedField);
             } else if (event instanceof EmoteUpdateRolesEvent) {
                 modlogEvent = ModlogEvent.EMOTE_UPDATED_ROLES;
                 List<Role> oldRoles = ((EmoteUpdateRolesEvent) event).getOldRoles();
@@ -261,6 +258,9 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         String messageID = event.getMessageId();
         String messageString = CascadeBot.INS.getRedisClient().get("message:" + messageID);
+        if (messageString == null) {
+            return;
+        }
         CascadeBot.INS.getRedisClient().del("message:" + messageID);
         SerializableMessage message = getMessageFromString(messageString);
         if (message == null) {
@@ -274,6 +274,7 @@ public class ModlogEventListener extends ListenerAdapter {
         if (affected == null) {
             return;
         }
+        //TODO handle embeds/ect...
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             ModlogEvent modlogEvent;
@@ -297,6 +298,9 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         Message message = event.getMessage();
         String messageString = CascadeBot.INS.getRedisClient().get("message:" + message.getId());
+        if (messageString == null) {
+            return;
+        }
         CascadeBot.INS.getRedisClient().del("message:" + message.getId());
         SerializableMessage oldMessage = getMessageFromString(messageString);
         if (oldMessage == null) {
@@ -308,6 +312,7 @@ public class ModlogEventListener extends ListenerAdapter {
         oldEmbedField.addValueObjects(oldMessage.getContent());
         LanguageEmbedField newEmbedField = new LanguageEmbedField(false, "modlog.message.new_message", "modlog.general.variable");
         newEmbedField.addValueObjects(message.getContentRaw());
+        // TODO handle embeds/ect...
         embedFieldList.add(newEmbedField);
         ModlogEvent modlogEvent = ModlogEvent.GUILD_MESSAGE_UPDATED;
         ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, null, affected, embedFieldList);

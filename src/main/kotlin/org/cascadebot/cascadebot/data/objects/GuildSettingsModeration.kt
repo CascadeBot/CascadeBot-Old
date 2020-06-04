@@ -33,6 +33,8 @@ class GuildSettingsModeration {
 
     var guildId: Long = 0
 
+    var modlogChannelNum: Int = 1;
+
     constructor(guildId: Long) {
         this.guildId = guildId;
     }
@@ -97,6 +99,7 @@ class GuildSettingsModeration {
 
     private fun createModlogEventsInfo(channel: TextChannel, consumer: Consumer<ChannelModlogEventsInfo>) {
         val eventsInfo = ChannelModlogEventsInfo()
+        eventsInfo.id = modlogChannelNum++
         modlogEvents.put(channel.idLong, eventsInfo)
         channel.createWebhook("Cascade-modlog").setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
             eventsInfo.webhookId = webhook.idLong
@@ -110,20 +113,29 @@ class GuildSettingsModeration {
         private val events: MutableSet<ModlogEvent> = LinkedHashSet()
         internal var webhookId: Long = 0
         internal var webhookToken: String = ""
+        internal var id: Int
 
         @Transient
         @kotlin.jvm.Transient
         private var webhookClient: WebhookClient? = null
 
-        internal constructor() {}
-        constructor(webhookId: Long, webhookToken: String) {
+        internal constructor() {
+            id = 0
+        }
+
+        constructor(webhookId: Long, webhookToken: String, id: Int) {
             this.webhookId = webhookId
             this.webhookToken = webhookToken
+            this.id = id
             buildWebhookClient()
         }
 
         fun buildWebhookClient() {
             webhookClient = WebhookClientBuilder(webhookId, webhookToken).build()
+        }
+
+        fun getId(): Int {
+            return id
         }
 
         fun getEvents(): List<ModlogEvent> {
@@ -140,6 +152,12 @@ class GuildSettingsModeration {
 
         fun getWebhookId() : Long {
             return webhookId
+        }
+
+        fun setNewWebhook(webhookId: Long, webhookToken: String) {
+            this.webhookId = webhookId
+            this.webhookToken = webhookToken
+            buildWebhookClient()
         }
 
         fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {

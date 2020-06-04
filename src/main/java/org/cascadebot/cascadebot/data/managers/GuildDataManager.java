@@ -64,6 +64,9 @@ public final class GuildDataManager {
     }
 
     public static GuildData getGuildData(long id) {
+        if (id == 0) {
+            throw new UnsupportedOperationException("Cannot load guild with id 0");
+        }
         return guilds.get(id);
     }
 
