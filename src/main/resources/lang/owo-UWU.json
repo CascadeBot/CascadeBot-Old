@@ -1,0 +1,1319 @@
+{
+  "commands": {
+    "invite": {
+      "command": "invite",
+      "description": "Returns teh bwot invite link, two invite teh bwot two other Discword guilds."
+    },
+    "help": {
+      "command": "help",
+      "description": "This is teh help cwommand; what else did u expect?",
+      "module_not_enabled": "That mwodule isn't enyabled fwor this guild!",
+      "no_access_to_module": "U dwon't have access two any cwommands in this mwodule!"
+    },
+    "prefix": {
+      "command": "pwefwix",
+      "description": "Gets and sets teh current guild pwefwix.",
+      "reset": {
+        "command": "reset",
+        "description": "Resets teh pwefwix two default."
+      },
+      "prefix_reset": "Teh pwefwix has been reset two: `{0}`",
+      "prefix_too_long": "Teh requested pwefwix is twoo wong!",
+      "new_prefix": "Teh nyew pwefwix is: `{0}`",
+      "current_prefix": "Teh current serwer pwefwix is `{0}`"
+    },
+    "support": {
+      "command": "suppwort",
+      "description": "Returns a link two teh Discword suppwort serwer.",
+      "cascade_support_server": "Cascade Suppwort Serwer: {0}"
+    },
+    "usage": {
+      "command": "usage",
+      "description": "Gets teh usage fwor a cwommand.",
+      "title": "Usage fwor cwommand |%|{0}",
+      "specify_usage": "Pwease specify cwommand two get usage fwom!",
+      "command_not_found": "Cwommand `{0}` nywot fwound!"
+    },
+    "cat": {
+      "command": "cat",
+      "description": "Returns a randwom picture of a cat.",
+      "error_loading": "Erwor woading cat picture! |fwownying|"
+    },
+    "dog": {
+      "command": "dwog",
+      "description": "Returns a randwom picture of a dwog.",
+      "error_loading": "Erwor woading dwog picture! |fwownying|"
+    },
+    "color": {
+      "command": "cwowwour",
+      "description": "Gives infwormation abwout a pwovided cwowwour.",
+      "aliases": [
+        "cwowwor"
+      ]
+    },
+    "random": {
+      "command": "randwom",
+      "description": "Returns a randwom nyumber",
+      "numbers_only": "Teh range nyeeds two be a integer value!",
+      "no_negatives": "Nyegative nyumbers are nywot awwowed",
+      "random_result": "Randwom nyumber is `{0}`",
+      "random_choice_result": "Result is `{0}`!",
+      "choice": {
+        "command": "chwoice",
+        "description": "Return a randwom word of ywour chwosen list"
+      }
+    },
+    "roles": {
+      "command": "wowals",
+      "description": "Returns teh serwer's wowals.",
+      "aliases": [
+        "wowalinfwo"
+      ],
+      "header_id": "Wowal ID",
+      "header_name": "Wowal Nyamwe",
+      "header_members": "Nywo. Users",
+      "header_color": "Cwowwour"
+    },
+    "joke": {
+      "command": "jwoke",
+      "description": "Returns a randwom jwoke.",
+      "error_loading": "We were nywot able two woad a jwoke."
+    },
+    "serverinfo": {
+      "command": "serwerinfwo",
+      "description": "Returns infwormation regarding teh specifwied serwer.",
+      "aliases": [
+        "guildinfwo"
+      ],
+      "guild_creation_date": "Cweation Date",
+      "guild_name": "Guild Nyamwe",
+      "guild_owner": "Ownyer",
+      "guild_region": "Region",
+      "guild_member_count": "Mwember Cwount",
+      "guild_id": "ID: {0}"
+    },
+    "userinfo": {
+      "command": "userinfwo",
+      "description": "Returns infwormation regarding teh specifwied user.",
+      "user_created": "User Cweated",
+      "user_join_date": "Jwoin Date",
+      "user_id": "User ID",
+      "user_mutual_servers": "Mutuwl Serwers",
+      "user_official_role": "Cascade Offwiciwl Wowal",
+      "activity": "Activity",
+      "role_id": "Wowal ID",
+      "role_name": "Wowal Nyamwe"
+    },
+    "groupperms": {
+      "command": "gwoupperms",
+      "description": "Interact with permission gwoups.",
+      "add": {
+        "command": "add",
+        "description": "Adds a permission two a gwoup.",
+        "success": "Successfuwwy added permission `{0}` two gwoup `{1}`",
+        "fail": "Cwouldn't add permission `{0}` two gwoup `{1}` as they alweady have teh permission"
+      },
+      "remove": {
+        "command": "remuv",
+        "description": "Remuvs a permission fwom teh gwoup.",
+        "success": "Successfuwwy remuvd permission `{0}` fwom gwoup `{1}`",
+        "fail": "Cwouldn't remuvd permission `{0}` fwom gwoup `{1}` as they alweady have teh permission"
+      },
+      "create": {
+        "command": "cweate",
+        "description": "Cweates a gwoup.",
+        "success": "Cweated gwoup `{0}` with id `{1}`"
+      },
+      "delete": {
+        "command": "delete",
+        "description": "Deletes a gwoup.",
+        "success": "Deleted gwoup `{0}` with id `{1}`"
+      },
+      "info": {
+        "command": "infwo",
+        "description": "Gets teh infwormation abwout a gwoup.",
+        "empty_group": "Gwoup has nywo permissions or wowals",
+        "roles_title": "Linked Wowals",
+        "perms_title": "Permissions"
+      },
+      "link": {
+        "command": "link",
+        "description": "Links a gwoup two a wowal.",
+        "success": "Linked gwoup `{0}` two wowal `{1}`",
+        "fail": "Cwouldn't link gwoup `{0}` two wowal `{1}`"
+      },
+      "unlink": {
+        "command": "unlink",
+        "description": "Unlink a wowal fwom a gwoup.",
+        "success": "Unlinked gwoup `{0}` two wowal `{1}`",
+        "fail": "Cwouldn't unlink gwoup `{0}` fwom wowal `{1}`"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists aww gwoups.",
+        "no_groups": "U have nywo gwoups!"
+      },
+      "move": {
+        "command": "muv",
+        "description": "Muvs gwoups awound in teh hierarchy",
+        "wrong_mode": "Cannywot muv gwoups in mwost restwictive mwode",
+        "moved": "Muvd gwoup {0} two pwosition {1}"
+      },
+      "switch": {
+        "command": "switch",
+        "description": "Changes teh permission evaluation mwode.",
+        "success": "Switched teh permission mwode two `{0}`",
+        "fail": "Teh permission mwode {1} isn't a valid permission mwode!"
+      }
+    },
+    "userperms": {
+      "command": "userperms",
+      "description": "Interact with user permissions.",
+      "aliases": [
+        "userpermissions"
+      ],
+      "add": {
+        "command": "add",
+        "description": "Adds a permission two a user.",
+        "success": "Successfuwwy added permission `{0}` two user `{1}`",
+        "fail": "Cwouldn't add permission `{0}` two user `{1}` as they alweady have teh permission"
+      },
+      "remove": {
+        "command": "remuv",
+        "description": "Remuvs a permission fwom a user.",
+        "success": "Successfuwwy remuvd permission `{0}` fwom user `{1}`",
+        "fail": "Cwouldn't remuv permission `{0}` fwom user `{1}` as they dwon't have teh permission"
+      },
+      "group": {
+        "command": "gwoup",
+        "put": {
+          "command": "put",
+          "description": "Adds a gwoup two a user.",
+          "success": "Put user `{0}` in gwoup `{1}`",
+          "fail": "Cwouldn't add user `{0}` two gwoup `{1}` because they're alweady in teh gwoup"
+        },
+        "remove": {
+          "command": "remuv",
+          "description": "Remuvs a gwoup fwom a user.",
+          "success": "Remuvd user `{0}` fwom gwoup `{1}`",
+          "fail": "Cwouldn't remuv user `{0}` fwom gwoup {1}` because they're nywot in teh gwoup"
+        }
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists teh gwoups or permissions a user has.",
+        "no_groups": "User has nywo gwoups!",
+        "group_title": "{0}'s gwoups",
+        "no_permissions": "User has nywo permissions!",
+        "perms_title": "{0}'s permissions"
+      },
+      "test": {
+        "command": "test",
+        "description": "Tests whether a user has a permission or nywot.",
+        "has": "|white_check_mark| User {0} has teh permission `{1}`",
+        "does_not_have": "|x| User {0} dwoesn't teh permission `{1}`"
+      }
+    },
+    "flags": {
+      "command": "flags",
+      "description": "Shwows what services and extwa features this serwer has access two."
+    },
+    "module": {
+      "command": "mwodule",
+      "description": "Interacts with mwodules by enyabling, disabling or listing them.",
+      "disable": {
+        "command": "disable",
+        "description": "Disables teh specifwied mwodule.",
+        "disabled": "Teh mwodule `{0}` has been disabled!",
+        "already_disabled": "Teh mwodule `{0}` is alweady disabled!",
+        "cannot_find_module": "We cwouldn't fwind that mwodule. Use `|%|mwodule list` fwor a list of mwodules."
+      },
+      "enable": {
+        "command": "enyable",
+        "description": "Enyables teh specifwied mwodule.",
+        "enabled": "Teh mwodule `{0}` has been enyabled!",
+        "already_enabled": "Teh mwodule `{0}` is alweady enyabled!",
+        "cannot_find_module": "We cwouldn't fwind that mwodule. Use `|%|mwodule list` fwor a list of mwodules."
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists aww mwodules."
+      }
+    },
+    "settings": {
+      "command": "settings",
+      "description": "Awwows users two change settings fwor teh guild.",
+      "list": {
+        "command": "list",
+        "description": "Lists teh settings that can be changed fwor teh guild."
+      },
+      "cannot_edit": "U cannywot edit this setting! U nyeed teh: {0} flag two dwo this!",
+      "setting_set": "Setting {0} has been set two a value of {1}.",
+      "cannot_access": "Cwould nywot access that setting!",
+      "couldnt_process": "Cwould nywot pwocess settings!",
+      "setting": "Setting",
+      "current_value": "Current value",
+      "section_title": "----- {0} mwodule -----",
+      "cannot_find_field": "Cannywot fwind that fwield!"
+    },
+    "tag": {
+      "command": "tag",
+      "description": "Tag cwommand",
+      "cannot_find_tag": "Cwouldn't fwind tag with nyamwe `{0}`.",
+      "category": {
+        "command": "categwory",
+        "description": "Muvs a tag two a specifwic categwory.",
+        "successfully_set_tag": "Set tag `{0}` categwory two `{1}`."
+      },
+      "create": {
+        "command": "cweate",
+        "description": "Cweates a tag.",
+        "tag_already_exists": "Teh tag `{0}` alweady exists!",
+        "successfully_created_tag": "Successfuwwy cweated tag with nyamwe `{0}`.",
+        "warn_uppercase": "|warnying| Teh tag nyamwe has been cwonwerted two wowercase since tags are case insensitive!"
+      },
+      "delete": {
+        "command": "delete",
+        "description": "Deletes a tag.",
+        "successfully_deleted_tag": "Successfuwwy deleted tag!",
+        "tag_doesnt_exist": "Tag `{0}` dwoesn't exist!"
+      },
+      "edit": {
+        "command": "edit",
+        "description": "Edits a tag.",
+        "successfully_edited_tag": "Successfuwwy updated tag `{0}`."
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists aww a guild's tags.",
+        "no_tags_found": "Serwer has nywo tags!"
+      },
+      "placeholders": {
+        "command": "placehwowlders",
+        "description": "Lists aww available placehwowlders.",
+        "header": "Two use placehwowlders in tags u wwap teh placehwowlder in `{}` (exampwe: `{serwer_nyamwe}`). If a place hwowlder requires mwore options (like args) u use this fwormat `{placehwowlder:option1,option2}` (exampwe: `{args:0}`)."
+      },
+      "raw": {
+        "command": "raw",
+        "description": "Displays a tag's cwontent and categwory."
+      }
+    },
+    "ban": {
+      "command": "ban",
+      "description": "Bans or fworcebans teh specifwied user.",
+      "cannot_find_user": "We can't fwind that user!",
+      "forcefully_ban": "**We cwouldn't fwind that user in this guild!** \n If u would like two fworcefuwwy ban them, pwease react two this mwessage!"
+    },
+    "kick": {
+      "command": "kick",
+      "description": "Kicks teh specifwied user.",
+      "cannot_find_user": "Cwould nywot fwind that user!"
+    },
+    "softban": {
+      "command": "swoftban",
+      "description": "Bans and then unbans a specifwied user in order two remuv mwessages and kick teh user.",
+      "no_specified_user": "Nywot enywough argumwents (Nywo specifwied mwember)",
+      "cannot_find_user": "Cwould nywot fwind that user!"
+    },
+    "unban": {
+      "command": "unban",
+      "description": "Unbans teh specifwied user.",
+      "cannot_unban": "Cwould nywot fwind a user two unban matching: {0}",
+      "several_matches": "There is mwore than onye user that matches this cwiteria! \n Pwease enter teh ID or teh user's fuww nyamwe!"
+    },
+    "join": {
+      "command": "jwoin",
+      "description": "Jwoins teh bwot two a voice channyel.",
+      "aliases": [
+        "summwon",
+        "cwonnyect",
+        "getinhere"
+      ],
+      "user_not_connected": "U are nywot cwonnyected two a voice channyel!",
+      "already_connected": "I am alweady cwonnyected two ywour channyel!",
+      "successfully_joined": "I have successfuwwy jwoinyed teh voice channywl `#{0}`"
+    },
+    "leave": {
+      "command": "leave",
+      "description": "Tewws teh bwot two leave a voice channyel.",
+      "aliases": [
+        "gtfwo"
+      ],
+      "successfully_left": "I have successfuwwy left teh channywl `#{0}`"
+    },
+    "loop": {
+      "command": "woop",
+      "description": "Changes between woop mwodes.",
+      "looping_disabled": "Wooping has been disabled!",
+      "looping_set": "Set two woop teh current **{0}**!",
+      "not_valid_mode": "`{0}` is nywot a valid woop mwode! Valid mwodes are: {1}"
+    },
+    "pause": {
+      "command": "pause",
+      "description": "Pauses teh currentwy playing twack.",
+      "already_paused": "Music has alweady been paused! Use **{0}resumwe** two resumwe.",
+      "successfully_paused": "Paused! Use **{0}resumwe** two resumwe."
+    },
+    "play": {
+      "command": "play",
+      "description": "Plays music.",
+      "could_not_find_matches": "We cwould nywot fwind music that matches: `{0}`",
+      "encountered_error": "We encwountered an erwor pwocessing that! {0}"
+    },
+    "playtop": {
+      "command": "playtwop",
+      "description": "Plays a swong immwediatewy"
+    },
+    "playing": {
+      "command": "playing",
+      "description": "Get playing music.",
+      "aliases": [
+        "swong"
+      ],
+      "no_music_playing": "There is nywo music playing!",
+      "loop_mode": "Woop mwode",
+      "up_next": "Up nyext"
+    },
+    "seek": {
+      "command": "seek",
+      "description": "Seeks two a timwestamp within a swong.",
+      "no_music_playing": "U are nywot listenying two any music!",
+      "music_is_stream": "U can't seek on a livestweam!",
+      "negative_value": "U cannywot seek two a nyegative value!",
+      "duration_shorter": "Teh timwestamp u are twying two seek two is wonger than teh swong duration!",
+      "bad_format": "Incworrect fwormat.",
+      "success": "Successfuwwy seeked two {0}"
+    },
+    "karaoke": {
+      "command": "karaoke",
+      "description": "Send teh current swong's wyrics two a channyel.",
+      "aliases": [
+        "wyrics"
+      ],
+      "cannot_find": "There are nywo wyrics available fwor this swong!",
+      "enabled_karaoke": "Successfuwwy enyabled karaoke!",
+      "disabled_karaoke": "Successfuwwy disabled karaoke!",
+      "loading_karaoke": "Woading karaoke...",
+      "nothing_playing": "There is nywo swong playing, swo karaoke cannywot be enyabled!",
+      "no_lyrics_atm": "There are nywo wyrics available fwor this part of teh swong.",
+      "not_youtube": "Teh currentwy playing twack isn't fwom YwouTube, swo we can't get wyrics fwor it."
+    },
+    "queue": {
+      "command": "queue",
+      "description": "Displays teh current queue.",
+      "aliases": [
+        "playlist"
+      ],
+      "no_tracks_playing": "There are nywo twacks playing!",
+      "track_number": "Cannywot fwind twack nyumber {0}",
+      "queue_time": "*There is `{0}` left in this queue*",
+      "load": {
+        "command": "woad",
+        "description": "Woads a playlist.",
+        "cannot_find_playlist": "Cwouldn't fwind playlist `{0}`.",
+        "load_track": "Where would u like two woad this twack fwom\n|onye| User\n|two| Guild"
+      },
+      "save": {
+        "command": "save",
+        "description": "Saves a playlist.",
+        "scope_not_found": "Scwope `{0}` nywot fwound!",
+        "nothing_to_save": "There's nywothing two save! Teh queue fwor this serwer is empty.",
+        "playlist_already_exists": "Playlist alweady exists in guild and u dwon't have teh perm `cascade.queue.dave.oworwwite` two oworwwite it.",
+        "playlist_overwrite": "Playlist alweady exists. Would u like two oworwwite it?",
+        "saved_playlist": "Saved playlist `{0}` in scwope `{1}`."
+      },
+      "remove": {
+        "command": "remuv",
+        "description": "Remuvs a swong fwom teh queue at teh specifwied pwosition",
+        "invalid_number": "`{0}` is nywot a nyumber! U can onwy remuv using teh twack nyumber.",
+        "removed": "Remuvd twack nyumber {0} fwom teh queue."
+      },
+      "move": {
+        "command": "muv",
+        "description": "Muvs items awound in teh queue",
+        "numbers": "Must use nyumbers two muv twacks!",
+        "zero": "Cannywot muv a twack two a nyumber less then 0",
+        "self": "Cannywot muv twack two its own pwosition!",
+        "moved": "Muvd twack at pwosition {0}} two pwosition {1}"
+      }
+    },
+    "resume": {
+      "command": "resumwe",
+      "description": "Resumwes music.",
+      "successfully_resumed": "Music has been resumwed!",
+      "already_resumed": "Music is alweady playing! Use **{0}pause** two pause it."
+    },
+    "search": {
+      "command": "search",
+      "description": "Searches fwor a swong.",
+      "aliases": [
+        "fwind"
+      ],
+      "cannot_find_video": "Cwouldn't fwind video!",
+      "error_loading_track": "Erwor woading twack",
+      "found_result": "We fwound {0, plural, offset:1\n =0 {nywo results}\n =1 {onye result}\n other {multipwal results}} fwor this search!",
+      "search_timed_out": "Teh search fwor `{0}` has timwed out!"
+    },
+    "shuffle": {
+      "command": "shuffwal",
+      "description": "Shuffles music in a queue.",
+      "enabled": "Shuffling has been enyabled!",
+      "disabled": "Shuffling has been disabled!"
+    },
+    "skip": {
+      "command": "skip",
+      "description": "Skips teh current swong.",
+      "yes": {
+        "command": "yes",
+        "description": "Votes two skip a twack."
+      },
+      "no": {
+        "command": "nywo",
+        "description": "Votes two nywot skip a twack."
+      },
+      "not_playing": "I'm nywot playing anything!",
+      "forcefully_skipped": "Fworcefuwwy skipped teh swong!",
+      "cannot_skip": {
+        "no_music": "Can't skip if u aren't listenying two music!",
+        "no_vote": "Cannywot vote if u aren't listenying!"
+      },
+      "added_vote": "A skip vote is alweady runnying but dwon't worry! We added ywour vote autwomaticawwy!",
+      "skipped_user_queued": "Skipped currentwy playing swong because u queued it.",
+      "skipping": "Skipping swong!",
+      "not_skipping": "Nywot skipping swong!",
+      "skip_vote_title": "Skip vote"
+    },
+    "stop": {
+      "command": "stwop",
+      "description": "Stwops music when playing.",
+      "stopped": "Music has been stwopped!",
+      "not_stopped": "Music isn't playing, nywothing two stwop!"
+    },
+    "volume": {
+      "command": "vowlumwe",
+      "description": "Returns or sets teh current music player vowlumwe.",
+      "no_flag": "Unfwortunyatewy u dwo nywot have teh flag `Music Services` two run this cwommand! This is a dwonyatwor feature onwy |smile|",
+      "current_volume": "Current vowlumwe is {0}%.",
+      "greater_than_zero": "Vowlumwe nyeeds two be gweater than 0%.",
+      "extreme_volume": "Are u sure u want two exceed 100% vowlumwe?",
+      "volume_set": "Vowlumwe set two {0}%.",
+      "volume_already_set": "Vowlumwe is alweady set two {0}%.",
+      "volume_range": "Vowlumwe nyeeds two be between 0% and 200%."
+    },
+    "equalizer": {
+      "command": "equalizer",
+      "description": "Awwows u two cwontwowl an equalizer",
+      "embed_title": "{0} channywl Equalizer",
+      "not_lavalink": "Teh equalizer is onwy available when using lavalink",
+      "reset": {
+        "command": "reset",
+        "description": "Resets teh equalizer",
+        "success": "Reset equalizer two default values"
+      }
+    },
+    "purge": {
+      "contains": {
+        "name": "cwontains",
+        "description": "Cleans mwessages cwontainying a value"
+      },
+      "link": {
+        "name": "link",
+        "description": "Cleans mwessages cwontainying a link"
+      },
+      "attachment": {
+        "name": "attachmwent",
+        "description": "Cleans aww mwessages cwontainying an attachmwent"
+      },
+      "user": {
+        "name": "user",
+        "description": "Cleans aww mwessages sent by an user"
+      },
+      "bot": {
+        "name": "bwot",
+        "description": "Cleans aww mwessages fwom bwots"
+      },
+      "name": "purge",
+      "description": "Cleans aww mwessages",
+      "successfully_done": "Successfuwwy cleanyed {0} mwessages!",
+      "restriction_time": "Fwound a mwessage owlder than 2 weeks\nDue two Discword limits, we won't be able two clean it.",
+      "failed_clear": "Nywo mwessages were purged with this cwiteria"
+    },
+    "todo": {
+      "command": "twodwo",
+      "description": "Cweate and manyipulates twodwo lists",
+      "add": {
+        "command": "add",
+        "description": "Adds an item two a twodwo list",
+        "embed_title": "Added item two twodwo list"
+      },
+      "remove": {
+        "command": "remuv",
+        "description": "Remuvs an item fwom a twodwo list",
+        "embed_title": "Remuvd item fwom twodwo list",
+        "not_number": "U can onwy remuv an item by nyumber!",
+        "item_does_not_exist": "Cannywot remuv an item that dwoesn't exist!",
+        "deleted": "U have remuvd aww teh items in teh twodwo list mweanying that teh list has nywow been deleted!"
+      },
+      "create": {
+        "command": "cweate",
+        "description": "Cweates a twodwo list",
+        "list_exists": "A twodwo list with that nyamwe alweady exists!",
+        "created": "Cweated twodwo list with nyamwe `{0}`",
+        "warn_uppercase": "|warnying| Teh twodwo-list nyamwe has been cwonwerted two wowercase since twodwo-lists are case insensitive!"
+      },
+      "view": {
+        "command": "view",
+        "description": "Views a twodwo list cwontents"
+      },
+      "adduser": {
+        "command": "adduser",
+        "description": "Add a user two a twodwo list u own",
+        "added": "Added user {0} two teh twodwo list {1}"
+      },
+      "removeuser": {
+        "command": "remuvuser",
+        "description": "Remuv a user fwom a twodwo list u own",
+        "removed": "Remuvd user {0} fwom teh twodwo list {1}"
+      },
+      "send": {
+        "command": "send",
+        "description": "Sends teh twodwo list fwor checking items off, and actuawwy using teh list",
+        "cannot_find_channel": "Cwouldn't fwind channywl `{0}`"
+      },
+      "owner_only": "Onwy teh ownyer of a twodwo list can add or remuv users fwom teh list!",
+      "cannot_edit": "U cannywot edit this twodwo list. If u want two edit this cwontact {0}",
+      "cannot_edit_no_owner": "U cannywot edit this twodwo list and teh ownyer has left teh guild swo teh twodwo list has been deleted",
+      "list_does_not_exist": "Twodwo list {0} dwoesn't exist",
+      "list_already_sent": "This twodwo list has alweady been sent, and therefwor is nywo wonger editable",
+      "no_items": "Teh twodwo list dwoesn't have any items!",
+      "user_not_found": "Cwouldn't fwind user `{0}`",
+      "embed_list_field": "List",
+      "embed_position_field": "Pwosition",
+      "embed_item_field": "Item"
+    }
+  },
+  "permissions": {
+    "module": {
+      "name": "mwodule",
+      "label": "Mwodule cwommand",
+      "disable": {
+        "name": "mwodule.disable",
+        "label": "Disable mwodule sub-cwommand"
+      },
+      "enable": {
+        "name": "mwodule.enyable",
+        "label": "Enyable mwodule sub-cwommand"
+      },
+      "list": {
+        "name": "mwodule.list",
+        "label": "List mwodules sub-cwommand"
+      },
+      "info": {
+        "name": "mwodule.infwo",
+        "label": "Infwormation mwodule"
+      },
+      "fun": {
+        "name": "mwodule.fun",
+        "label": "Fun mwodule"
+      },
+      "music": {
+        "name": "mwodule.music",
+        "label": "Music mwodule"
+      },
+      "moderation": {
+        "name": "mwodule.mwoderation",
+        "label": "Mwoderation mwodule"
+      },
+      "management": {
+        "name": "mwodule.manyagemwent",
+        "label": "Manyagemwent mwodule"
+      }
+    },
+    "prefix": {
+      "reset": {
+        "name": "pwefwix.reset",
+        "label": "Reset cwommand pwefwix"
+      },
+      "set": {
+        "name": "pwefwix.set",
+        "label": "Set cwommand pwefwix"
+      }
+    },
+    "cat": {
+      "name": "cat",
+      "label": "Cat cwommand"
+    },
+    "dog": {
+      "name": "dwog",
+      "label": "Dwog cwommand"
+    },
+    "color": {
+      "name": "cwowwour",
+      "label": "Cwowwour cwommand"
+    },
+    "random": {
+      "name": "randwom",
+      "label": "Randwom nyumber cwommand"
+    },
+    "roles": {
+      "name": "wowals",
+      "label": "Wowals cwommand"
+    },
+    "serverinfo": {
+      "name": "serwerinfwo",
+      "label": "Serwer infwo cwommand"
+    },
+    "userinfo": {
+      "name": "userinfwo",
+      "label": "User infwo cwommand"
+    },
+    "settings": {
+      "name": "settings",
+      "label": "Settings cwommand"
+    },
+    "tag": {
+      "name": "tag",
+      "label": "Tag cwommand",
+      "category": {
+        "name": "tag.categwory",
+        "label": "Tag categwory sub-cwommand"
+      },
+      "create": {
+        "name": "tag.cweate",
+        "label": "Tag cweate sub-cwommand"
+      },
+      "delete": {
+        "name": "tag.delete",
+        "label": "Tag delete sub-cwommand"
+      },
+      "edit": {
+        "name": "tag.edit",
+        "label": "Tag edit sub-cwommand"
+      },
+      "list": {
+        "name": "tag.list",
+        "label": "Tag list sub-cwommand"
+      },
+      "placeholder": {
+        "name": "tag.placehwowlder",
+        "label": "Tag placehwowlder sub-cwommand"
+      },
+      "raw": {
+        "name": "tag.raw",
+        "label": "Tag raw sub-cwommand"
+      }
+    },
+    "ban": {
+      "name": "ban",
+      "label": "Ban cwommand"
+    },
+    "kick": {
+      "name": "kick",
+      "label": "Kick cwommand"
+    },
+    "softban": {
+      "name": "swoftban",
+      "label": "Swoft-ban cwommand"
+    },
+    "unban": {
+      "name": "unban",
+      "label": "Unban cwommand"
+    },
+    "join": {
+      "name": "jwoin",
+      "label": "Jwoin cwommand",
+      "other": {
+        "name": "jwoin.other",
+        "label": "Make Cascade jwoin a different channywl"
+      }
+    },
+    "leave": {
+      "name": "leave",
+      "label": "Leave cwommand",
+      "other": {
+        "name": "leave.other",
+        "label": "Make Cascade leave anywother channywl"
+      }
+    },
+    "loop": {
+      "name": "woop",
+      "label": "Woop cwommand"
+    },
+    "pause": {
+      "name": "pause",
+      "label": "Pause cwommand"
+    },
+    "play": {
+      "name": "play",
+      "label": "Play cwommand"
+    },
+    "playing": {
+      "name": "playing",
+      "label": "Playing cwommand"
+    },
+    "queue": {
+      "name": "queue",
+      "label": "Queue cwommand",
+      "load": {
+        "name": "queue.woad",
+        "label": "Queue woad sub-cwommand"
+      },
+      "save": {
+        "name": "queue.save",
+        "label": "Queue save sub-cwommand",
+        "overwrite": {
+          "name": "queue.save.oworwwite",
+          "label": "Oworwwite guild playlist"
+        }
+      },
+      "remove": {
+        "name": "queue.remuv",
+        "label": "Queue remuv sub cwommand"
+      },
+      "move": {
+        "name": "queue.muv",
+        "label": "Queue muv sub cwommand"
+      }
+    },
+    "resume": {
+      "name": "resumwe",
+      "label": "Resumwe cwommand"
+    },
+    "search": {
+      "name": "search",
+      "label": "Search cwommand"
+    },
+    "shuffle": {
+      "name": "shuffwal",
+      "label": "Shuffwal cwommand"
+    },
+    "skip": {
+      "name": "skip",
+      "label": "Skip cwommand",
+      "force": {
+        "name": "skip.fworce",
+        "label": "Fworce skip a swong"
+      }
+    },
+    "stop": {
+      "name": "stwop",
+      "label": "Stwop cwommand"
+    },
+    "karaoke": {
+      "name": "karaoke",
+      "label": "Karaoke cwommand"
+    },
+    "seek": {
+      "name": "seek",
+      "label": "Seek cwommand"
+    },
+    "volume": {
+      "name": "vowlumwe",
+      "label": "Vowlumwe cwommand",
+      "extreme": {
+        "name": "vowlumwe.extwemwe",
+        "label": "Raise vowlumwe abuv 100%"
+      }
+    },
+    "flags": {
+      "name": "flags",
+      "label": "Flags cwommand"
+    },
+    "purge": {
+      "name": "purge",
+      "label": "Purge cwommand"
+    },
+    "todo": {
+      "name": "twodwo",
+      "label": "Twodwo Cwommand",
+      "add": {
+        "name": "twodwo.add",
+        "label": "Twodwo add sub cwommand"
+      },
+      "remove": {
+        "name": "twodwo.remuv",
+        "label": "Twodwo remuv sub cwommand"
+      },
+      "create": {
+        "name": "twodwo.cweate",
+        "label": "Twodwo cweate sub cwommand"
+      },
+      "adduser": {
+        "name": "twodwo.add.user",
+        "label": "Twodwo adduser sub cwommand"
+      },
+      "removeuser": {
+        "name": "twodwo.remuv.user",
+        "label": "Twodwo remuvuser sub cwommand"
+      },
+      "view": {
+        "name": "twodwo.view",
+        "label": "Twodwo view sub cwommand"
+      },
+      "send": {
+        "name": "twodwo.send",
+        "label": "Twodwo send sub cwommand"
+      }
+    }
+  },
+  "moderation_manager": {
+    "failed_action": "Cwould nywot {0} teh user {1} due two an exception!",
+    "cannot_action_yourself": "U cannywot {0} ywourself!",
+    "cannot_action_bot": "U cannywot {0} a bwot!",
+    "missing_permission": "Cannywot {0} user {1}, missing `{2}` permission!",
+    "cannot_action_owner": "Cannywot {0} user {1} as they are teh ownyer of teh guild!",
+    "cannot_action_superior": "Cannywot {0} user {1} teh twop wowal they have is higher than minye!",
+    "success": "{0} has been {1}!"
+  },
+  "music": {
+    "misc": {
+      "load_options": "|musical_nywote| - Woad as twack `{0}`\n|nywotes| - Woad as playlist `{1}`",
+      "load_options_title": "Woad as a singwal twack or as a playlist?",
+      "load_options_typed": "\n\n Pwease type either `{0}` or`{1}`!",
+      "load_option": {
+        "track": "twack",
+        "playlist": "playlist"
+      },
+      "cannot_find_tracks": "We cwouldn't fwind any twacks two woad!",
+      "num_tracks": "{0} twacks",
+      "loaded_tracks": "Woaded `{0}` twacks with a twotwl length of `{1}`",
+      "loaded_track": "Woaded twack",
+      "error": "Failed two play audio twack"
+    },
+    "handler": {
+      "error_searching": "Erwor searching fwom YwouTube!",
+      "error_processing": "Erwor while pwocessing search!",
+      "error_reading": "Erwor weading YwouTube data!",
+      "no_data_returned": "YwouTube didn't return any data!",
+      "query_unsuccessful": "Teh query was unsuccessful! Respwonse: {0}",
+      "more_than_five": "YwouTube returnyed mwore then 5 results! A check of teh YwouTube api is recwommwended"
+    }
+  },
+  "responses": {
+    "invalid_user": "Invalid User!",
+    "error_loading_image": "Erwor woading image",
+    "cannot_find_guild": "We cannywot fwind that guild!",
+    "not_enough_arguments": "Nywot enywough argumwents!",
+    "no_arguments_for_command": "Nywo argumwents fwor cwommand `{0}`!",
+    "empty_result": "Empty result!",
+    "cannot_find_argument": "I can't fwind that argumwent!",
+    "no_specified_user": "Nywot enywough argumwents (nywo specifwied mwember)",
+    "cannot_find_user": "I cannywot fwind that user!",
+    "cannot_find_user_matching": "Cannywot fwind a user matching: {0}",
+    "cannot_find_voice_channel": "Cwould nywot fwind that voice channywl two cwonnyect two!",
+    "voice_not_connected": "I am nywot cwonnyected two a voice channyel!",
+    "type_one_of": "Pwease type onye of: ",
+    "invalid_guild_id": "That isn't a valid guild ID!",
+    "no_cascade_perm_discord": "U dwon't have teh permission `{0}` or teh Discword permission(s) {1} that u nyeed two dwo this!",
+    "no_cascade_perm": "U dwon't have teh permission `{0}` that u nyeed two dwo this!",
+    "no_discord_perm": "U dwon't have teh Discword permission `{0}` that u nyeed two dwo this!",
+    "no_discord_perm_bot": "I dwon't have teh Discword permission `{0}` that I nyeed two dwo this!",
+    "incorrect_usage_title_1": "That's nywot teh cworrect usage fwor teh cwommand!",
+    "incorrect_usage_title_2": "Cworrect usage:",
+    "failed_to_process_command": "There was an erwor while pwocessing ywour cwommand!",
+    "failed_to_run_command": "There was an erwor while runnying teh cwommand!",
+    "cant_delete_guild_messages": "We can't delete guild mwessages as we won't have teh permission manyage mwessages! Pwease either give mwe this permission or turn off cwommand mwessage deletion!",
+    "module_for_command_disabled": "Teh mwodule `{0}` fwor cwommand `{1}` is disabled!",
+    "permission_not_exist": "`{0}` isn't a valid permission",
+    "cannot_find_role_matching": "Cwould nywot fwind wowal {0}"
+  },
+  "statuses": {
+    "streaming": "Stweaming",
+    "online": "Onlinye",
+    "offline": "Offlinye",
+    "do_not_disturb": "Dwo Nywot Disturb",
+    "idle": "Idwal"
+  },
+  "enums": {
+    "flag": {
+      "beta": "beta",
+      "spotify": "spwotify",
+      "music_services": "music services"
+    },
+    "loop_mode": {
+      "disabled": "disabled",
+      "playlist": "playlist",
+      "song": "swong"
+    },
+    "module": {
+      "core": "cwore",
+      "management": "manyagemwent",
+      "music": "music",
+      "informational": "infwormationywl",
+      "moderation": "mwoderation",
+      "fun": "fun",
+      "developer": "devewoper",
+      "useful": "usefwl"
+    },
+    "permissionmode": {
+      "most_restrictive": "mwost restwictive",
+      "hierarchical": "hierarchicwl"
+    }
+  },
+  "game_types": {
+    "default": "Playing",
+    "streaming": "Stweaming",
+    "listening": "Listenying two",
+    "watching": "Watching"
+  },
+  "mod_actions": {
+    "ban": {
+      "name": "ban",
+      "verb": "bannyed"
+    },
+    "unban": {
+      "name": "unban",
+      "verb": "unbannyed"
+    },
+    "soft_ban": {
+      "name": "swoft ban",
+      "verb": "swoft-bannyed"
+    },
+    "force_ban": {
+      "name": "fworce ban",
+      "verb": "fworcefuwwy bannyed"
+    },
+    "kick": {
+      "name": "kick",
+      "verb": "kicked"
+    },
+    "mute": {
+      "name": "mute",
+      "verb": "muted"
+    },
+    "warn": {
+      "name": "warn",
+      "verb": "warnyed"
+    }
+  },
+  "words": {
+    "permission": "Permission",
+    "permissions": "Permissions",
+    "subcommand": "Subcwommand",
+    "command": "Cwommand",
+    "module": "Mwodule",
+    "discord_perms": "Discword permissions",
+    "default_permission": "Default permission",
+    "no_permission": "Nywo permission",
+    "reason": "Reaswon",
+    "enabled": "Enyabled",
+    "disabled": "Disabled",
+    "status": "Status",
+    "queue": "Queue",
+    "requested_by": "Requested by ",
+    "playing": "Playing",
+    "paused": "Paused",
+    "progress": "Pwogwess",
+    "volume": "Vowlumwe",
+    "category": "Categwory",
+    "tag": "Tag",
+    "author": "Authwor",
+    "length": "Length",
+    "flags": "Flags",
+    "default": "Default",
+    "linked_roles": "Linked wowals"
+  },
+  "messaging": {
+    "loading_page": "Paged mwessage woading...",
+    "exception_message": "**{0}**\nStack twace: {1}",
+    "report_error": "Pwease repwort teh stack twace and teh erwor two teh devewopers here: {0}"
+  },
+  "page_objects": {
+    "page_footer": "Page {0}/{1}"
+  },
+  "settings": {
+    "core": {
+      "mentionPrefix": {
+        "nice_name": "Mwention pwefwix",
+        "description": "Whether teh bwot wiww respwond two a mwention as a pwefwix."
+      },
+      "deleteCommand": {
+        "nice_name": "Delete cwommand after execution",
+        "description": "Whether teh originywl cwommand mwessages shwould be deleted after runnying teh cwommand."
+      },
+      "useEmbedForMessages": {
+        "nice_name": "Use embeds fwor mwessages",
+        "description": "Whether two use embedded mwessages two display infwormation."
+      },
+      "showPermErrors": {
+        "nice_name": "Shwow permission erwors",
+        "description": "Whether two shwow an erwor if swomweonye dwoes nywot have permission two dwo an action."
+      },
+      "showModuleErrors": {
+        "nice_name": "Shwow mwodule erwors",
+        "description": "Whether two shwow an erwor when twying two run a cwommand fwom a disabled mwodule."
+      },
+      "adminsHaveAllPerms": {
+        "nice_name": "Admins have aww permissions",
+        "description": "Whether users with teh \"Adminyistwatwor\" permission are able two run aww actions on teh bwot."
+      },
+      "allowTagCommands": {
+        "nice_name": "Awwow tags two be used as cwommands",
+        "description": "Whether tags can be executed using ;<tagnyamwe>."
+      },
+      "enabledModules": {
+        "nice_name": "Enyabled mwodules",
+        "description": "Teh mwodules whwose cwommands are awwowed two be ran on teh serwer."
+      },
+      "helpHideCommandsNoPermission": {
+        "nice_name": "Hide cwommand when teh user dwoesn't have permissions",
+        "description": "Whether two hide a cwommand fwom teh help mwenyu if teh user dwoesn't have permission two run it."
+      },
+      "helpShowAllModules": {
+        "nice_name": "Shwow aww mwodules in teh help mwenyu",
+        "description": "Whether two shwow aww mwodules in teh help mwenyu even if they are disabled."
+      },
+      "prefix": {
+        "nice_name": "Pwefwix",
+        "description": "Teh pwefwix fwor aww cwommands directed at teh bwot. It is recwommwended two make sure that this dwoesn't cwonflict with other bwots."
+      },
+      "tags": {
+        "nice_name": "Tags",
+        "description": "Teh tags saved on this serwer."
+      }
+    }
+  },
+  "placeholders": {
+    "server": {
+      "description": "Gets infwormation abwout teh current serwer"
+    },
+    "member_count": {
+      "description": "Gets teh amwount of peopwal in this serwer"
+    },
+    "sender": {
+      "description": "Gets teh user whwo executed teh tag"
+    },
+    "channel": {
+      "description": "Gets teh channywl that teh tag was ran in"
+    },
+    "time": {
+      "description": "Gets teh current tim"
+    },
+    "args": {
+      "description": "Injects a specifwied argumwent (zewo indexed)"
+    }
+  },
+  "arguments": {
+    "name": "nyamwe",
+    "id": "id",
+    "user": "user",
+    "group": "gwoup",
+    "permission": "permission",
+    "position": "pwosition",
+    "role": "wowal",
+    "mode": "mwode",
+    "tag": "tag",
+    "category": "categwory",
+    "content": "cwontent",
+    "module": "mwodule",
+    "member": "mwember",
+    "reason": "reaswon",
+    "guild_id": "guild_id",
+    "value": "value",
+    "volume": "vowlumwe",
+    "setting": "setting",
+    "flag": "flag",
+    "query": "query",
+    "force": "fworce",
+    "scope": "scwope",
+    "url": "uwl",
+    "channel": "channywl",
+    "prefix": "pwefwix",
+    "command": "cwommand",
+    "timestamp": "timwestamp",
+    "amount": "amwount",
+    "token": "twoken",
+    "item": "item",
+    "list": "list",
+    "words": "words",
+    "pos": "pwosition",
+    "source": "swource",
+    "destination": "destinyation",
+    "userperms#list#user#permissions": {
+      "name": "permissions",
+      "description": "Lists teh permissions a user has."
+    },
+    "userperms#list#user#groups": {
+      "name": "gwoups",
+      "description": "Lists teh gwoups a user has."
+    },
+    "guild#save#all": {
+      "name": "aww",
+      "description": "Saves aww guilds."
+    },
+    "guild#flag#list": {
+      "name": "list",
+      "description": "Lists aww flags."
+    }
+  },
+  "utils": {
+    "permission_command": {
+      "no_group_found": "Nywo gwoup fwound with nyamwe or id `{0}`!",
+      "too_many_groups": "There are mwore than 5 gwoups with teh samwe nyamwe! Pwease use a gwoup ID instead.",
+      "no_permissions": "Nywo permissions!",
+      "no_linked_roles": "Nywo linked wowals!"
+    },
+    "color": {
+      "invalid_rgb": "RGB values shwould be between 0 and 255!",
+      "invalid_hex_code": "Pwease pwovide a valid hex value! #000000-#FFFFFF",
+      "invalid_decimal": "Pwease pwovide a valid decimwl value! 0-16777215",
+      "invalid_binary": "Pwease enter a valid binyary value!\n0-111111111111111111111111",
+      "color_not_recognised": "Cwould nywot recwognyise cwowwour fwom teh given value!",
+      "embed_title": "Values fwor {0}",
+      "rgb": "RGB",
+      "decimal": "Decimwl value",
+      "binary": "Binyary value",
+      "hex": "Hex",
+      "colors": {
+        "aliceblue": "Aliceblue",
+        "antiquewhite": "Antiquewhite",
+        "aqua": "Aqua",
+        "aquamarine": "Aquamarinye",
+        "azure": "Azure",
+        "beige": "Beige",
+        "bisque": "Bisque",
+        "black": "Black",
+        "blanchedalmond": "Blanchedalmwond",
+        "blue": "Blue",
+        "blueviolet": "Blueviowalt",
+        "brown": "Bwown",
+        "burlywood": "Burwywood",
+        "cadetblue": "Cadetblue",
+        "chartreuse": "Chartweuse",
+        "chocolate": "Chwocwowlate",
+        "coral": "Cworwl",
+        "cornflowerblue": "Cwornfwowerblue",
+        "cornsilk": "Cwornsilk",
+        "crimson": "Cwimswon",
+        "cyan": "Cyan",
+        "darkblue": "Darkblue",
+        "darkcyan": "Darkcyan",
+        "darkgoldenrod": "Darkgwowldenwod",
+        "darkgray": "Darkgway",
+        "darkgreen": "Darkgween",
+        "darkgrey": "Darkgwey",
+        "darkkhaki": "Darkkhaki",
+        "darkmagenta": "Darkmagenta",
+        "darkolivegreen": "Darkwowlivegween",
+        "darkorange": "Darkworange",
+        "darkorchid": "Darkworchid",
+        "darkred": "Darkwed",
+        "darksalmon": "Darksalmwon",
+        "darkseagreen": "Darkseagween",
+        "darkslateblue": "Darkslateblue",
+        "darkslategray": "Darkslategway",
+        "darkslategrey": "Darkslategwey",
+        "darkturquoise": "Darkturquoise",
+        "darkviolet": "Darkviowalt",
+        "deeppink": "Deeppink",
+        "deepskyblue": "Deepskyblue",
+        "dimgray": "Dimgway",
+        "dimgrey": "Dimgwey",
+        "dodgerblue": "Dwodgerblue",
+        "firebrick": "Fwirebwick",
+        "floralwhite": "Fworalwhite",
+        "forestgreen": "Fworestgween",
+        "fuchsia": "Fwuchsia",
+        "gainsboro": "Gainsbwowo",
+        "ghostwhite": "Ghwostwhite",
+        "goldenrod": "Gwowldenwod",
+        "gold": "Gwowld",
+        "gray": "Gway",
+        "green": "Gween",
+        "greenyellow": "Gweenyewwow",
+        "grey": "Gwey",
+        "honeydew": "Hwonyeydew",
+        "hotpink": "Hwotpink",
+        "indianred": "Indianwed",
+        "indigo": "Indigwo",
+        "ivory": "Ivory",
+        "khaki": "Khaki",
+        "lavenderblush": "Lavenderblush",
+        "lavender": "Lavender",
+        "lawngreen": "Lawngween",
+        "lemonchiffon": "Lemwonchiffwon",
+        "lightblue": "Lightblue",
+        "lightcoral": "Lightcworwl",
+        "lightcyan": "Lightcyan",
+        "lightgoldenrodyellow": "Lightgwowldenwodyewwow",
+        "lightgray": "Lightgway",
+        "lightgreen": "Lightgween",
+        "lightgrey": "Lightgwey",
+        "lightpink": "Lightpink",
+        "lightsalmon": "Lightsalmwon",
+        "lightseagreen": "Lightseagween",
+        "lightskyblue": "Lightskyblue",
+        "lightslategray": "Lightslategway",
+        "lightslategrey": "Lightslategwey",
+        "lightsteelblue": "Lightsteelblue",
+        "lightyellow": "Lightyewwow",
+        "lime": "Limwe",
+        "limegreen": "Limwegween",
+        "linen": "Linyen",
+        "magenta": "Magenta",
+        "maroon": "Mawoon",
+        "mediumaquamarine": "Mwediumaquamarinye",
+        "mediumblue": "Mwediumblue",
+        "mediumorchid": "Mwediumworchid",
+        "mediumpurple": "Mwediumpurpwal",
+        "mediumseagreen": "Mwediumseagween",
+        "mediumslateblue": "Mwediumslateblue",
+        "mediumspringgreen": "Mwediumspwinggween",
+        "mediumturquoise": "Mwediumturquoise",
+        "mediumvioletred": "Mwediumviowaltwed",
+        "midnightblue": "Midnyightblue",
+        "mintcream": "Mintcweam",
+        "mistyrose": "Mistywose",
+        "moccasin": "Mwoccasin",
+        "navajowhite": "Nyavajwowhite",
+        "navy": "Nyavy",
+        "oldlace": "Owldlace",
+        "olive": "Owlive",
+        "olivedrab": "Owlivedwab",
+        "orange": "Orange",
+        "orangered": "Orangered",
+        "orchid": "Orchid",
+        "palegoldenrod": "Palegwowldenwod",
+        "palegreen": "Palegween",
+        "paleturquoise": "Paleturquoise",
+        "palevioletred": "Paleviowaltwed",
+        "papayawhip": "Papayawhip",
+        "peachpuff": "Peachpuff",
+        "peru": "Peru",
+        "pink": "Pink",
+        "plum": "Plum",
+        "powderblue": "Pwowderblue",
+        "purple": "Purpwal",
+        "rebeccapurple": "Rebeccapurpwal",
+        "red": "Red",
+        "rosybrown": "Wosybwown",
+        "royalblue": "Woyalblue",
+        "saddlebrown": "Saddlebwown",
+        "salmon": "Salmwon",
+        "sandybrown": "Sandybwown",
+        "seagreen": "Seagween",
+        "seashell": "Seasheww",
+        "sienna": "Siennya",
+        "silver": "Silwer",
+        "skyblue": "Skyblue",
+        "slateblue": "Slateblue",
+        "slategray": "Slategway",
+        "slategrey": "Slategwey",
+        "snow": "Snywow",
+        "springgreen": "Spwinggween",
+        "steelblue": "Steelblue",
+        "tan": "Tan",
+        "teal": "Tewl",
+        "thistle": "Thistwal",
+        "tomato": "Twomatwo",
+        "turquoise": "Turquoise",
+        "violet": "Viowalt",
+        "wheat": "Wheat",
+        "white": "White",
+        "whitesmoke": "Whitesmwoke",
+        "yellow": "Yewwow",
+        "yellowgreen": "Yewwowgween"
+      }
+    }
+  }
+}
