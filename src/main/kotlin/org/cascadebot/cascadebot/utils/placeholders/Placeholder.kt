@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.utils.placeholders
 
+import com.ibm.icu.text.MessageFormat
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 
@@ -12,7 +13,8 @@ abstract class Placeholder<T>(val key: String, val absoluteKey: String) {
             if (element.get().isJsonObject) {
                 return@mapValues PlaceholderInfo(
                         it.value.getString("placeholders.$absoluteKey.key").orElse(key),
-                        it.value.getString("placeholders.$absoluteKey.description").orElse(null)
+                        it.value.getString("placeholders.$absoluteKey.description").orElse(null),
+                        it.value.getString("placeholders.$absoluteKey.example_usage").orElse(null)
                 )
             } else {
                 error("Could not parse placeholder!")
@@ -20,7 +22,20 @@ abstract class Placeholder<T>(val key: String, val absoluteKey: String) {
         }
     }
 
-    data class PlaceholderInfo(val key: String, val description: String? = null)
+    data class PlaceholderInfo(
+            val key: String,
+            val description: String? = null,
+            val exampleUsage: String? = null
+    )
+
+    fun getUsageInfo(locale: Locale): String {
+        val info = localisedInfo[locale] ?: error("Could not get localised information from locale $locale")
+        val usage = if (true) "" else if (info.exampleUsage != null) "Example usage: ${MessageFormat.format(info.exampleUsage, info.key)}" else ""
+        return """
+            `{${info.key}}` - ${info.description}
+            $usage
+        """.trimIndent().trim()
+    }
 
 }
 
