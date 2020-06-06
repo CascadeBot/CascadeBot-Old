@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
@@ -54,7 +55,7 @@ public class GroupPermissionCommand extends MainCommand {
     }
 
     @Override
-    public List<Page> additionalUsagePages() {
+    public List<Page> additionalUsagePages(Locale locale) {
         List<Page> extraPages = new ArrayList<>();
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle("Test");
