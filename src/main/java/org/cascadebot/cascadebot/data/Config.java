@@ -88,7 +88,6 @@ public class Config {
     private String redisPassword;
 
     private byte[] encryptKey;
-    private byte[] ivSpec;
     private byte[] mac;
 
     private Config(String file) throws IOException {
@@ -263,16 +262,6 @@ public class Config {
             }
         }
 
-        String stringIv = config.getString("encryption_key.iv");
-        if (stringIv != null) {
-            byte[] ivBytes = stringIv.getBytes();
-            if (ivBytes.length != 16) {
-                CascadeBot.LOGGER.warn("Encryption iv invalid size! must be 128 bits!");
-            } else {
-                this.ivSpec = ivBytes;
-            }
-        }
-
         String stringMac = config.getString("encryption_key.mac");
         if (stringMac != null) {
             byte[] macBytes = stringMac.getBytes();
@@ -283,10 +272,9 @@ public class Config {
             }
         }
 
-        if (encryptKey == null || ivSpec == null) {
-            CascadeBot.LOGGER.warn("One of the required encryption values are null, or wrong size. Encryption will not work!");
+        if (encryptKey == null) {
+            CascadeBot.LOGGER.warn("Encryption key is not set. Encryption will not work!");
             encryptKey = null;
-            ivSpec = null;
             mac = null;
         }
 

@@ -13,7 +13,6 @@ public class ModlogCommand extends MainCommand {
 
     public void onCommand(Member sender, CommandContext context) {
         context.getUiMessaging().replyUsage();
-
     }
 
     public String command() {

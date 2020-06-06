@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.events;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.Permission;
@@ -326,15 +327,26 @@ public class ModlogEventListener extends ListenerAdapter {
     }
 
     private SerializableMessage getMessageFromString(String messageString) {
+        JsonObject object = new JsonParser().parse(messageString).getAsJsonObject();
         String message;
         if (Config.INS.getEncryptKey() != null) {
-            JsonArray bytesJsonArray = new JsonParser().parse(messageString).getAsJsonArray();
+            JsonArray messageIdJson = object.getAsJsonArray("id");
+            byte[] messageId = new byte[messageIdJson.size()];
+            int mi = 0;
+            for (JsonElement element : messageIdJson) {
+                messageId[mi] = element.getAsByte();
+                mi++;
+            }
+            JsonArray bytesJsonArray = object.getAsJsonArray("content");
+            byte[] iv = new byte[messageId.length * 2];
+            System.arraycopy(messageId, 0, iv, 0, messageId.length);
+            System.arraycopy(messageId, 0, iv, messageId.length, messageId.length);
             byte[] messageBytes = new byte[bytesJsonArray.size()];
             for (int i = 0; i < bytesJsonArray.size(); i++) {
                 messageBytes[i] = bytesJsonArray.get(i).getAsByte();
             }
             try {
-                message = CryptUtils.decryptString(Config.INS.getEncryptKey(), Config.INS.getIvSpec(), messageBytes);
+                message = CryptUtils.decryptString(Config.INS.getEncryptKey(), iv, messageBytes);
             } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | ShortBufferException e) {
                 e.printStackTrace();
                 // TODO log these
@@ -344,7 +356,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return null;
             }
         } else {
-            message = messageString;
+            message = object.get("content").getAsString();
         }
         return CascadeBot.getGSON().fromJson(message, SerializableMessage.class);
     }
