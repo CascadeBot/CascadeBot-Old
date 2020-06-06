@@ -283,7 +283,7 @@ public class Config {
             }
         }
 
-        if (encryptKey == null || ivSpec == null || mac == null) {
+        if (encryptKey == null || ivSpec == null) {
             CascadeBot.LOGGER.warn("One of the required encryption values are null, or wrong size. Encryption will not work!");
             encryptKey = null;
             ivSpec = null;
