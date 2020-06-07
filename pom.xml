@@ -6,7 +6,11 @@
 
     <groupId>org.cascadebot</groupId>
     <artifactId>cascadebot</artifactId>
+    <packaging>pom</packaging>
     <version>0.1.8</version>
+    <modules>
+        <module>CascadeBenchmark</module>
+    </modules>
 
     <properties>
         <build.number>DEV</build.number>
@@ -436,19 +440,6 @@
             <artifactId>icu4j</artifactId>
             <version>64.2</version>
         </dependency>
-
-        <!-- Benchmark -->
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-core</artifactId>
-            <version>1.19</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-generator-annprocess</artifactId>
-            <version>1.19</version>
-        </dependency>
-
     </dependencies>
 
 </project>
