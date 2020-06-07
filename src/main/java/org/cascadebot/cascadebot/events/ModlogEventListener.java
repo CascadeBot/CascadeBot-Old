@@ -1,7 +1,6 @@
 package org.cascadebot.cascadebot.events;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.Permission;
@@ -102,6 +101,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.ShortBufferException;
 import java.awt.Color;
+import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -266,7 +266,7 @@ public class ModlogEventListener extends ListenerAdapter {
             return;
         }
         CascadeBot.INS.getRedisClient().del("message:" + messageID);
-        SerializableMessage message = getMessageFromString(messageString);
+        SerializableMessage message = getMessageFromString(event.getMessageIdLong(), messageString);
         if (message == null) {
             return;
         }
@@ -309,7 +309,7 @@ public class ModlogEventListener extends ListenerAdapter {
             return;
         }
         CascadeBot.INS.getRedisClient().del("message:" + message.getId());
-        SerializableMessage oldMessage = getMessageFromString(messageString);
+        SerializableMessage oldMessage = getMessageFromString(message.getIdLong(), messageString);
         if (oldMessage == null) {
             return;
         }
@@ -326,21 +326,14 @@ public class ModlogEventListener extends ListenerAdapter {
         guildData.getModeration().sendModlogEvent(eventStore);
     }
 
-    private SerializableMessage getMessageFromString(String messageString) {
-        JsonObject object = new JsonParser().parse(messageString).getAsJsonObject();
+    private SerializableMessage getMessageFromString(long id, String messageString) {
         String message;
         if (Config.INS.getEncryptKey() != null) {
-            JsonArray messageIdJson = object.getAsJsonArray("id");
-            byte[] messageId = new byte[messageIdJson.size()];
-            int mi = 0;
-            for (JsonElement element : messageIdJson) {
-                messageId[mi] = element.getAsByte();
-                mi++;
-            }
-            JsonArray bytesJsonArray = object.getAsJsonArray("content");
+            byte[] messageId = ByteBuffer.allocate(Long.BYTES).putLong(id).array();
             byte[] iv = new byte[messageId.length * 2];
             System.arraycopy(messageId, 0, iv, 0, messageId.length);
             System.arraycopy(messageId, 0, iv, messageId.length, messageId.length);
+            JsonArray bytesJsonArray = new JsonParser().parse(messageString).getAsJsonArray();
             byte[] messageBytes = new byte[bytesJsonArray.size()];
             for (int i = 0; i < bytesJsonArray.size(); i++) {
                 messageBytes[i] = bytesJsonArray.get(i).getAsByte();
@@ -356,7 +349,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return null;
             }
         } else {
-            message = object.get("content").getAsString();
+            message = messageString;
         }
         return CascadeBot.getGSON().fromJson(message, SerializableMessage.class);
     }

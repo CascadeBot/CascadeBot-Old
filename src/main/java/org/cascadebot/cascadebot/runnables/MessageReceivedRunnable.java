@@ -46,25 +46,22 @@ public class MessageReceivedRunnable implements Runnable {
                 }
                 SerializableMessage serializableMessage = SerializableMessage.createSerializeMessageFromJda(event.getMessage());
                 String messageJson = CascadeBot.getGSON().toJson(serializableMessage);
-                byte[] messageId = ByteBuffer.allocate(Long.BYTES).putLong(event.getMessage().getIdLong()).array();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.add("id", CascadeBot.getGSON().toJsonTree(messageId));
                 String message = "";
                 if (Config.INS.getEncryptKey() != null) {
                     try {
+                        byte[] messageId = ByteBuffer.allocate(Long.BYTES).putLong(event.getMessage().getIdLong()).array();
                         byte[] iv = new byte[messageId.length * 2];
                         System.arraycopy(messageId, 0, iv, 0, messageId.length);
                         System.arraycopy(messageId, 0, iv, messageId.length, messageId.length);
                         byte[] results = CryptUtils.encryptString(Config.INS.getEncryptKey(), iv, messageJson);
-                        jsonObject.add("content", CascadeBot.getGSON().toJsonTree(results));
+                        message = CascadeBot.getGSON().toJson(CascadeBot.getGSON().toJsonTree(results));
                     } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | ShortBufferException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException exception) {
                         CascadeBot.LOGGER.warn("Failed to encrypt", exception);
                         return;
                     }
                 } else {
-                    jsonObject.add("content", new JsonPrimitive(messageJson));
+                    message = messageJson;
                 }
-                message = CascadeBot.getGSON().toJson(jsonObject);
                 CascadeBot.INS.getRedisClient().set("message:" + event.getMessageId(), message);
                 CascadeBot.INS.getRedisClient().expire("message:" + event.getMessageId(), (int) TimeUnit.HOURS.toSeconds(24));
             } catch (InterruptedException e) {
