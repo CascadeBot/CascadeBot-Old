@@ -83,7 +83,7 @@ enum class LoopMode {
     DISABLED, PLAYLIST, SONG
 }
 
-enum class SavePlaylistResult {
+enum class SavePlaylistResultType {
     ALREADY_EXISTS, OVERWRITE, NEW
 }
 

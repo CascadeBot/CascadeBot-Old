@@ -206,6 +206,14 @@ class GuildSettingsModeration {
                     affectedType = "Command"
                     affected.command()
                 }
+                is Playlist -> {
+                    affectedType = "Playlist"
+                    affected.name
+                }
+                is Tag -> {
+                    affectedType = "Tag"
+                    affected.name
+                }
                 else -> null
             }
             if (affectedStr != null) {

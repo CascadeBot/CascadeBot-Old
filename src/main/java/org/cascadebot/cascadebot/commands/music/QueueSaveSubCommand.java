@@ -9,12 +9,15 @@ import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
-import org.cascadebot.cascadebot.data.objects.SavePlaylistResult;
 import org.cascadebot.cascadebot.messaging.MessageType;
+import org.cascadebot.cascadebot.moderation.ModlogEvent;
+import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class QueueSaveSubCommand extends SubCommand {
@@ -52,8 +55,8 @@ public class QueueSaveSubCommand extends SubCommand {
 
         long lambdaOwner = owner;
         PlaylistType lambdaScope = scope;
-        SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
-        switch (result) {
+        CascadePlayer.SavePlaylistResult result = context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
+        switch (result.getType()) {
             case ALREADY_EXISTS:
                 if (lambdaScope.equals(PlaylistType.GUILD)) {
                     if (!context.hasPermission("queue.save.overwrite")) {
@@ -65,13 +68,16 @@ public class QueueSaveSubCommand extends SubCommand {
                         context.i18n("commands.save.already_exists"), TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(10), true,  new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
-                                context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
+                                context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), true);
                                 context.getTypedMessaging().replySuccess(context.i18n("commands.queue.save.saved_playlist", context.getArg(0), lambdaScope.name().toLowerCase()));
                             }
                         });
                 break;
             case NEW:
                 context.getTypedMessaging().replySuccess(context.i18n("commands.queue.save.saved_playlist", context.getArg(0), lambdaScope.name().toLowerCase()));
+                ModlogEvent event = ModlogEvent.CASCADE_PLAYLIST_CREATED;
+                ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), result.getPlaylist(), new ArrayList<>());
+                context.getData().getModeration().sendModlogEvent(eventStore);
                 break;
         }
     }

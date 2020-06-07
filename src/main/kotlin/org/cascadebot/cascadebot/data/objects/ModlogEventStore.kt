@@ -74,6 +74,14 @@ class ModlogEventStore {
                 affectedId = affected.command()
                 "Command"
             }
+            is Playlist -> {
+                affectedId = affected.name
+                "Playlist"
+            }
+            is Tag -> {
+                affectedId = affected.name
+                "Tag"
+            }
             else -> {
                 affectedId = "unknown"
                 "unknown"

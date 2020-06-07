@@ -102,7 +102,6 @@ enum class ModlogEvent(messageType: MessageType, vararg categories: Category) {
     CASCADE_COMMAND_RUN_ERROR(MessageType.WARNING, Category.CASCADE),
 
     CASCADE_PLAYLIST_CREATED(MessageType.INFO, Category.CASCADE),
-    CASCADE_PLAYLIST_DELETED(MessageType.INFO, Category.CASCADE),
 
     CASCADE_TEMP_MUTE(MessageType.DANGER, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
     CASCADE_TEMP_BAN(MessageType.DANGER, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
