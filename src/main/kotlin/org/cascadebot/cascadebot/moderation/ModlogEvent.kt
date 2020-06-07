@@ -1,17 +1,12 @@
-package org.cascadebot.cascadebot.moderation;
+package org.cascadebot.cascadebot.moderation
 
-import kotlin.jvm.JvmStatic;
-import lombok.Getter;
-import org.cascadebot.cascadebot.messaging.MessageType;
+import lombok.Getter
+import org.cascadebot.cascadebot.messaging.MessageType
+import java.util.ArrayList
+import java.util.Arrays
+import java.util.HashMap
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-public enum ModlogEvent {
+enum class ModlogEvent(messageType: MessageType, vararg categories: Category) {
 
     EMOTE_CREATED(MessageType.INFO, Category.EMOTE),
     EMOTE_DELETED(MessageType.INFO, Category.EMOTE),
@@ -125,50 +120,36 @@ public enum ModlogEvent {
     CASCADE_TAG_DELETED(MessageType.WARNING, Category.CASCADE, Category.CASCADE_CUSTOM_COMMANDS),
     CASCADE_TAG_UPDATED(MessageType.WARNING, Category.CASCADE, Category.CASCADE_CUSTOM_COMMANDS);
 
-    @Getter
-    private static Map<Category, List<ModlogEvent>> modlogCategoryMap = new HashMap<>();
+    companion object {
+        @Getter
+        private val modlogCategoryMap: MutableMap<Category, MutableList<ModlogEvent>> = HashMap()
+        fun getEventsFromCategory(category: Category): List<ModlogEvent> {
+            return modlogCategoryMap[category]!!
+        }
 
-    static {
-        modlogCategoryMap.put(Category.ALL, Arrays.asList(ModlogEvent.values()));
-        for (ModlogEvent event : ModlogEvent.values()) {
-            for (Category category : event.getCategories()) {
-                if (modlogCategoryMap.containsKey(category)) {
-                    modlogCategoryMap.get(category).add(event);
-                } else {
-                    modlogCategoryMap.put(category, new ArrayList<>(Set.of(event)));
+        init {
+            modlogCategoryMap[Category.ALL] = Arrays.asList(*values())
+            for (cat in Category.values()) {
+                modlogCategoryMap[cat] = ArrayList()
+            }
+            for (event in values()) {
+                for (category in event.categories) {
+                    modlogCategoryMap[category]?.add(event)
                 }
             }
         }
     }
 
-    private final List<Category> categories;
+    val categories: List<Category>
+    val messageType: MessageType
 
-    private final MessageType messageType;
-
-    ModlogEvent(MessageType messageType, Category... categories) {
-        this.categories = Arrays.asList(categories);
-        this.messageType = messageType;
-    }
-
-    public static List<ModlogEvent> getEventsFromCategory(Category category) {
-        return modlogCategoryMap.get(category);
-    }
-
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public MessageType getMessageType() {
-        return messageType;
-    }
-
-    public enum Category {
+    enum class Category {
         ALL,
         MODERATION,
         EMOTE,
         GUILD,
         GUILD_MEMBER,
-        GUILD_MESSAGE,
+        GUILD_MESSAGE, 
         GUILD_BOOST,
         GUILD_SETTINGS,
         VOICE,
@@ -181,4 +162,8 @@ public enum ModlogEvent {
         CASCADE_CUSTOM_COMMANDS
     }
 
+    init {
+        this.categories = Arrays.asList(*categories)
+        this.messageType = messageType
+    }
 }
