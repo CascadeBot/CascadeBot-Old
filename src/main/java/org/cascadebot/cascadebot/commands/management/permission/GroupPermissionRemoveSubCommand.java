@@ -36,7 +36,7 @@ public class GroupPermissionRemoveSubCommand extends SubCommand {
             if (group.removePermission(context.getArg(1))) {
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.remove.success", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
                 List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-                embedFieldList.add(new LanguageEmbedField(true, "modlog.cascade_permissions.permission_removed", "moldog.general.variable", context.getArg(1)));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.cascade_permissions.permission_removed", "modlog.general.variable", context.getArg(1)));
                 ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_PERMISSION_REMOVE;
                 ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), group, embedFieldList);
                 context.getData().getModeration().sendModlogEvent(eventStore);

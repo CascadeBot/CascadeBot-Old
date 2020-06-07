@@ -927,7 +927,7 @@
       "most_restrictive": "most restrictive",
       "hierarchical": "hierarchical"
     },
-    "moldogevent": {
+    "modlogevent": {
       "emote_created": {
         "select": "emote_created",
         "display": "Emote created"
@@ -1807,7 +1807,20 @@
     "cascade_permissions": {
       "permission_added": "Added permission",
       "permission_removed": "Removed permission",
-      "linked_role": "Linked Role"
+      "linked_role": "Linked Role",
+      "group_added": "Added group",
+      "group_removed": "Removed group"
+    },
+    "setting": {
+      "old": "Old Value",
+      "new": "New Value"
+    },
+    "module": {
+      "enabled": "Enabled"
+    },
+    "command": {
+      "command": "Command",
+      "args": "Arguments"
     }
   }
 }

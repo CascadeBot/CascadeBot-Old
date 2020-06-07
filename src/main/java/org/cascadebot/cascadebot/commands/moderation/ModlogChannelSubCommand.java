@@ -51,7 +51,7 @@ public class ModlogChannelSubCommand extends SubCommand {
                     someEvents = true;
                 }
                 boolean webhookExists = isEnabled(modlogChannel, context);
-                String eventsListString = channelModlogEventsInfo.getValue().getEvents().stream().limit(numEvents).map(event -> Language.i18n(context.getLocale(), "enums.moldogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining(", "));
+                String eventsListString = channelModlogEventsInfo.getValue().getEvents().stream().limit(numEvents).map(event -> Language.i18n(context.getLocale(), "enums.modlogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining(", "));
                 if (someEvents) {
                     eventsListString += ", and " + (channelModlogEventsInfo.getValue().getEvents().size() - 3) + " more";
                 }
@@ -154,7 +154,7 @@ public class ModlogChannelSubCommand extends SubCommand {
             context.getTypedMessaging().replySuccess("Successfully deleted channel!");
         } else if (context.getArg(0).equalsIgnoreCase("info")) {
             GuildSettingsModeration.ChannelModlogEventsInfo channelModlogEventsInfo = context.getData().getModeration().getModlogEvents().get(channel.getIdLong());
-            String events = channelModlogEventsInfo.getEvents().stream().map(event -> Language.i18n(context.getLocale(), "enums.moldogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining("\n"));
+            String events = channelModlogEventsInfo.getEvents().stream().map(event -> Language.i18n(context.getLocale(), "enums.modlogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining("\n"));
             context.getUiMessaging().sendPagedMessage(PageUtils.splitStringToEmbedPages(events, "Events for channel " + channel.getName(), 1000, '\n'));
         } else {
             context.getUiMessaging().replyUsage();

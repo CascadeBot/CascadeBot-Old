@@ -32,7 +32,7 @@ public class ModlogEventsSubCommand extends SubCommand {
             if (category.equals(ModlogEvent.Category.ALL)) {
                 continue;
             }
-            List<String> pageValues = PageUtils.splitString(categoryListEntry.getValue().stream().map(event -> Language.i18n(context.getLocale(), "enums.moldogevent." + event.name().toLowerCase() + ".select")).collect(Collectors.joining("\n")), 1000, '\n');
+            List<String> pageValues = PageUtils.splitString(categoryListEntry.getValue().stream().map(event -> Language.i18n(context.getLocale(), "enums.modlogevent." + event.name().toLowerCase() + ".select")).collect(Collectors.joining("\n")), 1000, '\n');
             int subPage = 1;
             for (String pageValue: pageValues) {
                 EmbedBuilder embedBuilder = new EmbedBuilder()

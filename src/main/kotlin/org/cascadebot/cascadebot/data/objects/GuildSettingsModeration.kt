@@ -17,12 +17,16 @@ import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.moderation.ModlogEvent
+import org.cascadebot.cascadebot.permissions.objects.Group
+import org.cascadebot.cascadebot.utils.FormatUtils
+import java.lang.reflect.Field
 import java.net.URL
 import java.util.ArrayList
 import java.util.Date
@@ -162,11 +166,10 @@ class GuildSettingsModeration {
 
         fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {
             val webhookEmbedBuilder = WebhookEmbedBuilder()
-            webhookEmbedBuilder.setTitle(EmbedTitle(i18n(guildData.locale, "enums.moldogevent." + modlogEventStore.trigger.name.toLowerCase() + ".display"), null))
+            webhookEmbedBuilder.setTitle(EmbedTitle(i18n(guildData.locale, "enums.modlogevent." + modlogEventStore.trigger.name.toLowerCase() + ".display"), null))
             val affected: Any = modlogEventStore.affected;
             var affectedType = ""
             val affectedStr = when (affected) {
-
                 is User -> {
                     affectedType = "User";
                     affected.name + " (" + affected.id + ")"
@@ -186,7 +189,23 @@ class GuildSettingsModeration {
                 is GuildChannel -> {
                     affectedType = "Channel"
                     affected.name
-                } // TODO rest of events
+                }
+                is Group -> {
+                    affectedType = "Group"
+                    affected.name + "(" + affected.id + ")"
+                }
+                is Field -> {
+                    affectedType = "Setting"
+                    affected.name
+                }
+                is Module -> {
+                    affectedType = "Module"
+                    FormatUtils.formatEnum(affected, guildData.locale)
+                }
+                is MainCommand -> {
+                    affectedType = "Command"
+                    affected.command()
+                }
                 else -> null
             }
             if (affectedStr != null) {

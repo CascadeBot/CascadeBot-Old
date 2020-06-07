@@ -78,7 +78,7 @@ public class ModlogEnableSubCommand extends SubCommand {
             pageList.add(new PageObjects.EmbedPage(embedBuilder));
         }
         if (succeed.size() > 0) {
-            List<String> pageValues = PageUtils.splitString(succeed.stream().map(event -> Language.i18n(context.getLocale(), "enums.moldogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining("\n")), 1000, '\n');
+            List<String> pageValues = PageUtils.splitString(succeed.stream().map(event -> Language.i18n(context.getLocale(), "enums.modlogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining("\n")), 1000, '\n');
             int subPage = 1;
             for (String pageValue: pageValues) {
                 EmbedBuilder embedBuilder = new EmbedBuilder();
@@ -94,7 +94,7 @@ public class ModlogEnableSubCommand extends SubCommand {
             }
         }
         if (failedEvents.size() > 0) {
-            List<String> pageValues = PageUtils.splitString(failedEvents.stream().map(event -> Language.i18n(context.getLocale(), "enums.moldogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining("\n")), 1000, '\n');
+            List<String> pageValues = PageUtils.splitString(failedEvents.stream().map(event -> Language.i18n(context.getLocale(), "enums.modlogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining("\n")), 1000, '\n');
             int subPage = 1;
             for (String pageValue: pageValues) {
                 EmbedBuilder embedBuilder = new EmbedBuilder();

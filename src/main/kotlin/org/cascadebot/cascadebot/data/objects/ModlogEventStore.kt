@@ -7,9 +7,12 @@ import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.commandmeta.MainCommand
+import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.objects.Group
 import org.cascadebot.cascadebot.utils.LanguageEmbedField
+import java.lang.reflect.Field
 
 class ModlogEventStore {
     
@@ -58,6 +61,18 @@ class ModlogEventStore {
             is Group -> {
                 affectedId = affected.id
                 "Group"
+            }
+            is Field -> {
+                affectedId = affected.name
+                "Setting"
+            }
+            is Module -> {
+                affectedId = affected.name.toLowerCase()
+                "Module"
+            }
+            is MainCommand -> {
+                affectedId = affected.command()
+                "Command"
             }
             else -> {
                 affectedId = "unknown"

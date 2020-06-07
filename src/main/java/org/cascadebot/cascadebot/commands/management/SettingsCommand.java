@@ -13,9 +13,12 @@ import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.data.objects.Setting;
 import org.cascadebot.cascadebot.data.objects.SettingsContainer;
+import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.cascadebot.cascadebot.utils.ReflectionUtils;
 
 import java.io.IOException;
@@ -59,6 +62,7 @@ public class SettingsCommand extends MainCommand {
                         context.getUiMessaging().replyUsage();
                         return;
                     }
+                    String oldValue = field.get(context.getCoreSettings()).toString();
                     String value = context.getArg(1);
                     if (field.getType() == boolean.class) {
                         boolean booleanValue = Boolean.parseBoolean(value);
@@ -70,6 +74,12 @@ public class SettingsCommand extends MainCommand {
                         return;
                     }
                     context.getTypedMessaging().replySuccess(context.i18n("commands.settings.setting_set", field.getName(), value));
+                    ModlogEvent event = ModlogEvent.CASCADE_SETTINGS_UPDATED;
+                    List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.setting.old", "modlog.general.variable", oldValue));
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.setting.new", "modlog.general.variable", value));
+                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), field, embedFieldList);
+                    context.getData().getModeration().sendModlogEvent(eventStore);
                 } catch (IllegalAccessException e) {
                     context.getTypedMessaging().replyException(context.i18n("commands.settings.cannot_access"), e);
                 }

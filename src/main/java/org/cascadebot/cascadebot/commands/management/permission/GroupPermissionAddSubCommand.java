@@ -35,7 +35,7 @@ public class GroupPermissionAddSubCommand extends SubCommand {
             if (group.addPermission(context.getArg(1))) {
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.add.success", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
                 List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-                embedFieldList.add(new LanguageEmbedField(true, "modlog.cascade_permissions.permission_added", "moldog.general.variable", context.getArg(1)));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.cascade_permissions.permission_added", "modlog.general.variable", context.getArg(1)));
                 ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_PERMISSION_ADD;
                 ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), group, embedFieldList);
                 context.getData().getModeration().sendModlogEvent(eventStore);

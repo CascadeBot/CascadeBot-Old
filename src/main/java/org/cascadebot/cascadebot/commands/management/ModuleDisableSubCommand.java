@@ -11,7 +11,13 @@ import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.LanguageEmbedField;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModuleDisableSubCommand extends SubCommand {
 
@@ -29,6 +35,11 @@ public class ModuleDisableSubCommand extends SubCommand {
                 if (context.getData().getCore().disableModule(module)) {
                     // If module wasn't already disabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", module.toString()));
+                    ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;
+                    List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.module.enabled", "modlog.general.variable", "false"));
+                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), module, embedFieldList);
+                    context.getData().getModeration().sendModlogEvent(eventStore);
                 } else {
                     // If module was already disabled
                     context.getTypedMessaging().replyInfo(context.i18n("commands.module.disable.already_disabled", module.toString()));

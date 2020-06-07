@@ -23,18 +23,23 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
+import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
+import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.slf4j.MDC;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
@@ -100,13 +105,26 @@ public class CommandListener extends ListenerAdapter {
         MDC.put("cascade.trigger", trigger);
         MDC.put("cascade.args", Arrays.toString(args));
 
+        ModlogEvent modlogEvent = null;
         try {
             processCommands(event, guildData, trigger, args, isMention);
+            modlogEvent = ModlogEvent.CASCADE_COMMAND_RUN;
         } catch (Exception e) {
             Messaging.sendExceptionMessage(event.getChannel(), Language.i18n(guildData.getLocale(), "responses.failed_to_process_command"), e);
-            return;
+            modlogEvent = ModlogEvent.CASCADE_COMMAND_RUN_ERROR;
         } finally {
             CascadeBot.clearCascadeMDC();
+            MainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
+            if (modlogEvent != null && cmd != null) {
+                List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+                StringBuilder stringBuilder = new StringBuilder();
+                for (String arg : args) {
+                    stringBuilder.append(arg).append(' ');
+                }
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.command.args", "modlog.general.variable", stringBuilder.toString()));
+                ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, event.getAuthor(),cmd, embedFieldList);
+                guildData.getModeration().sendModlogEvent(eventStore);
+            }
         }
     }
 
