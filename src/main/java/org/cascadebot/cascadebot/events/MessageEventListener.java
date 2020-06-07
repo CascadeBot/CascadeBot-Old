@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.runnables.MessageReceivedRunnable;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 
 import javax.crypto.BadPaddingException;
@@ -20,7 +21,7 @@ public class MessageEventListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        CascadeBot.INS.getMessageReceivedRunnable().getQueue().add(event);
+        MessageReceivedRunnable.getInstance().getQueue().add(event);
     }
 
 }

@@ -33,6 +33,12 @@ public class MessageReceivedRunnable implements Runnable {
 
     private BlockingQueue<GuildMessageReceivedEvent> queue = new LinkedBlockingQueue<>();
 
+    private static MessageReceivedRunnable instance;
+
+    static {
+        instance = new MessageReceivedRunnable();
+    }
+
     @Override
     public void run() {
         while (!ShutdownHandler.SHUTDOWN_LOCK.get()) {
@@ -72,6 +78,10 @@ public class MessageReceivedRunnable implements Runnable {
 
     public BlockingQueue<GuildMessageReceivedEvent> getQueue() {
         return queue;
+    }
+
+    public static MessageReceivedRunnable getInstance() {
+        return instance;
     }
 
 }

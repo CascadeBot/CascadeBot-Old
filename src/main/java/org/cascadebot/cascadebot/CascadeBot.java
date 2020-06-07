@@ -83,8 +83,6 @@ public class CascadeBot {
     private EventWaiter eventWaiter;
     private Jedis redisClient;
 
-    private MessageReceivedRunnable messageReceivedRunnable;
-
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(CascadeBot.class.getResourceAsStream("/version.txt"))) {
             version = Version.parseVer(scanner.next());
@@ -182,8 +180,7 @@ public class CascadeBot {
             builder.setPrettyPrinting();
         }
 
-        messageReceivedRunnable = new MessageReceivedRunnable();
-        new Thread(messageReceivedRunnable, "messageHandleThread").start();
+        new Thread(MessageReceivedRunnable.getInstance(), "messageHandleThread").start();
 
         if (Config.INS.getConnectionString() != null) {
             databaseManager = new DatabaseManager(Config.INS.getConnectionString());
@@ -354,7 +351,4 @@ public class CascadeBot {
         return redisClient;
     }
 
-    public MessageReceivedRunnable getMessageReceivedRunnable() {
-        return messageReceivedRunnable;
-    }
 }
