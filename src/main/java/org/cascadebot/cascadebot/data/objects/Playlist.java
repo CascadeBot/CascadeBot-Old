@@ -14,7 +14,6 @@ import org.bson.types.ObjectId;
 
 import java.util.List;
 
-@Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Playlist {
 
@@ -41,6 +40,26 @@ public class Playlist {
 
     public void removeTrack(String url) {
         tracks.remove(url);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public PlaylistType getType() {
+        return scope;
+    }
+
+    public List<String> getTracks() {
+        return tracks;
+    }
+
+    public ObjectId getPlaylistId() {
+        return playlistId;
     }
 
 }

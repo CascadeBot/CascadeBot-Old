@@ -18,7 +18,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Setter
-@Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class Tag extends PermissionObject {
@@ -64,4 +63,17 @@ public class Tag extends PermissionObject {
     public Module cascadeModule() {
         return Module.MANAGEMENT;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
 }

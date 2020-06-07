@@ -25,7 +25,6 @@ public class Group extends PermissionHolder {
     // This is normal alphanumeric with similar characters removed for less errors when inputting
     private String id = RandomStringUtils.random(5, "abcdefghijkmnopqrstuvwxyzACDEFHJKLMNPRSTUVWXYZ123467890");
 
-    @Getter
     @Setter
     private String name;
 
@@ -55,4 +54,9 @@ public class Group extends PermissionHolder {
     public String getId() {
         return id;
     }
+
+    public String getName() {
+        return name;
+    }
+
 }
