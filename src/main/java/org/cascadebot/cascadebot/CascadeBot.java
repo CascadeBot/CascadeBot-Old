@@ -159,7 +159,7 @@ public class CascadeBot {
                 redisClient.ping("Hello!");
                 LOGGER.info("Redis connected!");
             } catch (JedisConnectionException e) {
-                LOGGER.warn("Failed to connect to redis", e);
+                LOGGER.error("Failed to connect to redis", e);
                 redisClient = null;
             }
         }
