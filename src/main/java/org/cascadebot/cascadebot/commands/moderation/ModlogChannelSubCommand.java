@@ -36,12 +36,12 @@ public class ModlogChannelSubCommand extends SubCommand {
             StringBuilder enabled = new StringBuilder();
             StringBuilder disabled = new StringBuilder();
             StringBuilder deleted = new StringBuilder();
-            Set<Map.Entry<Long, GuildSettingsModeration.ChannelModlogEventsInfo>> channelModlogEventsSet = context.getData().getModeration().getModlogEvents().entrySet();
+            var channelModlogEventsSet = context.getData().getModeration().getModlogEvents().entrySet();
             if (channelModlogEventsSet.size() == 0) {
-                context.reply("No channels have been set up with modlog events!");
+                context.getTypedMessaging().replyDanger("No channels have been set up with modlog events!");
                 return;
             }
-            for (Map.Entry<Long, GuildSettingsModeration.ChannelModlogEventsInfo>  channelModlogEventsInfo : channelModlogEventsSet) {
+            for (var channelModlogEventsInfo : channelModlogEventsSet) {
                 TextChannel modlogChannel = CascadeBot.INS.getShardManager().getTextChannelById(channelModlogEventsInfo.getKey());
                 boolean channelExists = modlogChannel != null;
                 boolean someEvents = false;
@@ -50,16 +50,7 @@ public class ModlogChannelSubCommand extends SubCommand {
                     numEvents = 3;
                     someEvents = true;
                 }
-                boolean webhookExists = false;
-                if (modlogChannel != null) {
-                    List<Webhook> webhooks = modlogChannel.retrieveWebhooks().complete();
-                    for (Webhook webhook : webhooks) {
-                        if (webhook.getIdLong() == channelModlogEventsInfo.getValue().getWebhookId()) {
-                            webhookExists = true;
-                            break;
-                        }
-                    }
-                }
+                boolean webhookExists = isEnabled(modlogChannel, context);
                 String eventsListString = channelModlogEventsInfo.getValue().getEvents().stream().limit(numEvents).map(event -> Language.i18n(context.getLocale(), "enums.moldogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining(", "));
                 if (someEvents) {
                     eventsListString += ", and " + (channelModlogEventsInfo.getValue().getEvents().size() - 3) + " more";
@@ -69,7 +60,7 @@ public class ModlogChannelSubCommand extends SubCommand {
                 } else if (channelExists) { // Channel exists, but is disabled
                     disabled.append(modlogChannel.getAsMention()).append(" - ").append(eventsListString).append('\n');
                 } else { // Channel doesn't exist
-                    deleted.append("#deleted-channel (" + channelModlogEventsInfo.getValue().getId() + ") - ").append(eventsListString).append('\n');
+                    deleted.append("#deleted-channel (").append(channelModlogEventsInfo.getValue().getId()).append(") - ").append(eventsListString).append('\n');
                 }
             }
             List<Page> pages = new ArrayList<>();
@@ -103,7 +94,7 @@ public class ModlogChannelSubCommand extends SubCommand {
             GuildSettingsModeration.ChannelModlogEventsInfo channelModlogEventsInfo = null;
             if (context.isArgInteger(1)) {
                 int id = context.getArgAsInteger(1);
-                for (Map.Entry<Long, GuildSettingsModeration.ChannelModlogEventsInfo> eventsInfoEntry : context.getData().getModeration().getModlogEvents().entrySet()) {
+                for (var eventsInfoEntry : context.getData().getModeration().getModlogEvents().entrySet()) {
                     if (eventsInfoEntry.getValue().getId() == id) {
                         channelModlogEventsInfo = eventsInfoEntry.getValue();
                     }

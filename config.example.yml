@@ -119,8 +119,8 @@ redis:
   port: 6379
   password: ''
 
-# If this is specified all sub fields are required to have encryption
+# If this is specified the key is required for encryption.
 encryption_key:
   key: 'AES key, 256 bit recommended'
-  iv: '64 bit iv key'
+  # This isn't required, but might be used in the future for some encryption
   mac: '128 bit mac key'

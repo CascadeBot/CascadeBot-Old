@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 public class ModlogEventsSubCommand extends SubCommand {
 
     public void onCommand(Member sender, CommandContext context) {
-        Map<ModlogEvent.Category, List<ModlogEvent>> modlogCategoryMap = ModlogEvent.getModlogCategoryMap();
+        var modlogCategoryMap = ModlogEvent.getModlogCategoryMap();
         List<Page> embedPages = new ArrayList<>();
-        for (Map.Entry<ModlogEvent.Category, List<ModlogEvent>> categoryListEntry : modlogCategoryMap.entrySet()) {
+        for (var categoryListEntry : modlogCategoryMap.entrySet()) {
             ModlogEvent.Category category = categoryListEntry.getKey();
             if (category.equals(ModlogEvent.Category.ALL)) {
                 continue;

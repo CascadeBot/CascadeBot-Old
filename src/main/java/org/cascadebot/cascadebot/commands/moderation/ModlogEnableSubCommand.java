@@ -32,8 +32,7 @@ public class ModlogEnableSubCommand extends SubCommand {
         }
         TextChannel textChannel = DiscordUtils.getTextChannel(context.getGuild(), context.getArg(0));
         if (textChannel == null) {
-            context.reply("Invalid channel");
-            // Invalid channel
+            context.getTypedMessaging().replyDanger("Invalid channel");
             return;
         }
         List<String> events = new ArrayList<>(Arrays.asList(context.getArgs()));
@@ -41,9 +40,9 @@ public class ModlogEnableSubCommand extends SubCommand {
         List<ModlogEvent> modlogEvents = new ArrayList<>();
         List<String> failed = new ArrayList<>();
         for (String event : events) {
-            if (EnumUtils.isValidEnum(ModlogEvent.class, event.toUpperCase())) {
+            if (EnumUtils.isValidEnumIgnoreCase(ModlogEvent.class, event.toUpperCase())) {
                 modlogEvents.add(ModlogEvent.valueOf(event.toUpperCase())); // TODO reverse language to get event
-            } else if (EnumUtils.isValidEnum(ModlogEvent.Category.class, event.toUpperCase())){
+            } else if (EnumUtils.isValidEnumIgnoreCase(ModlogEvent.Category.class, event.toUpperCase())){
                 ModlogEvent.Category category = ModlogEvent.Category.valueOf(event.toUpperCase());
                 List<ModlogEvent> additionalEvents = ModlogEvent.getEventsFromCategory(category);
                 modlogEvents.addAll(additionalEvents);

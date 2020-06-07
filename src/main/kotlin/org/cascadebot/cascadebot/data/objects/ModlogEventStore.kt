@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.utils.LanguageEmbedField
 
 class ModlogEventStore {
+    
     var trigger: ModlogEvent = ModlogEvent.CASCADE_BLACKLIST
 
     @Transient

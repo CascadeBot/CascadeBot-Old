@@ -68,8 +68,7 @@ public class MessageReceivedRunnable implements Runnable {
                 } else {
                     message = messageJson;
                 }
-                CascadeBot.INS.getRedisClient().set("message:" + event.getMessageId(), message);
-                CascadeBot.INS.getRedisClient().expire("message:" + event.getMessageId(), (int) TimeUnit.HOURS.toSeconds(24));
+                CascadeBot.INS.getRedisClient().setex("message:" + event.getMessageId(), (int) TimeUnit.HOURS.toSeconds(24), message);
             } catch (InterruptedException e) {
                 CascadeBot.LOGGER.warn("Message thread interrupted: " + PasteUtils.getStackTrace(e));
             }

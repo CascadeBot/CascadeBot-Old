@@ -31,7 +31,7 @@ class SerializableMessage(
 ) {
     companion object {
         @JvmStatic
-        fun createSerializeMessageFromJda(message: Message): SerializableMessage? {
+        fun createSerializeMessageFromJda(message: Message): SerializableMessage {
             val userMentions: List<Long> = message.mentionedUsers.stream().map { it.idLong }.collect(Collectors.toList())
             val channelMentions: List<ChannelMention> = message.mentionedChannels.stream().map { ChannelMention(it.idLong, it.guild.idLong) }.collect(Collectors.toList())
             val roleMentions: List<Long> = message.mentionedRoles.stream().map { it.idLong }.collect(Collectors.toList())
