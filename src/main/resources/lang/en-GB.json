@@ -1803,6 +1803,11 @@
       "mute": "Muted",
       "join": "Joined Channel",
       "left": "Left Channel"
+    },
+    "cascade_permissions": {
+      "permission_added": "Added permission",
+      "permission_removed": "Removed permission",
+      "linked_role": "Linked Role"
     }
   }
 }

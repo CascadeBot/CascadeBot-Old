@@ -163,7 +163,7 @@ class GuildSettingsModeration {
         fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {
             val webhookEmbedBuilder = WebhookEmbedBuilder()
             webhookEmbedBuilder.setTitle(EmbedTitle(i18n(guildData.locale, "enums.moldogevent." + modlogEventStore.trigger.name.toLowerCase() + ".display"), null))
-            val affected: ISnowflake = modlogEventStore.affected;
+            val affected: Any = modlogEventStore.affected;
             var affectedType = ""
             val affectedStr = when (affected) {
 
@@ -186,7 +186,7 @@ class GuildSettingsModeration {
                 is GuildChannel -> {
                     affectedType = "Channel"
                     affected.name
-                }
+                } // TODO rest of events
                 else -> null
             }
             if (affectedStr != null) {

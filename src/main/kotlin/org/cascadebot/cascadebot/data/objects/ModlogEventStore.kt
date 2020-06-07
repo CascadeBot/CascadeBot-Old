@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.moderation.ModlogEvent
+import org.cascadebot.cascadebot.permissions.objects.Group
 import org.cascadebot.cascadebot.utils.LanguageEmbedField
 
 class ModlogEventStore {
@@ -18,29 +19,50 @@ class ModlogEventStore {
     var responsible: User? = null
 
     @Transient
-    var affected: ISnowflake = CascadeBot.INS.selfUser
+    var affected: Any = CascadeBot.INS.selfUser
 
     var extraInfo: List<LanguageEmbedField> = ArrayList()
 
-    var affectedId: Long = 0
+    var affectedId: String = ""
     var affectedType: String = ""
 
     var responsibleId: Long = 0;
 
-    constructor(trigger: ModlogEvent, responsible: User?, affected: ISnowflake, extraInfo: List<LanguageEmbedField>) {
+    constructor(trigger: ModlogEvent, responsible: User?, affected: Any, extraInfo: List<LanguageEmbedField>) {
         this.trigger = trigger
         this.responsible = responsible
         this.affected = affected
         this.extraInfo = extraInfo
 
-        affectedId = affected.idLong
         affectedType = when (affected) {
-            is User -> "User"
-            is Role -> "Role"
-            is Emote -> "Emote"
-            is Guild -> "Guild"
-            is GuildChannel -> "Channel"
-            else -> "unknown"
+            is User -> {
+                affectedId = affected.id
+                "User"
+            }
+            is Role -> {
+                affectedId = affected.id
+                "Role"
+            }
+            is Emote -> {
+                affectedId = affected.id
+                "Emote"
+            }
+            is Guild -> {
+                affectedId = affected.id
+                "Guild"
+            }
+            is GuildChannel -> {
+                affectedId = affected.id
+                "Channel"
+            }
+            is Group -> {
+                affectedId = affected.id
+                "Group"
+            }
+            else -> {
+                affectedId = "unknown"
+                "unknown"
+            }
         }
 
         if (responsible != null) {

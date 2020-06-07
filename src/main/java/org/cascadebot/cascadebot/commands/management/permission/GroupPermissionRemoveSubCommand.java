@@ -9,8 +9,14 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GroupPermissionRemoveSubCommand extends SubCommand {
 
@@ -29,6 +35,11 @@ public class GroupPermissionRemoveSubCommand extends SubCommand {
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (group.removePermission(context.getArg(1))) {
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.remove.success", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
+                List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.cascade_permissions.permission_removed", "moldog.general.variable", context.getArg(1)));
+                ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_PERMISSION_REMOVE;
+                ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), group, embedFieldList);
+                context.getData().getModeration().sendModlogEvent(eventStore);
             } else {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.remove.fail", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
             }

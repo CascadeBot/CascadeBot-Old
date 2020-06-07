@@ -44,7 +44,7 @@ public class ModlogEnableSubCommand extends SubCommand {
                 modlogEvents.add(ModlogEvent.valueOf(event.toUpperCase())); // TODO reverse language to get event
             } else if (EnumUtils.isValidEnumIgnoreCase(ModlogEvent.Category.class, event.toUpperCase())){
                 ModlogEvent.Category category = ModlogEvent.Category.valueOf(event.toUpperCase());
-                List<ModlogEvent> additionalEvents = ModlogEvent.getEventsFromCategory(category);
+                List<ModlogEvent> additionalEvents = ModlogEvent.Companion.getEventsFromCategory(category);
                 modlogEvents.addAll(additionalEvents);
             } else {
                 failed.add(event);

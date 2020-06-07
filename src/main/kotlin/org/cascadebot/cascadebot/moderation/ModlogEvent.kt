@@ -121,8 +121,12 @@ enum class ModlogEvent(messageType: MessageType, vararg categories: Category) {
     CASCADE_TAG_UPDATED(MessageType.WARNING, Category.CASCADE, Category.CASCADE_CUSTOM_COMMANDS);
 
     companion object {
-        @Getter
         private val modlogCategoryMap: MutableMap<Category, MutableList<ModlogEvent>> = HashMap()
+
+        fun getModlogCategoryMap(): Map<Category, MutableList<ModlogEvent>> {
+            return modlogCategoryMap
+        }
+
         fun getEventsFromCategory(category: Category): List<ModlogEvent> {
             return modlogCategoryMap[category]!!
         }
@@ -149,7 +153,7 @@ enum class ModlogEvent(messageType: MessageType, vararg categories: Category) {
         EMOTE,
         GUILD,
         GUILD_MEMBER,
-        GUILD_MESSAGE, 
+        GUILD_MESSAGE,
         GUILD_BOOST,
         GUILD_SETTINGS,
         VOICE,
