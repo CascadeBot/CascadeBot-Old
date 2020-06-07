@@ -1739,7 +1739,18 @@
         "new": "New Vanity Url"
       },
       "old_verification": "Old Verification Level",
-      "new_verification": "New Verification Level"
+      "new_verification": "New Verification Level",
+      "old_boost_count": "Old boost count",
+      "new_boost_count": "New boost count",
+      "boost_tier": {
+        "none": "None",
+        "tier_1": "Level 1",
+        "tier_2": "Level 2",
+        "tier_3": "Level 3",
+        "unknown": "Unknown"
+      },
+      "old_boost_tier": "Old boost tier",
+      "new_boost_tier": "New boost tier"
     },
     "channel": {
       "type": {
@@ -1761,7 +1772,20 @@
         "update_deny": "New Denied permission for {0}",
         "old_allow": "Old Allowed permission for {0}",
         "old_deny": "Old Denied permissions for {0}"
-      }
+      },
+      "old_parent": "Old Parent",
+      "new_parent": "New Parent",
+      "nsfw": "NSFW",
+      "old_slowmode": "Old Slowmode",
+      "new_slowmode": "New Slowmode",
+      "old_topic": "Old topic",
+      "new_topic": "New topic",
+      "kpbs": "{0}kbps",
+      "old_bitrate": "Old bitrate",
+      "new_bitrate": "New bitrate",
+      "user": "{0} users",
+      "old_users": "Old user limit",
+      "new_users": "New user limit"
     },
     "role": {
       "old_color": "Old Color",
@@ -1773,6 +1797,12 @@
     },
     "user": {
       "old_discrim": "Old Discriminator"
+    },
+    "voice": {
+      "deafen": "Deafened",
+      "mute": "Muted",
+      "join": "Joined Channel",
+      "left": "Left Channel"
     }
   }
 }

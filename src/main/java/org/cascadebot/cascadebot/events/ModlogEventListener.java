@@ -1,11 +1,11 @@
 package org.cascadebot.cascadebot.events;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
+import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
@@ -28,13 +28,20 @@ import net.dv8tion.jda.api.events.channel.store.update.StoreChannelUpdatePositio
 import net.dv8tion.jda.api.events.channel.text.GenericTextChannelEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
+import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateNSFWEvent;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateParentEvent;
 import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdatePositionEvent;
+import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateSlowmodeEvent;
+import net.dv8tion.jda.api.events.channel.text.update.TextChannelUpdateTopicEvent;
 import net.dv8tion.jda.api.events.channel.voice.GenericVoiceChannelEvent;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.voice.VoiceChannelDeleteEvent;
+import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateBitrateEvent;
 import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateNameEvent;
+import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateParentEvent;
 import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdatePositionEvent;
+import net.dv8tion.jda.api.events.channel.voice.update.VoiceChannelUpdateUserLimitEvent;
 import net.dv8tion.jda.api.events.emote.EmoteAddedEvent;
 import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
 import net.dv8tion.jda.api.events.emote.GenericEmoteEvent;
@@ -56,6 +63,8 @@ import net.dv8tion.jda.api.events.guild.update.GenericGuildUpdateEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateAfkChannelEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateAfkTimeoutEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateBannerEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostCountEvent;
+import net.dv8tion.jda.api.events.guild.update.GuildUpdateBoostTierEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateDescriptionEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateExplicitContentLevelEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateFeaturesEvent;
@@ -70,6 +79,14 @@ import net.dv8tion.jda.api.events.guild.update.GuildUpdateSplashEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateSystemChannelEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateVanityCodeEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateVerificationLevelEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceDeafenEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceGuildDeafenEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceGuildMuteEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMuteEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent;
 import net.dv8tion.jda.api.events.role.GenericRoleEvent;
@@ -94,7 +111,6 @@ import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.cascadebot.cascadebot.utils.SerializableMessage;
-import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -143,7 +159,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 addedRolesEmbed.addValueObjects(roleListChanges.getAdded().stream().map(role -> role.getName() + " (" + role.getId() + ")")
                         .collect(Collectors.joining("\n")));
                 LanguageEmbedField removedRolesEmbed = new LanguageEmbedField(false, "modlog.general.removed_roles", "modlog.general.variable");
-                removedRolesEmbed.addValueObjects( roleListChanges.getRemoved().stream().map(role -> role.getName() + " (" + role.getId() + ")")
+                removedRolesEmbed.addValueObjects(roleListChanges.getRemoved().stream().map(role -> role.getName() + " (" + role.getId() + ")")
                         .collect(Collectors.joining("\n")));
                 embedFieldList.add(addedRolesEmbed);
                 embedFieldList.add(removedRolesEmbed);
@@ -472,6 +488,14 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_verification", "utils.verification_level." + ((GuildUpdateVerificationLevelEvent) event).getOldVerificationLevel().name().toLowerCase()));
                 embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_verification", "utils.verification_level." + ((GuildUpdateVerificationLevelEvent) event).getNewVerificationLevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_VERIFICATION_LEVEL;
+            } else if (event instanceof GuildUpdateBoostCountEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_boost_count", "modlog.general.variable", String.valueOf(event.getOldValue())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_boost_count", "modlog.general.variable", String.valueOf(event.getNewValue())));
+                modlogEvent = ModlogEvent.GUILD_BOOST_COUNT_UPDATED;
+            } else if (event instanceof GuildUpdateBoostTierEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.old_boost_tier", "modlog.guild.boost_tier." + ((GuildUpdateBoostTierEvent) event).getOldBoostTier().name().toLowerCase()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.guild.new_boost_tier", "modlog.guild.boost_tier." + ((GuildUpdateBoostTierEvent) event).getNewBoostTier().name().toLowerCase()));
+                modlogEvent = ModlogEvent.GUILD_BOOST_TIER_UPDATED;
             } else {
                 return;
             }
@@ -480,8 +504,50 @@ public class ModlogEventListener extends ListenerAdapter {
         });
     }
 
+    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
+        User affected = event.getEntity().getUser();
+        List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+        ModlogEvent action;
+        Guild guild;
+        if (event.getChannelLeft() != null) {
+            guild = event.getChannelLeft().getGuild();
+        } else if (event.getChannelJoined() != null) {
+            guild = event.getChannelJoined().getGuild();
+        } else {
+            return;
+        }
+        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+        if (event instanceof GuildVoiceDeafenEvent) {
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.deafen", "modlog.general.variable", String.valueOf(((GuildVoiceDeafenEvent) event).isDeafened())));
+            action = ModlogEvent.VOICE_DEAFEN;
+        } else if (event instanceof GuildVoiceMuteEvent) {
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.mute", "modlog.general.variable", String.valueOf(((GuildVoiceMuteEvent) event).isMuted())));
+            action = ModlogEvent.VOICE_MUTE;
+        } else if (event instanceof GuildVoiceGuildDeafenEvent) {
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.deafen", "modlog.general.variable", String.valueOf(((GuildVoiceGuildDeafenEvent) event).isGuildDeafened())));
+            action = ModlogEvent.VOICE_SERVER_DEAFEN;
+        } else if (event instanceof GuildVoiceGuildMuteEvent) {
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.mute", "modlog.general.variable", String.valueOf(((GuildVoiceGuildMuteEvent) event).isGuildMuted())));
+            action = ModlogEvent.VOICE_SERVER_MUTE;
+        } else if (event instanceof GuildVoiceJoinEvent) {
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", event.getChannelJoined().getName()));
+            action = ModlogEvent.VOICE_JOIN;
+        } else if (event instanceof GuildVoiceLeaveEvent) {
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", event.getChannelLeft().getName()));
+            action = ModlogEvent.VOICE_LEAVE;
+        } else if (event instanceof GuildVoiceMoveEvent) {
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", event.getChannelLeft().getName()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", event.getChannelJoined().getName()));
+            action = ModlogEvent.VOICE_MOVE;
+        } else {
+            return;
+        }
+        ModlogEventStore eventStore = new ModlogEventStore(action, null, affected, embedFieldList);
+        guildData.getModeration().sendModlogEvent(eventStore);
+    }
+
     //region Channels
-    public void onGenericStoreChannel(@NotNull GenericStoreChannelEvent event) {
+    public void onGenericStoreChannel(GenericStoreChannelEvent event) {
         if (event instanceof StoreChannelCreateEvent) {
             handleChannelCreateEvents(event.getChannel().getGuild(), ChannelType.STORE, event.getChannel());
         } else if (event instanceof StoreChannelDeleteEvent) {
@@ -493,19 +559,52 @@ public class ModlogEventListener extends ListenerAdapter {
         }
     }
 
-    public void onGenericTextChannel(@NotNull GenericTextChannelEvent event) {
+    public void onGenericTextChannel(GenericTextChannelEvent event) {
         if (event instanceof TextChannelCreateEvent) {
             handleChannelCreateEvents(event.getGuild(), ChannelType.TEXT, event.getChannel());
+            return;
         } else if (event instanceof TextChannelDeleteEvent) {
             handleChannelDeleteEvents(event.getGuild(), ChannelType.TEXT, event.getChannel());
+            return;
         } else if (event instanceof TextChannelUpdateNameEvent) {
             handleChannelUpdateNameEvents(event.getGuild(), ChannelType.TEXT, ((TextChannelUpdateNameEvent) event).getOldName(), event.getChannel());
+            return;
         } else if (event instanceof TextChannelUpdatePositionEvent) {
             handleChannelUpdatePositionEvents(event.getGuild(), ChannelType.TEXT, ((TextChannelUpdatePositionEvent) event).getOldPosition(), event.getChannel());
+            return;
+        } else if (event instanceof TextChannelUpdateParentEvent) {
+            handleChannelUpdateParentEvents(event.getGuild(), ChannelType.TEXT, ((TextChannelUpdateParentEvent) event).getOldParent(), ((TextChannelUpdateParentEvent) event).getNewParent(), event.getChannel());
+            return;
         }
+        GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
+        event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
+            ModlogEvent trigger;
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+                responsible = entry.getUser();
+            }
+            if (event instanceof TextChannelUpdateNSFWEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.nsfw", "modlog.general.variable", String.valueOf(!((TextChannelUpdateNSFWEvent) event).getOldNSFW())));
+                trigger = ModlogEvent.TEXT_CHANNEL_NSFW_UPDATED;
+            } else if (event instanceof TextChannelUpdateSlowmodeEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.old_slowmode", "modlog.general.variable", String.valueOf(((TextChannelUpdateSlowmodeEvent) event).getOldSlowmode())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.new_slowmode", "modlog.general.variable", String.valueOf(((TextChannelUpdateSlowmodeEvent) event).getNewSlowmode())));
+                trigger = ModlogEvent.TEXT_CHANNEL_SLOWMODE_UPDATED;
+            } else if (event instanceof TextChannelUpdateTopicEvent) {
+                embedFieldList.add(new LanguageEmbedField(false, "modlog.channel.old_topic", "modlog.general.variable", ((TextChannelUpdateTopicEvent) event).getOldTopic()));
+                embedFieldList.add(new LanguageEmbedField(false, "modlog.channel.new_topic", "modlog.general.variable", ((TextChannelUpdateTopicEvent) event).getNewTopic()));
+                trigger = ModlogEvent.TEXT_CHANNEL_TOPIC_UPDATED;
+            } else {
+                return;
+            }
+            ModlogEventStore eventStore = new ModlogEventStore(trigger, responsible, event.getChannel(), embedFieldList);
+            guildData.getModeration().sendModlogEvent(eventStore);
+        });
     }
 
-    public void onGenericVoiceChannel(@NotNull GenericVoiceChannelEvent event) {
+    public void onGenericVoiceChannel(GenericVoiceChannelEvent event) {
         if (event instanceof VoiceChannelCreateEvent) {
             handleChannelCreateEvents(event.getGuild(), ChannelType.VOICE, event.getChannel());
         } else if (event instanceof VoiceChannelDeleteEvent) {
@@ -514,10 +613,35 @@ public class ModlogEventListener extends ListenerAdapter {
             handleChannelUpdateNameEvents(event.getGuild(), ChannelType.VOICE, ((VoiceChannelUpdateNameEvent) event).getOldName(), event.getChannel());
         } else if (event instanceof VoiceChannelUpdatePositionEvent) {
             handleChannelUpdatePositionEvents(event.getGuild(), ChannelType.VOICE, ((VoiceChannelUpdatePositionEvent) event).getOldPosition(), event.getChannel());
+        } else if (event instanceof VoiceChannelUpdateParentEvent) {
+            handleChannelUpdateParentEvents(event.getGuild(), ChannelType.VOICE, ((VoiceChannelUpdateParentEvent) event).getOldParent(), ((VoiceChannelUpdateParentEvent) event).getNewParent(), event.getChannel());
         }
+        GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
+        event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
+            ModlogEvent trigger;
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+                responsible = entry.getUser();
+            }
+            if (event instanceof VoiceChannelUpdateBitrateEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.old_bitrate", "modlog.channel.kpbs", String.valueOf(((VoiceChannelUpdateBitrateEvent) event).getOldBitrate())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.new_bitrate", "modlog.channel.kpbs", String.valueOf(((VoiceChannelUpdateBitrateEvent) event).getNewBitrate())));
+                trigger = ModlogEvent.VOICE_CHANNEL_BITRATE_UPDATED;
+            } else if (event instanceof VoiceChannelUpdateUserLimitEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.old_users", "modlog.channel.user", String.valueOf(((VoiceChannelUpdateUserLimitEvent) event).getOldUserLimit())));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.new_users", "modlog.channel.user", String.valueOf(((VoiceChannelUpdateUserLimitEvent) event).getNewUserLimit())));
+                trigger = ModlogEvent.VOICE_CHANNEL_USER_LIMIT_UPDATED;
+            } else {
+                return;
+            }
+            ModlogEventStore eventStore = new ModlogEventStore(trigger, responsible, event.getChannel(), embedFieldList);
+            guildData.getModeration().sendModlogEvent(eventStore);
+        });
     }
 
-    public void onGenericCategory(@NotNull GenericCategoryEvent event) {
+    public void onGenericCategory(GenericCategoryEvent event) {
         if (event instanceof CategoryCreateEvent) {
             handleChannelCreateEvents(event.getGuild(), ChannelType.CATEGORY, event.getCategory());
         } else if (event instanceof CategoryDeleteEvent) {
@@ -654,8 +778,26 @@ public class ModlogEventListener extends ListenerAdapter {
                 responsible = entry.getUser();
             }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.old_pos", "modlog.general.variable", String.valueOf(oldPos)));
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.new_pos", "modlog.general.variable", String.valueOf(channel.getPosition())));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_pos", "modlog.general.variable", String.valueOf(oldPos)));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.general.new_pos", "modlog.general.variable", String.valueOf(channel.getPosition())));
+            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+            guildData.getModeration().sendModlogEvent(modlogEventStore);
+        });
+    }
+
+    public void handleChannelUpdateParentEvents(Guild guild, ChannelType type, Category oldParent, Category newParent, GuildChannel channel) {
+        ModlogEvent event = ModlogEvent.CHANNEL_PARENT_UPDATED;
+        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+        guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
+            AuditLogEntry entry = auditLogEntries.get(0);
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+            User responsible = null;
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+                responsible = entry.getUser();
+            }
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.old_parent", "modlog.general.variable", oldParent.getName()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.new_parent", "modlog.general.variable", newParent.getName()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(modlogEventStore);
         });
