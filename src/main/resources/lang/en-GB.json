@@ -1212,7 +1212,7 @@
     }
   },
   "placeholders": {
-    "see_the_docs": "To view more detailed information, please see our docs: https://docs.cascadebot.org",
+    "see_the_docs": "To view more detailed information, please see our docs: https://docs.cascadebot.org/placeholders",
     "tags": {
       "title": "Tag Placeholders",
       "server": {
