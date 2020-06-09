@@ -37,8 +37,8 @@ class LanguageEmbedField {
 
     fun getLocalizedEmbedField(locale: Locale): WebhookEmbed.EmbedField {
         return WebhookEmbed.EmbedField(inline,
-        Language.i18n(locale, titleLanguagePath, titleLanguageObjects),
-                Language.i18n(locale, valueLanguagePath, valueLanguageObjects))
+        Language.i18n(locale, titleLanguagePath, titleLanguageObjects.joinToString(" ")),
+                Language.i18n(locale, valueLanguagePath, valueLanguageObjects.joinToString(" ")))
     }
 
 }
