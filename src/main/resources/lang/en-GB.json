@@ -1217,30 +1217,58 @@
       "title": "Tag Placeholders",
       "server": {
         "key": "server",
-        "description": "Gets information about the current server"
+        "description": "Gets information about the current server."
       },
       "sender": {
         "key": "sender",
-        "description": "Gets the user who executed the tag"
+        "description": "Gets the user who executed the tag."
       },
       "channel": {
         "key": "channel",
-        "description": "Gets the channel that the tag was ran in"
+        "description": "Gets the channel that the tag was ran in."
       },
       "time": {
         "key": "time",
-        "description": "Gets the current time"
+        "description": "Gets the current time."
       },
       "args": {
         "key": "args",
         "description": "Injects a specified argument (zero indexed)."
       }
     },
-    "server": {
-      "description": "Gets information about the current server"
+    "welcome": {
+      "title": "Welcome Placeholders",
+      "server": {
+        "key": "server",
+        "description": "Gets information about the current server."
+      },
+      "sender": {
+        "key": "user",
+        "description": "Gets information about the user who joined."
+      },
+      "time": {
+        "key": "time",
+        "description": "Gets the current time"
+      }
     },
-    "member_count": {
-      "description": "Gets the amount of people in this server"
+    "goodbye": {
+      "title": "Goodbye Placeholders",
+      "server": {
+        "key": "server",
+        "description": "Gets information about the current server."
+      },
+      "sender": {
+        "key": "user",
+        "description": "Gets information about the user who left."
+      },
+      "time": {
+        "key": "time",
+        "description": "Gets the current time"
+      },
+      "time_in_guild": {
+        "key": "time_in_guild",
+        "description": "Returns how long the user was in the guild before he left."
+      }
     }
   },
   "arguments": {
