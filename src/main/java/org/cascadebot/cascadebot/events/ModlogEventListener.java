@@ -227,6 +227,8 @@ public class ModlogEventListener extends ListenerAdapter {
                     embedFieldList.add(newNickEmbedField);
                 }
                 modlogEvent = ModlogEvent.GUILD_MEMBER_NICKNAME_UPDATED;
+            } else if (event instanceof GuildMemberJoinEvent) {
+                modlogEvent = ModlogEvent.GUILD_MEMBER_JOINED;
             } else {
                 return;
             }

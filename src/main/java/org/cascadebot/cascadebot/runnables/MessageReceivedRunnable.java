@@ -41,7 +41,7 @@ public class MessageReceivedRunnable implements Runnable {
 
     @Override
     public void run() {
-        while (!ShutdownHandler.SHUTDOWN_LOCK.get()) {
+        while (true) {
             try {
                 GuildMessageReceivedEvent event = queue.take();
                 if (event.getMember() == null) {
