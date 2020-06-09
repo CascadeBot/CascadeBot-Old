@@ -18,9 +18,12 @@ import org.cascadebot.cascadebot.data.objects.GuildSettingsManagement
 import org.cascadebot.cascadebot.data.objects.GuildSettingsModeration
 import org.cascadebot.cascadebot.data.objects.GuildSettingsMusic
 import org.cascadebot.cascadebot.data.objects.GuildSettingsUseful
+import org.cascadebot.cascadebot.data.objects.ModlogEventStore
 import org.cascadebot.cascadebot.data.objects.Setting
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
+import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.cascadebot.cascadebot.utils.LanguageEmbedField
 import org.cascadebot.cascadebot.utils.ReflectionUtils
 import java.io.IOException
 import java.lang.reflect.Field
@@ -104,6 +107,7 @@ class SettingsCommand : MainCommand() {
                         context.uiMessaging.replyUsage()
                         return
                     }
+                    val oldValue: String = field.get(settingsContainer).toString()
                     var value = context.getArg(1)
                     when (field.type) {
                         Boolean::class.javaPrimitiveType -> {
@@ -119,6 +123,10 @@ class SettingsCommand : MainCommand() {
                         }
                     }
                     context.typedMessaging.replySuccess(context.i18n("commands.settings.setting_set", field.name, value))
+                    val embedFields: MutableList<LanguageEmbedField> = ArrayList();
+                    embedFields.add(LanguageEmbedField(true, "modlog.setting.old", "modlog.general.variable", oldValue))
+                    embedFields.add(LanguageEmbedField(true, "modlog.setting.new", "modlog.general.variable", value))
+                    context.data.moderation.sendModlogEvent(context.guild.idLong, ModlogEventStore(ModlogEvent.CASCADE_SETTINGS_UPDATED, sender.user, field, ArrayList()))
                 } catch (e: IllegalAccessException) {
                     context.typedMessaging.replyException(context.i18n("commands.settings.cannot_access"), e)
                 }
