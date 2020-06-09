@@ -111,7 +111,7 @@
         "command": "remove",
         "description": "Removes a permission from the group.",
         "success": "Successfully removed permission `{0}` from group `{1}`",
-        "fail": "Couldn't removed permission `{0}` from group `{1}` as they already have the permission"
+        "fail": "Couldn't remove permission `{0}` from group `{1}` as they already have the permission"
       },
       "create": {
         "command": "create",
@@ -245,7 +245,7 @@
       "couldnt_process": "Could not process settings!",
       "setting": "Setting",
       "current_value": "Current value",
-      "section_title": "----- {0} module -----",
+      "section_title": "{0} module",
       "cannot_find_field": "Cannot find that field!"
     },
     "tag": {

@@ -67,7 +67,7 @@ class EmbedBuilder(val type : MessageType) {
     }
 
     fun build () : net.dv8tion.jda.api.EmbedBuilder {
-        val embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(type)
+        val embedBuilder = net.dv8tion.jda.api.EmbedBuilder().setColor(type.color)
         for (builder in fieldBuilders) {
             embedBuilder.addField(
                     builder.name,
