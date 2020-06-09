@@ -122,6 +122,8 @@ import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.time.Duration;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -131,13 +133,16 @@ import java.util.stream.Collectors;
 
 public class ModlogEventListener extends ListenerAdapter {
 
+    private final long auditTimeAllowed = 1000l;
+
     public void onGenericEmote(GenericEmoteEvent event) {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         Emote emote = event.getEmote();
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             User user = null;
-            if (entry.getType().equals(ActionType.EMOTE_UPDATE) || entry.getType().equals(ActionType.EMOTE_CREATE) || entry.getType().equals(ActionType.EMOTE_DELETE)) {
+            if ((entry.getType().equals(ActionType.EMOTE_UPDATE) || entry.getType().equals(ActionType.EMOTE_CREATE) || entry.getType().equals(ActionType.EMOTE_DELETE)) && millis < auditTimeAllowed && entry.getTargetIdLong() == event.getEmote().getIdLong()) {
                 user = auditLogEntries.get(0).getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find emote entry");
@@ -179,13 +184,14 @@ public class ModlogEventListener extends ListenerAdapter {
         User user = event.getMember().getUser();
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent;
             User responsible = null;
             if (event instanceof GuildMemberJoinEvent) {
-                modlogEvent = ModlogEvent.GUILD_MEMBER_LEFT;
+                modlogEvent = ModlogEvent.GUILD_MEMBER_JOINED;
             } else if (event instanceof GuildMemberLeaveEvent) {
-                if (entry.getType().equals(ActionType.KICK)) {
+                if (entry.getType().equals(ActionType.KICK) && millis < auditTimeAllowed && entry.getTargetIdLong() == event.getMember().getIdLong()) {
                     LanguageEmbedField respLanguageEmbedField = new LanguageEmbedField(true, "modlog.general.responsible", "modlog.general.variable");
                     respLanguageEmbedField.addValueObjects(Objects.requireNonNull(entry.getUser()).getAsTag());
                     embedFieldList.add(respLanguageEmbedField);
@@ -200,7 +206,7 @@ public class ModlogEventListener extends ListenerAdapter {
                     modlogEvent = ModlogEvent.GUILD_MEMBER_LEFT;
                 }
             } else if (event instanceof GuildMemberRoleAddEvent) {
-                if (entry.getType().equals(ActionType.MEMBER_ROLE_UPDATE)) {
+                if (entry.getType().equals(ActionType.MEMBER_ROLE_UPDATE) && millis < auditTimeAllowed && entry.getTargetIdLong() == event.getMember().getIdLong()) {
                     responsible = entry.getUser();
                 }
                 modlogEvent = ModlogEvent.GUILD_MEMBER_ROLE_ADDED;
@@ -208,7 +214,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 addedRolesEmbedField.addValueObjects(((GuildMemberRoleAddEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n")));
                 embedFieldList.add(addedRolesEmbedField);
             } else if (event instanceof GuildMemberRoleRemoveEvent) {
-                if (entry.getType().equals(ActionType.MEMBER_ROLE_UPDATE)) {
+                if (entry.getType().equals(ActionType.MEMBER_ROLE_UPDATE) && millis < 1000 && entry.getTargetIdLong() == event.getMember().getIdLong()) {
                     responsible = entry.getUser();
                 }
                 modlogEvent = ModlogEvent.GUILD_MEMBER_ROLE_REMOVED;
@@ -227,8 +233,6 @@ public class ModlogEventListener extends ListenerAdapter {
                     embedFieldList.add(newNickEmbedField);
                 }
                 modlogEvent = ModlogEvent.GUILD_MEMBER_NICKNAME_UPDATED;
-            } else if (event instanceof GuildMemberJoinEvent) {
-                modlogEvent = ModlogEvent.GUILD_MEMBER_JOINED;
             } else {
                 return;
             }
@@ -244,9 +248,10 @@ public class ModlogEventListener extends ListenerAdapter {
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             ModlogEvent modlogEvent = ModlogEvent.GUILD_USER_BANNED;
             User responsible = null;
-            if (entry.getType().equals(ActionType.BAN)) {
+            if (entry.getType().equals(ActionType.BAN) && millis < auditTimeAllowed && entry.getTargetIdLong() == event.getUser().getIdLong()) {
                 responsible = entry.getUser();
                 if (entry.getReason() != null) {
                     LanguageEmbedField reasonEmbedField = new LanguageEmbedField(false, "modlog.general.reason", "modlog.general.variable");
@@ -266,10 +271,11 @@ public class ModlogEventListener extends ListenerAdapter {
         User user = event.getUser();
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent = ModlogEvent.GUILD_USER_UNBANNED;
             User responsible = null;
-            if (entry.getType().equals(ActionType.UNBAN)) {
+            if (entry.getType().equals(ActionType.UNBAN) && millis < auditTimeAllowed && entry.getTargetIdLong() == event.getUser().getIdLong()) {
                 responsible = entry.getUser();
             }  else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find unban entry");
@@ -314,8 +320,9 @@ public class ModlogEventListener extends ListenerAdapter {
         //TODO handle embeds/ect...
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             User responsible;
-            if (entry.getType().equals(ActionType.MESSAGE_DELETE)) {
+            if (entry.getType().equals(ActionType.MESSAGE_DELETE) && millis < auditTimeAllowed && entry.getTargetIdLong() == message.getAuthorId()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find message delete entry");
@@ -395,10 +402,11 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(affected.getIdLong());
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
             ModlogEvent modlogEvent;
-            if (entry.getType().equals(ActionType.GUILD_UPDATE)) {
+            if (entry.getType().equals(ActionType.GUILD_UPDATE) && millis < auditTimeAllowed) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find guild update entry");
@@ -601,9 +609,10 @@ public class ModlogEventListener extends ListenerAdapter {
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             ModlogEvent trigger;
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
-            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE) && millis < auditTimeAllowed && event.getChannel().getIdLong() == entry.getTargetIdLong()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
@@ -643,9 +652,10 @@ public class ModlogEventListener extends ListenerAdapter {
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             ModlogEvent trigger;
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
-            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE) && millis < auditTimeAllowed && entry.getTargetIdLong() == event.getChannel().getIdLong()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
@@ -684,9 +694,10 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
-            if (entry.getType().equals(ActionType.CHANNEL_UPDATE) || entry.getType().equals(ActionType.CHANNEL_OVERRIDE_UPDATE)) {
+            if ((entry.getType().equals(ActionType.CHANNEL_UPDATE) || entry.getType().equals(ActionType.CHANNEL_OVERRIDE_UPDATE)) && millis < auditTimeAllowed && entry.getTargetIdLong() == event.getChannel().getIdLong()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
@@ -750,9 +761,10 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
-            if (entry.getType().equals(ActionType.CHANNEL_CREATE)) {
+            if (entry.getType().equals(ActionType.CHANNEL_CREATE) && millis < auditTimeAllowed && entry.getTargetIdLong() == channel.getIdLong()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel create entry");
@@ -768,9 +780,10 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
-            if (entry.getType().equals(ActionType.CHANNEL_DELETE)) {
+            if (entry.getType().equals(ActionType.CHANNEL_DELETE) && millis < auditTimeAllowed && entry.getTargetIdLong() == channel.getIdLong()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel delete entry");
@@ -786,9 +799,10 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
-            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE) && millis < 1000 && entry.getTargetIdLong() == channel.getIdLong()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
@@ -805,9 +819,10 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
-            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE) && millis < 1000 && entry.getTargetIdLong() == channel.getIdLong()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
@@ -825,9 +840,10 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
-            if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
+            if (entry.getType().equals(ActionType.CHANNEL_UPDATE) && millis < 1000 && entry.getTargetIdLong() == channel.getIdLong()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
@@ -845,10 +861,11 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             User responsible = null;
             ModlogEvent modlogEvent;
-            if (entry.getType().equals(ActionType.ROLE_CREATE) || entry.getType().equals(ActionType.ROLE_DELETE) || entry.getType().equals(ActionType.ROLE_UPDATE)) {
+            if ((entry.getType().equals(ActionType.ROLE_CREATE) || entry.getType().equals(ActionType.ROLE_DELETE) || entry.getType().equals(ActionType.ROLE_UPDATE)) && millis < 1000 && entry.getTargetIdLong() == event.getRole().getIdLong()) {
                 responsible = entry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find role entry");

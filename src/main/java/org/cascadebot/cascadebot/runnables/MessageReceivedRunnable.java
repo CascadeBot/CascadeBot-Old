@@ -41,14 +41,14 @@ public class MessageReceivedRunnable implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (!ShutdownHandler.SHUTDOWN_LOCK.get()) {
             try {
                 GuildMessageReceivedEvent event = queue.take();
                 if (event.getMember() == null) {
-                    return;
+                    continue;
                 }
                 if (CascadeBot.INS.getRedisClient() == null) {
-                    return;
+                    continue;
                 }
                 SerializableMessage serializableMessage = SerializableMessage.createSerializeMessageFromJda(event.getMessage());
                 String messageJson = CascadeBot.getGSON().toJson(serializableMessage);
@@ -63,7 +63,7 @@ public class MessageReceivedRunnable implements Runnable {
                         message = CascadeBot.getGSON().toJson(CascadeBot.getGSON().toJsonTree(results));
                     } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | ShortBufferException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException exception) {
                         CascadeBot.LOGGER.warn("Failed to encrypt", exception);
-                        return;
+                        continue;
                     }
                 } else {
                     message = messageJson;
@@ -71,6 +71,7 @@ public class MessageReceivedRunnable implements Runnable {
                 CascadeBot.INS.getRedisClient().setex("message:" + event.getMessageId(), (int) TimeUnit.HOURS.toSeconds(24), message);
             } catch (InterruptedException e) {
                 CascadeBot.LOGGER.warn("Message thread interrupted: " + PasteUtils.getStackTrace(e));
+                return;
             }
         }
     }
