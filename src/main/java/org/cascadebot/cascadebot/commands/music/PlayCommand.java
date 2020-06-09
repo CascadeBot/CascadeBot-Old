@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
@@ -17,6 +18,16 @@ public class PlayCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        VoiceChannel voiceChannel = sender.getVoiceState().getChannel();
+
+        if (voiceChannel != null) {
+            if (context.getMusicPlayer().getConnectedChannel() != voiceChannel) {
+                context.runOtherCommand("join", sender, context);
+            }
+        } else {
+            context.runOtherCommand("join", sender, context);
+        }
+
         if (context.getArgs().length == 0) {
             context.runOtherCommand("resume", sender, context);
         } else if (context.getArgs().length == 1 && context.getArg(0).startsWith("http")) {
