@@ -33,7 +33,7 @@ public class TagDeleteSubCommand extends SubCommand {
             context.getTypedMessaging().replySuccess(context.i18n("commands.tag.delete.successfully_deleted_tag"));
             ModlogEvent event = ModlogEvent.CASCADE_TAG_DELETED;
             ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), tag, new ArrayList<>());
-            context.getData().getModeration().sendModlogEvent(eventStore);
+            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
         } else {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", tagName));
         }

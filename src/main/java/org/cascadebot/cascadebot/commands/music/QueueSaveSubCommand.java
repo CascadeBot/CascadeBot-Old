@@ -77,7 +77,7 @@ public class QueueSaveSubCommand extends SubCommand {
                 context.getTypedMessaging().replySuccess(context.i18n("commands.queue.save.saved_playlist", context.getArg(0), lambdaScope.name().toLowerCase()));
                 ModlogEvent event = ModlogEvent.CASCADE_PLAYLIST_CREATED;
                 ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), result.getPlaylist(), new ArrayList<>());
-                context.getData().getModeration().sendModlogEvent(eventStore);
+                context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 break;
         }
     }

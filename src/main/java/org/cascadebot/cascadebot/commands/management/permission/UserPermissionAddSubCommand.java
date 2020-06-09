@@ -47,7 +47,7 @@ public class UserPermissionAddSubCommand extends SubCommand {
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             embedFieldList.add(new LanguageEmbedField(true, "modlog.cascade_permissions.permission_added", "modlog.general.variable", context.getArg(1)));
             ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), embedFieldList);
-            context.getData().getModeration().sendModlogEvent(eventStore);
+            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
         } else {
             context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.add.fail", context.getArg(1), member.getUser().getAsTag()));
         }

@@ -39,7 +39,7 @@ public class ModuleEnableSubCommand extends SubCommand {
                     List<LanguageEmbedField> embedFieldList = new ArrayList<>();
                     embedFieldList.add(new LanguageEmbedField(true, "modlog.module.enabled", "modlog.general.variable", "true"));
                     ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), module, embedFieldList);
-                    context.getData().getModeration().sendModlogEvent(eventStore);
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {
                     // If the module was enabled
                     context.getTypedMessaging().replyInfo(context.i18n("commands.module.enable.already_enabled", module.toString()));

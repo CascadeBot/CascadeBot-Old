@@ -123,7 +123,7 @@ public class CommandListener extends ListenerAdapter {
                 }
                 embedFieldList.add(new LanguageEmbedField(true, "modlog.command.args", "modlog.general.variable", stringBuilder.toString()));
                 ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, event.getAuthor(),cmd, embedFieldList);
-                guildData.getModeration().sendModlogEvent(eventStore);
+                guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
             }
         }
     }

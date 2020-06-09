@@ -79,6 +79,7 @@ import net.dv8tion.jda.api.events.guild.update.GuildUpdateSplashEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateSystemChannelEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateVanityCodeEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateVerificationLevelEvent;
+import net.dv8tion.jda.api.events.guild.voice.GenericGuildVoiceEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceDeafenEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceGuildDeafenEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceGuildMuteEvent;
@@ -175,7 +176,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, user, emote, embedFieldList);
-            guildData.getModeration().sendModlogEvent(eventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         });
     }
 
@@ -237,7 +238,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
-            guildData.getModeration().sendModlogEvent(eventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         });
     }
 
@@ -262,7 +263,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find ban entry");
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
-            guildData.getModeration().sendModlogEvent(eventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         });
     }
 
@@ -281,7 +282,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find unban entry");
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
-            guildData.getModeration().sendModlogEvent(eventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         });
     }
     //endregion
@@ -330,10 +331,10 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             if (message.getUserMentions().size() > 0 || message.getRoleMentions().size() > 0) {
                 ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.GUILD_MESSAGE_DELETED_MENTION, responsible, affected, embedFieldList);
-                guildData.getModeration().sendModlogEvent(eventStore);
+                guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
             }
             ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.GUILD_MESSAGE_DELETED, responsible, affected, embedFieldList);
-            guildData.getModeration().sendModlogEvent(eventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         });
     }
 
@@ -366,7 +367,7 @@ public class ModlogEventListener extends ListenerAdapter {
         embedFieldList.add(newEmbedField);
         ModlogEvent modlogEvent = ModlogEvent.GUILD_MESSAGE_UPDATED;
         ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, null, affected, embedFieldList);
-        guildData.getModeration().sendModlogEvent(eventStore);
+        guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
     }
 
     private SerializableMessage getMessageFromString(long id, String messageString) {
@@ -530,7 +531,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
-            guildData.getModeration().sendModlogEvent(eventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         });
     }
 
@@ -573,7 +574,7 @@ public class ModlogEventListener extends ListenerAdapter {
             return;
         }
         ModlogEventStore eventStore = new ModlogEventStore(action, null, affected, embedFieldList);
-        guildData.getModeration().sendModlogEvent(eventStore);
+        guildData.getModeration().sendModlogEvent(((GenericGuildVoiceEvent) event).getGuild().getIdLong(), eventStore);
     }
 
     //region Channels
@@ -633,7 +634,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(trigger, responsible, event.getChannel(), embedFieldList);
-            guildData.getModeration().sendModlogEvent(eventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         });
     }
 
@@ -673,7 +674,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(trigger, responsible, event.getChannel(), embedFieldList);
-            guildData.getModeration().sendModlogEvent(eventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         });
     }
 
@@ -750,7 +751,7 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + event.getChannelType().name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, event.getChannel(), embedFieldList);
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), modlogEventStore);
         });
     }
 
@@ -772,7 +773,7 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         });
     }
 
@@ -791,7 +792,7 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         });
     }
 
@@ -811,7 +812,7 @@ public class ModlogEventListener extends ListenerAdapter {
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_name", "modlog.general.variable", oldName));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         });
     }
 
@@ -832,7 +833,7 @@ public class ModlogEventListener extends ListenerAdapter {
             embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_pos", "modlog.general.variable", String.valueOf(oldPos)));
             embedFieldList.add(new LanguageEmbedField(true, "modlog.general.new_pos", "modlog.general.variable", String.valueOf(channel.getPosition())));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         });
     }
 
@@ -853,7 +854,7 @@ public class ModlogEventListener extends ListenerAdapter {
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.old_parent", "modlog.general.variable", oldParent.getName()));
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.new_parent", "modlog.general.variable", newParent.getName()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         });
     }
     //endregion
@@ -910,7 +911,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), modlogEventStore);
         });
     }
 
@@ -922,7 +923,7 @@ public class ModlogEventListener extends ListenerAdapter {
         ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_NAME_UPDATED, event.getUser(), event.getUser(), embedFieldList);
         for (Guild guild : CascadeBot.INS.getClient().getMutualGuilds(event.getUser())) {
             GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }
     }
 
@@ -932,7 +933,7 @@ public class ModlogEventListener extends ListenerAdapter {
         ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_DISCRIMINATOR_UPDATED, event.getUser(), event.getUser(), embedFieldList);
         for (Guild guild : CascadeBot.INS.getClient().getMutualGuilds(event.getUser())) {
             GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-            guildData.getModeration().sendModlogEvent(modlogEventStore);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }
     }
     //endregion

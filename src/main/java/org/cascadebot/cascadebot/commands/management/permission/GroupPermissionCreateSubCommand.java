@@ -13,10 +13,8 @@ import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
-import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GroupPermissionCreateSubCommand extends SubCommand {
 
@@ -31,7 +29,7 @@ public class GroupPermissionCreateSubCommand extends SubCommand {
         context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create.success", context.getArg(0), group.getId()));
         ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_CREATED;
         ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), group, new ArrayList<>());
-        context.getData().getModeration().sendModlogEvent(eventStore);
+        context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
 
     }
 

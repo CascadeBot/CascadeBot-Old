@@ -49,7 +49,7 @@ public class UserPermissionGroupSubCommand extends SubCommand {
                     List<LanguageEmbedField> embedFieldList = new ArrayList<>();
                     embedFieldList.add(new LanguageEmbedField(true, "modlog.cascade_permissions.group_added", "modlog.general.variable", group.getName() + "(" + group.getId() + ")"));
                     ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), embedFieldList);
-                    context.getData().getModeration().sendModlogEvent(eventStore);
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {
                     context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.put.fail", member.getUser().getAsTag(), group.getName()));
                 }
@@ -60,7 +60,7 @@ public class UserPermissionGroupSubCommand extends SubCommand {
                     List<LanguageEmbedField> embedFieldList = new ArrayList<>();
                     embedFieldList.add(new LanguageEmbedField(true, "modlog.cascade_permissions.group_removed", "modlog.general.variable", group.getName() + "(" + group.getId() + ")"));
                     ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), embedFieldList);
-                    context.getData().getModeration().sendModlogEvent(eventStore);
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {
                     context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.remove.fail", member.getUser().getAsTag(), group.getName()));
                 }

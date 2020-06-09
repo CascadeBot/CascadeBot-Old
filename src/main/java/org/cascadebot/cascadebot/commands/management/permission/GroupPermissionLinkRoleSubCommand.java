@@ -42,7 +42,7 @@ public class GroupPermissionLinkRoleSubCommand extends SubCommand {
                 embedFieldList.add(new LanguageEmbedField(false, "modlog.cascade_permissions.linked_role", "modlog.general.variable", role.getAsMention()));
                 ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_LINK;
                 ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), group, embedFieldList);
-                context.getData().getModeration().sendModlogEvent(eventStore);
+                context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
             } else {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.link.fail", group.getName(), role.getName()));
             }

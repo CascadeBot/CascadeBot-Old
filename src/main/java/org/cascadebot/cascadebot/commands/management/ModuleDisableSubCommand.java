@@ -39,7 +39,7 @@ public class ModuleDisableSubCommand extends SubCommand {
                     List<LanguageEmbedField> embedFieldList = new ArrayList<>();
                     embedFieldList.add(new LanguageEmbedField(true, "modlog.module.enabled", "modlog.general.variable", "false"));
                     ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), module, embedFieldList);
-                    context.getData().getModeration().sendModlogEvent(eventStore);
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {
                     // If module was already disabled
                     context.getTypedMessaging().replyInfo(context.i18n("commands.module.disable.already_disabled", module.toString()));

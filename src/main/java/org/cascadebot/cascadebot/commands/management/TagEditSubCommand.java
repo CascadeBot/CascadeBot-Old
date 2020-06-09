@@ -41,7 +41,7 @@ public class TagEditSubCommand extends SubCommand {
         embedFieldList.add(new LanguageEmbedField(false, "modlog.tag.old_content", "modlog.general.variable", oldContent));
         embedFieldList.add(new LanguageEmbedField(false, "modlog.tag.new_content", "modlog.general.variable", tag.getContent()));
         ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), tag, embedFieldList);
-        context.getData().getModeration().sendModlogEvent(eventStore);
+        context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
     }
 
     @Override

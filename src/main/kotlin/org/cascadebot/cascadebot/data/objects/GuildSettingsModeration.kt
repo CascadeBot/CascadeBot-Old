@@ -35,22 +35,14 @@ import java.util.function.Consumer
 @SettingsContainer(module = Module.MODERATION)
 class GuildSettingsModeration {
 
-    var guildId: Long = 0
-
     var modlogChannelNum: Int = 1;
 
-    constructor(guildId: Long) {
-        this.guildId = guildId;
-    }
-
-    constructor()
-
     @Setting
-    public val purgePinnedMessages: Boolean = false
+    val purgePinnedMessages: Boolean = false
 
     private val modlogEvents: MutableMap<Long, ChannelModlogEventsInfo> = HashMap()
 
-    fun sendModlogEvent(modlogEventStore: ModlogEventStore) {
+    fun sendModlogEvent(guildId: Long, modlogEventStore: ModlogEventStore) {
         val eventsInfo: List<ChannelModlogEventsInfo> = getEventInfoForEvent(modlogEventStore.trigger)
         for (eventInfo in eventsInfo) {
             eventInfo.sendEvent(GuildDataManager.getGuildData(guildId), modlogEventStore);
