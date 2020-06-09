@@ -107,6 +107,7 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
+import org.cascadebot.cascadebot.utils.Attachment;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.LanguageEmbedField;
@@ -291,22 +292,30 @@ public class ModlogEventListener extends ListenerAdapter {
         LanguageEmbedField messageEmbedField = new LanguageEmbedField(false, "modlog.message.message", "modlog.general.variable");
         messageEmbedField.addValueObjects(message.getContent());
         embedFieldList.add(messageEmbedField);
+        if (message.getAttachments().size() > 0) {
+            StringBuilder attachmentsBuilder = new StringBuilder();
+            for (Attachment attachment : message.getAttachments()) {
+                attachmentsBuilder.append(attachment.getUrl()).append('\n');
+            }
+            embedFieldList.add(new LanguageEmbedField(false, "modlog.message.attachments", "modlog.general.variable", attachmentsBuilder.toString()));
+        }
         if (affected == null) {
             return;
         }
         //TODO handle embeds/ect...
         event.getGuild().retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
             AuditLogEntry entry = auditLogEntries.get(0);
-            ModlogEvent modlogEvent;
             User responsible;
             if (entry.getType().equals(ActionType.MESSAGE_DELETE)) {
-                modlogEvent = ModlogEvent.GUILD_MESSAGE_DELETED;
                 responsible = entry.getUser();
-            } else { //TODO not assume self delete if audit log entry for message delete was not found.
-                modlogEvent = ModlogEvent.GUILD_MESSAGE_DELETED_SELF;
-                responsible = affected;
+            } else {
+                responsible = null;
             }
-            ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
+            if (message.getUserMentions().size() > 0 || message.getRoleMentions().size() > 0) {
+                ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.GUILD_MESSAGE_DELETED_MENTION, responsible, affected, embedFieldList);
+                guildData.getModeration().sendModlogEvent(eventStore);
+            }
+            ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.GUILD_MESSAGE_DELETED, responsible, affected, embedFieldList);
             guildData.getModeration().sendModlogEvent(eventStore);
         });
     }

@@ -24,7 +24,7 @@ enum class ModlogEvent(messageType: MessageType, vararg categories: Category) {
     GUILD_USER_UNBANNED(MessageType.DANGER, Category.GUILD, Category.GUILD_MEMBER, Category.MODERATION),
 
     GUILD_MESSAGE_DELETED(MessageType.WARNING, Category.GUILD, Category.GUILD_MESSAGE),
-    GUILD_MESSAGE_DELETED_SELF(MessageType.INFO, Category.GUILD, Category.GUILD_MESSAGE),
+    GUILD_MESSAGE_DELETED_MENTION(MessageType.INFO, Category.GUILD, Category.GUILD_MESSAGE),
     GUILD_MESSAGE_UPDATED(MessageType.INFO, Category.GUILD, Category.GUILD_MESSAGE),
 
     GUILD_BOOST_COUNT_UPDATED(MessageType.INFO, Category.GUILD, Category.GUILD_BOOST),

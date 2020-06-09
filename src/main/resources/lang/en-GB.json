@@ -1682,7 +1682,8 @@
     "message": {
       "message": "Message",
       "old_message": "Old Message",
-      "new_message": "New Message"
+      "new_message": "New Message",
+      "attachments": "Attachments"
     },
     "guild": {
       "old_channel": "Old Channel",
