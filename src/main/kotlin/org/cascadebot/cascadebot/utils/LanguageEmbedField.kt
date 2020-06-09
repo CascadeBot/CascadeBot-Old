@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.utils
 
 import club.minnced.discord.webhook.send.WebhookEmbed
+import org.cascadebot.cascadebot.UnicodeConstants
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 
@@ -37,8 +38,8 @@ class LanguageEmbedField {
 
     fun getLocalizedEmbedField(locale: Locale): WebhookEmbed.EmbedField {
         return WebhookEmbed.EmbedField(inline,
-        Language.i18n(locale, titleLanguagePath, titleLanguageObjects.joinToString(" ")),
-                Language.i18n(locale, valueLanguagePath, valueLanguageObjects.joinToString(" ")))
+        Language.i18n(locale, titleLanguagePath, titleLanguageObjects.joinToString(" ") + UnicodeConstants.ZERO_WIDTH_SPACE),
+                Language.i18n(locale, valueLanguagePath, valueLanguageObjects.joinToString(" ") + UnicodeConstants.ZERO_WIDTH_SPACE))
     }
 
 }
