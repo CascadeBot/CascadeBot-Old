@@ -20,12 +20,14 @@ public class PlayCommand extends MainCommand {
     public void onCommand(Member sender, CommandContext context) {
         VoiceChannel voiceChannel = sender.getVoiceState().getChannel();
 
-        if (voiceChannel != null) {
-            if (context.getMusicPlayer().getConnectedChannel() != voiceChannel) {
+        if (context.getData().getMusic().getJoinOnPlay()) {
+            if (voiceChannel != null) {
+                if (context.getMusicPlayer().getConnectedChannel() != voiceChannel) {
+                    context.runOtherCommand("join", sender, context);
+                }
+            } else {
                 context.runOtherCommand("join", sender, context);
             }
-        } else {
-            context.runOtherCommand("join", sender, context);
         }
 
         if (context.getArgs().length == 0) {
