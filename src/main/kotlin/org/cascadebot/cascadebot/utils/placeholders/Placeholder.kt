@@ -1,6 +1,5 @@
 package org.cascadebot.cascadebot.utils.placeholders
 
-import com.ibm.icu.text.MessageFormat
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 
@@ -30,11 +29,7 @@ abstract class Placeholder<T>(val key: String, val absoluteKey: String) {
 
     fun getUsageInfo(locale: Locale): String {
         val info = localisedInfo[locale] ?: error("Could not get localised information from locale $locale")
-        val usage = if (true) "" else if (info.exampleUsage != null) "Example usage: ${MessageFormat.format(info.exampleUsage, info.key)}" else ""
-        return """
-            `{${info.key}}` - ${info.description}
-            $usage
-        """.trimIndent().trim()
+        return "`{${info.key}}` - ${info.description}"
     }
 
 }

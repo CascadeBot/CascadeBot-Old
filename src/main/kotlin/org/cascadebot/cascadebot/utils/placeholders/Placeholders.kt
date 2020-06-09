@@ -6,7 +6,11 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.messaging.MessageType
+import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.utils.FormatUtils
+import org.cascadebot.cascadebot.utils.pagination.PageObjects
+import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects.tags
 import java.time.Duration
 import java.time.OffsetDateTime
 
@@ -26,7 +30,7 @@ class Placeholders<T>(var key: String) {
     }
 
     fun argsPlaceholder(key: String, mapping: ArgsPlaceholder<T>.(PlaceholderContext<T>, List<String>) -> String?) {
-        _placeholders.add(ArgsPlaceholder(key,"${this.key}.$key", mapping))
+        _placeholders.add(ArgsPlaceholder(key, "${this.key}.$key", mapping))
     }
 
     // TODO: Use locale!
@@ -40,6 +44,7 @@ class Placeholders<T>(var key: String) {
                             toReplace[matchResult.groupValues[0]] = it
                         }
                     }
+
                     is ArgsPlaceholder<T> -> {
                         val args = if (matchResult.groupValues[2].isNotEmpty()) {
                             matchResult.groupValues[2].split(",")
@@ -51,6 +56,7 @@ class Placeholders<T>(var key: String) {
                             toReplace[matchResult.groupValues[0]] = it
                         }
                     }
+
                     else -> error("Invalid Placeholder type: ${placeholder::class.simpleName}")
                 }
             }
@@ -161,4 +167,18 @@ object PlaceholderObjects {
         staticPlaceholder("time_in_guild") { context -> Duration.between(context.item.member.timeJoined, OffsetDateTime.now()).toString() }
     }
 
+}
+
+fun <T> getPlaceholderUsagePage(placeholders: List<Placeholder<T>>, title: String, locale: Locale): PageObjects.EmbedPage {
+    val builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO)
+    val placeholderUsages = tags
+            .placeholders
+            .joinToString("\n") { it.getUsageInfo(locale) }
+    builder.setTitle(title)
+    builder.setDescription(
+            placeholderUsages
+                    + "\n\n"
+                    + Language.i18n(locale, "placeholders.see_the_docs")
+    )
+    return PageObjects.EmbedPage(builder)
 }

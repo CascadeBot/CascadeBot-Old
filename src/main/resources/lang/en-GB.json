@@ -1212,21 +1212,20 @@
     }
   },
   "placeholders": {
+    "see_the_docs": "To view more detailed information, please see our docs: https://docs.cascadebot.org",
     "tags": {
+      "title": "Tag Placeholders",
       "server": {
         "key": "server",
-        "description": "Gets information about the current server",
-        "example_usage": "`'{'{0}'}'`, `'{'{0}:property'}'` (Replace `property` with one of: `id`, `region`, `owner`, `member_count`)"
+        "description": "Gets information about the current server"
       },
       "sender": {
         "key": "sender",
-        "description": "Gets the user who executed the tag",
-        "example_usage": "`'{'{0}'}'`, `'{'{0}:property'}'` (Replace property with one of: `id`, `nickname`, `name`, `full_name`, `mention`)"
+        "description": "Gets the user who executed the tag"
       },
       "channel": {
         "key": "channel",
-        "description": "Gets the channel that the tag was ran in",
-        "example_usage": "`'{'{0}'}'`, `'{'{0}:property'}'` (Replace property with one of: `id`, `mention`, `topic`, `creation`, `parent`)"
+        "description": "Gets the channel that the tag was ran in"
       },
       "time": {
         "key": "time",
@@ -1234,8 +1233,7 @@
       },
       "args": {
         "key": "args",
-        "description": "Injects a specified argument (zero indexed).",
-        "example_usage": "`'{'{0}:0'}'`, `'{'{0}:1'}'`, etc..."
+        "description": "Injects a specified argument (zero indexed)."
       }
     },
     "server": {
