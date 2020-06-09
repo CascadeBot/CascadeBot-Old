@@ -139,6 +139,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User user = null;
             if (entry.getType().equals(ActionType.EMOTE_UPDATE) || entry.getType().equals(ActionType.EMOTE_CREATE) || entry.getType().equals(ActionType.EMOTE_DELETE)) {
                 user = auditLogEntries.get(0).getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find emote entry");
             }
             List<LanguageEmbedField> embedFieldList = new ArrayList<>();
             ModlogEvent modlogEvent;
@@ -181,7 +183,7 @@ public class ModlogEventListener extends ListenerAdapter {
             ModlogEvent modlogEvent;
             User responsible = null;
             if (event instanceof GuildMemberJoinEvent) {
-                modlogEvent = ModlogEvent.GUILD_MEMBER_JOINED;
+                modlogEvent = ModlogEvent.GUILD_MEMBER_LEFT;
             } else if (event instanceof GuildMemberLeaveEvent) {
                 if (entry.getType().equals(ActionType.KICK)) {
                     LanguageEmbedField respLanguageEmbedField = new LanguageEmbedField(true, "modlog.general.responsible", "modlog.general.variable");
@@ -193,7 +195,8 @@ public class ModlogEventListener extends ListenerAdapter {
                         embedFieldList.add(reasonEmbedField);
                     }
                     modlogEvent = ModlogEvent.GUILD_MEMBER_KICKED;
-                } else { //TODO not assume leave if audit log entry for kick was not found.
+                } else { //TODO not assume leave if audit log entry for kick was not found. else {
+                    CascadeBot.LOGGER.warn("Modlog: Failed to find kick entry");
                     modlogEvent = ModlogEvent.GUILD_MEMBER_LEFT;
                 }
             } else if (event instanceof GuildMemberRoleAddEvent) {
@@ -248,6 +251,8 @@ public class ModlogEventListener extends ListenerAdapter {
                     reasonEmbedField.addValueObjects(entry.getReason());
                     embedFieldList.add(reasonEmbedField);
                 }
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find ban entry");
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
             guildData.getModeration().sendModlogEvent(eventStore);
@@ -264,6 +269,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (entry.getType().equals(ActionType.UNBAN)) {
                 responsible = entry.getUser();
+            }  else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find unban entry");
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
             guildData.getModeration().sendModlogEvent(eventStore);
@@ -309,6 +316,7 @@ public class ModlogEventListener extends ListenerAdapter {
             if (entry.getType().equals(ActionType.MESSAGE_DELETE)) {
                 responsible = entry.getUser();
             } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find message delete entry");
                 responsible = null;
             }
             if (message.getUserMentions().size() > 0 || message.getRoleMentions().size() > 0) {
@@ -390,6 +398,8 @@ public class ModlogEventListener extends ListenerAdapter {
             ModlogEvent modlogEvent;
             if (entry.getType().equals(ActionType.GUILD_UPDATE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find guild update entry");
             }
             if (event instanceof GuildUpdateAfkChannelEvent) {
                 VoiceChannel oldChannel = ((GuildUpdateAfkChannelEvent) event).getOldAfkChannel();
@@ -593,6 +603,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             if (event instanceof TextChannelUpdateNSFWEvent) {
                 embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.nsfw", "modlog.general.variable", String.valueOf(!((TextChannelUpdateNSFWEvent) event).getOldNSFW())));
@@ -633,6 +645,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             if (event instanceof VoiceChannelUpdateBitrateEvent) {
                 embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.old_bitrate", "modlog.channel.kpbs", String.valueOf(((VoiceChannelUpdateBitrateEvent) event).getOldBitrate())));
@@ -672,6 +686,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE) || entry.getType().equals(ActionType.CHANNEL_OVERRIDE_UPDATE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             String permissionsHolderName;
             if (event.getPermissionHolder() instanceof User) {
@@ -736,6 +752,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_CREATE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find channel create entry");
             }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
@@ -752,6 +770,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_DELETE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find channel delete entry");
             }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
@@ -768,6 +788,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_name", "modlog.general.variable", oldName));
@@ -785,6 +807,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             embedFieldList.add(new LanguageEmbedField(true, "modlog.general.old_pos", "modlog.general.variable", String.valueOf(oldPos)));
@@ -803,6 +827,8 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (entry.getType().equals(ActionType.CHANNEL_UPDATE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             embedFieldList.add(new LanguageEmbedField(true, "modlog.channel.old_parent", "modlog.general.variable", oldParent.getName()));
@@ -822,6 +848,8 @@ public class ModlogEventListener extends ListenerAdapter {
             ModlogEvent modlogEvent;
             if (entry.getType().equals(ActionType.ROLE_CREATE) || entry.getType().equals(ActionType.ROLE_DELETE) || entry.getType().equals(ActionType.ROLE_UPDATE)) {
                 responsible = entry.getUser();
+            } else {
+                CascadeBot.LOGGER.warn("Modlog: Failed to find role entry");
             }
             Role affected = event.getRole();
             if (event instanceof RoleCreateEvent) {

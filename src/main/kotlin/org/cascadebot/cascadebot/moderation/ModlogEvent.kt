@@ -131,10 +131,10 @@ enum class ModlogEvent(messageType: MessageType, vararg categories: Category) {
         }
 
         init {
-            modlogCategoryMap[Category.ALL] = Arrays.asList(*values())
             for (cat in Category.values()) {
                 modlogCategoryMap[cat] = ArrayList()
             }
+            modlogCategoryMap[Category.ALL] = Arrays.asList(*values())
             for (event in values()) {
                 for (category in event.categories) {
                     modlogCategoryMap[category]?.add(event)

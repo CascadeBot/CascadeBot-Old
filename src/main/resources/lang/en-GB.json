@@ -1287,6 +1287,10 @@
       "cascade_tag_updated": {
         "select": "cascade_tag_updated",
         "display": "Cascade tag updated"
+      },
+      "guild_message_deleted_mention": {
+        "select": "guild_message_deleted_mention",
+        "display": "Guild message deleted with mention"
       }
     }
   },
