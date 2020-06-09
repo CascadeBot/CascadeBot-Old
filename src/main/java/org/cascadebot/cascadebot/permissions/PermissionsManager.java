@@ -73,6 +73,7 @@ public class PermissionsManager {
             }
         }
 
+        registerPermission(CascadePermission.ALL_PERMISSIONS);
         registerPermission(CascadePermission.of("module.info", false, Module.INFORMATIONAL));
         registerPermission(CascadePermission.of("module.fun", false, Module.FUN));
         registerPermission(CascadePermission.of("module.music", false, Module.MUSIC));
