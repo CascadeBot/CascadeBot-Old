@@ -39,12 +39,17 @@ public class PageObjects {
         public void pageShow(Message message, int page, int total) {
             GuildData data = GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong());
             if (data.getCore().getUseEmbedForMessages()) {
-                if (numbersInEmbed && total > 1) {
-                    embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
+                if (numbersInEmbed) {
+                    if (total > 1) {
+                        embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
+                    }
                     message.editMessage(embed.build()).override(true).queue();
                 } else {
-                    message.editMessage(new MessageBuilder().setEmbed(embed.build()).append(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total)).build()).override(true).queue();
-
+                    var messageBuilder = new MessageBuilder().setEmbed(embed.build());
+                    if (total > 1) {
+                        messageBuilder.append(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total));
+                    }
+                    message.editMessage(messageBuilder.build()).override(true).queue();
                 }
             } else {
                 if (total > 1) {
