@@ -362,6 +362,7 @@ public class ModlogEventListener extends ListenerAdapter {
         LanguageEmbedField newEmbedField = new LanguageEmbedField(false, "modlog.message.new_message", "modlog.general.variable");
         newEmbedField.addValueObjects(message.getContentRaw());
         // TODO handle embeds/ect...
+        embedFieldList.add(oldEmbedField);
         embedFieldList.add(newEmbedField);
         ModlogEvent modlogEvent = ModlogEvent.GUILD_MESSAGE_UPDATED;
         ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, null, affected, embedFieldList);
