@@ -171,9 +171,7 @@ object PlaceholderObjects {
 
 fun <T> getPlaceholderUsagePage(placeholders: List<Placeholder<T>>, title: String, locale: Locale): PageObjects.EmbedPage {
     val builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO)
-    val placeholderUsages = tags
-            .placeholders
-            .joinToString("\n") { it.getUsageInfo(locale) }
+    val placeholderUsages = placeholders.joinToString("\n") { it.getUsageInfo(locale) }
     builder.setTitle(title)
     builder.setDescription(
             placeholderUsages

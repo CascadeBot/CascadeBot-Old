@@ -99,7 +99,7 @@ class GoodbyeCommand : MainCommand() {
         return listOf(
                 getPlaceholderUsagePage(
                         goodbyes.placeholders,
-                        i18n(locale, "placeholders.goodbye.title"),
+                        i18n(locale, "placeholders.goodbyes.title"),
                         locale
                 )
         )

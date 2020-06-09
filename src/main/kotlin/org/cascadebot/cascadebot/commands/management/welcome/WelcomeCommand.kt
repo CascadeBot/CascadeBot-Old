@@ -97,7 +97,7 @@ class WelcomeCommand : MainCommand() {
         return listOf(
                 getPlaceholderUsagePage(
                         PlaceholderObjects.welcomes.placeholders,
-                        Language.i18n(locale, "placeholders.welcome.title"),
+                        Language.i18n(locale, "placeholders.welcomes.title"),
                         locale
                 )
         )

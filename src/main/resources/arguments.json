@@ -188,12 +188,6 @@
         "_type": "required"
       }
     },
-    "channel": {
-      "channel": {
-        "_type": "required"
-      },
-      "clear": {}
-    },
     "weight": {
       "index*": {
         "_type": "required",
@@ -201,7 +195,8 @@
           "_type": "required"
         }
       }
-    }
+    },
+    "clear": {}
   },
   "color*": {
     "value": {

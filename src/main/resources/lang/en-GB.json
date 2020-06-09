@@ -1236,13 +1236,13 @@
         "description": "Injects a specified argument (zero indexed)."
       }
     },
-    "welcome": {
+    "welcomes": {
       "title": "Welcome Placeholders",
       "server": {
         "key": "server",
         "description": "Gets information about the current server."
       },
-      "sender": {
+      "user": {
         "key": "user",
         "description": "Gets information about the user who joined."
       },
@@ -1251,13 +1251,13 @@
         "description": "Gets the current time"
       }
     },
-    "goodbye": {
+    "goodbyes": {
       "title": "Goodbye Placeholders",
       "server": {
         "key": "server",
         "description": "Gets information about the current server."
       },
-      "sender": {
+      "user": {
         "key": "user",
         "description": "Gets information about the user who left."
       },
