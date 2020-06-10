@@ -43,7 +43,7 @@ class AutoRoleCommand : MainCommand() {
 
     override fun command(): String = "autorole"
 
-    override fun subCommands(): Set<SubCommand> = setOf(AutoRoleAddSubCommand())
+    override fun subCommands(): Set<SubCommand> = setOf(AutoRoleAddSubCommand(), AutoRoleRemoveSubCommand())
 
     override fun module(): Module = Module.MANAGEMENT
 
