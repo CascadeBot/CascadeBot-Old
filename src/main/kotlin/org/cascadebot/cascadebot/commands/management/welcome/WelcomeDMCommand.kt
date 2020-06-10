@@ -38,6 +38,6 @@ class WelcomeDMCommand : MainCommand() {
 
     override fun module(): Module = Module.MANAGEMENT
 
-    override fun permission(): CascadePermission = CascadePermission.of("welcomedm", false)
+    override fun permission(): CascadePermission? = null
 
 }

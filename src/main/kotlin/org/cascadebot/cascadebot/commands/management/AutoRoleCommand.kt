@@ -18,35 +18,15 @@ import org.cascadebot.cascadebot.permissions.CascadePermission
 class AutoRoleCommand : MainCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
-        if (context.args.isNotEmpty()) {
-            context.uiMessaging.replyUsage()
-            return
-        }
-        val roles = context.data.management.autoRoles.map { context.guild.getRoleById(it) ?: it }
-        val autoRoles = StringBuilder()
-        for (role in roles) {
-            when (role) {
-                is Role -> autoRoles.append(role.asMention).append(" (${role.id})").append(" ")
-                is Long -> autoRoles.append("<@$role>").append(" ")
-            }
-        }
-        val embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.user)
-        embedBuilder.setTitle(context.i18n("words.autorole"))
-        embedBuilder.setDescription("""
-            ${context.i18n("commands.autorole.autorole_description")}
-            
-            ${context.i18n("words.roles")}: $autoRoles
-        """.trimIndent())
-
-        context.typedMessaging.replyInfo(embedBuilder)
+        context.uiMessaging.replyUsage()
     }
 
     override fun command(): String = "autorole"
 
-    override fun subCommands(): Set<SubCommand> = setOf(AutoRoleAddSubCommand(), AutoRoleRemoveSubCommand())
+    override fun subCommands(): Set<SubCommand> = setOf(AutoRoleAddSubCommand(), AutoRoleRemoveSubCommand(), AutoRoleListSubCommand())
 
     override fun module(): Module = Module.MANAGEMENT
 
-    override fun permission(): CascadePermission = CascadePermission.of("autorole", false)
+    override fun permission(): CascadePermission? = null
 
 }

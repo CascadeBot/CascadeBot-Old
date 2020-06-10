@@ -32,7 +32,7 @@ class WelcomeCommand : MainCommand() {
 
     override fun module(): Module = Module.MANAGEMENT
 
-    override fun permission(): CascadePermission = CascadePermission.of("welcome", false)
+    override fun permission(): CascadePermission? = null
 
     override fun additionalUsagePages(locale: Locale): List<Page> {
         return listOf(

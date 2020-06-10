@@ -115,7 +115,7 @@
       }
     }
   },
-  "autorole": {
+  "autorole*": {
     "add*": {
       "roles": {
         "_type": "required",
@@ -127,7 +127,8 @@
         "_type": "required",
         "_vararg": true
       }
-    }
+    },
+    "list": {}
   },
   "welcome*": {
     "add*": {

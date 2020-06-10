@@ -292,7 +292,7 @@
     },
     "autorole": {
       "command": "autorole",
-      "description": "Lists the roles that will be added to new members of the server.",
+      "description": "Manages the roles that will be added to new members of the server.",
       "inputs_unparsed": "Inputs that could not be parsed:",
       "parse_failed": "Could not parse any of arguments to a role! Please enter role IDs or role mentions!",
       "autorole_description": "The roles listed below will automatically be assigned to users when they join.",
@@ -307,6 +307,10 @@
         "description": "Removes a role from the AutoRole list.",
         "remove_success": "Successfully removed the roles from AutoRole!",
         "removed_roles": "Removed roles:"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the roles that will be added to new members of the server."
       }
     },
     "welcome": {
