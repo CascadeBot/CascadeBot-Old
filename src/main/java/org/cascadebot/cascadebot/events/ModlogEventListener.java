@@ -538,37 +538,49 @@ public class ModlogEventListener extends ListenerAdapter {
 
     public void onGenericGuildVoice(GenericGuildVoiceEvent event) {
         User affected = event.getMember().getUser();
-        List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-        ModlogEvent action;
         Guild guild = event.getGuild();
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-        if (event instanceof GuildVoiceDeafenEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.deafen", "modlog.general.variable", String.valueOf(((GuildVoiceDeafenEvent) event).isDeafened())));
-            action = ModlogEvent.VOICE_DEAFEN;
-        } else if (event instanceof GuildVoiceMuteEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.mute", "modlog.general.variable", String.valueOf(((GuildVoiceMuteEvent) event).isMuted())));
-            action = ModlogEvent.VOICE_MUTE;
-        } else if (event instanceof GuildVoiceGuildDeafenEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.deafen", "modlog.general.variable", String.valueOf(((GuildVoiceGuildDeafenEvent) event).isGuildDeafened())));
-            action = ModlogEvent.VOICE_SERVER_DEAFEN;
-        } else if (event instanceof GuildVoiceGuildMuteEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.mute", "modlog.general.variable", String.valueOf(((GuildVoiceGuildMuteEvent) event).isGuildMuted())));
-            action = ModlogEvent.VOICE_SERVER_MUTE;
-        } else if (event instanceof GuildVoiceJoinEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", ((GuildVoiceJoinEvent) event).getChannelJoined().getName()));
-            action = ModlogEvent.VOICE_JOIN;
-        } else if (event instanceof GuildVoiceLeaveEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", ((GuildVoiceLeaveEvent) event).getChannelLeft().getName()));
-            action = ModlogEvent.VOICE_LEAVE;
-        } else if (event instanceof GuildVoiceMoveEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", ((GuildVoiceMoveEvent) event).getChannelLeft().getName()));
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", ((GuildVoiceMoveEvent) event).getChannelJoined().getName()));
-            action = ModlogEvent.VOICE_MOVE;
-        } else {
-            return;
-        }
-        ModlogEventStore eventStore = new ModlogEventStore(action, null, affected, embedFieldList);
-        guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
+        guild.retrieveAuditLogs().limit(1).queue(auditLogEntries -> {
+            AuditLogEntry entry = auditLogEntries.get(0);
+            long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
+            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+            ModlogEvent action;
+            if (event instanceof GuildVoiceDeafenEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.deafen", "modlog.general.variable", String.valueOf(((GuildVoiceDeafenEvent) event).isDeafened())));
+                action = ModlogEvent.VOICE_DEAFEN;
+            } else if (event instanceof GuildVoiceMuteEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.mute", "modlog.general.variable", String.valueOf(((GuildVoiceMuteEvent) event).isMuted())));
+                action = ModlogEvent.VOICE_MUTE;
+            } else if (event instanceof GuildVoiceGuildDeafenEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.deafen", "modlog.general.variable", String.valueOf(((GuildVoiceGuildDeafenEvent) event).isGuildDeafened())));
+                action = ModlogEvent.VOICE_SERVER_DEAFEN;
+            } else if (event instanceof GuildVoiceGuildMuteEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.mute", "modlog.general.variable", String.valueOf(((GuildVoiceGuildMuteEvent) event).isGuildMuted())));
+                action = ModlogEvent.VOICE_SERVER_MUTE;
+            } else if (event instanceof GuildVoiceJoinEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", ((GuildVoiceJoinEvent) event).getChannelJoined().getName()));
+                action = ModlogEvent.VOICE_JOIN;
+            } else if (event instanceof GuildVoiceLeaveEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", ((GuildVoiceLeaveEvent) event).getChannelLeft().getName()));
+                if (entry.getType().equals(ActionType.MEMBER_VOICE_MOVE) && millis < auditTimeAllowed && entry.getTargetIdLong() == event.getMember().getIdLong()) {
+                    action = ModlogEvent.VOICE_DISCONNECT;
+                } else {
+                    action = ModlogEvent.VOICE_LEAVE;
+                }
+            } else if (event instanceof GuildVoiceMoveEvent) {
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", ((GuildVoiceMoveEvent) event).getChannelLeft().getName()));
+                embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", ((GuildVoiceMoveEvent) event).getChannelJoined().getName()));
+                if (entry.getType().equals(ActionType.MEMBER_VOICE_KICK) && millis < auditTimeAllowed && entry.getTargetIdLong() == event.getMember().getIdLong()) {
+                    action = ModlogEvent.VOICE_FORCE_MOVE;
+                } else {
+                    action = ModlogEvent.VOICE_MOVE;
+                }
+            } else {
+                return;
+            }
+            ModlogEventStore eventStore = new ModlogEventStore(action, null, affected, embedFieldList);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
+        });
     }
 
     //region Channels

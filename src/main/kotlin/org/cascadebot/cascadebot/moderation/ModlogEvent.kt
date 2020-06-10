@@ -54,7 +54,8 @@ enum class ModlogEvent(messageType: MessageType, vararg categories: Category) {
     VOICE_SERVER_MUTE(MessageType.WARNING, Category.VOICE, Category.MODERATION),
     VOICE_JOIN(MessageType.INFO, Category.VOICE),
     VOICE_LEAVE(MessageType.INFO, Category.VOICE),
-    VOICE_MOVE(MessageType.WARNING, Category.VOICE),
+    VOICE_MOVE(MessageType.INFO, Category.VOICE),
+    VOICE_FORCE_MOVE(MessageType.WARNING, Category.VOICE, Category.MODERATION),
     VOICE_DISCONNECT(MessageType.WARNING, Category.VOICE, Category.MODERATION),
 
     ROLE_CREATED(MessageType.WARNING, Category.ROLE),
