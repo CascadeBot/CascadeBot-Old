@@ -82,26 +82,18 @@ public class PageUtils {
         Checks.check(length <= 1800, "length");
         Checks.notEmpty(string, "string");
 
-        int amount = (int) ((double) string.length() / (double) length);
+        var strings = new ArrayList<String>();
 
-        List<String> strings = new ArrayList<>();
-        String toAdd = "";
+        int start = 0;
 
-        for (int i = 0; i <= amount; i++) {
-            int start = length * i;
-            int end = Math.min(start + (length - 1), string.length());
-
-            String temp = toAdd + string.substring(start, end == string.length() ? end : end - toAdd.length());
-            int last;
-            if (end != string.length()) {
-                last = temp.lastIndexOf(c);
-
-                toAdd = temp.substring(last + 1);
-            } else {
-                last = temp.length();
+        while (start < string.length()) {
+            int end = Math.min(start + length, string.length());
+            String substring = string.substring(start, end);
+            if (substring.lastIndexOf(c) != -1 && end != string.length()) {
+                substring = substring.substring(0, substring.lastIndexOf(c) + 1);
             }
-
-            strings.add(temp.substring(0, last));
+            strings.add(substring);
+            start += substring.length();
         }
 
         return strings;
