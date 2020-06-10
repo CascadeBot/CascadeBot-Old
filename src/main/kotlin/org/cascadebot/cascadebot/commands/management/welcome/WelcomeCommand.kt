@@ -25,66 +25,7 @@ import org.cascadebot.cascadebot.utils.truncate
 class WelcomeCommand : MainCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
-        if (context.args.isNotEmpty()) {
-            context.uiMessaging.replyUsage()
-            return
-        }
-        val welcomeMessages = context.data.management.greetings.welcomeMessages
-
-        val totalWeight = welcomeMessages.totalWeight
-        val items = welcomeMessages.itemsAndWeighting
-
-        val overviewPage = PageObjects.EmbedPage(embed(MessageType.INFO) {
-            title { name = context.i18n("commands.welcome.messages_title") }
-            field {
-                name = context.i18n("commands.welcome.embed_message_count")
-                value = welcomeMessages.size.toString()
-                inline = true
-            }
-            field {
-                name = context.i18n("commands.welcome.embed_total_weight")
-                value = welcomeMessages.totalWeight.toString()
-                inline = true
-            }
-            field {
-                name = context.i18n("commands.welcome.embed_quick_overview")
-                value = run {
-                    var result = ""
-                    for ((item, weight) in items.take(10)) {
-                        if (item == null) continue
-                        result += item.truncate(25).padEnd(25) + " - " + (weight.toDouble() / totalWeight.toDouble()).toPercentage() + "\n"
-                    }
-                    if (items.size > 10) result += context.i18n("responses.more_in_list", items.size - 10)
-                    result
-                }
-            }
-        })
-
-        val pages: MutableList<PageObjects.EmbedPage> = mutableListOf(overviewPage)
-
-        for ((index, weightPair) in items.withIndex()) {
-            check(weightPair.item != null) { "The message should never be null!" }
-            pages.add(PageObjects.EmbedPage(embed(MessageType.INFO) {
-                title { name = context.i18n("commands.welcome.message_title", index + 1)}
-                field {
-                    name = context.i18n("commands.welcome.embed_message")
-                    value = PlaceholderObjects.welcomes.highlightMessage(weightPair.item)
-                }
-                field {
-                    name = context.i18n("commands.welcome.proportion_title")
-                    value = (weightPair.weight.toDouble() / totalWeight.toDouble()).toPercentage()
-                    inline = true
-                }
-                field {
-                    name = context.i18n("commands.welcome.embed_weight")
-                    value = weightPair.weight.toString()
-                    inline = true
-                }
-            }))
-        }
-
-
-        context.uiMessaging.sendPagedMessage(pages as List<Page>)
+        context.uiMessaging.replyUsage()
     }
 
     override fun command(): String = "welcome"
@@ -103,6 +44,6 @@ class WelcomeCommand : MainCommand() {
         )
     }
 
-    override fun subCommands(): Set<SubCommand> = setOf(WelcomeAddSubCommand(), WelcomeChannelSubCommand(), WelcomeClearSubCommand(), WelcomeRemoveSubCommand(), WelcomeWeightSubCommand())
+    override fun subCommands(): Set<SubCommand> = setOf(WelcomeAddSubCommand(), WelcomeChannelSubCommand(), WelcomeClearSubCommand(), WelcomeRemoveSubCommand(), WelcomeWeightSubCommand(), WelcomeListSubCommand())
 
 }
