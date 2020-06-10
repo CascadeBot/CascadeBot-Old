@@ -17,4 +17,7 @@ class GuildSettingsMusic {
 
     var equalizerBands: MutableMap<Int, Float> = ConcurrentHashMap();
 
+    @Setting
+    var joinOnPlay = true;
+
 }
