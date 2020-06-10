@@ -52,7 +52,7 @@ abstract class ExecutableCommand {
 
     open fun deleteMessages(): Boolean = true
 
-    open fun additionalUsagePages(): List<Page> = listOf()
+    open fun additionalUsagePages(locale: Locale): List<Page> = listOf()
 
 
 }

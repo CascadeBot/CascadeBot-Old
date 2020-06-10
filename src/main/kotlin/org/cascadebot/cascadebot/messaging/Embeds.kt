@@ -1,46 +1,44 @@
 package org.cascadebot.cascadebot.messaging
 
+import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.UnicodeConstants
 import java.awt.Color
 import java.time.LocalDateTime
 import java.time.temporal.TemporalAccessor
+import net.dv8tion.jda.api.EmbedBuilder as JDAEmbedBuilder
 
-class EmbedBuilder(val type : MessageType) {
-    private var titleBuilder : TitleBuilder? = null
-    private var authorBuilder : AuthorBuilder? = null
-    private var footerBuilder : FooterBuilder? = null
-    private var fieldBuilders : MutableList<FieldBuilder> = mutableListOf()
+class EmbedBuilder(type: MessageType, private val requestedBy: User? = null) {
+    private var titleBuilder: TitleBuilder? = null
+    private var authorBuilder: AuthorBuilder? = null
+    private var footerBuilder: FooterBuilder? = null
+    private var fieldBuilders: MutableList<FieldBuilder> = mutableListOf()
 
-    var description : String? = null
-    var imageUrl : String? = null
-    var thumbnailUrl : String? = null
-    var timestamp : TemporalAccessor? = null
-    var color : Color? = null
+    var description: String? = null
+    var imageUrl: String? = null
+    var thumbnailUrl: String? = null
+    var timestamp: TemporalAccessor? = null
+    var color: Color? = type.color
 
     class TitleBuilder {
-        var name : String? = null
-        var url : String? = null
-
-        fun build() : String {
-            return "yeet"
-        }
+        var name: String? = null
+        var url: String? = null
     }
 
     class AuthorBuilder {
-        var name : String? = null
-        var url : String? = null
-        var iconUrl : String? = null
+        var name: String? = null
+        var url: String? = null
+        var iconUrl: String? = null
     }
 
     class FieldBuilder {
-        var name : String? = null
-        var value : String? = null
+        var name: String? = null
+        var value: String? = null
         var inline = false
     }
 
     class FooterBuilder {
-        var text : String? = null
-        var iconUrl : String? = null
+        var text: String? = null
+        var iconUrl: String? = null
     }
 
     fun title(init: TitleBuilder.() -> Unit) {
@@ -54,6 +52,7 @@ class EmbedBuilder(val type : MessageType) {
     fun field(init: FieldBuilder.() -> Unit) {
         fieldBuilders.add(FieldBuilder().apply(init))
     }
+
     fun footer(init: FooterBuilder.() -> Unit) {
         footerBuilder = FooterBuilder().apply(init)
     }
@@ -66,8 +65,8 @@ class EmbedBuilder(val type : MessageType) {
         })
     }
 
-    fun build () : net.dv8tion.jda.api.EmbedBuilder {
-        val embedBuilder = net.dv8tion.jda.api.EmbedBuilder().setColor(type.color)
+    fun build(): JDAEmbedBuilder {
+        val embedBuilder = net.dv8tion.jda.api.EmbedBuilder()
         for (builder in fieldBuilders) {
             embedBuilder.addField(
                     builder.name,
@@ -77,7 +76,9 @@ class EmbedBuilder(val type : MessageType) {
         }
         titleBuilder?.let { embedBuilder.setTitle(it.name, it.url) }
         authorBuilder?.let { embedBuilder.setAuthor(it.name, it.url, it.iconUrl) }
-        footerBuilder?.let { embedBuilder.setFooter(it.text, it.iconUrl) }
+        footerBuilder?.let { embedBuilder.setFooter(it.text, it.iconUrl) } ?: requestedBy?.also {
+            embedBuilder.setFooter("Requested by " + it.asTag, it.effectiveAvatarUrl)
+        }
 
         embedBuilder.setDescription(description)
         embedBuilder.setImage(imageUrl)
@@ -88,14 +89,14 @@ class EmbedBuilder(val type : MessageType) {
     }
 }
 
-fun embed(type : MessageType, init : EmbedBuilder.() -> Unit) : net.dv8tion.jda.api.EmbedBuilder = EmbedBuilder(type).apply(init).build()
+fun embed(type: MessageType, user: User? = null, init: EmbedBuilder.() -> Unit): JDAEmbedBuilder = EmbedBuilder(type, user).apply(init).build()
 
 /*
 ====================================
 Full embed type-safe builder example
 ====================================
  */
-fun getEmbed() : net.dv8tion.jda.api.EmbedBuilder {
+fun getEmbed(): JDAEmbedBuilder {
     return embed(type = MessageType.INFO) {
         title {
             name = "title"

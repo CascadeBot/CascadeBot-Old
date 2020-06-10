@@ -3,40 +3,34 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.management;
+package org.cascadebot.cascadebot.commands.management.tag;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-public class TagCategorySubCommand extends SubCommand {
+public class TagDeleteSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length < 2) {
+        if (context.getArgs().length < 1) {
             context.getUiMessaging().replyUsage();
             return;
         }
 
-        Tag tag = context.getData().getManagement().getTag(context.getArg(0));
-
         String tagName = context.getArg(0).toLowerCase();
-        String category = context.getArg(1).toLowerCase();
 
-        if (tag == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
-            return;
+        if (context.getData().getManagement().removeTag(tagName)) {
+            context.getTypedMessaging().replySuccess(context.i18n("commands.tag.delete.successfully_deleted_tag"));
+        } else {
+            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", tagName));
         }
-
-        tag.setCategory(category);
-        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.category.successfully_set_tag", tagName, category));
     }
 
     @Override
     public String command() {
-        return "category";
+        return "delete";
     }
 
     @Override
@@ -46,7 +40,7 @@ public class TagCategorySubCommand extends SubCommand {
 
     @Override
     public CascadePermission permission() {
-        return CascadePermission.of("tag.category", false);
+        return CascadePermission.of("tag.delete", false);
     }
 
 }

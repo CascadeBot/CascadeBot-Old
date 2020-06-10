@@ -9,6 +9,7 @@ import org.cascadebot.cascadebot.data.objects.ArgumentType
 data class Argument(val id: String,
                     val type: ArgumentType,
                     val displayAlone: Boolean,
+                    val varargs: Boolean,
                     val subArgs: List<Argument>,
                     val aliases: Set<String>
 ) {
@@ -102,9 +103,10 @@ data class Argument(val id: String,
             }
             argument = paramBuilder.toString()
         }
+        val varArgs = if (varargs) "..." else ""
         return when (type) {
-            ArgumentType.OPTIONAL -> "[$argument]"
-            ArgumentType.REQUIRED -> "<$argument>"
+            ArgumentType.OPTIONAL -> "[$argument$varArgs]"
+            ArgumentType.REQUIRED -> "<$argument$varArgs>"
             else -> argument
         }
     } //TODO implement utils for checking arguments in the command. we have a class here why not use it.

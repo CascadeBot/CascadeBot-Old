@@ -177,7 +177,7 @@ public class MessagingUI {
     public void replyUsage(ExecutableCommand command) {
         String usage = context.getUsage(command);
         List<Page> pages = PageUtils.splitStringToEmbedPages(usage, context.i18n("commands.usage.title", command.command()), 1000, '\n');
-        pages.addAll(command.additionalUsagePages());
+        pages.addAll(command.additionalUsagePages(context.getLocale()));
         sendPagedMessage(pages);
     }
 

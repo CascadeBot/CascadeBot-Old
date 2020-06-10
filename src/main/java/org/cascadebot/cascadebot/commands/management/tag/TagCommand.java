@@ -3,16 +3,23 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.management;
+package org.cascadebot.cascadebot.commands.management.tag;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.pagination.Page;
+import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;
+import org.cascadebot.cascadebot.utils.placeholders.PlaceholdersKt;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Set;
 
 public class TagCommand extends MainCommand {
@@ -49,6 +56,18 @@ public class TagCommand extends MainCommand {
     public Set<SubCommand> subCommands() {
         return Set.of(new TagCreateSubCommand(), new TagDeleteSubCommand(), new TagListSubCommand(), new TagRawSubCommand(), new TagPlaceholdersSubCommand(),
                 new TagCategorySubCommand(), new TagEditSubCommand());
+    }
+
+    @NotNull
+    @Override
+    public List<Page> additionalUsagePages(@NotNull Locale locale) {
+        return List.of(
+                PlaceholdersKt.getPlaceholderUsagePage(
+                        PlaceholderObjects.getTags().getPlaceholders(),
+                        Language.i18n(locale, "placeholders.tags.title"),
+                        locale
+                )
+        );
     }
 
     @Override
