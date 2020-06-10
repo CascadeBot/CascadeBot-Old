@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.utils
 
+import org.cascadebot.cascadebot.utils.lists.ChangeList
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

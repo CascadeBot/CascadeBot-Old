@@ -2,18 +2,16 @@ package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class VolumeCommand implements ICommandMain {
+public class VolumeCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -48,8 +46,8 @@ public class VolumeCommand implements ICommandMain {
                             @Override
                             public void execute() {
                                 player.setVolume(volume);
-                                if (context.getData().getGuildMusic().getPreserveVolume()) {
-                                    context.getData().getGuildMusic().setVolume(volume);
+                                if (context.getData().getMusic().getPreserveVolume()) {
+                                    context.getData().getMusic().setVolume(volume);
                                 }
                                 context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
                             }
@@ -68,8 +66,8 @@ public class VolumeCommand implements ICommandMain {
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getVolume()));
         } else {
             player.setVolume(volume);
-            if (context.getData().getGuildMusic().getPreserveVolume()) {
-                context.getData().getGuildMusic().setVolume(volume);
+            if (context.getData().getMusic().getPreserveVolume()) {
+                context.getData().getMusic().setVolume(volume);
             }
             context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
         }
@@ -77,7 +75,7 @@ public class VolumeCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MUSIC;
     }
 
@@ -87,13 +85,8 @@ public class VolumeCommand implements ICommandMain {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("volume", false);
-    }
-
-    @Override
-    public Set<Flag> getFlags() {
-        return Set.of(Flag.MUSIC_SERVICES);
     }
 
 }

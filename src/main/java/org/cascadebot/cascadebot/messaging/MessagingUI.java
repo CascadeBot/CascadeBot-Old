@@ -17,7 +17,7 @@ import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
@@ -25,6 +25,7 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
+import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import spark.utils.CollectionUtils;
 
 import java.io.File;
@@ -173,11 +174,11 @@ public class MessagingUI {
         replyUsage(context.getCommand());
     }
 
-    public void replyUsage(ICommandExecutable command) {
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.getUsage(command), context.getUser());
-        builder.setAuthor(context.i18n("responses.incorrect_usage_title_1"));
-        builder.setTitle(context.i18n("responses.incorrect_usage_title_2"));
-        context.getTypedMessaging().replyWarning(builder);
+    public void replyUsage(ExecutableCommand command) {
+        String usage = context.getUsage(command);
+        List<Page> pages = PageUtils.splitStringToEmbedPages(usage, context.i18n("commands.usage.title", command.command()), 1000, '\n');
+        pages.addAll(command.additionalUsagePages(context.getLocale()));
+        sendPagedMessage(pages);
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {
@@ -236,7 +237,7 @@ public class MessagingUI {
                 context.getUiMessaging().sendTracksFound(tracks);
             }));
 
-            String message = context.i18n("music.misc.load_options",selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
+            String message = context.i18n("music.misc.load_options", selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
 
             EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
             embedBuilder.setTitle(context.i18n("music.misc.load_options_title"));

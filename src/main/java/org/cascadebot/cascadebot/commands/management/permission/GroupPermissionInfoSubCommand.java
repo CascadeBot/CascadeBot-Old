@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
@@ -20,7 +20,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupPermissionInfoSubCommand implements ISubCommand {
+public class GroupPermissionInfoSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -86,7 +86,7 @@ public class GroupPermissionInfoSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("permissions.group.info", false, Module.MANAGEMENT);
     }
 

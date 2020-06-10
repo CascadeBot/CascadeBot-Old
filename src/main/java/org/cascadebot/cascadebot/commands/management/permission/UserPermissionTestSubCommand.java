@@ -8,12 +8,12 @@ package org.cascadebot.cascadebot.commands.management.permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
-public class UserPermissionTestSubCommand implements ISubCommand {
+public class UserPermissionTestSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -34,7 +34,7 @@ public class UserPermissionTestSubCommand implements ISubCommand {
             return;
         }
 
-        if (context.getData().getPermissionSettings().hasPermission(target, context.getChannel(), perm, context.getCoreSettings())) {
+        if (context.getData().getManagement().getPermissions().hasPermission(target, context.getChannel(), perm, context.getCoreSettings())) {
             context.getTypedMessaging().replyInfo(context.i18n("commands.userperms.test.has", target.getUser().getAsTag(), perm.getPermission(context.getLocale())));
         } else {
             context.getTypedMessaging().replyInfo(context.i18n("commands.userperms.test.does_not_have", target.getUser().getAsTag(), perm.getPermission(context.getLocale())));
@@ -52,7 +52,7 @@ public class UserPermissionTestSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("permissions.user.test", false, Module.MANAGEMENT);
     }
 

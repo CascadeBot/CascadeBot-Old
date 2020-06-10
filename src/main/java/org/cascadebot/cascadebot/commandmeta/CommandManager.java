@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.commandmeta;
 import lombok.Getter;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
 import org.cascadebot.cascadebot.ShutdownHandler;
-import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.ReflectionUtils;
 import org.slf4j.Logger;
@@ -23,18 +22,15 @@ public class CommandManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
 
     @Getter
-    private List<ICommandMain> commands;
+    private List<MainCommand> commands;
 
     public CommandManager() {
         long start = System.currentTimeMillis();
         try {
-            List<ICommandMain> commands = new ArrayList<>();
+            List<MainCommand> commands = new ArrayList<>();
             for (Class<?> c : ReflectionUtils.getClasses("org.cascadebot.cascadebot.commands")) {
-                if (ICommandMain.class.isAssignableFrom(c)) {
-                    ICommandMain command = (ICommandMain) ConstructorUtils.invokeConstructor(c);
-                    if (command.getModule() == null) {
-                        throw new IllegalStateException(String.format("Command %s could not be loaded as its module was null!", command.getClass().getSimpleName()));
-                    }
+                if (MainCommand.class.isAssignableFrom(c)) {
+                    MainCommand command = (MainCommand) ConstructorUtils.invokeConstructor(c);
                     commands.add(command);
                 }
             }
@@ -46,25 +42,25 @@ public class CommandManager {
         }
     }
 
-    public ICommandMain getCommand(String command) {
-        for (ICommandMain cmd : commands) {
+    public MainCommand getCommand(String command) {
+        for (MainCommand cmd : commands) {
             if (cmd.command().equals(command)) return cmd;
         }
         return null;
     }
 
-    public ICommandMain getCommand(String command, GuildData data) {
-        for (ICommandMain cmd : commands) {
-            if (data.getCommandAliases(cmd).contains(command)) {
+    public MainCommand getCommand(String command, GuildData data) {
+        for (MainCommand cmd : commands) {
+            if (data.getCore().getCommandAliases(cmd).contains(command)) {
                 return cmd;
             }
         }
 
         // Fallback to default if cannot find command
-        for (ICommandMain cmd : commands) {
+        for (MainCommand cmd : commands) {
             if (cmd.command(data.getLocale()).equals(command)) {
                 return cmd;
-            } else if (cmd.getGlobalAliases(data.getLocale()).contains(command)) {
+            } else if (cmd.globalAliases(data.getLocale()).contains(command)) {
                 return cmd;
             }
         }
@@ -72,11 +68,11 @@ public class CommandManager {
         return getCommand(command);
     }
 
-    public List<ICommandMain> getCommandsByModule(Module type) {
-        return commands.stream().filter(command -> command.getModule() == type).collect(Collectors.toList());
+    public List<MainCommand> getCommandsByModule(Module type) {
+        return commands.stream().filter(command -> command.module() == type).collect(Collectors.toList());
     }
 
-    public ICommandMain getCommandByDefault(String defaultCommand) {
+    public MainCommand getCommandByDefault(String defaultCommand) {
         return commands.stream().filter(command -> command.command().equalsIgnoreCase(defaultCommand)).findFirst().orElse(null);
     }
 

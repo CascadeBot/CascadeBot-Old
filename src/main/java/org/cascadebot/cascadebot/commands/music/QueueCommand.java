@@ -11,9 +11,9 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.music.TrackData;
@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class QueueCommand implements ICommandMain {
+public class QueueCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -71,7 +71,7 @@ public class QueueCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MUSIC;
     }
 
@@ -82,12 +82,12 @@ public class QueueCommand implements ICommandMain {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("queue", false);
     }
 
     @Override
-    public Set<ISubCommand> getSubCommands() {
+    public Set<SubCommand> subCommands() {
         return Set.of(new QueueSaveSubCommand(), new QueueLoadSubCommand(), new QueueMoveSubCommand(), new QueueRemoveSubCommand());
     }
 

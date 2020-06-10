@@ -27,8 +27,8 @@ import org.cascadebot.cascadebot.messaging.MessagingUI
 import org.cascadebot.cascadebot.music.CascadePlayer
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
-class CommandContext(
-        val command: ICommandExecutable,
+data class CommandContext(
+        val command: ExecutableCommand?,
         val jda: JDA,
         val channel: TextChannel,
         val message: Message,
@@ -66,16 +66,16 @@ class CommandContext(
 
     fun getArg(index: Int): String = args[index]
 
-    fun isArgInteger(index: Int): Boolean = args[index].toIntOrNull() == null
+    fun isArgInteger(index: Int): Boolean = args[index].toIntOrNull() != null
 
     fun getArgAsInteger(index: Int): Int? = args[index].toIntOrNull()
 
-    fun isArgLong(index: Int): Boolean = args[index].toLongOrNull() == null
+    fun isArgLong(index: Int): Boolean = args[index].toLongOrNull() != null
 
     fun getArgAsLong(index: Int): Long? = args[index].toLongOrNull()
 
     @Deprecated("This is only here for Java interop. Should not be used in Kotlin!", ReplaceWith("data.coreSettings"))
-    fun getCoreSettings() : GuildSettingsCore = data.coreSettings
+    fun getCoreSettings() : GuildSettingsCore = data.core
 
     /**
      * Tests for an argument of a particular id. This check it exists at the position and,
@@ -99,7 +99,7 @@ class CommandContext(
             to check the arg length explicitly.
          */
         if (args.size < requiredArgsCount) return false
-        val argId = command.absoluteCommand + "." + id
+        val argId = (command?.absoluteCommand ?: "") + "." + id
         val argument = CascadeBot.INS.argumentManager.getArgument(argId) ?: return false
         // If the argument doesn't exist, it can't be valid!
         if (argument.type != ArgumentType.COMMAND) {
@@ -123,21 +123,23 @@ class CommandContext(
         return Language.i18n(guild.idLong, path, *args)
     }
 
+    @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
     fun getUsage(): String? {
-        return getUsage(command)
+        return getUsage(this.command!!)
     }
 
-    fun getUsage(command: ICommandExecutable): String? {
+    @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
+    fun getUsage(command: ExecutableCommand): String? {
         val parentArg = CascadeBot.INS.argumentManager.getArgument(command.absoluteCommand)
         return if (parentArg != null) {
             var parent: String? = null
-            if (command is ISubCommand) {
+            if (command is SubCommand) {
                 parent = command.parent()
             }
-            val commandString: String = data.coreSettings.prefix + if (parent == null) "" else "$parent "
+            val commandString: String = data.core.prefix + if (parent == null) "" else "$parent "
             parentArg.getUsageString(locale, commandString)
         } else {
-            "`" + data.coreSettings.prefix + command.command(locale) + "` - " + command.description(locale)
+            "`" + data.core.prefix + command.command(locale) + "` - " + command.description(locale)
         }
     }
 
@@ -179,24 +181,24 @@ class CommandContext(
             CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission)
             return false
         }
-        return data.permissionSettings.hasPermission(member, channel, cascadePermission, data.coreSettings)
+        return data.management.permissions.hasPermission(member, channel, cascadePermission, data.core)
     }
 
     fun hasPermission(permission: CascadePermission?): Boolean {
-        return permission != null && data.permissionSettings.hasPermission(member, channel, permission, data.coreSettings)
+        return permission != null && data.management.permissions.hasPermission(member, channel, permission, data.core)
     }
 
     fun hasPermission(member: Member?, channel: GuildChannel?, permission: CascadePermission?): Boolean {
-        return permission != null && data.permissionSettings.hasPermission(member, channel, permission, data.coreSettings)
+        return permission != null && data.management.permissions.hasPermission(member, channel, permission, data.core)
     }
 
     fun runOtherCommand(command: String?, sender: Member?, context: CommandContext) {
         val commandMain = CascadeBot.INS.commandManager.getCommandByDefault(command)
                 ?: throw IllegalArgumentException("Cannot find that command!")
-        if (hasPermission(commandMain.permission)) {
+        if (hasPermission(commandMain.permission())) {
             commandMain.onCommand(member, context)
         } else {
-            context.uiMessaging.sendPermissionError(commandMain.permission)
+            context.uiMessaging.sendPermissionError(commandMain.permission())
         }
     }
 

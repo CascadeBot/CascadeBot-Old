@@ -56,7 +56,7 @@ public class ArgumentManager {
      * @param command The command to get the argument for
      * @return The command argument containing all the sub arguments
      */
-    public Argument getCommandArgument(ICommandExecutable command) {
+    public Argument getCommandArgument(ExecutableCommand command) {
         return getArgument(command.getAbsoluteCommand());
     }
 
@@ -134,6 +134,11 @@ public class ArgumentManager {
         String typeRaw = subConfig.get().getString("_type").orElse("command");
         // If no valid argument type is given, this defaults to the "command" type
         ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
+        boolean varArgs = subConfig.get().getBoolean("_vararg").orElse(false);
+
+        if (varArgs && type == ArgumentType.COMMAND) {
+            throw new IllegalArgumentException("Var args cannot be used with a command typ!");
+        }
 
         boolean displayAlone = true;
         if (id.endsWith("*")) {
@@ -161,7 +166,7 @@ public class ArgumentManager {
 
         List<Argument> subArgs = getArguments(id);
 
-        return new Argument(newId, type, displayAlone, subArgs, aliases);
+        return new Argument(newId, type, displayAlone, varArgs, subArgs, aliases);
     }
 
 }

@@ -8,13 +8,12 @@ package org.cascadebot.cascadebot.permissions;
 import com.google.common.collect.ImmutableSet;
 import io.github.binaryoverload.JSONConfig;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
-import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
+import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -39,9 +38,13 @@ public class PermissionsManager {
 
     public PermissionsManager() {
         for (Locale locale : Language.getLanguages().keySet()) {
-            if (locale == Locale.getDefaultLocale()) continue;
+            if (locale == Locale.getDefaultLocale()) {
+                continue;
+            }
             JSONConfig config = Language.getLanguages().get(locale);
-            if (config.getElement("permissions").isEmpty()) continue;
+            if (config.getElement("permissions").isEmpty()) {
+                continue;
+            }
             for (String permission : permissions.keySet()) {
                 if (config.getString("permissions." + permission + ".name").isPresent()) {
                     localisedPermissionsMapping.put(config.getString("permissions." + permission + ".name").get(), permission);
@@ -51,19 +54,26 @@ public class PermissionsManager {
     }
 
     public void registerPermissions() {
-        if (!permissions.isEmpty()) throw new IllegalStateException("Permissions have already been registered!");
+        if (!permissions.isEmpty()) {
+            throw new IllegalStateException("Permissions have already been registered!");
+        }
 
         long startTime = System.currentTimeMillis();
 
-        for (ICommandMain command : CascadeBot.INS.getCommandManager().getCommands()) {
-            if (command.getPermission() == null || command instanceof ICommandRestricted) continue;
-            registerPermission(command.getPermission());
-            for (ICommandExecutable subCommand : command.getSubCommands()) {
-                if (subCommand.getPermission() == null) continue;
-                registerPermission(subCommand.getPermission());
+        for (MainCommand command : CascadeBot.INS.getCommandManager().getCommands()) {
+            if (command.permission() == null || command instanceof RestrictedCommand) {
+                continue;
+            }
+            registerPermission(command.permission());
+            for (ExecutableCommand subCommand : command.subCommands()) {
+                if (subCommand.permission() == null) {
+                    continue;
+                }
+                registerPermission(subCommand.permission());
             }
         }
 
+        registerPermission(CascadePermission.ALL_PERMISSIONS);
         registerPermission(CascadePermission.of("module.info", false, Module.INFORMATIONAL));
         registerPermission(CascadePermission.of("module.fun", false, Module.FUN));
         registerPermission(CascadePermission.of("module.music", false, Module.MUSIC));
@@ -107,16 +117,14 @@ public class PermissionsManager {
     }
 
     public boolean isValidPermission(String permission) {
-        return isValidPermission(null, permission);
-    }
-
-    public boolean isValidPermission(Guild guild, String permission) {
-        Set<CascadePermission> permissions = getPermissions(guild);
+        Set<CascadePermission> permissions = getPermissions();
         if (permission.contains("*")) {
             PermissionNode node = new PermissionNode(permission);
             for (CascadePermission perm : permissions) {
                 if (perm != CascadePermission.ALL_PERMISSIONS) {
-                    if (node.test(perm.getPermissionRaw())) return true;
+                    if (node.test(perm.getPermissionRaw())) {
+                        return true;
+                    }
                 }
             }
         }
@@ -132,14 +140,10 @@ public class PermissionsManager {
     }
 
     public Set<CascadePermission> getPermissions() {
-        return getPermissions(null);
+        return getPermissions(false);
     }
 
-    public Set<CascadePermission> getPermissions(Guild guild) {
-        return getPermissions(guild, false);
-    }
-
-    public Set<CascadePermission> getPermissions(Guild guild, boolean defaultOnly) {
+    public Set<CascadePermission> getPermissions(boolean defaultOnly) {
         if (defaultOnly) {
             return defaultPermissions;
         } else {
@@ -147,21 +151,29 @@ public class PermissionsManager {
         }
     }
 
-    public boolean isAuthorised(ICommandExecutable command, GuildData guildData, Member member) {
-        if (command instanceof ICommandRestricted) {
+    public boolean isAuthorised(ExecutableCommand command, GuildData guildData, Member member) {
+        if (command instanceof RestrictedCommand) {
             SecurityLevel userLevel = getUserSecurityLevel(member.getIdLong());
-            if (userLevel == null) return false;
-            SecurityLevel levelToCheck = ((ICommandRestricted) command).getCommandLevel();
+            if (userLevel == null) {
+                return false;
+            }
+            SecurityLevel levelToCheck = ((RestrictedCommand) command).commandLevel();
             return userLevel.isAuthorised(levelToCheck);
         } else {
-            if (command.getPermission() == null) return true;
-            return guildData.getPermissionSettings().hasPermission(member, command.getPermission(), guildData.getCoreSettings());
+            if (command.permission() == null) {
+                return true;
+            }
+            return guildData.getManagement().getPermissions().hasPermission(member, command.permission(), guildData.getCore());
         }
         // return false;
     }
 
     public SecurityLevel getUserSecurityLevel(long userId) {
         return Security.getLevelById(userId, DiscordUtils.getAllOfficialRoleIds(userId));
+    }
+
+    public Map<String, CascadePermission> getPermissionMap() {
+        return Map.copyOf(permissions);
     }
 
 }

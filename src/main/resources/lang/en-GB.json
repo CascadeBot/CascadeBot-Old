@@ -111,7 +111,7 @@
         "command": "remove",
         "description": "Removes a permission from the group.",
         "success": "Successfully removed permission `{0}` from group `{1}`",
-        "fail": "Couldn't removed permission `{0}` from group `{1}` as they already have the permission"
+        "fail": "Couldn't remove permission `{0}` from group `{1}` as they already have the permission"
       },
       "create": {
         "command": "create",
@@ -245,7 +245,7 @@
       "couldnt_process": "Could not process settings!",
       "setting": "Setting",
       "current_value": "Current value",
-      "section_title": "----- {0} module -----",
+      "section_title": "{0} module",
       "cannot_find_field": "Cannot find that field!"
     },
     "tag": {
@@ -283,11 +283,184 @@
       "placeholders": {
         "command": "placeholders",
         "description": "Lists all available placeholders.",
-        "header": "To use placeholders in tags you wrap the placeholder in `{}` (example: `{server_name}`). If a place holder requires more options (like args) you use this format `{placeholder:option1,option2}` (example: `{args:0}`)."
+        "header": "To use placeholders in tags you wrap the placeholder in `'{}'` (example: `'{server}'`). If a place holder requires more options (like args) you use this format `'{placeholder:option1,option2}'` (example: `'{args:0}'`)."
       },
       "raw": {
         "command": "raw",
         "description": "Displays a tag's content and category."
+      }
+    },
+    "autorole": {
+      "command": "autorole",
+      "description": "Manages the roles that will be added to new members of the server.",
+      "inputs_unparsed": "Inputs that could not be parsed:",
+      "parse_failed": "Could not parse any of arguments to a role! Please enter role IDs or role mentions!",
+      "autorole_description": "The roles listed below will automatically be assigned to users when they join.",
+      "add": {
+        "command": "add",
+        "description": "Adds a role to the AutoRole list.",
+        "add_success": "Successfully added the roles to AutoRole!",
+        "added_roles": "Added roles:"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a role from the AutoRole list.",
+        "remove_success": "Successfully removed the roles from AutoRole!",
+        "removed_roles": "Removed roles:"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the roles that will be added to new members of the server."
+      }
+    },
+    "welcome": {
+      "command": "welcome",
+      "description": "Manages the welcome messages for this server.",
+      "current_channel": "The current welcome channel is: {0}",
+      "no_channel_set": "There is no welcome channel set!",
+      "invalid_message_index": "The message index must be between `1` and `{0}`",
+      "no_messages": "There are no welcome messages for this server!",
+      "proportion_title": "Message chance",
+      "embed_message": "Message",
+      "embed_message_count": "Message count",
+      "embed_weight": "Weight",
+      "embed_total_weight": "Total weight",
+      "embed_quick_overview": "Quick overview",
+      "messages_title": "Welcome messages",
+      "message_title": "Welcome message #{0}",
+      "add": {
+        "command": "add",
+        "description": "Adds a welcome message to the server.",
+        "success_title": "Added welcome message!",
+        "success_text_1": "Added the message: ",
+        "success_text_2": "There {0,plural,one{is} other{are}} currently {0} welcome {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
+      },
+      "channel": {
+        "command": "channel",
+        "description": "Gets or sets the welcome channel for the server.",
+        "clear_success": "Successfully cleared the welcome channel!",
+        "invalid_channel": "Please specify a valid channel!",
+        "set_success": "Successfully set the welcome channel to: {0}",
+        "clear": {
+          "command": "clear",
+          "description": "Clears the welcome channel for this server."
+        }
+      },
+      "clear": {
+        "command": "clear",
+        "description": "Clears all welcome messages and the welcome channel.",
+        "confirm_warning": "Running this command will clear **all** messages and the channel for welcome messages! To confirm this action, run the command again or click the button below within 1 minute.",
+        "clear_success": "The welcome messages and the channel for welcome messages have been cleared!"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the welcome messages for this server."
+      },
+      "weight": {
+        "command": "weight",
+        "description": "Allows viewing and setting of welcome message weights.",
+        "embed_title": "Welcome message weights",
+        "weight_range": "The weight must be 1 or more!",
+        "input_whole": "The message index and weight both need to be whole numbers!",
+        "same_weight_title": "Message weight already the same!",
+        "same_weight_text": "The message weight is already set to `{0}`! Message: \n```\n{1}\n```",
+        "proportion_text": "This message will be shown {0}% of the time!",
+        "set_weight_title": "Set the message weight!",
+        "set_weight_text": "Successfully set the weight of the message: \n```\n{0}\n```",
+        "old_weight": "Old Weight",
+        "new_weight": "New Weight"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a welcome message from this server.",
+        "message_index_number": "The message index must be a whole number!",
+        "success_title": "Removed a welcome message!",
+        "success_text": "This message has been removed!\n```\n{0}\n```"
+      }
+    },
+    "welcomedm": {
+      "command": "welcomedm",
+      "description": "Managed the DM welcome messages for this server.",
+      "overview_messages_title": "DM welcome messages",
+      "index_message_title": "DM welcome message #{0}",
+      "no_messages": "There are no DM welcome messages for this server!",
+      "add": {
+        "command": "add",
+        "description": "Adds a DM welcome message to the server.",
+        "success_title": "Added a DM welcome message!",
+        "success_text_1": "Added the message: ",
+        "success_text_2": "There {0,plural,one{is} other{are}} currently {0} DM welcome {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the DM welcome messages for this server."
+      },
+      "weight": {
+        "command": "weight",
+        "description": "Allows viewing and setting of DM welcome message weights.",
+        "embed_title": "DM welcome message weights"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a DM welcome message from this server.",
+        "success_title": "Removed a DM welcome message!"
+      },
+      "clear": {
+        "command": "clear",
+        "description": "Clears all DM welcome messages.",
+        "confirm_warning": "Running this command will clear **all** DM messages! To confirm this action, run the command again or click the button below within 1 minute.",
+        "clear_success": "The welcome DM messages have been cleared!"
+      }
+    },
+    "goodbye": {
+      "command": "goodbye",
+      "description": "Manages the goodbye messages for this server.",
+      "invalid_message_index": "The message index must be between `1` and `{0}`",
+      "no_messages": "There are no goodbye messages for this server!",
+      "proportion_title": "Message chance",
+      "embed_message": "Message",
+      "embed_weight": "Weight",
+      "embed_total_weight": "Total weight",
+      "embed_quick_overview": "Quick overview",
+      "quick_overview_more": "...and {0} more.",
+      "messages_title": "Goodbye messages",
+      "add": {
+        "command": "add",
+        "description": "Adds a goodbye message to the server.",
+        "success_title": "Added goodbye message!",
+        "success_text_1": "Added the message: ",
+        "success_text_2": "There {0,plural,one{is} other{are}} currently {0} goodbye {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the goodbye messages for this server."
+      },
+      "clear": {
+        "command": "clear",
+        "description": "Clears all goodbye messages.",
+        "confirm_warning": "Running this command will clear **all** messages! To confirm this action, run the command again or click the button below within 1 minute.",
+        "clear_success": "The goodbye messages have been cleared!"
+      },
+      "weight": {
+        "command": "weight",
+        "description": "Allows viewing and setting of goodbye message weights.",
+        "embed_title": "Goodbye message weights",
+        "weight_range": "The weight must be 1 or more!",
+        "input_whole": "The message index and weight both need to be whole numbers!",
+        "same_weight_title": "Message weight already the same!",
+        "same_weight_text": "The message weight is already set to `{0}`! Message: \n```\n{1}\n```",
+        "proportion_text": "This message will be shown {0}% of the time!",
+        "set_weight_title": "Set the message weight!",
+        "set_weight_text": "Successfully set the weight of the message: \n```\n{0}\n```",
+        "old_weight": "Old Weight",
+        "new_weight": "New Weight"
+      },
+      "remove": {
+        "command": "remove",
+        "description": "Removes a goodbye message from this server.",
+        "message_index_number": "The message index must be a whole number!",
+        "remove_success_title": "Removed goodbye message!",
+        "remove_success_text": "This message has been removed!\n```\n{0}\n```"
       }
     },
     "ban": {
@@ -909,7 +1082,8 @@
     "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
     "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!",
     "permission_not_exist": "`{0}` isn't a valid permission",
-    "cannot_find_role_matching": "Could not find role {0}"
+    "cannot_find_role_matching": "Could not find role {0}",
+    "more_in_list": "...and {0} more."
   },
   "statuses": {
     "streaming": "Streaming",
@@ -982,6 +1156,7 @@
   },
   "words": {
     "permission": "Permission",
+    "autorole": "AutoRole",
     "permissions": "Permissions",
     "subcommand": "Subcommand",
     "command": "Command",
@@ -1005,7 +1180,8 @@
     "length": "Length",
     "flags": "Flags",
     "default": "Default",
-    "linked_roles": "Linked roles"
+    "linked_roles": "Linked roles",
+    "roles": "Roles"
   },
   "messaging": {
     "loading_page": "Paged message loading...",
@@ -1068,23 +1244,63 @@
     }
   },
   "placeholders": {
-    "server": {
-      "description": "Gets information about the current server"
+    "see_the_docs": "To view more detailed information, please see our docs: https://docs.cascadebot.org/placeholders",
+    "tags": {
+      "title": "Tag Placeholders",
+      "server": {
+        "key": "server",
+        "description": "Gets information about the current server."
+      },
+      "sender": {
+        "key": "sender",
+        "description": "Gets the user who executed the tag."
+      },
+      "channel": {
+        "key": "channel",
+        "description": "Gets the channel that the tag was ran in."
+      },
+      "time": {
+        "key": "time",
+        "description": "Gets the current time."
+      },
+      "args": {
+        "key": "args",
+        "description": "Injects a specified argument (zero indexed)."
+      }
     },
-    "member_count": {
-      "description": "Gets the amount of people in this server"
+    "welcomes": {
+      "title": "Welcome Placeholders",
+      "server": {
+        "key": "server",
+        "description": "Gets information about the current server."
+      },
+      "user": {
+        "key": "user",
+        "description": "Gets information about the user who joined."
+      },
+      "time": {
+        "key": "time",
+        "description": "Gets the current time"
+      }
     },
-    "sender": {
-      "description": "Gets the user who executed the tag"
-    },
-    "channel": {
-      "description": "Gets the channel that the tag was ran in"
-    },
-    "time": {
-      "description": "Gets the current time"
-    },
-    "args": {
-      "description": "Injects a specified argument (zero indexed)"
+    "goodbyes": {
+      "title": "Goodbye Placeholders",
+      "server": {
+        "key": "server",
+        "description": "Gets information about the current server."
+      },
+      "user": {
+        "key": "user",
+        "description": "Gets information about the user who left."
+      },
+      "time": {
+        "key": "time",
+        "description": "Gets the current time"
+      },
+      "time_in_guild": {
+        "key": "time_in_guild",
+        "description": "Returns how long the user was in the guild before he left."
+      }
     }
   },
   "arguments": {
@@ -1095,6 +1311,7 @@
     "permission": "permission",
     "position": "position",
     "role": "role",
+    "roles": "roles",
     "mode": "mode",
     "tag": "tag",
     "category": "category",
@@ -1123,6 +1340,9 @@
     "pos": "position",
     "source": "source",
     "destination": "destination",
+    "message": "message",
+    "index": "index",
+    "weight": "weight",
     "filter": "filter",
     "type": "type",
     "filters#users#add": {

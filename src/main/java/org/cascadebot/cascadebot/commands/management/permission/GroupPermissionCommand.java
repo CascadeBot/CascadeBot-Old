@@ -5,16 +5,22 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.pagination.Page;
+import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
-public class GroupPermissionCommand implements ICommandMain {
+public class GroupPermissionCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -22,7 +28,7 @@ public class GroupPermissionCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MANAGEMENT;
     }
 
@@ -32,7 +38,7 @@ public class GroupPermissionCommand implements ICommandMain {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("permissions.group", false, Module.MANAGEMENT);
     }
 
@@ -42,9 +48,19 @@ public class GroupPermissionCommand implements ICommandMain {
     }
 
     @Override
-    public Set<ISubCommand> getSubCommands() {
+    public Set<SubCommand> subCommands() {
         return Set.of(new GroupPermissionCreateSubCommand(), new GroupPermissionDeleteSubCommand(), new GroupPermissionAddSubCommand(), new GroupPermissionRemoveSubCommand(),
                 new GroupPermissionLinkRoleSubCommand(), new GroupPermissionUnlinkRoleSubCommand(), new GroupPermissionMoveSubCommand(),
                 new GroupPermissionSwitchSubCommand(), new GroupPermissionListSubCommand(), new GroupPermissionInfoSubCommand());
+    }
+
+    @Override
+    public List<Page> additionalUsagePages(Locale locale) {
+        List<Page> extraPages = new ArrayList<>();
+        EmbedBuilder builder = new EmbedBuilder();
+        builder.setTitle("Test");
+        builder.setDescription("This is a test embed");
+        extraPages.add(new PageObjects.EmbedPage(builder));
+        return extraPages;
     }
 }

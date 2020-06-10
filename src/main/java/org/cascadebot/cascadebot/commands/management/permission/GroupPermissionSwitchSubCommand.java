@@ -8,17 +8,17 @@ package org.cascadebot.cascadebot.commands.management.permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
-public class GroupPermissionSwitchSubCommand implements ISubCommand {
+public class GroupPermissionSwitchSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        PermissionMode mode = context.getData().getPermissionSettings().getMode();
+        PermissionMode mode = context.getData().getManagement().getPermissions().getMode();
         if (context.getArgs().length > 1) {
             mode = EnumUtils.getEnumIgnoreCase(PermissionMode.class, context.getArg(0));
             if (mode == null) {
@@ -36,7 +36,7 @@ public class GroupPermissionSwitchSubCommand implements ISubCommand {
             }
         }
 
-        context.getData().getPermissionSettings().setMode(mode);
+        context.getData().getManagement().getPermissions().setMode(mode);
         context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.switch.success", FormatUtils.formatEnum(mode, context.getLocale())));
     }
 
@@ -51,7 +51,7 @@ public class GroupPermissionSwitchSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("permissions.group.switch", false, Module.MANAGEMENT);
     }
 

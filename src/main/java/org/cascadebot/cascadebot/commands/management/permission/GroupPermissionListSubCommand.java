@@ -8,9 +8,8 @@ package org.cascadebot.cascadebot.commands.management.permission;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.objects.GuildPermissions;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
@@ -21,19 +20,19 @@ import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupPermissionListSubCommand implements ISubCommand {
+public class GroupPermissionListSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getPermissionSettings().getGroups().isEmpty()) {
+        if (context.getData().getManagement().getPermissions().getGroups().isEmpty()) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.list.no_groups"));
             return;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < context.getData().getPermissionSettings().getGroups().size(); i++) {
-            Group group = context.getData().getPermissionSettings().getGroups().get(i);
-            if (context.getData().getPermissionSettings().getMode().equals(PermissionMode.HIERARCHICAL)) {
+        for (int i = 0; i < context.getData().getManagement().getPermissions().getGroups().size(); i++) {
+            Group group = context.getData().getManagement().getPermissions().getGroups().get(i);
+            if (context.getData().getManagement().getPermissions().getMode().equals(PermissionMode.HIERARCHICAL)) {
                 stringBuilder.append(i).append(": ");
             }
             stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
@@ -59,7 +58,7 @@ public class GroupPermissionListSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("permissions.group.list", false, Module.MANAGEMENT);
     }
 

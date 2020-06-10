@@ -22,12 +22,12 @@ public class PageObjects {
 
     public static class EmbedPage implements Page {
 
-        EmbedBuilder embed;
-        boolean numbersInEmbed;
+        private final EmbedBuilder embed;
+        private final boolean numbersInEmbed;
 
         public EmbedPage(EmbedBuilder embed) {
             this.embed = embed;
-            numbersInEmbed = true;
+            this.numbersInEmbed = true;
         }
 
         public EmbedPage(EmbedBuilder embed, boolean numbersInEmbed) {
@@ -38,16 +38,24 @@ public class PageObjects {
         @Override
         public void pageShow(Message message, int page, int total) {
             GuildData data = GuildDataManager.getGuildData(message.getTextChannel().getGuild().getIdLong());
-            if (data.getCoreSettings().getUseEmbedForMessages()) {
+            if (data.getCore().getUseEmbedForMessages()) {
                 if (numbersInEmbed) {
-                    embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
+                    if (total > 1) {
+                        embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
+                    }
                     message.editMessage(embed.build()).override(true).queue();
                 } else {
-                    message.editMessage(new MessageBuilder().setEmbed(embed.build()).append(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total)).build()).override(true).queue();
+                    var messageBuilder = new MessageBuilder().setEmbed(embed.build());
+                    if (total > 1) {
+                        messageBuilder.append(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total));
+                    }
+                    message.editMessage(messageBuilder.build()).override(true).queue();
 
                 }
             } else {
-                embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
+                if (total > 1) {
+                    embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
+                }
                 String content = FormatUtils.formatEmbed(embed.build());
                 message.editMessage(content).override(true).queue();
             }
@@ -64,7 +72,11 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            message.editMessage(content + "\n\n" + Language.i18n(message.getGuild().getIdLong(), "page_objects.page_footer", page, total)).override(true).queue();
+            String content = this.content;
+            if (total > 1) {
+                content += "\n\n" + Language.i18n(message.getGuild().getIdLong(), "page_objects.page_footer", page, total);
+            }
+            message.editMessage(content).override(true).queue();
         }
 
     }
@@ -78,7 +90,7 @@ public class PageObjects {
 
         @Override
         public void pageShow(Message message, int page, int total) {
-            if (numbersInTable) {
+            if (numbersInTable && total > 1) {
                 Table.TableBuilder builder = this.table.edit();
                 builder.setFooter(Language.i18n(message.getGuild().getIdLong(), "page_objects.page_footer", page, total));
                 message.editMessage(builder.build().toString()).override(true).queue();

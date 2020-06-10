@@ -8,8 +8,8 @@ package org.cascadebot.cascadebot.commands.management.permission;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.permissions.objects.User;
@@ -21,7 +21,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserPermissionListSubCommand implements ISubCommand {
+public class UserPermissionListSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -41,7 +41,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
             return;
         }
 
-        User user = context.getData().getPermissionSettings().getPermissionUser(member);
+        User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
 
         if (context.getArg(1).equalsIgnoreCase("groups")) {
             StringBuilder groupsBuilder = new StringBuilder();
@@ -51,7 +51,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
             }
 
             for (String id : user.getGroupIds()) {
-                Group group = context.getData().getPermissionSettings().getGroupById(id);
+                Group group = context.getData().getManagement().getPermissions().getGroupById(id);
                 groupsBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
             }
             List<String> pageContent = PageUtils.splitString(groupsBuilder.toString(), 1000, '\n');
@@ -96,7 +96,7 @@ public class UserPermissionListSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("permissions.user.list", false, Module.MANAGEMENT);
     }
 

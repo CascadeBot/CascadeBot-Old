@@ -7,13 +7,13 @@ package org.cascadebot.cascadebot.commands.management.permission;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
-public class UserPermissionRemoveSubCommand implements ISubCommand {
+public class UserPermissionRemoveSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -28,7 +28,7 @@ public class UserPermissionRemoveSubCommand implements ISubCommand {
             return;
         }
 
-        User user = context.getData().getPermissionSettings().getPermissionUser(member);
+        User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
 
         if (user.removePermission(context.getArg(1))) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));
@@ -48,7 +48,7 @@ public class UserPermissionRemoveSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("permissions.user.remove", false, Module.MANAGEMENT);
     }
 
