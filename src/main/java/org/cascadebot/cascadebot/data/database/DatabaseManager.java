@@ -43,7 +43,7 @@ public class DatabaseManager {
                     "org.cascadebot.cascadebot.utils.lists",
                     "org.cascadebot.cascadebot.scheduler",
                     "org.cascadebot.shared"
-            ).register(LanguageEmbedField.class).build())
+            ).register(LanguageEmbedField.class).register(WeightPair.class).build())
     );
 
     @Getter
