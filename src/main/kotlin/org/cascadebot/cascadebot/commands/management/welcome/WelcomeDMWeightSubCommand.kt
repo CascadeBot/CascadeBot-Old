@@ -91,22 +91,22 @@ class WelcomeDMWeightSubCommand : SubCommand() {
 
             context.typedMessaging.replySuccess(embed(MessageType.SUCCESS, context.user) {
                 title {
-                    name = context.i18n(TODO("commands.welcome.weight.set_weight_title"))
+                    name = context.i18n("commands.welcome.weight.set_weight_title")
                 }
-                description = context.i18n(TODO("commands.welcome.weight.set_weight_text"),  welcomeMessages[index].item ?: "Message unavailable!")
+                description = context.i18n("commands.welcome.weight.set_weight_text",  welcomeMessages[index].item ?: "Message unavailable!")
                 field {
-                    name = context.i18n(TODO("commands.welcome.weight.old_weight"))
+                    name = context.i18n("commands.welcome.weight.old_weight")
                     value = oldWeight.toString()
                     inline = true
                 }
                 field {
-                    name = context.i18n(TODO("commands.welcome.weight.new_weight"))
+                    name = context.i18n("commands.welcome.weight.new_weight")
                     value = weight.toString()
                     inline = true
                 }
                 field {
-                    name = context.i18n(TODO("commands.welcome.proportion_title"))
-                    value = context.i18n(TODO("commands.welcome.weight.proportion_text"),  (welcomeMessages.getItemProportion(index) * 100).roundToInt())
+                    name = context.i18n("commands.welcome.proportion_title")
+                    value = context.i18n("commands.welcome.weight.proportion_text",  (welcomeMessages.getItemProportion(index) * 100).roundToInt())
                 }
             })
 
