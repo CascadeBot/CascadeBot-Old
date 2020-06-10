@@ -51,7 +51,7 @@ class AutoRoleRemoveSubCommand : SubCommand() {
 
     override fun parent(): String = "autorole"
 
-    override fun command(): String = "add"
+    override fun command(): String = "remove"
 
     override fun permission(): CascadePermission = CascadePermission.of("autorole.remove", false)
 
