@@ -20,12 +20,10 @@ public class PlayCommand extends MainCommand {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getData().getMusic().getJoinOnPlay()) {
             VoiceChannel voiceChannel = sender.getVoiceState().getChannel();
-            if (voiceChannel != null) {
+            if (context.getMusicPlayer().getConnectedChannel() != null) {
                 if (context.getMusicPlayer().getConnectedChannel() != voiceChannel) {
                     context.runOtherCommand("join", sender, context);
                 }
-            } else {
-                context.runOtherCommand("join", sender, context);
             }
         }
 
