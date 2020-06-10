@@ -311,7 +311,7 @@
     },
     "welcome": {
       "command": "welcome",
-      "description": "Lists the welcome messages for this server.",
+      "description": "Manages the welcome messages for this server.",
       "current_channel": "The current welcome channel is: {0}",
       "no_channel_set": "There is no welcome channel set!",
       "invalid_message_index": "The message index must be between `1` and `{0}`",
@@ -348,6 +348,10 @@
         "confirm_warning": "Running this command will clear **all** messages and the channel for welcome messages! To confirm this action, run the command again or click the button below within 1 minute.",
         "clear_success": "The welcome messages and the channel for welcome messages have been cleared!"
       },
+      "list": {
+        "command": "list",
+        "description": "Lists the welcome messages for this server."
+      },
       "weight": {
         "command": "weight",
         "description": "Allows viewing and setting of welcome message weights.",
@@ -372,7 +376,7 @@
     },
     "welcomedm": {
       "command": "welcomedm",
-      "description": "Lists the DM welcome messages for this server.",
+      "description": "Managed the DM welcome messages for this server.",
       "overview_messages_title": "DM welcome messages",
       "index_message_title": "DM welcome message #{0}",
       "no_messages": "There are no DM welcome messages for this server!",
@@ -382,6 +386,10 @@
         "success_title": "Added a DM welcome message!",
         "success_text_1": "Added the message: ",
         "success_text_2": "There {0,plural,one{is} other{are}} currently {0} DM welcome {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the DM welcome messages for this server."
       },
       "weight": {
         "command": "weight",
@@ -402,7 +410,7 @@
     },
     "goodbye": {
       "command": "goodbye",
-      "description": "Lists the goodbye messages for this server.",
+      "description": "Manages the goodbye messages for this server.",
       "invalid_message_index": "The message index must be between `1` and `{0}`",
       "no_messages": "There are no goodbye messages for this server!",
       "proportion_title": "Message chance",
@@ -418,6 +426,10 @@
         "success_title": "Added goodbye message!",
         "success_text_1": "Added the message: ",
         "success_text_2": "There {0,plural,one{is} other{are}} currently {0} goodbye {0,plural,one{message} other{messages}}. This message will be shown {1}% of the time!"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the goodbye messages for this server."
       },
       "clear": {
         "command": "clear",

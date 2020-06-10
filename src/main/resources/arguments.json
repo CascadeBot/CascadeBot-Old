@@ -129,7 +129,7 @@
       }
     }
   },
-  "welcome": {
+  "welcome*": {
     "add*": {
       "message": {
         "_type": "required"
@@ -154,9 +154,10 @@
         }
       }
     },
+    "list": {},
     "clear": {}
   },
-  "welcomedm": {
+  "welcomedm*": {
     "add*": {
       "message": {
         "_type": "required"
@@ -175,9 +176,10 @@
         }
       }
     },
+    "list": {},
     "clear": {}
   },
-  "goodbye": {
+  "goodbye*": {
     "add*": {
       "message": {
         "_type": "required"
@@ -196,6 +198,7 @@
         }
       }
     },
+    "list": {},
     "clear": {}
   },
   "color*": {

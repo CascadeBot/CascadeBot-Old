@@ -46,6 +46,6 @@ class GoodbyeCommand : MainCommand() {
         )
     }
 
-    override fun subCommands(): Set<SubCommand> = setOf(GoodbyeAddSubCommand(), GoodbyeClearSubCommand(), GoodbyeRemoveSubCommand(), GoodbyeWeightSubCommand())
+    override fun subCommands(): Set<SubCommand> = setOf(GoodbyeAddSubCommand(), GoodbyeClearSubCommand(), GoodbyeRemoveSubCommand(), GoodbyeWeightSubCommand(), GoodbyeListSubCommand())
 
 }
