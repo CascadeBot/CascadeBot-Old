@@ -117,11 +117,13 @@ public class CommandListener extends ListenerAdapter {
             MainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
             if (modlogEvent != null && cmd != null) {
                 List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-                StringBuilder stringBuilder = new StringBuilder();
-                for (String arg : args) {
-                    stringBuilder.append(arg).append(' ');
+                if (args.length > 0) {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (String arg : args) {
+                        stringBuilder.append(arg).append(' ');
+                    }
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.command.args", "modlog.general.variable", stringBuilder.toString()));
                 }
-                embedFieldList.add(new LanguageEmbedField(true, "modlog.command.args", "modlog.general.variable", stringBuilder.toString()));
                 ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, event.getAuthor(),cmd, embedFieldList);
                 guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
             }

@@ -1291,6 +1291,10 @@
       "guild_message_deleted_mention": {
         "select": "guild_message_deleted_mention",
         "display": "Guild message deleted with mention"
+      },
+      "voice_force_move": {
+        "select": "voice_force_move",
+        "display": "Voice Force Move"
       }
     }
   },
