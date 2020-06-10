@@ -114,6 +114,7 @@ import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.cascadebot.cascadebot.utils.SerializableMessage;
 
+import javax.annotation.Nonnull;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
@@ -535,18 +536,11 @@ public class ModlogEventListener extends ListenerAdapter {
         });
     }
 
-    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent event) {
-        User affected = event.getEntity().getUser();
+    public void onGenericGuildVoice(GenericGuildVoiceEvent event) {
+        User affected = event.getMember().getUser();
         List<LanguageEmbedField> embedFieldList = new ArrayList<>();
         ModlogEvent action;
-        Guild guild;
-        if (event.getChannelLeft() != null) {
-            guild = event.getChannelLeft().getGuild();
-        } else if (event.getChannelJoined() != null) {
-            guild = event.getChannelJoined().getGuild();
-        } else {
-            return;
-        }
+        Guild guild = event.getGuild();
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         if (event instanceof GuildVoiceDeafenEvent) {
             embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.deafen", "modlog.general.variable", String.valueOf(((GuildVoiceDeafenEvent) event).isDeafened())));
@@ -561,20 +555,20 @@ public class ModlogEventListener extends ListenerAdapter {
             embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.mute", "modlog.general.variable", String.valueOf(((GuildVoiceGuildMuteEvent) event).isGuildMuted())));
             action = ModlogEvent.VOICE_SERVER_MUTE;
         } else if (event instanceof GuildVoiceJoinEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", event.getChannelJoined().getName()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", ((GuildVoiceJoinEvent) event).getChannelJoined().getName()));
             action = ModlogEvent.VOICE_JOIN;
         } else if (event instanceof GuildVoiceLeaveEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", event.getChannelLeft().getName()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", ((GuildVoiceLeaveEvent) event).getChannelLeft().getName()));
             action = ModlogEvent.VOICE_LEAVE;
         } else if (event instanceof GuildVoiceMoveEvent) {
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", event.getChannelLeft().getName()));
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", event.getChannelJoined().getName()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.left", "modlog.general.variable", ((GuildVoiceMoveEvent) event).getChannelLeft().getName()));
+            embedFieldList.add(new LanguageEmbedField(true, "modlog.voice.join", "modlog.general.variable", ((GuildVoiceMoveEvent) event).getChannelJoined().getName()));
             action = ModlogEvent.VOICE_MOVE;
         } else {
             return;
         }
         ModlogEventStore eventStore = new ModlogEventStore(action, null, affected, embedFieldList);
-        guildData.getModeration().sendModlogEvent(((GenericGuildVoiceEvent) event).getGuild().getIdLong(), eventStore);
+        guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
     }
 
     //region Channels
