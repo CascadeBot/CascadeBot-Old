@@ -2,7 +2,7 @@ package org.cascadebot.cascadebot.data.objects
 
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.data.language.Locale
-import org.cascadebot.cascadebot.utils.ChangeList
+import org.cascadebot.cascadebot.utils.lists.ChangeList
 
 class GuildCommandInfo(var enabled: Boolean,
                        val command: String,

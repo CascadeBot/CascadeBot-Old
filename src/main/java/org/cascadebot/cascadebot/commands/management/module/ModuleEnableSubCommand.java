@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.commands.management;
+package org.cascadebot.cascadebot.commands.management.module;
 
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -19,7 +19,7 @@ import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModuleDisableSubCommand extends SubCommand {
+public class ModuleEnableSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -32,30 +32,30 @@ public class ModuleDisableSubCommand extends SubCommand {
 
         if (module != null) {
             try {
-                if (context.getData().getCore().disableModule(module)) {
-                    // If module wasn't already disabled
-                    context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", module.toString()));
+                if (context.getCoreSettings().enableModule(module)) {
+                    // If the module wasn't enabled
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.module.enable.enabled", module.toString()));
                     ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;
                     List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-                    embedFieldList.add(new LanguageEmbedField(true, "modlog.module.enabled", "modlog.general.variable", "false"));
+                    embedFieldList.add(new LanguageEmbedField(true, "modlog.module.enabled", "modlog.general.variable", "true"));
                     ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), module, embedFieldList);
                     context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {
-                    // If module was already disabled
-                    context.getTypedMessaging().replyInfo(context.i18n("commands.module.disable.already_disabled", module.toString()));
+                    // If the module was enabled
+                    context.getTypedMessaging().replyInfo(context.i18n("commands.module.enable.already_enabled", module.toString()));
                 }
             } catch (IllegalArgumentException ex) {
                 context.getTypedMessaging().replyDanger(ex.getMessage());
             }
         } else {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.module.disable.cannot_find_module"));
+            context.getTypedMessaging().replyDanger(context.i18n("commands.module.enable.cannot_find_module"));
         }
 
     }
 
     @Override
     public String command() {
-        return "disable";
+        return "enable";
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ModuleDisableSubCommand extends SubCommand {
 
     @Override
     public CascadePermission permission() {
-        return CascadePermission.of("module.disable", false, Permission.MANAGE_SERVER);
+        return CascadePermission.of("module.enable", false, Permission.MANAGE_SERVER);
     }
 
 }

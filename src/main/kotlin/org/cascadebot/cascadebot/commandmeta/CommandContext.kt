@@ -27,7 +27,7 @@ import org.cascadebot.cascadebot.messaging.MessagingUI
 import org.cascadebot.cascadebot.music.CascadePlayer
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
-class CommandContext(
+data class CommandContext(
         val command: ExecutableCommand?,
         val jda: JDA,
         val channel: TextChannel,
@@ -66,11 +66,11 @@ class CommandContext(
 
     fun getArg(index: Int): String = args[index]
 
-    fun isArgInteger(index: Int): Boolean = args[index].toIntOrNull() == null
+    fun isArgInteger(index: Int): Boolean = args[index].toIntOrNull() != null
 
     fun getArgAsInteger(index: Int): Int? = args[index].toIntOrNull()
 
-    fun isArgLong(index: Int): Boolean = args[index].toLongOrNull() == null
+    fun isArgLong(index: Int): Boolean = args[index].toLongOrNull() != null
 
     fun getArgAsLong(index: Int): Long? = args[index].toLongOrNull()
 

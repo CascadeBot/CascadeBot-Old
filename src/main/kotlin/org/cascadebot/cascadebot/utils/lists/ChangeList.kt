@@ -1,4 +1,4 @@
-package org.cascadebot.cascadebot.utils
+package org.cascadebot.cascadebot.utils.lists
 
 import java.util.Collections
 

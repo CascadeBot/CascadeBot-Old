@@ -22,12 +22,12 @@ public class PageObjects {
 
     public static class EmbedPage implements Page {
 
-        EmbedBuilder embed;
-        boolean numbersInEmbed;
+        private final EmbedBuilder embed;
+        private final boolean numbersInEmbed;
 
         public EmbedPage(EmbedBuilder embed) {
             this.embed = embed;
-            numbersInEmbed = true;
+            this.numbersInEmbed = true;
         }
 
         public EmbedPage(EmbedBuilder embed, boolean numbersInEmbed) {
@@ -50,6 +50,7 @@ public class PageObjects {
                         messageBuilder.append(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total));
                     }
                     message.editMessage(messageBuilder.build()).override(true).queue();
+
                 }
             } else {
                 if (total > 1) {
