@@ -119,13 +119,13 @@
     "add*": {
       "roles": {
         "_type": "required",
-        "_vararg": true
+        "_varargs": true
       }
     },
     "remove*": {
       "roles": {
         "_type": "required",
-        "_vararg": true
+        "_varargs": true
       }
     },
     "list": {}
@@ -538,7 +538,8 @@
       "amount*": {
         "_type": "required",
         "user": {
-          "_type": "required"
+          "_type": "required",
+          "_varargs": true
         }
       }
     },
