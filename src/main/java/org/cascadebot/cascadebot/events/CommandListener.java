@@ -155,8 +155,8 @@ public class CommandListener extends ListenerAdapter {
         }
     }
 
-    private boolean processFilters(ICommandMain cmd, CommandContext context) {
-        for (CommandFilter filter : context.getCoreSettings().getCommandFilters()) {
+    private boolean processFilters(MainCommand cmd, CommandContext context) {
+        for (CommandFilter filter : context.getData().getManagement().getFilters()) {
             if (filter.evaluateFilter(cmd.command(), context.getChannel(), context.getMember()) == CommandFilter.FilterResult.DENY)  {
                 return false;
             }
