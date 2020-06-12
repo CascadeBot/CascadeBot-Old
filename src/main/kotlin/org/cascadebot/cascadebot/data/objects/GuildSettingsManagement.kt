@@ -10,6 +10,7 @@ class GuildSettingsManagement {
     var allowTagCommands = true
 
     val tags: ConcurrentHashMap<String, Tag> = ConcurrentHashMap()
+    val filters: MutableList<CommandFilter> = mutableListOf()
     val permissions = GuildPermissions()
     val greetings = Greetings()
     val autoRoles: MutableSet<Long> = mutableSetOf()
