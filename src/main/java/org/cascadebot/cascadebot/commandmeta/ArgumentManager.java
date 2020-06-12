@@ -134,7 +134,7 @@ public class ArgumentManager {
         String typeRaw = subConfig.get().getString("_type").orElse("command");
         // If no valid argument type is given, this defaults to the "command" type
         ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
-        boolean varArgs = subConfig.get().getBoolean("_vararg").orElse(false);
+        boolean varArgs = subConfig.get().getBoolean("_varargs").orElse(false);
 
         if (varArgs && type == ArgumentType.COMMAND) {
             throw new IllegalArgumentException("Var args cannot be used with a command typ!");
