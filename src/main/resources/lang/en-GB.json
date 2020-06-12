@@ -754,8 +754,44 @@
       },
       "delete": {
         "command": "delete",
-        "doesnt_exist": "A filter with the name `{0}` doesn't exist! Please use `{1}` to list your filters!",
-
+        "doesnt_exist": "A filter with the name `{0}` doesn't exist!",
+        "success": "The filter with the name `{0}` has been deleted!"
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the command filters for this server."
+      },
+      "operator": {
+        "command": "operator",
+        "description": "Changes the logic operator used to calculate the command filter output."
+      },
+      "type": {
+        "command": "type",
+        "description": "Changes the type to either `blacklist` or `whitelist`."
+      },
+      "channels": {
+        "command": "channels",
+        "description": "Manages the channels linked to a command filter."
+      },
+      "commands": {
+        "command": "commands",
+        "description": "Manages the commands that trigger command filter."
+      },
+      "roles": {
+        "command": "roles",
+        "description": "Manages the roles linked to a command filter."
+      },
+      "users": {
+        "command": "users",
+        "description": "Manages the users linked to a command filter."
+      },
+      "enable": {
+        "command": "enable",
+        "description": "Enables a command filter."
+      },
+      "disable": {
+        "command": "disable",
+        "description": "Disables a command filter."
       }
     }
   },
@@ -1345,6 +1381,12 @@
     "weight": "weight",
     "filter": "filter",
     "type": "type",
+    "filters#type#whitelist": {
+      "name": "whitelist"
+    },
+    "filters#operator#or": {
+      "name": "or"
+    },
     "filters#users#add": {
       "name": "add",
       "description": "Adds or removes a user from the filter"

@@ -579,11 +579,15 @@
         "_type": "required"
       }
     },
-    "operator": {
-
+    "operator*": {
+      "or": {
+        "_aliases": ["and"]
+      }
     },
-    "type": {
-
+    "type*": {
+      "whitelist": {
+        "_aliases": ["blacklist"]
+      }
     },
     "channels*": {
       "add*": {
