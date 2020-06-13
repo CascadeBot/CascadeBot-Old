@@ -19,7 +19,7 @@ class CommandFilter(val name: String) {
     var type = FilterType.BLACKLIST
     var operator = FilterOperator.AND
 
-    var enabled = false
+    var enabled = true
 
     val commands: MutableList<String> = Collections.synchronizedList(listOf())
     val channelIds: MutableList<Long> = Collections.synchronizedList(listOf())
