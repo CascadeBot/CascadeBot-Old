@@ -11,7 +11,6 @@ import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.GuildChannel
-import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
@@ -20,7 +19,6 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
-import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.moderation.ModlogEvent
@@ -39,6 +37,13 @@ class GuildSettingsModeration {
 
     @Setting
     val purgePinnedMessages: Boolean = false
+
+    @Setting
+    private val respectBanOrKickHierarchy = true
+
+    fun getRespectBanOrKickHierarchy(): Boolean {
+        return respectBanOrKickHierarchy
+    }
 
     private val modlogEvents: MutableMap<Long, ChannelModlogEventsInfo> = HashMap()
 
