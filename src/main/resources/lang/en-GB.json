@@ -1036,7 +1036,7 @@
     "missing_permission": "Cannot {0} user {1}, missing `{2}` permission!",
     "cannot_action_owner": "Cannot {0} user {1} as they are the owner of the guild!",
     "cannot_action_superior": "Cannot {0} user {1} the top role they have is higher than mine!",
-    "user_cannot_action_superior": "Cannot {0} user {1} because they are above you in the hierarchy",
+    "user_cannot_action_superior": "Cannot {0} user {1} because they are above you in the hierarchy!",
     "success": "{0} has been {1}!"
   },
   "music": {
