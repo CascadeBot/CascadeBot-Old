@@ -23,7 +23,7 @@ class FiltersDeleteSubCommand : SubCommand() {
         val filter = context.data.management.filters.find { it.name == name }
 
         if (filter == null) {
-            context.typedMessaging.replyDanger(context.i18n("commands.filters.delete.doesnt_exist", name))
+            context.typedMessaging.replyDanger(context.i18n("commands.filters.doesnt_exist", name))
             return
         }
 

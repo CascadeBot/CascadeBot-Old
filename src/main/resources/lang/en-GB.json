@@ -745,16 +745,17 @@
     "filters": {
       "command": "filters",
       "description": "Create and manipulate command filters.",
+      "doesnt_exist": "A filter with the name `{0}` doesn't exist!",
       "create": {
         "command": "create",
-        "already_exists": "A filter with the name `{0}` already exists! Edit or delete the existing filter instead.",
         "description": "Creates a command filter",
+        "already_exists": "A filter with the name `{0}` already exists! Edit or delete the existing filter instead.",
         "created_filter": "Created command filter of type **{0}** with the name `{1}`",
         "type_invalid": "The filter type `{0}` does not exist! Please choose one of: {1}"
       },
       "delete": {
         "command": "delete",
-        "doesnt_exist": "A filter with the name `{0}` doesn't exist!",
+        "description": "Deletes a command filter.",
         "success": "The filter with the name `{0}` has been deleted!"
       },
       "list": {
@@ -771,19 +772,67 @@
       },
       "channels": {
         "command": "channels",
-        "description": "Manages the channels linked to a command filter."
+        "description": "Manages the channels linked to a command filter.",
+        "add": {
+          "command": "add",
+          "description": "Adds a channel to a command filter."
+        },
+        "remove": {
+          "command": "remove",
+          "description": "Removes a channel from a command filter."
+        },
+        "list": {
+          "command": "list",
+          "description": "Lists the channels linked to a command filter."
+        }
       },
       "commands": {
         "command": "commands",
-        "description": "Manages the commands that trigger command filter."
+        "description": "Manages the commands that trigger command filter.",
+        "add": {
+          "command": "add",
+          "description": "Adds a command to a command filter."
+        },
+        "remove": {
+          "command": "remove",
+          "description": "Removes a command from a command filter."
+        },
+        "list": {
+          "command": "list",
+          "description": "Lists the commands linked to a command filter."
+        }
       },
       "roles": {
         "command": "roles",
-        "description": "Manages the roles linked to a command filter."
+        "description": "Manages the roles linked to a command filter.",
+        "add": {
+          "command": "add",
+          "description": "Adds a role to a command filter."
+        },
+        "remove": {
+          "command": "remove",
+          "description": "Removes a role from a command filter."
+        },
+        "list": {
+          "command": "list",
+          "description": "Lists the roles linked to a command filter."
+        }
       },
       "users": {
         "command": "users",
-        "description": "Manages the users linked to a command filter."
+        "description": "Manages the users linked to a command filter.",
+        "add": {
+          "command": "add",
+          "description": "Adds a user to a command filter."
+        },
+        "remove": {
+          "command": "remove",
+          "description": "Removes a user from a command filter."
+        },
+        "list": {
+          "command": "list",
+          "description": "Lists the users linked to a command filter."
+        }
       },
       "enable": {
         "command": "enable",
@@ -791,7 +840,9 @@
       },
       "disable": {
         "command": "disable",
-        "description": "Disables a command filter."
+        "description": "Disables a command filter.",
+        "success": "Successfully disabled the filter with the name `{0}`!",
+        "already_disabled": "The filter with the name `{0}` is already disabled!"
       }
     }
   },
@@ -1386,38 +1437,6 @@
     },
     "filters#operator#or": {
       "name": "or"
-    },
-    "filters#users#add": {
-      "name": "add",
-      "description": "Adds or removes a user from the filter"
-    },
-    "filters#users#list": {
-      "name": "list",
-      "description": "Lists the users attached to this filter"
-    },
-    "filters#commands#add": {
-      "name": "add",
-      "description": "Adds or removes a command from the filter"
-    },
-    "filters#commands#list": {
-      "name": "list",
-      "description": "Lists the commands attached to this filter"
-    },
-    "filters#channels#add": {
-      "name": "add",
-      "description": "Adds or removes a channel from the filter"
-    },
-    "filters#channels#list": {
-      "name": "list",
-      "description": "Lists the channels attached to this filter"
-    },
-    "filters#roles#add": {
-      "name": "add",
-      "description": "Adds or removes a role from the filter"
-    },
-    "filters#roles#list": {
-      "name": "list",
-      "description": "Lists the roles attached to this filter"
     },
     "userperms#list#user#permissions": {
       "name": "permissions",
