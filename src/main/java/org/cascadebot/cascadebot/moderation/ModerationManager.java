@@ -77,7 +77,7 @@ public class ModerationManager {
         } else if (target.equals(context.getSelfUser())) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_bot", action.getName(context.getLocale())));
             return false;
-        } else if(!submitter.canInteract(context.getGuild().getMember(target)) && context.getData().getModeration().isRespectBanOrKickHierarchy()) {
+        } else if (context.getData().getModeration().isRespectBanOrKickHierarchy() && !submitter.canInteract(context.getGuild().getMember(target))) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.user_cannot_action_superior", action.getName(context.getLocale()), target.getName()));
             return false;
         }
