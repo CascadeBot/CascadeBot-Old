@@ -20,4 +20,7 @@ public class GuildSettingsModeration {
     @Setting
     private boolean purgePinnedMessages = false;
 
+    @Setting
+    private boolean respectBanOrKickHierarchy = true;
+
 }
