@@ -836,7 +836,9 @@
       },
       "enable": {
         "command": "enable",
-        "description": "Enables a command filter."
+        "description": "Enables a command filter.",
+        "success": "Successfully enabled the filter with the name `{0}`!",
+        "already_disabled": "The filter with the name `{0}` is already enabled!"
       },
       "disable": {
         "command": "disable",

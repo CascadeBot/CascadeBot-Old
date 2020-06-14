@@ -32,7 +32,6 @@ class FiltersDisableSubCommand : SubCommand() {
         } else {
             context.typedMessaging.replyInfo(context.i18n("commands.filters.disable.already_disabled", name))
         }
-
     }
 
     override fun command(): String = "disable"
