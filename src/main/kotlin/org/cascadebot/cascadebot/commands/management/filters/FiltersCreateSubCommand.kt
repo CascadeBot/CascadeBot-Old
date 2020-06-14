@@ -64,16 +64,10 @@ class FiltersCreateSubCommand : SubCommand() {
         }
     }
 
-    override fun command(): String {
-        TODO("Not yet implemented")
-    }
+    override fun command(): String = "create"
 
-    override fun parent(): String {
-        TODO("Not yet implemented")
-    }
+    override fun parent(): String = "filters"
 
-    override fun permission(): CascadePermission? {
-        TODO("Not yet implemented")
-    }
+    override fun permission(): CascadePermission = CascadePermission.of("filters.create", false)
 
 }
