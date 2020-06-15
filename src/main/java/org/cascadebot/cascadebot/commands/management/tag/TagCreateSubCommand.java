@@ -10,9 +10,10 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.data.objects.Tag;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +47,8 @@ public class TagCreateSubCommand extends SubCommand {
         context.getData().getPermissionsManager().registerGuildPermission(tag.getInternalPermission());
         context.getTypedMessaging().replySuccess(message);
         ModlogEvent event = ModlogEvent.CASCADE_TAG_CREATED;
-        List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new LanguageEmbedField(false, "modlog.tag.content", "modlog.general.variable", tag.getContent()));
+        List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.content", "modlog.general.variable", tag.getContent()));
         ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), tag, embedFieldList);
         context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
     }

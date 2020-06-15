@@ -11,10 +11,11 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
-import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ public class GroupPermissionLinkRoleSubCommand extends SubCommand {
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (group.linkRole(role.getIdLong())) {
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.link.success", group.getName(), role.getName()));
-                List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-                embedFieldList.add(new LanguageEmbedField(false, "modlog.cascade_permissions.linked_role", "modlog.general.variable", role.getAsMention()));
+                List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.cascade_permissions.linked_role", "modlog.general.variable", role.getAsMention()));
                 ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_LINK;
                 ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), group, embedFieldList);
                 context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);

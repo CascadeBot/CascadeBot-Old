@@ -9,9 +9,9 @@ import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart
 import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.objects.Group
-import org.cascadebot.cascadebot.utils.LanguageEmbedField
 import java.lang.reflect.Field
 
 class ModlogEventStore {
@@ -24,14 +24,14 @@ class ModlogEventStore {
     @Transient
     var affected: Any = CascadeBot.INS.selfUser
 
-    var extraInfo: List<LanguageEmbedField> = ArrayList()
+    var extraInfo: List<ModlogEmbedPart> = ArrayList()
 
     var affectedId: String = ""
     var affectedType: String = ""
 
     var responsibleId: Long = 0;
 
-    constructor(trigger: ModlogEvent, responsible: User?, affected: Any, extraInfo: List<LanguageEmbedField>) {
+    constructor(trigger: ModlogEvent, responsible: User?, affected: Any, extraInfo: List<ModlogEmbedPart>) {
         this.trigger = trigger
         this.responsible = responsible
         this.affected = affected

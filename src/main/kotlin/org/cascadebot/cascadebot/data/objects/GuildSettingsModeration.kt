@@ -216,8 +216,8 @@ class GuildSettingsModeration {
             if (affectedStr != null) {
                 webhookEmbedBuilder.addField(EmbedField(true, "Affected $affectedType", affectedStr))
             }
-            for (embedField in modlogEventStore.extraInfo) {
-                webhookEmbedBuilder.addField(embedField.getLocalizedEmbedField(guildData.locale))
+            for (embedPart in modlogEventStore.extraInfo) {
+                embedPart.build(guildData.locale, webhookEmbedBuilder)
             }
             webhookEmbedBuilder.setColor(modlogEventStore.trigger.messageType.color.rgb)
             if (modlogEventStore.responsible != null) {

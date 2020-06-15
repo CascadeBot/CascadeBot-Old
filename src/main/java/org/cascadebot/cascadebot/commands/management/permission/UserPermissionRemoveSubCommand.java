@@ -10,11 +10,12 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
-import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,8 @@ public class UserPermissionRemoveSubCommand extends SubCommand {
         if (user.removePermission(context.getArg(1))) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));
             ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_USER_PERMISSION_REMOVE;
-            List<LanguageEmbedField> embedFieldList = new ArrayList<>();
-            embedFieldList.add(new LanguageEmbedField(true, "modlog.cascade_permissions.permission_removed", "modlog.general.variable", context.getArg(1)));
+            List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+            embedFieldList.add(new ModlogEmbedField(true, "modlog.cascade_permissions.permission_removed", "modlog.general.variable", context.getArg(1)));
             ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), embedFieldList);
             context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
         } else {

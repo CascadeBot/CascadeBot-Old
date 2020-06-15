@@ -29,10 +29,11 @@ import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
-import org.cascadebot.cascadebot.utils.LanguageEmbedField;
 import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.slf4j.MDC;
@@ -116,13 +117,13 @@ public class CommandListener extends ListenerAdapter {
             CascadeBot.clearCascadeMDC();
             MainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
             if (modlogEvent != null && cmd != null) {
-                List<LanguageEmbedField> embedFieldList = new ArrayList<>();
+                List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
                 if (args.length > 0) {
                     StringBuilder stringBuilder = new StringBuilder();
                     for (String arg : args) {
                         stringBuilder.append(arg).append(' ');
                     }
-                    embedFieldList.add(new LanguageEmbedField(true, "modlog.command.args", "modlog.general.variable", stringBuilder.toString()));
+                    embedFieldList.add(new ModlogEmbedField(true, "modlog.command.args", "modlog.general.variable", stringBuilder.toString()));
                 }
                 ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, event.getAuthor(),cmd, embedFieldList);
                 guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
