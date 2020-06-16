@@ -40,13 +40,12 @@ public class UserInfoCommand extends MainCommand {
         String statusName = "";
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
 
-
         if (member != null) {
             builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getTimeJoined(), context.getLocale()), true);
-            statusName = LanguageUtils.getEnumI18n(context.getLocale(), "statuses", member.getOnlineStatus());
+            statusName = LanguageUtils.i18nEnum(member.getOnlineStatus(), context.getLocale());
             if (member.getActivities().size() > 0 && member.getActivities().stream().anyMatch(activity -> activity.getType() == Activity.ActivityType.STREAMING)) {
                 status = context.globalEmote("streaming");
-                statusName = context.i18n("statuses.streaming");
+                statusName = context.i18n("enums.onlinestatus.streaming");
             } else if (member.getOnlineStatus() == OnlineStatus.ONLINE) {
                 status = context.globalEmote("online");
             } else if (member.getOnlineStatus() == OnlineStatus.OFFLINE) {
@@ -57,7 +56,6 @@ public class UserInfoCommand extends MainCommand {
                 status = context.globalEmote("idle");
             }
         }
-
 
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
@@ -75,7 +73,7 @@ public class UserInfoCommand extends MainCommand {
 
             for (Activity activity : member.getActivities()) {
                 String gameStatus;
-                String gameType = LanguageUtils.getEnumI18n(context.getLocale(), "game_types", activity.getType());
+                String gameType = LanguageUtils.i18nEnum(activity.getType(), context.getLocale());
                 if (activity.isRich()) {
                     RichPresence presence = activity.asRichPresence();
                     gameStatus = String.format("%s **%s**", gameType, presence.getName());
