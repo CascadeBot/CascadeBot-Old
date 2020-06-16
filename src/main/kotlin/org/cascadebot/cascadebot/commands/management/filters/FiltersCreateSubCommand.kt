@@ -33,8 +33,6 @@ class FiltersCreateSubCommand : SubCommand() {
         }
 
         // Args in the format "<name> [type]"
-
-        // Args in the format "<name> [type]"
         if (context.args.size == 1) {
             val filter = CommandFilter(name)
             context.data.management.filters.add(filter)
