@@ -764,7 +764,10 @@
       },
       "operator": {
         "command": "operator",
-        "description": "Changes the logic operator used to calculate the command filter output."
+        "description": "Changes the logic operator used to calculate the command filter output.",
+        "invalid_operator": "That operator is not valid! Valid operators are: {0}",
+        "already_set": "The filter operator is already set to `{0}` on the filter `{1}`!",
+        "success": "The operator has been set to `{0}` on the filter `{1}`!"
       },
       "type": {
         "command": "type",
@@ -1205,6 +1208,9 @@
     "permissionmode":{
       "most_restrictive": "most restrictive",
       "hierarchical": "hierarchical"
+    "filteroperator": {
+      "and": "and",
+      "or": "or"
     }
   },
   "game_types": {
