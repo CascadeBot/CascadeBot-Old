@@ -771,7 +771,10 @@
       },
       "type": {
         "command": "type",
-        "description": "Changes the type to either `blacklist` or `whitelist`."
+        "description": "Changes the type to either `blacklist` or `whitelist`.",
+        "invalid_type": "That type is not valid! Valid types are: {0}",
+        "already_set": "The filter type is already set to `{0}` on the filter `{1}`!",
+        "success": "The type has been set to `{0}` on the filter `{1}`!"
       },
       "channels": {
         "command": "channels",
@@ -1208,6 +1211,11 @@
     "permissionmode":{
       "most_restrictive": "most restrictive",
       "hierarchical": "hierarchical"
+    },
+    "filtertype": {
+      "blacklist": "blacklist",
+      "whitelist": "whitelist"
+    },
     "filteroperator": {
       "and": "and",
       "or": "or"
