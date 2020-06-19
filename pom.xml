@@ -12,7 +12,7 @@
         <build.number>DEV</build.number>
         <jda.version>4.0.0_39</jda.version>
         <lavaplayer.version>1.3.50</lavaplayer.version>
-        <lavalink.client.version>4.0</lavalink.client.version>
+        <lavalink.client.version>41e1025</lavalink.client.version>
     </properties>
 
     <build>
