@@ -6,11 +6,18 @@
 package org.cascadebot.cascadebot.utils.votes;
 
 import com.google.common.collect.Sets;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +25,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class VoteButtonGroup extends PersistentButtonGroup {
@@ -27,19 +36,27 @@ public class VoteButtonGroup extends PersistentButtonGroup {
 
     private BiConsumer<List<VoteResult>, Message> periodicConsumer;
 
+    private Consumer<List<VoteResult>> finishConsumer;
+
     private Set<Long> allowedUsers;
 
     private Timer timer = new Timer();
 
     private Timer voteTimer;
 
-    VoteButtonGroup(long ownerId, long channelId, long guildId, BiConsumer<List<VoteResult>, Message> periodicRunnable, Timer voteTimer) {
+    private long timerStartTime;
+
+    private int timerRunTime = 10;
+
+    VoteButtonGroup(long ownerId, long channelId, long guildId, BiConsumer<List<VoteResult>, Message> periodicRunnable, Timer voteTimer, long timerStartTime, Consumer<List<VoteResult>> finishConsumer) {
         super(ownerId, channelId, guildId);
         this.periodicConsumer = periodicRunnable;
         if (periodicRunnable != null) {
             setUpVoteProcessConsumer();
         }
         this.voteTimer = voteTimer;
+        this.timerStartTime = timerStartTime;
+        this.finishConsumer = finishConsumer;
     }
 
     private void setUpVoteProcessConsumer() {
@@ -64,6 +81,55 @@ public class VoteButtonGroup extends PersistentButtonGroup {
             if (votes.get(user.getIdLong()).equals(vote)) {
                 votes.remove(user.getIdLong());
                 return;
+            }
+        } else {
+            DecimalFormat df = new DecimalFormat("#");
+            df.setRoundingMode(RoundingMode.HALF_UP);
+            long timeElapsed = Instant.now().toEpochMilli() - timerStartTime;
+            int elapsed = Integer.parseInt(df.format(timeElapsed /1000));
+            int newTimersTime;
+
+            if (timerRunTime < 30 && !user.isBot() && user.getIdLong() != getOwnerId()) {
+                if ((timerRunTime + 5) > 30) {
+                    timerRunTime = 30;
+                    newTimersTime = timerRunTime - elapsed;
+                } else {
+                    timerRunTime += 5;
+                    newTimersTime = (timerRunTime - elapsed);
+                }
+
+                voteTimer.cancel();
+                voteTimer = new Timer();
+                voteTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
+                            message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        voteFinished();
+                        finishConsumer.accept(getOrderedVoteResults());
+                    }
+                }, TimeUnit.SECONDS.toMillis(newTimersTime));
+
+                List<Guild> mutualGuilds = user.getMutualGuilds();
+                int position = 0;
+                for (int i = 0; i < mutualGuilds.size(); i++){
+                    if (mutualGuilds.get(i).getIdLong() == getGuildId()){
+                        position = i;
+                    }
+                }
+                Member member = mutualGuilds.get(position).getMember(user);
+
+                int votesNeeded = Integer.parseInt(df.format(((member.getVoiceState().getChannel().getMembers().size()) / 2)));
+
+                if (votes.size() >= votesNeeded) {
+                    CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
+                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    voteFinished();
+                    finishConsumer.accept(getOrderedVoteResults());
+                    stopVote();
+                }
             }
         }
         votes.put(user.getIdLong(), vote);

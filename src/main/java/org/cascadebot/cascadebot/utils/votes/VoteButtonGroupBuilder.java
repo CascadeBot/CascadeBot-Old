@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -32,7 +33,7 @@ public class VoteButtonGroupBuilder {
     private List<Object> voteButtons = new ArrayList<>();
     private int amount = 1; //Setting this so things don't break
 
-    private long voteTime = TimeUnit.SECONDS.toMillis(30);
+    private long voteTime = TimeUnit.SECONDS.toMillis(10);
 
     private Consumer<List<VoteResult>> finishConsumer;
 
@@ -129,7 +130,7 @@ public class VoteButtonGroupBuilder {
      * @return a {@link VoteButtonGroup}.
      */
     public VoteButtonGroup build(long owner, long channelId, long guild) {
-        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer);
+        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer, Instant.now().toEpochMilli(), finishConsumer);
         switch (type) {
             case YES_NO:
                 buttonGroup.addPersistentButton(PersistentButton.VOTE_BUTTON_YES);
@@ -169,5 +170,4 @@ public class VoteButtonGroupBuilder {
 
         return buttonGroup;
     }
-
 }
