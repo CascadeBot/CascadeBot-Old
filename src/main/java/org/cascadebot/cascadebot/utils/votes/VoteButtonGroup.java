@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 
 import java.math.RoundingMode;
@@ -83,52 +84,44 @@ public class VoteButtonGroup extends PersistentButtonGroup {
                 return;
             }
         } else {
-            DecimalFormat df = new DecimalFormat("#");
-            df.setRoundingMode(RoundingMode.HALF_UP);
+
             long timeElapsed = Instant.now().toEpochMilli() - timerStartTime;
-            int elapsed = Integer.parseInt(df.format(timeElapsed /1000));
+            int elapsed = (int) FormatUtils.round((timeElapsed /1000), 0);
             int newTimersTime;
 
-            if (timerRunTime < 30 && !user.isBot() && user.getIdLong() != getOwnerId()) {
-                if ((timerRunTime + 5) > 30) {
-                    timerRunTime = 30;
+            if (!user.isBot() && user.getIdLong() != getOwnerId()) {
+                if (timerRunTime < 30) {
+                    if ((timerRunTime + 5) > 30) {
+                        timerRunTime = 30;
+                    } else {
+                        timerRunTime += 5;
+                    }
                     newTimersTime = timerRunTime - elapsed;
-                } else {
-                    timerRunTime += 5;
-                    newTimersTime = (timerRunTime - elapsed);
+
+                    voteTimer.cancel();
+                    voteTimer = new Timer();
+                    voteTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
+                                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                                voteFinished();
+                                finishConsumer.accept(getOrderedVoteResults());
+                            }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        }
+                    }, TimeUnit.SECONDS.toMillis(newTimersTime));
                 }
+                Member member = CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getMember(user);
 
-                voteTimer.cancel();
-                voteTimer = new Timer();
-                voteTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
-                            message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        voteFinished();
-                        finishConsumer.accept(getOrderedVoteResults());
-                    }
-                }, TimeUnit.SECONDS.toMillis(newTimersTime));
-
-                List<Guild> mutualGuilds = user.getMutualGuilds();
-                int position = 0;
-                for (int i = 0; i < mutualGuilds.size(); i++){
-                    if (mutualGuilds.get(i).getIdLong() == getGuildId()){
-                        position = i;
-                    }
-                }
-                Member member = mutualGuilds.get(position).getMember(user);
-
-                int votesNeeded = Integer.parseInt(df.format(((member.getVoiceState().getChannel().getMembers().size()) / 2)));
+                int votesNeeded = (int) FormatUtils.round((member.getVoiceState().getChannel().getMembers().size() / 2), 0);
 
                 if (votes.size() >= votesNeeded) {
                     CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        voteFinished();
+                        finishConsumer.accept(getOrderedVoteResults());
+                        stopVote();
                     }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                    voteFinished();
-                    finishConsumer.accept(getOrderedVoteResults());
-                    stopVote();
                 }
             }
         }
