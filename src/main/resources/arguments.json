@@ -590,7 +590,7 @@
       }
     },
     "channels*": {
-      "add*": {
+      "link*": {
         "filter*": {
           "_type": "required",
           "channel": {
@@ -598,7 +598,7 @@
           }
         }
       },
-      "remove*": {
+      "unlink*": {
         "filter*": {
           "_type": "required",
           "channel": {
@@ -606,10 +606,14 @@
           }
         }
       },
-      "list": {}
+      "list*": {
+        "filter*": {
+          "_type": "required"
+        }
+      }
     },
     "commands*": {
-      "add*": {
+      "link*": {
         "filter*": {
           "_type": "required",
           "command": {
@@ -617,7 +621,7 @@
           }
         }
       },
-      "remove*": {
+      "unlink*": {
         "filter*": {
           "_type": "required",
           "command": {
@@ -628,7 +632,7 @@
       "list": {}
     },
     "roles*": {
-      "add*": {
+      "link*": {
         "filter*": {
           "_type": "required",
           "role": {
@@ -636,7 +640,7 @@
           }
         }
       },
-      "remove*": {
+      "unlink*": {
         "filter*": {
           "_type": "required",
           "role": {
@@ -649,7 +653,7 @@
       }
     },
     "users*": {
-      "add*": {
+      "link*": {
         "filter*": {
           "_type": "required",
           "user": {
@@ -657,7 +661,7 @@
           }
         }
       },
-      "remove*": {
+      "unlink*": {
         "filter*": {
           "_type": "required",
           "user": {

@@ -779,29 +779,35 @@
       "channels": {
         "command": "channels",
         "description": "Manages the channels linked to a command filter.",
-        "add": {
-          "command": "add",
-          "description": "Adds a channel to a command filter."
+        "link": {
+          "command": "link",
+          "description": "Links a channel to a command filter.",
+          "success": "Successfully linked the channel {0} to the filter `{1}`!",
+          "already_exists": "The channel {0} is already linked to the filter `{1}`!"
         },
-        "remove": {
-          "command": "remove",
-          "description": "Removes a channel from a command filter."
+        "unlink": {
+          "command": "unlink",
+          "description": "Unlinks a channel from a command filter.",
+          "success": "Successfully unlinked the channel {0} from the filter `{1}`!",
+          "didnt_exist": "The channel {0} is not linked to the filter `{1}`!"
         },
         "list": {
           "command": "list",
-          "description": "Lists the channels linked to a command filter."
+          "description": "Lists the channels linked to a command filter.",
+          "embed_title": "Channels linked to the filter `{0}`",
+          "no_filters": "There are no channels linked to this filter!"
         }
       },
       "commands": {
         "command": "commands",
         "description": "Manages the commands that trigger command filter.",
-        "add": {
-          "command": "add",
-          "description": "Adds a command to a command filter."
+        "link": {
+          "command": "link",
+          "description": "Links a command to a command filter."
         },
-        "remove": {
-          "command": "remove",
-          "description": "Removes a command from a command filter."
+        "unlink": {
+          "command": "unlink",
+          "description": "Unlinks a command from a command filter."
         },
         "list": {
           "command": "list",
@@ -811,13 +817,13 @@
       "roles": {
         "command": "roles",
         "description": "Manages the roles linked to a command filter.",
-        "add": {
-          "command": "add",
-          "description": "Adds a role to a command filter."
+        "link": {
+          "command": "link",
+          "description": "Links a role to a command filter."
         },
-        "remove": {
-          "command": "remove",
-          "description": "Removes a role from a command filter."
+        "unlink": {
+          "command": "unlink",
+          "description": "Unlinks a role from a command filter."
         },
         "list": {
           "command": "list",
@@ -827,13 +833,13 @@
       "users": {
         "command": "users",
         "description": "Manages the users linked to a command filter.",
-        "add": {
-          "command": "add",
-          "description": "Adds a user to a command filter."
+        "link": {
+          "command": "link",
+          "description": "Links a user to a command filter."
         },
-        "remove": {
-          "command": "remove",
-          "description": "Removes a user from a command filter."
+        "unlink": {
+          "command": "unlink",
+          "description": "Unlinks a user from a command filter."
         },
         "list": {
           "command": "list",

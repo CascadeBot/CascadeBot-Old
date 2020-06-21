@@ -21,10 +21,10 @@ class CommandFilter(val name: String) {
 
     var enabled = true
 
-    val commands: MutableList<String> = Collections.synchronizedList(listOf())
-    val channelIds: MutableList<Long> = Collections.synchronizedList(listOf())
-    val userIds: MutableList<Long> = Collections.synchronizedList(listOf())
-    val roleIds: MutableList<Long> = Collections.synchronizedList(listOf())
+    val commands: MutableSet<String> = Collections.synchronizedSet(mutableSetOf())
+    val channelIds: MutableSet<Long> = Collections.synchronizedSet(mutableSetOf())
+    val userIds: MutableSet<Long> = Collections.synchronizedSet(mutableSetOf())
+    val roleIds: MutableSet<Long> = Collections.synchronizedSet(mutableSetOf())
 
     fun evaluateFilter(command: String, channel: TextChannel, member: Member): FilterResult {
         if (!enabled) {

@@ -28,7 +28,8 @@ class FiltersCommand : MainCommand() {
             FiltersEnableSubCommand(),
             FiltersDisableSubCommand(),
             FiltersTypeSubCommand(),
-            FiltersOperatorSubCommand()
+            FiltersOperatorSubCommand(),
+            FiltersChannelsSubCommand()
     )
 
     override fun permission(): CascadePermission? = null
