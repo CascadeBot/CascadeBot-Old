@@ -90,6 +90,7 @@ public class SkipCommand extends MainCommand {
 
         VoteButtonGroupBuilder buttonGroupBuilder = new VoteButtonGroupBuilder(VoteMessageType.YES_NO);
         buttonGroupBuilder.addExtraButton(PersistentButton.SKIP_BUTTON_FORCE);
+        buttonGroupBuilder.setIsMusicSkip(true);
         buttonGroupBuilder.setPeriodicConsumer((results, message) -> {
             StringBuilder resultsBuilder = new StringBuilder();
             for (VoteResult result : results) {

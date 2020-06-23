@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -38,6 +37,12 @@ public class VoteButtonGroupBuilder {
     private Consumer<List<VoteResult>> finishConsumer;
 
     private BiConsumer<List<VoteResult>, Message> periodicConsumer;
+
+    private boolean isMusicSkip = false;
+
+    public void setIsMusicSkip(boolean isMusicSkip) {
+        this.isMusicSkip = isMusicSkip;
+    }
 
     /**
      * Creates a new build for {@link VoteButtonGroup}
@@ -130,7 +135,14 @@ public class VoteButtonGroupBuilder {
      * @return a {@link VoteButtonGroup}.
      */
     public VoteButtonGroup build(long owner, long channelId, long guild) {
-        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer, Instant.now().toEpochMilli(), finishConsumer);
+        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer);
+        buttonGroup.setIsMusicSkip(isMusicSkip);
+        if (isMusicSkip) {
+            buttonGroup.setFinishConsumer(finishConsumer);
+            buttonGroup.setTimerRunTime(10);
+            buttonGroup.setMaxTimeRunTime(30);
+            buttonGroup.setTimerRunTimeSkipAddon(5);
+        }
         switch (type) {
             case YES_NO:
                 buttonGroup.addPersistentButton(PersistentButton.VOTE_BUTTON_YES);

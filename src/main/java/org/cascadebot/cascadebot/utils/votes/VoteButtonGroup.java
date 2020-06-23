@@ -6,7 +6,6 @@
 package org.cascadebot.cascadebot.utils.votes;
 
 import com.google.common.collect.Sets;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -16,8 +15,6 @@ import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,19 +42,43 @@ public class VoteButtonGroup extends PersistentButtonGroup {
 
     private Timer voteTimer;
 
-    private long timerStartTime;
+    private long timerStartTime = Instant.now().toEpochMilli();
 
-    private int timerRunTime = 10;
+    private int timerRunTime;
 
-    VoteButtonGroup(long ownerId, long channelId, long guildId, BiConsumer<List<VoteResult>, Message> periodicRunnable, Timer voteTimer, long timerStartTime, Consumer<List<VoteResult>> finishConsumer) {
+    private int maxTimerRunTime;
+
+    private int timerRunTimeSkipAddon;
+
+    private boolean isMusicSkip;
+
+    public void setIsMusicSkip(Boolean isMusicSkip) {
+        this.isMusicSkip = isMusicSkip;
+    }
+
+    public void setFinishConsumer(Consumer<List<VoteResult>> finishConsumer) {
+        this.finishConsumer = finishConsumer;
+    }
+
+    public void setMaxTimeRunTime(int maxTimerRunTime) {
+        this.maxTimerRunTime = maxTimerRunTime;
+    }
+
+    public void setTimerRunTimeSkipAddon(int timerRunTimeSkipAddon) {
+        this.timerRunTimeSkipAddon = timerRunTimeSkipAddon;
+    }
+
+    public void setTimerRunTime(int timerRunTime) {
+        this.timerRunTime = timerRunTime;
+    }
+
+    VoteButtonGroup(long ownerId, long channelId, long guildId, BiConsumer<List<VoteResult>, Message> periodicRunnable, Timer voteTimer) {
         super(ownerId, channelId, guildId);
         this.periodicConsumer = periodicRunnable;
         if (periodicRunnable != null) {
             setUpVoteProcessConsumer();
         }
         this.voteTimer = voteTimer;
-        this.timerStartTime = timerStartTime;
-        this.finishConsumer = finishConsumer;
     }
 
     private void setUpVoteProcessConsumer() {
@@ -83,51 +104,54 @@ public class VoteButtonGroup extends PersistentButtonGroup {
                 votes.remove(user.getIdLong());
                 return;
             }
-        } else {
-
-            long timeElapsed = Instant.now().toEpochMilli() - timerStartTime;
-            int elapsed = (int) FormatUtils.round((timeElapsed /1000), 0);
-            int newTimersTime;
-
-            if (!user.isBot() && user.getIdLong() != getOwnerId()) {
-                if (timerRunTime < 30) {
-                    if ((timerRunTime + 5) > 30) {
-                        timerRunTime = 30;
-                    } else {
-                        timerRunTime += 5;
-                    }
-                    newTimersTime = timerRunTime - elapsed;
-
-                    voteTimer.cancel();
-                    voteTimer = new Timer();
-                    voteTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
-                                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                                voteFinished();
-                                finishConsumer.accept(getOrderedVoteResults());
-                            }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        }
-                    }, TimeUnit.SECONDS.toMillis(newTimersTime));
-                }
-                Member member = CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getMember(user);
-
-                int votesNeeded = (int) FormatUtils.round((member.getVoiceState().getChannel().getMembers().size() / 2), 0);
-
-                if (votes.size() >= votesNeeded) {
-                    CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
-                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        voteFinished();
-                        finishConsumer.accept(getOrderedVoteResults());
-                        stopVote();
-                    }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                }
-            }
+        } else if (isMusicSkip) {
+            musicSkipExtraFunctionality(user);
         }
         votes.put(user.getIdLong(), vote);
     }
 
+    private void musicSkipExtraFunctionality(User user) {
+
+        long timeElapsed = Instant.now().toEpochMilli() - timerStartTime;
+        int elapsed = (int) FormatUtils.round((timeElapsed /1000), 0);
+        int newTimersTime;
+
+        if (!user.isBot() && user.getIdLong() != getOwnerId()) {
+            if (timerRunTime < maxTimerRunTime) {
+                if ((timerRunTime + timerRunTimeSkipAddon) > maxTimerRunTime) {
+                    timerRunTime = maxTimerRunTime;
+                } else {
+                    timerRunTime += timerRunTimeSkipAddon;
+                }
+                newTimersTime = timerRunTime - elapsed;
+
+                voteTimer.cancel();
+                voteTimer = new Timer();
+                voteTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
+                            message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                            voteFinished();
+                            finishConsumer.accept(getOrderedVoteResults());
+                        }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    }
+                }, TimeUnit.SECONDS.toMillis(newTimersTime));
+            }
+            Member member = CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getMember(user);
+
+            int votesNeeded = (int) Math.ceil(member.getVoiceState().getChannel().getMembers().size() / 2);
+
+            if ((votes.size() - 1) >= votesNeeded) { // - 1 is because the users vote hasn't been added yet
+                CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
+                    message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    voteFinished();
+                    finishConsumer.accept(getOrderedVoteResults());
+                    stopVote();
+                }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+            }
+        }
+    }
     public Map<Long, Object> getVotes() {
         return votes;
     }
