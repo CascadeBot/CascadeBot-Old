@@ -142,7 +142,7 @@ public class VoteButtonGroup extends PersistentButtonGroup {
 
             int votesNeeded = (int) Math.ceil(member.getVoiceState().getChannel().getMembers().size() / 2);
 
-            if ((votes.size() - 1) >= votesNeeded) { // - 1 is because the users vote hasn't been added yet
+            if ((votes.size()) >= votesNeeded - 1) { // - 1 is because the users vote hasn't been added yet
                 CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
                     message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                     voteFinished();
