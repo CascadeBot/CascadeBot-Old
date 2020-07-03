@@ -68,7 +68,7 @@ class CommandFilter(val name: String) {
             channelMatch != FilterMatch.NOT_MATCH || userMatch != FilterMatch.NOT_MATCH || roleMatch != FilterMatch.NOT_MATCH
         }
         return when (type) {
-            FilterType.WHITELIST -> if (combinedResult) NodeFilter.FilterResult.ALLOW else FilterResult.DENY
+            FilterType.WHITELIST -> if (combinedResult) FilterResult.ALLOW else FilterResult.DENY
             FilterType.BLACKLIST -> if (combinedResult) FilterResult.DENY else FilterResult.ALLOW
         }
     }
