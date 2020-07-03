@@ -9,6 +9,14 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
+import org.cascadebot.cascadebot.data.language.Language
+import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.messaging.MessageType
+import org.cascadebot.cascadebot.messaging.embed
+import org.cascadebot.cascadebot.utils.language.LanguageUtils
+import org.cascadebot.cascadebot.utils.toCapitalized
+import org.jsoup.select.NodeFilter
+import java.lang.StringBuilder
 import java.util.Collections
 
 class CommandFilter(val name: String) {
@@ -60,13 +68,76 @@ class CommandFilter(val name: String) {
             channelMatch != FilterMatch.NOT_MATCH || userMatch != FilterMatch.NOT_MATCH || roleMatch != FilterMatch.NOT_MATCH
         }
         return when (type) {
-            FilterType.WHITELIST -> if (combinedResult) FilterResult.ALLOW else FilterResult.DENY
+            FilterType.WHITELIST -> if (combinedResult) NodeFilter.FilterResult.ALLOW else FilterResult.DENY
             FilterType.BLACKLIST -> if (combinedResult) FilterResult.DENY else FilterResult.ALLOW
         }
     }
 
-    val filterEmbed: EmbedBuilder
-        get() = EmbedBuilder()
+    fun getFilterEmbed(locale: Locale): EmbedBuilder = embed(MessageType.NEUTRAL) {
+        title {
+            name = this@CommandFilter.name
+        }
+        author {
+            name = "Command Filter"
+        }
+
+        val commandList = if (commands.isEmpty()) {
+            locale.i18n("commands.filters.no_commands")
+        } else {
+            commands.joinToString(", ") { "`${Language.i18n(locale, "commands.$it.name")}`" }
+        }
+
+        description = Language.i18n(
+                locale,
+            "commands.filters.embed_description",
+                LanguageUtils.i18nEnum(operator, locale),
+                commands.size,
+                commandList,
+                LanguageUtils.i18nEnum(type, locale),
+                locale.i18n("commands.filters.${type.name.toLowerCase()}_description")
+            )
+
+        val conditions: String = if (channelIds.isEmpty() && roleIds.isEmpty() && userIds.isEmpty()) {
+            locale.i18n("commands.filters.no_conditions")
+        } else {
+            val conditionsBuilder = StringBuilder()
+            if (channelIds.isNotEmpty()) {
+                conditionsBuilder
+                        .append(locale.i18n("words.channels").toCapitalized())
+                        .append(": ")
+                        .append(channelIds.joinToString(", ") { "<#$it>" })
+                        .append("\n")
+                        .append("*${LanguageUtils.i18nEnum(operator, locale)}*")
+                        .append("\n")
+            }
+            if (roleIds.isNotEmpty()) {
+                conditionsBuilder
+                        .append(locale.i18n("words.roles").toCapitalized())
+                        .append(": ")
+                        .append(roleIds.joinToString(", ") { "<@&$it>" })
+                        .append("\n")
+                        .append("*${LanguageUtils.i18nEnum(operator, locale)}*")
+                        .append("\n")
+            }
+            if (userIds.isNotEmpty()) {
+                conditionsBuilder
+                        .append(locale.i18n("words.users").toCapitalized())
+                        .append(": ")
+                        .append(userIds.joinToString(", ") { "<@$it>" })
+                        .append("\n")
+                        .append("*${LanguageUtils.i18nEnum(operator, locale)}*")
+                        .append("\n")
+            }
+            conditionsBuilder.toString()
+        }
+
+        field {
+            name = locale.i18n("words.conditions").toCapitalized()
+            value = conditions
+        }
+    }
+
+
 
     /**
      * Determines whether users who match this filter will be blocked or whitelisted
