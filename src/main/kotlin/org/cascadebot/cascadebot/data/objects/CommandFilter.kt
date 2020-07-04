@@ -81,20 +81,22 @@ class CommandFilter(val name: String) {
             name = "Command Filter"
         }
 
-        val commandList = if (commands.isEmpty()) {
+        val commandText = if (commands.isEmpty()) {
             locale.i18n("commands.filters.no_commands")
         } else {
-            commands.joinToString(", ") { "`${Language.i18n(locale, "commands.$it.name")}`" }
+            locale.i18n("commands.filters.commands_list", commands.size, commands.joinToString(", ") { "`${Language.i18n(locale, "commands.$it.command")}`" })
         }
+
+        color = if (enabled) MessageType.SUCCESS.color else MessageType.DANGER.color
 
         description = Language.i18n(
                 locale,
             "commands.filters.embed_description",
                 LanguageUtils.i18nEnum(operator, locale),
-                commands.size,
-                commandList,
+                locale.i18n("commands.filters.op_${operator.name.toLowerCase()}_description"),
+                commandText,
                 LanguageUtils.i18nEnum(type, locale),
-                locale.i18n("commands.filters.${type.name.toLowerCase()}_description")
+                locale.i18n("commands.filters.type_${type.name.toLowerCase()}_description")
             )
 
         val conditions: String = if (channelIds.isEmpty() && roleIds.isEmpty() && userIds.isEmpty()) {
@@ -107,25 +109,23 @@ class CommandFilter(val name: String) {
                         .append(": ")
                         .append(channelIds.joinToString(", ") { "<#$it>" })
                         .append("\n")
-                        .append("*${LanguageUtils.i18nEnum(operator, locale)}*")
-                        .append("\n")
             }
             if (roleIds.isNotEmpty()) {
                 conditionsBuilder
+                        .append("*${LanguageUtils.i18nEnum(operator, locale)}*")
+                        .append("\n")
                         .append(locale.i18n("words.roles").toCapitalized())
                         .append(": ")
                         .append(roleIds.joinToString(", ") { "<@&$it>" })
                         .append("\n")
-                        .append("*${LanguageUtils.i18nEnum(operator, locale)}*")
-                        .append("\n")
             }
             if (userIds.isNotEmpty()) {
                 conditionsBuilder
+                        .append("*${LanguageUtils.i18nEnum(operator, locale)}*")
+                        .append("\n")
                         .append(locale.i18n("words.users").toCapitalized())
                         .append(": ")
                         .append(userIds.joinToString(", ") { "<@$it>" })
-                        .append("\n")
-                        .append("*${LanguageUtils.i18nEnum(operator, locale)}*")
                         .append("\n")
             }
             conditionsBuilder.toString()
@@ -134,6 +134,11 @@ class CommandFilter(val name: String) {
         field {
             name = locale.i18n("words.conditions").toCapitalized()
             value = conditions
+        }
+
+        field {
+            name = locale.i18n("words.enabled").toCapitalized()
+            value = locale.i18n("words.$enabled").toCapitalized()
         }
     }
 
