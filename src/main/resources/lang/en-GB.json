@@ -768,6 +768,13 @@
       "command": "filters",
       "description": "Create and manipulate command filters.",
       "doesnt_exist": "A filter with the name `{0}` doesn't exist!",
+      "embed_description": "The operator for this filter is `{0}`. {1}\n\n{2}\n\nFilter type: `{3}` ({4})",
+      "commands_list": "This filter applies for the following {0, plural, =1 {command} other {commands}}: {1}",
+      "no_commands": "No commands have been linked to this filter yet! You need to link commands for this filter to be applied to users!",
+      "op_and_description": "Therefore, the channel, user and role need to match for this filter to be applied.",
+      "op_or_description": "Therefore, only channel, user or role need to match for this filter to be applied.",
+      "type_whitelist_description": "Only users who match this filter will be allowed to run the commands",
+      "type_blacklist_description": "Any user who matching this filter will not be allowed to run the commands",
       "create": {
         "command": "create",
         "description": "Creates a command filter",
@@ -1314,7 +1321,12 @@
     "flags": "Flags",
     "default": "Default",
     "linked_roles": "Linked roles",
-    "roles": "Roles"
+    "roles": "Roles",
+    "channels": "channels",
+    "users": "users",
+    "conditions": "conditions",
+    "true": "true",
+    "false": "false"
   },
   "messaging": {
     "loading_page": "Paged message loading...",
