@@ -780,7 +780,8 @@
         "description": "Creates a command filter",
         "already_exists": "A filter with the name `{0}` already exists! Edit or delete the existing filter instead.",
         "created_filter": "Created command filter of type **{0}** with the name `{1}`",
-        "type_invalid": "The filter type `{0}` does not exist! Please choose one of: {1}"
+        "type_invalid": "The filter type `{0}` does not exist! Please choose one of: {1}",
+        "over10warning": "You have 10 or more command filters! This is not recommended as it will be harder to manage!\nTo disable this warning, set the `warnOver10Filters` setting to `false`!"
       },
       "delete": {
         "command": "delete",

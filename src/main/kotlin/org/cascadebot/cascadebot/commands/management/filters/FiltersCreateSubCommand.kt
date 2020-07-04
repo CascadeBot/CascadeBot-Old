@@ -36,6 +36,9 @@ class FiltersCreateSubCommand : SubCommand() {
         if (context.args.size == 1) {
             val filter = CommandFilter(name)
             context.data.management.filters.add(filter)
+            if (context.data.management.filters.size >= 10 && context.data.management.warnOver10Filters) {
+                context.typedMessaging.replyWarning(context.i18n("commands.filters.create.over10warning"))
+            }
             context.typedMessaging.replySuccess(context.i18n(
                     "commands.filters.create.created_filter",
                     FormatUtils.formatEnum(filter.type, context.locale),
@@ -47,6 +50,9 @@ class FiltersCreateSubCommand : SubCommand() {
                 val filter = CommandFilter(name)
                 filter.type = EnumUtils.getEnumIgnoreCase(FilterType::class.java, type)
                 context.data.management.filters.add(filter)
+                if (context.data.management.filters.size >= 10 && context.data.management.warnOver10Filters) {
+                    context.typedMessaging.replyWarning(context.i18n("commands.filters.create.over10warning"))
+                }
                 context.typedMessaging.replySuccess(context.i18n(
                         "commands.filters.create.created_filter",
                         FormatUtils.formatEnum(filter.type, context.locale),
