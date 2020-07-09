@@ -34,6 +34,9 @@ class CommandFilter(val name: String) {
     val userIds: MutableSet<Long> = Collections.synchronizedSet(mutableSetOf())
     val roleIds: MutableSet<Long> = Collections.synchronizedSet(mutableSetOf())
 
+    val configured: Boolean
+        get() = commands.isNotEmpty() && (channelIds.isNotEmpty() || userIds.isNotEmpty() || roleIds.isNotEmpty())
+
     fun evaluateFilter(command: String, channel: TextChannel, member: Member): FilterResult {
         if (!enabled) {
             return FilterResult.NEUTRAL

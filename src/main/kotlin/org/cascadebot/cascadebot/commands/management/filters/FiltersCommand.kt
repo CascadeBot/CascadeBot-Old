@@ -23,6 +23,7 @@ class FiltersCommand : MainCommand() {
     override fun module(): Module = Module.MANAGEMENT
 
     override fun subCommands(): Set<SubCommand> = setOf(
+            FiltersListSubCommand(),
             FiltersCreateSubCommand(),
             FiltersDeleteSubCommand(),
             FiltersEnableSubCommand(),
