@@ -771,10 +771,14 @@
       "embed_description": "The operator for this filter is `{0}`. {1}\n\n{2}\n\nFilter type: `{3}` ({4})",
       "commands_list": "This filter applies for the following {0, plural, =1 {command} other {commands}}: {1}",
       "no_commands": "No commands have been linked to this filter yet! You need to link commands for this filter to be applied to users!",
+      "no_conditions": "No conditions have been linked to this filter yet! You need to link either a user, role or channel for the filter to be applied to users!",
       "op_and_description": "Therefore, the channel, user and role need to match for this filter to be applied.",
       "op_or_description": "Therefore, only channel, user or role need to match for this filter to be applied.",
       "type_whitelist_description": "Only users who match this filter will be allowed to run the commands",
       "type_blacklist_description": "Any user who matching this filter will not be allowed to run the commands",
+      "not_configured_commands": "There are no commands linked to this filter!",
+      "not_configured_conditions": "There are no conditions linked to this filter!",
+      "no_filters": "There are no command filters for this server!",
       "create": {
         "command": "create",
         "description": "Creates a command filter",
@@ -790,7 +794,8 @@
       },
       "list": {
         "command": "list",
-        "description": "Lists the command filters for this server."
+        "description": "Lists the command filters for this server.",
+        "filter_overview": "Here is a quick overview of your current filters:"
       },
       "operator": {
         "command": "operator",
@@ -833,15 +838,21 @@
         "description": "Manages the commands that trigger command filter.",
         "link": {
           "command": "link",
-          "description": "Links a command to a command filter."
+          "description": "Links a command to a command filter.",
+          "success": "Successfully linked the command `{0}` to the filter `{1}`!",
+          "already_exists": "The command `{0}` is already linked to the filter `{1}`!"
         },
         "unlink": {
           "command": "unlink",
-          "description": "Unlinks a command from a command filter."
+          "description": "Unlinks a command from a command filter.",
+          "success": "Successfully unlinked the command `{0}` from the filter `{1}`!",
+          "didnt_exist": "The command `{0}` is not linked to the filter `{1}`!"
         },
         "list": {
           "command": "list",
-          "description": "Lists the commands linked to a command filter."
+          "description": "Lists the commands linked to a command filter.",
+          "embed_title": "Commands linked to the filter `{0}`",
+          "no_filters": "There are no commands linked to this filter!"
         }
       },
       "roles": {
@@ -849,15 +860,21 @@
         "description": "Manages the roles linked to a command filter.",
         "link": {
           "command": "link",
-          "description": "Links a role to a command filter."
+          "description": "Links a role to a command filter.",
+          "success": "Successfully linked the role {0} to the filter `{1}`!",
+          "already_exists": "The role {0} is already linked to the filter `{1}`!"
         },
         "unlink": {
           "command": "unlink",
-          "description": "Unlinks a role from a command filter."
+          "description": "Unlinks a role from a command filter.",
+          "success": "Successfully unlinked the role {0} from the filter `{1}`!",
+          "didnt_exist": "The role {0} is not linked to the filter `{1}`!"
         },
         "list": {
           "command": "list",
-          "description": "Lists the roles linked to a command filter."
+          "description": "Lists the roles linked to a command filter.",
+          "embed_title": "Roles linked to the filter `{0}`",
+          "no_filters": "There are no roles linked to this filter!"
         }
       },
       "users": {
@@ -865,15 +882,21 @@
         "description": "Manages the users linked to a command filter.",
         "link": {
           "command": "link",
-          "description": "Links a user to a command filter."
+          "description": "Links a user to a command filter.",
+          "success": "Successfully linked the user {0} to the filter `{1}`!",
+          "already_exists": "The user {0} is already linked to the filter `{1}`!"
         },
         "unlink": {
           "command": "unlink",
-          "description": "Unlinks a user from a command filter."
+          "description": "Unlinks a user from a command filter.",
+          "success": "Successfully unlinked the user {0} from the filter `{1}`!",
+          "didnt_exist": "The user {0} is not linked to the filter `{1}`!"
         },
         "list": {
           "command": "list",
-          "description": "Lists the users linked to a command filter."
+          "description": "Lists the users linked to a command filter.",
+          "embed_title": "Users linked to the filter `{0}`",
+          "no_filters": "There are no users linked to this filter!"
         }
       },
       "enable": {
@@ -1198,7 +1221,6 @@
     "cannot_find_argument": "I can't find that argument!",
     "no_specified_user": "Not enough arguments (no specified member)",
     "cannot_find_user": "I cannot find that user!",
-    "cannot_find_user_matching": "Cannot find a user matching: {0}",
     "cannot_find_voice_channel": "Could not find that voice channel to connect to!",
     "voice_not_connected": "I am not connected to a voice channel!",
     "type_one_of": "Please type one of: ",
@@ -1214,7 +1236,10 @@
     "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
     "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!",
     "permission_not_exist": "`{0}` isn't a valid permission",
-    "cannot_find_role_matching": "Could not find role {0}",
+    "cannot_find_role_matching": "Could not find the role `{0}`",
+    "cannot_find_channel_matching": "Could not find the channel `{0}`",
+    "cannot_find_command_matching": "Could not find the command `{0}`",
+    "cannot_find_user_matching": "Could not find the user `{0}`",
     "more_in_list": "...and {0} more."
   },
   "enums": {
@@ -1308,6 +1333,8 @@
     "reason": "Reason",
     "enabled": "Enabled",
     "disabled": "Disabled",
+    "not_configured": "not configured",
+    "total": "total",
     "status": "Status",
     "queue": "Queue",
     "requested_by": "Requested by ",
@@ -1327,7 +1354,8 @@
     "users": "users",
     "conditions": "conditions",
     "true": "true",
-    "false": "false"
+    "false": "false",
+    "command_filters": "command filters"
   },
   "messaging": {
     "loading_page": "Paged message loading...",

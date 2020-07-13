@@ -630,7 +630,11 @@
           }
         }
       },
-      "list": {}
+      "list*": {
+        "filter*": {
+          "_type": "required"
+        }
+      }
     },
     "roles*": {
       "link*": {
@@ -649,8 +653,10 @@
           }
         }
       },
-      "list": {
-
+      "list*": {
+        "filter*": {
+          "_type": "required"
+        }
       }
     },
     "users*": {
@@ -670,8 +676,10 @@
           }
         }
       },
-      "list": {
-
+      "list*": {
+        "filter*": {
+          "_type": "required"
+        }
       }
     },
     "enable*": {

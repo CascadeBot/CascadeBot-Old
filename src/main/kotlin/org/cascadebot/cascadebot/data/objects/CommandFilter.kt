@@ -9,14 +9,14 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
+import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.utils.language.LanguageUtils
 import org.cascadebot.cascadebot.utils.toCapitalized
-import org.jsoup.select.NodeFilter
-import java.lang.StringBuilder
 import java.util.Collections
 
 class CommandFilter(val name: String) {
@@ -36,6 +36,13 @@ class CommandFilter(val name: String) {
 
     val configured: Boolean
         get() = commands.isNotEmpty() && (channelIds.isNotEmpty() || userIds.isNotEmpty() || roleIds.isNotEmpty())
+
+    val statusEmote: String
+        get() = when {
+            !configured -> Config.INS.globalEmotes["offline"]?.let { CascadeBot.INS.shardManager.getEmoteById(it)?.asMention }
+            enabled -> Config.INS.globalEmotes["online"]?.let { CascadeBot.INS.shardManager.getEmoteById(it)?.asMention }
+            else -> Config.INS.globalEmotes["dnd"]?.let { CascadeBot.INS.shardManager.getEmoteById(it)?.asMention }
+        } ?: ""
 
     fun evaluateFilter(command: String, channel: TextChannel, member: Member): FilterResult {
         if (!enabled) {
@@ -90,17 +97,19 @@ class CommandFilter(val name: String) {
             locale.i18n("commands.filters.commands_list", commands.size, commands.joinToString(", ") { "`${Language.i18n(locale, "commands.$it.command")}`" })
         }
 
-        color = if (enabled) MessageType.SUCCESS.color else MessageType.DANGER.color
+        color = if (!configured) null else {
+            if (enabled) MessageType.SUCCESS.color else MessageType.DANGER.color
+        }
 
         description = Language.i18n(
                 locale,
-            "commands.filters.embed_description",
+                "commands.filters.embed_description",
                 LanguageUtils.i18nEnum(operator, locale),
                 locale.i18n("commands.filters.op_${operator.name.toLowerCase()}_description"),
                 commandText,
                 LanguageUtils.i18nEnum(type, locale),
                 locale.i18n("commands.filters.type_${type.name.toLowerCase()}_description")
-            )
+        )
 
         val conditions: String = if (channelIds.isEmpty() && roleIds.isEmpty() && userIds.isEmpty()) {
             locale.i18n("commands.filters.no_conditions")
@@ -140,17 +149,25 @@ class CommandFilter(val name: String) {
         }
 
         field {
-            name = locale.i18n("words.enabled").toCapitalized()
-            value = locale.i18n("words.$enabled").toCapitalized()
+            name = locale.i18n("words.status").toCapitalized()
+            value = "$statusEmote " + if (!configured) {
+                if (commands.isEmpty()) {
+                    locale.i18n("words.not_configured").toCapitalized() + " - " + locale.i18n("commands.filters.not_configured_commands")
+                } else {
+                    locale.i18n("words.not_configured").toCapitalized() + " - " + locale.i18n("commands.filters.not_configured_conditions")
+                }
+            } else {
+                locale.i18n("words.${if (enabled) "enabled" else "disabled"}").toCapitalized()
+            }
         }
     }
-
 
 
     /**
      * Determines whether users who match this filter will be blocked or whitelisted
      */
     enum class FilterType {
+
         WHITELIST, BLACKLIST
     }
 
@@ -158,6 +175,7 @@ class CommandFilter(val name: String) {
      * Determines whether the channel, roles and user properties all have to be matched or just one of them.
      */
     enum class FilterOperator {
+
         AND, OR
     }
 
@@ -165,6 +183,7 @@ class CommandFilter(val name: String) {
      * Whether this filter explicitly allows or denies the user. Also has a neutral option which has no effect on the outcome.
      */
     enum class FilterResult {
+
         ALLOW, DENY, NEUTRAL
     }
 
@@ -172,6 +191,7 @@ class CommandFilter(val name: String) {
      * Whether the condition matches or not. Also has a neutral option which has no effect on the outcome.
      */
     enum class FilterMatch {
+
         MATCH, NOT_MATCH, NEUTRAL
     }
 

@@ -14,6 +14,8 @@ import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import org.cascadebot.cascadebot.utils.toCapitalized
+import org.cascadebot.cascadebot.utils.toSentenceCase
+import org.cascadebot.cascadebot.utils.toTitleCase
 
 class FiltersListSubCommand : SubCommand() {
 
@@ -26,19 +28,14 @@ class FiltersListSubCommand : SubCommand() {
         val filters = context.data.management.filters
         pages.add(PageObjects.EmbedPage(embed(MessageType.INFO) {
             title {
-                name = "Command Filters"
+                name = context.i18n("words.command_filters").toTitleCase()
             }
             if (filters.isEmpty()) {
-                description = "There are no command filters for this server!"
+                description = context.i18n("commands.filters.no_filters").toSentenceCase()
             } else {
-                val builder = StringBuilder("Here's a quick overview of your command filters:\n\n")
+                val builder = StringBuilder("${context.i18n("commands.filters.list.filter_overview").toSentenceCase()}\n\n")
                 for (filter in filters.take(FILTERS_LISTED)) {
-                    val icon = when {
-                        !filter.configured -> context.globalEmote("offline")
-                        filter.enabled -> context.globalEmote("online")
-                        else -> context.globalEmote("dnd")
-                    }
-                    builder.append("$icon ${filter.name}\n")
+                    builder.append("${filter.statusEmote} ${filter.name}\n")
                 }
                 if (filters.size > FILTERS_LISTED) {
                     builder.append(context.i18n("responses.more_in_list", filters.size - FILTERS_LISTED))
@@ -52,7 +49,7 @@ class FiltersListSubCommand : SubCommand() {
             }
 
             field {
-                name = context.i18n("words.enabled").toCapitalized() + " / " + context.i18n("words.disabled").toCapitalized() + context.i18n("words.not_configured").toCapitalized()
+                name = "${context.i18n("words.enabled").toCapitalized()} / ${context.i18n("words.disabled").toCapitalized()} / ${context.i18n("words.not_configured").toCapitalized()}"
                 value = "${filters.count { it.enabled && it.configured }} / ${filters.count { !it.enabled && it.configured }} / ${filters.count { !it.configured }} (${filters.size} ${context.i18n("words.total")})"
             }
 
