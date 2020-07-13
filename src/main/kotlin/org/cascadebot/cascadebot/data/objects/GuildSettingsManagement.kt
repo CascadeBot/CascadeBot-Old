@@ -10,6 +10,9 @@ class GuildSettingsManagement {
     var allowTagCommands = true
 
     @Setting
+    var displayFilterError = false
+
+    @Setting
     var warnOver10Filters = true
 
     val tags: ConcurrentHashMap<String, Tag> = ConcurrentHashMap()

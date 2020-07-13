@@ -779,6 +779,8 @@
       "not_configured_commands": "There are no commands linked to this filter!",
       "not_configured_conditions": "There are no conditions linked to this filter!",
       "no_filters": "There are no command filters for this server!",
+      "message_blocked": "Your message has been blocked by a command filter!",
+      "message_blocked_admin": "Please consult the modlog for more information.",
       "create": {
         "command": "create",
         "description": "Creates a command filter",

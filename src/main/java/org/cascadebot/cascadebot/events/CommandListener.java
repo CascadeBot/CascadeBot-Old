@@ -131,8 +131,11 @@ public class CommandListener extends ListenerAdapter {
 
             if (!processFilters(cmd, context)) {
                 // TODO: Moderation log event
-                // TODO: Message for the end user?
-                context.getTypedMessaging().replyDanger("Message blocked");
+                if (context.getData().getManagement().getDisplayFilterError()) {
+                    var message = context.i18n("commands.filters.message_blocked") +
+                            (context.getMember().hasPermission(Permission.ADMINISTRATOR) ? context.i18n("commands.filters.message_blocked_admin") : "");
+                    context.getTypedMessaging().replyDanger(message);
+                }
                 return;
             }
 
@@ -157,7 +160,8 @@ public class CommandListener extends ListenerAdapter {
 
     private boolean processFilters(MainCommand cmd, CommandContext context) {
         for (CommandFilter filter : context.getData().getManagement().getFilters()) {
-            if (filter.evaluateFilter(cmd.command(), context.getChannel(), context.getMember()) == CommandFilter.FilterResult.DENY)  {
+            if (filter.evaluateFilter(cmd.command(), context.getChannel(), context.getMember()) == CommandFilter.FilterResult.DENY
+                    && !context.hasPermission("filters.bypass"))  {
                 return false;
             }
         }
