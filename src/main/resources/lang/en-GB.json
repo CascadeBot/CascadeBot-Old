@@ -1160,6 +1160,14 @@
     "warn": {
       "name": "warn",
       "verb": "warned"
+    },
+    "temp_ban": {
+      "name": "temp ban",
+      "verb": "temporarily banned"
+    },
+    "temp_mute": {
+      "name": "temp mute",
+      "verb": "temporarily muted"
     }
   },
   "words": {

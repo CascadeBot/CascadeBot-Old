@@ -12,7 +12,12 @@ import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
+import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.scheduler.ActionType;
+import org.cascadebot.cascadebot.scheduler.ScheduledAction;
+
+import java.time.Instant;
 
 public class ModerationManager {
 
@@ -40,6 +45,25 @@ public class ModerationManager {
                     sendSuccess(context, target, submitter, ModAction.UNBAN, reason);
                 }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, ModAction.UNBAN));
             }, context, ModAction.UNBAN, target);
+        }
+    }
+
+    public void tempBan(CommandContext context, User target, Member submitter, String reason, long delay) {
+        if (runChecks(ModAction.TEMP_BAN, target, submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild().ban(target, 7).reason(reason).queue(success -> {
+                    ScheduledActionManager.registerScheduledAction(new ScheduledAction(
+                            ActionType.UNBAN,
+                            new ScheduledAction.ModerationActionData(target.getIdLong()),
+                            context.getGuild().getIdLong(),
+                            context.getChannel().getIdLong(),
+                            submitter.getIdLong(),
+                            Instant.now(),
+                            delay
+                    ));
+                    sendSuccess(context, target, submitter, ModAction.TEMP_BAN, reason);
+                });
+            }, context, ModAction.TEMP_BAN, target);
         }
     }
 
