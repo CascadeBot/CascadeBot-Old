@@ -25,11 +25,12 @@ fun Double.toPercentage(dp: Int = 0): String {
 }
 
 fun Guild.getMutedRole(): Role {
-    val muteRoleName = GuildDataManager.getGuildData(this.idLong).moderation.muteRoleName
+    val guildData = GuildDataManager.getGuildData(this.idLong)
+    val muteRoleName = guildData.moderation.muteRoleName
     val roleByName = this.getRolesByName(muteRoleName, true)
     return if (roleByName.isEmpty()) {
         this.createRole().setName(muteRoleName).complete()
     } else {
-        roleByName[0]
-    }
+        roleByName.find { it.idLong == guildData.mutedRoleId } ?: roleByName[0]
+    }.also { guildData.mutedRoleId = it.idLong }
 }
