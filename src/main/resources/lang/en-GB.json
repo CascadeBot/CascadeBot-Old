@@ -1197,7 +1197,9 @@
     "flags": "Flags",
     "default": "Default",
     "linked_roles": "Linked roles",
-    "roles": "Roles"
+    "roles": "Roles",
+    "duration": "Duration",
+    "until": "Until"
   },
   "messaging": {
     "loading_page": "Paged message loading...",

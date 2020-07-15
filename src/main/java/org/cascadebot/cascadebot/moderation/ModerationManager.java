@@ -16,8 +16,12 @@ import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.scheduler.ActionType;
 import org.cascadebot.cascadebot.scheduler.ScheduledAction;
+import org.cascadebot.cascadebot.utils.ExtensionsKt;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 
 import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class ModerationManager {
 
@@ -61,7 +65,7 @@ public class ModerationManager {
                             Instant.now(),
                             delay
                     ));
-                    sendSuccess(context, target, submitter, ModAction.TEMP_BAN, reason);
+                    sendTempSuccess(context, target, submitter, ModAction.TEMP_BAN, reason, delay);
                 });
             }, context, ModAction.TEMP_BAN, target);
         }
@@ -88,6 +92,41 @@ public class ModerationManager {
                             sendSuccess(context, target.getUser(), submitter, ModAction.KICK, reason);
                         }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target.getUser(), ModAction.KICK));
             }, context, ModAction.KICK, target.getUser());
+        }
+    }
+
+    public void mute(CommandContext context, Member target, Member submitter, String reason) {
+        if (runChecks(ModAction.MUTE, target.getUser(), submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild()
+                        .addRoleToMember(target, ExtensionsKt.getMutedRole(context.getGuild()))
+                        .reason(submitter.getUser().getAsTag() + " muted user")
+                        .queue(aVoid -> {
+                            sendSuccess(context, target.getUser(), submitter, ModAction.MUTE, reason);
+                        });
+            }, context, ModAction.MUTE, target.getUser());
+        }
+    }
+
+    public void tempMute(CommandContext context, Member target, Member submitter, String reason, long delay) {
+        if (runChecks(ModAction.TEMP_MUTE, target.getUser(), submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild()
+                        .addRoleToMember(target, ExtensionsKt.getMutedRole(context.getGuild()))
+                        .reason(submitter.getUser().getAsTag() + " muted user")
+                        .queue(aVoid -> {
+                            ScheduledActionManager.registerScheduledAction(new ScheduledAction(
+                                    ActionType.UNMUTE,
+                                    new ScheduledAction.ModerationActionData(target.getIdLong()),
+                                    context.getGuild().getIdLong(),
+                                    context.getChannel().getIdLong(),
+                                    submitter.getIdLong(),
+                                    Instant.now(),
+                                    delay
+                            ));
+                            sendTempSuccess(context, target.getUser(), submitter, ModAction.TEMP_MUTE, reason, delay);
+                        });
+            }, context, ModAction.TEMP_MUTE, target.getUser());
         }
     }
 
@@ -128,6 +167,25 @@ public class ModerationManager {
         if (!StringUtils.isBlank(reason)) {
             builder.addField(context.i18n("words.reason"), reason, false);
         }
+
+        builder.setTitle(StringUtils.capitalize(action.getVerb(context.getLocale())) + " user");
+        context.getTypedMessaging().replySuccess(builder);
+    }
+
+    private void sendTempSuccess(CommandContext context, User target, Member submitter, ModAction action, String reason, long delay) {
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb(context.getLocale())), submitter.getUser());
+
+        if (!StringUtils.isBlank(reason)) {
+            builder.addField(context.i18n("words.reason"), reason, false);
+        }
+
+        // TODO, Use kotlin string extensions when PR #232 is merged.
+        builder.addField(
+                context.i18n("words.duration"),
+                FormatUtils.formatTime(delay, context.getLocale(), true)
+                        + " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(delay, ChronoUnit.MILLIS), context.getLocale()) + ")",
+                true
+        );
 
         builder.setTitle(StringUtils.capitalize(action.getVerb(context.getLocale())) + " user");
         context.getTypedMessaging().replySuccess(builder);
