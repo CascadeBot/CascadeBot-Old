@@ -29,7 +29,13 @@ fun Guild.getMutedRole(): Role {
     val muteRoleName = guildData.moderation.muteRoleName
     val roleByName = this.getRolesByName(muteRoleName, true)
     return if (roleByName.isEmpty()) {
-        this.createRole().setName(muteRoleName).complete()
+        this.createRole().setName(muteRoleName).complete().also {
+            //
+            this.modifyRolePositions()
+                    .selectPosition(it)
+                    .moveTo((this.selfMember.roles.first()?.position?.minus(1)) ?: 0)
+                    .complete()
+        }
     } else {
         roleByName.find { it.idLong == guildData.mutedRoleId } ?: roleByName[0]
     }.also { guildData.mutedRoleId = it.idLong }

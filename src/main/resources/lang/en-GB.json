@@ -494,6 +494,10 @@
       "cannot_unban": "Could not find a user to unban matching: {0}",
       "several_matches": "There is more than one user that matches this criteria! \n Please enter the ID or the user's full name!"
     },
+    "mute": {
+      "command": "mute",
+      "description": "Gives the user the muted role."
+    },
     "join": {
       "command": "join",
       "description": "Joins the bot to a voice channel.",
