@@ -51,6 +51,18 @@ object ScheduledActionManager {
         }
     }
 
+    fun find(condition: (ScheduledAction) -> Boolean): ScheduledAction? {
+        return scheduledActions.keys.find(condition)
+    }
+
+    fun filter(condition: (ScheduledAction) -> Boolean): List<ScheduledAction> {
+        return scheduledActions.keys.filter(condition)
+    }
+
+    fun removeIf(condition: (ScheduledAction) -> Boolean): Boolean {
+        return scheduledActions.entries.removeIf { condition(it.key) }
+    }
+
     private fun getScheduledActions(guildId: Long? = null): FindIterable<ScheduledAction> {
         val collection = CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledAction::class.java)
         return if (guildId == null) collection.find() else collection.find(eq("guildId", guildId))
