@@ -1131,7 +1131,6 @@
       "idle": "idle"
     }
   },
-
   "mod_actions": {
     "ban": {
       "name": "ban",
@@ -1161,6 +1160,10 @@
       "name": "warn",
       "verb": "warned"
     }
+  },
+  "scheduled_actions": {
+    "reminder_overdue": "|warning| This reminder was originally due to occur at {0}. It has been delayed because of bot downtime!",
+    "reminder_text": "You asked me to remind you of:"
   },
   "words": {
     "permission": "Permission",
