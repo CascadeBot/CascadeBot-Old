@@ -510,6 +510,22 @@
       }
     }
   },
+  "remindme*": {
+    "delay*": {
+      "_type": "required",
+      "message": {
+        "_type": "required"
+      }
+    },
+    "dm*": {
+      "delay*": {
+        "_type": "required",
+        "message": {
+          "_type": "required"
+        }
+      }
+    }
+  },
   "purge*": {
     "attachment*": {
       "amount": {
