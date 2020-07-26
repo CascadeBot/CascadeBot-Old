@@ -118,8 +118,9 @@ public class CommandListener extends ListenerAdapter {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.module().isPrivate() && !guildData.getCore().isModuleEnabled(cmd.module())) {
                 if (guildData.getCore().getShowModuleErrors() || Environment.isDevelopment()) {
-                    EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.module(), context.getLocale()), trigger), event.getAuthor());
-                    Messaging.sendEmbedMessage(MessageType.DANGER, event.getChannel(), builder, guildData.getCore().getUseEmbedForMessages());
+                    EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.DANGER, event.getAuthor())
+                            .setDescription(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.module(), context.getLocale()), trigger));
+                    context.getTimedMessaging().sendAutoDeleteMessage(builder.build(), 5000);
                 }
                 // TODO: Modlog?
                 return;
