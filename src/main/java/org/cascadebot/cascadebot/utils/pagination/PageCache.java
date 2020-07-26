@@ -37,8 +37,12 @@ public class PageCache extends HashMap<Long, PageCache.Pages> {
             return pages.get(page - 1);
         }
 
-        public int getPages() {
+        public int getPageCount() {
             return pages.size();
+        }
+
+        public List<Page> getPages() {
+            return List.copyOf(pages);
         }
     }
 
