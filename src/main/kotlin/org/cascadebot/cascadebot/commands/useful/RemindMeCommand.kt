@@ -23,36 +23,33 @@ import java.time.OffsetDateTime
 class RemindMeCommand : MainCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
-        if (context.testForArg("dm")) {
-
-        } else {
-            val delay = ParserUtils.parseTextTime(context.getArg(0), false)
-            if (delay == 0L) {
-                context.typedMessaging.replyDanger("")
-            }
-            val message = context.getMessage(1)
-            ScheduledActionManager.registerScheduledAction(
-                    ScheduledAction(
-                            ActionType.REMINDER,
-                            ScheduledAction.ReminderActionData(message),
-                            context.guild.idLong,
-                            context.channel.idLong,
-                            context.user.idLong,
-                            Instant.now(),
-                            delay
-                    )
-            )
-            val duration = Duration.ofMillis(delay)
-            if (duration.toDays() < 1) {
-                val relativeDuration = FormatUtils.formatRelativeDuration(duration, context.locale)
-                val absoluteTime = FormatUtils.formatTime(OffsetDateTime.now().plus(duration).toOffsetTime(), DateFormat.SHORT, context.locale)
-                context.typedMessaging.replySuccess("I will remind you $relativeDuration at $absoluteTime")
-            } else {
-                val absoluteDateTime = FormatUtils.formatDateTime(OffsetDateTime.now().plus(duration), DateFormat.SHORT, DateFormat.SHORT, context.locale)
-                context.typedMessaging.replySuccess("I will remind you at $absoluteDateTime")
-            }
-//            context.typedMessaging.replySuccess("Reminder created for " + FormatUtils.formatDateTime(, context.locale))
+        val dm = context.testForArg("dm")
+        val delay = ParserUtils.parseTextTime(context.getArg(if (dm) 1 else 0), false)
+        if (delay == 0L) {
+            context.typedMessaging.replyDanger("")
         }
+        val message = context.getMessage(if (dm) 2 else 1)
+        ScheduledActionManager.registerScheduledAction(
+                ScheduledAction(
+                        ActionType.REMINDER,
+                        ScheduledAction.ReminderActionData(message, dm),
+                        context.guild.idLong,
+                        context.channel.idLong,
+                        context.user.idLong,
+                        Instant.now(),
+                        delay
+                )
+        )
+        val duration = Duration.ofMillis(delay)
+        if (duration.toDays() < 1) {
+            val relativeDuration = FormatUtils.formatRelativeDuration(duration, context.locale)
+            val absoluteTime = FormatUtils.formatTime(OffsetDateTime.now().plus(duration).toOffsetTime(), DateFormat.LONG, context.locale)
+            context.typedMessaging.replySuccess("I will remind you ${if (dm) "in your DMs" else ""} $relativeDuration at $absoluteTime")
+        } else {
+            val absoluteDateTime = FormatUtils.formatDateTime(OffsetDateTime.now().plus(duration), DateFormat.SHORT, DateFormat.LONG, context.locale)
+            context.typedMessaging.replySuccess("I will remind you ${if (dm) "in your DMs" else ""} at $absoluteDateTime")
+        }
+//            context.typedMessaging.replySuccess("Reminder created for " + FormatUtils.formatDateTime(, context.locale))
     }
 
     override fun command(): String = "remindme"
