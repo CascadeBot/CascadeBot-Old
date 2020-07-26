@@ -471,6 +471,14 @@
         "remove_success_text": "This message has been removed!\n```\n{0}\n```"
       }
     },
+    "remindme": {
+      "command": "remindme",
+      "description": "Reminds the user of a message in the current channel.",
+      "dm": {
+        "command": "dm",
+        "description": "Reminds the user of a message in their DMs."
+      }
+    },
     "ban": {
       "command": "ban",
       "description": "Bans or forcebans the specified user.",
@@ -1354,6 +1362,7 @@
     "message": "message",
     "index": "index",
     "weight": "weight",
+    "delay": "delay",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
