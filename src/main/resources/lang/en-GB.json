@@ -1092,13 +1092,6 @@
     "cannot_find_role_matching": "Could not find role {0}",
     "more_in_list": "...and {0} more."
   },
-  "statuses": {
-    "streaming": "Streaming",
-    "online": "Online",
-    "offline": "Offline",
-    "do_not_disturb": "Do Not Disturb",
-    "idle": "Idle"
-  },
   "enums": {
     "flag": {
       "beta": "beta",
@@ -1493,14 +1486,22 @@
         "select": "voice_force_move",
         "display": "Voice Force Move"
       }
+    },
+    "activitytype": {
+      "default": "playing",
+      "streaming": "streaming",
+      "listening": "listening to",
+      "watching": "watching"
+    },
+    "onlinestatus": {
+      "streaming": "streaming",
+      "online": "online",
+      "offline": "offline",
+      "do_not_disturb": "do not disturb",
+      "idle": "idle"
     }
   },
-  "game_types": {
-    "default": "Playing",
-    "streaming": "Streaming",
-    "listening": "Listening to",
-    "watching": "Watching"
-  },
+
   "mod_actions": {
     "ban": {
       "name": "ban",
