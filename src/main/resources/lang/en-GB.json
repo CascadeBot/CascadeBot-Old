@@ -496,8 +496,13 @@
     },
     "mute": {
       "command": "mute",
-      "description": "Gives the user the muted role."
-    },
+      "description": "Gives the user the muted role.",
+      "role": {
+        "command": "role",
+        "description": "Gets or sets the role that we will use to mute users.",
+        "set_role": "Successfully set the muted role to {0}!",
+        "role_info": "The current muted role is {0}"
+      },
     "join": {
       "command": "join",
       "description": "Joins the bot to a voice channel.",
@@ -1093,7 +1098,7 @@
     "cant_delete_guild_messages": "We can't delete guild messages as we won't have the permission manage messages! Please either give me this permission or turn off command message deletion!",
     "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!",
     "permission_not_exist": "`{0}` isn't a valid permission",
-    "cannot_find_role_matching": "Could not find role {0}",
+    "cannot_find_role_matching": "Could not find the role {0}",
     "more_in_list": "...and {0} more."
   },
   "enums": {
