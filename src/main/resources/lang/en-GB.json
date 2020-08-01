@@ -503,6 +503,15 @@
         "set_role": "Successfully set the muted role to {0}!",
         "role_info": "The current muted role is {0}"
       },
+      "channelsetup": {
+        "command": "channelsetup",
+        "description": "Sets up channels to have the correct permissions for the muted roles.",
+        "embed_title": "Channel Permissions Setup",
+        "perm_success": "Successfully updated the permissions on the following channels and categories:",
+        "perm_failure": "Failed to change the permissions on the following channels and categories:",
+        "perm_failure_footer": "We didn't have permission to complete the action! Please make sure we have the `Manage Channel` and `Manage Permissions` permissions for the channels!"
+      }
+    },
     "unmute": {
       "command": "unmute",
       "description": "Unmutes a member of a guild.",
