@@ -503,6 +503,11 @@
         "set_role": "Successfully set the muted role to {0}!",
         "role_info": "The current muted role is {0}"
       },
+    "unmute": {
+      "command": "unmute",
+      "description": "Unmutes a member of a guild.",
+      "not_muted": "The user {0} is not muted!"
+    },
     "join": {
       "command": "join",
       "description": "Joins the bot to a voice channel.",

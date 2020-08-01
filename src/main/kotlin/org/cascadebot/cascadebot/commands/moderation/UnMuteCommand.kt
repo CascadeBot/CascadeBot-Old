@@ -36,14 +36,13 @@ class UnMuteCommand : MainCommand() {
         val mutedRole = context.guild.getMutedRole()
 
         if (targetMember.roles.contains(mutedRole)) {
-
             ScheduledActionManager.removeIf {
                 if (it.type != ActionType.UNMUTE) return@removeIf false
                 if (it.data !is ScheduledAction.ModerationActionData) return@removeIf false
                 it.data.targetId == targetMember.idLong
             }
         } else {
-
+            context.typedMessaging.replyWarning(context.i18n("commands.unmute.not_muted", targetMember.asMention))
         }
 
 
