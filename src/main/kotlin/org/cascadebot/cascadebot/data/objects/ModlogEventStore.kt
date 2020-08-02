@@ -22,11 +22,11 @@ class ModlogEventStore {
 
     var affected: ModlogAffected = ModlogAffected()
 
-    var extraInfo: List<ModlogEmbedPart> = ArrayList()
+    var extraInfo: MutableList<ModlogEmbedPart> = ArrayList()
 
     var responsibleId: Long = 0
 
-    constructor(trigger: ModlogEvent, responsible: User?, affected: Any, extraInfo: List<ModlogEmbedPart>) {
+    constructor(trigger: ModlogEvent, responsible: User?, affected: Any, extraInfo: MutableList<ModlogEmbedPart>) {
         this.trigger = trigger
         this.responsible = responsible
         this.extraInfo = extraInfo
