@@ -517,6 +517,14 @@
       "description": "Unmutes a member of a guild.",
       "not_muted": "The user {0} is not muted!"
     },
+    "tempmute": {
+      "command": "tempmute",
+      "description": "Temporarily mutes a user."
+    },
+    "tempban": {
+      "command": "tempban",
+      "description": "Temporarily bans a user."
+    },
     "join": {
       "command": "join",
       "description": "Joins the bot to a voice channel.",
@@ -1113,7 +1121,8 @@
     "module_for_command_disabled": "The module `{0}` for command `{1}` is disabled!",
     "permission_not_exist": "`{0}` isn't a valid permission",
     "cannot_find_role_matching": "Could not find the role {0}",
-    "more_in_list": "...and {0} more."
+    "more_in_list": "...and {0} more.",
+    "invalid_duration": "Please enter a valid duration! e.g. 2h2m"
   },
   "enums": {
     "flag": {
@@ -1384,6 +1393,7 @@
     "message": "message",
     "index": "index",
     "weight": "weight",
+    "duration": "duration",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."

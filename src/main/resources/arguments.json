@@ -239,6 +239,28 @@
       }
     }
   },
+  "tempban*": {
+    "user*": {
+      "_type": "required",
+      "duration*": {
+        "_type": "required",
+        "reason": {
+          "_type": "optional"
+        }
+      }
+    }
+  },
+  "tempmute*": {
+    "user*": {
+      "_type": "required",
+      "duration*": {
+        "_type": "required",
+        "reason": {
+          "_type": "optional"
+        }
+      }
+    }
+  },
   "join*": {
     "channel": {
       "_type": "optional"
