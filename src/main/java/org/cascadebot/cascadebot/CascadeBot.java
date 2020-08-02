@@ -133,7 +133,6 @@ public class CascadeBot {
 
 
     private void init() {
-
         GsonBuilder builder = new GsonBuilder();
         try {
             Config.init("config.yml");
