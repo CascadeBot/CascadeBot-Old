@@ -802,22 +802,20 @@ public class ModlogEventListener extends ListenerAdapter {
     }
 
     private void handleChannelUpdatePositionEvents(Guild guild, ChannelType type, int oldPos, GuildChannel channel) {
-        ModlogEvent event = ModlogEvent.CHANNEL_POSITION_UPDATED;
-        GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-        ModlogUtils.getAuditLogFromType(guild, channel.getIdLong(), auditLogEntry -> {
-            List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-            User responsible = null;
-            if (auditLogEntry != null) {
-                responsible = auditLogEntry.getUser();
-            } else {
-                CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
-            }
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.general.old_pos", "modlog.general.variable", String.valueOf(oldPos)));
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.general.new_pos", "modlog.general.variable", String.valueOf(channel.getPosition())));
-            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
-        }, ActionType.CHANNEL_UPDATE);
+        ModlogChannelMoveCollectorRunnable.ChannelMoveData moveData =
+                new ModlogChannelMoveCollectorRunnable.ChannelMoveData(type, oldPos, channel);
+        if (moveRunnableMap.containsKey(guild.getIdLong())) {
+            moveRunnableMap.get(guild.getIdLong()).getQueue().add(moveData);
+        } else {
+            ModlogChannelMoveCollectorRunnable runnable = new ModlogChannelMoveCollectorRunnable(guild, new Runnable() {
+                @Override
+                public void run() {
+                    moveRunnableMap.remove(guild.getIdLong());
+                }
+            });
+            moveRunnableMap.put(guild.getIdLong(), runnable);
+            new Thread(runnable, "modlog-channel-move-" + guild.getId()).start();
+        }
     }
 
     public void handleChannelUpdateParentEvents(Guild guild, ChannelType type, Category oldParent, Category newParent, GuildChannel channel) {

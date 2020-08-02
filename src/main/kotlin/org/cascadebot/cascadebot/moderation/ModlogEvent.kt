@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.moderation
 
+import de.bild.codec.annotations.Transient
 import lombok.Getter
 import org.cascadebot.cascadebot.messaging.MessageType
 import java.util.ArrayList
@@ -145,6 +146,7 @@ enum class ModlogEvent(messageType: MessageType, displayType: ModlogDisplayType,
     }
 
     val categories: List<Category>
+    @Transient
     val messageType: MessageType
     val displayType: ModlogDisplayType
 
@@ -170,6 +172,7 @@ enum class ModlogEvent(messageType: MessageType, displayType: ModlogDisplayType,
     enum class ModlogDisplayType {
         AFFECTED_THUMBNAIL,
         AFFECTED_AUTHOR,
+        AFFECTED_FOOTER,
         PLAIN
     }
 

@@ -5,6 +5,12 @@ import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.User;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
+import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.utils.ModlogUtils;
 
 import java.util.ArrayList;
@@ -17,11 +23,11 @@ import java.util.function.Consumer;
 public class ModlogChannelMoveCollectorRunnable implements Runnable {
 
     private Guild guild;
-    private Consumer<Void> finishedConsumer;
+    private Runnable finishRunnable;
 
-    public ModlogChannelMoveCollectorRunnable(Guild guild, Consumer<Void> finishedConsumer) {
+    public ModlogChannelMoveCollectorRunnable(Guild guild, Runnable finishRunnable) {
         this.guild = guild;
-        this.finishedConsumer = finishedConsumer;
+        this.finishRunnable = finishRunnable;
     }
 
     private BlockingQueue<ChannelMoveData> queue = new LinkedBlockingQueue<>();
@@ -45,17 +51,49 @@ public class ModlogChannelMoveCollectorRunnable implements Runnable {
     }
 
     private void afterCollected() {
-        finishedConsumer.accept(null);
+        finishRunnable.run();
         ModlogUtils.getAuditLogFromType(guild, auditLogEntry -> {
             User responsible = null;
             if (auditLogEntry != null) {
                 responsible = auditLogEntry.getUser();
             }
+            List<ModlogEmbedPart> embedParts = new ArrayList<>();
+            int maxDistance = 0;
+            List<ChannelMoveData> maxMoveDatas = new ArrayList<>();
+            for (ChannelMoveData moveData : channelMoveDataList) {
+                if (moveData == null) {
+                    continue;
+                }
+                int distance = moveData.channel.getPosition() - moveData.oldPos;
+                if (distance == maxDistance) {
+                    maxMoveDatas.add(moveData);
+                } else if (distance > maxDistance) {
+                    maxMoveDatas = new ArrayList<>();
+                    maxDistance = distance;
+                    maxMoveDatas.add(moveData);
+                }
+            }
+
+            for (ChannelMoveData data : maxMoveDatas) {
+                ModlogEmbedField field = new ModlogEmbedField(false, "modlog.channel.position.title",
+                        "modlog.channel.position.positions",
+                        String.valueOf(data.oldPos), String.valueOf(data.channel.getPosition()));
+                field.addTitleObjects(data.channel.getName());
+                embedParts.add(field);
+            }
+
+            GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+            ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.CHANNEL_POSITION_UPDATED, responsible, maxMoveDatas.get(0).channel, embedParts);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), eventStore);
 
         }, ActionType.CHANNEL_UPDATE);
     }
 
-    static class ChannelMoveData {
+    public BlockingQueue<ChannelMoveData> getQueue() {
+        return queue;
+    }
+
+    public static class ChannelMoveData {
 
         private ChannelType type;
         private int oldPos;

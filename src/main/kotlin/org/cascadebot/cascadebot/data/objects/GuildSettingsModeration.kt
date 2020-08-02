@@ -164,58 +164,50 @@ class GuildSettingsModeration {
         fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {
             val webhookEmbedBuilder = WebhookEmbedBuilder()
             webhookEmbedBuilder.setTitle(EmbedTitle(i18n(guildData.locale, "enums.modlogevent." + modlogEventStore.trigger.name.toLowerCase() + ".display"), null))
-            val affected: Any = modlogEventStore.affected;
-            var affectedType = ""
-            val affectedStr = when (affected) {
-                is User -> {
-                    affectedType = "User";
-                    affected.name + " (" + affected.id + ")"
+            val affected: ModlogAffected = modlogEventStore.affected;
+
+            when (modlogEventStore.trigger.displayType) {
+                ModlogEvent.ModlogDisplayType.PLAIN -> {
+                    var name = affected.name;
+                    if (affected.id != null) {
+                        name += " (" + affected.id + ")"
+                    }
+                    webhookEmbedBuilder.addField(EmbedField(true, "Affected", name))
                 }
-                is Role -> {
-                    affectedType = "Role"
-                    affected.name + " (" + affected.id + ")"
+                ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL -> {
+                    when (affected.affectedType) {
+                        AffectedType.USER -> {
+                            val user: User = CascadeBot.INS.shardManager.getUserById(affected.id!!)!!
+                            webhookEmbedBuilder.setThumbnailUrl(user.avatarUrl)
+                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, null, null))
+                        }
+                        AffectedType.EMOTE -> {
+                            val emote: Emote = CascadeBot.INS.shardManager.getEmoteById(affected.id!!)!!
+                            webhookEmbedBuilder.setThumbnailUrl(emote.imageUrl)
+                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, null, null))
+                        }
+                    }
                 }
-                is Emote -> {
-                    affectedType = "Emote"
-                    affected.name
+                ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR -> {
+                    when (affected.affectedType) {
+                        AffectedType.USER -> {
+                            val user: User = CascadeBot.INS.shardManager.getUserById(affected.id!!)!!
+                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, user.avatarUrl, "https://discord.com/users/" + affected.id))
+                        }
+                        AffectedType.EMOTE -> {
+                            val emote: Emote = CascadeBot.INS.shardManager.getEmoteById(affected.id!!)!!
+                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, emote.imageUrl, null))
+                        }
+                        else -> {
+                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, null, null))
+                        }
+                    }
                 }
-                is Guild -> {
-                    affectedType = "Guild"
-                    affected.name
+                ModlogEvent.ModlogDisplayType.AFFECTED_FOOTER -> {
+                    webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter("name: " + affected.name + " id: " + affected.id, null))
                 }
-                is GuildChannel -> {
-                    affectedType = "Channel"
-                    affected.name
-                }
-                is Group -> {
-                    affectedType = "Group"
-                    affected.name + "(" + affected.id + ")"
-                }
-                is Field -> {
-                    affectedType = "Setting"
-                    affected.name
-                }
-                is Module -> {
-                    affectedType = "Module"
-                    FormatUtils.formatEnum(affected, guildData.locale)
-                }
-                is MainCommand -> {
-                    affectedType = "Command"
-                    affected.command()
-                }
-                is Playlist -> {
-                    affectedType = "Playlist"
-                    affected.name
-                }
-                is Tag -> {
-                    affectedType = "Tag"
-                    affected.name
-                }
-                else -> null
             }
-            if (affectedStr != null) {
-                webhookEmbedBuilder.addField(EmbedField(true, "Affected $affectedType", affectedStr))
-            }
+
             for (embedPart in modlogEventStore.extraInfo) {
                 embedPart.build(guildData.locale, webhookEmbedBuilder)
             }

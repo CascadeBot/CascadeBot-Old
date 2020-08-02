@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.data.objects
 
 import net.dv8tion.jda.api.entities.User
+import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.utils.PurgeUtils
 
 enum class PlaylistType {
@@ -129,4 +130,20 @@ enum class ArgumentType {
      * Represents that this is just part of the command and isn't a parameter.
      */
     COMMAND
+}
+
+enum class AffectedType(vararg val allowedDisplayTypes: ModlogEvent.ModlogDisplayType) {
+    UNKNOWN(ModlogEvent.ModlogDisplayType.PLAIN),
+    USER(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
+    ROLE(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_FOOTER, ModlogEvent.ModlogDisplayType.PLAIN),
+    EMOTE(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
+    GUILD(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_FOOTER, ModlogEvent.ModlogDisplayType.PLAIN),
+    CHANNEL(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.PLAIN),
+    GROUP(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.PLAIN),
+    SETTING(ModlogEvent.ModlogDisplayType.PLAIN),
+    MODULE(ModlogEvent.ModlogDisplayType.PLAIN),
+    COMMAND(ModlogEvent.ModlogDisplayType.PLAIN),
+    PLAYLIST(ModlogEvent.ModlogDisplayType.PLAIN),
+    TAG(ModlogEvent.ModlogDisplayType.PLAIN);
+
 }

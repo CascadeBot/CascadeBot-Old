@@ -3,15 +3,14 @@ package org.cascadebot.cascadebot.data.objects
 import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.GuildChannel
-import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
-import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart
 import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.objects.Group
+import java.lang.UnsupportedOperationException
 import java.lang.reflect.Field
 
 class ModlogEventStore {
@@ -21,71 +20,69 @@ class ModlogEventStore {
     @Transient
     var responsible: User? = null
 
-    @Transient
-    var affected: Any = CascadeBot.INS.selfUser
+    var affected: ModlogAffected = ModlogAffected()
 
     var extraInfo: List<ModlogEmbedPart> = ArrayList()
 
-    var affectedId: String = ""
-    var affectedType: String = ""
-
-    var responsibleId: Long = 0;
+    var responsibleId: Long = 0
 
     constructor(trigger: ModlogEvent, responsible: User?, affected: Any, extraInfo: List<ModlogEmbedPart>) {
         this.trigger = trigger
         this.responsible = responsible
-        this.affected = affected
         this.extraInfo = extraInfo
 
-        affectedType = when (affected) {
+        var affectedType: AffectedType = AffectedType.UNKNOWN
+        this.affected = when (affected) {
             is User -> {
-                affectedId = affected.id
-                "User"
+                affectedType = AffectedType.USER
+                ModlogAffected(AffectedType.USER, affected.asTag, affected.id)
             }
             is Role -> {
-                affectedId = affected.id
-                "Role"
+                affectedType = AffectedType.ROLE
+                ModlogAffected(AffectedType.ROLE, affected.name, affected.id)
             }
             is Emote -> {
-                affectedId = affected.id
-                "Emote"
+                affectedType = AffectedType.EMOTE
+                ModlogAffected(AffectedType.EMOTE, affected.name, affected.id)
             }
             is Guild -> {
-                affectedId = affected.id
-                "Guild"
+                affectedType = AffectedType.GUILD
+                ModlogAffected(AffectedType.GUILD, affected.name)
             }
             is GuildChannel -> {
-                affectedId = affected.id
-                "Channel"
+                affectedType = AffectedType.CHANNEL
+                ModlogAffected(AffectedType.CHANNEL, affected.name, affected.id)
             }
             is Group -> {
-                affectedId = affected.id
-                "Group"
+                affectedType = AffectedType.GROUP
+                ModlogAffected(AffectedType.GROUP, affected.name, affected.id)
             }
             is Field -> {
-                affectedId = affected.name
-                "Setting"
+                affectedType = AffectedType.SETTING
+                ModlogAffected(AffectedType.SETTING, affected.name)
             }
             is Module -> {
-                affectedId = affected.name.toLowerCase()
-                "Module"
+                affectedType = AffectedType.MODULE
+                ModlogAffected(AffectedType.MODULE, affected.name)
             }
             is MainCommand -> {
-                affectedId = affected.command()
-                "Command"
+                affectedType = AffectedType.COMMAND
+                ModlogAffected(AffectedType.COMMAND, affected.command())
             }
             is Playlist -> {
-                affectedId = affected.name
-                "Playlist"
+                affectedType = AffectedType.PLAYLIST
+                ModlogAffected(AffectedType.PLAYLIST, affected.name, affected.playlistId.toHexString())
             }
             is Tag -> {
-                affectedId = affected.name
-                "Tag"
+                affectedType = AffectedType.TAG
+                ModlogAffected(AffectedType.TAG, affected.name)
             }
             else -> {
-                affectedId = "unknown"
-                "unknown"
+                ModlogAffected()
             }
+        }
+        if (!affectedType.allowedDisplayTypes.contains(trigger.displayType)) {
+            throw UnsupportedOperationException("This events display type does not support this affected")
         }
 
         if (responsible != null) {

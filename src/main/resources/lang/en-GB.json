@@ -2026,6 +2026,10 @@
         "old_allow": "Old Allowed permission for {0}",
         "old_deny": "Old Denied permissions for {0}"
       },
+      "position": {
+        "title": "Channel {0} moved",
+        "positions": "{0} -> {1}"
+      },
       "old_parent": "Old Parent",
       "new_parent": "New Parent",
       "nsfw": "NSFW",
