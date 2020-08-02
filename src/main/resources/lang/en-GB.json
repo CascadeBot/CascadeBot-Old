@@ -496,7 +496,7 @@
     },
     "mute": {
       "command": "mute",
-      "description": "Gives the user the muted role.",
+      "description": "Gives the member the muted role.",
       "role": {
         "command": "role",
         "description": "Gets or sets the role that we will use to mute users.",
