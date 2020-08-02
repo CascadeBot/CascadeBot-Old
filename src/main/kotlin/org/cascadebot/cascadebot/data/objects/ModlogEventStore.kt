@@ -22,7 +22,7 @@ class ModlogEventStore {
 
     var affected: ModlogAffected = ModlogAffected()
 
-    var extraInfo: MutableList<ModlogEmbedPart> = ArrayList()
+    var extraInfo: MutableList<ModlogEmbedPart> = mutableListOf()
 
     var responsibleId: Long = 0
 
