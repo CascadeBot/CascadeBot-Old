@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.commands.moderation
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Category
-import net.dv8tion.jda.api.entities.ChannelType
 import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
@@ -18,25 +17,67 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.Messaging
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.cascadebot.cascadebot.utils.ConfirmUtils
 import org.cascadebot.cascadebot.utils.getMutedRole
+import java.util.concurrent.CompletableFuture
 
 class MuteChannelSetupSubCommand : SubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
+        if (!context.selfMember.hasPermission(Permission.MANAGE_CHANNEL)) {
+            context.uiMessaging.sendBotDiscordPermError(Permission.MANAGE_CHANNEL)
+            return
+        } else if (!context.selfMember.hasPermission(Permission.MANAGE_PERMISSIONS)) {
+            context.uiMessaging.sendBotDiscordPermError(Permission.MANAGE_PERMISSIONS)
+            return
+        }
+
+        if (ConfirmUtils.hasConfirmedAction("mute.channelsetup", context.user.idLong)) {
+            ConfirmUtils.completeAction("mute.channelsetup", context.user.idLong)
+            return
+        }
+
+        ConfirmUtils.confirmAction(
+                context.user.idLong,
+                "mute.channelsetup",
+                context.channel,
+                MessageType.WARNING,
+                context.i18n("commands.mute.channelsetup.warning"),
+                true,
+                object : ConfirmUtils.ConfirmRunnable() {
+                    override fun execute() {
+                        channelSetup(context)
+                    }
+                }
+        )
+    }
+
+    override fun command(): String = "channelsetup"
+
+    override fun parent(): String = "mute"
+
+    override fun permission(): CascadePermission = CascadePermission.of("mute.channelsetup", false)
+
+    private fun channelSetup(context: CommandContext) {
         val mutedRole = context.guild.getMutedRole()
         val success = mutableListOf<GuildChannel>()
         val failed = mutableListOf<GuildChannel>()
+
+        val futures: MutableList<CompletableFuture<Void>> = mutableListOf()
+
         context.guild.channels.forEach {
             try {
-                when (it) {
-                    is TextChannel -> it.manager.putPermissionOverride(mutedRole, 0, Permission.MESSAGE_WRITE.rawValue).complete()
+                futures.add(when (it) {
+                    is TextChannel -> it.manager.putPermissionOverride(mutedRole, 0, Permission.MESSAGE_WRITE.rawValue).submit()
+
                     is Category -> {
                         // Don't modify voice only categories
                         if (it.textChannels.isEmpty()) return@forEach
-                        it.manager.putPermissionOverride(mutedRole, 0, Permission.MESSAGE_WRITE.rawValue).complete()
+                        it.manager.putPermissionOverride(mutedRole, 0, Permission.MESSAGE_WRITE.rawValue).submit()
                     }
+
                     else -> return@forEach
-                }
+                })
                 success.add(it)
             } catch (e: InsufficientPermissionException) {
                 if (e.permission == Permission.MANAGE_PERMISSIONS ||
@@ -47,39 +88,34 @@ class MuteChannelSetupSubCommand : SubCommand() {
                 }
             }
         }
-        val messageType = when {
-            success.isNotEmpty() && failed.isNotEmpty() -> MessageType.WARNING
-            success.isNotEmpty() -> MessageType.SUCCESS
-            failed.isNotEmpty() -> MessageType.DANGER
-            else -> throw IllegalStateException("Logically this should not happen!")
+
+        CompletableFuture.allOf(*futures.toTypedArray()).whenComplete { _, _ ->
+            val messageType = when {
+                success.isNotEmpty() && failed.isNotEmpty() -> MessageType.WARNING
+                success.isNotEmpty() -> MessageType.SUCCESS
+                failed.isNotEmpty() -> MessageType.DANGER
+                else -> throw IllegalStateException("Logically this should not happen!")
+            }
+
+            val successText = if (success.isNotEmpty()) {
+                context.i18n("commands.mute.channelsetup.perm_success") + "\n" +
+                        success.joinToString("\n") { "- ${if (it is TextChannel) it.asMention else it.name}" }
+            } else ""
+            val failureText = if (failed.isNotEmpty()) {
+                context.i18n("commands.mute.channelsetup.perm_failure") + "\n" +
+                        failed.joinToString("\n") { "- ${if (it is TextChannel) it.asMention else it.name}" } + "\n\n" +
+                        context.i18n("commands.mute.channelsetup.perm_failure_footer")
+            } else ""
+
+            Messaging.sendEmbedMessage(
+                    messageType,
+                    context.channel,
+                    EmbedBuilder()
+                            .setTitle(context.i18n("commands.mute.channelsetup.embed_title"))
+                            .setDescription("$successText\n\n$failureText".trim()),
+                    context.data.core.useEmbedForMessages
+            )
         }
-
-        val successText = if (success.isNotEmpty()) {
-            """${context.i18n("commands.mute.channelsetup.perm_success")}
-               ${success.joinToString("\n") { "- ${if (it is TextChannel) it.asMention else it.name}" }}
-            """.trimIndent()
-        } else ""
-        val failureText = if (failed.isNotEmpty()) {
-            """${context.i18n("commands.mute.channelsetup.perm_failure")}
-               ${failed.joinToString("\n") { "- ${if (it is TextChannel) it.asMention else it.name}" }}
-               
-               ${context.i18n("commands.mute.channelsetup.perm_failure_footer")}""".trimIndent()
-        } else ""
-
-        Messaging.sendEmbedMessage(
-                messageType,
-                context.channel,
-                EmbedBuilder()
-                        .setTitle(context.i18n("commands.mute.channelsetup.embed_title"))
-                        .setDescription("$successText\n\n$failureText".trim()),
-                context.data.core.useEmbedForMessages
-        )
     }
-
-    override fun command(): String = "channelsetup"
-
-    override fun parent(): String = "mute"
-
-    override fun permission(): CascadePermission = CascadePermission.of("mute.channelsetup", false)
 
 }
