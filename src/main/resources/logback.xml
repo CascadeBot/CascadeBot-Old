@@ -9,12 +9,12 @@
         <file>logs/latest.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- hourly rollover -->
+            <!-- daily rollover -->
             <fileNamePattern>logs/latest.%d{yyyy-MM-dd}.log</fileNamePattern>
 
-            <!-- keep 30 days worth of history capped at 3GB total size -->
+            <!-- keep 14 days worth of history capped at 1GB total size -->
             <maxHistory>30</maxHistory>
-            <totalSizeCap>3GB</totalSizeCap>
+            <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
 
         <encoder>
@@ -25,11 +25,11 @@
         <file>logs/debug-latest.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
+            <!-- hourly rollover -->
             <fileNamePattern>logs/debug-latest.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
 
-            <!-- keep 12 hours worth of history capped at 1GB total size -->
-            <maxHistory>12</maxHistory>
+            <!-- keep 3 days worth of history capped at 1GB total size -->
+            <maxHistory>72</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
 
