@@ -2,17 +2,37 @@
 
     <variable scope="context" name="logPattern" value="[%d{yyyy.MM.dd HH:mm}] [%level] [%t] [%logger] %msg%n"/>
 
-    <appender name="LOG" class="ch.qos.logback.core.FileAppender">
+    <appender name="LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
         </filter>
-        <file>latest.log</file>
+        <file>logs/latest.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- hourly rollover -->
+            <fileNamePattern>logs/latest.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+            <!-- keep 30 days worth of history capped at 3GB total size -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+
         <encoder>
             <pattern>${logPattern}</pattern>
         </encoder>
     </appender>
-    <appender name="DEBUG-LOG" class="ch.qos.logback.core.FileAppender">
-        <file>debug-latest.log</file>
+    <appender name="DEBUG-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/debug-latest.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>logs/debug-latest.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
+
+            <!-- keep 12 hours worth of history capped at 1GB total size -->
+            <maxHistory>12</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+
         <encoder>
             <pattern>${logPattern}</pattern>
         </encoder>
