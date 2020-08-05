@@ -511,7 +511,6 @@
         "perm_failure": "Failed to change the permissions on the following channels and categories:",
         "perm_failure_footer": "We didn't have permission to complete the action! Please make sure we have the `Manage Channel` and `Manage Permissions` permissions for the channels!",
         "warning": "This command will deny the `Read Messages` permission to the muted role for all channels the bot has access to. Do you want to continue?"
-
       }
     },
     "unmute": {
