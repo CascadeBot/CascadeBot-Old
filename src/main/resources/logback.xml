@@ -26,7 +26,7 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- hourly rollover -->
-            <fileNamePattern>logs/debug-latest.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
+            <fileNamePattern>logs/debug/debug-latest.%d{yyyy-MM-dd_HH}.log</fileNamePattern>
 
             <!-- keep 3 days worth of history capped at 1GB total size -->
             <maxHistory>72</maxHistory>
