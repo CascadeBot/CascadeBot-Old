@@ -13,7 +13,7 @@
             <fileNamePattern>logs/latest.%d{yyyy-MM-dd}.log</fileNamePattern>
 
             <!-- keep 14 days worth of history capped at 1GB total size -->
-            <maxHistory>30</maxHistory>
+            <maxHistory>14</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
 
