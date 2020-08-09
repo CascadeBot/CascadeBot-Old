@@ -474,6 +474,10 @@
     "remindme": {
       "command": "remindme",
       "description": "Reminds the user of a message in the current channel.",
+      "aliases": [
+        "remind",
+        "forgetmenot"
+      ],
       "invalid_duration": "Please enter a valid duration using `w`, `d`, `h`, `m` or `s`! e.g. `2d24h`, `2m10s`",
       "success_relative": "I will remind you {0} at {1}",
       "success_relative_dm": "I will remind you in your DMs {0} at {1}",
