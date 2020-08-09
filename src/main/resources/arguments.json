@@ -12,6 +12,11 @@
       "_type": "required"
     }
   },
+  "page*": {
+    "page": {
+      "_type": "required"
+    }
+  },
   "guild*": {
     "flag*": {
       "flag*": {

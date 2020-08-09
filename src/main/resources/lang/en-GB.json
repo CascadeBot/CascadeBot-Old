@@ -34,6 +34,14 @@
       "specify_usage": "Please specify command to get usage from!",
       "command_not_found": "Command `{0}` not found!"
     },
+    "page": {
+      "command": "page",
+      "description": "Jumps the user to a specific page on the latest paged message.",
+      "page_must_number": "The page number must be a valid number!",
+      "not_in_range": "The page number needs to be between `{0}` and `{1}`! (Inclusive)",
+      "no_pages": "You haven't requested any paged messages in this channel!",
+      "message_error": "Something went wrong while trying to retrieve the message!"
+    },
     "cat": {
       "command": "cat",
       "description": "Returns a random picture of a cat.",
@@ -1131,7 +1139,6 @@
       "idle": "idle"
     }
   },
-
   "mod_actions": {
     "ban": {
       "name": "ban",
@@ -1351,6 +1358,7 @@
     "message": "message",
     "index": "index",
     "weight": "weight",
+    "page": "page",
     "userperms#list#user#permissions": {
       "name": "permissions",
       "description": "Lists the permissions a user has."
