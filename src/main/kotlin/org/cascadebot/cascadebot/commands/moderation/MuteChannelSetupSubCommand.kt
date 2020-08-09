@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Category
 import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.VoiceChannel
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
@@ -68,12 +69,10 @@ class MuteChannelSetupSubCommand : SubCommand() {
         context.guild.channels.forEach {
             try {
                 futures.add(when (it) {
-                    is TextChannel -> it.manager.putPermissionOverride(mutedRole, 0, Permission.MESSAGE_WRITE.rawValue).submit()
-
+                    is TextChannel -> it.manager.putPermissionOverride(mutedRole, setOf(), setOf(Permission.MESSAGE_WRITE)).submit()
+                    is VoiceChannel -> it.manager.putPermissionOverride(mutedRole, setOf(), setOf(Permission.VOICE_SPEAK)).submit()
                     is Category -> {
-                        // Don't modify voice only categories
-                        if (it.textChannels.isEmpty()) return@forEach
-                        it.manager.putPermissionOverride(mutedRole, 0, Permission.MESSAGE_WRITE.rawValue).submit()
+                        it.manager.putPermissionOverride(mutedRole, setOf(), setOf(Permission.MESSAGE_WRITE, Permission.VOICE_SPEAK)).submit()
                     }
 
                     else -> return@forEach
