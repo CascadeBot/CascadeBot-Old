@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.scheduler.ActionType
@@ -24,9 +25,14 @@ class RemindMeCommand : MainCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         val dm = context.testForArg("dm")
+        if (context.args.size < if (dm) 3 else 2) {
+            context.uiMessaging.replyUsage()
+            return
+        }
         val delay = ParserUtils.parseTextTime(context.getArg(if (dm) 1 else 0), false)
         if (delay == 0L) {
-            context.typedMessaging.replyDanger("")
+            context.typedMessaging.replyDanger(context.i18n("commands.remindme.invalid_duration"))
+            return
         }
         val message = context.getMessage(if (dm) 2 else 1)
         ScheduledActionManager.registerScheduledAction(
@@ -44,15 +50,16 @@ class RemindMeCommand : MainCommand() {
         if (duration.toDays() < 1) {
             val relativeDuration = FormatUtils.formatRelativeDuration(duration, context.locale)
             val absoluteTime = FormatUtils.formatTime(OffsetDateTime.now().plus(duration).toOffsetTime(), DateFormat.LONG, context.locale)
-            context.typedMessaging.replySuccess("I will remind you ${if (dm) "in your DMs" else ""} $relativeDuration at $absoluteTime")
+            context.typedMessaging.replySuccess(context.i18n("commands.remindme.success_relative${if (dm) "_dm" else ""}", relativeDuration, absoluteTime))
         } else {
             val absoluteDateTime = FormatUtils.formatDateTime(OffsetDateTime.now().plus(duration), DateFormat.SHORT, DateFormat.LONG, context.locale)
-            context.typedMessaging.replySuccess("I will remind you ${if (dm) "in your DMs" else ""} at $absoluteDateTime")
+            context.typedMessaging.replySuccess(context.i18n("commands.remindme.success${if (dm) "_dm" else ""}", absoluteDateTime))
         }
-//            context.typedMessaging.replySuccess("Reminder created for " + FormatUtils.formatDateTime(, context.locale))
     }
 
     override fun command(): String = "remindme"
+
+    override fun subCommands(): Set<SubCommand> = setOf(RemindMeListSubCommand())
 
     override fun module(): Module = Module.USEFUL
 
