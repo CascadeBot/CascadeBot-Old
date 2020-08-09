@@ -524,7 +524,8 @@
           "_type": "required"
         }
       }
-    }
+    },
+    "list": {}
   },
   "purge*": {
     "attachment*": {
