@@ -35,6 +35,13 @@ class RemindMeCommand : MainCommand() {
             return
         }
         val message = context.getMessage(if (dm) 2 else 1)
+        val duration = Duration.ofMillis(delay)
+
+        if (duration.toDays() > 365) {
+            context.typedMessaging.replyDanger(context.i18n("commands.remindme.duration_too_long"))
+            return
+        }
+
         ScheduledActionManager.registerScheduledAction(
                 ScheduledAction(
                         ActionType.REMINDER,
@@ -46,7 +53,10 @@ class RemindMeCommand : MainCommand() {
                         delay
                 )
         )
-        val duration = Duration.ofMillis(delay)
+
+
+
+
         if (duration.toDays() < 1) {
             val relativeDuration = FormatUtils.formatRelativeDuration(duration, context.locale)
             val absoluteTime = FormatUtils.formatTime(OffsetDateTime.now().plus(duration).toOffsetTime(), DateFormat.LONG, context.locale)

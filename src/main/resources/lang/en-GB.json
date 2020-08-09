@@ -479,6 +479,7 @@
       "success_relative_dm": "I will remind you in your DMs {0} at {1}",
       "success": "I will remind you at {0}",
       "success_dm": "I will remind you in your DMs at {0}",
+      "duration_too_long": "You cannot set a reminder for a time greater than 1 year in the future!",
       "dm": {
         "command": "dm",
         "description": "Reminds the user of a message in their DMs."
