@@ -21,6 +21,12 @@ fun String.truncate(length: Int, ellipses: Boolean = true): String =
             else -> this.take(length)
         }
 
+fun String.toCapitalized(): String = this.toLowerCase().capitalize()
+
+fun String.toTitleCase(): String = this.split(" ").joinToString(" ") { it.toCapitalized() }
+
+fun String.toSentenceCase() : String = this.split(".").joinToString(".") { it.toCapitalized() }
+
 fun Double.toPercentage(dp: Int = 0): String {
     return (round((this * 100) * 10.0.pow(dp)) / 10.0.pow(dp)).roundToInt().toString() + "%"
 }
