@@ -7,6 +7,7 @@ package org.cascadebot.cascadebot.commands.useful
 
 import com.ibm.icu.text.DateFormat
 import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
@@ -53,9 +54,6 @@ class RemindMeCommand : MainCommand() {
                         delay
                 )
         )
-
-
-
 
         if (duration.toDays() < 1) {
             val relativeDuration = FormatUtils.formatRelativeDuration(duration, context.locale)

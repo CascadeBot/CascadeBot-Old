@@ -2,10 +2,13 @@ package org.cascadebot.cascadebot.scheduler
 
 import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.entities.IMentionable
+import net.dv8tion.jda.api.requests.ErrorResponse
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
+import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.FormatUtils
+import org.cascadebot.cascadebot.utils.toKotlin
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
@@ -31,13 +34,15 @@ private fun reminderAction(action: ScheduledAction) {
         if (action.data.isDM) {
             action.user?.openPrivateChannel()?.queue { channel ->
                 channel.sendMessage(MessageBuilder()
-                        .setEmbed(embed(MessageType.INFO) {
-                            description = (warningText?.let { "$it\n\n" } ?: "") +
-                                    Language.i18n(action.guildId, "scheduled_actions.reminder_text") +
-                                    "\n```\n${action.data.reminder}\n```"
-                        }.build())
+                        .setEmbed(
+                            embed(MessageType.INFO) {
+                                description = (warningText?.let { "$it\n\n" } ?: "") +
+                                        Language.i18n(action.guildId, "scheduled_actions.reminder_text") +
+                                        "\n```\n${action.data.reminder}\n```"
+                            }.build()
+                        )
                         .build()
-                ).queue()
+                ).queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER).toKotlin())
             }
         } else {
             action.channel?.sendMessage(MessageBuilder()
