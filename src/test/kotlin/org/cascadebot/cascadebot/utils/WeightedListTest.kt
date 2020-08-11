@@ -70,8 +70,7 @@ class WeightedListTest {
     @CsvSource(
         "100,0.05",
         "1000,0.025",
-        "10000,0.01",
-        "100000,0.005"
+        "10000,0.01"
     )
     fun `Test random selection`(repeatCount: Int, threshold: Double) {
         val list = WeightedList<String>()

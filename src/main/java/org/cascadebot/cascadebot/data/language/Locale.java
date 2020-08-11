@@ -46,6 +46,10 @@ public enum Locale {
         return CascadeBot.class.getClassLoader().getResourceAsStream("lang/" + getLanguageFileName());
     }
 
+    public String i18n(String path, Object... objects) {
+        return Language.i18n(this, path, objects);
+    }
+
     public static Locale getDefaultLocale() {
         return ENGLISH_UK;
     }
