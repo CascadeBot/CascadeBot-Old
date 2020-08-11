@@ -12,6 +12,11 @@
       "_type": "required"
     }
   },
+  "page*": {
+    "page": {
+      "_type": "required"
+    }
+  },
   "guild*": {
     "flag*": {
       "flag*": {
@@ -575,6 +580,139 @@
     },
     "amount": {
       "_type": "optional"
+    }
+  },
+  "filters*": {
+    "filter": {
+      "_type": "required"
+    },
+    "list": {
+
+    },
+    "create*": {
+      "filter*": {
+        "_type": "required",
+        "type": {
+          "_type": "optional"
+        }
+      }
+    },
+    "delete*": {
+      "filter": {
+        "_type": "required"
+      }
+    },
+    "operator*": {
+      "or": {
+        "_aliases": ["and"]
+      }
+    },
+    "type*": {
+      "whitelist": {
+        "_aliases": ["blacklist"]
+      }
+    },
+    "channels*": {
+      "link*": {
+        "filter*": {
+          "_type": "required",
+          "channel": {
+            "_type": "required"
+          }
+        }
+      },
+      "unlink*": {
+        "filter*": {
+          "_type": "required",
+          "channel": {
+            "_type": "required"
+          }
+        }
+      },
+      "list*": {
+        "filter*": {
+          "_type": "required"
+        }
+      }
+    },
+    "commands*": {
+      "link*": {
+        "filter*": {
+          "_type": "required",
+          "command": {
+            "_type": "required"
+          }
+        }
+      },
+      "unlink*": {
+        "filter*": {
+          "_type": "required",
+          "command": {
+            "_type": "required"
+          }
+        }
+      },
+      "list*": {
+        "filter*": {
+          "_type": "required"
+        }
+      }
+    },
+    "roles*": {
+      "link*": {
+        "filter*": {
+          "_type": "required",
+          "role": {
+            "_type": "required"
+          }
+        }
+      },
+      "unlink*": {
+        "filter*": {
+          "_type": "required",
+          "role": {
+            "_type": "required"
+          }
+        }
+      },
+      "list*": {
+        "filter*": {
+          "_type": "required"
+        }
+      }
+    },
+    "users*": {
+      "link*": {
+        "filter*": {
+          "_type": "required",
+          "user": {
+            "_type": "required"
+          }
+        }
+      },
+      "unlink*": {
+        "filter*": {
+          "_type": "required",
+          "user": {
+            "_type": "required"
+          }
+        }
+      },
+      "list*": {
+        "filter*": {
+          "_type": "required"
+        }
+      }
+    },
+    "enable*": {
+      "filter": {
+        "_type": "required"
+      }
+    },
+    "disable*": {
+      "filter": {
+        "_type": "required"
+      }
     }
   }
 }
