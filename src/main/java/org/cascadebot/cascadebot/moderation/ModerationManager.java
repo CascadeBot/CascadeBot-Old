@@ -100,7 +100,10 @@ public class ModerationManager {
             runWithCheckedExceptions(() -> {
                 context.getGuild()
                         .addRoleToMember(target, ExtensionsKt.getMutedRole(context.getGuild()))
-                        .reason(submitter.getUser().getAsTag() + " muted user")
+                        .reason(context.i18n("mod_actions.mute.reason",
+                                target.getUser().getAsTag(),
+                                submitter.getUser().getAsTag(),
+                                reason))
                         .queue(aVoid -> {
                             sendSuccess(context, target.getUser(), submitter, ModAction.MUTE, reason);
                         });
@@ -113,7 +116,11 @@ public class ModerationManager {
             runWithCheckedExceptions(() -> {
                 context.getGuild()
                         .addRoleToMember(target, ExtensionsKt.getMutedRole(context.getGuild()))
-                        .reason(submitter.getUser().getAsTag() + " muted user")
+                        .reason(context.i18n("mod_actions.mute.reason",
+                                target.getUser().getAsTag(),
+                                submitter.getUser().getAsTag(),
+                                reason,
+                                FormatUtils.formatDateTime(OffsetDateTime.now().plus(delay, ChronoUnit.MILLIS), context.getLocale())))
                         .queue(aVoid -> {
                             ScheduledActionManager.registerScheduledAction(new ScheduledAction(
                                     ActionType.UNMUTE,
