@@ -31,7 +31,7 @@ class SlowmodeCommand : MainCommand() {
             return
         }
         var channel: TextChannel = context.channel
-        if (!context.args.isEmpty()) {
+        if (context.args.size == 2) {
             try {
                 channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
             } catch (e: IllegalStateException) {
