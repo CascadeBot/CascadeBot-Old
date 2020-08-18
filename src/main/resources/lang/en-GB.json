@@ -1355,7 +1355,8 @@
     },
     "mute": {
       "name": "mute",
-      "verb": "muted"
+      "verb": "muted",
+      "reason": "{0} was muted by {1} for the reason: {2}"
     },
     "warn": {
       "name": "warn",
@@ -1363,11 +1364,17 @@
     },
     "temp_ban": {
       "name": "temp ban",
-      "verb": "temporarily banned"
+      "verb": "temporarily banned",
+      "unban_reason": "Temp-ban: {0} has been automatically unbanned"
     },
     "temp_mute": {
       "name": "temp mute",
-      "verb": "temporarily muted"
+      "verb": "temporarily muted",
+      "reason": "{0} was temporarily muted by {1} for the reason: {2} until: {3}",
+      "unmute_reason": "Temp-mute: {0} has been automatically unmuted"
+    },
+    "unmute": {
+      "reason": "{0} was unmuted by {1}"
     }
   },
   "words": {
