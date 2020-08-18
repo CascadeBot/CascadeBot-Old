@@ -53,6 +53,19 @@
       "_type": "optional"
     }
   },
+  "slowmode*": {
+    "interval*": {
+      "_type": "required",
+      "channel*": {
+        "_type": "optional"
+      }
+    },
+    "reset*" : {
+      "channel*": {
+        "_type": "optional"
+      }
+    }
+  },
   "userinfo*": {
     "guild_id": {
       "_type": "optional"
@@ -570,7 +583,6 @@
       "_type": "required"
     },
     "list": {
-
     },
     "create*": {
       "filter*": {
@@ -587,12 +599,16 @@
     },
     "operator*": {
       "or": {
-        "_aliases": ["and"]
+        "_aliases": [
+          "and"
+        ]
       }
     },
     "type*": {
       "whitelist": {
-        "_aliases": ["blacklist"]
+        "_aliases": [
+          "blacklist"
+        ]
       }
     },
     "channels*": {
