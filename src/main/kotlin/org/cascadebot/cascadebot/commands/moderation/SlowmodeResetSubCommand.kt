@@ -10,7 +10,6 @@ import org.cascadebot.cascadebot.utils.DiscordUtils
 
 class SlowmodeResetSubCommand : SubCommand() {
 
-
     override fun onCommand(sender: Member, context: CommandContext) {
         var channel: TextChannel = context.channel
         if (!context.args.isEmpty()) {
