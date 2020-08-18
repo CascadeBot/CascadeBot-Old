@@ -20,11 +20,11 @@ class SlowmodeResetSubCommand : SubCommand() {
                 return
             }
         }
-
-        if (!context.selfMember.hasPermission(context.channel, Permission.MANAGE_CHANNEL)) {
+        if (!context.selfMember.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
             context.uiMessaging.sendBotDiscordPermError(Permission.MANAGE_CHANNEL)
             return
         }
+
         channel.manager.setSlowmode(0).queue() // Slowmode off
         context.typedMessaging.replySuccess(context.i18n("commands.slowmode.reset_success", channel.name))
     }

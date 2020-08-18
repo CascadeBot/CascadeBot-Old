@@ -17,7 +17,16 @@ class SlowmodeCommand : MainCommand() {
             context.uiMessaging.replyUsage()
             return
         }
-        if (!context.selfMember.hasPermission(context.channel, Permission.MANAGE_CHANNEL)) {
+        var channel: TextChannel = context.channel
+        if (context.args.size == 2) {
+            try {
+                channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
+            } catch (e: IllegalStateException) {
+                context.typedMessaging.replyWarning(context.i18n("commands.slowmode.invalid_channel", context.getArg(1)))
+                return
+            }
+        }
+        if (!context.selfMember.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
             context.uiMessaging.sendBotDiscordPermError(Permission.MANAGE_CHANNEL)
             return
         }
@@ -29,15 +38,6 @@ class SlowmodeCommand : MainCommand() {
         if (duration.toInt() == 0) {
             context.typedMessaging.replyDanger(context.i18n("responses.invalid_duration"))
             return
-        }
-        var channel: TextChannel = context.channel
-        if (context.args.size == 2) {
-            try {
-                channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
-            } catch (e: IllegalStateException) {
-                context.typedMessaging.replyWarning(context.i18n("commands.slowmode.invalid_channel", context.getArg(1)))
-                return
-            }
         }
         channel.manager.setSlowmode(duration.toInt() / 1000).queue()
         context.typedMessaging.replySuccess(context.i18n("commands.slowmode.success", context.getArg(0), channel.name))
