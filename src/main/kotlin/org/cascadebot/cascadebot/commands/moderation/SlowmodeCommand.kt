@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.ParserUtils
 
 class SlowmodeCommand : MainCommand() {
+
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isEmpty()) {
             context.uiMessaging.replyUsage()
