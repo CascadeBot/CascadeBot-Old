@@ -22,10 +22,11 @@ class SlowmodeCommand : MainCommand() {
         }
         var channel: TextChannel = context.channel
         if (context.args.size == 2) {
-            try {
-                channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
-            } catch (e: IllegalStateException) {
-                context.typedMessaging.replyWarning(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
+            val tempChannel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
+            if (tempChannel != null) {
+                channel = tempChannel
+            } else {
+                context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
                 return
             }
         }
