@@ -9,6 +9,7 @@ import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
+import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.ParserUtils
 
 class SlowmodeCommand : MainCommand() {
@@ -41,7 +42,8 @@ class SlowmodeCommand : MainCommand() {
             return
         }
         channel.manager.setSlowmode(duration.toInt() / 1000).queue()
-        context.typedMessaging.replySuccess(context.i18n("commands.slowmode.success", context.getArg(0), channel.name))
+        val interval: String = FormatUtils.formatTime(duration, context.locale, true).replace("(0[hms])".toRegex(), "")
+        context.typedMessaging.replySuccess(context.i18n("commands.slowmode.success", interval, channel.name))
     }
 
     override fun command(): String {
