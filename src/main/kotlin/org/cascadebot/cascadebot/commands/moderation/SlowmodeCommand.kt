@@ -24,7 +24,7 @@ class SlowmodeCommand : MainCommand() {
             try {
                 channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
             } catch (e: IllegalStateException) {
-                context.typedMessaging.replyWarning(context.i18n("commands.slowmode.invalid_channel", context.getArg(1)))
+                context.typedMessaging.replyWarning(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
                 return
             }
         }
