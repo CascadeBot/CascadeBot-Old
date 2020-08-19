@@ -26,7 +26,7 @@ class SlowmodeResetSubCommand : SubCommand() {
         }
 
         channel.manager.setSlowmode(0).queue() // Slowmode off
-        context.typedMessaging.replySuccess(context.i18n("commands.slowmode.reset_success", channel.name))
+        context.typedMessaging.replySuccess(context.i18n("commands.slowmode.reset.reset_success", channel.name))
     }
 
     override fun parent(): String = "slowmode"

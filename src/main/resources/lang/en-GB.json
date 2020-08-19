@@ -105,10 +105,10 @@
       "description": "Sets the slowmode of a channel",
       "time_exceeded": "Maximum time for slowmode of channels is 6 hours",
       "invalid_channel" : "I cannot find channel `{0}`",
-      "reset_success" : "Slowmode reset in {0}",
       "success": "Slowmode set to {0} in {1}",
       "reset" : {
-        "description": "Resets the slowmode to off"
+        "description": "Resets the slowmode to off",
+        "reset_success" : "Slowmode reset in {0}"
       }
     },
     "userinfo": {
