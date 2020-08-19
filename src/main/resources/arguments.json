@@ -56,12 +56,12 @@
   "slowmode*": {
     "interval*": {
       "_type": "required",
-      "channel*": {
+      "channel": {
         "_type": "optional"
       }
     },
     "reset*" : {
-      "channel*": {
+      "channel": {
         "_type": "optional"
       }
     }

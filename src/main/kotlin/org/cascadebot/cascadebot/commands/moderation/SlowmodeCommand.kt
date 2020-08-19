@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.commands.moderation
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
@@ -37,13 +38,21 @@ class SlowmodeCommand : MainCommand() {
             context.typedMessaging.replyWarning(context.i18n("commands.slowmode.time_exceeded"))
             return
         }
-        if (duration.toInt() == 0) {
+        if (duration == 0L) {
             context.typedMessaging.replyDanger(context.i18n("responses.invalid_duration"))
             return
         }
-        channel.manager.setSlowmode(duration.toInt() / 1000).queue()
-        val interval: String = FormatUtils.formatTime(duration, context.locale, true).replace("(0[hms])".toRegex(), "")
-        context.typedMessaging.replySuccess(context.i18n("commands.slowmode.success", interval, channel.name))
+        channel.manager.setSlowmode(duration.toInt() / 1000).queue({
+            val interval: String = FormatUtils.formatTime(duration, context.locale, true).replace("(0[hms])".toRegex(), "")
+            context.typedMessaging.replySuccess(context.i18n("commands.slowmode.success", interval, channel.name))
+        }, {
+            if (it is PermissionException) {
+                context.uiMessaging.sendBotDiscordPermError(it.permission)
+            } else {
+                context.typedMessaging.replyException("Couldn't change channel permissions", it)
+            }
+        })
+
     }
 
     override fun command(): String {
