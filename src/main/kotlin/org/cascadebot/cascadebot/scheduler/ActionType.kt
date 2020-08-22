@@ -13,11 +13,18 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
             action.guild?.let { guild ->
                 val member = guild.getMemberById(action.data.targetId)
                 if (member != null) {
-                    val restAction = guild.removeRoleFromMember(member, guild.getMutedRole())
-                    val userName = guild.getMemberById(action.data.targetId)?.user?.asTag ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
-                    restAction.reason(Language.getGuildLocale(guild.idLong).i18n("mod_actions.temp_mute.unmute_reason", userName))
-                    // TODO handle errors
-                    restAction.queue()
+                    guild.removeRoleFromMember(member, guild.getMutedRole()).apply {
+                        val userName = guild.getMemberById(action.data.targetId)?.user?.asTag ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
+                        reason(Language.getGuildLocale(guild.idLong).i18n("mod_actions.temp_mute.unmute_reason", userName))
+                        // TODO handle errors
+                        queue(null) {
+                            action.channel?.let {
+                                action.user?.let {
+
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -25,12 +32,13 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
     UNBAN(ScheduledAction.ModerationActionData::class, { action ->
         if (action.data is ScheduledAction.ModerationActionData) {
             action.guild?.let { guild ->
-                val restAction = guild.unban(action.data.targetId.toString())
-                val userName = CascadeBot.INS.shardManager.getUserById(action.data.targetId)
-                        ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
-                restAction.reason(Language.getGuildLocale(guild.idLong).i18n("mod_actions.temp_mute.unmute_reason", userName))
-                // TODO handle errors
-                restAction.queue()
+                guild.unban(action.data.targetId.toString()).apply {
+                    val userName = org.cascadebot.cascadebot.CascadeBot.INS.shardManager.getUserById(action.data.targetId)
+                            ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
+                    reason(Language.getGuildLocale(guild.idLong).i18n("mod_actions.temp_mute.unmute_reason", userName))
+                    // TODO handle errors
+                    queue()
+                }
             }
         }
     }),
