@@ -2,6 +2,7 @@ package org.cascadebot.cascadebot.scheduler
 
 import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.entities.IMentionable
+import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import net.dv8tion.jda.api.requests.ErrorResponse
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.messaging.MessageType
@@ -42,7 +43,17 @@ private fun reminderAction(action: ScheduledAction) {
                             }.build()
                         )
                         .build()
-                ).queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER).toKotlin())
+                ).queue(null) {
+                    action.channel?.sendMessage(MessageBuilder()
+                            .append(action.user as IMentionable)
+                            .setEmbed(embed(MessageType.INFO) {
+                                description = Language.i18n(action.guildId, "scheduled_actions.reminder_dm_error") + "\n\n" +
+                                        (warningText?.let { "$it\n\n" } ?: "") +
+                                        Language.i18n(action.guildId, "scheduled_actions.reminder_text") +
+                                        "\n```\n${action.data.reminder}\n```"
+                            }.build())
+                            .build())?.queue()
+                }
             }
         } else {
             action.channel?.sendMessage(MessageBuilder()

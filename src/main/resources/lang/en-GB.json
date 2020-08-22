@@ -1356,7 +1356,8 @@
   },
   "scheduled_actions": {
     "reminder_overdue": "|warning| This reminder was originally due to occur at {0}. It has been delayed because of bot downtime!",
-    "reminder_text": "You asked me to remind you of:"
+    "reminder_text": "You asked me to remind you of:",
+    "reminder_dm_error": "|no_entry| I tried to send this in your DMs! Please make sure I can DM you!"
   },
   "words": {
     "permission": "Permission",
