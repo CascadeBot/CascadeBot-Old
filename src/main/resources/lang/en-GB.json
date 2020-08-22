@@ -479,6 +479,31 @@
         "remove_success_text": "This message has been removed!\n```\n{0}\n```"
       }
     },
+    "remindme": {
+      "command": "remindme",
+      "description": "Reminds the user of a message in the current channel.",
+      "aliases": [
+        "remind",
+        "forgetmenot"
+      ],
+      "invalid_duration": "Please enter a valid duration using `w`, `d`, `h`, `m` or `s`! e.g. `2d24h`, `2m10s`",
+      "success_relative": "I will remind you {0} at {1}",
+      "success_relative_dm": "I will remind you in your DMs {0} at {1}",
+      "success": "I will remind you at {0}",
+      "success_dm": "I will remind you in your DMs at {0}",
+      "duration_too_long": "You cannot set a reminder for a time greater than 1 year in the future!",
+      "dm": {
+        "command": "dm",
+        "description": "Reminds the user of a message in their DMs."
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the reminders that the user has created.",
+        "your_reminders": "Your reminders",
+        "summary_page": "You have **{0}** reminders in {1}.\nYou have **{2}** DM reminders.\n\nYou have **{3}** reminders in total.",
+        "remind_datetime": "I will remind you at"
+      }
+    },
     "ban": {
       "command": "ban",
       "description": "Bans or forcebans the specified user.",
@@ -1329,6 +1354,11 @@
       "verb": "warned"
     }
   },
+  "scheduled_actions": {
+    "reminder_overdue": "|warning| This reminder was originally due to occur at {0}. It has been delayed because of bot downtime!",
+    "reminder_text": "You asked me to remind you of:",
+    "reminder_dm_error": "|no_entry| I tried to send this in your DMs! Please make sure I can DM you!"
+  },
   "words": {
     "permission": "Permission",
     "autorole": "AutoRole",
@@ -1359,6 +1389,10 @@
     "default": "Default",
     "linked_roles": "Linked roles",
     "roles": "Roles",
+    "dm": "DM",
+    "location": "location",
+    "reminder": "reminder",
+    "created_at": "created at",
     "channels": "channels",
     "users": "users",
     "conditions": "conditions",
@@ -1526,6 +1560,7 @@
     "message": "message",
     "index": "index",
     "weight": "weight",
+    "delay": "delay",
     "filter": "filter",
     "type": "type",
     "page": "page",
