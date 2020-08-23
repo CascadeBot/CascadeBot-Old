@@ -20,6 +20,7 @@ class SlowmodeCommand : MainCommand() {
             context.uiMessaging.replyUsage()
             return
         }
+
         var channel: TextChannel = context.channel
         if (context.args.size == 2) {
             val tempChannel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
@@ -30,10 +31,16 @@ class SlowmodeCommand : MainCommand() {
                 return
             }
         }
+
         if (!context.selfMember.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
             context.uiMessaging.sendBotDiscordPermError(Permission.MANAGE_CHANNEL)
             return
         }
+        if (!context.member.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
+            context.uiMessaging.sendUserDiscordPermError(Permission.MANAGE_CHANNEL)
+            return
+        }
+
         val duration = ParserUtils.parseTextTime(context.getArg(0), false) // In milliseconds
         if (duration / 1000 > 21600) {  // 6 hour maximum time imposed by API
             context.typedMessaging.replyWarning(context.i18n("commands.slowmode.time_exceeded"))
@@ -43,6 +50,7 @@ class SlowmodeCommand : MainCommand() {
             context.typedMessaging.replyDanger(context.i18n("responses.invalid_duration"))
             return
         }
+
         channel.manager.setSlowmode(duration.toInt() / 1000).queue({
             val interval: String = FormatUtils.formatTime(duration, context.locale, true).replace("(0[hms])".toRegex(), "")
             context.typedMessaging.replySuccess(context.i18n("commands.slowmode.success", interval, channel.name))

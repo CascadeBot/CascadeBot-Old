@@ -111,6 +111,11 @@
         "reset_success" : "Slowmode reset in {0}"
       }
     },
+    "tempslowmode":{
+      "command" : "tempslowmode",
+      "description" : "Sets the slowmode of a channel temporarily",
+      "success" : "Slowmode set to {0} in {1}\nThis will be reset in {2}"
+    },
     "userinfo": {
       "command": "userinfo",
       "description": "Returns information regarding the specified user.",
@@ -1371,6 +1376,7 @@
     "default": "Default",
     "linked_roles": "Linked roles",
     "roles": "Roles",
+    "until": "Until",
     "channels": "channels",
     "users": "users",
     "conditions": "conditions",
@@ -1540,6 +1546,7 @@
     "message": "message",
     "index": "index",
     "weight": "weight",
+    "duration": "duration",
     "filter": "filter",
     "type": "type",
     "page": "page",

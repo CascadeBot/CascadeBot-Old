@@ -60,7 +60,7 @@
         "_type": "optional"
       }
     },
-    "reset*" : {
+    "reset*": {
       "channel": {
         "_type": "optional"
       }
@@ -91,6 +91,17 @@
       "_type": "required",
       "value": {
         "_type": "required"
+      }
+    }
+  },
+  "tempslowmode*": {
+    "interval*": {
+      "_type": "required",
+      "duration*": {
+        "_type": "required",
+        "channel": {
+          "_type": "optional"
+        }
       }
     }
   },
