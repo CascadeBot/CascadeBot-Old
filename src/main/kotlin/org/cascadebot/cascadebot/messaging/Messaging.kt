@@ -133,14 +133,14 @@ object Messaging {
 
     private val lastPageButton = UnicodeButton(UnicodeConstants.FAST_FORWARD, IButtonRunnable { _: Member?, textChannel: TextChannel, message: Message ->
         val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-        handlePage(message, pageGroup!!.pages, pageGroup)
+        handlePage(message, pageGroup!!.pageCount, pageGroup)
     })
 
     private fun handlePage(message: Message, newPage: Int, pageGroup: PageCache.Pages) {
-        if (newPage < 1 || newPage > pageGroup.pages) {
+        if (newPage < 1 || newPage > pageGroup.pageCount) {
             return
         }
-        pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.pages)
+        pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.pageCount)
         pageGroup.currentPage = newPage
     }
 

@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
+import net.dv8tion.jda.api.events.message.MessageDeleteEvent
+import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import net.dv8tion.jda.api.requests.ErrorResponse
@@ -28,6 +30,10 @@ class GuildEvents : ListenerAdapter() {
                     .openPrivateChannel()
                     .queue({ it.sendMessage(Config.INS.guildWelcomeMessage).queue() }, { /* Do nothing on error! */ })
         }
+    }
+
+    override fun onGuildMessageDelete(event: GuildMessageDeleteEvent) {
+        GuildDataManager.getGuildData(event.guild.idLong).pageCache.remove(event.messageIdLong)
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent) {

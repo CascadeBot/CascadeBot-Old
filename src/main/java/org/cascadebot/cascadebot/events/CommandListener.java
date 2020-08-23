@@ -22,6 +22,7 @@ import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.CommandFilter;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
 import org.cascadebot.cascadebot.data.objects.Tag;
@@ -138,8 +139,9 @@ public class CommandListener extends ListenerAdapter {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.module().isPrivate() && !guildData.getCore().isModuleEnabled(cmd.module())) {
                 if (guildData.getCore().getShowModuleErrors() || Environment.isDevelopment()) {
-                    EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.module(), context.getLocale()), trigger), event.getAuthor());
-                    Messaging.sendEmbedMessage(MessageType.DANGER, event.getChannel(), builder, guildData.getCore().getUseEmbedForMessages());
+                    EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.DANGER, event.getAuthor())
+                            .setDescription(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.module(), context.getLocale()), trigger));
+                    context.getTimedMessaging().sendAutoDeleteMessage(builder.build(), 5000);
                 }
                 // TODO: Modlog?
                 return;
@@ -148,6 +150,17 @@ public class CommandListener extends ListenerAdapter {
             if (!isAuthorised(cmd, context)) {
                 return;
             }
+
+            if (!processFilters(cmd, context)) {
+                // TODO: Moderation log event
+                if (context.getData().getManagement().getDisplayFilterError()) {
+                    var message = context.i18n("commands.filters.message_blocked") +
+                            (context.getMember().hasPermission(Permission.ADMINISTRATOR) ? context.i18n("commands.filters.message_blocked_admin") : "");
+                    context.getTypedMessaging().replyDanger(message);
+                }
+                return;
+            }
+
             if (args.length >= 1) {
                 if (processSubCommands(cmd, args, context)) {
                     return;
@@ -165,6 +178,16 @@ public class CommandListener extends ListenerAdapter {
                 }
             }
         }
+    }
+
+    private boolean processFilters(MainCommand cmd, CommandContext context) {
+        for (CommandFilter filter : context.getData().getManagement().getFilters()) {
+            if (filter.evaluateFilter(cmd.command(), context.getChannel(), context.getMember()) == CommandFilter.FilterResult.DENY
+                    && !context.hasPermission("filters.bypass"))  {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean processSubCommands(MainCommand cmd, String[] args, CommandContext parentCommandContext) {
