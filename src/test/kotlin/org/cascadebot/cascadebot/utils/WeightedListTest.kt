@@ -64,34 +64,5 @@ class WeightedListTest {
         }
 
     }
-
-    @DisplayName("Test random selection")
-    @ParameterizedTest(name = "Repeat count of {0} with threshold of {1}")
-    @CsvSource(
-        "100,0.05",
-        "1000,0.025",
-        "10000,0.01"
-    )
-    fun `Test random selection`(repeatCount: Int, threshold: Double) {
-        val list = WeightedList<String>()
-        list.add("10%", 1)
-        list.add("90%", 9)
-
-        val outputItems = mutableListOf<String>()
-
-        repeat(repeatCount) {
-            list.randomItem?.let { randomItem -> outputItems.add(randomItem) }
-        }
-
-        val ten = outputItems.count { it == "10%" }
-        val ninety = outputItems.count { it == "90%" }
-
-        val tenPercentage = ten.toDouble() / repeatCount.toDouble()
-        val ninetyPercentage = ninety.toDouble() / repeatCount.toDouble()
-
-        assert(abs(0.1 - tenPercentage) <= threshold)
-        assert(abs(0.9 - ninetyPercentage) <= threshold)
-    }
-
-
+    
 }
