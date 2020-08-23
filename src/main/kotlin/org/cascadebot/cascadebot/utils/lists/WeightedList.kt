@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.utils.lists
 
-import org.cascadebot.cascadebot.utils.WeightPair
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import kotlin.concurrent.read
 import kotlin.concurrent.write
@@ -14,11 +13,13 @@ import kotlin.random.Random
 class WeightedList<T : Any>(seed: Long? = null) {
 
     @Transient
-    val random: Random = if (seed == null) Random.Default else Random(seed)
+    internal val random: Random = if (seed == null) Random.Default else Random(seed)
 
-    private val internalList: MutableList<WeightPair<T>> = mutableListOf()
     @Transient
     private val lock = ReentrantReadWriteLock()
+
+    private val internalList: MutableList<WeightPair<T>> = mutableListOf()
+
     val totalWeight
         get() = lock.read { internalList.sumBy { it.weight } }
 
@@ -29,9 +30,13 @@ class WeightedList<T : Any>(seed: Long? = null) {
             remove(item)
             val newWeight = existingItem.weight + weight
             // Create a new pair with the existing weight + the new weight
-            internalList.add(WeightPair(item, newWeight))
+            lock.write {
+                internalList.add(WeightPair(item, newWeight))
+            }
         } else {
-            internalList.add(WeightPair(item, weight))
+            lock.write {
+                internalList.add(WeightPair(item, weight))
+            }
         }
     }
 
@@ -64,7 +69,7 @@ class WeightedList<T : Any>(seed: Long? = null) {
     }
 
     fun get(obj: T): WeightPair<T>? {
-        return lock.read { internalList.find { it.item == obj }}
+        return lock.read { internalList.find { it.item == obj } }
     }
 
     fun indexOf(obj: T): Int {
@@ -81,7 +86,7 @@ class WeightedList<T : Any>(seed: Long? = null) {
         get() = lock.read { internalList.toList() }
 
     val size: Int
-        get() = lock.read { internalList.size}
+        get() = lock.read { internalList.size }
 
     // Gets a number between 1 and totalWeight (Inclusive)
     val randomItem: T?
@@ -111,6 +116,12 @@ class WeightedList<T : Any>(seed: Long? = null) {
         }
     }
 
+    data class WeightPair<T>(val item: T?, val weight: Int) {
+
+        @Suppress("unused") // Needed for MongoDB
+        private constructor() : this(null, 0)
+
+    }
 }
 
 fun <T : Any> WeightedList<List<T>>.randomListItem(): T? {
