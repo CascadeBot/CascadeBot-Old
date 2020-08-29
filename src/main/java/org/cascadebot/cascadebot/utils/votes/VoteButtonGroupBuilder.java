@@ -32,7 +32,7 @@ public class VoteButtonGroupBuilder {
     private List<Object> voteButtons = new ArrayList<>();
     private int amount = 1; //Setting this so things don't break
 
-    private long voteTime = TimeUnit.SECONDS.toMillis(30);
+    private long voteTime = TimeUnit.SECONDS.toMillis(10);
 
     private Consumer<List<VoteResult>> finishConsumer;
 
@@ -169,5 +169,4 @@ public class VoteButtonGroupBuilder {
 
         return buttonGroup;
     }
-
 }

@@ -1,7 +1,11 @@
 package org.cascadebot.cascadebot.scheduler
 
 import de.bild.codec.annotations.Id
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.entities.User
 import org.bson.types.ObjectId
+import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -21,6 +25,15 @@ data class ScheduledAction(
 
     val delay: Long
         get() = ChronoUnit.MILLIS.between(Instant.now(), executionTime).coerceAtLeast(0L)
+
+    val guild: Guild?
+        get() = CascadeBot.INS.shardManager.getGuildById(guildId)
+
+    val user: User?
+        get() = CascadeBot.INS.shardManager.getUserById(userId)
+
+    val channel: TextChannel?
+        get() = CascadeBot.INS.shardManager.getTextChannelById(channelId)
 
     // Default constructor for MongoDB serialisation
     private constructor() : this(
@@ -63,6 +76,12 @@ data class ScheduledAction(
         // Mongo Constructor
         @Suppress("unused")
         private constructor() : this("ugh", false)
+    }
+
+    class SlowmodeActionData(val targetId: Long, val oldSlowmode: Int) : ActionData {
+        // Mongo Constructor
+        @Suppress("unused")
+        private constructor() : this(0L, 0)
     }
 
 }

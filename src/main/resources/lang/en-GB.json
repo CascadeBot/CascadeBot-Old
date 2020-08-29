@@ -100,6 +100,22 @@
       "guild_member_count": "Member Count",
       "guild_id": "ID: {0}"
     },
+    "slowmode": {
+      "command": "slowmode",
+      "description": "Sets the slowmode of a channel",
+      "time_exceeded": "Maximum time for slowmode of channels is 6 hours",
+      "success": "Slowmode set to {0} in {1}",
+      "reset" : {
+        "command" : "reset",
+        "description": "Resets the slowmode to off",
+        "reset_success" : "Slowmode reset in {0}"
+      }
+    },
+    "tempslowmode":{
+      "command" : "tempslowmode",
+      "description" : "Sets the slowmode of a channel temporarily",
+      "success" : "Slowmode set to {0} in {1}\nThis will be reset in {2}"
+    },
     "userinfo": {
       "command": "userinfo",
       "description": "Returns information regarding the specified user.",
@@ -479,6 +495,31 @@
         "remove_success_text": "This message has been removed!\n```\n{0}\n```"
       }
     },
+    "remindme": {
+      "command": "remindme",
+      "description": "Reminds the user of a message in the current channel.",
+      "aliases": [
+        "remind",
+        "forgetmenot"
+      ],
+      "invalid_duration": "Please enter a valid duration using `w`, `d`, `h`, `m` or `s`! e.g. `2d24h`, `2m10s`",
+      "success_relative": "I will remind you {0} at {1}",
+      "success_relative_dm": "I will remind you in your DMs {0} at {1}",
+      "success": "I will remind you at {0}",
+      "success_dm": "I will remind you in your DMs at {0}",
+      "duration_too_long": "You cannot set a reminder for a time greater than 1 year in the future!",
+      "dm": {
+        "command": "dm",
+        "description": "Reminds the user of a message in their DMs."
+      },
+      "list": {
+        "command": "list",
+        "description": "Lists the reminders that the user has created.",
+        "your_reminders": "Your reminders",
+        "summary_page": "You have **{0}** reminders in {1}.\nYou have **{2}** DM reminders.\n\nYou have **{3}** reminders in total.",
+        "remind_datetime": "I will remind you at"
+      }
+    },
     "ban": {
       "command": "ban",
       "description": "Bans or forcebans the specified user.",
@@ -501,6 +542,38 @@
       "description": "Unbans the specified user.",
       "cannot_unban": "Could not find a user to unban matching: {0}",
       "several_matches": "There is more than one user that matches this criteria! \n Please enter the ID or the user's full name!"
+    },
+    "mute": {
+      "command": "mute",
+      "description": "Gives the member the muted role.",
+      "role": {
+        "command": "role",
+        "description": "Gets or sets the role that we will use to mute users.",
+        "set_role": "Successfully set the muted role to {0}!",
+        "role_info": "The current muted role is {0}"
+      },
+      "channelsetup": {
+        "command": "channelsetup",
+        "description": "Sets up channels to have the correct permissions for the muted roles.",
+        "embed_title": "Channel Permissions Setup",
+        "perm_success": "Successfully updated the permissions on the following channels and categories:",
+        "perm_failure": "Failed to change the permissions on the following channels and categories:",
+        "perm_failure_footer": "We didn't have permission to complete the action! Please make sure we have the `Manage Channel` and `Manage Permissions` permissions for the channels!",
+        "warning": "This command will deny the `Send Messages` and `Speak` permission to the muted role for all channels the bot has access to. Do you want to continue?"
+      }
+    },
+    "unmute": {
+      "command": "unmute",
+      "description": "Unmutes a member of a guild.",
+      "not_muted": "The user {0} is not muted!"
+    },
+    "tempmute": {
+      "command": "tempmute",
+      "description": "Temporarily mutes a user."
+    },
+    "tempban": {
+      "command": "tempban",
+      "description": "Temporarily bans a user."
     },
     "join": {
       "command": "join",
@@ -1250,7 +1323,8 @@
     "cannot_find_channel_matching": "Could not find the channel `{0}`",
     "cannot_find_command_matching": "Could not find the command `{0}`",
     "cannot_find_user_matching": "Could not find the user `{0}`",
-    "more_in_list": "...and {0} more."
+    "more_in_list": "...and {0} more.",
+    "invalid_duration": "Please enter a valid duration! e.g. 2h2m"
   },
   "enums": {
     "flag": {
@@ -1322,12 +1396,32 @@
     },
     "mute": {
       "name": "mute",
-      "verb": "muted"
+      "verb": "muted",
+      "reason": "{0} was muted by {1} for the reason: {2}"
     },
     "warn": {
       "name": "warn",
       "verb": "warned"
+    },
+    "temp_ban": {
+      "name": "temp ban",
+      "verb": "temporarily banned",
+      "unban_reason": "Temp-ban: {0} has been automatically unbanned"
+    },
+    "temp_mute": {
+      "name": "temp mute",
+      "verb": "temporarily muted",
+      "reason": "{0} was temporarily muted by {1} for the reason: {2} until: {3}",
+      "unmute_reason": "Temp-mute: {0} has been automatically unmuted"
+    },
+    "unmute": {
+      "reason": "{0} was unmuted by {1}"
     }
+  },
+  "scheduled_actions": {
+    "reminder_overdue": "|warning| This reminder was originally due to occur at {0}. It has been delayed because of bot downtime!",
+    "reminder_text": "You asked me to remind you of:",
+    "reminder_dm_error": "|no_entry| I tried to send this in your DMs! Please make sure I can DM you!"
   },
   "words": {
     "permission": "Permission",
@@ -1359,6 +1453,12 @@
     "default": "Default",
     "linked_roles": "Linked roles",
     "roles": "Roles",
+    "duration": "Duration",
+    "until": "Until",
+    "dm": "DM",
+    "location": "location",
+    "reminder": "reminder",
+    "created_at": "created at",
     "channels": "channels",
     "users": "users",
     "conditions": "conditions",
@@ -1498,6 +1598,7 @@
     "mode": "mode",
     "tag": "tag",
     "category": "category",
+    "interval": "interval",
     "content": "content",
     "module": "module",
     "member": "member",
@@ -1511,6 +1612,7 @@
     "force": "force",
     "scope": "scope",
     "url": "url",
+    "reset" : "reset",
     "channel": "channel",
     "prefix": "prefix",
     "command": "command",
@@ -1526,6 +1628,8 @@
     "message": "message",
     "index": "index",
     "weight": "weight",
+    "duration": "duration",
+    "delay": "delay",
     "filter": "filter",
     "type": "type",
     "page": "page",

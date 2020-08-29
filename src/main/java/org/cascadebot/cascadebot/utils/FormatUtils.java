@@ -5,8 +5,11 @@
 
 package org.cascadebot.cascadebot.utils;
 
+import com.ibm.icu.impl.Pair;
 import com.ibm.icu.text.DateFormat;
 import com.ibm.icu.text.MeasureFormat;
+import com.ibm.icu.text.RelativeDateTimeFormatter;
+import com.ibm.icu.text.RelativeDateTimeFormatter.RelativeDateTimeUnit;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Measure;
 import com.ibm.icu.util.MeasureUnit;
@@ -23,7 +26,10 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.OffsetTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -200,8 +206,44 @@ public class FormatUtils {
         return dateTime.format(DateTimeFormatter.RFC_1123_DATE_TIME);
     }
 
+    public static String formatDate(Date date, int dateFormat, Locale locale) {
+        return SimpleDateFormat.getDateInstance(dateFormat, locale.getULocale()).format(date);
+    }
+
+    public static String formatTime(OffsetTime time, int timeFormat, Locale locale) {
+        return SimpleDateFormat.getTimeInstance(timeFormat, locale.getULocale()).format(new Date(time.toEpochSecond(LocalDate.now()) * 1000));
+    }
+
+    public static String formatDateTime(OffsetDateTime dateTime, int dateFormat, int timeFormat, Locale locale) {
+        return SimpleDateFormat.getDateTimeInstance(dateFormat, timeFormat, locale.getULocale()).format(new Date(dateTime.toEpochSecond() * 1000));
+    }
+
     public static String formatDateTime(OffsetDateTime dateTime, Locale locale) {
-        return SimpleDateFormat.getDateTimeInstance(DateFormat.RELATIVE_LONG, DateFormat.LONG, locale.getULocale()).format(new Date(dateTime.toEpochSecond() * 1000));
+        return formatDateTime(dateTime, DateFormat.RELATIVE_LONG, DateFormat.LONG, locale);
+    }
+
+    public static String formatRelativeDate(double offset, RelativeDateTimeUnit unit, Locale locale) {
+        return RelativeDateTimeFormatter.getInstance(locale.getULocale()).format(offset, unit);
+    }
+
+    public static String formatRelativeDuration(Duration duration, Locale locale) {
+        var relativeUnit = relativeUnitFromDuration(duration);
+        if (relativeUnit == null) return "";
+        return RelativeDateTimeFormatter.getInstance(locale.getULocale()).format(relativeUnit.first, relativeUnit.second);
+    }
+
+    private static Pair<Long, RelativeDateTimeUnit> relativeUnitFromDuration(Duration duration) {
+        if (duration.toDays() > 0) {
+            return Pair.of(duration.toDays(), RelativeDateTimeUnit.DAY);
+        } else if (duration.toHours() > 0) {
+            return Pair.of(duration.toHours(), RelativeDateTimeUnit.HOUR);
+        } else if (duration.toMinutes() > 0) {
+            return Pair.of(duration.toMinutes(), RelativeDateTimeUnit.MINUTE);
+        } else if (duration.toSeconds() > 0) {
+            return Pair.of(duration.toSeconds(), RelativeDateTimeUnit.SECOND);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -213,8 +255,8 @@ public class FormatUtils {
      * <br/><br/>
      * Both forms follow the relative locale's time formatting rules.
      *
-     * @param millis The time to be formatted in milliseconds.
-     * @param locale The locale for the time to be formatted in.
+     * @param millis  The time to be formatted in milliseconds.
+     * @param locale  The locale for the time to be formatted in.
      * @param isShort Whether to display in short form or not.
      * @return The formatted string
      */
