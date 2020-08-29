@@ -1,7 +1,7 @@
 package org.cascadebot.cascadebot.scheduler
 
-import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Language
+import org.cascadebot.cascadebot.messaging.Messaging
 import org.cascadebot.cascadebot.utils.getMutedRole
 import org.cascadebot.cascadebot.utils.toCapitalized
 import kotlin.reflect.KClass
@@ -16,12 +16,13 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
                     guild.removeRoleFromMember(member, guild.getMutedRole()).apply {
                         val userName = guild.getMemberById(action.data.targetId)?.user?.asTag ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
                         reason(Language.getGuildLocale(guild.idLong).i18n("mod_actions.temp_mute.unmute_reason", userName))
-                        // TODO handle errors
                         queue(null) {
-                            action.channel?.let {
-                                action.user?.let {
-
+                            action.channel?.let channelLet@{ channel ->
+                                if (it is net.dv8tion.jda.api.exceptions.PermissionException) {
+                                    // TODO: Log something to modlog
+                                    return@channelLet
                                 }
+                                Messaging.sendExceptionMessage(channel, "Failed to unmute user!", it)
                             }
                         }
                     }
@@ -36,8 +37,15 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
                     val userName = org.cascadebot.cascadebot.CascadeBot.INS.shardManager.getUserById(action.data.targetId)
                             ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
                     reason(Language.getGuildLocale(guild.idLong).i18n("mod_actions.temp_mute.unmute_reason", userName))
-                    // TODO handle errors
-                    queue()
+                    queue(null) {
+                        action.channel?.let channelLet@{ channel ->
+                            if (it is net.dv8tion.jda.api.exceptions.PermissionException) {
+                                // TODO: Log something to modlog
+                                return@channelLet
+                            }
+                            Messaging.sendExceptionMessage(channel, "Failed to unban user!", it)
+                        }
+                    }
                 }
             }
         }
