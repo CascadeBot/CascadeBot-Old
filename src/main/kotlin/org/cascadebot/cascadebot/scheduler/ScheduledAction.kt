@@ -29,6 +29,9 @@ data class ScheduledAction(
     val guild: Guild?
         get() = CascadeBot.INS.shardManager.getGuildById(guildId)
 
+    val user: User?
+        get() = CascadeBot.INS.shardManager.getUserById(userId)
+
     val channel: TextChannel?
         get() = CascadeBot.INS.shardManager.getTextChannelById(channelId)
 
