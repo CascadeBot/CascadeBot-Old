@@ -41,11 +41,9 @@ class TempSlowmodeCommand : MainCommand() {
 
         var channel: TextChannel = context.channel
         if (context.args.size == 3) {
-            val tempChannel = DiscordUtils.getTextChannel(context.guild, context.getArg(2))
-            if (tempChannel != null) {
-                channel = tempChannel
-            } else {
-                context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
+            channel = DiscordUtils.getTextChannel(context.guild, context.getArg(2))
+            if (channel == null) {
+                context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(2)))
                 return
             }
         }
@@ -53,31 +51,36 @@ class TempSlowmodeCommand : MainCommand() {
             context.uiMessaging.sendUserDiscordPermError(Permission.MANAGE_CHANNEL)
             return
         }
+        if (!context.selfMember.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
+            context.uiMessaging.sendBotDiscordPermError(Permission.MANAGE_CHANNEL)
+            return
+        }
 
         val oldSlowmode = channel.slowmode
-        channel.manager.setSlowmode(longInterval.toInt() / 1000).queue({
-            val textInterval = FormatUtils.formatTime(longInterval, context.locale, true).replace("(0[hm])".toRegex(), "")
-            ScheduledActionManager.registerScheduledAction(ScheduledAction(
-                    ActionType.UNSLOWMODE,
-                    ScheduledAction.SlowmodeActionData(channel.idLong, oldSlowmode),
-                    context.guild.idLong,
-                    context.channel.idLong,
-                    context.member.idLong,
-                    Instant.now(),
-                    longDuration
-            ))
-            val textDuration = FormatUtils.formatTime(longDuration, context.locale, true).replace("(0[hm])".toRegex(), "") +
-                    " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(longDuration, ChronoUnit.SECONDS), context.locale) + ")"
-            context.typedMessaging.replySuccess(context.i18n("commands.tempslowmode.success", textInterval, channel.name, textDuration))
-        }, {
-            if (it is PermissionException) {
-                context.uiMessaging.sendBotDiscordPermError(it.permission)
-            } else {
-                context.typedMessaging.replyException("Couldn't change channel permissions", it)
+        try {
+            channel.manager.setSlowmode(longInterval.toInt() / 1000).queue {
+                val textInterval = FormatUtils.formatTime(longInterval, context.locale, true).replace("(0[hm])".toRegex(), "")
+                ScheduledActionManager.registerScheduledAction(ScheduledAction(
+                        ActionType.UNSLOWMODE,
+                        ScheduledAction.SlowmodeActionData(channel.idLong, oldSlowmode),
+                        context.guild.idLong,
+                        context.channel.idLong,
+                        context.member.idLong,
+                        Instant.now(),
+                        longDuration
+                ))
+                val textDuration = FormatUtils.formatTime(longDuration, context.locale, true).replace("(0[hm])".toRegex(), "") +
+                        " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(longDuration, ChronoUnit.SECONDS), context.locale) + ")"
+                context.typedMessaging.replySuccess(context.i18n("commands.tempslowmode.success", textInterval, channel.name, textDuration))
             }
-        })
+        } catch (e: PermissionException) {
+            context.uiMessaging.sendBotDiscordPermError(e.permission)
+        } catch (e: Exception) {
+            context.typedMessaging.replyException("Couldn't change channel permissions", e)
+        }
 
     }
+
 
     override fun command(): String {
         return "tempslowmode"

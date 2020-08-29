@@ -23,21 +23,18 @@ class SlowmodeCommand : MainCommand() {
 
         var channel: TextChannel = context.channel
         if (context.args.size == 2) {
-            val tempChannel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
-            if (tempChannel != null) {
-                channel = tempChannel
-            } else {
+            channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
+            if (channel == null) {
                 context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
                 return
             }
         }
-
-        if (!context.selfMember.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
-            context.uiMessaging.sendBotDiscordPermError(Permission.MANAGE_CHANNEL)
-            return
-        }
         if (!context.member.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
             context.uiMessaging.sendUserDiscordPermError(Permission.MANAGE_CHANNEL)
+            return
+        }
+        if (!context.selfMember.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
+            context.uiMessaging.sendBotDiscordPermError(Permission.MANAGE_CHANNEL)
             return
         }
 
@@ -50,17 +47,17 @@ class SlowmodeCommand : MainCommand() {
             context.typedMessaging.replyDanger(context.i18n("responses.invalid_duration"))
             return
         }
-
-        channel.manager.setSlowmode(duration.toInt() / 1000).queue({
-            val interval: String = FormatUtils.formatTime(duration, context.locale, true).replace("(0[hms])".toRegex(), "")
-            context.typedMessaging.replySuccess(context.i18n("commands.slowmode.success", interval, channel.name))
-        }, {
-            if (it is PermissionException) {
-                context.uiMessaging.sendBotDiscordPermError(it.permission)
-            } else {
-                context.typedMessaging.replyException("Couldn't change channel permissions", it)
+        try {
+            channel.manager.setSlowmode(duration.toInt() / 1000).queue {
+                val interval: String = FormatUtils.formatTime(duration, context.locale, true).replace("(0[hms])".toRegex(), "")
+                context.typedMessaging.replySuccess(context.i18n("commands.slowmode.success", interval, channel.name))
             }
-        })
+
+        } catch (e: PermissionException) {
+            context.uiMessaging.sendBotDiscordPermError(e.permission)
+        } catch (e: Exception) {
+            context.typedMessaging.replyException("Couldn't change channel permissions", e)
+        }
 
     }
 
