@@ -38,12 +38,6 @@ public class VoteButtonGroupBuilder {
 
     private BiConsumer<List<VoteResult>, Message> periodicConsumer;
 
-    private boolean isMusicSkip = false;
-
-    public void setIsMusicSkip(boolean isMusicSkip) {
-        this.isMusicSkip = isMusicSkip;
-    }
-
     /**
      * Creates a new build for {@link VoteButtonGroup}
      *
@@ -136,13 +130,6 @@ public class VoteButtonGroupBuilder {
      */
     public VoteButtonGroup build(long owner, long channelId, long guild) {
         VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer);
-        buttonGroup.setIsMusicSkip(isMusicSkip);
-        if (isMusicSkip) {
-            buttonGroup.setFinishConsumer(finishConsumer);
-            buttonGroup.setTimerRunTime(10);
-            buttonGroup.setMaxTimeRunTime(30);
-            buttonGroup.setTimerRunTimeSkipAddon(5);
-        }
         switch (type) {
             case YES_NO:
                 buttonGroup.addPersistentButton(PersistentButton.VOTE_BUTTON_YES);

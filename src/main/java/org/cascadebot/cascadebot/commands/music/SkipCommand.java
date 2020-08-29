@@ -90,7 +90,6 @@ public class SkipCommand extends MainCommand {
 
         VoteButtonGroupBuilder buttonGroupBuilder = new VoteButtonGroupBuilder(VoteMessageType.YES_NO);
         buttonGroupBuilder.addExtraButton(PersistentButton.SKIP_BUTTON_FORCE);
-        buttonGroupBuilder.setIsMusicSkip(true);
         buttonGroupBuilder.setPeriodicConsumer((results, message) -> {
             StringBuilder resultsBuilder = new StringBuilder();
             for (VoteResult result : results) {
@@ -114,6 +113,13 @@ public class SkipCommand extends MainCommand {
             }
         });
         VoteButtonGroup buttonGroup = buttonGroupBuilder.build(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+
+        // Specific settings for music skip
+        buttonGroup.setTimerRunTime(10);
+        buttonGroup.setMaxTimeRunTime(30);
+        buttonGroup.setTimerRunTimeSkipAddon(5);
+        buttonGroup.setIsMusicSkip(true);
+
         for (Member member : context.getGuild().getSelfMember().getVoiceState().getChannel().getMembers()) {
             if (context.hasPermission(member, "skip")) {
                 buttonGroup.allowUser(member.getIdLong());
