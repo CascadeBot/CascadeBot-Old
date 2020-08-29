@@ -12,7 +12,16 @@ import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
+import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.scheduler.ActionType;
+import org.cascadebot.cascadebot.scheduler.ScheduledAction;
+import org.cascadebot.cascadebot.utils.ExtensionsKt;
+import org.cascadebot.cascadebot.utils.FormatUtils;
+
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class ModerationManager {
 
@@ -43,6 +52,25 @@ public class ModerationManager {
         }
     }
 
+    public void tempBan(CommandContext context, User target, Member submitter, String reason, long delay) {
+        if (runChecks(ModAction.TEMP_BAN, target, submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild().ban(target, 7).reason(reason).queue(success -> {
+                    ScheduledActionManager.registerScheduledAction(new ScheduledAction(
+                            ActionType.UNBAN,
+                            new ScheduledAction.ModerationActionData(target.getIdLong()),
+                            context.getGuild().getIdLong(),
+                            context.getChannel().getIdLong(),
+                            submitter.getIdLong(),
+                            Instant.now(),
+                            delay
+                    ));
+                    sendTempSuccess(context, target, submitter, ModAction.TEMP_BAN, reason, delay);
+                });
+            }, context, ModAction.TEMP_BAN, target);
+        }
+    }
+
     public void softBan(CommandContext context, User target, Member submitter, String reason, int messagesToDelete) {
         if (runChecks(ModAction.SOFT_BAN, target, submitter, context)) {
             ban(context, ModAction.SOFT_BAN, target, submitter, reason, messagesToDelete);
@@ -67,6 +95,48 @@ public class ModerationManager {
         }
     }
 
+    public void mute(CommandContext context, Member target, Member submitter, String reason) {
+        if (runChecks(ModAction.MUTE, target.getUser(), submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild()
+                        .addRoleToMember(target, ExtensionsKt.getMutedRole(context.getGuild()))
+                        .reason(context.i18n("mod_actions.mute.reason",
+                                target.getUser().getAsTag(),
+                                submitter.getUser().getAsTag(),
+                                reason))
+                        .queue(aVoid -> {
+                            sendSuccess(context, target.getUser(), submitter, ModAction.MUTE, reason);
+                        });
+            }, context, ModAction.MUTE, target.getUser());
+        }
+    }
+
+    public void tempMute(CommandContext context, Member target, Member submitter, String reason, long delay) {
+        if (runChecks(ModAction.TEMP_MUTE, target.getUser(), submitter, context)) {
+            runWithCheckedExceptions(() -> {
+                context.getGuild()
+                        .addRoleToMember(target, ExtensionsKt.getMutedRole(context.getGuild()))
+                        .reason(context.i18n("mod_actions.mute.reason",
+                                target.getUser().getAsTag(),
+                                submitter.getUser().getAsTag(),
+                                reason,
+                                FormatUtils.formatDateTime(OffsetDateTime.now().plus(delay, ChronoUnit.MILLIS), context.getLocale())))
+                        .queue(aVoid -> {
+                            ScheduledActionManager.registerScheduledAction(new ScheduledAction(
+                                    ActionType.UNMUTE,
+                                    new ScheduledAction.ModerationActionData(target.getIdLong()),
+                                    context.getGuild().getIdLong(),
+                                    context.getChannel().getIdLong(),
+                                    submitter.getIdLong(),
+                                    Instant.now(),
+                                    delay
+                            ));
+                            sendTempSuccess(context, target.getUser(), submitter, ModAction.TEMP_MUTE, reason, delay);
+                        });
+            }, context, ModAction.TEMP_MUTE, target.getUser());
+        }
+    }
+
     private boolean runChecks(ModAction action, User target, Member submitter, CommandContext context) {
         if (!context.getGuild().equals(submitter.getGuild())) {
             // This should never really happen, this is here to make sure it definitely never happens
@@ -77,7 +147,7 @@ public class ModerationManager {
         } else if (target.equals(context.getSelfUser())) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_bot", action.getName(context.getLocale())));
             return false;
-        } else if (context.getData().getModeration().isRespectBanOrKickHierarchy() && !submitter.canInteract(context.getGuild().getMember(target))) {
+        } else if (context.getData().getModeration().getRespectBanOrKickHierarchy() && !submitter.canInteract(context.getGuild().getMember(target))) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.user_cannot_action_superior", action.getName(context.getLocale()), target.getName()));
             return false;
         }
@@ -104,6 +174,25 @@ public class ModerationManager {
         if (!StringUtils.isBlank(reason)) {
             builder.addField(context.i18n("words.reason"), reason, false);
         }
+
+        builder.setTitle(StringUtils.capitalize(action.getVerb(context.getLocale())) + " user");
+        context.getTypedMessaging().replySuccess(builder);
+    }
+
+    private void sendTempSuccess(CommandContext context, User target, Member submitter, ModAction action, String reason, long delay) {
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb(context.getLocale())), submitter.getUser());
+
+        if (!StringUtils.isBlank(reason)) {
+            builder.addField(context.i18n("words.reason"), reason, false);
+        }
+
+        // TODO, Use kotlin string extensions when PR #232 is merged.
+        builder.addField(
+                context.i18n("words.duration"),
+                FormatUtils.formatTime(delay, context.getLocale(), true)
+                        + " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(delay, ChronoUnit.MILLIS), context.getLocale()) + ")",
+                true
+        );
 
         builder.setTitle(StringUtils.capitalize(action.getVerb(context.getLocale())) + " user");
         context.getTypedMessaging().replySuccess(builder);

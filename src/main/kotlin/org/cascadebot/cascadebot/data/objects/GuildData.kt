@@ -26,6 +26,10 @@ class GuildData(@field:Id val guildId: Long) {
 
     val enabledFlags: MutableSet<Flag> = Sets.newConcurrentHashSet()
 
+    // This is a cache of the muted role so we can use the same one each time if, for
+    // some reason, there are multiple "Muted" roles
+    var mutedRoleId: Long = -1
+
     // TODO: Keep this here or remove it? It just serves as an accessor for the actual locale
     val locale: Locale
         get() = core.locale

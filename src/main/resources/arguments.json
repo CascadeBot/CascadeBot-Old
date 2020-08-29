@@ -244,6 +244,44 @@
       }
     }
   },
+  "tempban*": {
+    "user*": {
+      "_type": "required",
+      "duration*": {
+        "_type": "required",
+        "reason": {
+          "_type": "optional"
+        }
+      }
+    }
+  },
+  "mute*": {
+    "member": {
+      "_type": "required"
+    },
+    "role": {
+      "role": {
+        "_type": "required"
+      }
+    },
+    "channelsetup": {}
+  },
+  "unmute*": {
+    "member": {
+      "_type": "required"
+    }
+  },
+  "tempmute*": {
+    "user*": {
+      "_type": "required",
+      "duration*": {
+        "_type": "required",
+        "reason": {
+          "_type": "optional"
+        }
+      }
+    }
+  },
   "join*": {
     "channel": {
       "_type": "optional"
