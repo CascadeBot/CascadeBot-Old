@@ -58,7 +58,7 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
                 }
             }
         }
-    })
+    });
 
     fun verifyDataType(data: ScheduledAction.ActionData) = data::class.isSubclassOf(expectedClass)
 }
