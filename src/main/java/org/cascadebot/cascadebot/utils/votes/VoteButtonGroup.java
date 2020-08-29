@@ -50,10 +50,10 @@ public class VoteButtonGroup extends PersistentButtonGroup {
 
     private int timerRunTimeSkipAddon;
 
-    private boolean isMusicSkip;
+    private boolean isDynamicTiming;
 
-    public void setIsMusicSkip(Boolean isMusicSkip) {
-        this.isMusicSkip = isMusicSkip;
+    public void setIsDynamicTiming(boolean isDynamicTiming) {
+        this.isDynamicTiming = isDynamicTiming;
     }
 
     public void setFinishConsumer(Consumer<List<VoteResult>> finishConsumer) {
@@ -104,16 +104,16 @@ public class VoteButtonGroup extends PersistentButtonGroup {
                 votes.remove(user.getIdLong());
                 return;
             }
-        } else if (isMusicSkip) {
-            musicSkipExtraFunctionality(user);
+        } else if (isDynamicTiming) {
+            dynamicTimingFunctionality(user);
         }
         votes.put(user.getIdLong(), vote);
     }
 
-    private void musicSkipExtraFunctionality(User user) {
+    private void dynamicTimingFunctionality(User user) {
 
         long timeElapsed = Instant.now().toEpochMilli() - timerStartTime;
-        int elapsed = (int) FormatUtils.round((timeElapsed /1000), 0);
+        int elapsed = (int) FormatUtils.round((timeElapsed / 1000.0), 0);
         int newTimersTime;
 
         if (!user.isBot() && user.getIdLong() != getOwnerId()) {
@@ -140,7 +140,7 @@ public class VoteButtonGroup extends PersistentButtonGroup {
             }
             Member member = CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getMember(user);
 
-            int votesNeeded = (int) Math.ceil(member.getVoiceState().getChannel().getMembers().size() / 2);
+            int votesNeeded = (int) Math.ceil(member.getVoiceState().getChannel().getMembers().size() / 2.0);
 
             if ((votes.size()) >= votesNeeded - 1) { // - 1 is because the users vote hasn't been added yet
                 CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {

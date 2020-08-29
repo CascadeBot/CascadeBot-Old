@@ -118,7 +118,7 @@ public class SkipCommand extends MainCommand {
         buttonGroup.setTimerRunTime(10);
         buttonGroup.setMaxTimeRunTime(30);
         buttonGroup.setTimerRunTimeSkipAddon(5);
-        buttonGroup.setIsMusicSkip(true);
+        buttonGroup.setIsDynamicTiming(true);
 
         for (Member member : context.getGuild().getSelfMember().getVoiceState().getChannel().getMembers()) {
             if (context.hasPermission(member, "skip")) {
