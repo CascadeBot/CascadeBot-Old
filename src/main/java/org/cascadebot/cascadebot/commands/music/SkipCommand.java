@@ -113,6 +113,13 @@ public class SkipCommand extends MainCommand {
             }
         });
         VoteButtonGroup buttonGroup = buttonGroupBuilder.build(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+
+        // Specific settings for music skip
+        buttonGroup.setTimerRunTime(10);
+        buttonGroup.setMaxTimeRunTime(30);
+        buttonGroup.setTimerRunTimeSkipAddon(5);
+        buttonGroup.setIsDynamicTiming(true);
+
         for (Member member : context.getGuild().getSelfMember().getVoiceState().getChannel().getMembers()) {
             if (context.hasPermission(member, "skip")) {
                 buttonGroup.allowUser(member.getIdLong());
