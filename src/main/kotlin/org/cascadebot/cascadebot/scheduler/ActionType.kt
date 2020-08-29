@@ -29,7 +29,7 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
                 val targetChannel = guild.getGuildChannelById(action.data.targetId)
                 targetChannel?.manager?.setSlowmode(action.data.oldSlowmode)?.queue(null, {
                     if (it is PermissionException) {
-                        action.channel?.let { channel -> Messaging.sendMessage(MessageType.DANGER, channel, i18n(action.guildId, "responses.no_discord_perm_bot", it.permission)) }
+                        action.channel?.let { channel -> Messaging.sendMessage(MessageType.DANGER, channel, i18n(action.guildId, "responses.no_discord_perm_bot", it.permission.name)) }
                     } else {
                         action.channel?.let { channel -> Messaging.sendExceptionMessage(channel, "Couldn't unslowmode %s".format(targetChannel), it) }
                     }
