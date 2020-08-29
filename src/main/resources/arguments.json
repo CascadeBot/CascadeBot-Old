@@ -553,6 +553,23 @@
       }
     }
   },
+  "remindme*": {
+    "delay*": {
+      "_type": "required",
+      "message": {
+        "_type": "required"
+      }
+    },
+    "dm*": {
+      "delay*": {
+        "_type": "required",
+        "message": {
+          "_type": "required"
+        }
+      }
+    },
+    "list": {}
+  },
   "purge*": {
     "attachment*": {
       "amount": {

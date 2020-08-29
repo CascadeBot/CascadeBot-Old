@@ -8,6 +8,7 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
 import org.cascadebot.cascadebot.scheduler.ScheduledAction
 import java.time.Duration
+import java.util.Collections
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
@@ -16,7 +17,7 @@ object ScheduledActionManager {
 
     private val COLLECTION: String = "scheduled_actions"
 
-    var scheduledActions: MutableMap<ScheduledAction, ScheduledFuture<*>> = mutableMapOf()
+    var scheduledActions: MutableMap<ScheduledAction, ScheduledFuture<*>> = Collections.synchronizedMap(mutableMapOf())
 
     private val executor = ScheduledThreadPoolExecutor(10,
             ThreadFactoryBuilder().setNameFormat("scheduled-action-%d").build()
@@ -43,6 +44,7 @@ object ScheduledActionManager {
     }
 
     fun deleteScheduledAction(id: ObjectId) {
+        scheduledActions.entries.removeIf { it.key.id == id }
         CascadeBot.INS.databaseManager.runAsyncTask {
             it.getCollection(COLLECTION, ScheduledAction::class.java).deleteOne(
                     eq("_id", id),
