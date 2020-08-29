@@ -18,7 +18,10 @@ public enum ModAction {
     FORCE_BAN("forcefully banned"), // Bans a user in a guild, even if the user isn't in the guild
     KICK("kicked"), // Kicks a user from a guild
     MUTE("muted"), // Mutes a user in a guild
-    WARN("warned"); // Warns a user in a guild
+    WARN("warned"), // Warns a user in a guild
+    TEMP_MUTE("temporarily muted"),
+    TEMP_BAN("temporarily banned");
+    // TODO: Temp command ban?
 
     private String verb;
 

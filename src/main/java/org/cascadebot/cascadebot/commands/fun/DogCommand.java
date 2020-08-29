@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -24,7 +24,7 @@ import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import java.io.IOException;
 
 
-public class DogCommand implements ICommandMain {
+public class DogCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -39,7 +39,7 @@ public class DogCommand implements ICommandMain {
                     embedBuilder.setImage(getDogUrl());
                     message.editMessage(embedBuilder.build()).queue();
                 } else {
-                    context.getUIMessaging().replyImage(getDogUrl()).thenAccept(dogMessage -> {
+                    context.getUiMessaging().replyImage(getDogUrl()).thenAccept(dogMessage -> {
                         dogButtons.addButtonsToMessage(dogMessage);
                         dogButtons.setMessage(dogMessage.getIdLong());
                         context.getData().addButtonGroup(context.getChannel(), dogMessage, dogButtons);
@@ -51,7 +51,7 @@ public class DogCommand implements ICommandMain {
             }
         }));
         try {
-            context.getUIMessaging().replyImage(getDogUrl()).thenAccept(message -> {
+            context.getUiMessaging().replyImage(getDogUrl()).thenAccept(message -> {
                 dogButtons.addButtonsToMessage(message);
                 dogButtons.setMessage(message.getIdLong());
                 context.getData().addButtonGroup(context.getChannel(), message, dogButtons);
@@ -73,12 +73,12 @@ public class DogCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.FUN;
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("dog", true);
     }
 

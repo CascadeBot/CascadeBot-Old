@@ -7,40 +7,16 @@
 package org.cascadebot.cascadebot.utils;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
+import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class PurgeUtils {
-
-    /**
-     * Criteria for the {@link PurgeUtils#purge} method that checks
-     * which filters you are trying to apply to the message searching
-     *
-     * <ul>
-     *     <li>{@code Attachment - Clears messages with } {@link net.dv8tion.jda.api.entities.Message.Attachment}</li>
-     *     <li>{@code Bot - Clears messages with } {@link User#isBot()} {@code as true}</li>
-     *     <li>{@code Link - Clears any message with a regex checking for links}</li>
-     *     <li>{@code Token - Clears any message that contains x}</li>
-     *     <li>{@code User - Clears any message from a specific } {@link User}</li>
-     *     <li>{@code All - Clears anything}</li>
-     * </ul>
-     * @author DeadlyFirex
-     * @see PurgeUtils#purge
-     */
-
-    public enum Criteria {
-        ATTACHMENT,
-        BOT,
-        LINK,
-        TOKEN,
-        USER,
-        ALL,
-    }
 
     private static final Pattern linkCheck = Pattern.compile("^(?:https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$");
 
@@ -49,13 +25,13 @@ public class PurgeUtils {
      * and the amount of messages to clean.
      *
      * @param context {@link CommandContext} of the command
-     * @param type {@link PurgeUtils.Criteria} to filter for
+     * @param type {@link PurgeCriteria} to filter for
      * @param amount Amount of messages to clear
      * @param argument Optional argument, made for {@code TOKEN and USER}
      * @return {@link CommandContext#getTypedMessaging}
      */
 
-    public static void purge(CommandContext context, Criteria type, int amount, String argument) {
+    public static void purge(CommandContext context, PurgeCriteria type, int amount, String argument) {
 
         List<Message> messageList = new ArrayList<>();
 
@@ -69,7 +45,7 @@ public class PurgeUtils {
                 break;
             }
             
-            if (!context.getData().getGuildModeration().isPurgePinnedMessages() && message.isPinned()) {
+            if (!context.getData().getModeration().getPurgePinnedMessages() && message.isPinned()) {
                     continue;
             }
 
@@ -95,7 +71,7 @@ public class PurgeUtils {
                     }
                     break;
                 case USER:
-                    if (message.getAuthor().getId().equals(argument)) {
+                    if (Arrays.stream(argument.split(" ")).anyMatch(id -> message.getAuthor().getId().equals(id))) {
                         messageList.add(message);
                     }
                     break;

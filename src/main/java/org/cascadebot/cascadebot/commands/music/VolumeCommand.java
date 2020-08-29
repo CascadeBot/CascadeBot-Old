@@ -2,24 +2,22 @@ package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ConfirmUtils;
 
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class VolumeCommand implements ICommandMain {
+public class VolumeCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         CascadePlayer player = context.getMusicPlayer();
         if (context.getArgs().length == 0) {
-            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.current_volume", player.getPlayer().getVolume()));
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.current_volume", player.getVolume()));
             return;
         }
 
@@ -27,7 +25,7 @@ public class VolumeCommand implements ICommandMain {
         if (context.isArgInteger(0)) {
             volume = context.getArgAsInteger(0);
         } else {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -47,13 +45,16 @@ public class VolumeCommand implements ICommandMain {
                         new ConfirmUtils.ConfirmRunnable() {
                             @Override
                             public void execute() {
-                                player.getPlayer().setVolume(volume);
-                                context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getPlayer().getVolume()));
+                                player.setVolume(volume);
+                                if (context.getData().getMusic().getPreserveVolume()) {
+                                    context.getData().getMusic().setVolume(volume);
+                                }
+                                context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
                             }
                         });
                 return;
             } else {
-                context.getUIMessaging().sendPermissionError("volume.extreme");
+                context.getUiMessaging().sendPermissionError("volume.extreme");
                 return;
             }
         } else if (volume > 200) {
@@ -61,17 +62,20 @@ public class VolumeCommand implements ICommandMain {
             return;
         }
 
-        if (volume == context.getMusicPlayer().getPlayer().getVolume()) {
-            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getPlayer().getVolume()));
+        if (volume == context.getMusicPlayer().getVolume()) {
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_already_set", player.getVolume()));
         } else {
-            player.getPlayer().setVolume(volume);
-            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getPlayer().getVolume()));
+            player.setVolume(volume);
+            if (context.getData().getMusic().getPreserveVolume()) {
+                context.getData().getMusic().setVolume(volume);
+            }
+            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
         }
 
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MUSIC;
     }
 
@@ -81,13 +85,8 @@ public class VolumeCommand implements ICommandMain {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("volume", false);
-    }
-
-    @Override
-    public Set<Flag> getFlags() {
-        return Set.of(Flag.MUSIC_SERVICES);
     }
 
 }

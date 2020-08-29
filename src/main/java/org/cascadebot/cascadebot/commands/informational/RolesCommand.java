@@ -8,15 +8,13 @@ package org.cascadebot.cascadebot.commands.informational;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
-import java.util.Set;
-
-public class RolesCommand implements ICommandMain {
+public class RolesCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -37,7 +35,7 @@ public class RolesCommand implements ICommandMain {
                     role.getColor() == null ? context.i18n("words.default") : "#" + Integer.toHexString(role.getColor().getRGB()));
         }
 
-        context.getUIMessaging().sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
+        context.getUiMessaging().sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
     }
 
     @Override
@@ -46,12 +44,12 @@ public class RolesCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.INFORMATIONAL;
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("roles", false);
     }
 

@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.entities.RichPresence;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
@@ -23,7 +23,7 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.language.LanguageUtils;
 import org.cascadebot.shared.SecurityLevel;
 
-public class UserInfoCommand implements ICommandMain {
+public class UserInfoCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -40,13 +40,12 @@ public class UserInfoCommand implements ICommandMain {
         String statusName = "";
         EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
 
-
         if (member != null) {
             builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getTimeJoined(), context.getLocale()), true);
-            statusName = LanguageUtils.getEnumI18n(context.getLocale(), "statuses", member.getOnlineStatus());
+            statusName = LanguageUtils.i18nEnum(member.getOnlineStatus(), context.getLocale());
             if (member.getActivities().size() > 0 && member.getActivities().stream().anyMatch(activity -> activity.getType() == Activity.ActivityType.STREAMING)) {
                 status = context.globalEmote("streaming");
-                statusName = context.i18n("statuses.streaming");
+                statusName = context.i18n("enums.onlinestatus.streaming");
             } else if (member.getOnlineStatus() == OnlineStatus.ONLINE) {
                 status = context.globalEmote("online");
             } else if (member.getOnlineStatus() == OnlineStatus.OFFLINE) {
@@ -57,7 +56,6 @@ public class UserInfoCommand implements ICommandMain {
                 status = context.globalEmote("idle");
             }
         }
-
 
         builder.setTitle(userForInfo.getAsTag());
         builder.setThumbnail(userForInfo.getAvatarUrl());
@@ -75,7 +73,7 @@ public class UserInfoCommand implements ICommandMain {
 
             for (Activity activity : member.getActivities()) {
                 String gameStatus;
-                String gameType = LanguageUtils.getEnumI18n(context.getLocale(), "game_types", activity.getType());
+                String gameType = LanguageUtils.i18nEnum(activity.getType(), context.getLocale());
                 if (activity.isRich()) {
                     RichPresence presence = activity.asRichPresence();
                     gameStatus = String.format("%s **%s**", gameType, presence.getName());
@@ -97,12 +95,12 @@ public class UserInfoCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.INFORMATIONAL;
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("userinfo", true);
     }
 

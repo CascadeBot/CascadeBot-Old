@@ -12,8 +12,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
+import org.cascadebot.cascadebot.data.objects.ArgumentType;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -53,7 +56,7 @@ public class ArgumentManager {
      * @param command The command to get the argument for
      * @return The command argument containing all the sub arguments
      */
-    public Argument getCommandArgument(ICommandExecutable command) {
+    public Argument getCommandArgument(ExecutableCommand command) {
         return getArgument(command.getAbsoluteCommand());
     }
 
@@ -63,10 +66,10 @@ public class ArgumentManager {
      * @param parent The path to look for arguments under
      * @return
      */
-    private Set<Argument> getArguments(String parent) {
+    private List<Argument> getArguments(String parent) {
         Optional<JSONConfig> argumentsConfig = argumentsFile.getSubConfig(parent);
-        if (argumentsConfig.isEmpty()) return Set.of();
-        Set<Argument> arguments = new HashSet<>();
+        if (argumentsConfig.isEmpty()) return List.of();
+        List<Argument> arguments = new ArrayList<>();
         for (String key : argumentsConfig.get().getKeys(false)) {
             /*
                 Checks if the last path node contains a "_". If it does, it means this path refers to a meta key
@@ -131,6 +134,11 @@ public class ArgumentManager {
         String typeRaw = subConfig.get().getString("_type").orElse("command");
         // If no valid argument type is given, this defaults to the "command" type
         ArgumentType type = EnumUtils.isValidEnumIgnoreCase(ArgumentType.class, typeRaw) ? EnumUtils.getEnumIgnoreCase(ArgumentType.class, typeRaw) : ArgumentType.COMMAND;
+        boolean varArgs = subConfig.get().getBoolean("_varargs").orElse(false);
+
+        if (varArgs && type == ArgumentType.COMMAND) {
+            throw new IllegalArgumentException("Var args cannot be used with a command typ!");
+        }
 
         boolean displayAlone = true;
         if (id.endsWith("*")) {
@@ -156,9 +164,9 @@ public class ArgumentManager {
         Set<String> aliases = new HashSet<>();
         aliasesRaw.iterator().forEachRemaining(element -> aliases.add(element.getAsString()));
 
-        Set<Argument> subArgs = getArguments(id);
+        List<Argument> subArgs = getArguments(id);
 
-        return new Argument(newId, type, displayAlone, subArgs, aliases);
+        return new Argument(newId, type, displayAlone, varArgs, subArgs, aliases);
     }
 
 }

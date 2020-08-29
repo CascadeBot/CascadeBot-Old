@@ -8,18 +8,18 @@ package org.cascadebot.cascadebot.commands.fun;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.RandomUtils;
 
-public class RandomChoiceSubCommand implements ISubCommand {
+public class RandomChoiceSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length > 1) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.random.random_choice_result", RandomUtils.randomChoice(context.getArgs())));
         } else {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
         }
     }
 
@@ -30,6 +30,6 @@ public class RandomChoiceSubCommand implements ISubCommand {
     public String parent() { return "random"; }
 
     @Override
-    public CascadePermission getPermission() { return null; }
+    public CascadePermission permission() { return null; }
     
 }

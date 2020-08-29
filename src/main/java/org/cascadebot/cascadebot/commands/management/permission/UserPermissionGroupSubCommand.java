@@ -7,24 +7,24 @@ package org.cascadebot.cascadebot.commands.management.permission;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
-public class UserPermissionGroupSubCommand implements ISubCommand {
+public class UserPermissionGroupSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 3) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         if (!context.testForArg("put") && !context.testForArg("remove")) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
@@ -35,7 +35,7 @@ public class UserPermissionGroupSubCommand implements ISubCommand {
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(2), group -> {
-            User user = context.getData().getPermissions().getPermissionUser(member);
+            User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
             if (context.testForArg("put")) {
                 if (user.addGroup(group)) {
                     context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.put.success", member.getUser().getAsTag(), group.getName()));
@@ -65,7 +65,7 @@ public class UserPermissionGroupSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("permissions.user.group", false, Module.MANAGEMENT);
     }
 

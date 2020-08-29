@@ -34,12 +34,20 @@ public enum Locale {
         return locale.toLanguageTag();
     }
 
+    public String getLanguage() {
+        return locale.getLanguage();
+    }
+
     public String getLanguageFileName() {
         return getLanguageCode() + ".json";
     }
 
     public InputStream getLanguageFile() {
         return CascadeBot.class.getClassLoader().getResourceAsStream("lang/" + getLanguageFileName());
+    }
+
+    public String i18n(String path, Object... objects) {
+        return Language.i18n(this, path, objects);
     }
 
     public static Locale getDefaultLocale() {

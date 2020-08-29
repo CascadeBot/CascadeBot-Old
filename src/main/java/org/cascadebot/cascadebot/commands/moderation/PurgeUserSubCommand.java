@@ -7,34 +7,49 @@ package org.cascadebot.cascadebot.commands.moderation;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class PurgeUserSubCommand implements ISubCommand {
+
+public class PurgeUserSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length < 2) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         if (!context.isArgInteger(0)) {
-            context.getUIMessaging().replyUsage(this);
+            context.getUiMessaging().replyUsage();
             return;
         }
 
-        Member targetMember = null;
-        targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
-        if (targetMember == null) {
+        List<Member> members = new ArrayList<>();
+
+        for (int i = 0; i < context.getArgs().length; i++) {
+            if (i < 1) continue;
+            Member targetMember = null;
+            targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(i));
+            if (targetMember == null) {
+                continue;
+            }
+            members.add(targetMember);
+        }
+
+        if (members.isEmpty()) {
             context.getTypedMessaging().replyDanger(context.i18n("response.cannot_find_user"));
             return;
         }
 
-        PurgeUtils.purge(context, PurgeUtils.Criteria.USER, context.getArgAsInteger(0), targetMember.getUser().getId());
+        PurgeUtils.purge(context, PurgeCriteria.USER, context.getArgAsInteger(0), members.stream().map(Member::getId).collect(Collectors.joining(" ")));
     }
 
     @Override
@@ -46,6 +61,6 @@ public class PurgeUserSubCommand implements ISubCommand {
     public String parent() { return "purge"; }
 
     @Override
-    public CascadePermission getPermission() { return null; }
+    public CascadePermission permission() { return null; }
 
 }

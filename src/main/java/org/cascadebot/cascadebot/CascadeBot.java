@@ -30,9 +30,11 @@ import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
+import org.cascadebot.cascadebot.events.BotEvents;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
-import org.cascadebot.cascadebot.events.GeneralEventListener;
+import org.cascadebot.cascadebot.events.GuildEvents;
 import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
 import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
@@ -69,6 +71,7 @@ public class CascadeBot {
     private DatabaseManager databaseManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
+
     private OkHttpClient httpClient;
     private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
@@ -167,8 +170,7 @@ public class CascadeBot {
             );
         }
 
-        musicHandler = new MusicHandler(this);
-        musicHandler.buildMusic();
+        musicHandler = new MusicHandler();
 
         eventWaiter = new EventWaiter();
         gson = builder.create();
@@ -176,7 +178,8 @@ public class CascadeBot {
         try {
             DefaultShardManagerBuilder defaultShardManagerBuilder = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
-                    .addEventListeners(new GeneralEventListener())
+                    .addEventListeners(new GuildEvents())
+                    .addEventListeners(new BotEvents())
                     .addEventListeners(new ButtonEventListener())
                     .addEventListeners(new VoiceEventListener())
                     .addEventListeners(new JDAEventMetricsListener())
@@ -193,9 +196,9 @@ public class CascadeBot {
                     .setBulkDeleteSplittingEnabled(false)
                     .setEnableShutdownHook(false);
 
-            if (MusicHandler.isLavalinkEnabled()) {
-                defaultShardManagerBuilder.addEventListeners(MusicHandler.getLavalink());
-                defaultShardManagerBuilder.setVoiceDispatchInterceptor(MusicHandler.getLavalink().getVoiceInterceptor());
+            if (musicHandler.getLavalinkEnabled()) {
+                defaultShardManagerBuilder.addEventListeners(musicHandler.getLavaLink());
+                defaultShardManagerBuilder.setVoiceDispatchInterceptor(musicHandler.getLavaLink().getVoiceInterceptor());
             } else {
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
             }
@@ -213,6 +216,7 @@ public class CascadeBot {
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
+        ScheduledActionManager.loadAndRegister();
 
         Metrics.INS.cacheMetrics.addCache("guilds", GuildDataManager.getGuilds());
 

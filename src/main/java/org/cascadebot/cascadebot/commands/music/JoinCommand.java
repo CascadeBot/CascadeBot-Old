@@ -10,16 +10,15 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandMain;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.shared.Regex;
 
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 
-public class JoinCommand implements ICommandMain {
+public class JoinCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -43,10 +42,10 @@ public class JoinCommand implements ICommandMain {
         }
 
         if (!context.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_CONNECT)) {
-            context.getUIMessaging().sendBotDiscordPermError(Permission.VOICE_CONNECT);
+            context.getUiMessaging().sendBotDiscordPermError(Permission.VOICE_CONNECT);
             return;
         } else if (!context.getSelfMember().hasPermission(voiceChannel, Permission.VOICE_SPEAK)) {
-            context.getUIMessaging().sendBotDiscordPermError(Permission.VOICE_SPEAK);
+            context.getUiMessaging().sendBotDiscordPermError(Permission.VOICE_SPEAK);
             return;
         }
 
@@ -56,7 +55,7 @@ public class JoinCommand implements ICommandMain {
                 return;
             } else {
                 if (!context.hasPermission("join.other")) {
-                    context.getUIMessaging().sendPermissionError("join.other");
+                    context.getUiMessaging().sendPermissionError("join.other");
                     return;
                 }
             }
@@ -66,7 +65,7 @@ public class JoinCommand implements ICommandMain {
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.MUSIC;
     }
 
@@ -76,7 +75,7 @@ public class JoinCommand implements ICommandMain {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("join", true);
     }
 

@@ -5,13 +5,11 @@
 
 package org.cascadebot.cascadebot.utils.votes;
 
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.UnicodeConstants;
+import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
-import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
 
 import java.util.ArrayList;
@@ -34,7 +32,7 @@ public class VoteButtonGroupBuilder {
     private List<Object> voteButtons = new ArrayList<>();
     private int amount = 1; //Setting this so things don't break
 
-    private long voteTime = TimeUnit.SECONDS.toMillis(30);
+    private long voteTime = TimeUnit.SECONDS.toMillis(10);
 
     private Consumer<List<VoteResult>> finishConsumer;
 
@@ -171,5 +169,4 @@ public class VoteButtonGroupBuilder {
 
         return buttonGroup;
     }
-
 }

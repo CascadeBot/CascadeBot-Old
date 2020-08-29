@@ -5,62 +5,62 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.objects.GuildPermissions;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 
-public class GroupPermissionMoveSubCommand implements ISubCommand {
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class GroupPermissionMoveSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getPermissions().getMode() == GuildPermissions.PermissionMode.MOST_RESTRICTIVE) {
+        if (context.getData().getManagement().getPermissions().getMode() == PermissionMode.MOST_RESTRICTIVE) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.groupperms.move.wrong_mode")); //TODO provide docs link
             return;
         }
 
         if (context.getArgs().length < 1) {
-            context.getUIMessaging().replyUsage();
+            context.getUiMessaging().replyUsage();
             return;
         }
 
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (context.getArgs().length > 1 && context.isArgInteger(1)) {
-                context.getData().getPermissions().moveGroup(group, context.getArgAsInteger(1));
+                context.getData().getManagement().getPermissions().moveGroup(group, context.getArgAsInteger(1));
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.move.moved", group.getName(), context.getArg(1)));
                 return;
             }
 
-            AtomicInteger currIndex = new AtomicInteger(context.getData().getPermissions().getGroups().indexOf(group));
+            AtomicInteger currIndex = new AtomicInteger(context.getData().getManagement().getPermissions().getGroups().indexOf(group));
             ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
                 if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
                     return;
                 }
-                context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() - 1);
+                context.getData().getManagement().getPermissions().moveGroup(context.getData().getManagement().getPermissions().getGroups().get(currIndex.get()), currIndex.get() - 1);
                 currIndex.addAndGet(-1);
-                message.editMessage(getGroupsList(group, context.getData().getPermissions().getGroups())).queue();
+                message.editMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups())).queue();
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
                 if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
                     return;
                 }
-                context.getData().getPermissions().moveGroup(context.getData().getPermissions().getGroups().get(currIndex.get()), currIndex.get() + 1);
+                context.getData().getManagement().getPermissions().moveGroup(context.getData().getManagement().getPermissions().getGroups().get(currIndex.get()), currIndex.get() + 1);
                 currIndex.addAndGet(1);
-                message.editMessage(getGroupsList(group, context.getData().getPermissions().getGroups())).queue();
+                message.editMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups())).queue();
             }));
 
-            context.getUIMessaging().sendButtonedMessage(getGroupsList(group, context.getData().getPermissions().getGroups()), buttonGroup);
+            context.getUiMessaging().sendButtonedMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups()), buttonGroup);
         }, sender.getIdLong());
     }
 
@@ -99,7 +99,7 @@ public class GroupPermissionMoveSubCommand implements ISubCommand {
     }
 
     @Override
-    public CascadePermission getPermission() {
+    public CascadePermission permission() {
         return CascadePermission.of("permissions.group.move", false, Module.MANAGEMENT);
     }
 

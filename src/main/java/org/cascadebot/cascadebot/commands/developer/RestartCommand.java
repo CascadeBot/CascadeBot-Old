@@ -9,11 +9,11 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandRestricted;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
 import org.cascadebot.shared.SecurityLevel;
 
-public class RestartCommand implements ICommandRestricted {
+public class RestartCommand extends RestrictedCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -37,12 +37,12 @@ public class RestartCommand implements ICommandRestricted {
     }
 
     @Override
-    public SecurityLevel getCommandLevel() {
+    public SecurityLevel commandLevel() {
         return SecurityLevel.OWNER;
     }
 
     @Override
-    public Module getModule() {
+    public Module module() {
         return Module.DEVELOPER;
     }
 

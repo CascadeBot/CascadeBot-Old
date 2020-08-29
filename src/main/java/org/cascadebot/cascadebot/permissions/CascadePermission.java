@@ -26,7 +26,6 @@ public class CascadePermission {
     private final EnumSet<Permission> discordPerm;
     private final Module module;
 
-
     private CascadePermission(String permissionRaw, boolean defaultPerm, Module module, Permission... discordPerm) {
         this.permissionRaw = permissionRaw;
         this.defaultPerm = defaultPerm;

@@ -17,7 +17,7 @@ import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandExecutable;
+import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
@@ -25,13 +25,16 @@ import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
 import org.cascadebot.cascadebot.utils.pagination.Page;
+import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import spark.utils.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +61,7 @@ public class MessagingUI {
      * @return A {@link CompletableFuture<Message>} so you can interact with the message after it sends.
      */
     public CompletableFuture<Message> replyImage(String url) {
-        if (context.getCoreSettings().isUseEmbedForMessages()) {
+        if (context.getCoreSettings().getUseEmbedForMessages()) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
             embedBuilder.setImage(url);
             return context.getChannel().sendMessage(embedBuilder.build()).submit();
@@ -137,17 +140,19 @@ public class MessagingUI {
                     .map(p -> "`" + p + "`")
                     .collect(Collectors.joining(", "));
             String message = context.i18n("responses.no_cascade_perm_discord", permission.getPermission(context.getLocale()), discordPerms);
-            Messaging.sendDangerMessage(
+            Messaging.sendEmbedMessage(
+                    MessageType.DANGER,
                     context.getChannel(),
                     MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
-                    context.getCoreSettings().isUseEmbedForMessages()
+                    context.getCoreSettings().getUseEmbedForMessages()
             ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         } else {
             String message = context.i18n("responses.no_cascade_perm", permission.getPermission(context.getLocale()));
-            Messaging.sendDangerMessage(
+            Messaging.sendEmbedMessage(
+                    MessageType.DANGER,
                     context.getChannel(),
                     MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
-                    context.getCoreSettings().isUseEmbedForMessages()
+                    context.getCoreSettings().getUseEmbedForMessages()
             ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         }
     }
@@ -169,11 +174,11 @@ public class MessagingUI {
         replyUsage(context.getCommand());
     }
 
-    public void replyUsage(ICommandExecutable command) {
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.getUsage(command), context.getUser());
-        builder.setAuthor(context.i18n("responses.incorrect_usage_title_1"));
-        builder.setTitle(context.i18n("responses.incorrect_usage_title_2"));
-        context.getTypedMessaging().replyWarning(builder);
+    public void replyUsage(ExecutableCommand command) {
+        String usage = context.getUsage(command);
+        List<Page> pages = PageUtils.splitStringToEmbedPages(usage, context.i18n("commands.usage.title", command.command()), 1000, '\n');
+        pages.addAll(command.additionalUsagePages(context.getLocale()));
+        sendPagedMessage(pages);
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {
@@ -196,13 +201,13 @@ public class MessagingUI {
         }
     }
 
-    public void checkPlaylistOrSong(String input, List<AudioTrack> tracks, CommandContext context) {
+    public void checkPlaylistOrSong(String input, List<AudioTrack> tracks, CommandContext context, boolean playTop) {
         if (tracks.size() > 1) {
 
             Matcher matcher = YOUTUBE_VIDEO_REGEX.matcher(input);
             if (!matcher.find() || matcher.group("v") == null) {
                 context.getMusicPlayer().addTracks(tracks);
-                context.getUIMessaging().sendTracksFound(tracks);
+                context.getUiMessaging().sendTracksFound(tracks);
                 return;
             }
 
@@ -211,40 +216,52 @@ public class MessagingUI {
             ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
                 message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                context.getMusicPlayer().addTrack(selectedTrack);
-                context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
+                if (playTop) {
+                    context.getMusicPlayer().playTrack(selectedTrack);
+                } else {
+                    context.getMusicPlayer().addTrack(selectedTrack);
+                }
+                context.getUiMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.PLAYLIST, (runner, channel, message) -> {
                 message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                context.getMusicPlayer().addTracks(tracks);
-                context.getUIMessaging().sendTracksFound(tracks);
+                if (playTop) {
+                    List<AudioTrack> currentQueue = new ArrayList<>(context.getMusicPlayer().getQueue());
+                    AudioTrack topTrack = tracks.remove(0);
+                    currentQueue.addAll(0, tracks);
+                    context.getMusicPlayer().setQueue(new LinkedList<>(currentQueue));
+                    context.getMusicPlayer().playTrack(topTrack);
+                } else {
+                    context.getMusicPlayer().addTracks(tracks);
+                }
+                context.getUiMessaging().sendTracksFound(tracks);
             }));
 
-            String message = context.i18n("music.misc.load_options",selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
+            String message = context.i18n("music.misc.load_options", selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
 
             EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
             embedBuilder.setTitle(context.i18n("music.misc.load_options_title"));
             embedBuilder.setDescription(message);
 
             try {
-                context.getUIMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+                context.getUiMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
             } catch (PermissionException e) {
                 context.getTypedMessaging().replyInfo(embedBuilder.appendDescription(context.i18n("music.misc.load_options_typed", context.i18n("music.misc.load_option.track"), context.i18n("music.misc.load_option.playlist"))));
 
                 CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
                         new EventWaiter.TextResponse(event -> {
                             context.getMusicPlayer().addTrack(selectedTrack);
-                            context.getUIMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
+                            context.getUiMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
                         }, context.i18n("music.misc.load_option.track")),
                         new EventWaiter.TextResponse(event -> {
                             context.getMusicPlayer().addTracks(tracks);
-                            context.getUIMessaging().sendTracksFound(tracks);
+                            context.getUiMessaging().sendTracksFound(tracks);
                         }, context.i18n("music.misc.load_option.playlist")));
             }
 
         } else if (tracks.size() == 1) {
             context.getMusicPlayer().addTracks(tracks);
-            context.getUIMessaging().sendTracksFound(tracks);
+            context.getUiMessaging().sendTracksFound(tracks);
         } else {
             context.getTypedMessaging().replyDanger(context.i18n("music.misc.cannot_find_tracks"));
         }

@@ -7,10 +7,10 @@ package org.cascadebot.cascadebot.commands.core;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ICommandCore;
+import org.cascadebot.cascadebot.commandmeta.CoreCommand;
 import org.cascadebot.cascadebot.data.Config;
 
-public class PrefixCommand implements ICommandCore {
+public class PrefixCommand extends CoreCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -22,13 +22,13 @@ public class PrefixCommand implements ICommandCore {
                     context.getCoreSettings().setPrefix(Config.INS.getDefaultPrefix());
                     context.getTypedMessaging().replyInfo(context.i18n("commands.prefix.prefix_reset", Config.INS.getDefaultPrefix()));
                 } else {
-                    context.getUIMessaging().sendPermissionError("prefix.reset");
+                    context.getUiMessaging().sendPermissionError("prefix.reset");
                 }
                 return;
             }
 
             if (!context.hasPermission("prefix.set")) {
-                context.getUIMessaging().sendPermissionError("prefix.set");
+                context.getUiMessaging().sendPermissionError("prefix.set");
                 return;
             }
 

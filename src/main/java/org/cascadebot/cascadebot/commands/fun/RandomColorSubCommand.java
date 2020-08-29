@@ -7,18 +7,17 @@
 package org.cascadebot.cascadebot.commands.fun;
 
 import net.dv8tion.jda.api.entities.Member;
-
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ISubCommand;
+import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.RandomUtils;
 
-public class RandomColorSubCommand implements ISubCommand {
+public class RandomColorSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        context.reply(ColorUtils.getColor(RandomUtils.randomColor(), context));
+        context.reply(ColorUtils.getColorEmbed(RandomUtils.randomColor(), context));
     }
 
     @Override
@@ -28,6 +27,6 @@ public class RandomColorSubCommand implements ISubCommand {
     public String parent() { return "random"; }
 
     @Override
-    public CascadePermission getPermission() { return null; }
+    public CascadePermission permission() { return null; }
 
 }

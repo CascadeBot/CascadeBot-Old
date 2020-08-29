@@ -16,7 +16,6 @@ import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.permissions.objects.Group;
-import org.cascadebot.cascadebot.permissions.objects.PermissionAction;
 import org.cascadebot.cascadebot.permissions.objects.Result;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.shared.SecurityLevel;
@@ -64,9 +63,11 @@ public class GuildPermissions {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.OFFICIAL, SecurityLevel.CONTRIBUTOR);
         }
         // If the user is owner then they have all perms, obsv..
-        if (member.isOwner()) return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
+        if (member.isOwner()) {
+            return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
+        }
         // By default all members with the administrator perm have access to all perms; this can be turned off
-        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.isAdminsHaveAllPerms()) {
+        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.getAdminsHaveAllPerms()) {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         }
 
@@ -97,7 +98,9 @@ public class GuildPermissions {
     }
 
     private boolean hasDiscordPermissions(Member member, GuildChannel channel, Set<Permission> permissions) {
-        if (CollectionUtils.isEmpty(permissions)) return false;
+        if (CollectionUtils.isEmpty(permissions)) {
+            return false;
+        }
         if (channel != null) {
             return member.hasPermission(channel, permissions);
         } else {
@@ -107,14 +110,20 @@ public class GuildPermissions {
 
     private Result evaluateMostRestrictiveMode(User user, List<Group> userGroups, CascadePermission permission) {
         Result result = user.evaluatePermission(permission);
-        if (result.isDenied()) return result;
+        if (result.isDenied()) {
+            return result;
+        }
 
         for (Group group : userGroups) {
             Result groupResult = group.evaluatePermission(permission);
             // If the result is neutral, it has no effect on the existing result.
-            if (groupResult.isNeutral()) continue;
+            if (groupResult.isNeutral()) {
+                continue;
+            }
             // This is most restrictive mode so if any group permissions is DENY, the evaluated result is DENY.
-            if (groupResult.isDenied()) return groupResult;
+            if (groupResult.isDenied()) {
+                return groupResult;
+            }
             result = groupResult;
         }
         return result;
@@ -125,7 +134,9 @@ public class GuildPermissions {
         // Loop through the groups backwards to preserve hierarchy; groups higher up override lower groups.
         for (int i = userGroups.size() - 1; i >= 0; i--) {
             Result groupResult = userGroups.get(i).evaluatePermission(permission);
-            if (groupResult.isNeutral()) continue;
+            if (groupResult.isNeutral()) {
+                continue;
+            }
             // This overrides any previous action with no regard to what it was.
             result = groupResult;
         }
@@ -209,13 +220,6 @@ public class GuildPermissions {
     public void moveGroup(Group group, int position) throws IndexOutOfBoundsException {
         groups.remove(group);
         groups.add(position, group);
-    }
-
-    public enum PermissionMode {
-
-        HIERARCHICAL,
-        MOST_RESTRICTIVE
-
     }
 
 }
