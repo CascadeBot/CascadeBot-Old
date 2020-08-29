@@ -78,4 +78,10 @@ data class ScheduledAction(
         private constructor() : this("ugh", false)
     }
 
+    class SlowmodeActionData(val targetId: Long, val oldSlowmode: Int) : ActionData {
+        // Mongo Constructor
+        @Suppress("unused")
+        private constructor() : this(0L, 0)
+    }
+
 }

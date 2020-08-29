@@ -100,6 +100,22 @@
       "guild_member_count": "Member Count",
       "guild_id": "ID: {0}"
     },
+    "slowmode": {
+      "command": "slowmode",
+      "description": "Sets the slowmode of a channel",
+      "time_exceeded": "Maximum time for slowmode of channels is 6 hours",
+      "success": "Slowmode set to {0} in {1}",
+      "reset" : {
+        "command" : "reset",
+        "description": "Resets the slowmode to off",
+        "reset_success" : "Slowmode reset in {0}"
+      }
+    },
+    "tempslowmode":{
+      "command" : "tempslowmode",
+      "description" : "Sets the slowmode of a channel temporarily",
+      "success" : "Slowmode set to {0} in {1}\nThis will be reset in {2}"
+    },
     "userinfo": {
       "command": "userinfo",
       "description": "Returns information regarding the specified user.",
@@ -1582,6 +1598,7 @@
     "mode": "mode",
     "tag": "tag",
     "category": "category",
+    "interval": "interval",
     "content": "content",
     "module": "module",
     "member": "member",
@@ -1595,6 +1612,7 @@
     "force": "force",
     "scope": "scope",
     "url": "url",
+    "reset" : "reset",
     "channel": "channel",
     "prefix": "prefix",
     "command": "command",
