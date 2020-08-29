@@ -14,13 +14,12 @@ import org.cascadebot.cascadebot.utils.buttons.PersistentButton
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 import java.util.ArrayList
 
-class TodoList(ownerId: Long) {
+class TodoList(val ownerId: Long) {
 
     val items: MutableList<TodoListItem> = ArrayList()
     var messageId: Long = -1
     var channelId: Long = -1
     var currentItem = 0
-    var ownerId: Long = 0
 
     //List of users id who are able to access this list
     private val users: MutableList<Long> = ArrayList()
