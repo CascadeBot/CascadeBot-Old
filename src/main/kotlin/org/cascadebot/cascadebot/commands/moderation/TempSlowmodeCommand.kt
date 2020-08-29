@@ -21,7 +21,6 @@ import java.time.temporal.ChronoUnit
 class TempSlowmodeCommand : MainCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
-        // <interval> <duration>  [channel]
         if (context.args.size < 2) {
             context.uiMessaging.replyUsage()
             return
@@ -41,12 +40,15 @@ class TempSlowmodeCommand : MainCommand() {
 
         var channel: TextChannel = context.channel
         if (context.args.size == 3) {
-            channel = DiscordUtils.getTextChannel(context.guild, context.getArg(2))
-            if (channel == null) {
-                context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(2)))
+            val tempChannel = DiscordUtils.getTextChannel(context.guild, context.getArg(2))
+            if (tempChannel != null) {
+                channel = tempChannel
+            } else {
+                context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
                 return
             }
         }
+
         if (!context.member.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
             context.uiMessaging.sendUserDiscordPermError(Permission.MANAGE_CHANNEL)
             return

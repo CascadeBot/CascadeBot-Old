@@ -23,12 +23,15 @@ class SlowmodeCommand : MainCommand() {
 
         var channel: TextChannel = context.channel
         if (context.args.size == 2) {
-            channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
-            if (channel == null) {
+            val tempChannel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
+            if (tempChannel != null) {
+                channel = tempChannel
+            } else {
                 context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
                 return
             }
         }
+
         if (!context.member.hasPermission(channel, Permission.MANAGE_CHANNEL)) {
             context.uiMessaging.sendUserDiscordPermError(Permission.MANAGE_CHANNEL)
             return
