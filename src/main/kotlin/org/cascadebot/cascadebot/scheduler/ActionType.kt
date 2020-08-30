@@ -2,14 +2,15 @@ package org.cascadebot.cascadebot.scheduler
 
 import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.entities.IMentionable
-import net.dv8tion.jda.api.exceptions.ErrorResponseException
-import net.dv8tion.jda.api.requests.ErrorResponse
+import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.data.language.Language
+import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.messaging.MessageType
+import org.cascadebot.cascadebot.messaging.Messaging
 import org.cascadebot.cascadebot.messaging.embed
-import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.FormatUtils
-import org.cascadebot.cascadebot.utils.toKotlin
+import org.cascadebot.cascadebot.utils.getMutedRole
+import org.cascadebot.cascadebot.utils.toCapitalized
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
@@ -17,9 +18,63 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
 enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (ScheduledAction) -> Unit) {
-    UNMUTE(ScheduledAction.ModerationActionData::class, { action -> TODO() }),
-    UNBAN(ScheduledAction.ModerationActionData::class, { action -> TODO() }),
-    REMINDER(ScheduledAction.ReminderActionData::class, ::reminderAction);
+    REMINDER(ScheduledAction.ReminderActionData::class, ::reminderAction),
+    UNMUTE(ScheduledAction.ModerationActionData::class, { action ->
+        if (action.data is ScheduledAction.ModerationActionData) {
+            action.guild?.let { guild ->
+                val member = guild.getMemberById(action.data.targetId)
+                if (member != null) {
+                    guild.removeRoleFromMember(member, guild.getMutedRole()).apply {
+                        val userName = guild.getMemberById(action.data.targetId)?.user?.asTag ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
+                        reason(Language.getGuildLocale(guild.idLong).i18n("mod_actions.temp_mute.unmute_reason", userName))
+                        queue(null) {
+                            action.channel?.let channelLet@{ channel ->
+                                if (it is net.dv8tion.jda.api.exceptions.PermissionException) {
+                                    // TODO: Log something to modlog
+                                    return@channelLet
+                                }
+                                Messaging.sendExceptionMessage(channel, "Failed to unmute user!", it)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }),
+    UNBAN(ScheduledAction.ModerationActionData::class, { action ->
+        if (action.data is ScheduledAction.ModerationActionData) {
+            action.guild?.let { guild ->
+                guild.unban(action.data.targetId.toString()).apply {
+                    val userName = org.cascadebot.cascadebot.CascadeBot.INS.shardManager.getUserById(action.data.targetId)
+                            ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
+                    reason(Language.getGuildLocale(guild.idLong).i18n("mod_actions.temp_mute.unmute_reason", userName))
+                    queue(null) {
+                        action.channel?.let channelLet@{ channel ->
+                            if (it is net.dv8tion.jda.api.exceptions.PermissionException) {
+                                // TODO: Log something to modlog
+                                return@channelLet
+                            }
+                            Messaging.sendExceptionMessage(channel, "Failed to unban user!", it)
+                        }
+                    }
+                }
+            }
+        }
+    }),
+    UNSLOWMODE(ScheduledAction.SlowmodeActionData::class, { action ->
+        if (action.data is ScheduledAction.SlowmodeActionData) {
+            action.guild?.let { guild ->
+                val targetChannel = guild.getGuildChannelById(action.data.targetId)
+                targetChannel?.manager?.setSlowmode(action.data.oldSlowmode)?.queue(null, {
+                    if (it is PermissionException) {
+                        action.channel?.let { channel -> Messaging.sendMessage(MessageType.DANGER, channel, i18n(action.guildId, "responses.no_discord_perm_bot", it.permission.name)) }
+                    } else {
+                        action.channel?.let { channel -> Messaging.sendExceptionMessage(channel, "Couldn't unslowmode %s".format(targetChannel), it) }
+                    }
+                })
+            }
+        }
+    });
 
     fun verifyDataType(data: ScheduledAction.ActionData) = data::class.isSubclassOf(expectedClass)
 }

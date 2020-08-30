@@ -5,6 +5,10 @@
 
 package org.cascadebot.cascadebot.utils
 
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.Role
+import org.cascadebot.cascadebot.data.managers.GuildDataManager
+import org.cascadebot.cascadebot.data.objects.GuildData
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Supplier
@@ -63,6 +67,26 @@ fun String.toSentenceCase() : String = this.split(".").joinToString(".") { it.to
  */
 fun Double.toPercentage(dp: Int = 0): String {
     return (round((this * 100) * 10.0.pow(dp)) / 10.0.pow(dp)).roundToInt().toString() + "%"
+}
+
+fun Guild.getMutedRole(): Role {
+    val guildData = GuildDataManager.getGuildData(this.idLong)
+    return this.getRoleById(guildData.mutedRoleId) ?: getOrCreateMutedRole(this, guildData)
+}
+
+private fun getOrCreateMutedRole(guild: Guild, guildData: GuildData): Role {
+    val muteRoleName = guildData.moderation.muteRoleName
+    val roleByName = guild.getRolesByName(muteRoleName, true)
+    return if (roleByName.isEmpty()) {
+        guild.createRole().setName(muteRoleName).complete().also {
+            guild.modifyRolePositions()
+                    .selectPosition(it)
+                    .moveTo((guild.selfMember.roles.first()?.position?.minus(1)) ?: 0)
+                    .complete()
+        }
+    } else {
+        roleByName[0]
+    }.also { guildData.mutedRoleId = it.idLong }
 }
 
 /**
