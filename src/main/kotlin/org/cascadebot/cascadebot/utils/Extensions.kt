@@ -5,8 +5,11 @@
 
 package org.cascadebot.cascadebot.utils
 
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Role
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
+import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.data.objects.GuildData
 import java.util.function.Consumer
@@ -69,12 +72,36 @@ fun Double.toPercentage(dp: Int = 0): String {
     return (round((this * 100) * 10.0.pow(dp)) / 10.0.pow(dp)).roundToInt().toString() + "%"
 }
 
+/**
+ * Gets the muted role for this guild. If the muted role ID is not cached in the guild-data
+ * or the role ID that was cached was invalid, a new role is automatically created.
+ *
+ * @return The Muted role for this guild.
+ * @throws InsufficientPermissionException If the logged in account does not have the [Permission.MANAGE_ROLES] Permission.
+ * @see getOrCreateMutedRole
+ */
 fun Guild.getMutedRole(): Role {
     val guildData = GuildDataManager.getGuildData(this.idLong)
     return this.getRoleById(guildData.mutedRoleId) ?: getOrCreateMutedRole(this, guildData)
 }
 
+/**
+ * Attempts to get the muted role that already exists. Using the `muteRoleName` property from the
+ * moderation settings, it first attempts to search the role by name. If multiple roles exist with
+ * the same name, the first role in the list is used.
+ *
+ * If no role is found by name, this method creates a role at the highest level the bot is able to.
+ *
+ * Once an appropriate role is found, the id of the role is put into the `muteRoleId` field in the guild data.
+ *
+ * @param guild The guild to get the Muted role for.
+ * @param guildData The data for the guild in question.
+ * @return The Muted role for the specified guild.
+ * @throws InsufficientPermissionException If the logged in account does not have the [Permission.MANAGE_ROLES] Permission.
+ * @throws IllegalArgumentException If the guildData does not match the guild.
+ */
 private fun getOrCreateMutedRole(guild: Guild, guildData: GuildData): Role {
+    require(guild.idLong == guildData.guildId)
     val muteRoleName = guildData.moderation.muteRoleName
     val roleByName = guild.getRolesByName(muteRoleName, true)
     return if (roleByName.isEmpty()) {
