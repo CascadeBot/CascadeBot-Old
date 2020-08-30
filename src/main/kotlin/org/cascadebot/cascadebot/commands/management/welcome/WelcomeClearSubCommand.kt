@@ -22,18 +22,18 @@ class WelcomeClearSubCommand : SubCommand() {
             return
         }
 
-        if (ConfirmUtils.hasConfirmedAction(actionKey, context.user.idLong)) {
-            ConfirmUtils.completeAction(actionKey, context.user.idLong)
+        if (ConfirmUtils.hasRegisteredAction(actionKey, context.user.idLong)) {
+            ConfirmUtils.confirmAction(actionKey, context.user.idLong)
             return
         }
 
-        ConfirmUtils.confirmAction(context.user.idLong,
+        ConfirmUtils.registerForConfirmation(context.user.idLong,
                 actionKey,
                 context.channel,
                 MessageType.WARNING,
                 context.i18n("commands.welcome.clear.confirm_warning"),
-                true,
-                Runnable {
+                isCancellable = true,
+                action = Runnable {
                     context.data.management.greetings.welcomeMessages.clear()
                     context.data.management.greetings.welcomeChannel = null
                     context.typedMessaging.replySuccess(context.i18n("commands.welcome.clear.clear_success"))

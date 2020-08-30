@@ -34,7 +34,7 @@ public class VolumeCommand extends MainCommand {
             return;
         } else if (volume > 100 && volume <= 200) {
             if (context.hasPermission("volume.extreme")) {
-                ConfirmUtils.confirmAction(sender.getIdLong(),
+                ConfirmUtils.registerForConfirmation(sender.getIdLong(),
                         "volume-extreme",
                         context.getChannel(),
                         MessageType.WARNING,

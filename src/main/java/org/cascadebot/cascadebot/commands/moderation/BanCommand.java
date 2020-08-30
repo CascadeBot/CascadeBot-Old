@@ -47,7 +47,7 @@ public class BanCommand extends MainCommand {
             }
 
             String finalReason = reason;
-            ConfirmUtils.confirmAction(
+            ConfirmUtils.registerForConfirmation(
                     sender.getIdLong(),
                     "forceban_user",
                     context.getChannel(),
