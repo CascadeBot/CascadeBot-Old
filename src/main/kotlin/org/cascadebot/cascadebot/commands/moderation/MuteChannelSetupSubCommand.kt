@@ -45,10 +45,8 @@ class MuteChannelSetupSubCommand : SubCommand() {
                 MessageType.WARNING,
                 context.i18n("commands.mute.channelsetup.warning"),
                 true,
-                object : ConfirmUtils.ConfirmRunnable() {
-                    override fun execute() {
-                        channelSetup(context)
-                    }
+                Runnable {
+                    channelSetup(context)
                 }
         )
     }

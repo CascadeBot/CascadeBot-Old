@@ -54,19 +54,14 @@ public class BanCommand extends MainCommand {
                     MessageType.DANGER,
                     context.i18n("commands.ban.forcefully_ban"),
                     true,
-                    new ConfirmUtils.ConfirmRunnable() {
-                        @Override
-                        public void execute() {
-                            CascadeBot.INS.getModerationManager().ban(
-                                    context,
-                                    ModAction.FORCE_BAN,
-                                    targetUser,
-                                    sender,
-                                    finalReason,
-                                    7 // TODO: add this as an arg
-                            );
-                        }
-                    });
+                    () -> CascadeBot.INS.getModerationManager().ban(
+                            context,
+                            ModAction.FORCE_BAN,
+                            targetUser,
+                            sender,
+                            finalReason,
+                            7 // TODO: add this as an arg
+                    ));
             return;
         } else {
             // If the member is not null, we can safely get the user from the member.

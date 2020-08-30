@@ -33,11 +33,9 @@ class GoodbyeClearSubCommand : SubCommand() {
                 MessageType.WARNING,
                 context.i18n("commands.goodbye.clear.confirm_warning"),
                 true,
-                object : ConfirmUtils.ConfirmRunnable() {
-                    override fun execute() {
-                        context.data.management.greetings.goodbyeMessages.clear()
-                        context.typedMessaging.replySuccess(context.i18n("commands.goodbye.clear.clear_success"))
-                    }
+                Runnable {
+                    context.data.management.greetings.goodbyeMessages.clear()
+                    context.typedMessaging.replySuccess(context.i18n("commands.goodbye.clear.clear_success"))
                 }
         )
 

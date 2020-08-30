@@ -42,15 +42,12 @@ public class VolumeCommand extends MainCommand {
                         0,
                         TimeUnit.SECONDS.toMillis(30),
                         true,
-                        new ConfirmUtils.ConfirmRunnable() {
-                            @Override
-                            public void execute() {
-                                player.setVolume(volume);
-                                if (context.getData().getMusic().getPreserveVolume()) {
-                                    context.getData().getMusic().setVolume(volume);
-                                }
-                                context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
+                        () -> {
+                            player.setVolume(volume);
+                            if (context.getData().getMusic().getPreserveVolume()) {
+                                context.getData().getMusic().setVolume(volume);
                             }
+                            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
                         });
                 return;
             } else {

@@ -33,12 +33,10 @@ class WelcomeClearSubCommand : SubCommand() {
                 MessageType.WARNING,
                 context.i18n("commands.welcome.clear.confirm_warning"),
                 true,
-                object : ConfirmUtils.ConfirmRunnable() {
-                    override fun execute() {
-                        context.data.management.greetings.welcomeMessages.clear()
-                        context.data.management.greetings.welcomeChannel = null
-                        context.typedMessaging.replySuccess(context.i18n("commands.welcome.clear.clear_success"))
-                    }
+                Runnable {
+                    context.data.management.greetings.welcomeMessages.clear()
+                    context.data.management.greetings.welcomeChannel = null
+                    context.typedMessaging.replySuccess(context.i18n("commands.welcome.clear.clear_success"))
                 }
         )
 

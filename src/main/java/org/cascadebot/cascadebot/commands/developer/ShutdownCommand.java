@@ -32,12 +32,8 @@ public class ShutdownCommand extends RestrictedCommand {
                         MessageType.DANGER,
                         "It looks like the bot is running in ***production*** mode, **do you _really_ want to do this?** \n If so, simply repeat the command again. This confirmation will expire in one minute!",
                         true,
-                        new ConfirmUtils.ConfirmRunnable() {
-                            @Override
-                            public void execute() {
-                                shutdown(context);
-                            }
-                        });
+                        () -> shutdown(context)
+                );
                 return;
             }
             ConfirmUtils.completeAction("shutdown_bot", sender.getIdLong());
