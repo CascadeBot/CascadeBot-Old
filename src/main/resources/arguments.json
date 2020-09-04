@@ -316,9 +316,63 @@
       "_type": "optional"
     }
   },
+  "lock": {
+    "channel*": {
+      "_type": "optional"
+    },
+    "role*": {
+      "_type": "optional",
+      "channel*": {
+        "_type": "optional"
+      }
+    },
+    "member*": {
+      "_type": "optional",
+      "channel*": {
+        "_type": "optional"
+      }
+    }
+  },
+  "templock*" : {
+    "duration" : {
+      "_type" : "required",
+      "channel" : {
+        "_type" : "optional"
+      },
+      "role*" : {
+        "_type" : "optional",
+        "channel" : {
+          "_type" : "optional"
+        }
+      },
+      "member*" : {
+        "_type" : "optional",
+        "channel" : {
+          "_type" : "optional"
+        }
+      }
+    }
+  },
   "loop*": {
     "mode": {
       "_type": "optional"
+    }
+  },
+  "unlock": {
+    "channel*": {
+      "_type": "optional"
+    },
+    "role*": {
+      "_type": "optional",
+      "channel*": {
+        "_type": "optional"
+      }
+    },
+    "member*": {
+      "_type": "optional",
+      "channel*": {
+        "_type": "optional"
+      }
     }
   },
   "play*": {

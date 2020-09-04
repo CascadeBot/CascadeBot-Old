@@ -1,7 +1,10 @@
 package org.cascadebot.cascadebot.scheduler
 
 import net.dv8tion.jda.api.MessageBuilder
+import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.IMentionable
+import net.dv8tion.jda.api.entities.IPermissionHolder
+import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Language.i18n
@@ -14,8 +17,10 @@ import org.cascadebot.cascadebot.utils.toCapitalized
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
+import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
+
 
 enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (ScheduledAction) -> Unit) {
     REMINDER(ScheduledAction.ReminderActionData::class, ::reminderAction),
@@ -25,7 +30,8 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
                 val member = guild.getMemberById(action.data.targetId)
                 if (member != null) {
                     guild.removeRoleFromMember(member, guild.getMutedRole()).apply {
-                        val userName = guild.getMemberById(action.data.targetId)?.user?.asTag ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
+                        val userName = guild.getMemberById(action.data.targetId)?.user?.asTag
+                                ?: Language.getGuildLocale(guild.idLong).i18n("words.unknown").toCapitalized()
                         reason(Language.getGuildLocale(guild.idLong).i18n("mod_actions.temp_mute.unmute_reason", userName))
                         queue(null) {
                             action.channel?.let channelLet@{ channel ->
@@ -74,6 +80,39 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
                 })
             }
         }
+    }),
+    UNLOCK(ScheduledAction.LockActionData::class, { action ->
+        if (action.data is ScheduledAction.LockActionData) {
+            action.guild?.let { guild ->
+                var targetChannel = action.channel?.id?.let { guild.getGuildChannelById(it) }
+                if (action.data.targetChannelID != 0L) {
+                    targetChannel = guild.getGuildChannelById(action.data.targetChannelID)
+                }
+                val target: ISnowflake? =
+                        guild.getRoleById(action.data.targetRoleID)
+                                ?: guild.getMemberById(action.data.targetMemberID)
+                                ?: guild.publicRole
+
+                val empty = EnumSet.noneOf(Permission::class.java)
+                val perm = EnumSet.of(Permission.MESSAGE_WRITE)
+
+                targetChannel?.getPermissionOverride(target as IPermissionHolder)?.manager
+                        ?.setAllow(if (action.data.oldPermission.toString() == "true") perm else empty)
+                        ?.setDeny(if (action.data.oldPermission.toString() == "false") perm else empty)
+                        ?.clear(if (action.data.oldPermission.toString() == "null") perm else empty)
+                        // TODO: There's probably a better way to deal with nullable booleans... do it
+                        ?.queue(null, {
+                            if (it is PermissionException) {
+                                action.channel?.let { channel -> Messaging.sendMessage(MessageType.DANGER, channel, i18n(action.guildId, "responses.no_discord_perm_bot", it.permission.name)) }
+                            } else {
+                                action.channel?.let { channel -> Messaging.sendExceptionMessage(channel, "Couldn't unlock %s".format(targetChannel), it) }
+                            }
+                        })
+
+            }
+
+
+        }
     });
 
     fun verifyDataType(data: ScheduledAction.ActionData) = data::class.isSubclassOf(expectedClass)
@@ -91,11 +130,11 @@ private fun reminderAction(action: ScheduledAction) {
             action.user?.openPrivateChannel()?.queue { channel ->
                 channel.sendMessage(MessageBuilder()
                         .setEmbed(
-                            embed(MessageType.INFO) {
-                                description = (warningText?.let { "$it\n\n" } ?: "") +
-                                        Language.i18n(action.guildId, "scheduled_actions.reminder_text") +
-                                        "\n```\n${action.data.reminder}\n```"
-                            }.build()
+                                embed(MessageType.INFO) {
+                                    description = (warningText?.let { "$it\n\n" } ?: "") +
+                                            Language.i18n(action.guildId, "scheduled_actions.reminder_text") +
+                                            "\n```\n${action.data.reminder}\n```"
+                                }.build()
                         )
                         .build()
                 ).queue(null) {

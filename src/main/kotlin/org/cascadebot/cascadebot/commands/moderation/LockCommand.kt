@@ -5,21 +5,21 @@ import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.data.managers.LockManager
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import java.util.*
 
 class LockCommand : MainCommand() {
     override fun onCommand(sender: Member, context: CommandContext) {
-        // Args: [role/member/channel] [channel]
-
         var channel: TextChannel = context.channel
         if (context.args.size == 2) {
             channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
-                    ?: return context.reply("Invalid channel")
+                    ?: return context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
 
         }
 
@@ -27,23 +27,36 @@ class LockCommand : MainCommand() {
             DiscordUtils.getRole(context.getArg(0), context.guild)
                     ?: DiscordUtils.getMember(context.guild, context.getArg(0))
                     ?: DiscordUtils.getTextChannel(context.guild, context.getArg(0))
+                    ?: return context.typedMessaging.replyDanger(context.i18n("commands.lock.invalid_argument", context.getArg(0)))
         } else {
             context.channel
         }
-        var name: String? = null
-        when (temp) {
-            is Role -> {
-                channel.manager.putPermissionOverride(temp, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
-                name = temp.name
-            }
-            is Member -> {
-                channel.manager.putPermissionOverride(temp, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
-                name = temp.effectiveName
-            }
-            is TextChannel -> temp.manager.putPermissionOverride(context.guild.publicRole, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
-        }
-        context.typedMessaging.replySuccess(if (temp is TextChannel) "%s locked".format(temp.name) else "Channel locked for %s".format(name))
 
+        var name: String? = null
+        try {
+            when (temp) {
+                is Role -> {
+                    LockManager.add(channel, temp)
+                    channel.manager.putPermissionOverride(temp, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
+                    name = "%s %s".format(context.i18n("arguments.role"), temp.asMention)
+                }
+                is Member -> {
+                    LockManager.add(channel, temp)
+                    channel.manager.putPermissionOverride(temp, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
+                    name = "%s %s".format(context.i18n("arguments.member"), temp.asMention)
+                }
+                is TextChannel -> {
+                    LockManager.add(temp)
+                    temp.manager.putPermissionOverride(context.guild.publicRole, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
+                }
+            }
+        } catch (e: PermissionException) {
+            context.uiMessaging.sendBotDiscordPermError(e.permission)
+            return
+        }
+
+
+        context.typedMessaging.replySuccess(if (temp is TextChannel) context.i18n("commands.lock.text_success", temp.name) else name?.let { context.i18n("commands.lock.success", channel.name, it) })
     }
 
 

@@ -42,6 +42,8 @@ class GuildData(@field:Id val guildId: Long) {
     val music = GuildSettingsMusic()
     //endregion
 
+    var lockedChannels: MutableMap<String, MutableMap<String, Int>> = mutableMapOf()
+
     //region Transient fields
     @Transient
     val buttonsCache = ButtonsCache(5)

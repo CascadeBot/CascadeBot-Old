@@ -105,16 +105,36 @@
       "description": "Sets the slowmode of a channel",
       "time_exceeded": "Maximum time for slowmode of channels is 6 hours",
       "success": "Slowmode set to {0} in {1}",
-      "reset" : {
-        "command" : "reset",
+      "reset": {
+        "command": "reset",
         "description": "Resets the slowmode to off",
-        "reset_success" : "Slowmode reset in {0}"
+        "reset_success": "Slowmode reset in {0}"
       }
     },
-    "tempslowmode":{
-      "command" : "tempslowmode",
-      "description" : "Sets the slowmode of a channel temporarily",
-      "success" : "Slowmode set to {0} in {1}\nThis will be reset in {2}"
+    "tempslowmode": {
+      "command": "tempslowmode",
+      "description": "Sets the slowmode of a channel temporarily",
+      "success": "Slowmode set to {0} in {1}\nThis will be reset in {2}"
+    },
+    "lock": {
+      "command": "lock",
+      "description": "Locks a channel for a member, role or everyone",
+      "text_success": "Channel `{0}` locked",
+      "success": "Channel `{0}` has been locked for {1}",
+      "invalid_argument": "Could not find a channel, role or member matching `{0}`"
+    },
+    "templock": {
+      "command": "templock",
+      "descripton": "Locks a channel for a member, role or everyone for a given amount of time",
+      "text_success": "Channel `{0}` locked\nThis will be reset in {1}",
+      "success": "Channel `{0}` has been locked for {1}\nThis will be reset in {2}"
+    },
+    "unlock": {
+      "command": "unlock",
+      "description": "Unlocks a channel for a member, role or everyone",
+      "text_success" : "Channel `{0}` unlocked",
+      "success" : "Channel `{0}` has been unlocked for {1}",
+      "fail" : "Channel `{0}` is not locked for {1}"
     },
     "userinfo": {
       "command": "userinfo",
@@ -1612,7 +1632,7 @@
     "force": "force",
     "scope": "scope",
     "url": "url",
-    "reset" : "reset",
+    "reset": "reset",
     "channel": "channel",
     "prefix": "prefix",
     "command": "command",
