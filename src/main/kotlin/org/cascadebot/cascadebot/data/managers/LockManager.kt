@@ -1,37 +1,39 @@
 package org.cascadebot.cascadebot.data.managers
 
 
+import javassist.NotFoundException
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.*
+import net.dv8tion.jda.api.entities.Guild
+import net.dv8tion.jda.api.entities.IPermissionHolder
+import net.dv8tion.jda.api.entities.ISnowflake
+import net.dv8tion.jda.api.entities.TextChannel
 import java.util.*
 
 object LockManager {
 
-    // perm values: 0 = null/not specified, 1 = false, 2 = true
-    fun add(channel: TextChannel, target: Role) {
+    private fun getPerm(channel: TextChannel, target: ISnowflake): Int {
         var perm = 0
-        if (channel.getPermissionOverride(target)?.denied?.contains(Permission.MESSAGE_WRITE)!!) perm = 1
-        if (channel.getPermissionOverride(target)?.allowed?.contains(Permission.MESSAGE_WRITE)!!) perm = 2
-        GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels[channel.id]?.put(target.id, perm)
+        try {
+            if (channel.getPermissionOverride(target as IPermissionHolder)?.denied?.contains(Permission.MESSAGE_WRITE)!!) perm = 1
+            if (channel.getPermissionOverride(target)?.allowed?.contains(Permission.MESSAGE_WRITE)!!) perm = 2
+        } catch (e: NullPointerException) {
+            null
+        }
+        return perm
+    }
+
+    // perm values: 0 = null/not specified, 1 = false, 2 = true
+    fun add(channel: TextChannel, target: ISnowflake) {
+        GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels[channel.id] = mutableMapOf(Pair(target.id, getPerm(channel, target)))
     }
 
     fun add(channel: TextChannel) {
-        var perm = 0
-        if (channel.getPermissionOverride(channel.guild.publicRole)?.denied?.contains(Permission.MESSAGE_WRITE)!!) perm = 1
-        if (channel.getPermissionOverride(channel.guild.publicRole)?.allowed?.contains(Permission.MESSAGE_WRITE)!!) perm = 2
-        GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels[channel.id]?.put(channel.guild.publicRole.id, perm)
+        GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels[channel.id] = mutableMapOf(Pair(channel.guild.publicRole.id, getPerm(channel, channel.guild.publicRole)))
     }
-
-    fun add(channel: TextChannel, target: Member) {
-        var perm = 0
-        if (channel.getPermissionOverride(target)?.denied?.contains(Permission.MESSAGE_WRITE)!!) perm = 1
-        if (channel.getPermissionOverride(target)?.allowed?.contains(Permission.MESSAGE_WRITE)!!) perm = 2
-        GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels[channel.id]?.put(target.id, perm)
-
-    }
-
+    
     fun unlock(guild: Guild, channel: TextChannel, target: ISnowflake) {
-        val state = GuildDataManager.getGuildData(guild.idLong).lockedChannels[channel.id]?.get(target.id)
+        val state = GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels[channel.id]?.get(target.id)
+                ?: throw NotFoundException("")
         val empty = EnumSet.noneOf(net.dv8tion.jda.api.Permission::class.java)
         val perm = EnumSet.of(Permission.MESSAGE_WRITE)
 

@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.commands.moderation
 
+import javassist.NotFoundException
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Member
@@ -45,6 +46,9 @@ class UnlockCommand : MainCommand() {
             }
         } catch (e: PermissionException) {
             context.uiMessaging.sendBotDiscordPermError(e.permission)
+            return
+        } catch (e: NotFoundException) {
+            context.typedMessaging.replyWarning(context.i18n("commands.unlock.fail", if (temp is TextChannel) context.guild.publicRole.asMention else name!!))
             return
         }
         context.typedMessaging.replySuccess(if (temp is TextChannel) context.i18n("commands.unlock.text_success", temp.name) else name?.let { context.i18n("commands.unlock.success", channel.name, it) })

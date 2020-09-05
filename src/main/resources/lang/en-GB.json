@@ -134,7 +134,7 @@
       "description": "Unlocks a channel for a member, role or everyone",
       "text_success" : "Channel `{0}` unlocked",
       "success" : "Channel `{0}` has been unlocked for {1}",
-      "fail" : "Channel `{0}` is not locked for {1}"
+      "fail" : "Channel is not locked for {0}"
     },
     "userinfo": {
       "command": "userinfo",
