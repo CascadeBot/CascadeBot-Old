@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class ParserUtils {
 
-    private static final Pattern TEXT_TIME_PARSER = Pattern.compile("(?<hours>\\d+)h|(?<minutes>\\d+)m|(?<seconds>\\d+)s");
+    private static final Pattern TEXT_TIME_PARSER = Pattern.compile("(?<weeks>\\d+)w|(?<days>\\d+)d|(?<hours>\\d+)h|(?<minutes>\\d+)m|(?<seconds>\\d+)s");
     private static final Pattern DIGITAL_TIME_REGEX = Pattern.compile("(\\d+):(\\d+)(?::(\\d+))?");
 
     public static long parseTime(String input) {
@@ -25,28 +25,44 @@ public class ParserUtils {
         Matcher matcher = TEXT_TIME_PARSER.matcher(input);
 
         // These booleans represent whether the unit of time has been found yet
+        boolean weeksParsed = false;
+        boolean daysParsed = false;
         boolean hoursParsed = false;
         boolean minutesParsed = false;
         boolean secondsParsed = false;
 
+        String allowOnceMessage = "Only one of each time unit from the list: w, d, h, m, s is allowed!";
+
         // The result in milliseconds
         long millis = 0;
         while (matcher.find()) {
-            if (matcher.group("hours") != null) {
+            if (matcher.group("weeks") != null) {
+                if (weeksParsed && onlyAllowOnce) {
+                    throw new IllegalArgumentException(allowOnceMessage);
+                }
+                weeksParsed = true;
+                millis += TimeUnit.DAYS.toMillis(Long.parseLong(matcher.group("weeks")) * 7);
+            } else if (matcher.group("days") != null) {
+                if (daysParsed && onlyAllowOnce) {
+                    throw new IllegalArgumentException(allowOnceMessage);
+                }
+                daysParsed = true;
+                millis += TimeUnit.DAYS.toMillis(Long.parseLong(matcher.group("days")));
+            } else if (matcher.group("hours") != null) {
                 if (hoursParsed && onlyAllowOnce) {
-                    throw new IllegalArgumentException("Only one of each time unit from the list: h, m, s is allowed!");
+                    throw new IllegalArgumentException(allowOnceMessage);
                 }
                 hoursParsed = true;
                 millis += TimeUnit.HOURS.toMillis(Long.parseLong(matcher.group("hours")));
             } else if (matcher.group("minutes") != null) {
                 if (minutesParsed && onlyAllowOnce) {
-                    throw new IllegalArgumentException("Only one of each time unit from the list: h, m, s is allowed!");
+                    throw new IllegalArgumentException(allowOnceMessage);
                 }
                 minutesParsed = true;
                 millis += TimeUnit.MINUTES.toMillis(Long.parseLong(matcher.group("minutes")));
             } else if (matcher.group("seconds") != null) {
                 if (secondsParsed && onlyAllowOnce) {
-                    throw new IllegalArgumentException("Only one of each time unit from the list: h, m, s is allowed!");
+                    throw new IllegalArgumentException(allowOnceMessage);
                 }
                 secondsParsed = true;
                 millis += TimeUnit.SECONDS.toMillis(Long.parseLong(matcher.group("seconds")));

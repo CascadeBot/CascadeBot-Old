@@ -31,9 +31,10 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
+import org.cascadebot.cascadebot.events.BotEvents;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
-import org.cascadebot.cascadebot.events.GeneralEventListener;
+import org.cascadebot.cascadebot.events.GuildEvents;
 import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
 import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
@@ -132,7 +133,6 @@ public class CascadeBot {
 
 
     private void init() {
-
         GsonBuilder builder = new GsonBuilder();
         try {
             Config.init("config.yml");
@@ -178,7 +178,8 @@ public class CascadeBot {
         try {
             DefaultShardManagerBuilder defaultShardManagerBuilder = new DefaultShardManagerBuilder()
                     .addEventListeners(new CommandListener())
-                    .addEventListeners(new GeneralEventListener())
+                    .addEventListeners(new GuildEvents())
+                    .addEventListeners(new BotEvents())
                     .addEventListeners(new ButtonEventListener())
                     .addEventListeners(new VoiceEventListener())
                     .addEventListeners(new JDAEventMetricsListener())

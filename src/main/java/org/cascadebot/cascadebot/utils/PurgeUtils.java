@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -44,7 +45,7 @@ public class PurgeUtils {
                 break;
             }
             
-            if (!context.getData().getModeration().isPurgePinnedMessages() && message.isPinned()) {
+            if (!context.getData().getModeration().getPurgePinnedMessages() && message.isPinned()) {
                     continue;
             }
 
@@ -70,7 +71,7 @@ public class PurgeUtils {
                     }
                     break;
                 case USER:
-                    if (message.getAuthor().getId().equals(argument)) {
+                    if (Arrays.stream(argument.split(" ")).anyMatch(id -> message.getAuthor().getId().equals(id))) {
                         messageList.add(message);
                     }
                     break;

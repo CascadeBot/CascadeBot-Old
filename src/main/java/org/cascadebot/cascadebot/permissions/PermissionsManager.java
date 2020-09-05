@@ -73,6 +73,7 @@ public class PermissionsManager {
             }
         }
 
+        registerPermission(CascadePermission.ALL_PERMISSIONS);
         registerPermission(CascadePermission.of("module.info", false, Module.INFORMATIONAL));
         registerPermission(CascadePermission.of("module.fun", false, Module.FUN));
         registerPermission(CascadePermission.of("module.music", false, Module.MUSIC));
@@ -88,6 +89,8 @@ public class PermissionsManager {
         registerPermission(CascadePermission.of("volume.extreme", false, Permission.MANAGE_SERVER));
         registerPermission(CascadePermission.of("skip.force", false, Permission.MANAGE_CHANNEL));
         registerPermission(CascadePermission.of("queue.save.overwrite", false));
+
+        registerPermission(CascadePermission.of("filters.bypass", false));
 
         LOGGER.info("{} permissions loaded in {}ms!", permissions.size(), System.currentTimeMillis() - startTime);
 

@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.cascadebot.cascadebot.utils.WeightPair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,9 +39,10 @@ public class DatabaseManager {
                     "org.cascadebot.cascadebot.data.objects",
                     "org.cascadebot.cascadebot.permissions.objects",
                     "org.cascadebot.cascadebot.utils.buttons",
+                    "org.cascadebot.cascadebot.utils.lists",
                     "org.cascadebot.cascadebot.scheduler",
                     "org.cascadebot.shared"
-            ).build())
+            ).register(WeightPair.class).build())
     );
 
     @Getter

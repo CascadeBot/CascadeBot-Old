@@ -2,7 +2,7 @@
 
 <p align="center">
     <a href="https://github.com/CascadeBot/CascadeBot/blob/dev/LICENSE"><img src="https://img.shields.io/github/license/cascadebot/cascadebot.svg?style=flat-square" alt="GitHub License"></a>
-    <a href="https://jenkins.cascadebot.org/job/Cascade%20Bot/lastBuild/"><img src="https://img.shields.io/jenkins/build/https/jenkins.cascadebot.org/cascade%20bot.svg?style=flat-square" alt="Jenkins"></a>
+    <a href="https://jenkins.cascadebot.org/job/Cascade%20Bot/lastBuild/"><img src="https://jenkins.cascadebot.org/job/Cascade%20Bot/badge/icon?style=flat-square" alt="Jenkins"></a>
     <a href="https://github.com/CascadeBot/CascadeBot/issues"><img src="https://img.shields.io/github/issues/cascadebot/cascadebot.svg?color=purple&style=flat-square" alt="GitHub Issues"></a>
     <a href="https://github.com/CascadeBot/CascadeBot/pulls"><img src="https://img.shields.io/github/issues-pr/cascadebot/cascadebot.svg?color=purple&style=flat-square" alt="GitHub Pull Requests"></a>
     <a href="https://github.com/CascadeBot/CascadeBot/network/members"><img src="https://img.shields.io/github/forks/cascadebot/cascadebot.svg?style=flat-square" alt="GitHub Forks"></a>

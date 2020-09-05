@@ -18,18 +18,18 @@ public final class PlaylistManager {
 
     private static final String COLLECTION = "playlists";
 
-    public static MongoIterable<Playlist> getPlaylists(long ownerID, PlaylistType scope) {
+    public static MongoIterable<Playlist> getPlaylists(long ownerId, PlaylistType scope) {
         return CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, Playlist.class)
                 .find(
                         combine(
-                                eq("ownerID", ownerID),
+                                eq("ownerId", ownerId),
                                 eq("scope", scope)
                         )
                 );
     }
 
-    public static Playlist getPlaylistByName(long ownerID, PlaylistType scope, String name) {
-        for (Playlist playlist : getPlaylists(ownerID, scope)) {
+    public static Playlist getPlaylistByName(long ownerId, PlaylistType scope, String name) {
+        for (Playlist playlist : getPlaylists(ownerId, scope)) {
             if (playlist.getName().equalsIgnoreCase(name)) {
                 return playlist;
             }

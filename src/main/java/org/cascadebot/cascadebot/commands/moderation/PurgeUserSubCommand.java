@@ -13,6 +13,10 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class PurgeUserSubCommand extends SubCommand {
 
@@ -28,14 +32,24 @@ public class PurgeUserSubCommand extends SubCommand {
             return;
         }
 
-        Member targetMember = null;
-        targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
-        if (targetMember == null) {
+        List<Member> members = new ArrayList<>();
+
+        for (int i = 0; i < context.getArgs().length; i++) {
+            if (i < 1) continue;
+            Member targetMember = null;
+            targetMember = DiscordUtils.getMember(context.getGuild(), context.getArg(i));
+            if (targetMember == null) {
+                continue;
+            }
+            members.add(targetMember);
+        }
+
+        if (members.isEmpty()) {
             context.getTypedMessaging().replyDanger(context.i18n("response.cannot_find_user"));
             return;
         }
 
-        PurgeUtils.purge(context, PurgeCriteria.USER, context.getArgAsInteger(0), targetMember.getUser().getId());
+        PurgeUtils.purge(context, PurgeCriteria.USER, context.getArgAsInteger(0), members.stream().map(Member::getId).collect(Collectors.joining(" ")));
     }
 
     @Override
