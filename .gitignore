@@ -26,3 +26,4 @@ config.yml
 
 *.iml
 TestCommand.java
+testscript.js

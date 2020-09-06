@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.scripting.objects;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.mozilla.javascript.annotations.JSStaticFunction;
@@ -10,61 +11,66 @@ import java.util.stream.Collectors;
 
 public class ScriptUser {
 
-    public User internalUser;
+    private Member internalUser;
 
     public ScriptUser() {
 
     }
 
     public String getAsTag() {
-        return internalUser.getAsTag();
+        return internalUser.getUser().getAsTag();
     }
 
     public String getAvatarId() {
-        return internalUser.getAvatarId();
+        return internalUser.getUser().getAvatarId();
     }
 
     public String getAvatarUrl() {
-        return internalUser.getAvatarUrl();
+        return internalUser.getUser().getAvatarUrl();
     }
 
     public String getDefaultAvatarId() {
-        return internalUser.getDefaultAvatarId();
+        return internalUser.getUser().getDefaultAvatarId();
     }
 
     public String getDefaultAvatarUrl() {
-        return internalUser.getDefaultAvatarUrl();
+        return internalUser.getUser().getDefaultAvatarUrl();
     }
 
     public String getDiscriminator() {
-        return internalUser.getDiscriminator();
+        return internalUser.getUser().getDiscriminator();
     }
 
     public String getEffectiveAvatarUrl() {
-        return internalUser.getEffectiveAvatarUrl();
-    }
-
-    public List<String> getMutualGuilds() {
-        return internalUser.getMutualGuilds().stream().map(Guild::getName).collect(Collectors.toList());
+        return internalUser.getUser().getEffectiveAvatarUrl();
     }
 
     public String getName() {
-        return internalUser.getName();
+        return internalUser.getUser().getName();
     }
 
     public boolean isBot() {
-        return internalUser.isBot();
+        return internalUser.getUser().isBot();
     }
 
-    public static ScriptUser getUser(String id) {
+    public String getNickname() {
+        return internalUser.getNickname();
+    }
+
+    public static ScriptUser getUser(Guild guild, String id) {
         User user = CascadeBot.INS.getShardManager().getUserById(id);
         if (user == null) {
             return null;
         } else {
+            Member member = guild.getMember(user);
             ScriptUser scriptUser = new ScriptUser();
-            scriptUser.internalUser = user;
+            scriptUser.internalUser = member;
             return scriptUser;
         }
+    }
+
+    protected void setInternalUser(Member member) {
+        this.internalUser = member;
     }
 
 }
