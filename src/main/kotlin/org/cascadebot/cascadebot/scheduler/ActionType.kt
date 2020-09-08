@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.IMentionable
 import net.dv8tion.jda.api.entities.IPermissionHolder
+import org.cascadebot.cascadebot.data.managers.LockManager
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.data.language.Language
@@ -88,26 +90,12 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
                 if (action.data.targetChannelID != 0L) {
                     targetChannel = guild.getGuildChannelById(action.data.targetChannelID)
                 }
-                val target: ISnowflake? =
+                val target: ISnowflake =
                         guild.getRoleById(action.data.targetRoleID)
                                 ?: guild.getMemberById(action.data.targetMemberID)
                                 ?: guild.publicRole
 
-                val empty = EnumSet.noneOf(Permission::class.java)
-                val perm = EnumSet.of(Permission.MESSAGE_WRITE)
-
-                targetChannel?.getPermissionOverride(target as IPermissionHolder)?.manager
-                        ?.setAllow(if (action.data.oldPermission.toString() == "true") perm else empty)
-                        ?.setDeny(if (action.data.oldPermission.toString() == "false") perm else empty)
-                        ?.clear(if (action.data.oldPermission.toString() == "null") perm else empty)
-                        // TODO: There's probably a better way to deal with nullable booleans... do it
-                        ?.queue(null, {
-                            if (it is PermissionException) {
-                                action.channel?.let { channel -> Messaging.sendMessage(MessageType.DANGER, channel, i18n(action.guildId, "responses.no_discord_perm_bot", it.permission.name)) }
-                            } else {
-                                action.channel?.let { channel -> Messaging.sendExceptionMessage(channel, "Couldn't unlock %s".format(targetChannel), it) }
-                            }
-                        })
+                LockManager.unlock(guild, targetChannel as TextChannel, target as IPermissionHolder)
 
             }
 

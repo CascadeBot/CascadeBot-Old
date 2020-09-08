@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.managers.LockManager
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
-import java.util.*
 
 class LockCommand : MainCommand() {
     override fun onCommand(sender: Member, context: CommandContext) {
@@ -36,18 +35,15 @@ class LockCommand : MainCommand() {
         try {
             when (temp) {
                 is Role -> {
-                    LockManager.add(channel, temp)
-                    channel.manager.putPermissionOverride(temp, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
+                    LockManager.lock(channel, temp)
                     name = "%s %s".format(context.i18n("arguments.role"), temp.asMention)
                 }
                 is Member -> {
-                    LockManager.add(channel, temp)
-                    channel.manager.putPermissionOverride(temp, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
+                    LockManager.lock(channel, temp)
                     name = "%s %s".format(context.i18n("arguments.member"), temp.asMention)
                 }
                 is TextChannel -> {
-                    LockManager.add(temp)
-                    temp.manager.putPermissionOverride(context.guild.publicRole, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
+                    LockManager.lock(temp, context.guild.publicRole)
                 }
             }
         } catch (e: PermissionException) {

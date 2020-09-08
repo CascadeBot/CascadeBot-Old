@@ -20,7 +20,6 @@ import org.cascadebot.cascadebot.utils.ParserUtils
 import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
 
 class TempLockCommand : MainCommand() {
     override fun onCommand(sender: Member, context: CommandContext) {
@@ -55,37 +54,31 @@ class TempLockCommand : MainCommand() {
             context.channel
         }
 
-        val toAction = ScheduledAction.LockActionData(channel.idLong, null, 0, 0)
+        val toAction = ScheduledAction.LockActionData(channel.idLong, 0, 0, 0)
 
         var name: String? = null
         try {
             when (temp) {
                 is Role -> {
-                    if (channel.getPermissionOverride(temp)?.denied?.contains(Permission.MESSAGE_WRITE)!!) toAction.oldPermission = false
-                    if (channel.getPermissionOverride(temp)?.allowed?.contains(Permission.MESSAGE_WRITE)!!) toAction.oldPermission = true
+                    toAction.oldPermission = LockManager.getPerm(channel, temp)[0]
 
-                    LockManager.add(channel, temp)
-                    channel.manager.putPermissionOverride(temp, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
+                    LockManager.lock(channel, temp)
 
                     toAction.targetRoleID = temp.idLong
                     name = "%s %s".format(context.i18n("arguments.role"), temp.asMention)
                 }
                 is Member -> {
-                    if (channel.getPermissionOverride(temp)?.denied?.contains(Permission.MESSAGE_WRITE)!!) toAction.oldPermission = false
-                    if (channel.getPermissionOverride(temp)?.allowed?.contains(Permission.MESSAGE_WRITE)!!) toAction.oldPermission = true
+                    toAction.oldPermission = LockManager.getPerm(channel, temp)[0]
 
-                    LockManager.add(channel, temp)
-                    channel.manager.putPermissionOverride(temp, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
+                    LockManager.lock(channel, temp)
 
                     toAction.targetMemberID = temp.idLong
                     name = "%s %s".format(context.i18n("arguments.member"), temp.user.asMention)
                 }
                 is TextChannel -> {
-                    if (temp.getPermissionOverride(context.guild.publicRole)?.denied?.contains(Permission.MESSAGE_WRITE)!!) toAction.oldPermission = false
-                    if (temp.getPermissionOverride(context.guild.publicRole)?.allowed?.contains(Permission.MESSAGE_WRITE)!!) toAction.oldPermission = true
+                    toAction.oldPermission = LockManager.getPerm(temp, context.guild.publicRole)[0]
 
-                    LockManager.add(temp)
-                    temp.manager.putPermissionOverride(context.guild.publicRole, null, EnumSet.of(Permission.MESSAGE_WRITE)).queue()
+                    LockManager.lock(temp, context.guild.publicRole)
 
                     toAction.targetChannelID = temp.idLong
                 }
@@ -107,8 +100,8 @@ class TempLockCommand : MainCommand() {
 
 
         val textDuration = FormatUtils.formatTime(longDuration, context.locale, true).replace("(0[hm])".toRegex(), "") +
-                " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(longDuration, ChronoUnit.SECONDS), context.locale) + ")"
-        context.typedMessaging.replySuccess(if (temp is TextChannel) context.i18n("commands.templock.text_success", temp.name, textDuration) else name?.let { context.i18n("commands.templock.success", channel, it, textDuration) })
+                " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(longDuration, ChronoUnit.MILLIS), context.locale) + ")"
+        context.typedMessaging.replySuccess(if (temp is TextChannel) context.i18n("commands.templock.text_success", temp.name, textDuration) else name?.let { context.i18n("commands.templock.success", channel.name, it, textDuration) })
     }
 
 

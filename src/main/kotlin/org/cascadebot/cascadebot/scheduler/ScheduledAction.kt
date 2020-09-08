@@ -84,10 +84,10 @@ data class ScheduledAction(
         private constructor() : this(0L, 0)
     }
 
-    class LockActionData(var targetChannelID: Long, var oldPermission: Boolean?, var targetMemberID: Long = 0, var targetRoleID: Long = 0) : ActionData {
+    class LockActionData(var targetChannelID: Long, var oldPermission: Int, var targetMemberID: Long = 0, var targetRoleID: Long = 0) : ActionData {
         // Mongo Constructor
         @Suppress("unused")
-        private constructor() : this(0L, true, 0L, 0L)
+        private constructor() : this(0L, 0, 0L, 0L)
     }
 
 }

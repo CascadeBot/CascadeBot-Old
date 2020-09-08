@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.data.objects
 
+import com.google.common.collect.ImmutableList
 import com.google.common.collect.Sets
 import de.bild.codec.annotations.Id
 import de.bild.codec.annotations.Transient
@@ -42,7 +43,7 @@ class GuildData(@field:Id val guildId: Long) {
     val music = GuildSettingsMusic()
     //endregion
 
-    var lockedChannels: MutableMap<String, MutableMap<String, Int>> = mutableMapOf()
+    var lockedChannels: MutableMap<String, MutableMap<String, List<Int>>> = mutableMapOf()
 
     //region Transient fields
     @Transient
