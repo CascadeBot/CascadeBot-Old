@@ -24,15 +24,47 @@ import org.cascadebot.cascadebot.utils.buttons.IButtonRunnable
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
+private typealias ActionKey = String
+
 object ConfirmUtils {
 
     // Holds the users that have confirmed an action
+    // Map is in the format ActionKey as the key and the list of conformation actions
     @JvmStatic
-    private val confirmedMap: ListMultimap<String, ConfirmationAction> = ArrayListMultimap.create()
+    private val confirmedMap: ListMultimap<ActionKey, ConfirmationAction> = ArrayListMultimap.create()
 
-    //region Confirm Action
+    /**
+     * Registers an action to be confirmed. This method sends the message specified from the input and
+     * adds a ✅ button to it (And also a ❌ button if `isCancellable` is true). If the user clicks the
+     * check button before the expiry time, the action is run and the original confimration message is deleted.
+     *
+     * @param userId The ID of the user this action is associated with. The action can only be run by this user.
+     * @param actionKey An internal identified for this action. Should be a short string with lowercase and hyphens
+     * only (Although this is not a technical restriction, just a stylistic one)
+     * @param channel The channel in which to send the confirmation message.
+     * @param type What message type the message should be displayed as. This only affects the color of the message.
+     * @param message The confirmation message to send to the user.
+     * @param buttonDelay How long between the message sending and the buttons being added. This is useful if you
+     * want to make sure the user has read the confirmation.
+     * @param expiry How long the confirmation action is valid for. After this length of time, the action will not be run.
+     * @param isCancellable Whether the ❌ button will appear to cancel the message.
+     * @param action The action to run **only** if the user confirms the action before the expiry time is up.
+     *
+     * @return Whether the confirmation action has been successfully registered.
+     */
     @JvmStatic
-    fun confirmAction(userId: Long, actionKey: String, channel: TextChannel, type: MessageType, message: String, buttonDelay: Long, expiry: Long, isCancellable: Boolean, action: Runnable): Boolean {
+    @JvmOverloads
+    fun registerForConfirmation(
+            userId: Long,
+            actionKey: String,
+            channel: TextChannel,
+            type: MessageType = MessageType.WARNING,
+            message: String,
+            buttonDelay: Long = TimeUnit.SECONDS.toMillis(2),
+            expiry: Long = TimeUnit.MINUTES.toMillis(1),
+            isCancellable: Boolean,
+            action: Runnable
+    ): Boolean {
         val guildData = GuildDataManager.getGuildData(channel.guild.idLong)
         val confirmationAction: ConfirmationAction
         val useEmbed = guildData.core.useEmbedForMessages
@@ -77,50 +109,41 @@ object ConfirmUtils {
         return true
     }
 
+    /**
+     * Checks whether a user has an action registered under the specified key.
+     *
+     * @param actionKey The key of the action to check for.
+     * @param userId The ID of the user for which we are searching for actions.
+     * @return Whether an action matching the criteria is found in the internal map.
+     */
     @JvmStatic
-    fun confirmAction(userId: Long, actionKey: String, channel: TextChannel, type: MessageType, message: String, isCancellable: Boolean, action: Runnable) {
-        confirmAction(
-                userId,
-                actionKey,
-                channel,
-                type,
-                message,
-                TimeUnit.SECONDS.toMillis(2),
-                TimeUnit.MINUTES.toMillis(1),
-                isCancellable,
-                action
-        )
+    fun hasRegisteredAction(actionKey: String, userId: Long): Boolean {
+        return confirmedMap.entries().any { it.key == actionKey && it.value.userId == userId }
     }
 
+    /**
+     * Manually confirms an action the user has registered. Useful for when reactions are not enabled in a guild.
+     *
+     * If multiple actions exist for this user, only the first is run.
+     *
+     * If no actions exist, this method returns false.
+     *
+     * @param actionKey The action key for the action to confirm.
+     * @param userId The user associated with the action.
+     * @return `true` if the action has been run, `false` is no action exists with this criteria.
+     */
     @JvmStatic
-    fun confirmAction(userId: Long, actionKey: String, channel: TextChannel, message: String, isCancellable: Boolean, action: Runnable) {
-        confirmAction(
-                userId,
-                actionKey,
-                channel,
-                MessageType.WARNING,
-                message,
-                TimeUnit.SECONDS.toMillis(2),
-                TimeUnit.MINUTES.toMillis(1),
-                isCancellable,
-                action
-        )
-    }
-
-    //endregion
-    @JvmStatic
-    fun hasConfirmedAction(actionKey: String, userId: Long): Boolean {
-        return confirmedMap.entries().stream().anyMatch { it.key == actionKey && it.value.userId == userId }
-    }
-
-    @JvmStatic
-    fun completeAction(actionKey: String, userId: Long) {
-        val entryOptional = confirmedMap.entries().stream().filter { it.key == actionKey && it.value.userId == userId }.findFirst()
-        entryOptional.ifPresent { it.value.run() }
+    fun confirmAction(actionKey: String, userId: Long): Boolean {
+        val entryOptional = confirmedMap.entries().firstOrNull { it.key == actionKey && it.value.userId == userId }
+        return if (entryOptional != null) {
+            entryOptional.value.run()
+            true
+        } else {
+            false
+        }
     }
 
     private class ConfirmationAction(val userId: Long, val message: Message, private val runnable: Runnable) {
-
         fun run() {
             message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE))
             runnable.run()

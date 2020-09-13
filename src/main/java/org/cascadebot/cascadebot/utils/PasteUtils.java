@@ -35,8 +35,8 @@ public class PasteUtils {
         try {
             Response response = new OkHttpClient.Builder()
                     .connectTimeout(2, TimeUnit.SECONDS)
-                    .writeTimeout(2, TimeUnit.SECONDS)
-                    .readTimeout(2, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(5, TimeUnit.SECONDS)
                     .build().newCall(request).execute();
             JsonParser parser = new JsonParser();
             if (response.body() != null) {

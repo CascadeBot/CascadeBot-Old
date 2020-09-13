@@ -24,8 +24,8 @@ public class ShutdownCommand extends RestrictedCommand {
     public void onCommand(Member sender, CommandContext context) {
         // A confirmation check to make sure we actually want to shut down on production
         if (Environment.isProduction()) {
-            if (!ConfirmUtils.hasConfirmedAction("shutdown_bot", sender.getIdLong())) {
-                ConfirmUtils.confirmAction(
+            if (!ConfirmUtils.hasRegisteredAction("shutdown_bot", sender.getIdLong())) {
+                ConfirmUtils.registerForConfirmation(
                         sender.getIdLong(),
                         "shutdown_bot",
                         context.getChannel(),
@@ -36,7 +36,7 @@ public class ShutdownCommand extends RestrictedCommand {
                 );
                 return;
             }
-            ConfirmUtils.completeAction("shutdown_bot", sender.getIdLong());
+            ConfirmUtils.confirmAction("shutdown_bot", sender.getIdLong());
         } else {
             shutdown(context);
         }
