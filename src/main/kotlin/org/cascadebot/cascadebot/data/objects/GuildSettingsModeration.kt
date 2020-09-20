@@ -41,6 +41,9 @@ class GuildSettingsModeration {
     @Setting
     private val respectBanOrKickHierarchy = true
 
+    @Setting
+    var muteRoleName = "Muted"
+
     fun getRespectBanOrKickHierarchy(): Boolean {
         return respectBanOrKickHierarchy
     }
