@@ -29,8 +29,8 @@ public class ScriptGuild extends ScriptSnowflake {
 
     private Guild internalGuild;
 
-    public ScriptGuild() {
-
+    public ScriptGuild(ScriptContext scriptContext) {
+        super(scriptContext);
     }
 
     public ScriptVoiceChannel getAfkChannel() {
@@ -56,7 +56,7 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptUser> getBoosters() {
         return internalGuild.getBoosters().stream().map((member -> {
-            ScriptUser scriptUser = new ScriptUser();
+            ScriptUser scriptUser = new ScriptUser(scriptContext);
             scriptUser.setInternalUser(member);
             return scriptUser;
         })).collect(Collectors.toList());
@@ -68,7 +68,7 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptCategory> getCategories() {
         return internalGuild.getCategories().stream().map((category -> {
-            ScriptCategory scriptCategory = new ScriptCategory();
+            ScriptCategory scriptCategory = new ScriptCategory(scriptContext);
             scriptCategory.setInternalCategory(category);
             return scriptCategory;
         })).collect(Collectors.toList());
@@ -76,24 +76,24 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptCategory> getCategoriesByName(String name, boolean ignoreCase) {
         return internalGuild.getCategoriesByName(name, ignoreCase).stream().map((category -> {
-            ScriptCategory scriptCategory = new ScriptCategory();
+            ScriptCategory scriptCategory = new ScriptCategory(scriptContext);
             scriptCategory.setInternalCategory(category);
             return scriptCategory;
         })).collect(Collectors.toList());
     }
 
     public ScriptCategory getCategoryById(String id) {
-        ScriptCategory scriptCategory = new ScriptCategory();
+        ScriptCategory scriptCategory = new ScriptCategory(scriptContext);
         scriptCategory.setInternalCategory(internalGuild.getCategoryById(id));
         return scriptCategory;
     }
 
     public List<ScriptChannel> getChannels() {
-        return internalGuild.getChannels().stream().map(ScriptChannel::fromJda).collect(Collectors.toList());
+        return internalGuild.getChannels().stream().map(channel -> ScriptChannel.fromJda(scriptContext, channel)).collect(Collectors.toList());
     }
 
     public ScriptTextChannel getDefaultChannel() {
-        ScriptTextChannel scriptTextChannel = new ScriptTextChannel();
+        ScriptTextChannel scriptTextChannel = new ScriptTextChannel(scriptContext);
         scriptTextChannel.setInternalTextChannel(internalGuild.getDefaultChannel());
         return scriptTextChannel;
     }
@@ -107,14 +107,14 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     public ScriptEmote getEmoteById(String id) {
-        ScriptEmote scriptEmote = new ScriptEmote();
+        ScriptEmote scriptEmote = new ScriptEmote(scriptContext);
         scriptEmote.setInternalEmote(internalGuild.getEmoteById(id));
         return scriptEmote;
     }
 
     public List<ScriptEmote> getEmotes() {
         return internalGuild.getEmoteCache().asList().stream().map(emote -> {
-            ScriptEmote scriptEmote = new ScriptEmote();
+            ScriptEmote scriptEmote = new ScriptEmote(scriptContext);
             scriptEmote.setInternalEmote(emote);
             return scriptEmote;
         }).collect(Collectors.toList());
@@ -122,7 +122,7 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptEmote> getEmotesByName(String name, boolean ignoreCase) {
         return internalGuild.getEmotesByName(name, ignoreCase).stream().map(emote -> {
-            ScriptEmote scriptEmote = new ScriptEmote();
+            ScriptEmote scriptEmote = new ScriptEmote(scriptContext);
             scriptEmote.setInternalEmote(emote);
             return scriptEmote;
         }).collect(Collectors.toList());
@@ -137,11 +137,11 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     public ScriptChannel getGuildChannelById(String id) {
-        return ScriptChannel.fromJda(internalGuild.getGuildChannelById(id));
+        return ScriptChannel.fromJda(scriptContext, internalGuild.getGuildChannelById(id));
     }
 
     public ScriptChannel getGuildChannelById(ChannelType type, String id) {
-        return ScriptChannel.fromJda(internalGuild.getGuildChannelById(type, id));
+        return ScriptChannel.fromJda(scriptContext, internalGuild.getGuildChannelById(type, id));
     }
 
     public String getIconId() {
@@ -169,19 +169,19 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     public ScriptUser getUserById(String id) {
-        ScriptUser scriptUser = new ScriptUser();
+        ScriptUser scriptUser = new ScriptUser(scriptContext);
         scriptUser.setInternalUser(internalGuild.getMemberById(id));
         return scriptUser;
     }
 
     public ScriptUser getUserByTag(String tag) {
-        ScriptUser scriptUser = new ScriptUser();
+        ScriptUser scriptUser = new ScriptUser(scriptContext);
         scriptUser.setInternalUser(internalGuild.getMemberByTag(tag));
         return scriptUser;
     }
 
     public ScriptUser getUserByTag(String username, String discriminator) {
-        ScriptUser scriptUser = new ScriptUser();
+        ScriptUser scriptUser = new ScriptUser(scriptContext);
         scriptUser.setInternalUser(internalGuild.getMemberByTag(username, discriminator));
         return scriptUser;
     }
@@ -193,7 +193,7 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptUser> getUsersByEffectiveName(String name, boolean ignoreCase) {
         return internalGuild.getMembersByEffectiveName(name, ignoreCase).stream().map(member -> {
-            ScriptUser scriptUser = new ScriptUser();
+            ScriptUser scriptUser = new ScriptUser(scriptContext);
             scriptUser.setInternalUser(member);
             return scriptUser;
         }).collect(Collectors.toList());
@@ -201,7 +201,7 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptUser> getUsersByName(String name, boolean ignoreCase) {
         return internalGuild.getMembersByName(name, ignoreCase).stream().map(member -> {
-            ScriptUser scriptUser = new ScriptUser();
+            ScriptUser scriptUser = new ScriptUser(scriptContext);
             scriptUser.setInternalUser(member);
             return scriptUser;
         }).collect(Collectors.toList());
@@ -209,7 +209,7 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptUser> getUsersByNickname(String name, boolean ignoreCase) {
         return internalGuild.getMembersByNickname(name, ignoreCase).stream().map(member -> {
-            ScriptUser scriptUser = new ScriptUser();
+            ScriptUser scriptUser = new ScriptUser(scriptContext);
             scriptUser.setInternalUser(member);
             return scriptUser;
         }).collect(Collectors.toList());
@@ -218,7 +218,7 @@ public class ScriptGuild extends ScriptSnowflake {
     public List<ScriptUser> getUsersWithRoles(Collection<ScriptRole> roles) {
         return internalGuild.getMembersWithRoles(roles.stream().map(scriptRole -> scriptRole.internalRole)
                 .collect(Collectors.toList())).stream().map(member -> {
-            ScriptUser scriptUser = new ScriptUser();
+            ScriptUser scriptUser = new ScriptUser(scriptContext);
             scriptUser.setInternalUser(member);
             return scriptUser;
         }).collect(Collectors.toList());
@@ -229,7 +229,7 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     public ScriptUser getOwner() {
-        ScriptUser scriptUser = new ScriptUser();
+        ScriptUser scriptUser = new ScriptUser(scriptContext);
         scriptUser.setInternalUser(internalGuild.getOwner());
         return scriptUser;
     }
@@ -239,7 +239,7 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     public ScriptRole getPublicRole() {
-        ScriptRole scriptRole = new ScriptRole();
+        ScriptRole scriptRole = new ScriptRole(scriptContext);
         scriptRole.setInternalRole(internalGuild.getPublicRole());
         return scriptRole;
     }
@@ -253,7 +253,7 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     public ScriptRole getRoleById(String id) {
-        ScriptRole scriptRole = new ScriptRole();
+        ScriptRole scriptRole = new ScriptRole(scriptContext);
         scriptRole.setInternalRole(internalGuild.getRoleById(id));
         return scriptRole;
     }
@@ -265,7 +265,7 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptRole> getRolesByName(String name, boolean ignoreCase) {
         return internalGuild.getRolesByName(name, ignoreCase).stream().map(role -> {
-            ScriptRole scriptRole = new ScriptRole();
+            ScriptRole scriptRole = new ScriptRole(scriptContext);
             scriptRole.setInternalRole(role);
             return scriptRole;
         }).collect(Collectors.toList());
@@ -280,14 +280,14 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     public ScriptStoreChannel getStoreChannelById(String id) {
-        ScriptStoreChannel scriptStoreChannel = new ScriptStoreChannel();
+        ScriptStoreChannel scriptStoreChannel = new ScriptStoreChannel(scriptContext);
         scriptStoreChannel.setInternalStoreChannel(internalGuild.getStoreChannelById(id));
         return scriptStoreChannel;
     }
 
     public List<ScriptStoreChannel> getStoreChannels() {
         return internalGuild.getStoreChannels().stream().map(storeChannel -> {
-            ScriptStoreChannel scriptStoreChannel = new ScriptStoreChannel();
+            ScriptStoreChannel scriptStoreChannel = new ScriptStoreChannel(scriptContext);
             scriptStoreChannel.setInternalStoreChannel(storeChannel);
             return scriptStoreChannel;
         }).collect(Collectors.toList());
@@ -295,27 +295,27 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptStoreChannel> getStoreChannelsByName(String name, boolean ignoreCase) {
         return internalGuild.getStoreChannelsByName(name, ignoreCase).stream().map(storeChannel -> {
-            ScriptStoreChannel scriptStoreChannel = new ScriptStoreChannel();
+            ScriptStoreChannel scriptStoreChannel = new ScriptStoreChannel(scriptContext);
             scriptStoreChannel.setInternalStoreChannel(storeChannel);
             return scriptStoreChannel;
         }).collect(Collectors.toList());
     }
 
     public ScriptTextChannel getSystemChannel() {
-        ScriptTextChannel scriptTextChannel = new ScriptTextChannel();
+        ScriptTextChannel scriptTextChannel = new ScriptTextChannel(scriptContext);
         scriptTextChannel.setInternalTextChannel(internalGuild.getSystemChannel());
         return scriptTextChannel;
     }
 
     public ScriptTextChannel getTextChannelById(String id) {
-        ScriptTextChannel scriptTextChannel = new ScriptTextChannel();
+        ScriptTextChannel scriptTextChannel = new ScriptTextChannel(scriptContext);
         scriptTextChannel.setInternalTextChannel(internalGuild.getTextChannelById(id));
         return scriptTextChannel;
     }
 
     public List<ScriptTextChannel> getTextChannels() {
         return internalGuild.getTextChannelCache().asList().stream().map(textChannel -> {
-            ScriptTextChannel scriptTextChannel = new ScriptTextChannel();
+            ScriptTextChannel scriptTextChannel = new ScriptTextChannel(scriptContext);
             scriptTextChannel.setInternalTextChannel(textChannel);
             return scriptTextChannel;
         }).collect(Collectors.toList());
@@ -323,7 +323,7 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptTextChannel> getTextChannelsByName(String name, boolean ignoreCase) {
         return internalGuild.getTextChannelsByName(name, ignoreCase).stream().map(textChannel -> {
-            ScriptTextChannel scriptTextChannel = new ScriptTextChannel();
+            ScriptTextChannel scriptTextChannel = new ScriptTextChannel(scriptContext);
             scriptTextChannel.setInternalTextChannel(textChannel);
             return scriptTextChannel;
         }).collect(Collectors.toList());
@@ -338,14 +338,14 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     public ScriptVoiceChannel getVoiceChannelById(String id) {
-        ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel();
+        ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel(scriptContext);
         scriptVoiceChannel.setInternalVoiceChannel(internalGuild.getVoiceChannelById(id));
         return scriptVoiceChannel;
     }
 
     public List<ScriptVoiceChannel> getVoiceChannels() {
         return internalGuild.getVoiceChannelCache().asList().stream().map(voiceChannel -> {
-            ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel();
+            ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel(scriptContext);
             scriptVoiceChannel.setInternalVoiceChannel(voiceChannel);
             return scriptVoiceChannel;
         }).collect(Collectors.toList());
@@ -353,7 +353,7 @@ public class ScriptGuild extends ScriptSnowflake {
 
     public List<ScriptVoiceChannel> getVoiceChannelsByName(String name, boolean ignoreCase) {
         return internalGuild.getVoiceChannelsByName(name, ignoreCase).stream().map(voiceChannel -> {
-            ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel();
+            ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel(scriptContext);
             scriptVoiceChannel.setInternalVoiceChannel(voiceChannel);
             return scriptVoiceChannel;
         }).collect(Collectors.toList());

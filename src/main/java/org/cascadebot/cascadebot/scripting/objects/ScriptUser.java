@@ -4,17 +4,16 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.mozilla.javascript.annotations.JSStaticFunction;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ScriptUser {
+public class ScriptUser extends ScriptSnowflake {
 
     private Member internalUser;
 
-    public ScriptUser() {
-
+    public ScriptUser(ScriptContext scriptContext) {
+        super(scriptContext);
     }
 
     public String getAsTag() {
@@ -57,13 +56,13 @@ public class ScriptUser {
         return internalUser.getNickname();
     }
 
-    public static ScriptUser getUser(Guild guild, String id) {
+    public static ScriptUser getUser(Guild guild, String id, ScriptContext scriptContext) {
         User user = CascadeBot.INS.getShardManager().getUserById(id);
         if (user == null) {
             return null;
         } else {
             Member member = guild.getMember(user);
-            ScriptUser scriptUser = new ScriptUser();
+            ScriptUser scriptUser = new ScriptUser(scriptContext);
             scriptUser.internalUser = member;
             return scriptUser;
         }

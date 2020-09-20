@@ -5,31 +5,32 @@ import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.StoreChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import org.cascadebot.cascadebot.scripting.objects.ScriptContext;
 import org.cascadebot.cascadebot.scripting.objects.ScriptSnowflake;
 
 public class ScriptChannel extends ScriptSnowflake {
 
-    ScriptChannel() {
-
-    }
-
     protected GuildChannel internalChannel;
 
-    public static ScriptChannel fromJda(GuildChannel channel) {
+    public ScriptChannel(ScriptContext scriptContext) {
+        super(scriptContext);
+    }
+
+    public static ScriptChannel fromJda(ScriptContext scriptContext, GuildChannel channel) {
         if (channel instanceof Category) {
-            ScriptCategory scriptCategory = new ScriptCategory();
+            ScriptCategory scriptCategory = new ScriptCategory(scriptContext);
             scriptCategory.setInternalCategory((Category) channel);
             return scriptCategory;
         } else if (channel instanceof TextChannel) {
-            ScriptTextChannel scriptTextChannel = new ScriptTextChannel();
+            ScriptTextChannel scriptTextChannel = new ScriptTextChannel(scriptContext);
             scriptTextChannel.setInternalTextChannel((TextChannel) channel);
             return scriptTextChannel;
         } else if (channel instanceof VoiceChannel) {
-            ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel();
+            ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel(scriptContext);
             scriptVoiceChannel.setInternalVoiceChannel((VoiceChannel) channel);
             return scriptVoiceChannel;
         } else if (channel instanceof StoreChannel) {
-            ScriptStoreChannel scriptStoreChannel = new ScriptStoreChannel();
+            ScriptStoreChannel scriptStoreChannel = new ScriptStoreChannel(scriptContext);
             scriptStoreChannel.setInternalStoreChannel((StoreChannel) channel);
             return scriptStoreChannel;
         } else {
