@@ -53,6 +53,19 @@
       "_type": "optional"
     }
   },
+  "slowmode*": {
+    "interval*": {
+      "_type": "required",
+      "channel": {
+        "_type": "optional"
+      }
+    },
+    "reset*": {
+      "channel": {
+        "_type": "optional"
+      }
+    }
+  },
   "userinfo*": {
     "guild_id": {
       "_type": "optional"
@@ -78,6 +91,17 @@
       "_type": "required",
       "value": {
         "_type": "required"
+      }
+    }
+  },
+  "tempslowmode*": {
+    "interval*": {
+      "_type": "required",
+      "duration*": {
+        "_type": "required",
+        "channel": {
+          "_type": "optional"
+        }
       }
     }
   },
@@ -241,6 +265,44 @@
       "_type": "required",
       "reason": {
         "_type": "optional"
+      }
+    }
+  },
+  "tempban*": {
+    "user*": {
+      "_type": "required",
+      "duration*": {
+        "_type": "required",
+        "reason": {
+          "_type": "optional"
+        }
+      }
+    }
+  },
+  "mute*": {
+    "member": {
+      "_type": "required"
+    },
+    "role": {
+      "role": {
+        "_type": "required"
+      }
+    },
+    "channelsetup": {}
+  },
+  "unmute*": {
+    "member": {
+      "_type": "required"
+    }
+  },
+  "tempmute*": {
+    "user*": {
+      "_type": "required",
+      "duration*": {
+        "_type": "required",
+        "reason": {
+          "_type": "optional"
+        }
       }
     }
   },
@@ -587,7 +649,6 @@
       "_type": "required"
     },
     "list": {
-
     },
     "create*": {
       "filter*": {
@@ -604,12 +665,16 @@
     },
     "operator*": {
       "or": {
-        "_aliases": ["and"]
+        "_aliases": [
+          "and"
+        ]
       }
     },
     "type*": {
       "whitelist": {
-        "_aliases": ["blacklist"]
+        "_aliases": [
+          "blacklist"
+        ]
       }
     },
     "channels*": {

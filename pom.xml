@@ -6,7 +6,7 @@
 
     <groupId>org.cascadebot</groupId>
     <artifactId>cascadebot</artifactId>
-    <version>0.1.8</version>
+    <version>0.1.9</version>
 
     <properties>
         <build.number>DEV</build.number>
@@ -240,7 +240,7 @@
         <dependency>
             <groupId>com.jagrosh</groupId>
             <artifactId>jda-utilities-commons</artifactId>
-            <version>3.0.1</version>
+            <version>3.0.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
