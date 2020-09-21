@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CascadeLavalinkPlayer implements CascadePlayer {
+public class CascadeLavalinkPlayer extends CascadePlayer {
 
     @Getter
     private Map<Integer, Float> currentBands = new HashMap<>();
