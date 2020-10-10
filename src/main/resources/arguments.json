@@ -548,7 +548,7 @@
       }
     },
     "send*": {
-      "list*": {
+      "name*": {
         "_type": "required",
         "channel": {
           "_type": "optional"
@@ -556,7 +556,7 @@
       }
     },
     "adduser*": {
-      "list*": {
+      "name*": {
         "_type": "required",
         "user": {
           "_type": "required"
@@ -564,7 +564,7 @@
       }
     },
     "removeuser*": {
-      "list*": {
+      "name*": {
         "_type": "required",
         "user": {
           "_type": "required"
@@ -572,7 +572,7 @@
       }
     },
     "view*": {
-      "list*": {
+      "name*": {
         "_type": "required"
       }
     }
