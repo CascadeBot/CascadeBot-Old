@@ -8,6 +8,7 @@
       "command": "help",
       "description": "This is the help command; what else did you expect?",
       "module_not_enabled": "That module isn't enabled for this guild!",
+      "module_not_valid": "The module `{0}` is not valid! Please choose from: {1}",
       "no_access_to_module": "You don't have access to any commands in this module!"
     },
     "prefix": {
