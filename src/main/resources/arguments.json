@@ -378,9 +378,9 @@
       "_type": "required"
     }
   },
-  "skip*": {
+  "skip": {
     "force": {
-      "_type": "optional"
+      "_type": "command"
     },
     "yes": {
       "_type": "command"

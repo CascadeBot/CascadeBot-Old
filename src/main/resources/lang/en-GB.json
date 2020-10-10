@@ -718,6 +718,10 @@
     "skip": {
       "command": "skip",
       "description": "Skips the current song.",
+      "force": {
+        "command": "force",
+        "description": "Forcibily skips the current song."
+      },
       "yes": {
         "command": "yes",
         "description": "Votes to skip a track."
