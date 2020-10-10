@@ -70,6 +70,10 @@
       "choice": {
         "command": "choice",
         "description": "Return a random word of your chosen list."
+      },
+      "color": {
+        "command": "colour",
+        "description": "Returns a random colour."
       }
     },
     "roles": {
