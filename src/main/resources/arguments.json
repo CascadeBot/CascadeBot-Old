@@ -17,6 +17,11 @@
       "_type": "required"
     }
   },
+  "help*": {
+    "module": {
+      "_type": "optional"
+    }
+  },
   "guild*": {
     "flag*": {
       "flag*": {
