@@ -11,75 +11,48 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PurgeUtils {
 
-    private static final Pattern linkCheck = Pattern.compile("^(?:https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$");
 
     /**
      * Purge method that cleans messages based on the criteria received,
      * and the amount of messages to clean.
      *
-     * @param context {@link CommandContext} of the command
-     * @param type {@link PurgeCriteria} to filter for
-     * @param amount Amount of messages to clear
+     * @param context  {@link CommandContext} of the command
+     * @param type     {@link PurgeCriteria} to filter for
+     * @param amount   Amount of messages to clear
      * @param argument Optional argument, made for {@code TOKEN and USER}
      * @return {@link CommandContext#getTypedMessaging}
      */
 
     public static void purge(CommandContext context, PurgeCriteria type, int amount, String argument) {
 
-        List<Message> messageList = new ArrayList<>();
+        Set<Message> messageList = new HashSet<>();
 
         for (Message message : context.getChannel().getIterableHistory()) {
+            if (message.equals(context.getMessage()))
+                continue;
+
             if (messageList.size() == amount) {
                 break;
             }
-            
+
             if (message.getTimeCreated().isBefore(OffsetDateTime.now().minusWeeks(2))) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.purge.restriction_time"));
                 break;
             }
-            
+
             if (!context.getData().getModeration().getPurgePinnedMessages() && message.isPinned()) {
-                    continue;
+                continue;
             }
 
-            switch (type) {
-                case ATTACHMENT:
-                    if (!message.getAttachments().isEmpty()) {
-                        messageList.add(message);
-                    }
-                    break;
-                case BOT:
-                    if (message.getAuthor().isBot()) {
-                        messageList.add(message);
-                    }
-                    break;
-                case LINK:
-                    if (linkCheck.matcher(message.getContentRaw()).matches()) {
-                        messageList.add(message);
-                    }
-                    break;
-                case TOKEN:
-                    if (message.getContentRaw().toLowerCase().contains(argument.toLowerCase())) {
-                        messageList.add(message);
-                    }
-                    break;
-                case USER:
-                    if (Arrays.stream(argument.split(" ")).anyMatch(id -> message.getAuthor().getId().equals(id))) {
-                        messageList.add(message);
-                    }
-                    break;
-                case ALL:
-                    messageList.add(message);
-                    break;
+            if (type.matches(message, argument)) {
+                messageList.add(message);
             }
-            
+
         }
 
         if (messageList.size() <= 1) {
@@ -89,6 +62,6 @@ public class PurgeUtils {
         context.getChannel().deleteMessages(messageList).queue($void -> {
             context.getTypedMessaging().replySuccess(context.i18n("commands.purge.successfully_done", messageList.size()));
         }, e -> context.getTypedMessaging().replyException(context.i18n("responses.failed_to_run_command"), e));
-        }
-
     }
+
+}

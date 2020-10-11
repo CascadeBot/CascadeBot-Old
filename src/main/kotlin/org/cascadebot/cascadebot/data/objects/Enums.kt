@@ -1,7 +1,10 @@
 package org.cascadebot.cascadebot.data.objects
 
+import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.utils.PurgeUtils
+import java.util.Arrays
+import java.util.regex.Pattern
 
 enum class PlaylistType {
     GUILD, USER
@@ -27,7 +30,23 @@ enum class SearchResultType {
  * @see PurgeUtils.purge
  */
 enum class PurgeCriteria {
-    ATTACHMENT, BOT, LINK, TOKEN, USER, ALL
+    ATTACHMENT, BOT, LINK, TOKEN, USER, ALL;
+
+    fun matches(message: Message, argument: String?) : Boolean {
+        return when (this) {
+            ATTACHMENT -> message.attachments.isNotEmpty()
+            BOT -> message.author.isBot
+            LINK -> linkCheck.matcher(message.contentRaw).matches()
+            TOKEN -> message.contentRaw.contains(argument!!.toLowerCase())
+            USER -> argument!!.split(" ").any { it.contains(message.author.id) }
+            ALL -> true
+        }
+    }
+
+    companion object {
+        private val linkCheck = Pattern.compile("^(?:https?|ftp)://[^\\s/$.?#].[^\\s]*$")
+    }
+
 }
 
 enum class ColorErrorType {
