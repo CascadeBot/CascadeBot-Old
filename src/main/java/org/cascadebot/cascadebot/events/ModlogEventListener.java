@@ -106,6 +106,7 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
@@ -193,14 +194,14 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (event instanceof GuildMemberJoinEvent) {
                 modlogEvent = ModlogEvent.GUILD_MEMBER_JOINED;
+                embedFieldList.add(new ModlogEmbedDescription("modlog.member.joined", user.getAsMention()));
             } else if (event instanceof GuildMemberLeaveEvent) {
-                if (auditLogEntry != null) {
-                    ModlogEmbedField respModlogEmbedField = new ModlogEmbedField(true, "modlog.general.responsible", "modlog.general.variable");
-                    respModlogEmbedField.addValueObjects(Objects.requireNonNull(auditLogEntry.getUser()).getAsTag());
-                    embedFieldList.add(respModlogEmbedField);
+                if (auditLogEntry != null && auditLogEntry.getType().equals(ActionType.KICK)) {
+                    responsible = auditLogEntry.getUser();
+                    embedFieldList.add(new ModlogEmbedDescription("modlog.member.kicked", user.getAsMention()));
                     if (auditLogEntry.getReason() != null) {
                         ModlogEmbedField reasonEmbedField = new ModlogEmbedField(false, "modlog.general.reason", "modlog.general.variable");
-                        respModlogEmbedField.addValueObjects(auditLogEntry.getReason());
+                        reasonEmbedField.addValueObjects(auditLogEntry.getReason());
                         embedFieldList.add(reasonEmbedField);
                     }
                     modlogEvent = ModlogEvent.GUILD_MEMBER_KICKED;
@@ -254,6 +255,7 @@ public class ModlogEventListener extends ListenerAdapter {
             User responsible = null;
             if (auditLogEntry != null) {
                 responsible = auditLogEntry.getUser();
+                embedFieldList.add(new ModlogEmbedDescription("modlog.member.banned", user.getAsMention()));
                 if (auditLogEntry.getReason() != null) {
                     ModlogEmbedField reasonEmbedField = new ModlogEmbedField(false, "modlog.general.reason", "modlog.general.variable");
                     reasonEmbedField.addValueObjects(auditLogEntry.getReason());
@@ -894,9 +896,8 @@ public class ModlogEventListener extends ListenerAdapter {
 
     //region Username updates
     public void onUserUpdateName(UserUpdateNameEvent event) {
-        // TODO propagate to guilds
         List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new ModlogEmbedField(true, "modlog.general.old_name", "modlog.general.variable", event.getOldName()));
+        embedFieldList.add(new ModlogEmbedField(false, "modlog.general.name", "modlog.general.small_change", event.getOldName(), event.getNewName()));
         ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_NAME_UPDATED, event.getUser(), event.getUser(), embedFieldList);
         for (Guild guild : CascadeBot.INS.getClient().getMutualGuilds(event.getUser())) {
             GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
@@ -906,7 +907,7 @@ public class ModlogEventListener extends ListenerAdapter {
 
     public void onUserUpdateDiscriminator(UserUpdateDiscriminatorEvent event) {
         List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new ModlogEmbedField(true, "modlog.user.old_discrim", "modlog.general.variable", event.getOldDiscriminator()));
+        embedFieldList.add(new ModlogEmbedField(false, "modlog.member.discrim", "modlog.general.small_change", event.getOldDiscriminator(), event.getNewDiscriminator()));
         ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_DISCRIMINATOR_UPDATED, event.getUser(), event.getUser(), embedFieldList);
         for (Guild guild : CascadeBot.INS.getClient().getMutualGuilds(event.getUser())) {
             GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());

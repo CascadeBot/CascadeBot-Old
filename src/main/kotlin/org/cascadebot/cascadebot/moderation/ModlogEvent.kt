@@ -172,7 +172,6 @@ enum class ModlogEvent(messageType: MessageType, displayType: ModlogDisplayType,
     enum class ModlogDisplayType {
         AFFECTED_THUMBNAIL,
         AFFECTED_AUTHOR,
-        AFFECTED_FOOTER,
         PLAIN
     }
 

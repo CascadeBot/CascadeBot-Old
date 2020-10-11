@@ -26,6 +26,8 @@ import org.cascadebot.cascadebot.permissions.objects.Group
 import org.cascadebot.cascadebot.utils.FormatUtils
 import java.lang.reflect.Field
 import java.net.URL
+import java.time.Instant
+import java.time.temporal.TemporalAccessor
 import java.util.ArrayList
 import java.util.Date
 import java.util.function.Consumer
@@ -181,8 +183,11 @@ class GuildSettingsModeration {
                     when (affected.affectedType) {
                         AffectedType.USER -> {
                             val user: User = CascadeBot.INS.shardManager.getUserById(affected.id!!)!!
-                            webhookEmbedBuilder.setThumbnailUrl(user.avatarUrl)
-                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, null, null))
+                            if (user.avatarUrl != null) {
+                                webhookEmbedBuilder.setThumbnailUrl(user.avatarUrl)
+                            } else {
+                                webhookEmbedBuilder.setThumbnailUrl(user.defaultAvatarUrl)
+                            }
                         }
                         AffectedType.EMOTE -> {
                             val emote: Emote = CascadeBot.INS.shardManager.getEmoteById(affected.id!!)!!
@@ -195,7 +200,12 @@ class GuildSettingsModeration {
                     when (affected.affectedType) {
                         AffectedType.USER -> {
                             val user: User = CascadeBot.INS.shardManager.getUserById(affected.id!!)!!
-                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, user.avatarUrl, "https://discord.com/users/" + affected.id))
+                            var iconUrl = if (user.avatarUrl != null) {
+                                user.avatarUrl
+                            } else {
+                                user.defaultAvatarUrl
+                            }
+                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, iconUrl, "https://discord.com/users/" + affected.id))
                         }
                         AffectedType.EMOTE -> {
                             val emote: Emote = CascadeBot.INS.shardManager.getEmoteById(affected.id!!)!!
@@ -206,17 +216,20 @@ class GuildSettingsModeration {
                         }
                     }
                 }
-                ModlogEvent.ModlogDisplayType.AFFECTED_FOOTER -> {
-                    webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter("name: " + affected.name + " id: " + affected.id, null))
-                }
             }
 
             for (embedPart in modlogEventStore.extraInfo) {
                 embedPart.build(guildData.locale, webhookEmbedBuilder)
             }
             webhookEmbedBuilder.setColor(modlogEventStore.trigger.messageType.color.rgb)
+            webhookEmbedBuilder.setTimestamp(Instant.now())
             if (modlogEventStore.responsible != null) {
-                webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible!!.name + " (" + modlogEventStore.responsible!!.id + ")", null))
+                var iconUrl = if (modlogEventStore.responsible!!.avatarUrl != null) {
+                    modlogEventStore.responsible!!.avatarUrl
+                } else {
+                    modlogEventStore.responsible!!.defaultAvatarUrl
+                }
+                webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible!!.name + " (" + modlogEventStore.responsible!!.id + ")", iconUrl))
             }
             try {
                 webhookClient?.send(webhookEmbedBuilder.build())

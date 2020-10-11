@@ -1362,139 +1362,173 @@
     "modlogevent": {
       "emote_created": {
         "select": "emote_created",
-        "display": "Emote created"
+        "display": "Emote created",
+        "description": "Emote `{0}` was created"
       },
       "emote_deleted": {
         "select": "emote_deleted",
-        "display": "Emote deleted"
+        "display": "Emote deleted",
+        "description": "Emote `{0}` was deleted"
       },
       "emote_updated_name": {
         "select": "emote_updated_name",
-        "display": "Emote updated name"
+        "display": "Emote updated name",
+        "description": "Emote name changed"
       },
       "emote_updated_roles": {
         "select": "emote_updated_roles",
-        "display": "Emote updated roles"
+        "display": "Emote updated roles",
+        "description": "Emote `{0}` roles where changed"
       },
       "guild_member_joined": {
         "select": "guild_member_joined",
-        "display": "Guild member joined"
+        "display": "Guild member joined",
+        "description": "{0} joined the server"
       },
       "guild_member_left": {
         "select": "guild_member_left",
-        "display": "Guild member left"
+        "display": "Guild member left",
+        "description": "{0} left the server"
       },
       "guild_member_kicked": {
         "select": "guild_member_kicked",
-        "display": "Guild member kicked"
+        "display": "Guild member kicked",
+        "description": "{0} was kicked"
       },
       "guild_member_role_added": {
         "select": "guild_member_role_added",
-        "display": "Guild member role added"
+        "display": "Guild member role added",
+        "description": "Role(s) where added to {0}"
       },
       "guild_member_role_removed": {
         "select": "guild_member_role_removed",
-        "display": "Guild member role removed"
+        "display": "Guild member role removed",
+        "description": "Role(s) where removed from {0}"
       },
       "guild_member_nickname_updated": {
         "select": "guild_member_nickname_updated",
-        "display": "Guild member nickname updated"
+        "display": "Guild member nickname updated",
+        "description": "{0} updated there nickanme"
       },
       "guild_user_banned": {
         "select": "guild_user_banned",
-        "display": "Guild user banned"
+        "display": "Guild user banned",
+        "description": "{0} was banned"
       },
       "guild_user_unbanned": {
         "select": "guild_user_unbanned",
-        "display": "Guild user unbanned"
+        "display": "Guild user unbanned",
+        "description": "{0} was unbanned"
       },
       "guild_message_deleted": {
         "select": "guild_message_deleted",
-        "display": "Guild message deleted"
+        "display": "Guild message deleted",
+        "description": "{1} deleted a message sent by {0}"
       },
       "guild_message_deleted_self": {
         "select": "guild_message_deleted_self",
-        "display": "Guild message deleted self"
+        "display": "Guild message deleted self",
+        "description": "{0} deleted one of their own messages"
       },
       "guild_message_updated": {
         "select": "guild_message_updated",
-        "display": "Guild message updated"
+        "display": "Guild message updated",
+        "description": "{0} changed there message"
       },
       "guild_boost_count_updated": {
         "select": "guild_boost_count_updated",
-        "display": "Guild boost count updated"
+        "display": "Guild boost count updated",
+        "description": "Server boost count changed"
       },
       "guild_boost_tier_updated": {
         "select": "guild_boost_tier_updated",
-        "display": "Guild boost tier updated"
+        "display": "Guild boost tier updated",
+        "description": "Server bost teir changed"
       },
       "guild_update_afk_channel": {
         "select": "guild_update_afk_channel",
-        "display": "Guild update afk channel"
+        "display": "Guild update afk channel",
+        "description": "Afk channel changed"
       },
       "guild_update_afk_timeout": {
         "select": "guild_update_afk_timeout",
-        "display": "Guild update afk timeout"
+        "display": "Guild update afk timeout",
+        "description": "Aft timeout changed"
       },
       "guild_update_banner": {
         "select": "guild_update_banner",
-        "display": "Guild update banner"
+        "display": "Guild update banner",
+        "description": "Server banner changed"
       },
       "guild_update_description": {
         "select": "guild_update_description",
-        "display": "Guild update description"
+        "display": "Guild update description",
+        "description": "Server description changed"
       },
       "guild_update_explicit_filter": {
         "select": "guild_update_explicit_filter",
-        "display": "Guild update explicit filter"
+        "display": "Guild update explicit filter",
+        "description": "Explicit content filter changed"
       },
       "guild_update_features": {
         "select": "guild_update_features",
-        "display": "Guild update features"
+        "display": "Guild update features",
+        "description": "Server featured changed"
       },
       "guild_update_icon": {
         "select": "guild_update_icon",
-        "display": "Guild update icon"
+        "display": "Guild update icon",
+        "description": "Server icon changed"
       },
       "guild_update_max_members": {
         "select": "guild_update_max_members",
-        "display": "Guild update max members"
+        "display": "Guild update max members",
+        "description": "Server max members changed"
       },
       "guild_update_max_presences": {
         "select": "guild_update_max_presences",
-        "display": "Guild update max presences"
+        "display": "Guild update max presences",
+        "description": "Server max presences changed"
       },
       "guild_update_mfa_level": {
         "select": "guild_update_mfa_level",
-        "display": "Guild update mfa level"
+        "display": "Guild update mfa level",
+        "description": "Server multi factor authentication level changed"
       },
       "guild_update_name": {
         "select": "guild_update_name",
-        "display": "Guild update name"
+        "display": "Guild update name",
+        "description": "Server name changed"
       },
       "guild_update_notification_level": {
         "select": "guild_update_notification_level",
-        "display": "Guild update notification level"
+        "display": "Guild update notification level",
+        "description": "Server notification level changed"
       },
       "guild_update_region": {
         "select": "guild_update_region",
-        "display": "Guild update region"
+        "display": "Guild update region",
+        "description": "Server voce region changed"
       },
       "guild_update_splash": {
         "select": "guild_update_splash",
-        "display": "Guild update splash"
+        "display": "Guild update splash",
+        "description": "Server splash changed"
       },
       "guild_update_system_channel": {
         "select": "guild_update_system_channel",
-        "display": "Guild update system channel"
+        "display": "Guild update system channel",
+        "description": "Server update system channel changed"
       },
       "guild_update_vanity_code": {
         "select": "guild_update_vanity_code",
-        "display": "Guild update vanity code"
+        "display": "Guild update vanity code",
+        "description": "Server vanity code changed"
       },
       "guild_update_verification_level": {
         "select": "guild_update_verification_level",
-        "display": "Guild update verification level"
+        "display": "Guild update verification level",
+        "description": "Server verification level changed"
       },
       "voice_deafen": {
         "select": "voice_deafen",
@@ -1506,7 +1540,7 @@
       },
       "voice_server_deafen": {
         "select": "voice_server_deafen",
-        "display": "Voice server deafen"
+        "display": "Voice server deafen",
       },
       "voice_server_mute": {
         "select": "voice_server_mute",
@@ -1514,35 +1548,42 @@
       },
       "voice_join": {
         "select": "voice_join",
-        "display": "Voice join"
+        "display": "Voice join",
+        "description": "{0} joined {2}"
       },
       "voice_leave": {
         "select": "voice_leave",
-        "display": "Voice leave"
+        "display": "Voice leave",
+        "description": "{0} left {2}"
       },
       "voice_move": {
         "select": "voice_move",
-        "display": "Voice move"
+        "display": "Voice move",
+        "description": "{0} moved from {2} to {3}"
       },
       "voice_disconnect": {
         "select": "voice_disconnect",
-        "display": "Voice disconnect"
+        "display": "Voice disconnect",
+        "description": "{0} disconnected from voice"
       },
       "role_created": {
         "select": "role_created",
-        "display": "Role created"
+        "display": "Role created",
+        "description": "{1} created a new role called {0}"
       },
       "role_deleted": {
         "select": "role_deleted",
-        "display": "Role deleted"
+        "display": "Role deleted",
+        "description": "{1} deleted the role called {0}"
       },
       "role_color_updated": {
         "select": "role_color_updated",
-        "display": "Role color updated"
+        "display": "Role color updated",
+        "description": "Role {0} color was updated"
       },
       "role_hoist_updated": {
         "select": "role_hoist_updated",
-        "display": "Role hoist updated"
+        "display": "Role hoisted updated"
       },
       "role_mentionable_updated": {
         "select": "role_mentionable_updated",
@@ -1550,55 +1591,68 @@
       },
       "role_name_updated": {
         "select": "role_name_updated",
-        "display": "Role name updated"
+        "display": "Role name updated",
+        "description": "Role {0} had its name changed"
       },
       "role_permissions_updated": {
         "select": "role_permissions_updated",
-        "display": "Role permissions updated"
+        "display": "Role permissions updated",
+        "description": "Role {0} had permissions updated"
       },
       "role_position_updated": {
         "select": "role_position_updated",
-        "display": "Role position updated"
+        "display": "Role position updated",
+        "description": "Role {0} possition was updated"
       },
       "user_discriminator_updated": {
         "select": "user_discriminator_updated",
-        "display": "User discriminator updated"
+        "display": "User discriminator updated",
+        "description": "User {0} changed there discriminator"
       },
       "user_name_updated": {
         "select": "user_name_updated",
-        "display": "User name updated"
+        "display": "User name updated",
+        "description": "{0} changed there name"
       },
       "channel_created": {
         "select": "channel_created",
-        "display": "Channel created"
+        "display": "Channel created",
+        "description": "Channel {0} was created"
       },
       "channel_deleted": {
         "select": "channel_deleted",
-        "display": "Channel deleted"
+        "display": "Channel deleted",
+        "description": "Channel {0} was deleted"
       },
       "channel_name_updated": {
         "select": "channel_name_updated",
-        "display": "Channel name updated"
+        "display": "Channel name updated",
+        "description": "Channel {0} had its name changed"
       },
       "channel_permissions_updated": {
         "select": "channel_permissions_updated",
-        "display": "Channel permissions updated"
+        "display": "Channel permissions updated",
+        "description": "Channel {0} permissions where changed"
       },
       "channel_position_updated": {
         "select": "channel_position_updated",
-        "display": "Channel position updated"
+        "display": "Channel position updated",
+        "description": "Channel {0} was moved"
       },
       "channel_parent_updated": {
         "select": "channel_parent_updated",
-        "display": "Channel parent updated"
+        "display": "Channel parent updated",
+        "description": "Channel {0} changed category"
       },
       "voice_channel_bitrate_updated": {
         "select": "voice_channel_bitrate_updated",
-        "display": "Voice channel bitrate updated"
+        "display": "Voice channel bitrate updated",
+        "description": "Channel {0} had its bitrate changed"
       },
       "voice_channel_user_limit_updated": {
         "select": "voice_channel_user_limit_updated",
-        "display": "Voice channel user limit updated"
+        "display": "Voice channel user limit updated",
+        "description": "Channel {0} user limit was changed"
       },
       "text_channel_nsfw_updated": {
         "select": "text_channel_nsfw_updated",
@@ -1606,11 +1660,13 @@
       },
       "text_channel_slowmode_updated": {
         "select": "text_channel_slowmode_updated",
-        "display": "Text channel slowmode updated"
+        "display": "Text channel slowmode updated",
+        "description": "Channel {0} slowmode time was changed"
       },
       "text_channel_topic_updated": {
         "select": "text_channel_topic_updated",
-        "display": "Text channel topic updated"
+        "display": "Text channel topic updated",
+        "description": "Channel {0} topic was updated"
       },
       "cascade_permissions_group_created": {
         "select": "cascade_permissions_group_created",
@@ -2213,11 +2269,17 @@
       "added_roles": "Added Roles",
       "removed_roles": "Removed Roles",
       "old_pos": "Old Position",
-      "new_pos": "New Position"
+      "new_pos": "New Position",
+      "name": "Name",
+      "small_change": "{0} --> {1}"
     },
     "member": {
       "old_nick": "Old Nickname",
-      "new_nick": "New Nickname"
+      "new_nick": "New Nickname",
+      "kicked": "{0} was kicked",
+      "banned": "{0} was banned",
+      "joined": "{0} joined the server",
+      "discrim": "Discriminator"
     },
     "message": {
       "message": "Message",
@@ -2339,9 +2401,6 @@
       "mention": "Mentionable",
       "added_perm": "Added Permissions",
       "removed_perm": "Removed Permissions"
-    },
-    "user": {
-      "old_discrim": "Old Discriminator"
     },
     "voice": {
       "deafen": "Deafened",

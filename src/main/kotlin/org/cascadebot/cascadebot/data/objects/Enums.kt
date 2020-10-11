@@ -135,9 +135,9 @@ enum class ArgumentType {
 enum class AffectedType(vararg val allowedDisplayTypes: ModlogEvent.ModlogDisplayType) {
     UNKNOWN(ModlogEvent.ModlogDisplayType.PLAIN),
     USER(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
-    ROLE(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_FOOTER, ModlogEvent.ModlogDisplayType.PLAIN),
+    ROLE(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
     EMOTE(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
-    GUILD(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_FOOTER, ModlogEvent.ModlogDisplayType.PLAIN),
+    GUILD(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
     CHANNEL(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.PLAIN),
     GROUP(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.PLAIN),
     SETTING(ModlogEvent.ModlogDisplayType.PLAIN),
