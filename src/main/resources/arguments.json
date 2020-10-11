@@ -242,6 +242,15 @@
   "color*": {
     "value": {
       "_type": "required"
+    },
+    "red*": {
+      "_type": "required",
+      "green*": {
+        "_type": "required",
+        "blue": {
+          "_type": "required"
+        }
+      }
     }
   },
   "ban*": {

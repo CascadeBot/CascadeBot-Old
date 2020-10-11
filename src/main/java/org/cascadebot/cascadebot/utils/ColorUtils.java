@@ -32,7 +32,7 @@ public class ColorUtils {
 
     private static final Pattern HEX_COLOR = Pattern.compile("#([A-Fa-f0-9]+)");
     private static final Pattern DECIMAL_COLOR = Pattern.compile("([0-9]{1,8})");
-    private static final Pattern RGB_COLOR = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})");
+    private static final Pattern RGB_COLOR = Pattern.compile("(\\d{1,3})[, ](\\d{1,3})[, ](\\d{1,3})");
     private static final Pattern BINARY_COLOR = Pattern.compile("([0-1]+)");
 
 

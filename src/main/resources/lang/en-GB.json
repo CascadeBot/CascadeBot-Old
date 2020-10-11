@@ -1648,6 +1648,9 @@
     "page": "page",
     "min": "min",
     "max": "max",
+    "red": "red",
+    "green": "green",
+    "blue": "blue",
     "filters#type#whitelist": {
       "name": "whitelist"
     },
@@ -1675,6 +1678,9 @@
     },
     "random#min#max": {
       "description": "Random number between the min and the max."
+    },
+    "color#red#green#blue": {
+      "description": "Gets the information of a colour from the red, green and blue values."
     }
   },
   "utils": {
