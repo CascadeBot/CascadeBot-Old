@@ -62,7 +62,7 @@
     },
     "random": {
       "command": "random",
-      "description": "Returns a random number.",
+      "description": "Random number between 1 and 10.",
       "numbers_only": "The range needs to be a integer value!",
       "no_negatives": "Negative numbers are not allowed",
       "random_result": "Random number is `{0}`",
@@ -1642,6 +1642,8 @@
     "filter": "filter",
     "type": "type",
     "page": "page",
+    "min": "min",
+    "max": "max",
     "filters#type#whitelist": {
       "name": "whitelist"
     },
@@ -1663,6 +1665,12 @@
     "guild#flag#list": {
       "name": "list",
       "description": "Lists all flags."
+    },
+    "random#max": {
+      "description": "Random number between 1 and the max you specify."
+    },
+    "random#min#max": {
+      "description": "Random number between the min and the max."
     }
   },
   "utils": {

@@ -636,7 +636,16 @@
       "_type": "required"
     }
   },
-  "random*": {
+  "random": {
+    "max": {
+      "_type": "required"
+    },
+    "min*": {
+      "_type": "required",
+      "max": {
+        "_type": "required"
+      }
+    },
     "choice*": {
       "words": {
         "_type": "required"
@@ -644,9 +653,6 @@
     },
     "color": {
       "_type": "command"
-    },
-    "amount": {
-      "_type": "optional"
     }
   },
   "filters*": {
