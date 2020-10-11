@@ -1439,6 +1439,7 @@
     "subcommand": "Subcommand",
     "command": "Command",
     "module": "Module",
+    "modules": "Modules",
     "discord_perms": "Discord permissions",
     "default_permission": "Default permission",
     "no_permission": "No permission",
