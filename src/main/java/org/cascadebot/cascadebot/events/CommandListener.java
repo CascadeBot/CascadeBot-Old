@@ -171,7 +171,7 @@ public class CommandListener extends ListenerAdapter {
 
     private boolean processSubCommands(MainCommand cmd, String[] args, CommandContext parentCommandContext) {
         for (ExecutableCommand subCommand : cmd.subCommands()) {
-            if (subCommand.command().equalsIgnoreCase(args[0])) {
+            if (subCommand.command(parentCommandContext.getLocale()).equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.getMention());
                 if (!isAuthorised(cmd, subCommandContext)) {
                     return false;
