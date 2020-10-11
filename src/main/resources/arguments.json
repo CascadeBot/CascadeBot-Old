@@ -358,16 +358,22 @@
     "load*": {
       "name*": {
         "_type": "required",
-        "scope": {
-          "_type": "optional"
+        "guild": {
+          "_type": "optional",
+          "_aliases": [
+            "user"
+          ]
         }
       }
     },
     "save*": {
       "name*": {
         "_type": "required",
-        "scope": {
-          "_type": "optional"
+        "guild": {
+          "_type": "optional",
+          "_aliases": [
+            "user"
+          ]
         }
       }
     },
