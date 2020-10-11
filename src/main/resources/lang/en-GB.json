@@ -272,6 +272,9 @@
     "settings": {
       "command": "settings",
       "description": "Allows users to change settings for the guild.",
+      "aliases": [
+        "setting"
+      ],
       "list": {
         "command": "list",
         "description": "Lists the settings that can be changed for the guild."
