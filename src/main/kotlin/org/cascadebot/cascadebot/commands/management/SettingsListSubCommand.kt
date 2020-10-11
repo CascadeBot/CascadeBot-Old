@@ -7,6 +7,8 @@ package org.cascadebot.cascadebot.commands.management
 
 import net.dv8tion.jda.api.entities.Member
 import org.apache.commons.lang3.StringUtils
+import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.UnicodeConstants
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
@@ -20,25 +22,35 @@ import org.cascadebot.cascadebot.utils.Table.TableBuilder
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import java.lang.reflect.Field
+import java.util.Map
+import java.util.logging.Logger
 
 class SettingsListSubCommand(private val settingsClasses: List<Class<*>>) : SubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         val pages = mutableListOf<Page>()
         for (settingsClass in settingsClasses) {
-            val tableBuilder = TableBuilder(context.i18n("commands.settings.setting"), context.i18n("commands.settings.current_value"))
+            var descriptionStr = "";
             val entries = SettingsCommand.getSettingsFromClass(settingsClass).entries
 
             if (entries.isEmpty()) continue
 
             entries.stream()
-                    .sorted(java.util.Map.Entry.comparingByKey())
+                    .sorted(Map.Entry.comparingByKey())
                     .map { it.value }
                     .forEach { f: Field ->
-                        try {
-                            tableBuilder.addRow(f.name, f.get(SettingsCommand.getSettingsContainer(f, context)).toString())
-                        } catch (e: IllegalAccessException) {
-                            e.printStackTrace()
+                        val settingsContainer = SettingsCommand.getSettingsContainer(f, context)
+                        if (f.canAccess(settingsContainer)) {
+                            val settingValue = f.get(settingsContainer);
+                            descriptionStr += if (settingValue is Boolean) {
+                                if (settingValue) {
+                                    "${f.name}: ${context.globalEmote("tick")} \n"
+                                } else {
+                                    "${f.name}: ${context.globalEmote("cross")} \n"
+                                }
+                            } else {
+                                "${f.name}: `${settingValue}` \n"
+                            }
                         }
                     }
 
@@ -46,7 +58,7 @@ class SettingsListSubCommand(private val settingsClasses: List<Class<*>>) : SubC
                 title {
                     name = context.i18n("commands.settings.section_title", StringUtils.capitalize(FormatUtils.formatEnum<Module>(settingsClass.getAnnotation(SettingsContainer::class.java).module, context.locale)))
                 }
-                description = tableBuilder.build().toString()
+                description = descriptionStr
             }));
         }
         context.uiMessaging.sendPagedMessage(pages)
