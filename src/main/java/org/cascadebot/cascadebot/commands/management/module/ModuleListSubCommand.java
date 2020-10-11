@@ -24,7 +24,7 @@ public class ModuleListSubCommand extends SubCommand {
     public void onCommand(Member sender, CommandContext context) {
         String moduleList = Arrays.stream(Module.values())
                 .filter(module -> !module.isPrivate())
-                .map(module -> (context.getData().getCore().isModuleEnabled(module) ? "<:tick:588829303618404352>" : "<:cross:588829151126093834>") +
+                .map(module -> context.getData().getCore().isModuleEnabled(module) ? context.globalEmote("tick") : context.globalEmote("cross") +
                         ExtensionsKt.toCapitalized(FormatUtils.formatEnum(module, context.getLocale())))
                 .collect(Collectors.joining("\n"));
 
