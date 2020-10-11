@@ -77,7 +77,12 @@ data class Argument(val id: String,
             val paramBuilder = StringBuilder()
             paramBuilder.append(argument)
             for (alias in aliases) {
-                paramBuilder.append("|").append(alias)
+                if (type != ArgumentType.COMMAND) {
+                    paramBuilder.append("|").append(locale.i18n("arguments.$alias"))
+                } else {
+                    paramBuilder.append("|").append(alias)
+                }
+
             }
             argument = paramBuilder.toString()
         }
