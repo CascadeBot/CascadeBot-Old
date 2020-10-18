@@ -651,7 +651,8 @@
       ],
       "no_music_playing": "There is no music playing!",
       "loop_mode": "Loop mode",
-      "up_next": "Up next"
+      "up_next": "Up next",
+      "amount_played": "Amount Played"
     },
     "seek": {
       "command": "seek",
