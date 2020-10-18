@@ -35,6 +35,23 @@
       "specify_usage": "Please specify command to get usage from!",
       "command_not_found": "Command `{0}` not found!"
     },
+    "stats": {
+      "command": "stats",
+      "description": "Shows statistics about Cascade Bot.",
+      "embed": {
+        "total_guilds": "Total Guilds",
+        "active_guilds": "Active Guilds",
+        "active_voice_channels": "Active Voice Channels",
+        "ram_usage": "RAM Usage",
+        "cpu_load": "CPU Load",
+        "total_shards": "Total Shards",
+        "online_shards": "Online Shards",
+        "gateway_ping": "Gateway Ping",
+        "rest_ping": "REST Ping",
+        "shard_status": "Shard Status",
+        "shard_id": "Shard ID"
+      }
+    },
     "page": {
       "command": "page",
       "description": "Jumps the user to a specific page on the latest paged message.",
