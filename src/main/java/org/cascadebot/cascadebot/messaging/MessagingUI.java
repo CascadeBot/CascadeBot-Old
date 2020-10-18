@@ -62,7 +62,7 @@ public class MessagingUI {
      */
     public CompletableFuture<Message> replyImage(String url) {
         if (context.getCoreSettings().getUseEmbedForMessages()) {
-            EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
+            EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser(), context.getLocale());
             embedBuilder.setImage(url);
             return context.getChannel().sendMessage(embedBuilder.build()).submit();
         } else {
@@ -143,7 +143,7 @@ public class MessagingUI {
             Messaging.sendEmbedMessage(
                     MessageType.DANGER,
                     context.getChannel(),
-                    MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
+                    MessagingObjects.getStandardMessageEmbed(message, context.getUser(), context.getLocale()),
                     context.getCoreSettings().getUseEmbedForMessages()
             ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         } else {
@@ -151,7 +151,7 @@ public class MessagingUI {
             Messaging.sendEmbedMessage(
                     MessageType.DANGER,
                     context.getChannel(),
-                    MessagingObjects.getStandardMessageEmbed(message, context.getUser()),
+                    MessagingObjects.getStandardMessageEmbed(message, context.getUser(), context.getLocale()),
                     context.getCoreSettings().getUseEmbedForMessages()
             ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         }
@@ -190,7 +190,7 @@ public class MessagingUI {
             context.getTypedMessaging().replySuccess(context.i18n("music.misc.loaded_tracks", tracks.size(), FormatUtils.formatLongTimeMills(time)));
         } else {
             AudioTrack track = tracks.get(0);
-            EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
+            EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser(), context.getLocale());
             builder.setTitle(context.i18n("music.misc.loaded_track"));
             builder.setDescription(track.getInfo().title);
             if (!track.getInfo().isStream) {
@@ -239,7 +239,7 @@ public class MessagingUI {
 
             String message = context.i18n("music.misc.load_options", selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
 
-            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
+            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser(), context.getLocale());
             embedBuilder.setTitle(context.i18n("music.misc.load_options_title"));
             embedBuilder.setDescription(message);
 

@@ -36,7 +36,7 @@ public class UnbanCommand extends MainCommand {
         List<User> bannedUsers = FinderUtil.findBannedUsers(target, context.getGuild());
 
         if (bannedUsers.size() == 0) {
-            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed(context.i18n("responses.cannot_find_user_matching", target), context.getUser()));
+            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed(context.i18n("responses.cannot_find_user_matching", target), context.getUser(), context.getLocale()));
         } else if (bannedUsers.size() == 1) {
             CascadeBot.INS.getModerationManager().unban(
                     context,
@@ -45,7 +45,7 @@ public class UnbanCommand extends MainCommand {
                     reason
             );
         } else {
-            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed(context.i18n("commands.unban.several_matches"), context.getUser()));
+            context.getTypedMessaging().replyDanger(MessagingObjects.getStandardMessageEmbed(context.i18n("commands.unban.several_matches"), context.getUser(), context.getLocale()));
         }
 
     }

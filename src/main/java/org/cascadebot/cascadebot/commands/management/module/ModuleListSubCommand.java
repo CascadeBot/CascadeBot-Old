@@ -31,7 +31,7 @@ public class ModuleListSubCommand extends SubCommand {
         context.getTypedMessaging().replyInfo(
                 MessagingObjects.getStandardMessageEmbed(
                     moduleList,
-                    context.getUser()).setTitle(ExtensionsKt.toCapitalized(context.i18n("words.modules"))
+                    context.getUser(), context.getLocale()).setTitle(ExtensionsKt.toCapitalized(context.i18n("words.modules"))
                 )
         );
     }

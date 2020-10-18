@@ -20,7 +20,7 @@ class StatsCommand : CoreCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
 
-        val builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.user)
+        val builder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.user, context.locale)
         builder.setTitle(context.selfUser.name)
         builder.setThumbnail(context.selfUser.effectiveAvatarUrl)
 

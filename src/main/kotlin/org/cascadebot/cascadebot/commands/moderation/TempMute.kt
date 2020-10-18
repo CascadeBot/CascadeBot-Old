@@ -26,7 +26,7 @@ class TempMute : MainCommand() {
         val targetMember = DiscordUtils.getMember(context.guild, context.getArg(0))
 
         if (targetMember == null) {
-            context.typedMessaging.replyDanger(MessagingObjects.getStandardMessageEmbed(context.i18n("responses.cannot_find_user"), context.user))
+            context.typedMessaging.replyDanger(MessagingObjects.getStandardMessageEmbed(context.i18n("responses.cannot_find_user"), context.user, context.locale))
             return
         }
 

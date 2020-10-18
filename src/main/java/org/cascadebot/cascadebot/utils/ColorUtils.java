@@ -91,7 +91,7 @@ public class ColorUtils {
         String rgbValues = color.getRed() + "," + color.getGreen() + "," + color.getBlue();
         String hex = "#" + ColorUtils.getHex(color.getRed(), color.getGreen(), color.getBlue());
         int decimalColor = color.getRGB();
-        EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
+        EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser(), context.getLocale());
         builder.setTitle(context.i18n("utils.color.embed_title", CSSColor.getLocalNameOrDefault(context.getLocale(), color, hex)));
         builder.setColor(color);
         builder.addField(context.i18n("utils.color.hex"), hex, true);
