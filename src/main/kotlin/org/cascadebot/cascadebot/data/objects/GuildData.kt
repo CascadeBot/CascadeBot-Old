@@ -6,8 +6,11 @@ import de.bild.codec.annotations.Id
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
+import net.dv8tion.jda.internal.utils.tuple.MutablePair
+import net.dv8tion.jda.internal.utils.tuple.Pair
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.data.managers.LockPermission
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
@@ -43,7 +46,8 @@ class GuildData(@field:Id val guildId: Long) {
     val music = GuildSettingsMusic()
     //endregion
 
-    var lockedChannels: MutableMap<String, MutableMap<String, List<Int>>> = mutableMapOf()
+    // <Channel ID, <Target ID, >>
+    var lockedChannels: MutableMap<String, MutableMap<String, MutablePair<LockPermission, LockPermission>>> = mutableMapOf()
 
     //region Transient fields
     @Transient

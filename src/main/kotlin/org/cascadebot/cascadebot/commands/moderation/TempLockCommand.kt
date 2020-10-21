@@ -10,6 +10,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.managers.LockManager
+import org.cascadebot.cascadebot.data.managers.LockPermission
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.scheduler.ActionType
@@ -54,13 +55,13 @@ class TempLockCommand : MainCommand() {
             context.channel
         }
 
-        val toAction = ScheduledAction.LockActionData(channel.idLong, 0, 0, 0)
+        val toAction = ScheduledAction.LockActionData(channel.idLong, LockPermission.NEUTRAL, 0, 0)
 
         var name: String? = null
         try {
             when (temp) {
                 is Role -> {
-                    toAction.oldPermission = LockManager.getPerm(channel, temp)[0]
+                    toAction.oldPermission = LockManager.getPerm(channel, temp).left
 
                     LockManager.lock(channel, temp)
 
@@ -68,7 +69,7 @@ class TempLockCommand : MainCommand() {
                     name = "%s %s".format(context.i18n("arguments.role"), temp.asMention)
                 }
                 is Member -> {
-                    toAction.oldPermission = LockManager.getPerm(channel, temp)[0]
+                    toAction.oldPermission = LockManager.getPerm(channel, temp).left
 
                     LockManager.lock(channel, temp)
 
@@ -76,7 +77,7 @@ class TempLockCommand : MainCommand() {
                     name = "%s %s".format(context.i18n("arguments.member"), temp.user.asMention)
                 }
                 is TextChannel -> {
-                    toAction.oldPermission = LockManager.getPerm(temp, context.guild.publicRole)[0]
+                    toAction.oldPermission = LockManager.getPerm(temp, context.guild.publicRole).left
 
                     LockManager.lock(temp, context.guild.publicRole)
 

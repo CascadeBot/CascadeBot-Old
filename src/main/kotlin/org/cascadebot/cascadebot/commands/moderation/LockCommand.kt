@@ -22,7 +22,7 @@ class LockCommand : MainCommand() {
 
         }
 
-        val temp: ISnowflake? = if (context.args.isNotEmpty()) {
+        val target: ISnowflake? = if (context.args.isNotEmpty()) {
             DiscordUtils.getRole(context.getArg(0), context.guild)
                     ?: DiscordUtils.getMember(context.guild, context.getArg(0))
                     ?: DiscordUtils.getTextChannel(context.guild, context.getArg(0))
@@ -33,17 +33,17 @@ class LockCommand : MainCommand() {
 
         var name: String? = null
         try {
-            when (temp) {
+            when (target) {
                 is Role -> {
-                    LockManager.lock(channel, temp)
-                    name = "%s %s".format(context.i18n("arguments.role"), temp.asMention)
+                    LockManager.lock(channel, target)
+                    name = "%s %s".format(context.i18n("arguments.role"), target.asMention)
                 }
                 is Member -> {
-                    LockManager.lock(channel, temp)
-                    name = "%s %s".format(context.i18n("arguments.member"), temp.asMention)
+                    LockManager.lock(channel, target)
+                    name = "%s %s".format(context.i18n("arguments.member"), target.asMention)
                 }
                 is TextChannel -> {
-                    LockManager.lock(temp, context.guild.publicRole)
+                    LockManager.lock(target, context.guild.publicRole)
                 }
             }
         } catch (e: PermissionException) {
@@ -51,8 +51,7 @@ class LockCommand : MainCommand() {
             return
         }
 
-
-        context.typedMessaging.replySuccess(if (temp is TextChannel) context.i18n("commands.lock.text_success", temp.name) else name?.let { context.i18n("commands.lock.success", channel.name, it) })
+        context.typedMessaging.replySuccess(if (target is TextChannel) context.i18n("commands.lock.text_success", target.name) else name?.let { context.i18n("commands.lock.success", channel.name, it) })
     }
 
 
