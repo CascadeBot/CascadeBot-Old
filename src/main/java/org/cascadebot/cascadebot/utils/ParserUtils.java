@@ -6,9 +6,24 @@ import java.util.regex.Pattern;
 
 public class ParserUtils {
 
-    private static final Pattern TEXT_TIME_PARSER = Pattern.compile("(?<weeks>\\d+)w|(?<days>\\d+)d|(?<hours>\\d+)h|(?<minutes>\\d+)m|(?<seconds>\\d+)s");
+    private static final Pattern TEXT_TIME_PARSER = Pattern.compile("(?<weeks>\\d+) ?w|(?<days>\\d+) ?d|(?<hours>\\d+) ?h|(?<minutes>\\d+) ?m|(?<seconds>\\d+) ?s");
     private static final Pattern DIGITAL_TIME_REGEX = Pattern.compile("(\\d+):(\\d+)(?::(\\d+))?");
 
+    /**
+     * Attempts to parse a time from a input string.
+     *
+     * Can parse three types of input:
+     * <ul>
+     *     <li>Number of seconds</li>
+     *     <li>Parses a time in mm:ss or hh:mm:ss format</li>
+     *     <li>Parses a time using 2h6m20s format <b>(1)</b></li>
+     * </ul>
+     * (1) accepts a variety of units including w (weeks), d (days), h (hours), m (minutes), s (seconds).
+     * Works with or without a space before the unit.
+     *
+     * @param input
+     * @return The number of milliseconds
+     */
     public static long parseTime(String input) {
         try {
             return Long.parseLong(input) * 1000;

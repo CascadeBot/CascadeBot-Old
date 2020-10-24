@@ -34,7 +34,7 @@ public class VolumeCommand extends MainCommand {
             return;
         } else if (volume > 100 && volume <= 200) {
             if (context.hasPermission("volume.extreme")) {
-                ConfirmUtils.confirmAction(sender.getIdLong(),
+                ConfirmUtils.registerForConfirmation(sender.getIdLong(),
                         "volume-extreme",
                         context.getChannel(),
                         MessageType.WARNING,
@@ -42,15 +42,12 @@ public class VolumeCommand extends MainCommand {
                         0,
                         TimeUnit.SECONDS.toMillis(30),
                         true,
-                        new ConfirmUtils.ConfirmRunnable() {
-                            @Override
-                            public void execute() {
-                                player.setVolume(volume);
-                                if (context.getData().getMusic().getPreserveVolume()) {
-                                    context.getData().getMusic().setVolume(volume);
-                                }
-                                context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
+                        () -> {
+                            player.setVolume(volume);
+                            if (context.getData().getMusic().getPreserveVolume()) {
+                                context.getData().getMusic().setVolume(volume);
                             }
+                            context.getTypedMessaging().replyInfo(context.i18n("commands.volume.volume_set", player.getVolume()));
                         });
                 return;
             } else {

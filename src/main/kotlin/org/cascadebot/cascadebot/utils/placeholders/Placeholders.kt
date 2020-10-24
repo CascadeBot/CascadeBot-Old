@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.utils.placeholders
 import net.dv8tion.jda.api.events.guild.member.GenericGuildMemberEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
@@ -162,7 +163,7 @@ object PlaceholderObjects {
 
     @JvmStatic
     @Suppress("UNCHECKED_CAST")
-    val goodbyes = placeholders<GuildMemberLeaveEvent>("goodbyes") {
+    val goodbyes = placeholders<GuildMemberRemoveEvent>("goodbyes") {
         greetingsCommon(this as Placeholders<GenericGuildMemberEvent>)
         staticPlaceholder("time_in_guild") { context -> Duration.between(context.item.member.timeJoined, OffsetDateTime.now()).toString() }
     }

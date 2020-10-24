@@ -24,23 +24,19 @@ public class ShutdownCommand extends RestrictedCommand {
     public void onCommand(Member sender, CommandContext context) {
         // A confirmation check to make sure we actually want to shut down on production
         if (Environment.isProduction()) {
-            if (!ConfirmUtils.hasConfirmedAction("shutdown_bot", sender.getIdLong())) {
-                ConfirmUtils.confirmAction(
+            if (!ConfirmUtils.hasRegisteredAction("shutdown_bot", sender.getIdLong())) {
+                ConfirmUtils.registerForConfirmation(
                         sender.getIdLong(),
                         "shutdown_bot",
                         context.getChannel(),
                         MessageType.DANGER,
                         "It looks like the bot is running in ***production*** mode, **do you _really_ want to do this?** \n If so, simply repeat the command again. This confirmation will expire in one minute!",
                         true,
-                        new ConfirmUtils.ConfirmRunnable() {
-                            @Override
-                            public void execute() {
-                                shutdown(context);
-                            }
-                        });
+                        () -> shutdown(context)
+                );
                 return;
             }
-            ConfirmUtils.completeAction("shutdown_bot", sender.getIdLong());
+            ConfirmUtils.confirmAction("shutdown_bot", sender.getIdLong());
         } else {
             shutdown(context);
         }
