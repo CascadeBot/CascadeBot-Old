@@ -1378,7 +1378,7 @@
       "emote_updated_roles": {
         "select": "emote_updated_roles",
         "display": "Emote updated roles",
-        "description": "Emote `{0}` roles where changed"
+        "description": "The role whitelist for the emote `{0}` were changed:"
       },
       "guild_member_joined": {
         "select": "guild_member_joined",
@@ -1540,7 +1540,7 @@
       },
       "voice_server_deafen": {
         "select": "voice_server_deafen",
-        "display": "Voice server deafen",
+        "display": "Voice server deafen"
       },
       "voice_server_mute": {
         "select": "voice_server_mute",
@@ -2048,6 +2048,7 @@
     "item": "item",
     "list": "list",
     "words": "words",
+    "unknown": "unknown",
     "pos": "position",
     "source": "source",
     "destination": "destination",
@@ -2263,6 +2264,7 @@
   "modlog": {
     "general": {
       "old_name": "Old Name",
+      "new_name": "New Name",
       "variable": "{0}",
       "responsible": "Responsible",
       "reason": "Reason",
