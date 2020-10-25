@@ -85,7 +85,9 @@ class SettingsCommand : MainCommand() {
     }
 
     override fun onCommand(sender: Member, context: CommandContext) {
-        if (context.args.size == 2) {
+        if (context.args.isEmpty()) {
+            this.subCommands().find { it.command() == "list" }?.onCommand(sender, context)
+        } else if (context.args.size == 2) {
             val field = getAllSettings(settingsClasses)[context.getArg(0).toLowerCase()]
 
             if (field != null) {

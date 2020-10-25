@@ -38,11 +38,13 @@ public class PermissionCommandUtils {
         }
 
         if (groupList.isEmpty()) {
+            // TODO Language!
             context.getTypedMessaging().replyDanger("No group found with name or id " + s);
             return;
         }
 
         if (groupList.size() > 5) {
+            // TODO Language!
             context.getTypedMessaging().replyDanger("Too many groups with the same name! Use these groups ids instead.");
             return;
         }
@@ -62,6 +64,7 @@ public class PermissionCommandUtils {
         int i = 1;
 
         StringBuilder groupsBuilder = new StringBuilder();
+        // TODO Language!
         groupsBuilder.append("Multiple Groups With the same name found. Select a group to view more info on it, and then use said group\n\n");
 
         for (Group group : groupList) {

@@ -19,13 +19,13 @@ public class ColorCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length != 1) {
+        if (context.getArgs().length == 0) {
             context.getUiMessaging().replyUsage();
             return;
         }
 
         try {
-            Color color = ColorUtils.getColor(context.getArg(0), context);
+            Color color = ColorUtils.getColor(context.getMessage(0), context);
             context.reply(ColorUtils.getColorEmbed(color, context));
         } catch (ColorUtils.ColorException e) {
             context.getTypedMessaging().replyDanger(e.getI18nMessage(context.getLocale()));

@@ -33,22 +33,20 @@ class MuteChannelSetupSubCommand : SubCommand() {
             return
         }
 
-        if (ConfirmUtils.hasConfirmedAction("mute.channelsetup", context.user.idLong)) {
-            ConfirmUtils.completeAction("mute.channelsetup", context.user.idLong)
+        if (ConfirmUtils.hasRegisteredAction("mute.channelsetup", context.user.idLong)) {
+            ConfirmUtils.confirmAction("mute.channelsetup", context.user.idLong)
             return
         }
 
-        ConfirmUtils.confirmAction(
+        ConfirmUtils.registerForConfirmation(
                 context.user.idLong,
                 "mute.channelsetup",
                 context.channel,
                 MessageType.WARNING,
                 context.i18n("commands.mute.channelsetup.warning"),
-                true,
-                object : ConfirmUtils.ConfirmRunnable() {
-                    override fun execute() {
-                        channelSetup(context)
-                    }
+                isCancellable = true,
+                action = Runnable {
+                    channelSetup(context)
                 }
         )
     }

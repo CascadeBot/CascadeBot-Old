@@ -1,0 +1,7 @@
+{
+  "keyBlacklist": ["command"],
+  "ignoreArrays": true,
+  "textToReplace": "dave",
+  "sourceFile": "en-GB.json",
+  "destinationFile": "en-GB-redacted.json"
+}

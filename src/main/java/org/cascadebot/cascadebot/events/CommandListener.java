@@ -118,7 +118,7 @@ public class CommandListener extends ListenerAdapter {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
             if (!cmd.module().isPrivate() && !guildData.getCore().isModuleEnabled(cmd.module())) {
                 if (guildData.getCore().getShowModuleErrors() || Environment.isDevelopment()) {
-                    EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.DANGER, event.getAuthor())
+                    EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.DANGER, event.getAuthor(), context.getLocale())
                             .setDescription(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.module(), context.getLocale()), trigger));
                     context.getTimedMessaging().sendAutoDeleteMessage(builder.build(), 5000);
                 }
@@ -171,7 +171,7 @@ public class CommandListener extends ListenerAdapter {
 
     private boolean processSubCommands(MainCommand cmd, String[] args, CommandContext parentCommandContext) {
         for (ExecutableCommand subCommand : cmd.subCommands()) {
-            if (subCommand.command().equalsIgnoreCase(args[0])) {
+            if (subCommand.command(parentCommandContext.getLocale()).equalsIgnoreCase(args[0])) {
                 CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.getMention());
                 if (!isAuthorised(cmd, subCommandContext)) {
                     return false;
