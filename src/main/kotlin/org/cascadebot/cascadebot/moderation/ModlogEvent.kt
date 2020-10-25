@@ -5,9 +5,10 @@ import lombok.Getter
 import org.cascadebot.cascadebot.messaging.MessageType
 import java.util.ArrayList
 import java.util.Arrays
+import java.util.EnumMap
 import java.util.HashMap
 
-enum class ModlogEvent(messageType: MessageType, displayType: ModlogDisplayType, vararg categories: Category) {
+enum class ModlogEvent(@Transient val messageType: MessageType, val displayType: ModlogDisplayType, vararg categories: Category) {
 
     EMOTE_CREATED(MessageType.INFO, ModlogDisplayType.AFFECTED_THUMBNAIL, Category.EMOTE),
     EMOTE_DELETED(MessageType.INFO, ModlogDisplayType.PLAIN, Category.EMOTE),
@@ -122,7 +123,7 @@ enum class ModlogEvent(messageType: MessageType, displayType: ModlogDisplayType,
     CASCADE_TAG_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.CASCADE, Category.CASCADE_CUSTOM_COMMANDS);
 
     companion object {
-        private val modlogCategoryMap: MutableMap<Category, MutableList<ModlogEvent>> = HashMap()
+        private val modlogCategoryMap: MutableMap<Category, MutableList<ModlogEvent>> = EnumMap(Category::class.java)
 
         fun getModlogCategoryMap(): Map<Category, MutableList<ModlogEvent>> {
             return modlogCategoryMap
@@ -134,9 +135,9 @@ enum class ModlogEvent(messageType: MessageType, displayType: ModlogDisplayType,
 
         init {
             for (cat in Category.values()) {
-                modlogCategoryMap[cat] = ArrayList()
+                modlogCategoryMap[cat] = mutableListOf()
             }
-            modlogCategoryMap[Category.ALL] = Arrays.asList(*values())
+            modlogCategoryMap[Category.ALL] = mutableListOf(*values())
             for (event in values()) {
                 for (category in event.categories) {
                     modlogCategoryMap[category]?.add(event)
@@ -145,10 +146,7 @@ enum class ModlogEvent(messageType: MessageType, displayType: ModlogDisplayType,
         }
     }
 
-    val categories: List<Category>
-    @Transient
-    val messageType: MessageType
-    val displayType: ModlogDisplayType
+    val categories: List<Category> = listOf(*categories)
 
     enum class Category {
         ALL,
@@ -175,9 +173,5 @@ enum class ModlogEvent(messageType: MessageType, displayType: ModlogDisplayType,
         PLAIN
     }
 
-    init {
-        this.categories = Arrays.asList(*categories)
-        this.messageType = messageType
-        this.displayType = displayType
-    }
+}
 }

@@ -11,24 +11,14 @@ sealed class ModlogEmbedPart {
 
 }
 
-class ModlogEmbedField() : ModlogEmbedPart() {
+class ModlogEmbedField(val inline: Boolean = true,
+                       val titleLanguagePath: String,
+                       var valueLanguagePath: String? = null, vararg valueLanguageObjects: String) : ModlogEmbedPart() {
 
-    var inline: Boolean = false
+    constructor() : this(true, "", "")
 
-    var titleLanguagePath: String = ""
-    var titleLanguageObjects: MutableList<String> = ArrayList()
-
-    var valueLanguagePath: String = ""
-    var valueLanguageObjects: MutableList<String> = ArrayList()
-
-    constructor(inline: Boolean = true,
-                titleLanguagePath: String,
-                valueLanguagePath: String, vararg valueLanguageObjects: String): this() {
-        this.inline = inline;
-        this.titleLanguagePath = titleLanguagePath
-        this.valueLanguagePath = valueLanguagePath
-        this.valueLanguageObjects.addAll(valueLanguageObjects)
-    }
+    val titleLanguageObjects: MutableList<String> = mutableListOf()
+    val valueLanguageObjects: MutableList<String> = mutableListOf(*valueLanguageObjects)
 
     fun addTitleObjects(vararg titleLanguageObjects: String) {
         this.titleLanguageObjects.addAll(titleLanguageObjects)
@@ -41,20 +31,16 @@ class ModlogEmbedField() : ModlogEmbedPart() {
     override fun build(locale: Locale, embedBuilder: WebhookEmbedBuilder) {
         embedBuilder.addField(WebhookEmbed.EmbedField(inline,
                 Language.i18n(locale, titleLanguagePath, *titleLanguageObjects.toTypedArray()),
-                Language.i18n(locale, valueLanguagePath, *valueLanguageObjects.toTypedArray())))
+                Language.i18n(locale, valueLanguagePath ?: "modlog.general.variable", *valueLanguageObjects.toTypedArray())))
     }
 
 }
 
-class ModlogEmbedDescription() : ModlogEmbedPart() {
+class ModlogEmbedDescription(val languagePath: String, vararg languageObjects: String) : ModlogEmbedPart() {
 
-    var languagePath: String = ""
-    var languageObjects: MutableList<String> = ArrayList()
+    constructor() : this("")
 
-    constructor(languagePath: String, vararg languageObjects: String): this() {
-        this.languagePath = languagePath
-        this.languageObjects.addAll(languageObjects)
-    }
+    var languageObjects: MutableList<String> = mutableListOf(*languageObjects)
 
     override fun build(locale: Locale, embedBuilder: WebhookEmbedBuilder) {
         embedBuilder.setDescription(Language.i18n(locale, languagePath, *languageObjects.toTypedArray()))
@@ -62,17 +48,11 @@ class ModlogEmbedDescription() : ModlogEmbedPart() {
 
 }
 
-class ModlogEmbedFooter() : ModlogEmbedPart() {
+class ModlogEmbedFooter(val languagePath: String, val icon: String? = null, vararg languageObjects: String) : ModlogEmbedPart() {
 
-    var languagePath: String = ""
-    var languageObjects: MutableList<String> = ArrayList()
+    constructor() : this("", "")
 
-    var icon: String? = null
-
-    constructor(languagePath: String, icon: String? = null, vararg languageObjects: String): this() {
-        this.languagePath = languagePath
-        this.languageObjects.addAll(languageObjects)
-    }
+    var languageObjects: MutableList<String> = mutableListOf(*languageObjects)
 
     override fun build(locale: Locale, embedBuilder: WebhookEmbedBuilder) {
         embedBuilder.setFooter(WebhookEmbed.EmbedFooter(Language.i18n(locale, languagePath, *languageObjects.toTypedArray()), icon));
