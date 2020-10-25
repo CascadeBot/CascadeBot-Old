@@ -9,25 +9,18 @@ import club.minnced.discord.webhook.send.WebhookEmbed.EmbedTitle
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Emote
-import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Icon
-import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
-import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
-import org.cascadebot.cascadebot.data.language.Language.i18n
+import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.moderation.ModlogEvent
-import org.cascadebot.cascadebot.permissions.objects.Group
-import org.cascadebot.cascadebot.utils.FormatUtils
-import java.lang.reflect.Field
+import org.cascadebot.cascadebot.utils.toCapitalized
 import java.net.URL
 import java.time.Instant
-import java.time.temporal.TemporalAccessor
 import java.util.ArrayList
 import java.util.Date
 import java.util.function.Consumer
@@ -168,11 +161,27 @@ class GuildSettingsModeration {
 
         fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {
             val webhookEmbedBuilder = WebhookEmbedBuilder()
-            webhookEmbedBuilder.setTitle(EmbedTitle(i18n(guildData.locale, "enums.modlogevent." + modlogEventStore.trigger.name.toLowerCase() + ".display"), null))
+
+            val path = "enums.modlogevent.${modlogEventStore.trigger.name.toLowerCase()}.description"
+            val element = Language.getLanguageOrDefault(guildData.locale).getElement(path)
+
+            if (element.isPresent) {
+                webhookEmbedBuilder.setDescription(
+                        Language.i18n(
+                                guildData.locale,
+                                path,
+                                modlogEventStore.affected.name,
+                                modlogEventStore.responsible?.asTag ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized(),
+                                *modlogEventStore.extraDescriptionInfo.toTypedArray()
+                        )
+                )
+            }
+
+            webhookEmbedBuilder.setTitle(EmbedTitle(Language.i18n(guildData.locale, "enums.modlogevent." + modlogEventStore.trigger.name.toLowerCase() + ".display"), null))
             val affected: ModlogAffected = modlogEventStore.affected;
 
             when (modlogEventStore.trigger.displayType) {
-                ModlogEvent.ModlogDisplayType.PLAIN -> {
+                ModlogEvent.ModlogDisplayType.AFFECTED -> {
                     var name = affected.name;
                     if (affected.id != null) {
                         name += " (" + affected.id + ")"
@@ -192,7 +201,6 @@ class GuildSettingsModeration {
                         AffectedType.EMOTE -> {
                             val emote: Emote = CascadeBot.INS.shardManager.getEmoteById(affected.id!!)!!
                             webhookEmbedBuilder.setThumbnailUrl(emote.imageUrl)
-                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, null, null))
                         }
                     }
                 }
