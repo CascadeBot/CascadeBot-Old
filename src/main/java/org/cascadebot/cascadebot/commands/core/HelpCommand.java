@@ -9,6 +9,7 @@ import org.cascadebot.cascadebot.commandmeta.CoreCommand;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.utils.FormatUtils;
+import org.cascadebot.cascadebot.utils.language.LanguageUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 
@@ -43,6 +44,13 @@ public class HelpCommand extends CoreCommand {
                 } else {
                     context.getTypedMessaging().replyDanger(context.i18n("commands.help.module_not_enabled"));
                 }
+            } else {
+                context.getTypedMessaging().replyDanger(
+                        context.i18n("commands.help.module_not_valid",
+                                input,
+                                LanguageUtils.getListValidEnum(Module.class, context.getLocale(), module -> module != Module.DEVELOPER)
+                        )
+                );
             }
         } else {
             context.getUiMessaging().replyUsage();

@@ -169,7 +169,7 @@ public class ModerationManager {
     }
 
     private void sendSuccess(CommandContext context, User target, Member submitter, ModAction action, String reason) {
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb(context.getLocale())), submitter.getUser());
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb(context.getLocale())), submitter.getUser(), context.getLocale());
 
         if (!StringUtils.isBlank(reason)) {
             builder.addField(context.i18n("words.reason"), reason, false);
@@ -180,7 +180,7 @@ public class ModerationManager {
     }
 
     private void sendTempSuccess(CommandContext context, User target, Member submitter, ModAction action, String reason, long delay) {
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb(context.getLocale())), submitter.getUser());
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb(context.getLocale())), submitter.getUser(), context.getLocale());
 
         if (!StringUtils.isBlank(reason)) {
             builder.addField(context.i18n("words.reason"), reason, false);

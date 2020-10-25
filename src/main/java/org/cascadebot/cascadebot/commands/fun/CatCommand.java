@@ -34,7 +34,7 @@ public class CatCommand extends MainCommand {
                 }
                 try {
                     if (message.getEmbeds().size() > 0) {
-                        EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser());
+                        EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser(), context.getLocale());
                         embedBuilder.setImage(getCatUrl());
                         message.editMessage(embedBuilder.build()).queue();
                     } else {

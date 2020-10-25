@@ -18,7 +18,7 @@ object ColorUtils {
 
     private val HEX_COLOR = Pattern.compile("#([A-Fa-f0-9]+)")
     private val DECIMAL_COLOR = Pattern.compile("([0-9]{1,8})")
-    private val RGB_COLOR = Pattern.compile("(\\d{1,3}),(\\d{1,3}),(\\d{1,3})")
+    private val RGB_COLOR = Pattern.compile("(\\d{1,3})[, ](\\d{1,3})[, ](\\d{1,3})")
     private val BINARY_COLOR = Pattern.compile("([0-1]+)")
 
     fun getHex(r: Int, g: Int, b: Int): String {
@@ -84,7 +84,7 @@ object ColorUtils {
         val rgbValues = "${color.red},${color.green},${color.blue}"
         val hex = "#" + getHex(color.red, color.green, color.blue)
         val decimalColor = color.rgb
-        return MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.user).apply {
+        return MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.user, context.locale).apply {
             setTitle(context.i18n("utils.color.embed_title", CSSColor.getLocalNameOrDefault(context.locale, color, hex)))
             setColor(color)
             addField(context.i18n("utils.color.hex"), hex, true) // Hex Value

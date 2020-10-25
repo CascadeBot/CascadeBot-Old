@@ -12,6 +12,8 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.ExtensionsKt;
+import org.cascadebot.cascadebot.utils.FormatUtils;
 
 public class ModuleDisableSubCommand extends SubCommand {
 
@@ -25,13 +27,14 @@ public class ModuleDisableSubCommand extends SubCommand {
         Module module = EnumUtils.getEnum(Module.class, selectedModule);
 
         if (module != null) {
+            String moduleName = ExtensionsKt.toCapitalized(FormatUtils.formatEnum(module, context.getLocale()));
             try {
                 if (context.getData().getCore().disableModule(module)) {
                     // If module wasn't already disabled
-                    context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", module.toString()));
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", moduleName));
                 } else {
                     // If module was already disabled
-                    context.getTypedMessaging().replyInfo(context.i18n("commands.module.disable.already_disabled", module.toString()));
+                    context.getTypedMessaging().replyInfo(context.i18n("commands.module.disable.already_disabled", moduleName));
                 }
             } catch (IllegalArgumentException ex) {
                 context.getTypedMessaging().replyDanger(ex.getMessage());

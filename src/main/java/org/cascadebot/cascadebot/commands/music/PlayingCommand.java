@@ -152,7 +152,7 @@ public class PlayingCommand extends MainCommand {
             embedBuilder.addField(Language.i18n(guildId, "words.progress"), player.getTrackProgressBar(GuildDataManager.getGuildData(guildId).getCore().getUseEmbedForMessages()), false);
         }
 
-        embedBuilder.addField("Amount played", FormatUtils.formatLongTimeMills(player.getTrackPosition()) + " / " +
+        embedBuilder.addField(Language.i18n(guildId, "commands.playing.amount_played"), FormatUtils.formatLongTimeMills(player.getTrackPosition()) + " / " +
                 (!track.getInfo().isStream ? FormatUtils.formatLongTimeMills(track.getDuration()) : UnicodeConstants.INFINITY_SYMBOL), true);
         embedBuilder.addField(Language.i18n(guildId, "words.volume"), player.getVolume() + "%", true);
         embedBuilder.addField(Language.i18n(guildId, "commands.playing.loop_mode"), FormatUtils.formatEnum(player.getLoopMode(), Language.getGuildLocale(guildId)), true);

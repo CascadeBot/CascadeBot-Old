@@ -28,7 +28,7 @@ class AutoRoleListSubCommand : SubCommand() {
                 is Long -> autoRoles.append("<@$role>").append(" ")
             }
         }
-        val embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.user)
+        val embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.user, context.locale)
         embedBuilder.setTitle(context.i18n("words.autorole"))
         embedBuilder.setDescription("""
             ${context.i18n("commands.autorole.autorole_description")}
