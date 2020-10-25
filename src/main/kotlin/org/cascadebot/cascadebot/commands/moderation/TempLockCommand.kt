@@ -10,7 +10,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.managers.LockManager
-import org.cascadebot.cascadebot.data.managers.LockPermission
+import org.cascadebot.cascadebot.data.managers.Status
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.scheduler.ActionType
@@ -55,7 +55,7 @@ class TempLockCommand : MainCommand() {
             context.channel
         }
 
-        val toAction = ScheduledAction.LockActionData(channel.idLong, LockPermission.NEUTRAL, 0, 0)
+        val toAction = ScheduledAction.LockActionData(channel.idLong, Status.NEUTRAL, 0, 0)
 
         var name: String? = null
         try {

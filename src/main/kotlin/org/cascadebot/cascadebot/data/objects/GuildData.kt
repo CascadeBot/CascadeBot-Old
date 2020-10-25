@@ -1,16 +1,14 @@
 package org.cascadebot.cascadebot.data.objects
 
-import com.google.common.collect.ImmutableList
 import com.google.common.collect.Sets
 import de.bild.codec.annotations.Id
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import net.dv8tion.jda.internal.utils.tuple.MutablePair
-import net.dv8tion.jda.internal.utils.tuple.Pair
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Locale
-import org.cascadebot.cascadebot.data.managers.LockPermission
+import org.cascadebot.cascadebot.data.managers.Status
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
@@ -47,7 +45,7 @@ class GuildData(@field:Id val guildId: Long) {
     //endregion
 
     // <Channel ID, <Target ID, >>
-    var lockedChannels: MutableMap<String, MutableMap<String, MutablePair<LockPermission, LockPermission>>> = mutableMapOf()
+    var lockedChannels: MutableMap<String, MutableMap<String, MutablePair<Status, Status>>> = mutableMapOf()
 
     //region Transient fields
     @Transient
