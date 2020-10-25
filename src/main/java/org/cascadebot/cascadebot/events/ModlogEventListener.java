@@ -161,22 +161,34 @@ public class ModlogEventListener extends ListenerAdapter {
                 modlogEvent = ModlogEvent.EMOTE_DELETED;
             } else if (event instanceof EmoteUpdateNameEvent) {
                 modlogEvent = ModlogEvent.EMOTE_UPDATED_NAME;
-                ModlogEmbedField languageModlogEmbedField = new ModlogEmbedField(true, "modlog.general.old_name", "modlog.general.variable");
-                languageModlogEmbedField.addValueObjects(((EmoteUpdateNameEvent) event).getOldName());
-                embedFieldList.add(languageModlogEmbedField);
+
+                var oldName = new ModlogEmbedField(false, "modlog.general.old_name", null);
+                var newName = new ModlogEmbedField(false, "modlog.general.new_name", null);
+
+                oldName.addValueObjects(((EmoteUpdateNameEvent) event).getOldName());
+                newName.addValueObjects(((EmoteUpdateNameEvent) event).getNewName());
+
+                embedFieldList.add(oldName);
+                embedFieldList.add(newName);
             } else if (event instanceof EmoteUpdateRolesEvent) {
                 modlogEvent = ModlogEvent.EMOTE_UPDATED_ROLES;
+
                 List<Role> oldRoles = ((EmoteUpdateRolesEvent) event).getOldRoles();
                 List<Role> newRoles = ((EmoteUpdateRolesEvent) event).getNewRoles();
                 ListChanges<Role> roleListChanges = new ListChanges<>(oldRoles, newRoles);
-                ModlogEmbedField addedRolesEmbed = new ModlogEmbedField(false, "modlog.general.added_roles", "modlog.general.variable");
-                addedRolesEmbed.addValueObjects(roleListChanges.getAdded().stream().map(role -> role.getName() + " (" + role.getId() + ")")
-                        .collect(Collectors.joining("\n")));
-                ModlogEmbedField removedRolesEmbed = new ModlogEmbedField(false, "modlog.general.removed_roles", "modlog.general.variable");
-                removedRolesEmbed.addValueObjects(roleListChanges.getRemoved().stream().map(role -> role.getName() + " (" + role.getId() + ")")
-                        .collect(Collectors.joining("\n")));
-                embedFieldList.add(addedRolesEmbed);
-                embedFieldList.add(removedRolesEmbed);
+
+                if (!roleListChanges.getAdded().isEmpty()) {
+                    ModlogEmbedField addedRolesEmbed = new ModlogEmbedField(false, "modlog.general.added_roles", null);
+                    addedRolesEmbed.addValueObjects(roleListChanges.getAdded().stream().map(role -> role.getName() + " (" + role.getId() + ")")
+                            .collect(Collectors.joining("\n")));
+                    embedFieldList.add(addedRolesEmbed);
+                }
+                if (!roleListChanges.getRemoved().isEmpty()) {
+                    ModlogEmbedField removedRolesEmbed = new ModlogEmbedField(false, "modlog.general.removed_roles", null);
+                    removedRolesEmbed.addValueObjects(roleListChanges.getRemoved().stream().map(role -> role.getName() + " (" + role.getId() + ")")
+                            .collect(Collectors.joining("\n")));
+                    embedFieldList.add(removedRolesEmbed);
+                }
             } else {
                 return;
             }
