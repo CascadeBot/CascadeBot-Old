@@ -36,21 +36,20 @@ class TempLockCommand : MainCommand() {
         }
 
         var channel: TextChannel = context.channel
-        if (context.args.size == 3) {
-            val tempChannel = DiscordUtils.getTextChannel(context.guild, context.getArg(2))
+        if (context.args.size == 2) {
+            val tempChannel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
             if (tempChannel != null) {
                 channel = tempChannel
             } else {
-                context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(2)))
+                context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
                 return
             }
         }
 
-        val temp: ISnowflake? = if (context.args.size > 1) {
+        val target: ISnowflake = if (context.args.size == 3) {
             DiscordUtils.getRole(context.getArg(1), context.guild)
-                    ?: DiscordUtils.getMember(context.guild, context.getArg(1))
-                    ?: DiscordUtils.getTextChannel(context.guild, context.getArg(1))
-                    ?: return context.typedMessaging.replyDanger(context.i18n("commands.lock.invalid_argument", context.getArg(0)))
+                    ?: DiscordUtils.getMember(context.guild, context.getArg(2))
+                    ?: return context.typedMessaging.replyDanger(context.i18n("commands.templock.invalid_argument", context.getArg(2)))
         } else {
             context.channel
         }
@@ -59,29 +58,22 @@ class TempLockCommand : MainCommand() {
 
         var name: String? = null
         try {
-            when (temp) {
+            when (target) {
                 is Role -> {
-                    toAction.oldPermission = LockManager.getPerm(channel, temp).left
+                    toAction.oldPermission = LockManager.getPerm(channel, target).left
 
-                    LockManager.lock(channel, temp)
+                    LockManager.lock(channel, target)
 
-                    toAction.targetRoleID = temp.idLong
-                    name = "%s %s".format(context.i18n("arguments.role"), temp.asMention)
+                    toAction.targetRoleID = target.idLong
+                    name = "%s %s".format(context.i18n("arguments.role"), target.asMention)
                 }
                 is Member -> {
-                    toAction.oldPermission = LockManager.getPerm(channel, temp).left
+                    toAction.oldPermission = LockManager.getPerm(channel, target).left
 
-                    LockManager.lock(channel, temp)
+                    LockManager.lock(channel, target)
 
-                    toAction.targetMemberID = temp.idLong
-                    name = "%s %s".format(context.i18n("arguments.member"), temp.user.asMention)
-                }
-                is TextChannel -> {
-                    toAction.oldPermission = LockManager.getPerm(temp, context.guild.publicRole).left
-
-                    LockManager.lock(temp, context.guild.publicRole)
-
-                    toAction.targetChannelID = temp.idLong
+                    toAction.targetMemberID = target.idLong
+                    name = "%s %s".format(context.i18n("arguments.member"), target.user.asMention)
                 }
             }
         } catch (e: PermissionException) {
@@ -102,7 +94,7 @@ class TempLockCommand : MainCommand() {
 
         val textDuration = FormatUtils.formatTime(longDuration, context.locale, true).replace("(0[hm])".toRegex(), "") +
                 " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(longDuration, ChronoUnit.MILLIS), context.locale) + ")"
-        context.typedMessaging.replySuccess(if (temp is TextChannel) context.i18n("commands.templock.text_success", temp.name, textDuration) else name?.let { context.i18n("commands.templock.success", channel.name, it, textDuration) })
+        context.typedMessaging.replySuccess(if (target is TextChannel) context.i18n("commands.templock.text_success", target.name, textDuration) else name?.let { context.i18n("commands.templock.success", channel.name, it, textDuration) })
     }
 
 

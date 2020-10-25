@@ -334,38 +334,22 @@
     }
   },
   "lock": {
-    "channel*": {
-      "_type": "optional"
-    },
-    "role*": {
-      "_type": "optional",
-      "channel*": {
-        "_type": "optional"
-      }
-    },
-    "member*": {
-      "_type": "optional",
-      "channel*": {
-        "_type": "optional"
+    "channel": {
+      "_type": "required",
+      "role*": {
+        "_aliases": ["member"],
+        "_type": "required"
       }
     }
   },
   "templock*" : {
     "duration" : {
       "_type" : "required",
-      "channel" : {
-        "_type" : "optional"
-      },
-      "role*" : {
-        "_type" : "optional",
-        "channel" : {
-          "_type" : "optional"
-        }
-      },
-      "member*" : {
-        "_type" : "optional",
-        "channel" : {
-          "_type" : "optional"
+      "channel": {
+        "_type": "required",
+        "role*": {
+          "_aliases": ["member"],
+          "_type": "required"
         }
       }
     }
@@ -376,19 +360,11 @@
     }
   },
   "unlock": {
-    "channel*": {
-      "_type": "optional"
-    },
-    "role*": {
-      "_type": "optional",
-      "channel*": {
-        "_type": "optional"
-      }
-    },
-    "member*": {
-      "_type": "optional",
-      "channel*": {
-        "_type": "optional"
+    "channel": {
+      "_type": "required",
+      "role*": {
+        "_aliases": ["member"],
+        "_type": "required"
       }
     }
   },

@@ -16,42 +16,41 @@ import org.cascadebot.cascadebot.utils.DiscordUtils
 class LockCommand : MainCommand() {
     override fun onCommand(sender: Member, context: CommandContext) {
         var channel: TextChannel = context.channel
-        if (context.args.size == 2) {
-            channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
-                    ?: return context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
+        if (context.args.isNotEmpty()) {
+            channel = DiscordUtils.getTextChannel(context.guild, context.getArg(0))
+                    ?: return context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(0)))
 
         }
 
-        val target: ISnowflake? = if (context.args.isNotEmpty()) {
-            DiscordUtils.getRole(context.getArg(0), context.guild)
-                    ?: DiscordUtils.getMember(context.guild, context.getArg(0))
-                    ?: DiscordUtils.getTextChannel(context.guild, context.getArg(0))
+        val target: ISnowflake = if (context.args.size == 2) {
+            DiscordUtils.getRole(context.getArg(1), context.guild)
+                    ?: DiscordUtils.getMember(context.guild, context.getArg(1))
+                    ?: DiscordUtils.getTextChannel(context.guild, context.getArg(1))
                     ?: return context.typedMessaging.replyDanger(context.i18n("commands.lock.invalid_argument", context.getArg(0)))
         } else {
-            context.channel
+            context.guild.publicRole
         }
 
-        var name: String? = null
-        try {
+        if (target is TextChannel) channel = target;
+
+        val name: String = try {
             when (target) {
                 is Role -> {
                     LockManager.lock(channel, target)
-                    name = "%s %s".format(context.i18n("arguments.role"), target.asMention)
+                    "%s %s".format(context.i18n("arguments.role"), target.asMention)
                 }
                 is Member -> {
                     LockManager.lock(channel, target)
-                    name = "%s %s".format(context.i18n("arguments.member"), target.asMention)
+                    "%s %s".format(context.i18n("arguments.member"), target.asMention)
                 }
-                is TextChannel -> {
-                    LockManager.lock(target, context.guild.publicRole)
-                }
+                else -> ""
             }
         } catch (e: PermissionException) {
             context.uiMessaging.sendBotDiscordPermError(e.permission)
             return
         }
 
-        context.typedMessaging.replySuccess(if (target is TextChannel) context.i18n("commands.lock.text_success", target.name) else name?.let { context.i18n("commands.lock.success", channel.name, it) })
+        context.typedMessaging.replySuccess((context.i18n("commands.lock.success", channel.name, name)))
     }
 
 

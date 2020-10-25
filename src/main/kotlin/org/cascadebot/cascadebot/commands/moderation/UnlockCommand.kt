@@ -17,41 +17,45 @@ import org.cascadebot.cascadebot.utils.DiscordUtils
 class UnlockCommand : MainCommand() {
     override fun onCommand(sender: Member, context: CommandContext) {
         var channel: TextChannel = context.channel
-        if (context.args.size == 2) {
-            channel = DiscordUtils.getTextChannel(context.guild, context.getArg(1))
-                    ?: return context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(1)))
+        if (context.args.isNotEmpty()) {
+            channel = DiscordUtils.getTextChannel(context.guild, context.getArg(0))
+                    ?: return context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_channel_matching", context.getArg(0)))
 
         }
 
-        val temp: ISnowflake? = if (context.args.isNotEmpty()) {
-            DiscordUtils.getRole(context.getArg(0), context.guild)
-                    ?: DiscordUtils.getMember(context.guild, context.getArg(0))
-                    ?: DiscordUtils.getTextChannel(context.guild, context.getArg(0))
+        val target: ISnowflake = if (context.args.size == 2) {
+            DiscordUtils.getRole(context.getArg(1), context.guild)
+                    ?: DiscordUtils.getMember(context.guild, context.getArg(1))
+                    ?: return context.typedMessaging.replyDanger(context.i18n("commands.unlock.invalid_argument", context.getArg(1)))
         } else {
-            context.channel
+            context.guild.publicRole
         }
 
-        var name: String? = null
-        try {
-            when (temp) {
+        var name = ""
+        val completed = try {
+            when (target) {
                 is Role -> {
-                    name = "%s %s".format(context.i18n("arguments.role"), temp.asMention)
-                    LockManager.unlock(context.guild, channel, temp)
+                    name = target.asMention
+                    LockManager.unlock(context.guild, channel, target)
                 }
                 is Member -> {
-                    name = "%s %s".format(context.i18n("arguments.member"), temp.asMention)
-                    LockManager.unlock(context.guild, channel, temp)
+                    name = "%s %s".format(context.i18n("arguments.member"), target.asMention)
+                    LockManager.unlock(context.guild, channel, target)
                 }
-                is TextChannel -> LockManager.unlock(context.guild, temp, context.guild.publicRole)
+                else -> false
             }
         } catch (e: PermissionException) {
             context.uiMessaging.sendBotDiscordPermError(e.permission)
             return
         } catch (e: NotFoundException) {
-            context.typedMessaging.replyWarning(context.i18n("commands.unlock.fail", if (temp is TextChannel) context.guild.publicRole.asMention else name!!))
+            context.typedMessaging.replyWarning(context.i18n("commands.unlock.fail", if (target is TextChannel) context.guild.publicRole.asMention else name!!))
             return
         }
-        context.typedMessaging.replySuccess(if (temp is TextChannel) context.i18n("commands.unlock.text_success", temp.name) else name?.let { context.i18n("commands.unlock.success", channel.name, it) })
+        if (completed) {
+            context.typedMessaging.replySuccess(context.i18n("commands.unlock.success", channel.name, name))
+        } else {
+            context.typedMessaging.replyDanger(context.i18n("commands.unlock.failure", channel.name, name))
+        }
     }
 
     override fun command(): String {

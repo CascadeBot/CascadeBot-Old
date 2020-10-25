@@ -141,22 +141,20 @@
     "lock": {
       "command": "lock",
       "description": "Locks a channel for a member, role or everyone",
-      "text_success": "Channel `{0}` locked",
-      "success": "Channel `{0}` has been locked for {1}",
+      "success": "The channel `{0}` has been locked for {1}",
       "invalid_argument": "Could not find a channel, role or member matching `{0}`"
     },
     "templock": {
       "command": "templock",
       "descripton": "Locks a channel for a member, role or everyone for a given amount of time",
-      "text_success": "Channel `{0}` locked\nThis will be reset in {1}",
-      "success": "Channel `{0}` has been locked for {1}\nThis will be reset in {2}"
+      "success": "The channel `{0}` has been locked for {1}\nThis will be reset in {2}"
     },
     "unlock": {
       "command": "unlock",
       "description": "Unlocks a channel for a member, role or everyone",
-      "text_success" : "Channel `{0}` unlocked",
-      "success" : "Channel `{0}` has been unlocked for {1}",
-      "fail" : "Channel is not locked for {0}"
+      "success" : "The channel `{0}` has been unlocked for {1}",
+      "failure": "The channel `{0}` is not locked for {1}",
+      "invalid_argument": "Could not find a channel, role or member matching `{0}`"
     },
     "userinfo": {
       "command": "userinfo",
