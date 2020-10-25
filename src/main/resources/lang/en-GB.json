@@ -817,9 +817,9 @@
         "description": "Cleans all messages from bots."
       },
       "name": "purge",
-      "description": "Cleans all messages.",
-      "successfully_done": "Successfully cleaned {0} messages!",
-      "restriction_time": "Found a message older than 2 weeks\nDue to Discord limits, we won't be able to clean it.",
+      "description": "Purges all messages.",
+      "successfully_done": "Successfully purged {0} messages!",
+      "restriction_time": "Found a message older than 2 weeks\nDue to Discord limits, we won't be able to purge it.",
       "failed_clear": "No messages were purged with this criteria"
     },
     "todo": {

@@ -61,13 +61,10 @@ public class QueueSaveSubCommand extends SubCommand {
                         return;
                     }
                 }
-                ConfirmUtils.confirmAction(sender.getIdLong(), "overwrite", context.getChannel(), MessageType.WARNING,
-                        context.i18n("commands.save.already_exists"), TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(10), true,  new ConfirmUtils.ConfirmRunnable() {
-                            @Override
-                            public void execute() {
-                                context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
-                                context.getTypedMessaging().replySuccess(context.i18n("commands.queue.save.saved_playlist", context.getArg(0), lambdaScope.name().toLowerCase()));
-                            }
+                ConfirmUtils.registerForConfirmation(sender.getIdLong(), "overwrite", context.getChannel(), MessageType.WARNING,
+                        context.i18n("commands.save.already_exists"), TimeUnit.SECONDS.toMillis(1), TimeUnit.SECONDS.toMillis(10), true, () -> {
+                            context.getMusicPlayer().saveCurrentPlaylist(lambdaOwner, lambdaScope, context.getArg(0), false);
+                            context.getTypedMessaging().replySuccess(context.i18n("commands.queue.save.saved_playlist", context.getArg(0), lambdaScope.name().toLowerCase()));
                         });
                 break;
             case NEW:
