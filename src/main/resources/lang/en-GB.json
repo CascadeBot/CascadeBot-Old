@@ -1688,27 +1688,14 @@
     "value": "value",
     "volume": "volume",
     "weight": "weight",
-    "setting": "setting",
-    "flag": "flag",
-    "query": "query",
-    "force": "force",
-    "scope": "scope",
-    "url": "url",
-    "reset": "reset",
-    "channel": "channel",
-    "prefix": "prefix",
-    "command": "command",
-    "timestamp": "timestamp",
-    "amount": "amount",
-    "token": "token",
-    "item": "item",
-    "list": "list",
     "words": "words",
-    "filters#type#whitelist": {
-      "name": "whitelist"
+    "guild#flag#list": {
+      "name": "list",
+      "description": "Lists all flags."
     },
-    "filters#operator#or": {
-      "name": "or"
+    "guild#save#all": {
+      "name": "all",
+      "description": "Saves all guilds."
     },
     "userperms#list#user#permissions": {
       "name": "permissions",
@@ -1718,13 +1705,8 @@
       "name": "groups",
       "description": "Lists the groups a user has."
     },
-    "guild#save#all": {
-      "name": "all",
-      "description": "Saves all guilds."
-    },
-    "guild#flag#list": {
-      "name": "list",
-      "description": "Lists all flags."
+    "color#red#green#blue": {
+      "description": "Gets the information of a colour from the red, green and blue values."
     },
     "random#max": {
       "description": "Random number between 1 and the max you specify."
@@ -1732,8 +1714,11 @@
     "random#min#max": {
       "description": "Random number between the min and the max."
     },
-    "color#red#green#blue": {
-      "description": "Gets the information of a colour from the red, green and blue values."
+    "filters#operator#or": {
+      "name": "or"
+    },
+    "filters#type#whitelist": {
+      "name": "whitelist"
     }
   },
   "utils": {
