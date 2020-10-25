@@ -9,6 +9,7 @@ import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.User;
+import org.cascadebot.cascadebot.data.language.Locale;
 
 @UtilityClass
 public class MessagingObjects {
@@ -33,25 +34,25 @@ public class MessagingObjects {
                 .setImage(null);
     }
 
-    public static EmbedBuilder getClearThreadLocalEmbedBuilder(User requestedBy) {
-        return getClearThreadLocalEmbedBuilder().setFooter("Requested by " + requestedBy.getAsTag(), requestedBy.getEffectiveAvatarUrl());
+    public static EmbedBuilder getClearThreadLocalEmbedBuilder(User requestedBy, Locale locale) {
+        return getClearThreadLocalEmbedBuilder().setFooter(locale.i18n("messaging.requested_by", requestedBy.getAsTag()), requestedBy.getEffectiveAvatarUrl());
     }
 
 
-    public static EmbedBuilder getStandardMessageEmbed(String message, User requestedBy) {
+    public static EmbedBuilder getStandardMessageEmbed(String message, User requestedBy, Locale locale) {
         return getClearThreadLocalEmbedBuilder()
                 .setDescription(message)
-                .setFooter("Requested by " + requestedBy.getAsTag(), requestedBy.getEffectiveAvatarUrl());
+                .setFooter(locale.i18n("messaging.requested_by", requestedBy.getAsTag()), requestedBy.getEffectiveAvatarUrl());
     }
 
     public static EmbedBuilder getMessageTypeEmbedBuilder(MessageType messageType) {
         return getClearThreadLocalEmbedBuilder().setColor(messageType.getColor());
     }
 
-    public static EmbedBuilder getMessageTypeEmbedBuilder(MessageType messageType, User requestedBy) {
+    public static EmbedBuilder getMessageTypeEmbedBuilder(MessageType messageType, User requestedBy, Locale locale) {
         return getClearThreadLocalEmbedBuilder()
                 .setColor(messageType.getColor())
-                .setFooter("Requested by " + requestedBy.getAsTag(), requestedBy.getEffectiveAvatarUrl());
+                .setFooter(locale.i18n("messaging.requested_by", requestedBy.getAsTag()), requestedBy.getEffectiveAvatarUrl());
     }
 
     public static MessageBuilder getMessageTypeMessageBuilder(MessageType messageType) {

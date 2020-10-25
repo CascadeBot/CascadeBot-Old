@@ -8,6 +8,7 @@
       "command": "help",
       "description": "This is the help command; what else did you expect?",
       "module_not_enabled": "That module isn't enabled for this guild!",
+      "module_not_valid": "The module `{0}` is not valid! Please choose from: {1}",
       "no_access_to_module": "You don't have access to any commands in this module!"
     },
     "prefix": {
@@ -33,6 +34,23 @@
       "title": "Usage for command |%|{0}",
       "specify_usage": "Please specify command to get usage from!",
       "command_not_found": "Command `{0}` not found!"
+    },
+    "stats": {
+      "command": "stats",
+      "description": "Shows statistics about Cascade Bot.",
+      "embed": {
+        "total_guilds": "Total Guilds",
+        "active_guilds": "Active Guilds",
+        "active_voice_channels": "Active Voice Channels",
+        "ram_usage": "RAM Usage",
+        "cpu_load": "CPU Load",
+        "total_shards": "Total Shards",
+        "online_shards": "Online Shards",
+        "gateway_ping": "Gateway Ping",
+        "rest_ping": "REST Ping",
+        "shard_status": "Shard Status",
+        "shard_id": "Shard ID"
+      }
     },
     "page": {
       "command": "page",
@@ -61,7 +79,7 @@
     },
     "random": {
       "command": "random",
-      "description": "Returns a random number.",
+      "description": "Random number between 1 and 10.",
       "numbers_only": "The range needs to be a integer value!",
       "no_negatives": "Negative numbers are not allowed",
       "random_result": "Random number is `{0}`",
@@ -69,6 +87,10 @@
       "choice": {
         "command": "choice",
         "description": "Return a random word of your chosen list."
+      },
+      "color": {
+        "command": "colour",
+        "description": "Returns a random colour."
       }
     },
     "roles": {
@@ -267,6 +289,9 @@
     "settings": {
       "command": "settings",
       "description": "Allows users to change settings for the guild.",
+      "aliases": [
+        "setting"
+      ],
       "list": {
         "command": "list",
         "description": "Lists the settings that can be changed for the guild."
@@ -626,7 +651,8 @@
       ],
       "no_music_playing": "There is no music playing!",
       "loop_mode": "Loop mode",
-      "up_next": "Up next"
+      "up_next": "Up next",
+      "amount_played": "Amount Played"
     },
     "seek": {
       "command": "seek",
@@ -663,16 +689,16 @@
       "queue_time": "*There is `{0}` left in this queue*",
       "load": {
         "command": "load",
-        "description": "Loads a playlist.",
+        "description": "Loads a playlist [from either the user or the guild].",
         "cannot_find_playlist": "Couldn't find playlist `{0}`.",
         "load_track": "Where would you like to load this track from\n|one| User\n|two| Guild"
       },
       "save": {
         "command": "save",
-        "description": "Saves a playlist.",
+        "description": "Saves a playlist [to either the user or the guild].",
         "scope_not_found": "Scope `{0}` not found!",
         "nothing_to_save": "There's nothing to save! The queue for this server is empty.",
-        "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.dave.overwrite` to overwrite it.",
+        "playlist_already_exists": "Playlist already exists in guild and you don't have the perm `cascade.queue.save.overwrite` to overwrite it.",
         "playlist_overwrite": "Playlist already exists. Would you like to overwrite it?",
         "saved_playlist": "Saved playlist `{0}` in scope `{1}`."
       },
@@ -717,6 +743,10 @@
     "skip": {
       "command": "skip",
       "description": "Skips the current song.",
+      "force": {
+        "command": "force",
+        "description": "Forcibily skips the current song."
+      },
       "yes": {
         "command": "yes",
         "description": "Votes to skip a track."
@@ -787,9 +817,9 @@
         "description": "Cleans all messages from bots."
       },
       "name": "purge",
-      "description": "Cleans all messages.",
-      "successfully_done": "Successfully cleaned {0} messages!",
-      "restriction_time": "Found a message older than 2 weeks\nDue to Discord limits, we won't be able to clean it.",
+      "description": "Purges all messages.",
+      "successfully_done": "Successfully purged {0} messages!",
+      "restriction_time": "Found a message older than 2 weeks\nDue to Discord limits, we won't be able to purge it.",
       "failed_clear": "No messages were purged with this criteria"
     },
     "todo": {
@@ -1430,6 +1460,7 @@
     "subcommand": "Subcommand",
     "command": "Command",
     "module": "Module",
+    "modules": "Modules",
     "discord_perms": "Discord permissions",
     "default_permission": "Default permission",
     "no_permission": "No permission",
@@ -1440,7 +1471,7 @@
     "total": "total",
     "status": "Status",
     "queue": "Queue",
-    "requested_by": "Requested by ",
+    "requested_by": "Requested by",
     "playing": "Playing",
     "paused": "Paused",
     "progress": "Progress",
@@ -1469,7 +1500,8 @@
   "messaging": {
     "loading_page": "Paged message loading...",
     "exception_message": "**{0}**\nStack trace: {1}",
-    "report_error": "Please report the stack trace and the error to the developers here: {0}"
+    "report_error": "Please report the stack trace and the error to the developers here: {0}",
+    "requested_by": "Requested by {0}"
   },
   "page_objects": {
     "page_footer": "Page {0}/{1}"
@@ -1587,52 +1619,58 @@
     }
   },
   "arguments": {
-    "name": "name",
-    "id": "id",
-    "user": "user",
-    "group": "group",
-    "permission": "permission",
-    "position": "position",
-    "role": "role",
-    "roles": "roles",
-    "mode": "mode",
-    "tag": "tag",
-    "category": "category",
-    "interval": "interval",
-    "content": "content",
-    "module": "module",
-    "member": "member",
-    "reason": "reason",
-    "guild_id": "guild_id",
-    "value": "value",
-    "volume": "volume",
-    "setting": "setting",
-    "flag": "flag",
-    "query": "query",
-    "force": "force",
-    "scope": "scope",
-    "url": "url",
-    "reset" : "reset",
-    "channel": "channel",
-    "prefix": "prefix",
-    "command": "command",
-    "timestamp": "timestamp",
     "amount": "amount",
-    "token": "token",
+    "blue": "blue",
+    "category": "category",
+    "channel": "channel",
+    "command": "command",
+    "content": "content",
+    "delay": "delay",
+    "destination": "destination",
+    "duration": "duration",
+    "filter": "filter",
+    "flag": "flag",
+    "force": "force",
+    "green": "green",
+    "group": "group",
+    "guild": "guild",
+    "guild_id": "guild_id",
+    "id": "id",
+    "index": "index",
+    "interval": "interval",
     "item": "item",
     "list": "list",
-    "words": "words",
-    "pos": "position",
-    "source": "source",
-    "destination": "destination",
+    "max": "max",
+    "member": "member",
     "message": "message",
-    "index": "index",
-    "weight": "weight",
-    "duration": "duration",
-    "delay": "delay",
-    "filter": "filter",
-    "type": "type",
+    "min": "min",
+    "mode": "mode",
+    "module": "module",
+    "name": "name",
     "page": "page",
+    "permission": "permission",
+    "pos": "position",
+    "position": "position",
+    "prefix": "prefix",
+    "query": "query",
+    "reason": "reason",
+    "red": "red",
+    "reset": "reset",
+    "role": "role",
+    "roles": "roles",
+    "scope": "scope",
+    "setting": "setting",
+    "source": "source",
+    "tag": "tag",
+    "timestamp": "timestamp",
+    "token": "token",
+    "type": "type",
+    "url": "url",
+    "user": "user",
+    "value": "value",
+    "volume": "volume",
+    "weight": "weight",
+    "words": "words",
     "filters#type#whitelist": {
       "name": "whitelist"
     },
@@ -1654,6 +1692,15 @@
     "guild#flag#list": {
       "name": "list",
       "description": "Lists all flags."
+    },
+    "random#max": {
+      "description": "Random number between 1 and the max you specify."
+    },
+    "random#min#max": {
+      "description": "Random number between the min and the max."
+    },
+    "color#red#green#blue": {
+      "description": "Gets the information of a colour from the red, green and blue values."
     }
   },
   "utils": {

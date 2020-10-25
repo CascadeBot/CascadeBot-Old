@@ -75,7 +75,7 @@ public class SearchCommand extends MainCommand {
                 messageBuilder.append('\n');
             }
 
-            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser());
+            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser(), context.getLocale());
             embedBuilder.setTitle(context.i18n("commands.search.found_result", searchResults.size()));
             embedBuilder.setDescription(messageBuilder.toString());
 
