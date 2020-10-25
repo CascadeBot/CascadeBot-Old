@@ -51,6 +51,11 @@ object Language {
     }
 
     @JvmStatic
+    fun getLanguageOrDefault(locale: Locale): JSONConfig {
+        return languages[locale] ?: languages[Locale.getDefaultLocale()]!!
+    }
+
+    @JvmStatic
     fun hasLanguageEntry(locale: Locale, path: String?): Boolean {
         return languages.containsKey(locale) && languages[locale]!!.getString(path).isPresent
     }
