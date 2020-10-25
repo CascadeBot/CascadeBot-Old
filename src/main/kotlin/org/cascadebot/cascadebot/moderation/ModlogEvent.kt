@@ -60,14 +60,14 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     VOICE_FORCE_MOVE(MessageType.WARNING, ModlogDisplayType.AFFECTED_AUTHOR, Category.VOICE, Category.MODERATION),
     VOICE_DISCONNECT(MessageType.WARNING, ModlogDisplayType.AFFECTED_AUTHOR, Category.VOICE, Category.MODERATION),
 
-    ROLE_CREATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.ROLE),
-    ROLE_DELETED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.ROLE),
-    ROLE_COLOR_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.ROLE),
-    ROLE_HOIST_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.ROLE),
-    ROLE_MENTIONABLE_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.ROLE),
-    ROLE_NAME_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.ROLE),
-    ROLE_PERMISSIONS_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.ROLE),
-    ROLE_POSITION_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.ROLE),
+    ROLE_CREATED(MessageType.WARNING, ModlogDisplayType.AFFECTED, Category.ROLE),
+    ROLE_DELETED(MessageType.WARNING, ModlogDisplayType.AFFECTED, Category.ROLE),
+    ROLE_COLOR_UPDATED(MessageType.WARNING, ModlogDisplayType.AFFECTED, Category.ROLE),
+    ROLE_HOIST_UPDATED(MessageType.WARNING, ModlogDisplayType.AFFECTED, Category.ROLE),
+    ROLE_MENTIONABLE_UPDATED(MessageType.WARNING, ModlogDisplayType.AFFECTED, Category.ROLE),
+    ROLE_NAME_UPDATED(MessageType.WARNING, ModlogDisplayType.AFFECTED, Category.ROLE),
+    ROLE_PERMISSIONS_UPDATED(MessageType.WARNING, ModlogDisplayType.AFFECTED, Category.ROLE),
+    ROLE_POSITION_UPDATED(MessageType.WARNING, ModlogDisplayType.AFFECTED, Category.ROLE),
 
     USER_DISCRIMINATOR_UPDATED(MessageType.INFO, ModlogDisplayType.AFFECTED_THUMBNAIL, Category.USER),
     USER_NAME_UPDATED(MessageType.INFO, ModlogDisplayType.AFFECTED_THUMBNAIL, Category.USER),
@@ -170,8 +170,8 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     enum class ModlogDisplayType {
         AFFECTED_THUMBNAIL,
         AFFECTED_AUTHOR,
+        AFFECTED,
         PLAIN
     }
 
-}
 }
