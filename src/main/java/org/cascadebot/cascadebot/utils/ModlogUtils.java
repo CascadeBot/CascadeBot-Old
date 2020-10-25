@@ -23,12 +23,13 @@ public class ModlogUtils {
         guild.retrieveAuditLogs().limit(5 /* Get last 5 entries in case something else happens in the 500 ms */)
                 .queueAfter(500, TimeUnit.MILLISECONDS, // Wait 500ms so we have a better chance of it being in the modlog
                         auditLogEntries -> {
+            var startTime = OffsetDateTime.now();
             for (AuditLogEntry entry : auditLogEntries) {
-                long millis = Duration.between(entry.getTimeCreated(), OffsetDateTime.now()).toMillis();
+                long millis = Duration.between(entry.getTimeCreated(), startTime).toMillis();
                 if (!actionTypeList.contains(entry.getType())) {
                     continue;
                 }
-                if (millis > 1000l) {
+                if (millis > 5000l) {
                     continue;
                 }
                 if (targetId != -1) {
