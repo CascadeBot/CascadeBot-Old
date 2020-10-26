@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
-import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Emote;
@@ -101,7 +100,6 @@ import net.dv8tion.jda.api.events.role.update.RoleUpdatePositionEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.apache.commons.codec.language.bm.Lang;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -121,7 +119,7 @@ import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.ModlogUtils;
 import org.cascadebot.cascadebot.utils.SerializableMessage;
-import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
+import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -132,26 +130,18 @@ import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ModlogEventListener extends ListenerAdapter {
 
-    private Map<Long, ModlogChannelMoveCollectorRunnable> moveRunnableMap = new HashMap<>();
-    private Map<Long, ModlogMemberRoleCollectorRunnable> roleRunnableMap = new HashMap<>();
+    private final Map<Long, ModlogChannelMoveCollectorRunnable> moveRunnableMap = new HashMap<>();
+    private final Map<Long, ModlogMemberRoleCollectorRunnable> roleRunnableMap = new HashMap<>();
 
     public void onGenericEmote(GenericEmoteEvent event) {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
@@ -314,7 +304,7 @@ public class ModlogEventListener extends ListenerAdapter {
     //endregion
 
     //region Message
-    public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
+    public void onGuildMessageDelete(@NotNull GuildMessageDeleteEvent event) {
         if (CascadeBot.INS.getRedisClient() == null) {
             return;
         }
@@ -362,7 +352,7 @@ public class ModlogEventListener extends ListenerAdapter {
         }, ActionType.MESSAGE_DELETE);
     }
 
-    public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
+    public void onGuildMessageUpdate(@NotNull GuildMessageUpdateEvent event) {
         if (CascadeBot.INS.getRedisClient() == null) {
             return;
         }
@@ -603,7 +593,7 @@ public class ModlogEventListener extends ListenerAdapter {
     }
 
     //region Channels
-    public void onGenericStoreChannel(GenericStoreChannelEvent event) {
+    public void onGenericStoreChannel(@NotNull GenericStoreChannelEvent event) {
         if (event instanceof StoreChannelCreateEvent) {
             handleChannelCreateEvents(event.getChannel().getGuild(), ChannelType.STORE, event.getChannel());
         } else if (event instanceof StoreChannelDeleteEvent) {
@@ -615,7 +605,7 @@ public class ModlogEventListener extends ListenerAdapter {
         }
     }
 
-    public void onGenericTextChannel(GenericTextChannelEvent event) {
+    public void onGenericTextChannel(@NotNull GenericTextChannelEvent event) {
         if (event instanceof TextChannelCreateEvent) {
             handleChannelCreateEvents(event.getGuild(), ChannelType.TEXT, event.getChannel());
             return;
@@ -670,7 +660,7 @@ public class ModlogEventListener extends ListenerAdapter {
         }, ActionType.CHANNEL_UPDATE);
     }
 
-    public void onGenericVoiceChannel(GenericVoiceChannelEvent event) {
+    public void onGenericVoiceChannel(@NotNull GenericVoiceChannelEvent event) {
         if (event instanceof VoiceChannelCreateEvent) {
             handleChannelCreateEvents(event.getGuild(), ChannelType.VOICE, event.getChannel());
         } else if (event instanceof VoiceChannelDeleteEvent) {
@@ -712,7 +702,7 @@ public class ModlogEventListener extends ListenerAdapter {
         }, ActionType.CHANNEL_UPDATE);
     }
 
-    public void onGenericCategory(GenericCategoryEvent event) {
+    public void onGenericCategory(@NotNull GenericCategoryEvent event) {
         if (event instanceof CategoryCreateEvent) {
             handleChannelCreateEvents(event.getGuild(), ChannelType.CATEGORY, event.getCategory());
         } else if (event instanceof CategoryDeleteEvent) {
@@ -849,9 +839,7 @@ public class ModlogEventListener extends ListenerAdapter {
         if (moveRunnableMap.containsKey(guild.getIdLong())) {
             moveRunnableMap.get(guild.getIdLong()).getQueue().add(moveData);
         } else {
-            ModlogChannelMoveCollectorRunnable runnable = new ModlogChannelMoveCollectorRunnable(guild, () -> {
-                moveRunnableMap.remove(guild.getIdLong());
-            });
+            ModlogChannelMoveCollectorRunnable runnable = new ModlogChannelMoveCollectorRunnable(guild, () -> moveRunnableMap.remove(guild.getIdLong()));
             runnable.getQueue().add(moveData);
             moveRunnableMap.put(guild.getIdLong(), runnable);
             new Thread(runnable, "modlog-channel-move-" + guild.getId()).start();
