@@ -868,7 +868,7 @@
       "cannot_edit": "You cannot edit this todo list. If you want to edit this contact {0}",
       "cannot_edit_no_owner": "You cannot edit this todo list and the owner has left the guild so the todo list has been deleted",
       "list_does_not_exist": "Todo list {0} doesn't exist",
-      "list_already_sent": "This todo list has already been sent, and therefor is no longer editable",
+      "list_already_sent": "This todo list has already been sent, and therefore is no longer editable",
       "no_items": "The todo list doesn't have any items!",
       "user_not_found": "Couldn't find user `{0}`",
       "embed_list_field": "List",
@@ -1438,7 +1438,7 @@
       "guild_member_nickname_updated": {
         "select": "guild_member_nickname_updated",
         "display": "Guild member nickname updated",
-        "description": "{0} updated there nickanme"
+        "description": "{0} updated their nickanme"
       },
       "guild_user_banned": {
         "select": "guild_user_banned",
@@ -1463,7 +1463,7 @@
       "guild_message_updated": {
         "select": "guild_message_updated",
         "display": "Guild message updated",
-        "description": "{0} changed there message"
+        "description": "{0} changed their message"
       },
       "guild_boost_count_updated": {
         "select": "guild_boost_count_updated",
@@ -1639,12 +1639,12 @@
       "user_discriminator_updated": {
         "select": "user_discriminator_updated",
         "display": "User discriminator updated",
-        "description": "User {0} changed there discriminator"
+        "description": "User {0} changed their discriminator"
       },
       "user_name_updated": {
         "select": "user_name_updated",
         "display": "User name updated",
-        "description": "{0} changed there name"
+        "description": "{0} changed their name"
       },
       "channel_created": {
         "select": "channel_created",
