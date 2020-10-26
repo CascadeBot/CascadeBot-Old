@@ -238,6 +238,9 @@ public class ModlogEventListener extends ListenerAdapter {
                 removedRolesEmbedField.addValueObjects(((GuildMemberRoleRemoveEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n")));
                 embedFieldList.add(removedRolesEmbedField);
             } else if (event instanceof GuildMemberUpdateNicknameEvent) {
+                if (auditLogEntry != null && auditLogEntry.getType() == ActionType.MEMBER_UPDATE) {
+                    responsible = auditLogEntry.getUser();
+                }
                 if (((GuildMemberUpdateNicknameEvent) event).getOldValue() != null) {
                     ModlogEmbedField oldNickEmbedField = new ModlogEmbedField(false, "modlog.member.old_nick", null);
                     oldNickEmbedField.addValueObjects(((GuildMemberUpdateNicknameEvent) event).getOldValue());
