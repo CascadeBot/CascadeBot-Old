@@ -238,7 +238,6 @@ public class ModlogEventListener extends ListenerAdapter {
                 removedRolesEmbedField.addValueObjects(((GuildMemberRoleRemoveEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n")));
                 embedFieldList.add(removedRolesEmbedField);
             } else if (event instanceof GuildMemberUpdateNicknameEvent) {
-                // TODO: This still doesn't work, auditLogEntry is null?
                 if (auditLogEntry != null && auditLogEntry.getType() == ActionType.MEMBER_UPDATE) {
                     responsible = auditLogEntry.getUser();
                 }
@@ -258,7 +257,7 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
-        }, ActionType.KICK, ActionType.MEMBER_ROLE_UPDATE);
+        }, ActionType.KICK, ActionType.MEMBER_ROLE_UPDATE, ActionType.MEMBER_UPDATE);
     }
 
     //region Ban events

@@ -50,7 +50,7 @@ class GuildSettingsModeration {
         for (eventInfo in eventsInfo) {
             eventInfo.sendEvent(GuildDataManager.getGuildData(guildId), modlogEventStore);
         }
-        CascadeBot.INS.databaseManager.runAsyncTask { database -> database.getCollection("modlog", MongoModlogEventObject::class.java).insertOne(MongoModlogEventObject(guildId, modlogEventStore, "default" /* TODO change to actual time */), DebugLogCallback("Inserted Event")) }
+        //CascadeBot.INS.databaseManager.runAsyncTask { database -> database.getCollection("modlog", MongoModlogEventObject::class.java).insertOne(MongoModlogEventObject(guildId, modlogEventStore, "default" /* TODO change to actual time */), DebugLogCallback("Inserted Event")) }
     }
 
     private fun getEventInfoForEvent(event: ModlogEvent): List<ChannelModlogEventsInfo> {
