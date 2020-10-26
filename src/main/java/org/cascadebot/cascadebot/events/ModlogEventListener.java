@@ -102,6 +102,7 @@ import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.apache.commons.codec.language.bm.Lang;
+import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.Config;
@@ -635,6 +636,7 @@ public class ModlogEventListener extends ListenerAdapter {
         ModlogUtils.getAuditLogFromType(event.getGuild(), event.getChannel().getIdLong(), auditLogEntry -> {
             ModlogEvent trigger;
             List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+            List<String> descriptionParts = new ArrayList<>();
             User responsible = null;
             if (auditLogEntry != null) {
                 responsible = auditLogEntry.getUser();
@@ -642,21 +644,28 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             if (event instanceof TextChannelUpdateNSFWEvent) {
-                // TODO
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.nsfw", null, String.valueOf(!((TextChannelUpdateNSFWEvent) event).getOldNSFW())));
                 trigger = ModlogEvent.TEXT_CHANNEL_NSFW_UPDATED;
+
+                Boolean newValue = ((TextChannelUpdateNSFWEvent) event).getNewValue();
+                Emote emote = newValue != null && newValue ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("tick")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("cross"));
+                descriptionParts = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(newValue));
             } else if (event instanceof TextChannelUpdateSlowmodeEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.slowmode", "modlog.general.small_change", ((TextChannelUpdateSlowmodeEvent) event).getOldSlowmode(), ((TextChannelUpdateSlowmodeEvent) event).getNewSlowmode()));
                 trigger = ModlogEvent.TEXT_CHANNEL_SLOWMODE_UPDATED;
+
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.slowmode", "modlog.general.small_change", ((TextChannelUpdateSlowmodeEvent) event).getOldSlowmode(), ((TextChannelUpdateSlowmodeEvent) event).getNewSlowmode()));
             } else if (event instanceof TextChannelUpdateTopicEvent) {
-                // TODO: If empty new topic, fails
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_topic", null, ((TextChannelUpdateTopicEvent) event).getOldTopic()));
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_topic", null, ((TextChannelUpdateTopicEvent) event).getNewTopic()));
                 trigger = ModlogEvent.TEXT_CHANNEL_TOPIC_UPDATED;
+
+                String oldTopic = ((TextChannelUpdateTopicEvent) event).getOldTopic();
+                String newTopic = ((TextChannelUpdateTopicEvent) event).getNewTopic();
+
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_topic", null, StringUtils.isBlank(oldTopic) ? "-" : oldTopic));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_topic", null, StringUtils.isBlank(newTopic) ? "-" : newTopic));
             } else {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(trigger, responsible, event.getChannel(), embedFieldList);
+            eventStore.setExtraDescriptionInfo(descriptionParts);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.CHANNEL_UPDATE);
     }
@@ -900,7 +909,6 @@ public class ModlogEventListener extends ListenerAdapter {
                 modlogEvent = ModlogEvent.ROLE_HOIST_UPDATED;
                 var wasHoisted = ((RoleUpdateHoistedEvent) event).wasHoisted();
                 Emote emote = !wasHoisted ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("tick")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("cross"));
-                // TODO: Display role as new role (17367245237) instead of just new role in the description
                 descriptionStuff = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(!wasHoisted));
             } else if (event instanceof RoleUpdateMentionableEvent) {
                 modlogEvent = ModlogEvent.ROLE_MENTIONABLE_UPDATED;

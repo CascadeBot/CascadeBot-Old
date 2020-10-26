@@ -1692,7 +1692,8 @@
       },
       "text_channel_nsfw_updated": {
         "select": "text_channel_nsfw_updated",
-        "display": "Text channel NSFW updated"
+        "display": "Text channel NSFW updated",
+        "description": "{2} {3, select, true {The text channel `#{0}` is now an NSFW channel} other {The text channel `#{0}` is no longer a NSFW channel}}"
       },
       "text_channel_slowmode_updated": {
         "select": "text_channel_slowmode_updated",
