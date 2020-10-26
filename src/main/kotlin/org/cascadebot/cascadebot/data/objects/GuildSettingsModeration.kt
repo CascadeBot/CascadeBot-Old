@@ -184,11 +184,13 @@ class GuildSettingsModeration {
                 ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL -> {
                     when (affected.affectedType) {
                         AffectedType.USER -> {
-                            val user: User = CascadeBot.INS.shardManager.getUserById(affected.id!!)!!
-                            if (user.avatarUrl != null) {
-                                webhookEmbedBuilder.setThumbnailUrl(user.avatarUrl)
-                            } else {
-                                webhookEmbedBuilder.setThumbnailUrl(user.defaultAvatarUrl)
+                            val user: User? = CascadeBot.INS.shardManager.getUserById(affected.id!!)
+                            user?.let {
+                                if (it.avatarUrl != null) {
+                                    webhookEmbedBuilder.setThumbnailUrl(it.avatarUrl)
+                                } else {
+                                    webhookEmbedBuilder.setThumbnailUrl(it.defaultAvatarUrl)
+                                }
                             }
                         }
                         AffectedType.EMOTE -> {
@@ -225,12 +227,13 @@ class GuildSettingsModeration {
             webhookEmbedBuilder.setColor(modlogEventStore.trigger.messageType.color.rgb)
             webhookEmbedBuilder.setTimestamp(Instant.now())
             if (modlogEventStore.responsible != null) {
-                var iconUrl = if (modlogEventStore.responsible!!.avatarUrl != null) {
-                    modlogEventStore.responsible!!.avatarUrl
+                var iconUrl = if (modlogEventStore.responsible.avatarUrl != null) {
+                    modlogEventStore.responsible.avatarUrl
                 } else {
-                    modlogEventStore.responsible!!.defaultAvatarUrl
+                    modlogEventStore.responsible.defaultAvatarUrl
                 }
-                webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible!!.name + " (" + modlogEventStore.responsible!!.id + ")", iconUrl))
+                // TODO: by user
+                webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible.name + " (" + modlogEventStore.responsible.id + ")", iconUrl))
             }
             try {
                 webhookClient?.send(webhookEmbedBuilder.build())
