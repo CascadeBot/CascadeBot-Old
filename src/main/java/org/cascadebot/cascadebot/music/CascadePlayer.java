@@ -290,7 +290,7 @@ public abstract class CascadePlayer implements IPlayer {
     @Override
     public abstract void setVolume(int i);
 
-    class SavePlaylistResult {
+    public class SavePlaylistResult {
 
         private SavePlaylistResultType type;
         private Playlist playlist;

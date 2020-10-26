@@ -24,48 +24,42 @@ public class ModlogClearSubCommand extends SubCommand {
 
     public void onCommand(Member sender, CommandContext context) {
         if (context.getArgs().length == 0) {
-            if (ConfirmUtils.hasConfirmedAction(clearAction, sender.getIdLong())) {
-                ConfirmUtils.completeAction(clearAction, sender.getIdLong());
+            if (ConfirmUtils.hasRegisteredAction(clearAction, sender.getIdLong())) {
+                ConfirmUtils.confirmAction(clearAction, sender.getIdLong());
             } else {
-                ConfirmUtils.confirmAction(sender.getIdLong(), clearAction, context.getChannel(), MessageType.WARNING,
+                ConfirmUtils.registerForConfirmation(sender.getIdLong(), clearAction, context.getChannel(), MessageType.WARNING,
                         "Confirm that you want to remove ALL events", 0, TimeUnit.SECONDS.toMillis(5),
-                        true, new ConfirmUtils.ConfirmRunnable() {
-                    @Override
-                    public void execute() {
-                        context.getData().getModeration().getModlogEvents().clear();
-                        context.getTypedMessaging().replySuccess("Removed all modlog events!");
-                    }
-                });
+                        true, () -> {
+                            context.getData().getModeration().getModlogEvents().clear();
+                            context.getTypedMessaging().replySuccess("Removed all modlog events!");
+                        });
             }
             return;
         }
         if (context.getArg(0).equalsIgnoreCase("disabled")) {
-            if (ConfirmUtils.hasConfirmedAction(clearDisabledAction, sender.getIdLong())) {
-                ConfirmUtils.completeAction(clearDisabledAction, sender.getIdLong());
+            if (ConfirmUtils.hasRegisteredAction(clearDisabledAction, sender.getIdLong())) {
+                ConfirmUtils.confirmAction(clearDisabledAction, sender.getIdLong());
             } else {
-                ConfirmUtils.confirmAction(sender.getIdLong(), clearDisabledAction, context.getChannel(), MessageType.WARNING,
+                ConfirmUtils.registerForConfirmation(sender.getIdLong(), clearDisabledAction, context.getChannel(), MessageType.WARNING,
                         "Confirm that you want to remove all events in disabled channels", 0, TimeUnit.SECONDS.toMillis(5),
-                        true, new ConfirmUtils.ConfirmRunnable() {
-                            @Override
-                            public void execute() {
-                                List<Long> delete = new ArrayList<>();
-                                for (Map.Entry<Long, GuildSettingsModeration.ChannelModlogEventsInfo> entry : context.getData().getModeration().getModlogEvents().entrySet()) {
-                                    TextChannel textChannel = CascadeBot.INS.getClient().getTextChannelById(entry.getKey());
-                                    if (textChannel == null) {
-                                        continue;
-                                    }
-                                    List<Webhook> webhooks = textChannel.retrieveWebhooks().complete();
-                                    for (Webhook webhook : webhooks) {
-                                        if (webhook.getIdLong() == entry.getValue().getWebhookId()) {
-                                            delete.add(entry.getKey());
-                                        }
+                        true, () -> {
+                            List<Long> delete = new ArrayList<>();
+                            for (Map.Entry<Long, GuildSettingsModeration.ChannelModlogEventsInfo> entry : context.getData().getModeration().getModlogEvents().entrySet()) {
+                                TextChannel textChannel = CascadeBot.INS.getClient().getTextChannelById(entry.getKey());
+                                if (textChannel == null) {
+                                    continue;
+                                }
+                                List<Webhook> webhooks = textChannel.retrieveWebhooks().complete();
+                                for (Webhook webhook : webhooks) {
+                                    if (webhook.getIdLong() == entry.getValue().getWebhookId()) {
+                                        delete.add(entry.getKey());
                                     }
                                 }
-                                for (Long id : delete) {
-                                    context.getData().getModeration().getModlogEvents().remove(id);
-                                }
-                                context.getTypedMessaging().replySuccess("Deleted events from " + delete.size() + " disabled channel");
                             }
+                            for (Long id : delete) {
+                                context.getData().getModeration().getModlogEvents().remove(id);
+                            }
+                            context.getTypedMessaging().replySuccess("Deleted events from " + delete.size() + " disabled channel");
                         });
             }
             return;

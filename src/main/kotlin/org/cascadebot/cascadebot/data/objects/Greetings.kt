@@ -2,7 +2,6 @@ package org.cascadebot.cascadebot.data.objects
 
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
-import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Language

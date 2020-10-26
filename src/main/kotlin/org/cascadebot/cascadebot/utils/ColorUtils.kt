@@ -21,6 +21,7 @@ object ColorUtils {
     private val RGB_COLOR = Pattern.compile("(\\d{1,3})[, ](\\d{1,3})[, ](\\d{1,3})")
     private val BINARY_COLOR = Pattern.compile("([0-1]+)")
 
+    @JvmStatic
     fun getHex(r: Int, g: Int, b: Int): String {
         return String.format("%02x%02x%02x", r, g, b)
     }

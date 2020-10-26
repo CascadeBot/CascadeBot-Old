@@ -18,7 +18,6 @@ import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import java.lang.reflect.Field
-import java.util.Map
 
 class SettingsListSubCommand(private val settingsClasses: List<Class<*>>) : SubCommand() {
 
@@ -30,8 +29,8 @@ class SettingsListSubCommand(private val settingsClasses: List<Class<*>>) : SubC
 
             if (entries.isEmpty()) continue
 
-            entries.stream()
-                    .sorted(Map.Entry.comparingByKey())
+            entries
+                    .sortedBy { it.key }
                     .map { it.value }
                     .forEach { f: Field ->
                         val settingsContainer = SettingsCommand.getSettingsContainer(f, context)

@@ -59,8 +59,8 @@ class GoodbyeWeightSubCommand : SubCommand() {
                 return
             }
 
-            val index = context.getArgAsInteger(0)!! - 1
-            val weight = context.getArgAsInteger(1)!!
+            val index = context.getArgAsInteger(0) - 1
+            val weight = context.getArgAsInteger(1)
 
             if (index < 0 || index >= goodbyeMessages.size) {
                 context.typedMessaging.replyDanger(context.i18n("commands.goodbye.invalid_message_index", goodbyeMessages.size))

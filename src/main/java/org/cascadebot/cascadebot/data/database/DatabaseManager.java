@@ -23,7 +23,6 @@ import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedFooter;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
-import org.cascadebot.cascadebot.utils.WeightPair;
 import org.cascadebot.cascadebot.utils.lists.WeightedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -22,7 +22,7 @@ class PageCommand : CoreCommand() {
             context.typedMessaging.replyDanger(context.i18n("commands.page.page_must_number"))
             return
         }
-        val pageIndex = context.getArgAsInteger(0)!!
+        val pageIndex = context.getArgAsInteger(0)
         val buttonCaches = context.data.buttonsCache.mapValues { it.value.values }[context.channel.idLong]?.filter { it.ownerId == context.user.idLong }
         if (buttonCaches != null && buttonCaches.isNotEmpty()) {
             val pagesEntry = context.data.pageCache
