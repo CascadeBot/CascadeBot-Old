@@ -171,7 +171,7 @@ class GuildSettingsModeration {
                                 guildData.locale,
                                 path,
                                 modlogEventStore.affected.name,
-                                modlogEventStore.responsible?.asTag ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized(),
+                                modlogEventStore.responsible?.asMention ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized(),
                                 *modlogEventStore.extraDescriptionInfo.toTypedArray()
                         )
                 )
@@ -181,13 +181,6 @@ class GuildSettingsModeration {
             val affected: ModlogAffected = modlogEventStore.affected;
 
             when (modlogEventStore.trigger.displayType) {
-                ModlogEvent.ModlogDisplayType.AFFECTED -> {
-                    var name = affected.name;
-                    if (affected.id != null) {
-                        name += " (" + affected.id + ")"
-                    }
-                    webhookEmbedBuilder.addField(EmbedField(true, "Affected", name))
-                }
                 ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL -> {
                     when (affected.affectedType) {
                         AffectedType.USER -> {

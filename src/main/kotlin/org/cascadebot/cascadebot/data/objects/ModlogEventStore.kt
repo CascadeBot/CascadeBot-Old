@@ -40,7 +40,7 @@ class ModlogEventStore {
             }
             is Role -> {
                 affectedType = AffectedType.ROLE
-                ModlogAffected(AffectedType.ROLE, affected.name, affected.id)
+                ModlogAffected(AffectedType.ROLE, "${affected.name} (${affected.id})", affected.id)
             }
             is Emote -> {
                 affectedType = AffectedType.EMOTE

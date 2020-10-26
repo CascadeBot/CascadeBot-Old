@@ -1,11 +1,8 @@
 package org.cascadebot.cascadebot.data.objects
 
-import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
-import org.cascadebot.cascadebot.moderation.ModlogEvent
+import org.cascadebot.cascadebot.moderation.ModlogEvent.ModlogDisplayType
 import org.cascadebot.cascadebot.utils.PurgeUtils
-import java.util.Arrays
-import java.util.regex.Pattern
 
 enum class PlaylistType {
     GUILD, USER
@@ -135,18 +132,18 @@ enum class ArgumentType {
     COMMAND
 }
 
-enum class AffectedType(vararg val allowedDisplayTypes: ModlogEvent.ModlogDisplayType) {
-    UNKNOWN(ModlogEvent.ModlogDisplayType.PLAIN),
-    USER(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
-    ROLE(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
-    EMOTE(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
-    GUILD(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogEvent.ModlogDisplayType.PLAIN),
-    CHANNEL(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.PLAIN),
-    GROUP(ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR, ModlogEvent.ModlogDisplayType.PLAIN),
-    SETTING(ModlogEvent.ModlogDisplayType.PLAIN),
-    MODULE(ModlogEvent.ModlogDisplayType.PLAIN),
-    COMMAND(ModlogEvent.ModlogDisplayType.PLAIN),
-    PLAYLIST(ModlogEvent.ModlogDisplayType.PLAIN),
-    TAG(ModlogEvent.ModlogDisplayType.PLAIN);
+enum class AffectedType(vararg val allowedDisplayTypes: ModlogDisplayType) {
+    UNKNOWN(ModlogDisplayType.PLAIN),
+    USER(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogDisplayType.PLAIN),
+    ROLE(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.AFFECTED_THUMBNAIL,ModlogDisplayType.PLAIN),
+    EMOTE(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogDisplayType.PLAIN),
+    GUILD(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogDisplayType.PLAIN),
+    CHANNEL(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.PLAIN),
+    GROUP(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.PLAIN),
+    SETTING(ModlogDisplayType.PLAIN),
+    MODULE(ModlogDisplayType.PLAIN),
+    COMMAND(ModlogDisplayType.PLAIN),
+    PLAYLIST(ModlogDisplayType.PLAIN),
+    TAG(ModlogDisplayType.PLAIN);
 
 }

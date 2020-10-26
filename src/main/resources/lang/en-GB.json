@@ -1599,40 +1599,42 @@
       "role_created": {
         "select": "role_created",
         "display": "Role created",
-        "description": "{1} created a new role called {0}"
+        "description": "{1} created a new role called `{0}`"
       },
       "role_deleted": {
         "select": "role_deleted",
         "display": "Role deleted",
-        "description": "{1} deleted the role called {0}"
+        "description": "{1} deleted the role called `{0}`"
       },
       "role_color_updated": {
         "select": "role_color_updated",
         "display": "Role color updated",
-        "description": "Role {0} color was updated"
+        "description": "Role `{0}` color was updated"
       },
       "role_hoist_updated": {
         "select": "role_hoist_updated",
-        "display": "Role hoisted updated"
+        "display": "Role hoisted updated",
+        "description": "{2} {3, select, true {The role `{0}` is now displayed separately in the members list} other {The role `{0}` is no longer displayed separately in the members list}}"
       },
       "role_mentionable_updated": {
         "select": "role_mentionable_updated",
-        "display": "Role mentionable updated"
+        "display": "Role mentionable updated",
+        "description": "{2} {3, select, true {The role `{0}` is now mentionable} other {The role `{0}` is no longer mentionable}}"
       },
       "role_name_updated": {
         "select": "role_name_updated",
         "display": "Role name updated",
-        "description": "Role {0} had its name changed"
+        "description": "The role `{0}` had its name changed"
       },
       "role_permissions_updated": {
         "select": "role_permissions_updated",
         "display": "Role permissions updated",
-        "description": "Role {0} had permissions updated"
+        "description": "The role `{0}` had its permissions updated"
       },
       "role_position_updated": {
         "select": "role_position_updated",
         "display": "Role position updated",
-        "description": "Role {0} possition was updated"
+        "description": "The role `{0}`'s position was updated"
       },
       "user_discriminator_updated": {
         "select": "user_discriminator_updated",
@@ -2320,8 +2322,9 @@
       "removed_roles": "Removed Roles",
       "old_pos": "Old Position",
       "new_pos": "New Position",
+      "position": "Position",
       "name": "Name",
-      "small_change": "{0} --> {1}"
+      "small_change": "{0} \uD83E\uDC16 {1}"
     },
     "member": {
       "old_nick": "Old Nickname",

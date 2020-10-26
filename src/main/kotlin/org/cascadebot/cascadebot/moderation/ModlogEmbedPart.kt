@@ -13,18 +13,18 @@ sealed class ModlogEmbedPart {
 
 class ModlogEmbedField(val inline: Boolean = true,
                        val titleLanguagePath: String,
-                       var valueLanguagePath: String? = null, vararg valueLanguageObjects: String) : ModlogEmbedPart() {
+                       var valueLanguagePath: String? = null, vararg valueLanguageObjects: Any) : ModlogEmbedPart() {
 
     constructor() : this(true, "", "")
 
-    val titleLanguageObjects: MutableList<String> = mutableListOf()
-    val valueLanguageObjects: MutableList<String> = mutableListOf(*valueLanguageObjects)
+    val titleLanguageObjects: MutableList<Any> = mutableListOf()
+    val valueLanguageObjects: MutableList<Any> = mutableListOf(*valueLanguageObjects)
 
-    fun addTitleObjects(vararg titleLanguageObjects: String) {
+    fun addTitleObjects(vararg titleLanguageObjects: Any) {
         this.titleLanguageObjects.addAll(titleLanguageObjects)
     }
 
-    fun addValueObjects(vararg valueLanguageObjects: String) {
+    fun addValueObjects(vararg valueLanguageObjects: Any) {
         this.valueLanguageObjects.addAll(valueLanguageObjects)
     }
 

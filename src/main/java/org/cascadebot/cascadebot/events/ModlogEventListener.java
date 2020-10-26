@@ -856,12 +856,13 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
         ModlogUtils.getAuditLogFromType(event.getGuild(), event.getRole().getIdLong(), auditLogEntry -> {
             List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+            List<String> descriptionStuff = new ArrayList<>();
             User responsible = null;
             ModlogEvent modlogEvent;
             if (auditLogEntry != null) {
                 responsible = auditLogEntry.getUser();
             } else {
-                CascadeBot.LOGGER.warn("Modlog: Failed to find role entry");
+                CascadeBot.LOGGER.warn("Modlog: Failed to find role audit log entry");
             }
             Role affected = event.getRole();
             if (event instanceof RoleCreateEvent) {
@@ -880,28 +881,42 @@ public class ModlogEventListener extends ListenerAdapter {
                 }
             } else if (event instanceof RoleUpdateHoistedEvent) {
                 modlogEvent = ModlogEvent.ROLE_HOIST_UPDATED;
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.role.hoisted", null, String.valueOf(!((RoleUpdateHoistedEvent) event).wasHoisted())));
+                var wasHoisted = ((RoleUpdateHoistedEvent) event).wasHoisted();
+                Emote emote = !wasHoisted ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("tick")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("cross"));
+                // TODO: Display role as new role (17367245237) instead of just new role in the description
+                descriptionStuff = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(!wasHoisted));
             } else if (event instanceof RoleUpdateMentionableEvent) {
                 modlogEvent = ModlogEvent.ROLE_MENTIONABLE_UPDATED;
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.role.mention", null, String.valueOf(!((RoleUpdateMentionableEvent) event).wasMentionable())));
+                Emote emote = ((RoleUpdateMentionableEvent) event).getNewValue() ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("tick")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("cross"));
+                descriptionStuff = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(((RoleUpdateMentionableEvent) event).getNewValue()));
             } else if (event instanceof RoleUpdateNameEvent) {
                 modlogEvent = ModlogEvent.ROLE_NAME_UPDATED;
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.general.old_name", null, ((RoleUpdateNameEvent) event).getOldName()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.general.old_name", null, ((RoleUpdateNameEvent) event).getOldName()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.general.new_name", null, ((RoleUpdateNameEvent) event).getNewValue()));
             } else if (event instanceof RoleUpdatePermissionsEvent) {
                 modlogEvent = ModlogEvent.ROLE_PERMISSIONS_UPDATED;
                 EnumSet<Permission> oldPermissions = ((RoleUpdatePermissionsEvent) event).getOldPermissions();
                 EnumSet<Permission> newPermissions = ((RoleUpdatePermissionsEvent) event).getNewPermissions();
+
                 ListChanges<Permission> permissionListChanges = new ListChanges<>(oldPermissions, newPermissions);
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.role.added_perm", null, permissionListChanges.getAdded().stream().map(Permission::getName).collect(Collectors.joining("\n"))));
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.role.removed_perm", null, permissionListChanges.getRemoved().stream().map(Permission::getName).collect(Collectors.joining("\n"))));
+                if (!permissionListChanges.getAdded().isEmpty()) {
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.role.added_perm", null, permissionListChanges.getAdded().stream().map(Permission::getName).collect(Collectors.joining("\n"))));
+                }
+                if (!permissionListChanges.getRemoved().isEmpty()) {
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.role.removed_perm", null, permissionListChanges.getRemoved().stream().map(Permission::getName).collect(Collectors.joining("\n"))));
+                }
             } else if (event instanceof RoleUpdatePositionEvent) {
                 modlogEvent = ModlogEvent.ROLE_POSITION_UPDATED;
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.general.old_pos", null, String.valueOf(((RoleUpdatePositionEvent) event).getOldPosition())));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.general.new_pos", null, String.valueOf(((RoleUpdatePositionEvent) event).getNewPosition())));
+                if (((RoleUpdatePositionEvent) event).getNewPosition() == ((RoleUpdatePositionEvent) event).getOldPosition()) {
+                    // If the position stays the same, we have no reason to log the event
+                    return;
+                }
+                embedFieldList.add(new ModlogEmbedField(true, "modlog.general.position", "modlog.general.small_change", ((RoleUpdatePositionEvent) event).getOldPosition() + 1, ((RoleUpdatePositionEvent) event).getNewPosition() + 1));
             } else {
                 return;
             }
             ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
+            modlogEventStore.setExtraDescriptionInfo(descriptionStuff);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), modlogEventStore);
         }, ActionType.ROLE_CREATE, ActionType.ROLE_DELETE, ActionType.ROLE_UPDATE);
     }
