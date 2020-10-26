@@ -1649,56 +1649,60 @@
       "channel_created": {
         "select": "channel_created",
         "display": "Channel created",
-        "description": "Channel {0} was created"
+        "description": "Channel `#{0}` was created"
       },
       "channel_deleted": {
         "select": "channel_deleted",
         "display": "Channel deleted",
-        "description": "Channel {0} was deleted"
+        "description": "Channel `#{0}` was deleted"
       },
       "channel_name_updated": {
         "select": "channel_name_updated",
         "display": "Channel name updated",
-        "description": "Channel {0} had its name changed"
+        "description": "Channel `#{0}` had its name changed"
       },
       "channel_permissions_updated": {
         "select": "channel_permissions_updated",
         "display": "Channel permissions updated",
-        "description": "Channel {0} permissions where changed"
+        "description": "The channel `#{0}` permissions where changed"
       },
       "channel_position_updated": {
         "select": "channel_position_updated",
         "display": "Channel position updated",
-        "description": "Channel {0} was moved"
+        "description": "The channel `#{0}` was moved"
+      },
+      "multiple_channel_position_updated": {
+        "select": "multiple_channel_position_updated",
+        "display": "Multiple channel's position updated"
       },
       "channel_parent_updated": {
         "select": "channel_parent_updated",
         "display": "Channel parent updated",
-        "description": "Channel {0} changed category"
+        "description": "The channel `#{0}` changed category"
       },
       "voice_channel_bitrate_updated": {
         "select": "voice_channel_bitrate_updated",
         "display": "Voice channel bitrate updated",
-        "description": "Channel {0} had its bitrate changed"
+        "description": "The channel `#{0}` had its bitrate changed"
       },
       "voice_channel_user_limit_updated": {
         "select": "voice_channel_user_limit_updated",
         "display": "Voice channel user limit updated",
-        "description": "Channel {0} user limit was changed"
+        "description": "The channel `#{0}` user limit was changed"
       },
       "text_channel_nsfw_updated": {
         "select": "text_channel_nsfw_updated",
-        "display": "Text channel nsfw updated"
+        "display": "Text channel NSFW updated"
       },
       "text_channel_slowmode_updated": {
         "select": "text_channel_slowmode_updated",
         "display": "Text channel slowmode updated",
-        "description": "Channel {0} slowmode time was changed"
+        "description": "The channel `#{0}` slowmode time was changed"
       },
       "text_channel_topic_updated": {
         "select": "text_channel_topic_updated",
         "display": "Text channel topic updated",
-        "description": "Channel {0} topic was updated"
+        "description": "Channel `#{0}` topic was updated"
       },
       "cascade_permissions_group_created": {
         "select": "cascade_permissions_group_created",
@@ -1923,6 +1927,7 @@
     "conditions": "conditions",
     "true": "true",
     "false": "false",
+    "unknown": "unknown",
     "command_filters": "command filters"
   },
   "messaging": {
@@ -2430,22 +2435,18 @@
         "old_deny": "Old Denied permissions for {0}"
       },
       "position": {
-        "title": "Channel {0} moved",
-        "positions": "{0} -> {1}"
+        "title": "Channel {0} moved"
       },
       "old_parent": "Old Parent",
       "new_parent": "New Parent",
       "nsfw": "NSFW",
-      "old_slowmode": "Old Slowmode",
-      "new_slowmode": "New Slowmode",
+      "slowmode": "Slowmode",
       "old_topic": "Old topic",
       "new_topic": "New topic",
-      "kpbs": "{0}kbps",
-      "old_bitrate": "Old bitrate",
-      "new_bitrate": "New bitrate",
+      "kbps": "{0}kbps",
+      "bitrate": "Bitrate",
       "user": "{0} users",
-      "old_users": "Old user limit",
-      "new_users": "New user limit"
+      "users": "User limit"
     },
     "role": {
       "old_color": "Old Color",

@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.User;
+import org.bouncycastle.math.raw.Mod;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
@@ -57,14 +58,13 @@ public class ModlogChannelMoveCollectorRunnable implements Runnable {
             if (auditLogEntry != null) {
                 responsible = auditLogEntry.getUser();
             }
-            List<ModlogEmbedPart> embedParts = new ArrayList<>();
             int maxDistance = 0;
             List<ChannelMoveData> maxMoveDatas = new ArrayList<>();
             for (ChannelMoveData moveData : channelMoveDataList) {
                 if (moveData == null) {
                     continue;
                 }
-                int distance = moveData.channel.getPosition() - moveData.oldPos;
+                int distance = Math.abs(moveData.channel.getPosition() - moveData.oldPos);
                 if (distance == maxDistance) {
                     maxMoveDatas.add(moveData);
                 } else if (distance > maxDistance) {
@@ -74,17 +74,30 @@ public class ModlogChannelMoveCollectorRunnable implements Runnable {
                 }
             }
 
-            for (ChannelMoveData data : maxMoveDatas) {
-                ModlogEmbedField field = new ModlogEmbedField(false, "modlog.channel.position.title",
-                        "modlog.channel.position.positions",
-                        String.valueOf(data.oldPos), String.valueOf(data.channel.getPosition()));
-                field.addTitleObjects(data.channel.getName());
-                embedParts.add(field);
+            GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+            if (maxMoveDatas.size() == 1) {
+                ChannelMoveData data = maxMoveDatas.get(0);
+                ModlogEmbedField field = new ModlogEmbedField(false,
+                        "modlog.general.position",
+                        "modlog.general.small_change",
+                        String.valueOf(data.oldPos),
+                        String.valueOf(data.channel.getPosition()));
+                ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.CHANNEL_POSITION_UPDATED, responsible, maxMoveDatas.get(0).channel, List.of(field));
+                guildData.getModeration().sendModlogEvent(guild.getIdLong(), eventStore);
+            } else {
+                List<ModlogEmbedPart> embedParts = new ArrayList<>();
+                for (ChannelMoveData data : maxMoveDatas) {
+                    ModlogEmbedField field = new ModlogEmbedField(false, "modlog.channel.position.title",
+                            "modlog.general.small_change",
+                            String.valueOf(data.oldPos), String.valueOf(data.channel.getPosition()));
+                    field.addTitleObjects(data.channel.getName());
+                    embedParts.add(field);
+                }
+                ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.MULTIPLE_CHANNEL_POSITION_UPDATED, responsible, maxMoveDatas.get(0).channel, embedParts);
+                guildData.getModeration().sendModlogEvent(guild.getIdLong(), eventStore);
             }
 
-            GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-            ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.CHANNEL_POSITION_UPDATED, responsible, maxMoveDatas.get(0).channel, embedParts);
-            guildData.getModeration().sendModlogEvent(guild.getIdLong(), eventStore);
+
 
         }, ActionType.CHANNEL_UPDATE);
     }

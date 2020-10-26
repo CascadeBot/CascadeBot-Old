@@ -101,8 +101,11 @@ import net.dv8tion.jda.api.events.role.update.RoleUpdatePositionEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.apache.commons.codec.language.bm.Lang;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
@@ -117,6 +120,7 @@ import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.ModlogUtils;
 import org.cascadebot.cascadebot.utils.SerializableMessage;
+import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -136,6 +140,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ModlogEventListener extends ListenerAdapter {
@@ -238,6 +247,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 removedRolesEmbedField.addValueObjects(((GuildMemberRoleRemoveEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n")));
                 embedFieldList.add(removedRolesEmbedField);
             } else if (event instanceof GuildMemberUpdateNicknameEvent) {
+                // TODO: This still doesn't work, auditLogEntry is null?
                 if (auditLogEntry != null && auditLogEntry.getType() == ActionType.MEMBER_UPDATE) {
                     responsible = auditLogEntry.getUser();
                 }
@@ -632,13 +642,14 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             if (event instanceof TextChannelUpdateNSFWEvent) {
+                // TODO
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.nsfw", null, String.valueOf(!((TextChannelUpdateNSFWEvent) event).getOldNSFW())));
                 trigger = ModlogEvent.TEXT_CHANNEL_NSFW_UPDATED;
             } else if (event instanceof TextChannelUpdateSlowmodeEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_slowmode", null, String.valueOf(((TextChannelUpdateSlowmodeEvent) event).getOldSlowmode())));
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_slowmode", null, String.valueOf(((TextChannelUpdateSlowmodeEvent) event).getNewSlowmode())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.slowmode", "modlog.general.small_change", ((TextChannelUpdateSlowmodeEvent) event).getOldSlowmode(), ((TextChannelUpdateSlowmodeEvent) event).getNewSlowmode()));
                 trigger = ModlogEvent.TEXT_CHANNEL_SLOWMODE_UPDATED;
             } else if (event instanceof TextChannelUpdateTopicEvent) {
+                // TODO: If empty new topic, fails
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_topic", null, ((TextChannelUpdateTopicEvent) event).getOldTopic()));
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_topic", null, ((TextChannelUpdateTopicEvent) event).getNewTopic()));
                 trigger = ModlogEvent.TEXT_CHANNEL_TOPIC_UPDATED;
@@ -673,12 +684,16 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             if (event instanceof VoiceChannelUpdateBitrateEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_bitrate", "modlog.channel.kpbs", String.valueOf(((VoiceChannelUpdateBitrateEvent) event).getOldBitrate())));
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_bitrate", "modlog.channel.kpbs", String.valueOf(((VoiceChannelUpdateBitrateEvent) event).getNewBitrate())));
+                String oldBitrate = Language.i18n(event.getGuild().getIdLong(), "modlog.channel.kbps", ((VoiceChannelUpdateBitrateEvent) event).getOldBitrate() / 1000);
+                String newBitrate = Language.i18n(event.getGuild().getIdLong(), "modlog.channel.kbps", ((VoiceChannelUpdateBitrateEvent) event).getNewBitrate() / 1000);
+
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.bitrate", "modlog.general.small_change", oldBitrate, newBitrate));
                 trigger = ModlogEvent.VOICE_CHANNEL_BITRATE_UPDATED;
             } else if (event instanceof VoiceChannelUpdateUserLimitEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_users", "modlog.channel.user", String.valueOf(((VoiceChannelUpdateUserLimitEvent) event).getOldUserLimit())));
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_users", "modlog.channel.user", String.valueOf(((VoiceChannelUpdateUserLimitEvent) event).getNewUserLimit())));
+                var limitEvent = (VoiceChannelUpdateUserLimitEvent) event;
+                String oldLimit = limitEvent.getOldUserLimit() == 0 ? UnicodeConstants.INFINITY_SYMBOL : String.valueOf(limitEvent.getOldUserLimit());
+                String newLimit = limitEvent.getNewUserLimit() == 0 ? UnicodeConstants.INFINITY_SYMBOL : String.valueOf(limitEvent.getNewUserLimit());
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.users", "modlog.general.small_change", oldLimit, newLimit));
                 trigger = ModlogEvent.VOICE_CHANNEL_USER_LIMIT_UPDATED;
             } else {
                 return;
@@ -812,7 +827,8 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
-            embedFieldList.add(new ModlogEmbedField(false, "modlog.general.old_name", null, oldName));
+            embedFieldList.add(new ModlogEmbedField(true, "modlog.general.old_name", null, oldName));
+            embedFieldList.add(new ModlogEmbedField(true, "modlog.general.new_name", null, channel.getName()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_UPDATE);
@@ -824,12 +840,10 @@ public class ModlogEventListener extends ListenerAdapter {
         if (moveRunnableMap.containsKey(guild.getIdLong())) {
             moveRunnableMap.get(guild.getIdLong()).getQueue().add(moveData);
         } else {
-            ModlogChannelMoveCollectorRunnable runnable = new ModlogChannelMoveCollectorRunnable(guild, new Runnable() {
-                @Override
-                public void run() {
-                    moveRunnableMap.remove(guild.getIdLong());
-                }
+            ModlogChannelMoveCollectorRunnable runnable = new ModlogChannelMoveCollectorRunnable(guild, () -> {
+                moveRunnableMap.remove(guild.getIdLong());
             });
+            runnable.getQueue().add(moveData);
             moveRunnableMap.put(guild.getIdLong(), runnable);
             new Thread(runnable, "modlog-channel-move-" + guild.getId()).start();
         }
@@ -847,8 +861,8 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
-            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_parent", null, oldParent.getName()));
-            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_parent", null, newParent.getName()));
+            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.old_parent", null, oldParent.getName()));
+            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.new_parent", null, newParent.getName()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_UPDATE);

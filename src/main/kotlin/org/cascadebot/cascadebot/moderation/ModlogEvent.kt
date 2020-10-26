@@ -77,6 +77,7 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     CHANNEL_NAME_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.CHANNEL),
     CHANNEL_PERMISSIONS_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.CHANNEL),
     CHANNEL_POSITION_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.CHANNEL),
+    MULTIPLE_CHANNEL_POSITION_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.CHANNEL),
     CHANNEL_PARENT_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.CHANNEL),
 
     VOICE_CHANNEL_BITRATE_UPDATED(MessageType.WARNING, ModlogDisplayType.PLAIN, Category.CHANNEL),
