@@ -33,16 +33,16 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public interface CascadePlayer extends IPlayer {
+public abstract class CascadePlayer implements IPlayer {
 
-    Queue<AudioTrack> queue = new LinkedList<>();
+    private Queue<AudioTrack> queue = new LinkedList<>();
 
-    AtomicLong guildId = new AtomicLong();
+    private AtomicLong guildId = new AtomicLong();
 
-    AtomicReference<LoopMode> loopMode = new AtomicReference<>(LoopMode.DISABLED);
-    AtomicBoolean shuffleEnabled = new AtomicBoolean(false);
+    private AtomicReference<LoopMode> loopMode = new AtomicReference<>(LoopMode.DISABLED);
+    private AtomicBoolean shuffleEnabled = new AtomicBoolean(false);
 
-    default double getQueueLength() {
+    public double getQueueLength() {
         double queueLength = getPlayingTrack().getDuration() - getTrackPosition();
         for (AudioTrack track : queue) {
             queueLength += track.getDuration();
@@ -55,7 +55,7 @@ public interface CascadePlayer extends IPlayer {
      *
      * @return The progress bar for the current track
      */
-    default String getTrackProgressBar(boolean embed) {
+    public String getTrackProgressBar(boolean embed) {
         float process = (100f / getPlayingTrack().getDuration() * getTrackPosition());
         if (embed) {
             return StringsUtil.getProgressBarEmbed(process);
@@ -64,7 +64,7 @@ public interface CascadePlayer extends IPlayer {
         }
     }
 
-    default String getArtwork() {
+    public String getArtwork() {
         if (getPlayingTrack().getSourceManager().getSourceName().equals(CascadeBot.INS.getMusicHandler().getYoutubeSourceName())) {
             return "https://img.youtube.com/vi/" + getPlayingTrack().getIdentifier() + "/hqdefault.jpg";
         }
@@ -75,7 +75,7 @@ public interface CascadePlayer extends IPlayer {
         return null;
     }
 
-    default void addTrack(AudioTrack track) {
+    public void addTrack(AudioTrack track) {
         if (getPlayingTrack() != null) {
             queue.add(track);
         } else {
@@ -83,60 +83,65 @@ public interface CascadePlayer extends IPlayer {
         }
     }
 
-    default void addTracks(Collection<AudioTrack> tracks) {
+    public void addTracks(Collection<AudioTrack> tracks) {
         tracks.forEach(this::addTrack);
     }
 
-    default void loopMode(LoopMode loopMode) {
+    public void loopMode(LoopMode loopMode) {
         this.loopMode.set(loopMode);
     }
 
-    default boolean toggleShuffleOnRepeat() {
+    public boolean toggleShuffleOnRepeat() {
         boolean current = shuffleEnabled.get();
         shuffleEnabled.set(!current);
         return current;
     }
 
-    default void shuffle() {
+    public void shuffle() {
         List<AudioTrack> tracks = new ArrayList<>(queue);
         Collections.shuffle(tracks);
         queue.clear();
         queue.addAll(tracks);
     }
 
-    default boolean isShuffleEnabled() {
+    public boolean isShuffleEnabled() {
         return shuffleEnabled.get();
     }
 
-    default LoopMode getLoopMode() {
+    public LoopMode getLoopMode() {
         return loopMode.get();
     }
 
-    default Queue<AudioTrack> getQueue() {
+    public Queue<AudioTrack> getQueue() {
         return queue;
     }
 
-    default void skip() {
+    public void skip() {
         stopTrack();
     }
 
-    void join(VoiceChannel channel);
+    public abstract void join(VoiceChannel channel);
 
-    void leave();
+    public abstract void leave();
 
-    VoiceChannel getConnectedChannel();
+    public abstract VoiceChannel getConnectedChannel();
 
-    default Guild getGuild() {
+    public Guild getGuild() {
         return CascadeBot.INS.getShardManager().getGuildById(guildId.get());
     }
 
-    default void stop() {
+    public void stop() {
         queue.clear();
         loopMode.set(LoopMode.DISABLED);
         stopTrack();
     }
 
-    default void loadLink(String input, TrackData trackData, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
+    @Override
+    public long getTrackPosition() {
+        return 0;
+    }
+
+    public void loadLink(String input, TrackData trackData, Consumer<String> noMatchConsumer, Consumer<FriendlyException> exceptionConsumer, Consumer<List<AudioTrack>> resultTracks) {
         CascadeBot.INS.getMusicHandler().getPlayerManager().loadItem(input, new AudioLoadResultHandler() {
             @Override
             public void trackLoaded(AudioTrack audioTrack) {
@@ -166,7 +171,7 @@ public interface CascadePlayer extends IPlayer {
         });
     }
 
-    default void loadPlaylist(String name, TrackData trackData, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
+    public void loadPlaylist(String name, TrackData trackData, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
         Playlist guild = PlaylistManager.getPlaylistByName(getGuild().getIdLong(), PlaylistType.GUILD, name);
         Playlist user = PlaylistManager.getPlaylistByName(trackData.getUserId(), PlaylistType.USER, name);
         if (guild != null && user != null) {
@@ -184,7 +189,7 @@ public interface CascadePlayer extends IPlayer {
         }
     }
 
-    default void loadPlaylist(String name, TrackData trackData, PlaylistType scope, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
+    public void loadPlaylist(String name, TrackData trackData, PlaylistType scope, BiConsumer<LoadPlaylistResult, List<AudioTrack>> consumer) {
         LoadPlaylistResult result = LoadPlaylistResult.DOESNT_EXIST;
         long owner = 0;
         switch (scope) {
@@ -209,7 +214,7 @@ public interface CascadePlayer extends IPlayer {
         });
     }
 
-    default void loadLoadedPlaylist(Playlist playlist, TrackData trackData, Consumer<List<AudioTrack>> loadedConsumer) {
+    public void loadLoadedPlaylist(Playlist playlist, TrackData trackData, Consumer<List<AudioTrack>> loadedConsumer) {
         List<AudioTrack> tracks = new ArrayList<>();
         for (String url : playlist.getTracks()) {
             loadLink(url, trackData, noMatch -> {
@@ -225,7 +230,7 @@ public interface CascadePlayer extends IPlayer {
         }
     }
 
-    default SavePlaylistResult saveCurrentPlaylist(long owner, PlaylistType scope, String name, boolean overwrite) {
+    public SavePlaylistResult saveCurrentPlaylist(long owner, PlaylistType scope, String name, boolean overwrite) {
         List<AudioTrack> tracks = new ArrayList<>();
         tracks.add(getPlayingTrack());
         tracks.addAll(this.queue);
@@ -251,14 +256,14 @@ public interface CascadePlayer extends IPlayer {
         }
     }
 
-    default void removeTrack(int index) {
+    public void removeTrack(int index) {
         List<AudioTrack> tracks = new ArrayList<>(queue);
         tracks.remove(index);
         queue.clear();
         queue.addAll(tracks);
     }
 
-    default void moveTrack(int track, int pos) {
+    public void moveTrack(int track, int pos) {
         List<AudioTrack> tracks = new ArrayList<>(queue);
         AudioTrack trackToMove = tracks.get(track);
         if (pos >= tracks.size()) {
@@ -273,17 +278,17 @@ public interface CascadePlayer extends IPlayer {
         queue.addAll(tracks);
     }
 
-    default void setGuild(Guild guild) {
+    public void setGuild(Guild guild) {
         guildId.set(guild.getIdLong());
     }
 
-    default void setQueue(Queue<AudioTrack> newQueue) {
+    public void setQueue(Queue<AudioTrack> newQueue) {
         queue.clear();
         queue.addAll(newQueue);
     }
 
     @Override
-    void setVolume(int i);
+    public abstract void setVolume(int i);
 
     class SavePlaylistResult {
 

@@ -17,6 +17,11 @@
       "_type": "required"
     }
   },
+  "help*": {
+    "module": {
+      "_type": "optional"
+    }
+  },
   "guild*": {
     "flag*": {
       "flag*": {
@@ -72,6 +77,9 @@
     }
   },
   "module*": {
+    "list": {
+      "_type": "command"
+    },
     "disable*": {
       "module": {
         "_type": "required"
@@ -234,6 +242,15 @@
   "color*": {
     "value": {
       "_type": "required"
+    },
+    "red*": {
+      "_type": "required",
+      "green*": {
+        "_type": "required",
+        "blue": {
+          "_type": "required"
+        }
+      }
     }
   },
   "ban*": {
@@ -341,16 +358,22 @@
     "load*": {
       "name*": {
         "_type": "required",
-        "scope": {
-          "_type": "optional"
+        "guild": {
+          "_type": "optional",
+          "_aliases": [
+            "user"
+          ]
         }
       }
     },
     "save*": {
       "name*": {
         "_type": "required",
-        "scope": {
-          "_type": "optional"
+        "guild": {
+          "_type": "optional",
+          "_aliases": [
+            "user"
+          ]
         }
       }
     },
@@ -373,9 +396,9 @@
       "_type": "required"
     }
   },
-  "skip*": {
+  "skip": {
     "force": {
-      "_type": "optional"
+      "_type": "command"
     },
     "yes": {
       "_type": "command"
@@ -548,7 +571,7 @@
       }
     },
     "send*": {
-      "list*": {
+      "name*": {
         "_type": "required",
         "channel": {
           "_type": "optional"
@@ -556,7 +579,7 @@
       }
     },
     "adduser*": {
-      "list*": {
+      "name*": {
         "_type": "required",
         "user": {
           "_type": "required"
@@ -564,7 +587,7 @@
       }
     },
     "removeuser*": {
-      "list*": {
+      "name*": {
         "_type": "required",
         "user": {
           "_type": "required"
@@ -572,7 +595,7 @@
       }
     },
     "view*": {
-      "list*": {
+      "name*": {
         "_type": "required"
       }
     }
@@ -631,7 +654,16 @@
       "_type": "required"
     }
   },
-  "random*": {
+  "random": {
+    "max": {
+      "_type": "required"
+    },
+    "min*": {
+      "_type": "required",
+      "max": {
+        "_type": "required"
+      }
+    },
     "choice*": {
       "words": {
         "_type": "required"
@@ -639,9 +671,6 @@
     },
     "color": {
       "_type": "command"
-    },
-    "amount": {
-      "_type": "optional"
     }
   },
   "filters*": {

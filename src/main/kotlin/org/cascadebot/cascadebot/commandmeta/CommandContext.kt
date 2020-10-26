@@ -68,11 +68,11 @@ data class CommandContext(
 
     fun isArgInteger(index: Int): Boolean = args[index].toIntOrNull() != null
 
-    fun getArgAsInteger(index: Int): Int? = args[index].toIntOrNull()
+    fun getArgAsInteger(index: Int): Int = args[index].toInt()
 
     fun isArgLong(index: Int): Boolean = args[index].toLongOrNull() != null
 
-    fun getArgAsLong(index: Int): Long? = args[index].toLongOrNull()
+    fun getArgAsLong(index: Int): Long = args[index].toLong()
 
     @Deprecated("This is only here for Java interop. Should not be used in Kotlin!", ReplaceWith("data.coreSettings"))
     fun getCoreSettings() : GuildSettingsCore = data.core

@@ -1,10 +1,10 @@
 package org.cascadebot.cascadebot.commandmeta
 
 import org.apache.commons.lang3.StringUtils
-import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.objects.ArgumentType
+import kotlin.math.max
 
 data class Argument(val id: String,
                     val type: ArgumentType,
@@ -18,51 +18,29 @@ data class Argument(val id: String,
         if (type != ArgumentType.COMMAND) {
             return Language.i18n(locale, "arguments." + id.substring(id.lastIndexOf('.') + 1))
         }
-        val sepCount = StringUtils.countMatches(id, '.')
-        if (sepCount == 1) {
-            val command = CascadeBot.INS.commandManager.getCommand(id.substring(0, id.lastIndexOf('.')))
-            if (command != null) {
-                val subCommand = command.subCommands().stream().filter { it.command() == id.substring(id.lastIndexOf('.') + 1) }.findFirst().orElse(null)
-                if (subCommand != null) {
-                    return subCommand.command(locale)
-                }
-            }
-        } else if (sepCount == 0) {
-            val command = CascadeBot.INS.commandManager.getCommand(id)
-            if (command != null) {
-                return command.command(locale)
-            }
-        }
         return if (Language.getLanguage(locale)?.getElement("commands.$id")?.isPresent!!) {
             Language.i18n(locale, "commands.$id.command")
         } else Language.i18n(locale, "arguments." + id.replace(".", "#") + ".name")
     }
 
     fun description(locale: Locale): String {
-        if (type != ArgumentType.COMMAND) {
-            val parent = CascadeBot.INS.argumentManager.getParent(id)
-            return parent?.description(locale) ?: ""
-        }
-        val sepCount = StringUtils.countMatches(id, '.')
-        if (sepCount == 1) {
-            val command = CascadeBot.INS.commandManager.getCommand(id.substring(0, id.lastIndexOf('.')))
-            if (command != null) {
-                val subCommand = command.subCommands().firstOrNull { it.command() == id.substring(id.lastIndexOf('.') + 1) }
-                if (subCommand != null) {
-                    // Only return description if it is not null
-                    subCommand.description(locale)?.also { return it }
+        var identifier = id;
+        val language = Language.getLanguage(locale)
+        language?.let {
+            val specificDescription = language.getElement("arguments." + id.replace(".", "#"))
+            if (specificDescription.isPresent) {
+                return Language.i18n(locale, "arguments." + id.replace(".", "#") + ".description")
+            }
+
+            while (identifier.isNotEmpty()) {
+                val element = language.getElement("commands.$identifier")
+                if (element.isPresent) {
+                    return Language.i18n(locale, "commands.$identifier.description")
                 }
-            }
-        } else if (sepCount == 0) {
-            val command = CascadeBot.INS.commandManager.getCommand(id)
-            if (command != null) {
-                // Only return description if it is not null
-                command.description(locale)?.also { return it }
+                identifier = identifier.substring(0, max(identifier.lastIndexOf("."), 1))
             }
         }
-        return if (Language.getLanguage(locale)?.getElement("commands.$id")?.isPresent!!) {
-            Language.i18n(locale, "commands.$id.description")
-        } else Language.i18n(locale, "arguments." + id.replace(".", "#") + ".description")
+        return "No description found for $id"
     }
 
     /**
@@ -99,7 +77,12 @@ data class Argument(val id: String,
             val paramBuilder = StringBuilder()
             paramBuilder.append(argument)
             for (alias in aliases) {
-                paramBuilder.append("|").append(alias)
+                if (type != ArgumentType.COMMAND) {
+                    paramBuilder.append("|").append(locale.i18n("arguments.$alias"))
+                } else {
+                    paramBuilder.append("|").append(alias)
+                }
+
             }
             argument = paramBuilder.toString()
         }

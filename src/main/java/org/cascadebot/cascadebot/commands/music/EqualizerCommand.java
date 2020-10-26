@@ -194,7 +194,7 @@ public class EqualizerCommand extends MainCommand {
     public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, int currentBand, User requester, CommandContext context) {
         String equalizer = getEqualizerString(bands, currentBand);
 
-        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(requester);
+        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(requester, context.getLocale());
         if (bands.get(currentBand) >= .2) {
             builder.setColor(Color.decode("#EE6767")); // Red
         } else if (bands.get(currentBand) > 0 && bands.get(currentBand) < .2) {

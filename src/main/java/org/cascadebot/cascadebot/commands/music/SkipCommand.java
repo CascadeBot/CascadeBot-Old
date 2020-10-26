@@ -95,7 +95,7 @@ public class SkipCommand extends MainCommand {
             for (VoteResult result : results) {
                 resultsBuilder.append(result.getVote()).append(" (").append(result.getAmount()).append(")\n");
             }
-            EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser())
+            EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser(), context.getLocale())
                     .setTitle(context.i18n("commands.skip.skip_vote_title"));
             if (resultsBuilder.length() > 0) {
                 skipVoteEmbed.setDescription(resultsBuilder.toString());
@@ -126,7 +126,7 @@ public class SkipCommand extends MainCommand {
             }
         }
         voteMap.put(context.getGuild().getIdLong(), buttonGroup);
-        EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser())
+        EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser(), context.getLocale())
                 .setTitle(context.i18n("commands.skip.skip_vote_title"));
         context.getUiMessaging().sendButtonedMessage(skipVoteEmbed.build(), buttonGroup);
         buttonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
