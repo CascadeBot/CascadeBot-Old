@@ -239,12 +239,12 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedFieldList.add(removedRolesEmbedField);
             } else if (event instanceof GuildMemberUpdateNicknameEvent) {
                 if (((GuildMemberUpdateNicknameEvent) event).getOldValue() != null) {
-                    ModlogEmbedField oldNickEmbedField = new ModlogEmbedField(true, "modlog.member.old_nick", null);
+                    ModlogEmbedField oldNickEmbedField = new ModlogEmbedField(false, "modlog.member.old_nick", null);
                     oldNickEmbedField.addValueObjects(((GuildMemberUpdateNicknameEvent) event).getOldValue());
                     embedFieldList.add(oldNickEmbedField);
                 }
                 if (((GuildMemberUpdateNicknameEvent) event).getNewValue() != null) {
-                    ModlogEmbedField newNickEmbedField = new ModlogEmbedField(true, "modlog.member.new_nick", null);
+                    ModlogEmbedField newNickEmbedField = new ModlogEmbedField(false, "modlog.member.new_nick", null);
                     newNickEmbedField.addValueObjects(((GuildMemberUpdateNicknameEvent) event).getNewValue());
                     embedFieldList.add(newNickEmbedField);
                 }
@@ -424,16 +424,16 @@ public class ModlogEventListener extends ListenerAdapter {
             if (event instanceof GuildUpdateAfkChannelEvent) {
                 VoiceChannel oldChannel = ((GuildUpdateAfkChannelEvent) event).getOldAfkChannel();
                 if (oldChannel != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.old_channel", null, oldChannel.getName()));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_channel", null, oldChannel.getName()));
                 }
                 VoiceChannel newChannel = ((GuildUpdateAfkChannelEvent) event).getNewAfkChannel();
                 if (newChannel != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.new_channel", null, newChannel.getName()));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_channel", null, newChannel.getName()));
                 }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_AFK_CHANNEL;
             } else if (event instanceof GuildUpdateAfkTimeoutEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.old_timeout", "modlog.guild.timeout", String.valueOf(((GuildUpdateAfkTimeoutEvent) event).getOldAfkTimeout().getSeconds())));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.new_timeout", "modlog.guild.timeout", String.valueOf(((GuildUpdateAfkTimeoutEvent) event).getNewAfkTimeout().getSeconds())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_timeout", "modlog.guild.timeout", String.valueOf(((GuildUpdateAfkTimeoutEvent) event).getOldAfkTimeout().getSeconds())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_timeout", "modlog.guild.timeout", String.valueOf(((GuildUpdateAfkTimeoutEvent) event).getNewAfkTimeout().getSeconds())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_AFK_TIMEOUT;
             } else if (event instanceof GuildUpdateBannerEvent) {
                 if (((GuildUpdateBannerEvent) event).getOldBannerUrl() != null) {
@@ -452,8 +452,8 @@ public class ModlogEventListener extends ListenerAdapter {
                 }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_DESCRIPTION;
             } else if (event instanceof GuildUpdateExplicitContentLevelEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.content_filter.old", "modlog.guild.content_filter." + ((GuildUpdateExplicitContentLevelEvent) event).getOldLevel().name().toLowerCase()));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.content_filter.new", "modlog.guild.content_filter." + ((GuildUpdateExplicitContentLevelEvent) event).getNewLevel().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.content_filter.old", "modlog.guild.content_filter." + ((GuildUpdateExplicitContentLevelEvent) event).getOldLevel().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.content_filter.new", "modlog.guild.content_filter." + ((GuildUpdateExplicitContentLevelEvent) event).getNewLevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_EXPLICIT_FILTER;
             } else if (event instanceof GuildUpdateFeaturesEvent) {
                 ListChanges<String> featuresChanged = new ListChanges<>(((GuildUpdateFeaturesEvent) event).getOldFeatures(), ((GuildUpdateFeaturesEvent) event).getNewFeatures());
@@ -469,27 +469,27 @@ public class ModlogEventListener extends ListenerAdapter {
                 }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_ICON;
             } else if (event instanceof GuildUpdateMaxMembersEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.old_max_members", "modlog.guild.members", String.valueOf(((GuildUpdateMaxMembersEvent) event).getOldMaxMembers())));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.new_max_members", "modlog.guild.members", String.valueOf(((GuildUpdateMaxMembersEvent) event).getNewMaxMembers())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_max_members", "modlog.guild.members", String.valueOf(((GuildUpdateMaxMembersEvent) event).getOldMaxMembers())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_max_members", "modlog.guild.members", String.valueOf(((GuildUpdateMaxMembersEvent) event).getNewMaxMembers())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_MAX_MEMBERS;
             } else if (event instanceof GuildUpdateMaxPresencesEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.old_presences", "modlog.guild.presences", String.valueOf(((GuildUpdateMaxPresencesEvent) event).getOldMaxPresences())));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.new_presences", "modlog.guild.presences", String.valueOf(((GuildUpdateMaxPresencesEvent) event).getNewMaxPresences())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_presences", "modlog.guild.presences", String.valueOf(((GuildUpdateMaxPresencesEvent) event).getOldMaxPresences())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_presences", "modlog.guild.presences", String.valueOf(((GuildUpdateMaxPresencesEvent) event).getNewMaxPresences())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_MAX_PRESENCES;
             } else if (event instanceof GuildUpdateMFALevelEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.mfa.old", "modlog.guild.mfa." + ((GuildUpdateMFALevelEvent) event).getOldMFALevel().name().toLowerCase()));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.mfa.new", "modlog.guild.mfa." + ((GuildUpdateMFALevelEvent) event).getNewMFALevel().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.mfa.old", "modlog.guild.mfa." + ((GuildUpdateMFALevelEvent) event).getOldMFALevel().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.mfa.new", "modlog.guild.mfa." + ((GuildUpdateMFALevelEvent) event).getNewMFALevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_MFA_LEVEL;
             } else if (event instanceof GuildUpdateNameEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.general.old_name", null, ((GuildUpdateNameEvent) event).getOldName()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.general.old_name", null, ((GuildUpdateNameEvent) event).getOldName()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_NAME;
             } else if (event instanceof GuildUpdateNotificationLevelEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.notification.old", "modlog.guild.notification." + ((GuildUpdateNotificationLevelEvent) event).getOldNotificationLevel().name().toLowerCase()));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.notification.new", "modlog.guild.notification." + ((GuildUpdateNotificationLevelEvent) event).getNewNotificationLevel().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.notification.old", "modlog.guild.notification." + ((GuildUpdateNotificationLevelEvent) event).getOldNotificationLevel().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.notification.new", "modlog.guild.notification." + ((GuildUpdateNotificationLevelEvent) event).getNewNotificationLevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_NOTIFICATION_LEVEL;
             } else if (event instanceof GuildUpdateRegionEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.old_region", null, ((GuildUpdateRegionEvent) event).getOldRegion().getName()));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.new_region", null, ((GuildUpdateRegionEvent) event).getNewRegion().getName()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_region", null, ((GuildUpdateRegionEvent) event).getOldRegion().getName()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_region", null, ((GuildUpdateRegionEvent) event).getNewRegion().getName()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_REGION;
             } else if (event instanceof GuildUpdateSplashEvent) {
                 if (((GuildUpdateSplashEvent) event).getOldSplashUrl() != null) {
@@ -502,38 +502,38 @@ public class ModlogEventListener extends ListenerAdapter {
             } else if (event instanceof GuildUpdateSystemChannelEvent) {
                 TextChannel oldSystemChannel = ((GuildUpdateSystemChannelEvent) event).getOldSystemChannel();
                 if (oldSystemChannel != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.old_sys", null, oldSystemChannel.getName()));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_sys", null, oldSystemChannel.getName()));
                 }
                 TextChannel newSystemChannel = ((GuildUpdateSystemChannelEvent) event).getNewSystemChannel();
                 if (newSystemChannel != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.new_sys", null, newSystemChannel.getName()));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_sys", null, newSystemChannel.getName()));
                 }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_SYSTEM_CHANNEL;
             } else if (event instanceof GuildUpdateVanityCodeEvent) {
                 if (((GuildUpdateVanityCodeEvent) event).getOldVanityCode() != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.vanity_code.old", null, ((GuildUpdateVanityCodeEvent) event).getOldVanityCode()));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.vanity_code.old", null, ((GuildUpdateVanityCodeEvent) event).getOldVanityCode()));
                 }
                 if (((GuildUpdateVanityCodeEvent) event).getOldVanityUrl() != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.vanity_url.old", null, ((GuildUpdateVanityCodeEvent) event).getOldVanityUrl()));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.vanity_url.old", null, ((GuildUpdateVanityCodeEvent) event).getOldVanityUrl()));
                 }
                 if (((GuildUpdateVanityCodeEvent) event).getNewVanityCode() != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.vanity_code.new", null, ((GuildUpdateVanityCodeEvent) event).getNewVanityCode()));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.vanity_code.new", null, ((GuildUpdateVanityCodeEvent) event).getNewVanityCode()));
                 }
                 if (((GuildUpdateVanityCodeEvent) event).getNewVanityUrl() != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.vanity_url.new", null, ((GuildUpdateVanityCodeEvent) event).getNewVanityUrl()));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.vanity_url.new", null, ((GuildUpdateVanityCodeEvent) event).getNewVanityUrl()));
                 }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_VANITY_CODE;
             } else if (event instanceof GuildUpdateVerificationLevelEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.old_verification", "utils.verification_level." + ((GuildUpdateVerificationLevelEvent) event).getOldVerificationLevel().name().toLowerCase()));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.new_verification", "utils.verification_level." + ((GuildUpdateVerificationLevelEvent) event).getNewVerificationLevel().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_verification", "utils.verification_level." + ((GuildUpdateVerificationLevelEvent) event).getOldVerificationLevel().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_verification", "utils.verification_level." + ((GuildUpdateVerificationLevelEvent) event).getNewVerificationLevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_VERIFICATION_LEVEL;
             } else if (event instanceof GuildUpdateBoostCountEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.old_boost_count", null, String.valueOf(event.getOldValue())));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.new_boost_count", null, String.valueOf(event.getNewValue())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_boost_count", null, String.valueOf(event.getOldValue())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_boost_count", null, String.valueOf(event.getNewValue())));
                 modlogEvent = ModlogEvent.GUILD_BOOST_COUNT_UPDATED;
             } else if (event instanceof GuildUpdateBoostTierEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.old_boost_tier", "modlog.guild.boost_tier." + ((GuildUpdateBoostTierEvent) event).getOldBoostTier().name().toLowerCase()));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.guild.new_boost_tier", "modlog.guild.boost_tier." + ((GuildUpdateBoostTierEvent) event).getNewBoostTier().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_boost_tier", "modlog.guild.boost_tier." + ((GuildUpdateBoostTierEvent) event).getOldBoostTier().name().toLowerCase()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_boost_tier", "modlog.guild.boost_tier." + ((GuildUpdateBoostTierEvent) event).getNewBoostTier().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_BOOST_TIER_UPDATED;
             } else {
                 return;
@@ -551,30 +551,30 @@ public class ModlogEventListener extends ListenerAdapter {
             List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
             ModlogEvent action;
             if (event instanceof GuildVoiceDeafenEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.voice.deafen", null, String.valueOf(((GuildVoiceDeafenEvent) event).isDeafened())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.deafen", null, String.valueOf(((GuildVoiceDeafenEvent) event).isDeafened())));
                 action = ModlogEvent.VOICE_DEAFEN;
             } else if (event instanceof GuildVoiceMuteEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.voice.mute", null, String.valueOf(((GuildVoiceMuteEvent) event).isMuted())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.mute", null, String.valueOf(((GuildVoiceMuteEvent) event).isMuted())));
                 action = ModlogEvent.VOICE_MUTE;
             } else if (event instanceof GuildVoiceGuildDeafenEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.voice.deafen", null, String.valueOf(((GuildVoiceGuildDeafenEvent) event).isGuildDeafened())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.deafen", null, String.valueOf(((GuildVoiceGuildDeafenEvent) event).isGuildDeafened())));
                 action = ModlogEvent.VOICE_SERVER_DEAFEN;
             } else if (event instanceof GuildVoiceGuildMuteEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.voice.mute", null, String.valueOf(((GuildVoiceGuildMuteEvent) event).isGuildMuted())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.mute", null, String.valueOf(((GuildVoiceGuildMuteEvent) event).isGuildMuted())));
                 action = ModlogEvent.VOICE_SERVER_MUTE;
             } else if (event instanceof GuildVoiceJoinEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.voice.join", null, ((GuildVoiceJoinEvent) event).getChannelJoined().getName()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.join", null, ((GuildVoiceJoinEvent) event).getChannelJoined().getName()));
                 action = ModlogEvent.VOICE_JOIN;
             } else if (event instanceof GuildVoiceLeaveEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.voice.left", null, ((GuildVoiceLeaveEvent) event).getChannelLeft().getName()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.left", null, ((GuildVoiceLeaveEvent) event).getChannelLeft().getName()));
                 if (auditLogEntry != null) {
                     action = ModlogEvent.VOICE_DISCONNECT;
                 } else {
                     action = ModlogEvent.VOICE_LEAVE;
                 }
             } else if (event instanceof GuildVoiceMoveEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.voice.left", null, ((GuildVoiceMoveEvent) event).getChannelLeft().getName()));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.voice.join", null, ((GuildVoiceMoveEvent) event).getChannelJoined().getName()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.left", null, ((GuildVoiceMoveEvent) event).getChannelLeft().getName()));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.join", null, ((GuildVoiceMoveEvent) event).getChannelJoined().getName()));
                 if (auditLogEntry != null) {
                     action = ModlogEvent.VOICE_FORCE_MOVE;
                 } else {
@@ -629,11 +629,11 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             if (event instanceof TextChannelUpdateNSFWEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.nsfw", null, String.valueOf(!((TextChannelUpdateNSFWEvent) event).getOldNSFW())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.nsfw", null, String.valueOf(!((TextChannelUpdateNSFWEvent) event).getOldNSFW())));
                 trigger = ModlogEvent.TEXT_CHANNEL_NSFW_UPDATED;
             } else if (event instanceof TextChannelUpdateSlowmodeEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.old_slowmode", null, String.valueOf(((TextChannelUpdateSlowmodeEvent) event).getOldSlowmode())));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.new_slowmode", null, String.valueOf(((TextChannelUpdateSlowmodeEvent) event).getNewSlowmode())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_slowmode", null, String.valueOf(((TextChannelUpdateSlowmodeEvent) event).getOldSlowmode())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_slowmode", null, String.valueOf(((TextChannelUpdateSlowmodeEvent) event).getNewSlowmode())));
                 trigger = ModlogEvent.TEXT_CHANNEL_SLOWMODE_UPDATED;
             } else if (event instanceof TextChannelUpdateTopicEvent) {
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_topic", null, ((TextChannelUpdateTopicEvent) event).getOldTopic()));
@@ -670,12 +670,12 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             if (event instanceof VoiceChannelUpdateBitrateEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.old_bitrate", "modlog.channel.kpbs", String.valueOf(((VoiceChannelUpdateBitrateEvent) event).getOldBitrate())));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.new_bitrate", "modlog.channel.kpbs", String.valueOf(((VoiceChannelUpdateBitrateEvent) event).getNewBitrate())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_bitrate", "modlog.channel.kpbs", String.valueOf(((VoiceChannelUpdateBitrateEvent) event).getOldBitrate())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_bitrate", "modlog.channel.kpbs", String.valueOf(((VoiceChannelUpdateBitrateEvent) event).getNewBitrate())));
                 trigger = ModlogEvent.VOICE_CHANNEL_BITRATE_UPDATED;
             } else if (event instanceof VoiceChannelUpdateUserLimitEvent) {
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.old_users", "modlog.channel.user", String.valueOf(((VoiceChannelUpdateUserLimitEvent) event).getOldUserLimit())));
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.new_users", "modlog.channel.user", String.valueOf(((VoiceChannelUpdateUserLimitEvent) event).getNewUserLimit())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_users", "modlog.channel.user", String.valueOf(((VoiceChannelUpdateUserLimitEvent) event).getOldUserLimit())));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_users", "modlog.channel.user", String.valueOf(((VoiceChannelUpdateUserLimitEvent) event).getNewUserLimit())));
                 trigger = ModlogEvent.VOICE_CHANNEL_USER_LIMIT_UPDATED;
             } else {
                 return;
@@ -754,7 +754,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 denied.addTitleObjects(permissionsHolderName);
                 embedFieldList.add(denied);
             }
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + event.getChannelType().name().toLowerCase()));
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + event.getChannelType().name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, event.getChannel(), embedFieldList);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_OVERRIDE_UPDATE, ActionType.CHANNEL_UPDATE);
@@ -774,7 +774,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel create entry");
             }
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_CREATE);
@@ -791,7 +791,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel delete entry");
             }
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_DELETE);
@@ -808,8 +808,8 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.general.old_name", null, oldName));
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.general.old_name", null, oldName));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_UPDATE);
@@ -843,9 +843,9 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.old_parent", null, oldParent.getName()));
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.new_parent", null, newParent.getName()));
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.old_parent", null, oldParent.getName()));
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.new_parent", null, newParent.getName()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_UPDATE);
@@ -873,11 +873,11 @@ public class ModlogEventListener extends ListenerAdapter {
                 modlogEvent = ModlogEvent.ROLE_COLOR_UPDATED;
                 Color oldColor = ((RoleUpdateColorEvent) event).getOldColor();
                 if (oldColor != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.role.old_color", null, ColorUtils.getHex(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue())));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.role.old_color", null, ColorUtils.getHex(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue())));
                 }
                 Color newColor = ((RoleUpdateColorEvent) event).getNewColor();
                 if (newColor != null) {
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.role.new_color", null, ColorUtils.getHex(newColor.getRed(), newColor.getGreen(), newColor.getBlue())));
+                    embedFieldList.add(new ModlogEmbedField(false, "modlog.role.new_color", null, ColorUtils.getHex(newColor.getRed(), newColor.getGreen(), newColor.getBlue())));
                 }
             } else if (event instanceof RoleUpdateHoistedEvent) {
                 modlogEvent = ModlogEvent.ROLE_HOIST_UPDATED;
@@ -911,7 +911,7 @@ public class ModlogEventListener extends ListenerAdapter {
                     // If the position stays the same, we have no reason to log the event
                     return;
                 }
-                embedFieldList.add(new ModlogEmbedField(true, "modlog.general.position", "modlog.general.small_change", ((RoleUpdatePositionEvent) event).getOldPosition() + 1, ((RoleUpdatePositionEvent) event).getNewPosition() + 1));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.general.position", "modlog.general.small_change", ((RoleUpdatePositionEvent) event).getOldPosition() + 1, ((RoleUpdatePositionEvent) event).getNewPosition() + 1));
             } else {
                 return;
             }
