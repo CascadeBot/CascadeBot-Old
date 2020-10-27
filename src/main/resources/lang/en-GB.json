@@ -311,7 +311,6 @@
       "cannot_find_tag": "Couldn't find tag with name `{0}`.",
       "category": {
         "command": "category",
-        "description": "Moves a tag to a specific category.",
         "successfully_set_tag": "Set tag `{0}` category to `{1}`."
       },
       "create": {
