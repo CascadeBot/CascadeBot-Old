@@ -13,7 +13,7 @@ import org.cascadebot.cascadebot.permissions.objects.Group
 import java.lang.UnsupportedOperationException
 import java.lang.reflect.Field
 
-class ModlogEventStore(val trigger: ModlogEvent, val responsible: User?, affected: Any, var extraInfo: MutableList<ModlogEmbedPart>) {
+class ModlogEventStore(val trigger: ModlogEvent, @Transient val responsible: User?, affected: Any, var extraInfo: MutableList<ModlogEmbedPart>) {
     
     val affected: ModlogAffected = when (affected) {
         is User -> {
