@@ -1,9 +1,9 @@
 package org.cascadebot.cascadebot.data.objects
 
-class ModlogAffected(var affectedType: AffectedType, var name: String, var id : String?) {
+class ModlogAffected(val affectedType: AffectedType, val name: String, val id : String, @Transient val baseObject: Any) {
 
-    constructor(affectedType: AffectedType, name: String) : this(affectedType, name, null)
+    constructor(affectedType: AffectedType, name: String, baseObject: Any) : this(affectedType, name, "null", baseObject)
 
-    constructor() : this(AffectedType.UNKNOWN, "unknown")
+    constructor() : this(AffectedType.UNKNOWN, "unknown", "null")
 
 }

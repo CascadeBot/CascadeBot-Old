@@ -13,48 +13,47 @@ import org.cascadebot.cascadebot.permissions.objects.Group
 import java.lang.UnsupportedOperationException
 import java.lang.reflect.Field
 
-class ModlogEventStore(val trigger: ModlogEvent, val responsible: User?, affected: Any, extraInfo: MutableList<ModlogEmbedPart>) {
+class ModlogEventStore(val trigger: ModlogEvent, val responsible: User?, affected: Any, var extraInfo: MutableList<ModlogEmbedPart>) {
     
     val affected: ModlogAffected = when (affected) {
         is User -> {
-            ModlogAffected(AffectedType.USER, affected.asTag, affected.id)
+            ModlogAffected(AffectedType.USER, affected.asTag, affected.id, affected)
         }
         is Role -> {
-            ModlogAffected(AffectedType.ROLE, "${affected.name} (${affected.id})", affected.id)
+            ModlogAffected(AffectedType.ROLE, "${affected.name} (${affected.id})", affected.id, affected)
         }
         is Emote -> {
-            ModlogAffected(AffectedType.EMOTE, affected.name, affected.id)
+            ModlogAffected(AffectedType.EMOTE, affected.name, affected.id, affected)
         }
         is Guild -> {
-            ModlogAffected(AffectedType.GUILD, affected.name)
+            ModlogAffected(AffectedType.GUILD, affected.name, affected)
         }
         is GuildChannel -> {
-            ModlogAffected(AffectedType.CHANNEL, affected.name, affected.id)
+            ModlogAffected(AffectedType.CHANNEL, affected.name, affected.id, affected)
         }
         is Group -> {
-            ModlogAffected(AffectedType.GROUP, affected.name, affected.id)
+            ModlogAffected(AffectedType.GROUP, affected.name, affected.id, affected)
         }
         is Field -> {
-            ModlogAffected(AffectedType.SETTING, affected.name)
+            ModlogAffected(AffectedType.SETTING, affected.name, affected)
         }
         is Module -> {
-            ModlogAffected(AffectedType.MODULE, affected.name)
+            ModlogAffected(AffectedType.MODULE, affected.name, affected)
         }
         is MainCommand -> {
-            ModlogAffected(AffectedType.COMMAND, affected.command())
+            ModlogAffected(AffectedType.COMMAND, affected.command(), affected)
         }
         is Playlist -> {
-            ModlogAffected(AffectedType.PLAYLIST, affected.name, affected.playlistId.toHexString())
+            ModlogAffected(AffectedType.PLAYLIST, affected.name, affected.playlistId.toHexString(), affected)
         }
         is Tag -> {
-            ModlogAffected(AffectedType.TAG, affected.name)
+            ModlogAffected(AffectedType.TAG, affected.name, affected)
         }
         else -> {
             ModlogAffected()
         }
     }
 
-    var extraInfo: MutableList<ModlogEmbedPart> = mutableListOf()
     var extraDescriptionInfo: MutableList<String> = mutableListOf()
 
     val responsibleId: Long = responsible?.idLong ?: 0

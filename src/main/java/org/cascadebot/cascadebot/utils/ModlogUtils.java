@@ -29,7 +29,7 @@ public class ModlogUtils {
                 if (!actionTypeList.contains(entry.getType())) {
                     continue;
                 }
-                if (millis > 5000l) {
+                if (millis > 5000L) {
                     continue;
                 }
                 if (targetId != -1) {
