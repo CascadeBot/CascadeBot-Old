@@ -303,6 +303,7 @@ public class ModlogEventListener extends ListenerAdapter {
     //endregion
 
     //region Message
+    // TODO
     public void onGuildMessageDelete(@NotNull GuildMessageDeleteEvent event) {
         if (CascadeBot.INS.getRedisClient() == null) {
             return;
@@ -351,6 +352,7 @@ public class ModlogEventListener extends ListenerAdapter {
         }, ActionType.MESSAGE_DELETE);
     }
 
+    // TODO
     public void onGuildMessageUpdate(@NotNull GuildMessageUpdateEvent event) {
         if (CascadeBot.INS.getRedisClient() == null) {
             return;
@@ -425,19 +427,19 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find guild update entry");
             }
             if (event instanceof GuildUpdateAfkChannelEvent) {
-                VoiceChannel oldChannel = ((GuildUpdateAfkChannelEvent) event).getOldAfkChannel();
-                if (oldChannel != null) {
-                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_channel", null, oldChannel.getName()));
-                }
-                VoiceChannel newChannel = ((GuildUpdateAfkChannelEvent) event).getNewAfkChannel();
-                if (newChannel != null) {
-                    embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_channel", null, newChannel.getName()));
-                }
                 modlogEvent = ModlogEvent.GUILD_UPDATE_AFK_CHANNEL;
+
+                VoiceChannel oldChannel = ((GuildUpdateAfkChannelEvent) event).getOldAfkChannel();
+                VoiceChannel newChannel = ((GuildUpdateAfkChannelEvent) event).getNewAfkChannel();
+
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_channel", null, oldChannel != null ? oldChannel.getName() + " (" + oldChannel.getId() + ")" : "-"));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_channel", null, newChannel != null ? newChannel.getName() + " (" + newChannel.getId() + ")"  : "-"));
             } else if (event instanceof GuildUpdateAfkTimeoutEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_timeout", "modlog.guild.timeout", String.valueOf(((GuildUpdateAfkTimeoutEvent) event).getOldAfkTimeout().getSeconds())));
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_timeout", "modlog.guild.timeout", String.valueOf(((GuildUpdateAfkTimeoutEvent) event).getNewAfkTimeout().getSeconds())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_AFK_TIMEOUT;
+
+                String oldTimeout = Language.i18n(event.getGuild().getIdLong(), "modlog.guild.timeout_seconds", ((GuildUpdateAfkTimeoutEvent) event).getOldAfkTimeout().getSeconds());
+                String newTimeout = Language.i18n(event.getGuild().getIdLong(), "modlog.guild.timeout_seconds", ((GuildUpdateAfkTimeoutEvent) event).getNewAfkTimeout().getSeconds());
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.timeout", "modlog.general.small_change", oldTimeout, newTimeout));
             } else if (event instanceof GuildUpdateBannerEvent) {
                 if (((GuildUpdateBannerEvent) event).getOldBannerUrl() != null) {
                     embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_image", null, ((GuildUpdateBannerEvent) event).getOldBannerUrl()));
@@ -476,6 +478,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_max_members", "modlog.guild.members", String.valueOf(((GuildUpdateMaxMembersEvent) event).getNewMaxMembers())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_MAX_MEMBERS;
             } else if (event instanceof GuildUpdateMaxPresencesEvent) {
+                responsible = null;
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_presences", "modlog.guild.presences", String.valueOf(((GuildUpdateMaxPresencesEvent) event).getOldMaxPresences())));
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_presences", "modlog.guild.presences", String.valueOf(((GuildUpdateMaxPresencesEvent) event).getNewMaxPresences())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_MAX_PRESENCES;

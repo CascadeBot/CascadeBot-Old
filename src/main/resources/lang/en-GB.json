@@ -1477,13 +1477,13 @@
       },
       "guild_update_afk_channel": {
         "select": "guild_update_afk_channel",
-        "display": "Guild update afk channel",
-        "description": "Afk channel changed"
+        "display": "Guild update AFK channel",
+        "description": "AFK channel changed"
       },
       "guild_update_afk_timeout": {
         "select": "guild_update_afk_timeout",
-        "display": "Guild update afk timeout",
-        "description": "Aft timeout changed"
+        "display": "Guild update AFK timeout",
+        "description": "AFK timeout changed"
       },
       "guild_update_banner": {
         "select": "guild_update_banner",
@@ -2348,9 +2348,8 @@
     "guild": {
       "old_channel": "Old Channel",
       "new_channel": "New Channel",
-      "timeout": "{0} seconds",
-      "old_timeout": "Old Value",
-      "new_timeout": "New Value",
+      "timeout_seconds": "{0} seconds",
+      "timeout": "Timeout",
       "old_image": "Old Image",
       "new_image": "New Image",
       "old_description": "Old Description",

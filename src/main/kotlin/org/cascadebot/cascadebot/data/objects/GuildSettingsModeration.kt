@@ -202,18 +202,10 @@ class GuildSettingsModeration {
                 ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR -> {
                     when (affected.affectedType) {
                         AffectedType.USER -> {
-                            if (affected.baseObject is User) {
-                                val iconUrl = if (affected.baseObject.avatarUrl != null) {
-                                    affected.baseObject.avatarUrl
-                                } else {
-                                    affected.baseObject.defaultAvatarUrl
-                                }
-                                webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, iconUrl, "https://discord.com/users/" + affected.id))
-                            }
+                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, affected.imageUrl, "https://discord.com/users/" + affected.id))
                         }
                         AffectedType.EMOTE -> {
-                            val emote: Emote = CascadeBot.INS.shardManager.getEmoteById(affected.id)!!
-                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, emote.imageUrl, null))
+                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, affected.imageUrl, null))
                         }
                         else -> {
                             webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, null, null))
