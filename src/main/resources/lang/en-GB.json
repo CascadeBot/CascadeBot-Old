@@ -745,7 +745,7 @@
       "description": "Skips the current song.",
       "force": {
         "command": "force",
-        "description": "Forcibily skips the current song."
+        "description": "Forcibly skips the current song."
       },
       "yes": {
         "command": "yes",
@@ -1438,7 +1438,7 @@
       "guild_member_nickname_updated": {
         "select": "guild_member_nickname_updated",
         "display": "Guild member nickname updated",
-        "description": "{0} updated their nickanme"
+        "description": "{0} updated their nickname"
       },
       "guild_user_banned": {
         "select": "guild_user_banned",
@@ -1473,7 +1473,7 @@
       "guild_boost_tier_updated": {
         "select": "guild_boost_tier_updated",
         "display": "Guild boost tier updated",
-        "description": "Server bost teir changed"
+        "description": "Server boost tier changed"
       },
       "guild_update_afk_channel": {
         "select": "guild_update_afk_channel",
@@ -2074,7 +2074,6 @@
     "interval": "interval",
     "item": "item",
     "list": "list",
-    "words": "words",
     "unknown": "unknown",
     "max": "max",
     "member": "member",
