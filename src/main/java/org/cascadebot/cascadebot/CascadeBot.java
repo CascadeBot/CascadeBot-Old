@@ -199,7 +199,7 @@ public class CascadeBot {
         gson = builder.create();
 
         try {
-            DefaultShardManagerBuilder defaultShardManagerBuilder = new DefaultShardManagerBuilder()
+            DefaultShardManagerBuilder defaultShardManagerBuilder = DefaultShardManagerBuilder.create(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new GuildEvents())
                     .addEventListeners(new BotEvents())
@@ -208,7 +208,6 @@ public class CascadeBot {
                     .addEventListeners(new JDAEventMetricsListener())
                     .addEventListeners(new ModlogEventListener())
                     .addEventListeners(eventWaiter)
-                    .enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
                     .setToken(Config.INS.getBotToken())
                     .setShardsTotal(-1)
                     .setActivityProvider(shardId -> {

@@ -30,20 +30,22 @@ class AutoRoleAddSubCommand : SubCommand() {
             }
         }
 
+        // TODO Shouldn't be allowed to add roles higher than themself
+
         context.data.management.autoRoles.addAll(roles.map { it.idLong })
 
         if (roles.isEmpty()) {
             check(errorInputs.isNotEmpty()) { "Error inputs should contain data if no roles have been successfully parsed!" }
             context.typedMessaging.replyDanger(context.i18n("commands.autorole.parse_failed") + "\n" +
-                    context.i18n("commands.autorole.add.inputs_unparsed") + " ${errorInputs.joinToString(", ") { "`$it`" }}")
+                    context.i18n("commands.autorole.inputs_unparsed") + " ${errorInputs.joinToString(", ") { "`$it`" }}")
         } else {
             if (errorInputs.isEmpty()) {
                 context.typedMessaging.replySuccess(context.i18n("commands.autorole.add.add_success") + "\n" +
-                        context.i18n("commands.autorole.add.inputs_unparsed") + " ${roles.joinToString(" ") { it.asMention }}")
+                        context.i18n("commands.autorole.add.added_roles") + " ${roles.joinToString(" ") { it.asMention }}")
             } else {
                 context.typedMessaging.replyWarning(context.i18n("commands.autorole.add.add_success") + "\n" +
                         context.i18n("commands.autorole.add.added_roles") + " ${roles.joinToString(" ") { it.asMention }}\n" +
-                        context.i18n("commands.autorole.add.inputs_unparsed") + " ${errorInputs.joinToString(", ") { "`$it`" }}")
+                        context.i18n("commands.autorole.inputs_unparsed") + " ${errorInputs.joinToString(", ") { "`$it`" }}")
             }
         }
 
