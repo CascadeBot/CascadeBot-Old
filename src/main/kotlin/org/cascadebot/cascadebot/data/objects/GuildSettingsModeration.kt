@@ -4,7 +4,6 @@ import club.minnced.discord.webhook.WebhookClient
 import club.minnced.discord.webhook.WebhookClientBuilder
 import club.minnced.discord.webhook.exception.HttpException
 import club.minnced.discord.webhook.send.WebhookEmbed
-import club.minnced.discord.webhook.send.WebhookEmbed.EmbedField
 import club.minnced.discord.webhook.send.WebhookEmbed.EmbedTitle
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder
 import de.bild.codec.annotations.Transient
@@ -50,7 +49,7 @@ class GuildSettingsModeration {
         for (eventInfo in eventsInfo) {
             eventInfo.sendEvent(GuildDataManager.getGuildData(guildId), modlogEventStore);
         }
-        CascadeBot.INS.databaseManager.runAsyncTask { database -> database.getCollection("modlog", MongoModlogEventObject::class.java).insertOne(MongoModlogEventObject(guildId, modlogEventStore, "default" /* TODO change to actual time */), DebugLogCallback("Inserted Event")) }
+        CascadeBot.INS.databaseManager.runAsyncTask { database -> database.getCollection("modlog", ChannelModlogEventsInfo.MongoModlogEventObject::class.java).insertOne(ChannelModlogEventsInfo.MongoModlogEventObject(guildId, modlogEventStore, "default" /* TODO change to actual time */), DebugLogCallback("Inserted Event")) }
     }
 
     private fun getEventInfoForEvent(event: ModlogEvent): List<ChannelModlogEventsInfo> {
@@ -109,6 +108,7 @@ class GuildSettingsModeration {
     }
 
     class ChannelModlogEventsInfo {
+
         private val events: MutableSet<ModlogEvent> = LinkedHashSet()
         internal var webhookId: Long = 0
         internal var webhookToken: String = ""
@@ -149,7 +149,7 @@ class GuildSettingsModeration {
             return events.remove(event)
         }
 
-        fun getWebhookId() : Long {
+        fun getWebhookId(): Long {
             return webhookId
         }
 
@@ -166,12 +166,18 @@ class GuildSettingsModeration {
             val element = Language.getLanguageOrDefault(guildData.locale).getElement(path)
 
             if (element.isPresent) {
+                val affected = when (modlogEventStore.trigger.affectedDisplayType) {
+                    AffectedDisplayType.NAME -> modlogEventStore.affected.name
+                    AffectedDisplayType.MENTION -> modlogEventStore.affected.mention
+                            ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized()
+                }
                 webhookEmbedBuilder.setDescription(
                         Language.i18n(
                                 guildData.locale,
                                 path,
-                                modlogEventStore.affected.name,
-                                modlogEventStore.responsible?.asMention ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized(),
+                                affected,
+                                modlogEventStore.responsible?.asMention
+                                        ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized(),
                                 *modlogEventStore.extraDescriptionInfo.toTypedArray()
                         )
                 )
@@ -193,20 +199,24 @@ class GuildSettingsModeration {
                                 }
                             }
                         }
+
                         AffectedType.EMOTE -> {
                             val emote: Emote = CascadeBot.INS.shardManager.getEmoteById(affected.id!!)!!
                             webhookEmbedBuilder.setThumbnailUrl(emote.imageUrl)
                         }
                     }
                 }
+
                 ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR -> {
                     when (affected.affectedType) {
                         AffectedType.USER -> {
                             webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, affected.imageUrl, "https://discord.com/users/" + affected.id))
                         }
+
                         AffectedType.EMOTE -> {
                             webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, affected.imageUrl, null))
                         }
+
                         else -> {
                             webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, null, null))
                         }
@@ -234,23 +244,24 @@ class GuildSettingsModeration {
                 // TODO not ignore
             }
         }
-    }
-    
-    class MongoModlogEventObject {
-        
-        private var guildId: Long = 0;
-        private var modlogEventStore: ModlogEventStore? = null
 
-        private var createdDate: Date = Date()
-        private var tier: String = ""
-        
-        private constructor()
-        
-        constructor(guildId: Long, modlogEventStore: ModlogEventStore, tier: String) {
-            this.guildId = guildId
-            this.modlogEventStore = modlogEventStore
-            this.tier = tier
+        class MongoModlogEventObject {
+
+            private var guildId: Long = 0;
+            private var modlogEventStore: ModlogEventStore? = null
+
+            private var createdDate: Date = Date()
+            private var tier: String = ""
+
+            private constructor()
+
+            constructor(guildId: Long, modlogEventStore: ModlogEventStore, tier: String) {
+                this.guildId = guildId
+                this.modlogEventStore = modlogEventStore
+                this.tier = tier
+            }
+
         }
-        
     }
+
 }
