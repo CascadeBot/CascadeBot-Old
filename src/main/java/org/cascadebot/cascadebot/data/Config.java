@@ -15,8 +15,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.messaging.NoOpWebhookClient;
-import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
+import org.cascadebot.orchestra.data.LavalinkNode;
+import org.cascadebot.orchestra.data.enums.NodeType;
 import org.cascadebot.shared.Auth;
 import org.cascadebot.shared.SecurityLevel;
 import org.simpleyaml.configuration.ConfigurationSection;
@@ -81,7 +82,7 @@ public class Config {
 
     private String youtubeKey;
 
-    private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
+    private List<LavalinkNode> musicNodes = new ArrayList<>();
 
     private Config(String file) throws IOException {
         config = new File(file);
@@ -221,10 +222,12 @@ public class Config {
         if (config.contains("nodes")) {
             List<Map<?, ?>> rawNodes = config.getMapList("nodes");
             for (Map<?, ?> rawNode : rawNodes) {
+                String name = (String) rawNode.get("name");
                 String address = (String) rawNode.get("address");
                 String password = (String) rawNode.get("password");
+                NodeType nodeType = NodeType.valueOf(((String) rawNode.get("type")).toUpperCase());
                 try {
-                    musicNodes.add(new MusicHandler.MusicNode(new URI(address), password));
+                    musicNodes.add(new LavalinkNode(name, new URI(address), password, nodeType));
                 } catch (URISyntaxException e) {
                     LOG.warn("Invalid url for node provided", e);
                 }
@@ -327,7 +330,7 @@ public class Config {
         return shardNum;
     }
 
-    public List<MusicHandler.MusicNode> getMusicNodes() {
+    public List<LavalinkNode> getMusicNodes() {
         return musicNodes;
     }
 

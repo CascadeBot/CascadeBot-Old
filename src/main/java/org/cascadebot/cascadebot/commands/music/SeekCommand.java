@@ -22,7 +22,7 @@ public class SeekCommand extends MainCommand {
         String time = context.getMessage(0);
         long millis = 0;
 
-        VoiceChannel memberVoiceChannel = context.getMember().getVoiceState().getChannel();
+        /*VoiceChannel memberVoiceChannel = context.getMember().getVoiceState().getChannel();
         if (context.getMusicPlayer().getPlayingTrack() == null || !context.getMusicPlayer().getConnectedChannel().equals(memberVoiceChannel)) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.seek.no_music_playing"));
             return;
@@ -30,7 +30,7 @@ public class SeekCommand extends MainCommand {
         if (context.getMusicPlayer().getPlayingTrack().getInfo().isStream) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.seek.music_is_stream"));
             return;
-        }
+        }*/
 
 
         try {

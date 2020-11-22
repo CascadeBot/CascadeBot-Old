@@ -10,12 +10,13 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.data.objects.PlaylistType;
-import org.cascadebot.cascadebot.music.TrackData;
+import org.cascadebot.cascadebot.music.PlaylistHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.orchestra.data.TrackData;
+import org.cascadebot.orchestra.data.enums.PlaylistType;
 
 public class QueueLoadSubCommand extends SubCommand {
 
@@ -26,7 +27,7 @@ public class QueueLoadSubCommand extends SubCommand {
             return;
         }
 
-        context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), (result, tracks) -> {
+        PlaylistHandler.loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), context.getGuild().getIdLong(), (result, tracks) -> {
             switch (result) {
                 case LOADED_GUILD:
                 case LOADED_USER:
@@ -39,7 +40,7 @@ public class QueueLoadSubCommand extends SubCommand {
                             return;
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), ((loadPlaylistResult, newTracks) -> {
+                        PlaylistHandler.loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), context.getGuild().getIdLong(), ((loadPlaylistResult, newTracks) -> {
                             context.getUiMessaging().sendTracksFound(newTracks);
                         }));
                     })));
@@ -48,7 +49,7 @@ public class QueueLoadSubCommand extends SubCommand {
                             return;
                         }
                         message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
+                        PlaylistHandler.loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), PlaylistType.GUILD, context.getGuild().getIdLong(), ((loadPlaylistResult, newTracks) -> {
                             context.getUiMessaging().sendTracksFound(newTracks);
                         }));
                     })));

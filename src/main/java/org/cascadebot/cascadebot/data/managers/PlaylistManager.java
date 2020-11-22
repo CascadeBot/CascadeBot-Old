@@ -8,8 +8,8 @@ package org.cascadebot.cascadebot.data.managers;
 import com.mongodb.client.MongoIterable;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
-import org.cascadebot.cascadebot.data.objects.Playlist;
-import org.cascadebot.cascadebot.data.objects.PlaylistType;
+import org.cascadebot.orchestra.data.Playlist;
+import org.cascadebot.orchestra.data.enums.PlaylistType;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Updates.combine;

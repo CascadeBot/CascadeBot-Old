@@ -6,14 +6,6 @@ import org.cascadebot.cascadebot.utils.PurgeUtils
 import java.util.Arrays
 import java.util.regex.Pattern
 
-enum class PlaylistType {
-    GUILD, USER
-}
-
-enum class SearchResultType {
-    VIDEO, PLAYLIST
-}
-
 /**
  * Criteria for the [PurgeUtils.purge] method that checks
  * which filters you are trying to apply to the message searching
@@ -80,18 +72,6 @@ enum class PermissionAction {
      * permission will be denied regardless of the other permission actions.
      */
     DENY
-}
-
-enum class LoopMode {
-    DISABLED, PLAYLIST, SONG
-}
-
-enum class SavePlaylistResult {
-    ALREADY_EXISTS, OVERWRITE, NEW
-}
-
-enum class LoadPlaylistResult {
-    LOADED_GUILD, LOADED_USER, EXISTS_IN_ALL_SCOPES, DOESNT_EXIST
 }
 
 enum class PermissionMode {

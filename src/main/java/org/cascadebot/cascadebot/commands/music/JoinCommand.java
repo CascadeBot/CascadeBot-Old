@@ -9,10 +9,12 @@ import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.orchestra.data.enums.NodeType;
 import org.cascadebot.shared.Regex;
 
 import java.util.List;
@@ -48,7 +50,6 @@ public class JoinCommand extends MainCommand {
             context.getUiMessaging().sendBotDiscordPermError(Permission.VOICE_SPEAK);
             return;
         }
-
         if (context.getMusicPlayer().getConnectedChannel() != null) {
             if (context.getMusicPlayer().getConnectedChannel().equals(voiceChannel)) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.join.already_connected"));

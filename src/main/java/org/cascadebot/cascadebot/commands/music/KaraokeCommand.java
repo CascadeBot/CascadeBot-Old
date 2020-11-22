@@ -22,7 +22,7 @@ public class KaraokeCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getMusicPlayer().getPlayingTrack() == null) {
+        /*if (context.getMusicPlayer().getPlayingTrack() == null) {
             KaraokeHandler.disableKaraoke(context.getGuild().getIdLong());
             context.getTypedMessaging().replyDanger(context.i18n("commands.karaoke.nothing_playing"));
             return;
@@ -48,7 +48,7 @@ public class KaraokeCommand extends MainCommand {
             context.getTypedMessaging().replySuccess(context.i18n("commands.karaoke.enabled_karaoke"));
         } catch (InterruptedException | ExecutionException e) {
             context.getTypedMessaging().replyException(context.i18n("commands.karaoke.cannot_find"), e);
-        }
+        }*/
     }
 
     @Override

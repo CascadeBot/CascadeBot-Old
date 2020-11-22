@@ -38,7 +38,7 @@ class GuildEvents : ListenerAdapter() {
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent) {
-        CascadeBot.INS.musicHandler.removePlayer(event.guild.idLong)
+        //CascadeBot.INS.musicHandler.removePlayer(event.guild.idLong)
         if (!StringUtils.isBlank(Config.INS.guildGoodbyeMessage)) {
             event.guild.owner!!
                     .user

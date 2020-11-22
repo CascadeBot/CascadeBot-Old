@@ -10,8 +10,8 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.orchestra.data.enums.PlayerType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,22 +20,16 @@ public class EqualizerResetSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (!CascadeBot.INS.getMusicHandler().getLavalinkEnabled()) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
-            return;
-        }
-
-        if (!(context.getMusicPlayer() instanceof CascadeLavalinkPlayer)) {
+        if (!context.getMusicPlayer().getType().equals(PlayerType.LAVALINK)) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
             return;
         }
 
         Map<Integer, Float> bands = new HashMap<>();
         for (int i = 0; i < Equalizer.BAND_COUNT; i++) {
-            bands.put(i, 0.0f);
+            context.getMusicPlayer().getEqualizer().setBand(i, 0.5f);
         }
 
-        ((CascadeLavalinkPlayer) context.getMusicPlayer()).setBands(bands);
         context.getTypedMessaging().replySuccess(context.i18n("commands.equalizer.reset.success"));
     }
 

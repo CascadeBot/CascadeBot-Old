@@ -7,11 +7,11 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Locale
-import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 import org.cascadebot.cascadebot.utils.pagination.PageCache
+import org.cascadebot.orchestra.data.enums.NodeType
 import java.util.Date
 
 class GuildData(@field:Id val guildId: Long) {
@@ -63,16 +63,16 @@ class GuildData(@field:Id val guildId: Long) {
     }
 
     private fun loadMusicSettings() {
-        val player = CascadeBot.INS.musicHandler.getPlayer(guildId)!!
+        val player = CascadeBot.INS.musicHandler.getPlayer(guildId.toString(), NodeType.GENERAL)!!
         if (music.preserveVolume) {
             player.volume = music.volume
         }
         if (music.preserveEqualizer) {
-            if (CascadeBot.INS.musicHandler.lavalinkEnabled) {
+            /*if (CascadeBot.INS.musicHandler.lavalinkEnabled) {
                 if (player is CascadeLavalinkPlayer) {
                     player.setBands(music.equalizerBands)
                 }
-            }
+            }*/
         }
     }
 

@@ -40,11 +40,11 @@ import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
 import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
-import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
+import org.cascadebot.orchestra.MusicHandler;
 import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 public class CascadeBot {
 
@@ -171,7 +172,8 @@ public class CascadeBot {
             );
         }
 
-        musicHandler = new MusicHandler();
+        musicHandler = new MusicHandler(Config.INS.getMusicNodes(), Config.INS.getBotId(), -1,
+                integer -> getShardManager().getShardById(integer));
 
         eventWaiter = new EventWaiter();
         gson = builder.create();
@@ -197,12 +199,9 @@ public class CascadeBot {
                     .setBulkDeleteSplittingEnabled(false)
                     .setEnableShutdownHook(false);
 
-            if (musicHandler.getLavalinkEnabled()) {
-                defaultShardManagerBuilder.addEventListeners(musicHandler.getLavaLink());
-                defaultShardManagerBuilder.setVoiceDispatchInterceptor(musicHandler.getLavaLink().getVoiceInterceptor());
-            } else {
+                defaultShardManagerBuilder.addEventListeners(musicHandler.getLavalink());
+                defaultShardManagerBuilder.setVoiceDispatchInterceptor(musicHandler.getLavalink().getVoiceInterceptor());
                 defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
-            }
 
             shardManager = defaultShardManagerBuilder.build();
         } catch (LoginException e) {
@@ -238,12 +237,12 @@ public class CascadeBot {
     }
 
     private void setupTasks() {
-        new Task("prune-players") {
+        /*new Task("prune-players") {
             @Override
             protected void execute() {
                 musicHandler.purgeDisconnectedPlayers();
             }
-        }.start(TimeUnit.MINUTES.toMillis(5), TimeUnit.MINUTES.toMillis(15));
+        }.start(TimeUnit.MINUTES.toMillis(5), TimeUnit.MINUTES.toMillis(15));*/
     }
 
 

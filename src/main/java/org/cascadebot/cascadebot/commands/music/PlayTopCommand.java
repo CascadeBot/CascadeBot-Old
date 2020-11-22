@@ -11,8 +11,9 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.music.TrackData;
+import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.orchestra.data.TrackData;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -33,7 +34,7 @@ public class PlayTopCommand extends MainCommand {
                 context.getUiMessaging().checkPlaylistOrSong(context.getArg(0), tracks, context, true);
             });
         } else {
-            CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
+            CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), Config.INS.getYoutubeKey(),searchResults -> {
                 if (searchResults.isEmpty()) {
                     context.getTypedMessaging().replyDanger(context.i18n("commands.play.could_not_find_matches", context.getArg(0)));
                 } else {
@@ -49,6 +50,8 @@ public class PlayTopCommand extends MainCommand {
                         context.getUiMessaging().sendTracksFound(tracks);
                     });
                 }
+            }, throwable -> {
+
             });
         }
     }

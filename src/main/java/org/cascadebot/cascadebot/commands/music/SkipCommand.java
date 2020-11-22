@@ -15,12 +15,12 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup;
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroupBuilder;
 import org.cascadebot.cascadebot.utils.votes.VoteResult;
+import org.cascadebot.orchestra.data.TrackData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -130,9 +130,9 @@ public class SkipCommand extends MainCommand {
                 .setTitle(context.i18n("commands.skip.skip_vote_title"));
         context.getUiMessaging().sendButtonedMessage(skipVoteEmbed.build(), buttonGroup);
         buttonGroup.addVote(sender.getUser(), UnicodeConstants.TICK);
-        for (Member member : context.getMusicPlayer().getConnectedChannel().getMembers()) {
+        /*for (Member member : context.getMusicPlayer().getConnectedChannel().getMembers()) {
             buttonGroup.allowUser(member.getIdLong());
-        }
+        }*/
     }
 
     @Override

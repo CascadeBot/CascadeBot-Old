@@ -243,21 +243,6 @@
             <version>3.0.4</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>com.sedmelluq</groupId>
-            <artifactId>lavaplayer</artifactId>
-            <version>${lavaplayer.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.sedmelluq</groupId>
-            <artifactId>jda-nas</artifactId>
-            <version>1.1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.FredBoat</groupId>
-            <artifactId>Lavalink-Client</artifactId>
-            <version>${lavalink.client.version}</version>
-        </dependency>
 
         <!-- Internal Dependencies -->
         <dependency>
@@ -269,6 +254,11 @@
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
             <version>2.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.CascadeBot</groupId>
+            <artifactId>Orchestra</artifactId>
+            <version>92b7385796f31b32177f1872d446039649b77d51</version>
         </dependency>
 
         <!-- Utilities -->

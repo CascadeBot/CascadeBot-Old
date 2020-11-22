@@ -280,7 +280,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
         val voteButtonGroup = data.persistentButtons[channel.idLong]!![message.idLong] as VoteButtonGroup?
         voteButtonGroup!!.stopVote()
         SkipCommand.voteMap.remove(channel.guild.idLong)
-        CascadeBot.INS.musicHandler.getPlayer(channel.guild.idLong)!!.skip()
+        CascadeBot.INS.musicHandler.getPlayer(channel.guild.id, org.cascadebot.orchestra.data.enums.NodeType.GENERAL)!!.skip()
     }));
 
 }

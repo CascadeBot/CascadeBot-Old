@@ -5,22 +5,21 @@
 
 package org.cascadebot.cascadebot.commands.music;
 
-import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.orchestra.data.Equalizer;
+import org.cascadebot.orchestra.data.enums.PlayerType;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -33,15 +32,11 @@ public class EqualizerCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (!CascadeBot.INS.getMusicHandler().getLavalinkEnabled()) {
+        if (!context.getMusicPlayer().getType().equals(PlayerType.LAVALINK)) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
             return;
         }
-        if (!(context.getMusicPlayer() instanceof CascadeLavalinkPlayer)) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.equalizer.not_lavalink"));
-            return;
-        }
-        CascadeLavalinkPlayer player = (CascadeLavalinkPlayer) context.getMusicPlayer();
+        Equalizer equalizer = context.getMusicPlayer().getEqualizer();
         AtomicInteger currentBand = new AtomicInteger();
         ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.BACKWARD_ARROW, (runner, channel, message) -> {
@@ -55,7 +50,7 @@ public class EqualizerCommand extends MainCommand {
 
             currentBand.set(newBand);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(equalizer.getBandsMap(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, channel, message) -> {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
@@ -68,45 +63,45 @@ public class EqualizerCommand extends MainCommand {
 
             currentBand.set(newBand);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(equalizer.getBandsMap(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
                 return;
             }
 
-            int gain = (int) (player.getCurrentBands().get(currentBand.get()) * 20);
+            int gain = (int) (equalizer.getBandsMap().get(currentBand.get()) * 20);
             gain -= 1;
             if (gain < -5) {
                 return;
             }
 
-            player.setBand(currentBand.get(), ((float) gain) / 20f);
+            equalizer.setBand(currentBand.get(), ((float) gain) / 20f);
             if (context.getData().getMusic().getPreserveEqualizer()) {
                 context.getData().getMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
             }
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(equalizer.getBandsMap(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
             if (runner.getIdLong() != buttonGroup.getOwnerId()) {
                 return;
             }
 
-            int gain = (int) (player.getCurrentBands().get(currentBand.get()) * 20);
+            int gain = (int) (equalizer.getBandsMap().get(currentBand.get()) * 20);
             gain += 1;
             if (gain > 5) {
                 return;
             }
 
-            player.setBand(currentBand.get(), ((float) gain) / 20f);
+            equalizer.setBand(currentBand.get(), ((float) gain) / 20f);
             if (context.getData().getMusic().getPreserveEqualizer()) {
                 context.getData().getMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
             }
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
-        }));
-        context.getUiMessaging().sendButtonedMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), context.getUser(), context).build(), buttonGroup);
+            message.editMessage(getEqualizerEmbed(equalizer.getBandsMap(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
+        })); //TODO enable and disable buttons
+        context.getUiMessaging().sendButtonedMessage(getEqualizerEmbed(equalizer.getBandsMap(), currentBand.get(), context.getUser(), context).build(), buttonGroup);
     }
 
     private String getEqualizerString(Map<Integer, Float> bands, int currentBand) {

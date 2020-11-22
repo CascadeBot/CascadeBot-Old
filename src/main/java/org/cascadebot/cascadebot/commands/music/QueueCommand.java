@@ -15,12 +15,12 @@ import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.music.CascadePlayer;
-import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
+import org.cascadebot.orchestra.data.TrackData;
+import org.cascadebot.orchestra.players.CascadePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,14 +57,14 @@ public class QueueCommand extends MainCommand {
             }
             builder.append("\n\n");
             if (i % 10 == 0) {
-                pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString() + context.i18n("commands.queue.queue_time", FormatUtils.formatLongTimeMills((long) player.getQueueLength())))));
+                pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString() + context.i18n("commands.queue.queue_time", FormatUtils.formatLongTimeMills((long) player.getQueueLength(true))))));
                 builder = new StringBuilder();
             }
             i++;
         }
 
         if (builder.toString().length() > 0) {
-            pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString() + context.i18n("commands.queue.queue_time", FormatUtils.formatLongTimeMills((long) player.getQueueLength())))));
+            pages.add(new PageObjects.EmbedPage(new EmbedBuilder().setDescription(builder.toString() + context.i18n("commands.queue.queue_time", FormatUtils.formatLongTimeMills((long) player.getQueueLength(true))))));
         }
 
         context.getUiMessaging().sendPagedMessage(pages);

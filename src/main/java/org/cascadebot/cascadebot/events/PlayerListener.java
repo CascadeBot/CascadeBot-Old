@@ -15,13 +15,13 @@ import lavalink.client.player.event.TrackExceptionEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.language.Language;
-import org.cascadebot.cascadebot.data.objects.LoopMode;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
-import org.cascadebot.cascadebot.music.CascadePlayer;
-import org.cascadebot.cascadebot.music.TrackData;
+import org.cascadebot.orchestra.data.TrackData;
+import org.cascadebot.orchestra.data.enums.LoopMode;
+import org.cascadebot.orchestra.players.CascadePlayer;
 
 import java.util.NoSuchElementException;
 
@@ -63,7 +63,7 @@ public class PlayerListener implements IPlayerEventListener, AudioEventListener 
                     player.getQueue().add(track.makeClone());
                     if (player.isShuffleEnabled()) {
                         if (songPlayCount % player.getQueue().size() == 0) {
-                            player.shuffle(); //Shuffle when the tracks start over.
+                            player.shuffle(); //Shuffle when the tracks start over
                         }
                     }
                 }

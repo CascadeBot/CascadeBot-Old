@@ -16,15 +16,16 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
-import org.cascadebot.cascadebot.data.objects.LoopMode;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.music.CascadePlayer;
-import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.orchestra.data.TrackData;
+import org.cascadebot.orchestra.data.enums.LoopMode;
+import org.cascadebot.orchestra.data.enums.NodeType;
+import org.cascadebot.orchestra.players.CascadePlayer;
 
 public class PlayingCommand extends MainCommand {
 
@@ -163,6 +164,7 @@ public class PlayingCommand extends MainCommand {
                 embedBuilder.addField(Language.i18n(guildId, "words.requested_by"), user.getAsTag(), true);
             }
         }
+
         AudioTrack next = player.getQueue().peek();
         if (next != null) {
             StringBuilder nextSongBuilder = new StringBuilder();
@@ -181,7 +183,7 @@ public class PlayingCommand extends MainCommand {
     }
 
     public void handlePlayPause(ButtonGroup buttonGroup, Message buttonMessage) {
-        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
+        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(String.valueOf(buttonGroup.getGuildId()), NodeType.GENERAL);
         if (player.isPaused()) {
             player.setPaused(false);
             buttonGroup.removeButton(playButton);
@@ -195,7 +197,7 @@ public class PlayingCommand extends MainCommand {
     }
 
     public void handleRepeat(ButtonGroup buttonGroup, LoopMode mode, Message buttonMessage) {
-        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(buttonGroup.getGuildId());
+        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(String.valueOf(buttonGroup.getGuildId()), NodeType.GENERAL);
         switch (mode) {
             case DISABLED:
                 buttonGroup.removeButton(noRepeat);
@@ -210,7 +212,7 @@ public class PlayingCommand extends MainCommand {
                 buttonGroup.addButton(noRepeat);
                 break;
         }
-        player.loopMode(mode);
+        player.setLoopMode(mode);
         buttonMessage.editMessage(getSongEmbed(player, buttonGroup.getGuildId())).queue();
     }
 

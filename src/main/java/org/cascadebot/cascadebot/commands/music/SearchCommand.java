@@ -14,16 +14,18 @@ import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.music.MusicHandler;
-import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.orchestra.MusicHandler;
+import org.cascadebot.orchestra.data.SearchResult;
+import org.cascadebot.orchestra.data.TrackData;
 
 import java.util.concurrent.TimeUnit;
 
@@ -36,7 +38,7 @@ public class SearchCommand extends MainCommand {
             return;
         }
 
-        CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), context.getChannel(), searchResults -> {
+        CascadeBot.INS.getMusicHandler().searchTracks(context.getMessage(0), Config.INS.getYoutubeKey(), searchResults -> {
 
             if (searchResults.size() == 0) {
                 context.getTypedMessaging().replyInfo(context.i18n("commands.search.found_result", searchResults.size()));
@@ -46,7 +48,7 @@ public class SearchCommand extends MainCommand {
             ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             int i = 0;
             StringBuilder messageBuilder = new StringBuilder();
-            for (MusicHandler.SearchResult result : searchResults) {
+            for (SearchResult result : searchResults) {
                 i++;
                 char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
                 buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
@@ -91,7 +93,7 @@ public class SearchCommand extends MainCommand {
 
                 EventWaiter.TextResponse[] responses = new EventWaiter.TextResponse[searchResults.size()];
                 for (int index = 0; index < searchResults.size(); index++) {
-                    MusicHandler.SearchResult result = searchResults.get(index);
+                    SearchResult result = searchResults.get(index);
                     responses[index] = new EventWaiter.TextResponse(event -> {
                         context.getMusicPlayer().loadLink(result.getUrl(), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), nothing -> {
                             context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
@@ -107,6 +109,8 @@ public class SearchCommand extends MainCommand {
                     context.getTypedMessaging().replyWarning(context.i18n("commands.search.search_timed_out", context.getMessage(0)));
                 }, responses);
             }
+
+        }, throwable -> {
 
         });
     }

@@ -8,6 +8,8 @@ import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.tasks.Task;
+import org.cascadebot.orchestra.data.enums.NodeType;
+import org.cascadebot.orchestra.players.CascadePlayer;
 
 import java.util.List;
 
@@ -29,7 +31,7 @@ public class CaptionsTask extends Task {
     @Override
     protected void execute() {
 
-        IPlayer player = CascadeBot.INS.getMusicHandler().getPlayer(this.guildId);
+        CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(String.valueOf(this.guildId), NodeType.GENERAL);
         if (player.getPlayingTrack() == null) this.cancel();
 
         List<String> captionSet = this.captions.getCaptions((player.getPlayingTrack().getPosition() / 1000D));

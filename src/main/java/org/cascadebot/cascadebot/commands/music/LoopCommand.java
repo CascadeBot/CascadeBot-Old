@@ -12,8 +12,8 @@ import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.objects.LoopMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.orchestra.data.enums.LoopMode;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -25,7 +25,7 @@ public class LoopCommand extends MainCommand {
         if (context.getArgs().length == 0) {
             // This gets the next loop mode in the enum or returns to 0 if there are no more
             LoopMode loopMode = LoopMode.values()[(context.getMusicPlayer().getLoopMode().ordinal() + 1) % 3];
-            context.getMusicPlayer().loopMode(loopMode);
+            context.getMusicPlayer().setLoopMode(loopMode);
             if (loopMode == LoopMode.DISABLED) {
                 context.getTypedMessaging().replySuccess(context.i18n("commands.loop.looping_disabled"));
             } else {
@@ -34,7 +34,7 @@ public class LoopCommand extends MainCommand {
         } else {
             if (EnumUtils.isValidEnum(LoopMode.class, context.getArg(0).toUpperCase())) {
                 LoopMode loopMode = LoopMode.valueOf(context.getArg(0).toUpperCase());
-                context.getMusicPlayer().loopMode(loopMode);
+                context.getMusicPlayer().setLoopMode(loopMode);
                 if (loopMode == LoopMode.DISABLED) {
                     context.getTypedMessaging().replySuccess(context.i18n("commands.loop.looping_disabled"));
                 } else {
