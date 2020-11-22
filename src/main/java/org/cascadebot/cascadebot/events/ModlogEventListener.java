@@ -555,6 +555,7 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         ModlogUtils.getAuditLogFromType(event.getGuild(), event.getMember().getIdLong(), auditLogEntry -> {
             List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+            List<String> extraDescriptionInfo = List.of();
             ModlogEvent action;
             if (event instanceof GuildVoiceDeafenEvent) {
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.deafen", null, String.valueOf(((GuildVoiceDeafenEvent) event).isDeafened())));
@@ -569,18 +570,17 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.mute", null, String.valueOf(((GuildVoiceGuildMuteEvent) event).isGuildMuted())));
                 action = ModlogEvent.VOICE_SERVER_MUTE;
             } else if (event instanceof GuildVoiceJoinEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.join", null, ((GuildVoiceJoinEvent) event).getChannelJoined().getName()));
+                extraDescriptionInfo = List.of(((GuildVoiceJoinEvent) event).getChannelJoined().getName());
                 action = ModlogEvent.VOICE_JOIN;
             } else if (event instanceof GuildVoiceLeaveEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.left", null, ((GuildVoiceLeaveEvent) event).getChannelLeft().getName()));
+                extraDescriptionInfo = List.of(((GuildVoiceLeaveEvent) event).getChannelLeft().getName());
                 if (auditLogEntry != null) {
                     action = ModlogEvent.VOICE_DISCONNECT;
                 } else {
                     action = ModlogEvent.VOICE_LEAVE;
                 }
             } else if (event instanceof GuildVoiceMoveEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.left", null, ((GuildVoiceMoveEvent) event).getChannelLeft().getName()));
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.join", null, ((GuildVoiceMoveEvent) event).getChannelJoined().getName()));
+                extraDescriptionInfo = List.of(((GuildVoiceMoveEvent) event).getChannelLeft().getName(), ((GuildVoiceMoveEvent) event).getChannelJoined().getName());
                 if (auditLogEntry != null) {
                     action = ModlogEvent.VOICE_FORCE_MOVE;
                 } else {
@@ -590,6 +590,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 return;
             }
             ModlogEventStore eventStore = new ModlogEventStore(action, null, affected, embedFieldList);
+            eventStore.setExtraDescriptionInfo(extraDescriptionInfo);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.MEMBER_VOICE_MOVE, ActionType.MEMBER_VOICE_KICK);
     }
