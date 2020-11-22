@@ -70,7 +70,7 @@ public class MessagingUI {
             try {
                 return context.getChannel().sendFile(new URL(url).openStream(), split[split.length - 1]).submit();
             } catch (IOException e) {
-                return Messaging.sendExceptionMessage(context.getChannel(), context.i18n("responses.error_loading_image"), e);
+                return Messaging.sendExceptionMessage(context.getChannel(), context.i18n("responses.error_loading_image"), e, context.getData().getCore().getDeleteCommand() ? null : context.getMessage());
             }
         }
     }
@@ -83,7 +83,7 @@ public class MessagingUI {
      * @see ButtonGroup
      */
     public void sendButtonedMessage(String message, ButtonGroup group) {
-        Messaging.sendButtonedMessage(context.getChannel(), message, group);
+        Messaging.sendButtonedMessage(context.getChannel(), message, group, context.getData().getCore().getDeleteCommand() ? null : context.getMessage());
     }
 
     /**
@@ -94,7 +94,7 @@ public class MessagingUI {
      * @see ButtonGroup
      */
     public void sendButtonedMessage(MessageEmbed embed, ButtonGroup group) {
-        Messaging.sendButtonedMessage(context.getChannel(), embed, group);
+        Messaging.sendButtonedMessage(context.getChannel(), embed, group, context.getData().getCore().getDeleteCommand() ? null : context.getMessage());
     }
 
     /**
@@ -105,7 +105,7 @@ public class MessagingUI {
      * @see ButtonGroup
      */
     public void sendButtonedMessage(Message message, ButtonGroup group) {
-        Messaging.sendButtonedMessage(context.getChannel(), message, group);
+        Messaging.sendButtonedMessage(context.getChannel(), message, group, context.getData().getCore().getDeleteCommand() ? null : context.getMessage());
     }
 
     /**
@@ -117,7 +117,7 @@ public class MessagingUI {
      * @see org.cascadebot.cascadebot.utils.pagination.PageObjects.TablePage
      */
     public void sendPagedMessage(List<Page> pages) {
-        Messaging.sendPagedMessage(context.getChannel(), context.getMember(), pages);
+        Messaging.sendPagedMessage(context.getChannel(), context.getMember(), pages, context.getData().getCore().getDeleteCommand() ? null : context.getMessage());
     }
 
     /**

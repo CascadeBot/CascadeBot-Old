@@ -64,7 +64,7 @@ public class KaraokeHandler {
 
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Messaging.sendExceptionMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""), e);
+                Messaging.sendExceptionMessage(channel, Language.i18n(channel.getGuild().getIdLong(), ""), e, null);
             }
 
             @Override
@@ -103,7 +103,7 @@ public class KaraokeHandler {
                     new CaptionsTask(guildId, channel.getIdLong(), message.getIdLong(), captions).start(0, CAPTION_BUFFER_TIME * 1000);
 
                 } catch (IOException | SAXException e) {
-                    Messaging.sendExceptionMessage(channel, Language.i18n(guildId, "commands.karaoke.cannot_find"), e);
+                    Messaging.sendExceptionMessage(channel, Language.i18n(guildId, "commands.karaoke.cannot_find"), e, null);
                 }
             }
 

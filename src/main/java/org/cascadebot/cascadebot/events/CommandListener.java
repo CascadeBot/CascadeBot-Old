@@ -70,7 +70,7 @@ public class CommandListener extends ListenerAdapter {
                 throw new IllegalStateException(String.format("Guild data for guild ID: %s is null!", event.getGuild().getId()));
             }
         } catch (Exception e) {
-            Messaging.sendExceptionMessage(event.getChannel(), "We have failed to process your guild data!", e);
+            Messaging.sendExceptionMessage(event.getChannel(), "We have failed to process your guild data!", e, null);
             return;
         }
 
@@ -104,7 +104,7 @@ public class CommandListener extends ListenerAdapter {
         try {
             processCommands(event, guildData, trigger, args, isMention);
         } catch (Exception e) {
-            Messaging.sendExceptionMessage(event.getChannel(), Language.i18n(guildData.getLocale(), "responses.failed_to_process_command"), e);
+            Messaging.sendExceptionMessage(event.getChannel(), Language.i18n(guildData.getLocale(), "responses.failed_to_process_command"), e, null);
             return;
         } finally {
             CascadeBot.clearCascadeMDC();

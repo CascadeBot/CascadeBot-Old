@@ -112,11 +112,19 @@ data class CommandContext(
 
     fun reply(message: String) {
         require(!message.isBlank()) { "The message cannot be blank!" }
-        channel.sendMessage(message).queue()
+        if (!data.core.deleteCommand) {
+            this.message.reply(message).queue()
+        } else {
+            channel.sendMessage(message).queue()
+        }
     }
 
     fun reply(embed: MessageEmbed) {
-        channel.sendMessage(embed).queue()
+        if (!data.core.deleteCommand) {
+            message.reply(embed).queue()
+        } else {
+            channel.sendMessage(embed).queue()
+        }
     }
 
     fun i18n(path: String, vararg args: Any): String {

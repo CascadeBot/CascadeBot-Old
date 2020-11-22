@@ -27,7 +27,7 @@ public class MessagingTimed {
      */
     public void sendAutoDeleteMessage(String message, long delay) {
         Checks.notBlank(message, "message");
-        Messaging.sendAutoDeleteMessage(context.getChannel(), message, delay);
+        Messaging.sendAutoDeleteMessage(context.getChannel(), message, delay, context.getData().getCore().getDeleteCommand() ? null : context.getMessage());
     }
 
     /**
@@ -38,7 +38,7 @@ public class MessagingTimed {
      */
     public void sendAutoDeleteMessage(MessageEmbed embed, long delay) {
         Checks.notNull(embed, "embed");
-        Messaging.sendAutoDeleteMessage(context.getChannel(), embed, delay);
+        Messaging.sendAutoDeleteMessage(context.getChannel(), embed, delay, context.getData().getCore().getDeleteCommand() ? null : context.getMessage());
     }
 
     /**
@@ -50,7 +50,7 @@ public class MessagingTimed {
      */
     public void sendAutoDeleteMessage(Message message, long delay) {
         Checks.notNull(message, "message");
-        Messaging.sendAutoDeleteMessage(context.getChannel(), message, delay);
+        Messaging.sendAutoDeleteMessage(context.getChannel(), message, delay, context.getData().getCore().getDeleteCommand() ? null : context.getMessage());
     }
 
 }
