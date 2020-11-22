@@ -1561,19 +1561,23 @@
       },
       "voice_deafen": {
         "select": "voice_deafen",
-        "display": "Voice deafen"
+        "display": "Voice deafen",
+        "description": "{2} {3, select, true {The user `{0}` has deafened themselves} other {The user `{0}` has un-deafened themselves}}"
       },
       "voice_mute": {
         "select": "voice_mute",
-        "display": "Voice mute"
+        "display": "Voice mute",
+        "description": "{2} {3, select, true {The user `{0}` has muted themselves} other {The user `{0}` has un-muted themselves}}"
       },
       "voice_server_deafen": {
         "select": "voice_server_deafen",
-        "display": "Voice server deafen"
+        "display": "Voice server deafen",
+        "description": "{2} {3, select, true {The user `{0}` has been server deafened} other {The user `{0}` has been un-server deafened}}"
       },
       "voice_server_mute": {
         "select": "voice_server_mute",
-        "display": "Voice server mute"
+        "display": "Voice server mute",
+        "description": "{2} {3, select, true {The user `{0}` has been server muted} other {The user `{0}` has been un-server muted}}"
       },
       "voice_join": {
         "select": "voice_join",

@@ -100,6 +100,7 @@ import net.dv8tion.jda.api.events.role.update.RoleUpdatePositionEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.apache.commons.codec.language.bm.Lang;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -558,16 +559,24 @@ public class ModlogEventListener extends ListenerAdapter {
             List<String> extraDescriptionInfo = List.of();
             ModlogEvent action;
             if (event instanceof GuildVoiceDeafenEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.deafen", null, String.valueOf(((GuildVoiceDeafenEvent) event).isDeafened())));
+                boolean deafened = (((GuildVoiceDeafenEvent) event).isDeafened());
+                Emote emote = deafened ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("self-deafened")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("undeafened"));
+                extraDescriptionInfo = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(deafened));
                 action = ModlogEvent.VOICE_DEAFEN;
             } else if (event instanceof GuildVoiceMuteEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.mute", null, String.valueOf(((GuildVoiceMuteEvent) event).isMuted())));
+                boolean muted = (((GuildVoiceMuteEvent) event).isMuted());
+                Emote emote = muted ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("self-muted")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("unmuted"));
+                extraDescriptionInfo = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(muted));
                 action = ModlogEvent.VOICE_MUTE;
             } else if (event instanceof GuildVoiceGuildDeafenEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.deafen", null, String.valueOf(((GuildVoiceGuildDeafenEvent) event).isGuildDeafened())));
+                boolean guildDeafened = (((GuildVoiceGuildDeafenEvent) event).isGuildDeafened());
+                Emote emote = guildDeafened ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("server-deafened")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("undeafened"));
+                extraDescriptionInfo = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(guildDeafened));
                 action = ModlogEvent.VOICE_SERVER_DEAFEN;
             } else if (event instanceof GuildVoiceGuildMuteEvent) {
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.voice.mute", null, String.valueOf(((GuildVoiceGuildMuteEvent) event).isGuildMuted())));
+                boolean guildMuted = (((GuildVoiceGuildMuteEvent) event).isGuildMuted());
+                Emote emote = guildMuted ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("server-muted")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("unmuted"));
+                extraDescriptionInfo = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(guildMuted));
                 action = ModlogEvent.VOICE_SERVER_MUTE;
             } else if (event instanceof GuildVoiceJoinEvent) {
                 extraDescriptionInfo = List.of(((GuildVoiceJoinEvent) event).getChannelJoined().getName());
