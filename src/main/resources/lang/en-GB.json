@@ -1537,7 +1537,7 @@
       "guild_update_region": {
         "select": "guild_update_region",
         "display": "Guild update region",
-        "description": "Server voce region changed"
+        "description": "Server voice region changed"
       },
       "guild_update_splash": {
         "select": "guild_update_splash",
@@ -1562,22 +1562,22 @@
       "voice_deafen": {
         "select": "voice_deafen",
         "display": "Voice deafen",
-        "description": "{2} {3, select, true {The user `{0}` has deafened themselves} other {The user `{0}` has un-deafened themselves}}"
+        "description": "{2} {3, select, true {{0} has deafened themselves} other {{0} has un-deafened themselves}}"
       },
       "voice_mute": {
         "select": "voice_mute",
         "display": "Voice mute",
-        "description": "{2} {3, select, true {The user `{0}` has muted themselves} other {The user `{0}` has un-muted themselves}}"
+        "description": "{2} {3, select, true {{0} has muted themselves} other {{0} has un-muted themselves}}"
       },
       "voice_server_deafen": {
         "select": "voice_server_deafen",
         "display": "Voice server deafen",
-        "description": "{2} {3, select, true {The user `{0}` has been server deafened} other {The user `{0}` has been un-server deafened}}"
+        "description": "{2} {3, select, true {{0} has been server deafened} other {{0} has been un-server deafened}}"
       },
       "voice_server_mute": {
         "select": "voice_server_mute",
         "display": "Voice server mute",
-        "description": "{2} {3, select, true {The user `{0}` has been server muted} other {The user `{0}` has been un-server muted}}"
+        "description": "{2} {3, select, true {{0} has been server muted} other {{0} has been un-server muted}}"
       },
       "voice_join": {
         "select": "voice_join",
@@ -1627,7 +1627,7 @@
       "role_name_updated": {
         "select": "role_name_updated",
         "display": "Role name updated",
-        "description": "The role `{0}` had its name changed"
+        "description": "{0} has had its name changed"
       },
       "role_permissions_updated": {
         "select": "role_permissions_updated",
@@ -2152,8 +2152,8 @@
       "none": "None",
       "low": "Low",
       "medium": "Medium",
-      "high": "(╯°□°）╯︵ ┻━┻",
-      "very_high": "┻━┻ ﾐヽ(ಠ益ಠ)ノ彡┻━┻",
+      "high": "High",
+      "very_high": "Very High",
       "unknown": "Unknown"
     },
     "color": {
@@ -2332,7 +2332,7 @@
       "new_pos": "New Position",
       "position": "Position",
       "name": "Name",
-      "small_change": "{0} \uD83E\uDC16 {1}"
+      "small_change": "{0} \u279C {1}"
     },
     "member": {
       "old_nick": "Old Nickname",
@@ -2367,22 +2367,18 @@
       },
       "add_feature": "Added Features",
       "removed_feature": "Removed Features",
-      "old_max_members": "Old Max Members",
-      "new_max_members": "New Max Members",
+      "max_members": "Max Members",
       "members": "{0} members",
-      "old_presences": "Old Max Presences",
-      "new_presences": "New Max Presences",
+      "max_presences": "Max Presences",
       "presences": "{0} presences",
       "mfa": {
-        "old": "Old MFA Level",
-        "new": "New MFA Level",
+        "mfa_level": "MFA Level",
         "none": "None",
-        "two_factor_auth": "2fa Required",
+        "two_factor_auth": "2FA Required",
         "unknown": "Unknown"
       },
       "notification": {
-        "old": "Old Level",
-        "new": "New Level",
+        "title": "Level",
         "all_messages": "All Messages",
         "mentions_only": "Mentions Only",
         "unknown": "Unknown"
