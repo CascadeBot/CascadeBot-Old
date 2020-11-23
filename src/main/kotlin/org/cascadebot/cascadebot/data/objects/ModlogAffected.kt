@@ -1,8 +1,8 @@
 package org.cascadebot.cascadebot.data.objects
 
-class ModlogAffected(val affectedType: AffectedType, val name: String, val mention: String?, val id : String?, val imageUrl: String? = null) {
+class ModlogAffected(val affectedType: AffectedType, val name: String, val mention: String?, val id : String?, val imageUrl: String?) {
 
-    constructor() : this(AffectedType.UNKNOWN, "unknown", null, null)
+    constructor() : this(AffectedType.UNKNOWN, "unknown", null, null, null)
 
 }
 

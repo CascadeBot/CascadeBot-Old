@@ -21,37 +21,37 @@ class ModlogEventStore(val trigger: ModlogEvent, @Transient val responsible: Use
             ModlogAffected(AffectedType.USER, affected.asTag, affected.asMention, affected.id, affected.effectiveAvatarUrl)
         }
         is Role -> {
-            ModlogAffected(AffectedType.ROLE, "${affected.name} (${affected.id})", affected.asMention, affected.id)
+            ModlogAffected(AffectedType.ROLE, "${affected.name} (${affected.id})", affected.asMention, affected.id, null)
         }
         is Emote -> {
             ModlogAffected(AffectedType.EMOTE, affected.name, affected.asMention, affected.id, affected.imageUrl)
         }
         is Guild -> {
-            ModlogAffected(AffectedType.GUILD, affected.name, null, affected.id, imageUrl = affected.iconUrl)
+            ModlogAffected(AffectedType.GUILD, affected.name, null, affected.id, affected.iconUrl)
         }
         is TextChannel -> {
-            ModlogAffected(AffectedType.GUILD, affected.name, affected.asMention, affected.id)
+            ModlogAffected(AffectedType.GUILD, affected.name, affected.asMention, affected.id, null)
         }
         is GuildChannel -> {
-            ModlogAffected(AffectedType.CHANNEL, affected.name, null, affected.id)
+            ModlogAffected(AffectedType.CHANNEL, affected.name, null, affected.id, null)
         }
         is Group -> {
-            ModlogAffected(AffectedType.GROUP, affected.name, null, affected.id)
+            ModlogAffected(AffectedType.GROUP, affected.name, null, affected.id, null)
         }
         is Field -> {
-            ModlogAffected(AffectedType.SETTING, affected.name, null, null)
+            ModlogAffected(AffectedType.SETTING, affected.name, null, null, null)
         }
         is Module -> {
-            ModlogAffected(AffectedType.MODULE, affected.name, null, null)
+            ModlogAffected(AffectedType.MODULE, affected.name, null, null, null)
         }
         is MainCommand -> {
-            ModlogAffected(AffectedType.COMMAND, affected.command(), null, null)
+            ModlogAffected(AffectedType.COMMAND, affected.command(), null, null, null)
         }
         is Playlist -> {
             ModlogAffected(AffectedType.PLAYLIST, affected.name, affected.playlistId.toHexString(), null, null)
         }
         is Tag -> {
-            ModlogAffected(AffectedType.TAG, affected.name, null, null)
+            ModlogAffected(AffectedType.TAG, affected.name, null, null, null)
         }
         else -> {
             ModlogAffected()
