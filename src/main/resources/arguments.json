@@ -102,6 +102,49 @@
       }
     }
   },
+  "modlog*": {
+    "enable*": {
+      "channel*": {
+        "_type": "required",
+        "events": {
+          "_type": "required",
+          "_varargs": true
+        }
+      }
+    },
+    "disable*": {
+      "channel*": {
+        "_type": "required",
+        "events": {
+          "_type": "required",
+          "_varargs": true
+        }
+      }
+    },
+    "events": {},
+    "prune": {},
+    "clear": {
+      "disabled": {}
+    },
+    "channel*": {
+      "list": {},
+      "move*": {
+        "source*": {
+          "_type": "required",
+          "destination": {
+            "_type": "required"
+          }
+        }
+      },
+      "channel*": {
+        "_type": "required",
+        "enable": {},
+        "disable": {},
+        "delete": {},
+        "info": {}
+      }
+    }
+  },
   "tempslowmode*": {
     "interval*": {
       "_type": "required",

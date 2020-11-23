@@ -305,6 +305,62 @@
       "section_title": "{0} module",
       "cannot_find_field": "Cannot find that field!"
     },
+    "modlog": {
+      "command": "modlog",
+      "enable": {
+        "command": "enable",
+        "description": "Enables the specified modlog events for a channel."
+      },
+      "disable": {
+        "command": "disable",
+        "description": "Disables the specified modlog events for a channel."
+      },
+      "channel": {
+        "command": "channel",
+        "list": {
+          "command": "list",
+          "description": "Lists all the modlog channels."
+        },
+        "move": {
+          "command": "move",
+          "description": "Moves all events from one channel to another."
+        },
+        "channel": {
+          "enable": {
+            "command": "enable",
+            "description": "Enables a channel to receive modlog events."
+          },
+          "disable": {
+            "command": "disable",
+            "description": "Disables a channel from receiving modlog events."
+          },
+          "delete": {
+            "command": "delete",
+            "description": "Deletes all modlog events attached to a channel."
+          },
+          "info": {
+            "command": "info",
+            "description": "Displays information about a modlog channel."
+          }
+        }
+      },
+      "clear": {
+        "command": "clear",
+        "description": "Clear all modlog events.",
+        "disabled": {
+          "command": "disabled",
+          "description": "Clears all modlog events for disabled channels."
+        }
+      },
+      "events": {
+        "command": "event",
+        "description": "Displays a list of all modlog events."
+      },
+      "prune": {
+        "command": "prune",
+        "description": "Removes all modlog entries for deleted channels."
+      }
+    },
     "tag": {
       "command": "tag",
       "description": "Tag command.",
@@ -2109,6 +2165,7 @@
     "volume": "volume",
     "weight": "weight",
     "words": "words",
+    "events": "events",
     "filters#type#whitelist": {
       "name": "whitelist"
     },
