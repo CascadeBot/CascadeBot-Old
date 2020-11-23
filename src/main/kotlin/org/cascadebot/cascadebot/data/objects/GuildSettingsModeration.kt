@@ -6,6 +6,7 @@ import club.minnced.discord.webhook.exception.HttpException
 import club.minnced.discord.webhook.send.WebhookEmbed
 import club.minnced.discord.webhook.send.WebhookEmbed.EmbedTitle
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder
+import club.minnced.discord.webhook.send.WebhookMessageBuilder
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.Icon
@@ -99,7 +100,7 @@ class GuildSettingsModeration {
         val eventsInfo = ChannelModlogEventsInfo()
         eventsInfo.id = modlogChannelNum++
         modlogEvents.put(channel.idLong, eventsInfo)
-        channel.createWebhook("Cascade-modlog").setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
+        channel.createWebhook(CascadeBot.INS.client.selfUser.name).setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
             eventsInfo.webhookId = webhook.idLong
             eventsInfo.webhookToken = webhook.token!!
             eventsInfo.buildWebhookClient()
@@ -219,7 +220,12 @@ class GuildSettingsModeration {
                 webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible.name + " (" + modlogEventStore.responsible.id + ")", iconUrl))
             }
             try {
-                webhookClient?.send(webhookEmbedBuilder.build())
+                webhookClient?.send(WebhookMessageBuilder()
+                        .setUsername(CascadeBot.INS.client.selfUser.name)
+                        .setAvatarUrl(CascadeBot.INS.client.selfUser.effectiveAvatarUrl)
+                        .addEmbeds(webhookEmbedBuilder.build())
+                        .build()
+                )
             } catch (ignored: HttpException) {
                 // TODO not ignore
             }
