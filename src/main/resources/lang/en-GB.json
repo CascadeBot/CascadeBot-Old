@@ -1658,17 +1658,17 @@
       "role_created": {
         "select": "role_created",
         "display": "Role created",
-        "description": "{1} created a new role called `{0}`"
+        "description": "A new role was created called {0}"
       },
       "role_deleted": {
         "select": "role_deleted",
         "display": "Role deleted",
-        "description": "{1} deleted the role called `{0}`"
+        "description": "A role called `{0}` was deleted"
       },
       "role_color_updated": {
         "select": "role_color_updated",
         "display": "Role color updated",
-        "description": "Role `{0}` color was updated"
+        "description": "Role {0} colour was updated"
       },
       "role_hoist_updated": {
         "select": "role_hoist_updated",
@@ -1802,7 +1802,8 @@
       },
       "cascade_settings_updated": {
         "select": "cascade_settings_updated",
-        "display": "Cascade settings updated"
+        "display": "Cascade settings updated",
+        "description": "The setting `{2}` was updated"
       },
       "cascade_module_updated": {
         "select": "cascade_module_updated",
@@ -1810,7 +1811,8 @@
       },
       "cascade_command_run": {
         "select": "cascade_command_run",
-        "display": "Cascade command run"
+        "display": "Cascade command run",
+        "description": "{1} ran a command"
       },
       "cascade_command_run_error": {
         "select": "cascade_command_run_error",
@@ -2525,15 +2527,13 @@
       "group_removed": "Removed group"
     },
     "setting": {
-      "old": "Old Value",
-      "new": "New Value"
+      "value": "Value"
     },
     "module": {
       "enabled": "Enabled"
     },
     "command": {
-      "command": "Command",
-      "args": "Arguments"
+      "command": "Command"
     },
     "tag": {
       "content": "Content",

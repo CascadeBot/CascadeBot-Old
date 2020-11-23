@@ -901,13 +901,10 @@ public class ModlogEventListener extends ListenerAdapter {
             } else if (event instanceof RoleUpdateColorEvent) {
                 modlogEvent = ModlogEvent.ROLE_COLOR_UPDATED;
                 Color oldColor = ((RoleUpdateColorEvent) event).getOldColor();
-                if (oldColor != null) {
-                    embedFieldList.add(new ModlogEmbedField(false, "modlog.role.old_color", null, ColorUtils.getHex(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue())));
-                }
                 Color newColor = ((RoleUpdateColorEvent) event).getNewColor();
-                if (newColor != null) {
-                    embedFieldList.add(new ModlogEmbedField(false, "modlog.role.new_color", null, ColorUtils.getHex(newColor.getRed(), newColor.getGreen(), newColor.getBlue())));
-                }
+
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.role.old_color", oldColor != null ? null : "words.default", oldColor != null ? ColorUtils.getHex(oldColor.getRed(), oldColor.getGreen(), oldColor.getBlue()) : null));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.role.new_color", newColor != null ? null : "words.default", newColor != null ? ColorUtils.getHex(newColor.getRed(), newColor.getGreen(), newColor.getBlue()) : null));
             } else if (event instanceof RoleUpdateHoistedEvent) {
                 modlogEvent = ModlogEvent.ROLE_HOIST_UPDATED;
                 var wasHoisted = ((RoleUpdateHoistedEvent) event).wasHoisted();

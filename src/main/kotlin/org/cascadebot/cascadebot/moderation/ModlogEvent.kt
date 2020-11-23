@@ -58,7 +58,7 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     VOICE_DISCONNECT				            (MessageType.WARNING, ModlogDisplayType.AFFECTED_AUTHOR, AffectedDisplayType.MENTION, Category.VOICE, Category.MODERATION),
 
     ROLE_CREATED			       	            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.ROLE),
-    ROLE_DELETED			    	            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.ROLE),
+    ROLE_DELETED			    	            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.NAME, Category.ROLE),
     ROLE_COLOR_UPDATED				            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.ROLE),
     ROLE_HOIST_UPDATED				            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.ROLE),
     ROLE_MENTIONABLE_UPDATED		            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.ROLE),

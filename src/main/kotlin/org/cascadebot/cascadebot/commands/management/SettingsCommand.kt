@@ -127,9 +127,10 @@ class SettingsCommand : MainCommand() {
                     }
                     context.typedMessaging.replySuccess(context.i18n("commands.settings.setting_set", field.name, value))
                     val embedFields: MutableList<ModlogEmbedPart> = ArrayList();
-                    embedFields.add(ModlogEmbedField(true, "modlog.setting.old", "modlog.general.variable", oldValue))
-                    embedFields.add(ModlogEmbedField(true, "modlog.setting.new", "modlog.general.variable", value))
-                    context.data.moderation.sendModlogEvent(context.guild.idLong, ModlogEventStore(ModlogEvent.CASCADE_SETTINGS_UPDATED, sender.user, field, ArrayList()))
+                    embedFields.add(ModlogEmbedField(true, "modlog.setting.value", "modlog.general.small_change", oldValue, value))
+                    val modlogEventStore = ModlogEventStore(ModlogEvent.CASCADE_SETTINGS_UPDATED, sender.user, field, embedFields)
+                    modlogEventStore.extraDescriptionInfo = mutableListOf(field.name)
+                    context.data.moderation.sendModlogEvent(context.guild.idLong, modlogEventStore)
                 } catch (e: IllegalAccessException) {
                     context.typedMessaging.replyException(context.i18n("commands.settings.cannot_access"), e)
                 }
