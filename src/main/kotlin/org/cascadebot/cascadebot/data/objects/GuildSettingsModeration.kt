@@ -188,23 +188,7 @@ class GuildSettingsModeration {
 
             when (modlogEventStore.trigger.displayType) {
                 ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL -> {
-                    when (affected.affectedType) {
-                        AffectedType.USER -> {
-                            val user: User? = CascadeBot.INS.shardManager.getUserById(affected.id!!)
-                            user?.let {
-                                if (it.avatarUrl != null) {
-                                    webhookEmbedBuilder.setThumbnailUrl(it.avatarUrl)
-                                } else {
-                                    webhookEmbedBuilder.setThumbnailUrl(it.defaultAvatarUrl)
-                                }
-                            }
-                        }
-
-                        AffectedType.EMOTE -> {
-                            val emote: Emote = CascadeBot.INS.shardManager.getEmoteById(affected.id!!)!!
-                            webhookEmbedBuilder.setThumbnailUrl(emote.imageUrl)
-                        }
-                    }
+                    webhookEmbedBuilder.setThumbnailUrl(affected.imageUrl)
                 }
 
                 ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR -> {
@@ -230,11 +214,7 @@ class GuildSettingsModeration {
             webhookEmbedBuilder.setColor(modlogEventStore.trigger.messageType.color.rgb)
             webhookEmbedBuilder.setTimestamp(Instant.now())
             if (modlogEventStore.responsible != null) {
-                var iconUrl = if (modlogEventStore.responsible.avatarUrl != null) {
-                    modlogEventStore.responsible.avatarUrl
-                } else {
-                    modlogEventStore.responsible.defaultAvatarUrl
-                }
+                val iconUrl = modlogEventStore.responsible.effectiveAvatarUrl
                 // TODO: by user
                 webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible.name + " (" + modlogEventStore.responsible.id + ")", iconUrl))
             }
