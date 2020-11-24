@@ -2527,7 +2527,8 @@
       "group_removed": "Removed group"
     },
     "setting": {
-      "value": "Value"
+      "value": "Value",
+      "boolean_change": "{0} value has been set to `{1}`"
     },
     "module": {
       "enabled": "Enabled"

@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.data.objects.GuildSettingsCore
 import org.cascadebot.cascadebot.data.objects.GuildSettingsManagement
@@ -118,6 +119,7 @@ class SettingsCommand : MainCommand() {
                             value = booleanValue.toString()
                             field.setBoolean(settingsContainer, booleanValue)
                         }
+
                         String::class.java -> {
                             field[settingsContainer] = value
                         }
@@ -127,7 +129,16 @@ class SettingsCommand : MainCommand() {
                     }
                     context.typedMessaging.replySuccess(context.i18n("commands.settings.setting_set", field.name, value))
                     val embedFields: MutableList<ModlogEmbedPart> = ArrayList();
-                    embedFields.add(ModlogEmbedField(true, "modlog.setting.value", "modlog.general.small_change", oldValue, value))
+                    if (field.type == Boolean::class.javaPrimitiveType) {
+                        val emote = if (value.toBoolean()) {
+                            Config.INS.globalEmotes["tick"]?.let { CascadeBot.INS.shardManager.getEmoteById(it)?.asMention } ?: ""
+                        } else {
+                            Config.INS.globalEmotes["cross"]?.let { CascadeBot.INS.shardManager.getEmoteById(it)?.asMention } ?: ""
+                        }
+                        embedFields.add(ModlogEmbedField(true, "modlog.setting.value", "modlog.setting.boolean_change", emote, value))
+                    } else {
+                        embedFields.add(ModlogEmbedField(true, "modlog.setting.value", "modlog.general.small_change", oldValue, value))
+                    }
                     val modlogEventStore = ModlogEventStore(ModlogEvent.CASCADE_SETTINGS_UPDATED, sender.user, field, embedFields)
                     modlogEventStore.extraDescriptionInfo = mutableListOf(field.name)
                     context.data.moderation.sendModlogEvent(context.guild.idLong, modlogEventStore)

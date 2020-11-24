@@ -19,8 +19,8 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     GUILD_MEMBER_ROLE_REMOVED	                (MessageType.WARNING, ModlogDisplayType.AFFECTED_AUTHOR, AffectedDisplayType.MENTION, Category.GUILD, Category.GUILD_MEMBER),
     GUILD_MEMBER_NICKNAME_UPDATED	            (MessageType.INFO, ModlogDisplayType.AFFECTED_AUTHOR, AffectedDisplayType.MENTION, Category.GUILD, Category.GUILD_MEMBER),
 
-    GUILD_USER_BANNED				            (MessageType.DANGER, ModlogDisplayType.AFFECTED_AUTHOR, AffectedDisplayType.NAME, Category.GUILD, Category.GUILD_MEMBER, Category.MODERATION),
-    GUILD_USER_UNBANNED				            (MessageType.DANGER, ModlogDisplayType.AFFECTED_AUTHOR, AffectedDisplayType.NAME, Category.GUILD, Category.GUILD_MEMBER, Category.MODERATION),
+    GUILD_USER_BANNED				            (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.NAME, Category.GUILD, Category.GUILD_MEMBER, Category.MODERATION),
+    GUILD_USER_UNBANNED				            (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.NAME, Category.GUILD, Category.GUILD_MEMBER, Category.MODERATION),
 
     GUILD_MESSAGE_DELETED			            (MessageType.WARNING, ModlogDisplayType.AFFECTED_AUTHOR, AffectedDisplayType.MENTION, Category.GUILD, Category.GUILD_MESSAGE),
     GUILD_MESSAGE_DELETED_MENTION	            (MessageType.INFO, ModlogDisplayType.AFFECTED_AUTHOR, AffectedDisplayType.MENTION, Category.GUILD, Category.GUILD_MESSAGE),

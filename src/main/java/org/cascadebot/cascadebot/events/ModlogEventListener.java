@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Emote;
@@ -209,6 +210,9 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedFieldList.add(new ModlogEmbedDescription("modlog.member.joined", user.getAsMention()));
             } else if (event instanceof GuildMemberLeaveEvent) {
                 if (auditLogEntry != null && auditLogEntry.getType().equals(ActionType.KICK)) {
+                    ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.GUILD_MEMBER_LEFT, null, user, embedFieldList);
+                    guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
+
                     responsible = auditLogEntry.getUser();
                     embedFieldList.add(new ModlogEmbedDescription("modlog.member.kicked", user.getAsMention()));
                     if (auditLogEntry.getReason() != null) {
@@ -218,7 +222,6 @@ public class ModlogEventListener extends ListenerAdapter {
                     }
                     modlogEvent = ModlogEvent.GUILD_MEMBER_KICKED;
                 } else {
-                    CascadeBot.LOGGER.warn("Modlog: Failed to find kick entry");
                     modlogEvent = ModlogEvent.GUILD_MEMBER_LEFT;
                 }
             } else if (event instanceof GuildMemberRoleAddEvent) {
@@ -561,6 +564,7 @@ public class ModlogEventListener extends ListenerAdapter {
             List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
             List<String> extraDescriptionInfo = List.of();
             ModlogEvent action;
+            User responsible = null;
             if (event instanceof GuildVoiceDeafenEvent) {
                 boolean deafened = (((GuildVoiceDeafenEvent) event).isDeafened());
                 Emote emote = deafened ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("self-deafened")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("undeafened"));
@@ -572,11 +576,17 @@ public class ModlogEventListener extends ListenerAdapter {
                 extraDescriptionInfo = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(muted));
                 action = ModlogEvent.VOICE_MUTE;
             } else if (event instanceof GuildVoiceGuildDeafenEvent) {
+                if (auditLogEntry != null && auditLogEntry.getType() == ActionType.MEMBER_UPDATE) {
+                    responsible = auditLogEntry.getUser();
+                }
                 boolean guildDeafened = (((GuildVoiceGuildDeafenEvent) event).isGuildDeafened());
                 Emote emote = guildDeafened ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("server-deafened")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("undeafened"));
                 extraDescriptionInfo = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(guildDeafened));
                 action = ModlogEvent.VOICE_SERVER_DEAFEN;
             } else if (event instanceof GuildVoiceGuildMuteEvent) {
+                if (auditLogEntry != null && auditLogEntry.getType() == ActionType.MEMBER_UPDATE) {
+                    responsible = auditLogEntry.getUser();
+                }
                 boolean guildMuted = (((GuildVoiceGuildMuteEvent) event).isGuildMuted());
                 Emote emote = guildMuted ? CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("server-muted")) : CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("unmuted"));
                 extraDescriptionInfo = List.of(emote != null ? emote.getAsMention() : "", String.valueOf(guildMuted));
@@ -586,25 +596,27 @@ public class ModlogEventListener extends ListenerAdapter {
                 action = ModlogEvent.VOICE_JOIN;
             } else if (event instanceof GuildVoiceLeaveEvent) {
                 extraDescriptionInfo = List.of(((GuildVoiceLeaveEvent) event).getChannelLeft().getName());
-                if (auditLogEntry != null) {
+                if (auditLogEntry != null && auditLogEntry.getType() == ActionType.MEMBER_VOICE_KICK) {
                     action = ModlogEvent.VOICE_DISCONNECT;
+                    responsible = auditLogEntry.getUser();
                 } else {
                     action = ModlogEvent.VOICE_LEAVE;
                 }
             } else if (event instanceof GuildVoiceMoveEvent) {
                 extraDescriptionInfo = List.of(((GuildVoiceMoveEvent) event).getChannelLeft().getName(), ((GuildVoiceMoveEvent) event).getChannelJoined().getName());
-                if (auditLogEntry != null) {
+                if (auditLogEntry != null && auditLogEntry.getType() == ActionType.MEMBER_VOICE_MOVE) {
                     action = ModlogEvent.VOICE_FORCE_MOVE;
+                    responsible = auditLogEntry.getUser();
                 } else {
                     action = ModlogEvent.VOICE_MOVE;
                 }
             } else {
                 return;
             }
-            ModlogEventStore eventStore = new ModlogEventStore(action, null, affected, embedFieldList);
+            ModlogEventStore eventStore = new ModlogEventStore(action, responsible, affected, embedFieldList);
             eventStore.setExtraDescriptionInfo(extraDescriptionInfo);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
-        }, ActionType.MEMBER_VOICE_MOVE, ActionType.MEMBER_VOICE_KICK);
+        }, ActionType.MEMBER_VOICE_MOVE, ActionType.MEMBER_VOICE_KICK, ActionType.MEMBER_UPDATE);
     }
 
     //region Channels
