@@ -21,7 +21,17 @@ public class PlayCommand extends MainCommand {
     public void onCommand(Member sender, CommandContext context) {
         if (context.getData().getMusic().getJoinOnPlay()) {
             if (context.getMusicPlayer().getConnectedChannel() == null) {
-                context.runOtherCommand("join", sender, context);
+                CommandContext newContext = context.copy(context.getCommand(),
+                        context.getJda(),
+                        context.getChannel(),
+                        context.getMessage(),
+                        context.getGuild(),
+                        context.getData(),
+                        new String[]{},
+                        context.getMember(),
+                        context.getTrigger(),
+                        context.getMention());
+                context.runOtherCommand("join", sender, newContext);
             }
         }
 
