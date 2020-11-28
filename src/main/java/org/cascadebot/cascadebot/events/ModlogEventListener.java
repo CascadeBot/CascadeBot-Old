@@ -4,12 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
-import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -113,13 +113,14 @@ import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
-import org.cascadebot.cascadebot.runnables.ModlogChannelMoveCollectorRunnable;
 import org.cascadebot.cascadebot.runnables.ModlogMemberRoleCollectorRunnable;
 import org.cascadebot.cascadebot.utils.Attachment;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
 import org.cascadebot.cascadebot.utils.ModlogUtils;
 import org.cascadebot.cascadebot.utils.SerializableMessage;
+import org.cascadebot.cascadebot.utils.lists.ChangeList;
+import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.jetbrains.annotations.NotNull;
 
 import javax.crypto.BadPaddingException;
@@ -137,12 +138,17 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ModlogEventListener extends ListenerAdapter {
 
-    private final Map<Long, ModlogChannelMoveCollectorRunnable> moveRunnableMap = new HashMap<>();
-    private final Map<Long, ModlogMemberRoleCollectorRunnable> roleRunnableMap = new HashMap<>();
+    private final Map<Long, EventCollector<ChannelMoveData>> moveRunnableMap = new HashMap<>();
+    private final Map<Long, EventCollector<RoleModifyData>> roleRunnableMap = new HashMap<>();
+
+    private static final AtomicInteger threadCounter = new AtomicInteger(0);
+    private final ExecutorService EVENT_COLLECTOR_POOL = ThreadPoolExecutorLogged.newCachedThreadPool((runnable) -> new Thread(runnable, "event-collector-" + threadCounter.getAndIncrement()), CascadeBot.LOGGER);
 
     public void onGenericEmote(GenericEmoteEvent event) {
         GuildData guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
@@ -472,7 +478,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 String oldIconUrl = ((GuildUpdateIconEvent) event).getOldIconUrl();
                 String newIconUrl = ((GuildUpdateIconEvent) event).getNewIconUrl();
 
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_image", null, oldIconUrl != null ? oldIconUrl : "-" ));
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_image", null, oldIconUrl != null ? oldIconUrl : "-"));
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_image", null, newIconUrl != null ? newIconUrl : "-"));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_ICON;
             } else if (event instanceof GuildUpdateMaxMembersEvent) {
@@ -861,16 +867,100 @@ public class ModlogEventListener extends ListenerAdapter {
     }
 
     private void handleChannelUpdatePositionEvents(Guild guild, ChannelType type, int oldPos, GuildChannel channel) {
-        ModlogChannelMoveCollectorRunnable.ChannelMoveData moveData =
-                new ModlogChannelMoveCollectorRunnable.ChannelMoveData(type, oldPos, channel);
+        ChannelMoveData moveData = new ChannelMoveData(type, oldPos, channel);
         if (moveRunnableMap.containsKey(guild.getIdLong())) {
             moveRunnableMap.get(guild.getIdLong()).getQueue().add(moveData);
         } else {
-            ModlogChannelMoveCollectorRunnable runnable = new ModlogChannelMoveCollectorRunnable(guild, () -> moveRunnableMap.remove(guild.getIdLong()));
-            runnable.getQueue().add(moveData);
-            moveRunnableMap.put(guild.getIdLong(), runnable);
-            new Thread(runnable, "modlog-channel-move-" + guild.getId()).start();
+            EventCollector<ChannelMoveData> moveCollector = new EventCollector<>(guild, this::channelMove, 500);
+            moveCollector.getQueue().add(moveData);
+            moveRunnableMap.put(guild.getIdLong(), moveCollector);
+            EVENT_COLLECTOR_POOL.submit(moveCollector);
         }
+    }
+
+    private void channelMove(Guild guild, List<ChannelMoveData> channelMoveDataList) {
+        moveRunnableMap.remove(guild.getIdLong());
+        ModlogUtils.getAuditLogFromType(guild, auditLogEntry -> {
+            User responsible = null;
+            if (auditLogEntry != null) {
+                responsible = auditLogEntry.getUser();
+            }
+            int maxDistance = 0;
+            List<ChannelMoveData> maxMoveData = new ArrayList<>();
+            for (ChannelMoveData moveData : channelMoveDataList) {
+                if (moveData == null) {
+                    continue;
+                }
+                int distance = Math.abs(moveData.channel.getPosition() - moveData.oldPos);
+                if (distance == maxDistance) {
+                    maxMoveData.add(moveData);
+                } else if (distance > maxDistance) {
+                    maxMoveData = new ArrayList<>();
+                    maxDistance = distance;
+                    maxMoveData.add(moveData);
+                }
+            }
+
+            GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
+            List<ModlogEmbedPart> embedParts = new ArrayList<>();
+            for (ChannelMoveData data : maxMoveData) {
+                ModlogEmbedField field = new ModlogEmbedField(false, "modlog.channel.position.title",
+                        "modlog.general.small_change",
+                        String.valueOf(data.oldPos), String.valueOf(data.channel.getPosition()));
+                field.addTitleObjects(data.channel.getName());
+                embedParts.add(field);
+            }
+            ModlogEvent event = maxMoveData.size() <= 1 ? ModlogEvent.CHANNEL_POSITION_UPDATED : ModlogEvent.MULTIPLE_CHANNEL_POSITION_UPDATED;
+            ModlogEventStore eventStore = new ModlogEventStore(event, responsible, maxMoveData.get(0).channel, embedParts);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), eventStore);
+
+        }, ActionType.CHANNEL_UPDATE);
+    }
+
+    public class ChannelMoveData {
+
+        private final ChannelType type;
+        private final int oldPos;
+        private final GuildChannel channel;
+
+        public ChannelMoveData(ChannelType type, int oldPos, GuildChannel channel) {
+            this.type = type;
+            this.oldPos = oldPos;
+            this.channel = channel;
+        }
+
+        public ChannelType getType() {
+            return type;
+        }
+
+        public int getOldPos() {
+            return oldPos;
+        }
+
+        public GuildChannel getChannel() {
+            return channel;
+        }
+
+    }
+
+    public class RoleModifyData {
+
+        private final Member member;
+        private final ChangeList<Role> changeList;
+
+        public RoleModifyData(Member member, ChangeList<Role> changeList) {
+            this.member = member;
+            this.changeList = changeList;
+        }
+
+        public Member getMember() {
+            return member;
+        }
+
+        public ChangeList<Role> getChangeList() {
+            return changeList;
+        }
+
     }
 
     public void handleChannelUpdateParentEvents(Guild guild, ChannelType type, Category oldParent, Category newParent, GuildChannel channel) {
