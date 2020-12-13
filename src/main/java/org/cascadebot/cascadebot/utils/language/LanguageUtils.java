@@ -11,6 +11,10 @@ import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
+import java.util.Arrays;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 public class LanguageUtils {
 
     public static <T extends Enum<T>> String i18nEnum(T enumParam, Locale locale) {
@@ -19,6 +23,17 @@ public class LanguageUtils {
             return FormatUtils.formatEnum(enumParam);
         }
         return StringUtils.capitalize(Language.i18n(locale, path));
+    }
+
+    public static <T extends Enum<T>> String getListValidEnum(Class<T> enumClass, Locale locale, Predicate<T> filter) {
+        return Arrays.stream(enumClass.getEnumConstants())
+                .filter(filter)
+                .map(theEnum -> "`" + FormatUtils.formatEnum(theEnum, locale) + "`")
+                .collect(Collectors.joining(", "));
+    }
+
+    public static <T extends Enum<T>> String getListValidEnum(Class<T> enumClass, Locale locale) {
+        return getListValidEnum(enumClass, locale, e -> true);
     }
 
     public static <T extends Enum<T>> T findEnumByI18n(Class<T> enumClass, Locale locale, String search, boolean ignoreCase) {

@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.SelfUser;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -176,7 +177,7 @@ public class CascadeBot {
         gson = builder.create();
 
         try {
-            DefaultShardManagerBuilder defaultShardManagerBuilder = new DefaultShardManagerBuilder()
+            DefaultShardManagerBuilder defaultShardManagerBuilder = DefaultShardManagerBuilder.create(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
                     .addEventListeners(new CommandListener())
                     .addEventListeners(new GuildEvents())
                     .addEventListeners(new BotEvents())

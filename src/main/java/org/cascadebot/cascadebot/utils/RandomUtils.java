@@ -23,8 +23,12 @@ public class RandomUtils {
     @Getter
     private static final String[] characters = {"0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"};
 
-    public static int randomNumber(int Args) {
-        return(random.nextInt(Args));
+    public static int randomNumber(int min, int max) {
+        return random.nextInt(max - min) + min;
+    }
+
+    public static int randomNumber(int max) {
+        return random.nextInt(max);
     }
     
     public static String randomChoice(String... choices) {

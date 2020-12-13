@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import java.lang.reflect.Field
 
 class AutoRoleListSubCommand : SubCommand() {
 
@@ -24,17 +25,15 @@ class AutoRoleListSubCommand : SubCommand() {
         val autoRoles = StringBuilder()
         for (role in roles) {
             when (role) {
-                is Role -> autoRoles.append(role.asMention).append(" (${role.id})").append(" ")
-                is Long -> autoRoles.append("<@$role>").append(" ")
+                is Role -> autoRoles.append(role.asMention).append(" (${role.id})")
+                is Long -> autoRoles.append("<@$role>")
             }
+            autoRoles.append("\n")
         }
-        val embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.user)
+        val embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.user, context.locale)
         embedBuilder.setTitle(context.i18n("words.autorole"))
-        embedBuilder.setDescription("""
-            ${context.i18n("commands.autorole.autorole_description")}
-            
-            ${context.i18n("words.roles")}: $autoRoles
-        """.trimIndent())
+        embedBuilder.setDescription(context.i18n("commands.autorole.autorole_description"))
+        embedBuilder.addField(context.i18n("words.roles"), autoRoles.toString(), false)
 
         context.typedMessaging.replyInfo(embedBuilder)
     }

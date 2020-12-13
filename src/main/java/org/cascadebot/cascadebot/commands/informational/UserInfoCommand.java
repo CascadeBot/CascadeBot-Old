@@ -38,7 +38,7 @@ public class UserInfoCommand extends MainCommand {
         Member member = context.getGuild().getMember(userForInfo);
         String status = "";
         String statusName = "";
-        EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser());
+        EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, sender.getUser(), context.getLocale());
 
         if (member != null) {
             builder.addField(context.i18n("commands.userinfo.user_join_date"), FormatUtils.formatDateTime(member.getTimeJoined(), context.getLocale()), true);
