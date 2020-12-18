@@ -265,11 +265,11 @@
             <artifactId>JShellScriptEngine</artifactId>
             <version>a4018be</version>
         </dependency>
-        <!--<dependency>
+        <dependency>
             <groupId>com.github.CascadeBot</groupId>
-            <artifactId>delight-rhino-sandbox</artifactId>
-            <version>202fa1b</version>
-        </dependency>-->
+            <artifactId>delight-graaljs-sandbox</artifactId>
+            <version>770dcb2e1afa8a435cc9c7015ef929b12e7ad549</version>
+        </dependency>
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>Shared</artifactId>
@@ -277,11 +277,6 @@
         </dependency>
 
         <!-- Utilities -->
-        <dependency>
-            <groupId>org.javadelight</groupId>
-            <artifactId>delight-graaljs-sandbox</artifactId>
-            <version>0.1.2</version>
-        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

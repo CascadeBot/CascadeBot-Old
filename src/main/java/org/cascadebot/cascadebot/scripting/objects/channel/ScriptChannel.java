@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.StoreChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.VoiceChannel;
+import org.cascadebot.cascadebot.scripting.Promise;
 import org.cascadebot.cascadebot.scripting.objects.ScriptContext;
 import org.cascadebot.cascadebot.scripting.objects.ScriptSnowflake;
 

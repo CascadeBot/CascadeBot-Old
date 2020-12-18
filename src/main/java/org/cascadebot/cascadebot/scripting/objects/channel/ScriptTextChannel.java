@@ -2,9 +2,12 @@ package org.cascadebot.cascadebot.scripting.objects.channel;
 
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.scripting.Promise;
 import org.cascadebot.cascadebot.scripting.objects.ScriptContext;
 import org.cascadebot.cascadebot.scripting.objects.ScriptMessage;
+import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Value;
+import org.graalvm.polyglot.proxy.ProxyExecutable;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -17,20 +20,35 @@ public class ScriptTextChannel extends ScriptChannel {
         super(scriptContext);
     }
 
-    public void sendMessage(String message) {
-        sendMessage(message, null);
-    }
-
-    public void sendMessage(String message, Consumer<ScriptMessage> messageConsumer) {
+    public Promise sendMessage(String message) {
         CompletableFuture<Message> completableFuture = internalTextChannel.sendMessage(message).submit();
         scriptContext.addFuture(completableFuture);
-        if (messageConsumer != null) {
-            completableFuture.thenAccept(discordMessage -> {
+        /*Value global = scriptContext.getPolyContext().getBindings("js");
+        Value promiseConstructor = global.getMember("Promise");
+        return promiseConstructor.newInstance((ProxyExecutable) arguments -> {
+            Value resolve = arguments[0];
+            Value reject = arguments[1];
+            completableFuture.whenComplete((discordMessage, exception) -> {
+                if (exception == null) {
+                    ScriptMessage scriptMessage = new ScriptMessage(scriptContext);
+                    scriptMessage.setInternalMessage(discordMessage);
+                    resolve.executeVoid(scriptMessage);
+                } else {
+                    reject.executeVoid(exception);
+                }
+            });
+            return null;
+        });*/
+
+        return (success, error) -> completableFuture.whenComplete((discordMessage, exception) -> {
+            if (exception == null) {
                 ScriptMessage scriptMessage = new ScriptMessage(scriptContext);
                 scriptMessage.setInternalMessage(discordMessage);
-                messageConsumer.accept(scriptMessage);
-            });
-        }
+                success.executeVoid(scriptMessage);
+            } else {
+                error.executeVoid(exception);
+            }
+        });
     }
 
     public void getMessageById(String id, Consumer<ScriptMessage> messageConsumer) {

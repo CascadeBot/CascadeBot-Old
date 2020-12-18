@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.cascadebot.cascadebot.scripting.objects.channel.ScriptTextChannel;
+import org.graalvm.polyglot.Context;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +21,8 @@ public class ScriptContext {
     private String message;
 
     private List<CompletableFuture<?>> futures = new ArrayList<>();
+
+    private Context polyContext;
 
     public ScriptContext(String[] args, TextChannel textChannel, Member member, Guild guild, String message) {
         this.args = args;
@@ -66,4 +69,11 @@ public class ScriptContext {
         return canceledAny;
     }
 
+    public void setPolyContext(Context polyContext) {
+        this.polyContext = polyContext;
+    }
+
+    public Context getPolyContext() {
+        return polyContext;
+    }
 }
