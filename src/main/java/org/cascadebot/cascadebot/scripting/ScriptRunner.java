@@ -74,6 +74,8 @@ public class ScriptRunner {
         sandbox.setExecutor(SANDBOX_POOL);
 
         sandbox.allowPrintFunctions(true);
+
+        return sandbox;
     }
 
     public static void runScript(ScriptContext scriptContext, Map<String, Object> variables, String scriptName, String script) {
