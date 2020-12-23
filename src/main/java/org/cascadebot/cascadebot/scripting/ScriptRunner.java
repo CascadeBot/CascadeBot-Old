@@ -41,43 +41,39 @@ import java.util.function.Predicate;
 
 public class ScriptRunner {
 
-    private static final GraalSandbox SANDBOX = GraalSandboxes.create();
     private static final ThreadGroup SANDBOX_THREADS = new ThreadGroup("Sandbox Thread Pool");
     private static final ExecutorService SANDBOX_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r -> new Thread(SANDBOX_THREADS, r,
             SANDBOX_THREADS.getName() + "-" + SANDBOX_THREADS.activeCount()), CascadeBot.LOGGER);
     private static final Timer SANDBOX_TIMER = new Timer();
 
-    static {
-        SANDBOX.allowNoBraces(true);
-        SANDBOX.setMaxCPUTime(1000);
+    private static GraalSandbox createSandbox() {
+        GraalSandbox sandbox = GraalSandboxes.create();
 
-        SANDBOX.allow(Object.class);
-        SANDBOX.allow(String.class);
-        SANDBOX.allow(Integer.class);
-        SANDBOX.allow(Boolean.class);
-        SANDBOX.allow(Double.class);
-        SANDBOX.allow(Float.class);
+        sandbox.allowNoBraces(true);
+        sandbox.setMaxCPUTime(1000);
 
-        SANDBOX.allow(ScriptUser.class);
-        SANDBOX.allow(ScriptGuild.class);
-        SANDBOX.allow(ScriptSnowflake.class);
-        SANDBOX.allow(ScriptRole.class);
-        SANDBOX.allow(ScriptEmote.class);
-        SANDBOX.allow(ScriptCategory.class);
-        SANDBOX.allow(ScriptChannel.class);
-        SANDBOX.allow(ScriptStoreChannel.class);
-        SANDBOX.allow(ScriptTextChannel.class);
-        SANDBOX.allow(ScriptVoiceChannel.class);
-        SANDBOX.allow(Value.class);
-        SANDBOX.allowNoBraces(true);
-        SANDBOX.allowExitFunctions(true);
-        SANDBOX.allowLoadFunctions(true);
-        SANDBOX.allowReadFunctions(true);
+        sandbox.allow(Object.class);
+        sandbox.allow(String.class);
+        sandbox.allow(Integer.class);
+        sandbox.allow(Boolean.class);
+        sandbox.allow(Double.class);
+        sandbox.allow(Float.class);
 
-        SANDBOX.setExecutor(SANDBOX_POOL);
+        sandbox.allow(ScriptUser.class);
+        sandbox.allow(ScriptGuild.class);
+        sandbox.allow(ScriptSnowflake.class);
+        sandbox.allow(ScriptRole.class);
+        sandbox.allow(ScriptEmote.class);
+        sandbox.allow(ScriptCategory.class);
+        sandbox.allow(ScriptChannel.class);
+        sandbox.allow(ScriptStoreChannel.class);
+        sandbox.allow(ScriptTextChannel.class);
+        sandbox.allow(ScriptVoiceChannel.class);
+        sandbox.allow(Value.class);
 
-        SANDBOX.allowPrintFunctions(true);
-        SANDBOX.allowGlobalsObjects(true);
+        sandbox.setExecutor(SANDBOX_POOL);
+
+        sandbox.allowPrintFunctions(true);
     }
 
     public static void runScript(ScriptContext scriptContext, Map<String, Object> variables, String scriptName, String script) {
@@ -85,14 +81,14 @@ public class ScriptRunner {
         scriptVariables.put("config", variables);
 
         StringWriter stringWriter = new StringWriter();
-
-        SANDBOX.setWriter(stringWriter);
+        GraalSandbox sandbox = createSandbox();
+        sandbox.setWriter(stringWriter);
 
         try {
             Bindings bindings = new SimpleBindings();
             bindings.putAll(scriptVariables);
 
-            SANDBOX.eval(script, bindings);
+            sandbox.eval(script, bindings);
 
             stringWriter.flush();
             String content = stringWriter.toString();
