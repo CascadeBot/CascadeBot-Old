@@ -8,6 +8,7 @@ import org.cascadebot.cascadebot.scripting.objects.ScriptMessage;
 import org.graalvm.polyglot.Context;
 import org.graalvm.polyglot.Value;
 import org.graalvm.polyglot.proxy.ProxyExecutable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -23,32 +24,22 @@ public class ScriptTextChannel extends ScriptChannel {
     public Promise sendMessage(String message) {
         CompletableFuture<Message> completableFuture = internalTextChannel.sendMessage(message).submit();
         scriptContext.addFuture(completableFuture);
-        /*Value global = scriptContext.getPolyContext().getBindings("js");
-        Value promiseConstructor = global.getMember("Promise");
-        return promiseConstructor.newInstance((ProxyExecutable) arguments -> {
-            Value resolve = arguments[0];
-            Value reject = arguments[1];
-            completableFuture.whenComplete((discordMessage, exception) -> {
-                if (exception == null) {
-                    ScriptMessage scriptMessage = new ScriptMessage(scriptContext);
-                    scriptMessage.setInternalMessage(discordMessage);
-                    resolve.executeVoid(scriptMessage);
-                } else {
-                    reject.executeVoid(exception);
-                }
-            });
-            return null;
-        });*/
 
-        return (success, error) -> completableFuture.whenComplete((discordMessage, exception) -> {
-            if (exception == null) {
-                ScriptMessage scriptMessage = new ScriptMessage(scriptContext);
-                scriptMessage.setInternalMessage(discordMessage);
-                success.executeVoid(scriptMessage);
-            } else {
-                error.executeVoid(exception);
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                completableFuture.whenComplete((lMessage, throwable) -> {
+                    if (throwable != null) {
+                        reject.executeVoid(throwable);
+                    } else {
+                        resolve.executeVoid(lMessage);
+                    }
+                    callback.executeVoid();
+                });
+                return this;
             }
-        });
+        };
     }
 
     public void getMessageById(String id, Consumer<ScriptMessage> messageConsumer) {

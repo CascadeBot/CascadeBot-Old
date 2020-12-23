@@ -27,3 +27,5 @@ config.yml
 *.iml
 TestCommand.java
 testscript.js
+
+src/main/resources/resources/webjars/js-beautify/1.9.0/js/lib/beautifier.js
