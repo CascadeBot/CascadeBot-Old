@@ -259,6 +259,12 @@
             <version>${lavalink.client.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>de.danielbechler</groupId>
+            <artifactId>java-object-diff</artifactId>
+            <version>0.95</version>
+        </dependency>
+
         <!-- Internal Dependencies -->
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
@@ -268,7 +274,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>delight-graaljs-sandbox</artifactId>
-            <version>770dcb2e1afa8a435cc9c7015ef929b12e7ad549</version>
+            <version>4fdb637c7a4983b0f1a1e7d4e69ec9975cd5d22a</version>
         </dependency>
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
