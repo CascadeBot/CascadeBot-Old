@@ -23,23 +23,7 @@ public class ScriptTextChannel extends ScriptChannel {
 
     public Promise sendMessage(String message) {
         CompletableFuture<Message> completableFuture = internalTextChannel.sendMessage(message).submit();
-        scriptContext.addFuture(completableFuture);
-
-        return new Promise() {
-            @NotNull
-            @Override
-            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
-                completableFuture.whenComplete((lMessage, throwable) -> {
-                    if (throwable != null) {
-                        reject.executeVoid(throwable);
-                    } else {
-                        resolve.executeVoid(lMessage);
-                    }
-                    callback.executeVoid();
-                });
-                return this;
-            }
-        };
+        return ScriptMessage.handleMessageCompletableFuture(scriptContext, completableFuture);
     }
 
     public void getMessageById(String id, Consumer<ScriptMessage> messageConsumer) {
