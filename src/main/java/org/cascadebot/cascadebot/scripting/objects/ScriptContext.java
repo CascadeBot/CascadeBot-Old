@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.scripting.objects;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.scripting.objects.channel.ScriptTextChannel;
 import org.graalvm.polyglot.Context;
 
@@ -71,6 +72,10 @@ public class ScriptContext {
 
     public void setPolyContext(Context polyContext) {
         this.polyContext = polyContext;
+    }
+
+    public ScriptGuild getGuild() {
+        return guild;
     }
 
     public Context getPolyContext() {

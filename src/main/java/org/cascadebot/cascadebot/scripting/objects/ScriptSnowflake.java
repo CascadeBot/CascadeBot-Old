@@ -15,4 +15,8 @@ public class ScriptSnowflake {
         return internalSnowflake.getId();
     }
 
+    public long getIdLong() {
+        return internalSnowflake.getIdLong();
+    }
+
 }

@@ -1,0 +1,88 @@
+ScriptGuild: ❌
+    - getAfkTimeout: ✓
+    - getBannerId: ✓
+    - getBannerUrl: ✓
+    - getBoostCount: ✓
+    - getBoosters: ✓
+    - getBoostTier: ✓
+    - getCategories: ✓
+    - getCategoriesByName: ✓
+    - getCategoryById: ✓
+    - getChannels: ✓
+    - getDefaultChannel: ✓
+    - getDefaultNotificationLevel: ✓
+    - getDescription: ✓
+    - getEmoteById: ✓
+    - getEmotes: ✓
+    - getEmotesByName: ✓
+    - getExplicitContentLevel: ✓
+    - getFeatures: ✓
+    - getGuildChannelById: ✓
+        - String id: ✓
+        - ChannelType type, String id: ✓
+    - getIconId: ✓
+    - getIconUrl: ✓
+    - getMaxBitrate: ✓
+    - getMaxEmotes: ✓
+    - getMaxMembers: ✓
+    - getMaxPresences: ✓
+    - getUserById: ✓
+    - getUserByTag: ✓
+        - String tag: ✓
+        - String username, String discriminator: ✓
+    - getUsers: ❌
+    - getUsersByEffectiveName: ✓
+    - getUsersByName: ✓
+    - getUsersByNickname: ✓
+    - getUsersWithRoles: ✓
+    - getName: ✓
+    - getOwner: ✓
+    - getOwnerId: ✓
+    - getEveryoneRole: ✓
+    - getRegion: ✓
+    - getRequiredMFALevel: ✓
+    - getRoleById: ✓
+    - getRoles: ❌
+    - getRolesByName: ✓
+    - getSplashId: ✓
+    - getSplashUrl: ✓
+    - getStoreChannelById: ✓
+    - getStoreChannels: ✓
+    - getStoreChannelsByName: ✓
+    - getSystemChannel: ✓
+    - getTextChannelById: ✓
+    - getTextChannels: ✓
+    - getTextChannelsByName: ✓
+    - getVanityCode: ✓
+    - getVanityUrl: ✓
+    - getVoiceChannelById: ✓
+    - getVoiceChannels: ✓
+    - getVoiceChannelsByName: ✓
+    - getVoiceStates: ❌
+    - createTextChannel: ❌
+        - String name: ❌
+        - ScriptCategory parent, String name: ❌
+    - createVoiceChannel: ❌
+        - String name: ❌
+        - ScriptCategory parent, String name: ❌
+    - createCategory: ❌
+    - createRole: ❌
+    - createEmote: ❌
+    - setName: ❌
+    - setIcon: ❌
+    - setSplash: ❌
+    - setBanner: ❌
+    - setDescription: ❌
+    - setRequiredMFALevel: ❌
+    - setDefaultNotificationLevel: ❌
+ScriptMessage: ❌
+    - editMessage: ❌
+        - String message: ✓
+        - String message, ScriptMessageEditOptions editOptions: ❌
+        - MessageEmbed embed: ❌ (might need to create custom embed object)
+        - MessageEmbed embed, ScriptMessageEditOptions editOptions: ❌
+    - addReaction: ❌
+    - togglePin: ❌
+    - isPinned: ❌
+    - publish: ❌ (Message#crosspost)
+    - delete: ❌

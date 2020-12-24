@@ -187,7 +187,7 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     // TODO figure out how to re-do this
-    /*public MemberCacheView getMembers() {
+    /*public MemberCacheView getUsers() {
         return internalGuild.getMemberCache();
     }*/
 
@@ -238,7 +238,7 @@ public class ScriptGuild extends ScriptSnowflake {
         return internalGuild.getOwnerId();
     }
 
-    public ScriptRole getPublicRole() {
+    public ScriptRole getEveryoneRole() {
         ScriptRole scriptRole = new ScriptRole(scriptContext);
         scriptRole.setInternalRole(internalGuild.getPublicRole());
         return scriptRole;
@@ -359,9 +359,9 @@ public class ScriptGuild extends ScriptSnowflake {
         }).collect(Collectors.toList());
     }
 
-    public List<GuildVoiceState> getVoiceStates() {
+    /*public List<GuildVoiceState> getVoiceStates() {
         return internalGuild.getVoiceStates();
-    }
+    }*/
 
     protected void setInternalGuild(Guild guild) {
         this.internalGuild = guild;
