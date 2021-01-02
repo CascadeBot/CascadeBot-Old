@@ -1,7 +1,6 @@
-package org.cascadebot.cascadebot.scripting.objects.channel;
+package org.cascadebot.cascadebot.scripting.objects;
 
 import net.dv8tion.jda.api.entities.StoreChannel;
-import org.cascadebot.cascadebot.scripting.objects.ScriptContext;
 
 public class ScriptStoreChannel extends ScriptChannel {
 

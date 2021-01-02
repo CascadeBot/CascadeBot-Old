@@ -2,10 +2,12 @@ package org.cascadebot.cascadebot.scripting.objects;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import org.cascadebot.cascadebot.music.CascadePlayer;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptTextChannel;
+import org.cascadebot.cascadebot.scripting.Promise;
 import org.graalvm.polyglot.Context;
+import org.graalvm.polyglot.Value;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,25 +19,31 @@ public class ScriptContext {
 
     private String[] args;
     private ScriptTextChannel channel;
+    private Member runner;
     private ScriptUser user;
     private ScriptGuild guild;
+    private Guild intGuild;
     private String message;
 
     private List<CompletableFuture<?>> futures = new ArrayList<>();
 
     private Context polyContext;
 
+    private ScriptContext instance = this;
+
     public ScriptContext(String[] args, TextChannel textChannel, Member member, Guild guild, String message) {
         this.args = args;
 
         this.user = new ScriptUser(this);
         this.user.setInternalUser(member);
+        this.runner = member;
 
         this.channel = new ScriptTextChannel(this);
         this.channel.setInternalTextChannel(textChannel);
 
         this.guild = new ScriptGuild(this);
         this.guild.setInternalGuild(guild);
+        this.intGuild = guild;
 
         this.message = message;
     }
@@ -74,11 +82,54 @@ public class ScriptContext {
         this.polyContext = polyContext;
     }
 
-    public ScriptGuild getGuild() {
-        return guild;
+    public Guild getGuild() {
+        return intGuild;
     }
 
     public Context getPolyContext() {
         return polyContext;
+    }
+
+    public Promise handleVoidCompletableFuture(CompletableFuture<Void> voidCompletableFuture) {
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                voidCompletableFuture.whenComplete((unused, throwable) -> {
+                    if (throwable == null) {
+                        resolve.executeVoid(true);
+                    } else {
+                        reject.executeVoid(throwable);
+                    }
+                    callback.executeVoid();
+                });
+                return this;
+            }
+        };
+    }
+
+    public Promise handleMessageCompletableFuture(CompletableFuture<Message> messageCompletableFuture) {
+        this.addFuture(messageCompletableFuture);
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                messageCompletableFuture.whenComplete((lMessage, throwable) -> {
+                    if (throwable != null) {
+                        reject.executeVoid(throwable);
+                    } else {
+                        ScriptMessage scriptMessage = new ScriptMessage(instance);
+                        scriptMessage.setInternalMessage(lMessage);
+                        resolve.executeVoid(scriptMessage);
+                    }
+                    callback.executeVoid();
+                });
+                return this;
+            }
+        };
+    }
+
+    public Member getRunner() {
+        return runner;
     }
 }

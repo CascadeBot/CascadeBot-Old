@@ -1,13 +1,7 @@
 package org.cascadebot.cascadebot.scripting;
 
-import com.oracle.truffle.js.scriptengine.GraalJSScriptEngine;
-import de.danielbechler.diff.ObjectDifferBuilder;
-import de.danielbechler.diff.circular.CircularReferenceMatchingMode;
-import de.danielbechler.diff.node.DiffNode;
 import delight.graaljssandbox.GraalSandbox;
 import delight.graaljssandbox.GraalSandboxes;
-import delight.graaljssandbox.internal.GraalSandboxImpl;
-import delight.nashornsandbox.internal.SandboxClassFilter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.messaging.MessageType;
@@ -18,15 +12,12 @@ import org.cascadebot.cascadebot.scripting.objects.ScriptGuild;
 import org.cascadebot.cascadebot.scripting.objects.ScriptRole;
 import org.cascadebot.cascadebot.scripting.objects.ScriptSnowflake;
 import org.cascadebot.cascadebot.scripting.objects.ScriptUser;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptCategory;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptChannel;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptStoreChannel;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptTextChannel;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptVoiceChannel;
+import org.cascadebot.cascadebot.scripting.objects.ScriptCategory;
+import org.cascadebot.cascadebot.scripting.objects.ScriptChannel;
+import org.cascadebot.cascadebot.scripting.objects.ScriptStoreChannel;
+import org.cascadebot.cascadebot.scripting.objects.ScriptTextChannel;
+import org.cascadebot.cascadebot.scripting.objects.ScriptVoiceChannel;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
-import org.graalvm.polyglot.Context;
-import org.graalvm.polyglot.HostAccess;
-import org.graalvm.polyglot.PolyglotAccess;
 import org.graalvm.polyglot.Value;
 
 import javax.script.Bindings;
@@ -37,7 +28,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutorService;
-import java.util.function.Predicate;
 
 public class ScriptRunner {
 

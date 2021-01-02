@@ -1,28 +1,24 @@
 package org.cascadebot.cascadebot.scripting.objects;
 
 import net.dv8tion.jda.api.Region;
+import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildChannel;
-import net.dv8tion.jda.api.entities.GuildVoiceState;
-import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.StoreChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.utils.cache.MemberCacheView;
-import net.dv8tion.jda.api.utils.cache.SortedSnowflakeCacheView;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptCategory;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptChannel;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptStoreChannel;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptTextChannel;
-import org.cascadebot.cascadebot.scripting.objects.channel.ScriptVoiceChannel;
+import org.cascadebot.cascadebot.scripting.Promise;
+import org.graalvm.polyglot.Value;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class ScriptGuild extends ScriptSnowflake {
@@ -34,8 +30,9 @@ public class ScriptGuild extends ScriptSnowflake {
     }
 
     public ScriptVoiceChannel getAfkChannel() {
-        //return internalGuild.getAfkChannel();
-        return null;
+        ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel(scriptContext);
+        scriptVoiceChannel.setInternalVoiceChannel(internalGuild.getAfkChannel());
+        return scriptVoiceChannel;
     }
 
     public Guild.Timeout getAfkTimeout() {
@@ -186,10 +183,13 @@ public class ScriptGuild extends ScriptSnowflake {
         return scriptUser;
     }
 
-    // TODO figure out how to re-do this
-    /*public MemberCacheView getUsers() {
-        return internalGuild.getMemberCache();
-    }*/
+    public List<ScriptUser> getUsers() {
+        return internalGuild.getMembers().stream().map(member -> {
+            ScriptUser scriptUser = new ScriptUser(scriptContext);
+            scriptUser.setInternalUser(member);
+            return scriptUser;
+        }).collect(Collectors.toList());
+    }
 
     public List<ScriptUser> getUsersByEffectiveName(String name, boolean ignoreCase) {
         return internalGuild.getMembersByEffectiveName(name, ignoreCase).stream().map(member -> {
@@ -258,10 +258,13 @@ public class ScriptGuild extends ScriptSnowflake {
         return scriptRole;
     }
 
-    // TODO figure out how to re-do this
-    /*public SortedSnowflakeCacheView<Role> getRoles() {
-        return internalGuild.getRoleCache();
-    }*/
+    public List<ScriptRole> getRoles() {
+        return internalGuild.getRoles().stream().map(role -> {
+            ScriptRole scriptRole = new ScriptRole(scriptContext);
+            scriptRole.setInternalRole(role);
+            return scriptRole;
+        }).collect(Collectors.toList());
+    }
 
     public List<ScriptRole> getRolesByName(String name, boolean ignoreCase) {
         return internalGuild.getRolesByName(name, ignoreCase).stream().map(role -> {
@@ -359,9 +362,255 @@ public class ScriptGuild extends ScriptSnowflake {
         }).collect(Collectors.toList());
     }
 
-    /*public List<GuildVoiceState> getVoiceStates() {
-        return internalGuild.getVoiceStates();
-    }*/
+    public List<ScriptGuildVoiceState> getVoiceStates() {
+        return internalGuild.getVoiceStates().stream().map(guildVoiceState -> {
+            ScriptGuildVoiceState scriptGuildVoiceState = new ScriptGuildVoiceState(scriptContext);
+            scriptGuildVoiceState.setInternalVoiceState(guildVoiceState);
+            return scriptGuildVoiceState;
+        }).collect(Collectors.toList());
+    }
+
+    public Promise createTextChannel(String name) {
+        CompletableFuture<TextChannel> channelCompletableFuture = internalGuild.createTextChannel(name).submit();
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                channelCompletableFuture.whenComplete((textChannel, throwable) -> {
+                    if (throwable == null) {
+                        ScriptTextChannel scriptTextChannel = new ScriptTextChannel(scriptContext);
+                        scriptTextChannel.setInternalTextChannel(textChannel);
+                        resolve.executeVoid(scriptTextChannel);
+                    } else {
+                        reject.executeVoid(throwable);
+                    }
+                    callback.executeVoid();
+                });
+                return this;
+            }
+        };
+    }
+
+    public Promise createTextChannel(ScriptCategory parent, String name) {
+        return parent.createTextChannel(name);
+    }
+
+    public Promise createVoiceChannel(String name) {
+        CompletableFuture<VoiceChannel> channelCompletableFuture = internalGuild.createVoiceChannel(name).submit();
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                channelCompletableFuture.whenComplete((voiceChannel, throwable) -> {
+                    if (throwable == null) {
+                        ScriptVoiceChannel scriptVoiceChannel = new ScriptVoiceChannel(scriptContext);
+                        scriptVoiceChannel.setInternalVoiceChannel(voiceChannel);
+                        resolve.executeVoid(scriptVoiceChannel);
+                    } else {
+                        reject.executeVoid(throwable);
+                    }
+                    callback.executeVoid();
+                });
+                return this;
+            }
+        };
+    }
+
+    public Promise createVoiceChanel(ScriptCategory parent, String name) {
+        return parent.createVoiceChannel(name);
+    }
+
+    public Promise createCategory(String name) {
+        CompletableFuture<Category> categoryCompletableFuture = internalGuild.createCategory(name).submit();
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                categoryCompletableFuture.whenComplete((category, throwable) -> {
+                    if (throwable == null) {
+                        ScriptCategory scriptCategory = new ScriptCategory(scriptContext);
+                        scriptCategory.setInternalCategory(category);
+                        resolve.executeVoid(scriptCategory);
+                    } else {
+                        reject.executeVoid(throwable);
+                    }
+                    callback.executeVoid();
+                });
+                return this;
+            }
+        };
+    }
+
+    public Promise createRole(String name) {
+        CompletableFuture<Role> roleCompletableFuture = internalGuild.createRole().setName(name).submit();
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                roleCompletableFuture.whenComplete((role, throwable) -> {
+                    if (throwable == null) {
+                        ScriptRole scriptRole = new ScriptRole(scriptContext);
+                        scriptRole.setInternalRole(role);
+                        resolve.executeVoid(scriptRole);
+                    } else {
+                        reject.executeVoid(throwable);
+                    }
+                    callback.executeVoid();
+                });
+                return this;
+            }
+        };
+    }
+
+    public Promise createEmote(String name, String iconUrl) {
+        Throwable thrown = null;
+        CompletableFuture<Emote> emoteCompletableFuture = null;
+        try {
+            emoteCompletableFuture = internalGuild.createEmote(name, Icon.from(new URL(iconUrl).openStream())).submit();
+        } catch (IOException e) {
+            thrown = e;
+        }
+        Throwable finalThrown = thrown;
+        CompletableFuture<Emote> finalEmoteCompletableFuture = emoteCompletableFuture;
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                if (finalThrown != null) {
+                    reject.executeVoid(finalThrown);
+                    callback.executeVoid();
+                } else {
+                    finalEmoteCompletableFuture.whenComplete((emote, throwable) -> {
+                        if (throwable == null) {
+                            ScriptEmote scriptEmote = new ScriptEmote(scriptContext);
+                            scriptEmote.setInternalEmote(emote);
+                            resolve.executeVoid(scriptEmote);
+                        } else {
+                            reject.executeVoid(throwable);
+                        }
+                        callback.executeVoid();
+                    });
+                }
+                return this;
+            }
+        };
+    }
+
+    public Promise setName(String name) {
+        CompletableFuture<Void> voidCompletableFuture = internalGuild.getManager().setName(name).submit();
+        return scriptContext.handleVoidCompletableFuture(voidCompletableFuture);
+    }
+
+    public Promise setIcon(String iconUrl) {
+        Throwable thrown = null;
+        CompletableFuture<Void> voidCompletableFuture = null;
+        try {
+            voidCompletableFuture = internalGuild.getManager().setIcon(Icon.from(new URL(iconUrl).openStream())).submit();
+        } catch (IOException e) {
+            thrown = e;
+        }
+        Throwable finalThrown = thrown;
+        CompletableFuture<Void> finalVoidCompletableFuture = voidCompletableFuture;
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                if (finalThrown != null) {
+                    reject.executeVoid(finalThrown);
+                    callback.executeVoid();
+                } else {
+                    finalVoidCompletableFuture.whenComplete((unused, throwable) -> {
+                        if (throwable == null) {
+                            resolve.executeVoid(true);
+                        } else {
+                            reject.executeVoid(throwable);
+                        }
+                        callback.executeVoid();
+                    });
+                }
+                return this;
+            }
+        };
+    }
+
+    public Promise setSplash(String splashUrl) {
+        Throwable thrown = null;
+        CompletableFuture<Void> voidCompletableFuture = null;
+        try {
+            voidCompletableFuture = internalGuild.getManager().setSplash(Icon.from(new URL(splashUrl).openStream())).submit();
+        } catch (IOException e) {
+            thrown = e;
+        }
+        Throwable finalThrown = thrown;
+        CompletableFuture<Void> finalVoidCompletableFuture = voidCompletableFuture;
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                if (finalThrown != null) {
+                    reject.executeVoid(finalThrown);
+                    callback.executeVoid();
+                } else {
+                    finalVoidCompletableFuture.whenComplete((unused, throwable) -> {
+                        if (throwable == null) {
+                            resolve.executeVoid(true);
+                        } else {
+                            reject.executeVoid(throwable);
+                        }
+                        callback.executeVoid();
+                    });
+                }
+                return this;
+            }
+        };
+    }
+
+    public Promise setBanner(String bannerUrl) {
+        Throwable thrown = null;
+        CompletableFuture<Void> voidCompletableFuture = null;
+        try {
+            voidCompletableFuture = internalGuild.getManager().setBanner(Icon.from(new URL(bannerUrl).openStream())).submit();
+        } catch (IOException e) {
+            thrown = e;
+        }
+        Throwable finalThrown = thrown;
+        CompletableFuture<Void> finalVoidCompletableFuture = voidCompletableFuture;
+        return new Promise() {
+            @NotNull
+            @Override
+            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
+                if (finalThrown != null) {
+                    reject.executeVoid(finalThrown);
+                    callback.executeVoid();
+                } else {
+                    finalVoidCompletableFuture.whenComplete((unused, throwable) -> {
+                        if (throwable == null) {
+                            resolve.executeVoid(true);
+                        } else {
+                            reject.executeVoid(throwable);
+                        }
+                        callback.executeVoid();
+                    });
+                }
+                return this;
+            }
+        };
+    }
+
+    public Promise setDescription(String description) {
+        CompletableFuture<Void> voidCompletableFuture = internalGuild.getManager().setDescription(description).submit();
+        return scriptContext.handleVoidCompletableFuture(voidCompletableFuture);
+    }
+
+    public Promise setRequiredMFALevel(Guild.MFALevel mfaLevel) {
+        CompletableFuture<Void> voidCompletableFuture = internalGuild.getManager().setRequiredMFALevel(mfaLevel).submit();
+        return scriptContext.handleVoidCompletableFuture(voidCompletableFuture);
+    }
+
+    public Promise setDefaultNotificationLevel(Guild.NotificationLevel notificationLevel) {
+        CompletableFuture<Void> voidCompletableFuture = internalGuild.getManager().setDefaultNotificationLevel(notificationLevel).submit();
+        return scriptContext.handleVoidCompletableFuture(voidCompletableFuture);
+    }
 
     protected void setInternalGuild(Guild guild) {
         this.internalGuild = guild;

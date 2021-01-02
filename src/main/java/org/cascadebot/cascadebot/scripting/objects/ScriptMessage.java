@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.scripting.objects;
 
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import org.cascadebot.cascadebot.scripting.Promise;
 import org.graalvm.polyglot.Value;
 import org.jetbrains.annotations.NotNull;
@@ -16,29 +17,57 @@ public class ScriptMessage extends ScriptSnowflake {
     }
 
     public Promise editMessage(String message) {
-        CompletableFuture<Message> completableFuture = internalMessage.editMessage(message).override(true).submit(); // TODO not override, let user change these options
-        return handleMessageCompletableFuture(scriptContext, completableFuture);
+        CompletableFuture<Message> completableFuture = internalMessage.editMessage(message).override(true).submit();
+        return scriptContext.handleMessageCompletableFuture(completableFuture);
     }
 
-    public static Promise handleMessageCompletableFuture(ScriptContext scriptContext, CompletableFuture<Message> messageCompletableFuture) {
-        scriptContext.addFuture(messageCompletableFuture);
-        return new Promise() {
-            @NotNull
-            @Override
-            public Promise intThen(@NotNull Value resolve, @NotNull Value reject, @NotNull Value callback) {
-                messageCompletableFuture.whenComplete((lMessage, throwable) -> {
-                    if (throwable != null) {
-                        reject.executeVoid(throwable);
-                    } else {
-                        ScriptMessage scriptMessage = new ScriptMessage(scriptContext);
-                        scriptMessage.setInternalMessage(lMessage);
-                        resolve.executeVoid(scriptMessage);
-                    }
-                    callback.executeVoid();
-                });
-                return this;
-            }
-        };
+    public Promise editMessage(String message, boolean override) {
+        CompletableFuture<Message> completableFuture = internalMessage.editMessage(message).override(override).submit();
+        return scriptContext.handleMessageCompletableFuture(completableFuture);
+    }
+
+    public Promise editMessage(MessageEmbed messageEmbed) {
+        CompletableFuture<Message> completableFuture = internalMessage.editMessage(messageEmbed).override(true).submit();
+        return scriptContext.handleMessageCompletableFuture(completableFuture);
+    }
+
+    public Promise editMessage(MessageEmbed messageEmbed, boolean override) {
+        CompletableFuture<Message> completableFuture = internalMessage.editMessage(messageEmbed).override(override).submit();
+        return scriptContext.handleMessageCompletableFuture(completableFuture);
+    }
+
+    public Promise addReaction(String unicode) {
+        CompletableFuture<Void> voidCompletableFuture = internalMessage.addReaction(unicode).submit();
+        return scriptContext.handleVoidCompletableFuture(voidCompletableFuture);
+    }
+
+    public Promise addReaction(ScriptEmote emote) {
+        CompletableFuture<Void> voidCompletableFuture = internalMessage.addReaction(emote.internalEmote).submit();
+        return scriptContext.handleVoidCompletableFuture(voidCompletableFuture);
+    }
+
+    public Promise pin() {
+        CompletableFuture<Void> voidCompletableFuture = internalMessage.pin().submit();
+        return scriptContext.handleVoidCompletableFuture(voidCompletableFuture);
+    }
+
+    public Promise unPin() {
+        CompletableFuture<Void> voidCompletableFuture = internalMessage.unpin().submit();
+        return scriptContext.handleVoidCompletableFuture(voidCompletableFuture);
+    }
+
+    public boolean isPinned() {
+        return internalMessage.isPinned();
+    }
+
+    public Promise publish() {
+        CompletableFuture<Message> completableFuture = internalMessage.crosspost().submit();
+        return scriptContext.handleMessageCompletableFuture(completableFuture);
+    }
+
+    public Promise delete() {
+        CompletableFuture<Void> voidCompletableFuture = internalMessage.delete().submit();
+        return scriptContext.handleVoidCompletableFuture(voidCompletableFuture);
     }
 
     public void setInternalMessage(Message message) {

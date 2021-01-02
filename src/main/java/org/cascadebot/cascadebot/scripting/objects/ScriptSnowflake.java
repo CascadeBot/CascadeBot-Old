@@ -2,6 +2,8 @@ package org.cascadebot.cascadebot.scripting.objects;
 
 import net.dv8tion.jda.api.entities.ISnowflake;
 
+import java.util.Date;
+
 public class ScriptSnowflake {
 
     protected ISnowflake internalSnowflake;
@@ -15,8 +17,8 @@ public class ScriptSnowflake {
         return internalSnowflake.getId();
     }
 
-    public long getIdLong() {
-        return internalSnowflake.getIdLong();
+    public String getTimeCreated() {
+        return String.valueOf(internalSnowflake.getTimeCreated().toInstant().toEpochMilli());
     }
 
 }
