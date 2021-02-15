@@ -274,7 +274,7 @@
         <dependency>
             <groupId>com.github.CascadeBot</groupId>
             <artifactId>delight-graaljs-sandbox</artifactId>
-            <version>4fdb637c7a4983b0f1a1e7d4e69ec9975cd5d22a</version>
+            <version>cae329809576a946768681631f6e7b33288efe97</version>
         </dependency>
         <dependency>
             <groupId>com.github.CascadeBot</groupId>

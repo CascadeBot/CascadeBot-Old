@@ -19,11 +19,14 @@ import org.cascadebot.cascadebot.scripting.objects.ScriptTextChannel;
 import org.cascadebot.cascadebot.scripting.objects.ScriptVoiceChannel;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.graalvm.polyglot.Value;
+import org.jetbrains.annotations.NotNull;
 
 import javax.script.Bindings;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -72,9 +75,55 @@ public class ScriptRunner {
         Map<String, Object> scriptVariables = scriptContext.getVariableMap();
         scriptVariables.put("config", variables);
 
-        StringWriter stringWriter = new StringWriter();
+        Writer printWriter = new Writer() {
+            StringBuffer buffer = new StringBuffer();
+            @Override
+            public void write(@NotNull char[] cbuf, int off, int len) throws IOException {
+                buffer.append(cbuf, off, len);
+                CascadeBot.LOGGER.info("Script printed: " + cbuf);
+            }
+
+            @Override
+            public void flush() throws IOException {
+
+            }
+
+            @Override
+            public void close() throws IOException {
+
+            }
+
+            @Override
+            public String toString() {
+                return buffer.toString();
+            }
+        };
+        Writer errorWriter = new Writer() {
+            StringBuffer buffer = new StringBuffer();
+            @Override
+            public void write(@NotNull char[] cbuf, int off, int len) throws IOException {
+                buffer.append(cbuf, off, len);
+                CascadeBot.LOGGER.info("Script error: " + cbuf);
+            }
+
+            @Override
+            public void flush() throws IOException {
+
+            }
+
+            @Override
+            public void close() throws IOException {
+
+            }
+
+            @Override
+            public String toString() {
+                return buffer.toString();
+            }
+        };
         GraalSandbox sandbox = createSandbox();
-        sandbox.setWriter(stringWriter);
+        sandbox.setWriter(printWriter);
+        sandbox.setErrorWriter(errorWriter);
 
         try {
             Bindings bindings = new SimpleBindings();
@@ -82,8 +131,7 @@ public class ScriptRunner {
 
             sandbox.eval(script, bindings);
 
-            stringWriter.flush();
-            String content = stringWriter.toString();
+            String content = printWriter.toString();
             if (content.length() > 0) {
                 scriptContext.getChannel().sendMessage(content).queue();
             }

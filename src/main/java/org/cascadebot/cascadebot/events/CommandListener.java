@@ -46,7 +46,7 @@ public class CommandListener extends ListenerAdapter {
     private static final AtomicInteger threadCounter = new AtomicInteger(0);
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r -> new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
 
-    private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
+    //private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
@@ -60,7 +60,7 @@ public class CommandListener extends ListenerAdapter {
         MDC.put("cascade.channel", event.getChannel().toString());
 
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
-        message = MULTIQUOTE_REGEX.matcher(message).replaceAll("");
+        //message = MULTIQUOTE_REGEX.matcher(message).replaceAll("");
 
         GuildData guildData;
         try {

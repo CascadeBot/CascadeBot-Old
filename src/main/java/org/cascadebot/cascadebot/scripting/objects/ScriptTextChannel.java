@@ -10,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ScriptTextChannel extends ScriptChannel {
