@@ -47,9 +47,8 @@ public class UserPermissionGroupSubCommand extends SubCommand {
                 if (user.addGroup(group)) {
                     context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.put.success", member.getUser().getAsTag(), group.getName()));
                     ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_USER_GROUP_ADD;
-                    List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.cascade_permissions.group_added", "modlog.general.variable", group.getName() + "(" + group.getId() + ")"));
-                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), embedFieldList);
+                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), List.of());
+                    eventStore.setExtraDescriptionInfo(List.of(group.getName() + " (" + group.getId() + ")"));
                     context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {
                     context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.put.fail", member.getUser().getAsTag(), group.getName()));
@@ -58,9 +57,8 @@ public class UserPermissionGroupSubCommand extends SubCommand {
                 if (user.removeGroup(group)) {
                     context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.remove.success", member.getUser().getAsTag(), group.getName()));
                     ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_USER_GROUP_REMOVE;
-                    List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.cascade_permissions.group_removed", "modlog.general.variable", group.getName() + "(" + group.getId() + ")"));
-                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), embedFieldList);
+                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), List.of());
+                    eventStore.setExtraDescriptionInfo(List.of(group.getName() + " (" + group.getId() + ")"));
                     context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {
                     context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.remove.fail", member.getUser().getAsTag(), group.getName()));

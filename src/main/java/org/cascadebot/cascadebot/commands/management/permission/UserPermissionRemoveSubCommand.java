@@ -40,9 +40,8 @@ public class UserPermissionRemoveSubCommand extends SubCommand {
         if (user.removePermission(context.getArg(1))) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));
             ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_USER_PERMISSION_REMOVE;
-            List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.cascade_permissions.permission_removed", "modlog.general.variable", context.getArg(1)));
-            ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), embedFieldList);
+            ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), member.getUser(), List.of());
+            eventStore.setExtraDescriptionInfo(List.of(context.getArg(1)));
             context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
         } else {
             context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.remove.fail", context.getArg(1), member.getUser().getAsTag()));

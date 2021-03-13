@@ -39,10 +39,9 @@ public class GroupPermissionLinkRoleSubCommand extends SubCommand {
         PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
             if (group.linkRole(role.getIdLong())) {
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.link.success", group.getName(), role.getName()));
-                List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.cascade_permissions.linked_role", "modlog.general.variable", role.getAsMention()));
                 ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_LINK;
-                ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), group, embedFieldList);
+                ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), group, List.of());
+                eventStore.setExtraDescriptionInfo(List.of(role.getAsMention()));
                 context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
             } else {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.link.fail", group.getName(), role.getName()));
