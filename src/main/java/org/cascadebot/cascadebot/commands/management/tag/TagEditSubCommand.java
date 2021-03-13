@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.commands.management.tag;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
@@ -39,8 +40,8 @@ public class TagEditSubCommand extends SubCommand {
         context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", tagName));
         ModlogEvent event = ModlogEvent.CASCADE_TAG_UPDATED;
         List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.old_content", "modlog.general.variable", oldContent));
-        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.new_content", "modlog.general.variable", tag.getContent()));
+        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.old_content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(oldContent) + "```"));
+        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.new_content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(tag.getContent()) + "```"));
         ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), tag, embedFieldList);
         context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
     }
