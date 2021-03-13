@@ -480,12 +480,13 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_image", null, oldIconUrl != null ? oldIconUrl : "-"));
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_image", null, newIconUrl != null ? newIconUrl : "-"));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_ICON;
-            } else if (event instanceof GuildUpdateMaxMembersEvent) {
-                String oldMembers = String.valueOf(((GuildUpdateMaxMembersEvent) event).getOldMaxMembers());
-                String newMembers = String.valueOf(((GuildUpdateMaxMembersEvent) event).getNewMaxMembers());
-
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.max_members", "modlog.general.small_change", oldMembers, newMembers));
-                modlogEvent = ModlogEvent.GUILD_UPDATE_MAX_MEMBERS;
+//          The max members
+//            } else if (event instanceof GuildUpdateMaxMembersEvent) {
+//                String oldMembers = String.valueOf(((GuildUpdateMaxMembersEvent) event).getOldMaxMembers());
+//                String newMembers = String.valueOf(((GuildUpdateMaxMembersEvent) event).getNewMaxMembers());
+//
+//                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.max_members", "modlog.general.small_change", oldMembers, newMembers));
+//                modlogEvent = ModlogEvent.GUILD_UPDATE_MAX_MEMBERS;
             } else if (event instanceof GuildUpdateMaxPresencesEvent) {
                 String oldPresences = String.valueOf(((GuildUpdateMaxPresencesEvent) event).getOldMaxPresences());
                 String newPresences = String.valueOf(((GuildUpdateMaxPresencesEvent) event).getNewMaxPresences());
