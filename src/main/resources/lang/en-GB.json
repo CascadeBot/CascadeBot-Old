@@ -1688,12 +1688,12 @@
       "role_permissions_updated": {
         "select": "role_permissions_updated",
         "display": "Role permissions updated",
-        "description": "The role `{0}` had its permissions updated"
+        "description": "The role {0} had its permissions updated"
       },
       "role_position_updated": {
         "select": "role_position_updated",
         "display": "Role position updated",
-        "description": "The role `{0}`'s position was updated"
+        "description": "The role {0}'s position was updated"
       },
       "user_discriminator_updated": {
         "select": "user_discriminator_updated",
@@ -1777,32 +1777,42 @@
       "cascade_permissions_group_permission_add": {
         "select": "cascade_permissions_group_permission_add",
         "display": "Cascade permissions group permission add",
-        "description": "Permission `{1}` added to group `{0}`"
+        "description": "Permission `{2}` added to group `{0}`"
       },
       "cascade_permissions_group_permission_remove": {
         "select": "cascade_permissions_group_permission_remove",
         "display": "Cascade permissions group permission remove",
-        "description": "Permission `{1}` removed from group `{0}`"
+        "description": "Permission `{2}` removed from group `{0}`"
       },
       "cascade_permissions_group_link": {
         "select": "cascade_permissions_group_link",
-        "display": "Cascade permissions group link"
+        "display": "Cascade permissions group link",
+        "description": "Linked group `{0}` to {2}"
+      },
+      "cascade_permissions_group_unlink": {
+        "select": "cascade_permissions_group_unlink",
+        "display": "Cascade permissions group unlink",
+        "description": "Unlinked group `{0}` from {2}"
       },
       "cascade_permissions_user_permission_add": {
         "select": "cascade_permissions_user_permission_add",
-        "display": "Cascade permissions user permission add"
+        "display": "Cascade permissions user permission add",
+        "description": "Permission `{2}` added to user `{0}`"
       },
       "cascade_permissions_user_permission_remove": {
         "select": "cascade_permissions_user_permission_remove",
-        "display": "Cascade permissions user permission remove"
+        "display": "Cascade permissions user permission remove",
+        "description": "Permission `{2}` removed from user `{0}`"
       },
       "cascade_permissions_user_group_add": {
         "select": "cascade_permissions_user_group_add",
-        "display": "Cascade permissions user group add"
+        "display": "Cascade permissions user group add",
+        "description": "Group `{2}` added to user `{0}`"
       },
       "cascade_permissions_user_group_remove": {
         "select": "cascade_permissions_user_group_remove",
-        "display": "Cascade permissions user group remove"
+        "display": "Cascade permissions user group remove",
+        "description": "Group `{2}` removed from user `{0}`"
       },
       "cascade_settings_updated": {
         "select": "cascade_settings_updated",
@@ -1811,7 +1821,8 @@
       },
       "cascade_module_updated": {
         "select": "cascade_module_updated",
-        "display": "Cascade module updated"
+        "display": "Cascade module updated",
+        "description": "Module {0} was {2, select, true {enabled} other {disabled}}"
       },
       "cascade_command_run": {
         "select": "cascade_command_run",
@@ -1824,11 +1835,13 @@
       },
       "cascade_playlist_created": {
         "select": "cascade_playlist_created",
-        "display": "Cascade playlist created"
+        "display": "Cascade playlist created",
+        "description": "Playlist {0} was created"
       },
       "cascade_playlist_deleted": {
         "select": "cascade_playlist_deleted",
-        "display": "Cascade playlist deleted"
+        "display": "Cascade playlist deleted",
+        "description": "Playlist {0} was deleted"
       },
       "cascade_temp_mute": {
         "select": "cascade_temp_mute",
@@ -1868,15 +1881,18 @@
       },
       "cascade_tag_created": {
         "select": "cascade_tag_created",
-        "display": "Cascade tag created"
+        "display": "Cascade tag created",
+        "description": "Created tag `{0}`"
       },
       "cascade_tag_deleted": {
         "select": "cascade_tag_deleted",
-        "display": "Cascade tag deleted"
+        "display": "Cascade tag deleted",
+        "description": "Deleted tag `{0}`"
       },
       "cascade_tag_updated": {
         "select": "cascade_tag_updated",
-        "display": "Cascade tag updated"
+        "display": "Cascade tag updated",
+        "description": "Tag `{0}` was changed"
       },
       "guild_message_deleted_mention": {
         "select": "guild_message_deleted_mention",
@@ -2450,8 +2466,7 @@
       "new_region": "New Region",
       "old_splash": "Old Splash",
       "new_splash": "New Splash",
-      "old_sys": "Old System Channel",
-      "new_sys": "New System Channel",
+      "sys_channel": "System Channel",
       "vanity_code": {
         "old": "Old Vanity Code",
         "new": "New Vanity Code"
