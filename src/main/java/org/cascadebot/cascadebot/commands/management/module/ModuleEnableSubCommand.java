@@ -40,9 +40,8 @@ public class ModuleEnableSubCommand extends SubCommand {
                     // If the module wasn't enabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.enable.enabled", moduleName));
                     ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;
-                    List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.module.enabled", "modlog.general.variable", "true"));
-                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), module, embedFieldList);
+                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), module, List.of());
+                    eventStore.setExtraDescriptionInfo(List.of("true"));
                     context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {
                     // If the module was enabled

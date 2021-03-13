@@ -40,9 +40,8 @@ public class ModuleDisableSubCommand extends SubCommand {
                     // If module wasn't already disabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", moduleName));
                     ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;
-                    List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-                    embedFieldList.add(new ModlogEmbedField(true, "modlog.module.enabled", "modlog.general.variable", "false"));
-                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), module, embedFieldList);
+                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), module, List.of());
+                    eventStore.setExtraDescriptionInfo(List.of("false"));
                     context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {
                     // If module was already disabled
