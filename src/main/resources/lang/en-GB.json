@@ -1708,7 +1708,7 @@
       "channel_created": {
         "select": "channel_created",
         "display": "Channel created",
-        "description": "Channel `#{0}` was created"
+        "description": "Channel {2, select, text {{0}} other {`#{0}`}} was created"
       },
       "channel_deleted": {
         "select": "channel_deleted",
@@ -1718,17 +1718,17 @@
       "channel_name_updated": {
         "select": "channel_name_updated",
         "display": "Channel name updated",
-        "description": "Channel `#{0}` had its name changed"
+        "description": "Channel {0} had its name changed"
       },
       "channel_permissions_updated": {
         "select": "channel_permissions_updated",
         "display": "Channel permissions updated",
-        "description": "The channel `#{0}` permissions where changed"
+        "description": "The channel {0} permissions where changed"
       },
       "channel_position_updated": {
         "select": "channel_position_updated",
         "display": "Channel position updated",
-        "description": "The channel `#{0}` was moved"
+        "description": "The channel {0} was moved"
       },
       "multiple_channel_position_updated": {
         "select": "multiple_channel_position_updated",
@@ -1752,33 +1752,37 @@
       "text_channel_nsfw_updated": {
         "select": "text_channel_nsfw_updated",
         "display": "Text channel NSFW updated",
-        "description": "{2} {3, select, true {The text channel `#{0}` is now an NSFW channel} other {The text channel `#{0}` is no longer a NSFW channel}}"
+        "description": "{2} {3, select, true {The text channel {0} is now an NSFW channel} other {The text channel {0} is no longer a NSFW channel}}"
       },
       "text_channel_slowmode_updated": {
         "select": "text_channel_slowmode_updated",
         "display": "Text channel slowmode updated",
-        "description": "The channel `#{0}` slowmode time was changed"
+        "description": "The channel {0} slowmode time was changed"
       },
       "text_channel_topic_updated": {
         "select": "text_channel_topic_updated",
         "display": "Text channel topic updated",
-        "description": "Channel `#{0}` topic was updated"
+        "description": "Channel {0} topic was updated"
       },
       "cascade_permissions_group_created": {
         "select": "cascade_permissions_group_created",
-        "display": "Cascade permissions group created"
+        "display": "Cascade permissions group created",
+        "description": "Group `{0}` created"
       },
       "cascade_permissions_group_deleted": {
         "select": "cascade_permissions_group_deleted",
-        "display": "Cascade permissions group deleted"
+        "display": "Cascade permissions group deleted",
+        "description": "Group `{0}` deleted"
       },
       "cascade_permissions_group_permission_add": {
         "select": "cascade_permissions_group_permission_add",
-        "display": "Cascade permissions group permission add"
+        "display": "Cascade permissions group permission add",
+        "description": "Permission `{1}` added to group `{0}`"
       },
       "cascade_permissions_group_permission_remove": {
         "select": "cascade_permissions_group_permission_remove",
-        "display": "Cascade permissions group permission remove"
+        "display": "Cascade permissions group permission remove",
+        "description": "Permission `{1}` removed from group `{0}`"
       },
       "cascade_permissions_group_link": {
         "select": "cascade_permissions_group_link",
@@ -2473,12 +2477,12 @@
     "channel": {
       "type": {
         "name": "Type",
-        "text": "Text",
+        "text": "|g:channeltext| Text",
         "private": "Private",
-        "voice": "Voice",
+        "voice": "|g:channelvoice| Voice",
         "group": "Group",
         "category": "Category",
-        "store": "Store",
+        "store": "|g:channelstore| Store",
         "unknown": "Unknown"
       },
       "perm": {

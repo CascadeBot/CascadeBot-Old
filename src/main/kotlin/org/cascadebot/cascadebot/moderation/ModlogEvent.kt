@@ -70,7 +70,7 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     USER_NAME_UPDATED				            (MessageType.INFO, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.MENTION, Category.USER),
 
     CHANNEL_CREATED		    		            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CHANNEL),
-    CHANNEL_DELETED			    	            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CHANNEL),
+    CHANNEL_DELETED			    	            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.NAME, Category.CHANNEL),
     CHANNEL_NAME_UPDATED			            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CHANNEL),
     CHANNEL_PERMISSIONS_UPDATED		            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CHANNEL),
     CHANNEL_POSITION_UPDATED		            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CHANNEL),

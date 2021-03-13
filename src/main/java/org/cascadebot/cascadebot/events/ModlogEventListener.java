@@ -826,6 +826,7 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+            modlogEventStore.setExtraDescriptionInfo(List.of(type.name().toLowerCase()));
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_CREATE);
     }
@@ -843,6 +844,7 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
+            modlogEventStore.setExtraDescriptionInfo(List.of(type.name().toLowerCase()));
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_DELETE);
     }
@@ -858,9 +860,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
-            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.general.old_name", null, oldName));
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.general.new_name", null, channel.getName()));
+            embedFieldList.add(new ModlogEmbedField(true, "modlog.general.name", "modlog.general.small_change", oldName, channel.getName()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_UPDATE);

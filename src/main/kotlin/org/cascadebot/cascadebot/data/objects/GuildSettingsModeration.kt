@@ -170,7 +170,7 @@ class GuildSettingsModeration {
                 val affected = when (modlogEventStore.trigger.affectedDisplayType) {
                     AffectedDisplayType.NAME -> modlogEventStore.affected.name
                     AffectedDisplayType.MENTION -> modlogEventStore.affected.mention
-                            ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized()
+                            ?: modlogEventStore.affected.name
                 }
                 webhookEmbedBuilder.setDescription(
                         Language.i18n(
