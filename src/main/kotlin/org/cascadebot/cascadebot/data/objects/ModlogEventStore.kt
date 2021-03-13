@@ -36,7 +36,7 @@ class ModlogEventStore(val trigger: ModlogEvent, @Transient val responsible: Use
             ModlogAffected(AffectedType.CHANNEL, affected.name, null, affected.id, null)
         }
         is Group -> {
-            ModlogAffected(AffectedType.GROUP, affected.name, null, affected.id, null)
+            ModlogAffected(AffectedType.GROUP, affected.name + " (" + affected.id + ")", null, affected.id, null)
         }
         is Field -> {
             ModlogAffected(AffectedType.SETTING, affected.name, null, null, null)
