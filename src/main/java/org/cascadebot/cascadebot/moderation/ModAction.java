@@ -12,18 +12,19 @@ import org.cascadebot.cascadebot.data.language.Locale;
 @AllArgsConstructor
 public enum ModAction {
 
-    BAN("banned"), // Bans a user
-    UNBAN("unbanned"), // Unbans a user
-    SOFT_BAN("soft-banned"), // Bans a user then unbans them, clears messages without actually banning them
-    FORCE_BAN("forcefully banned"), // Bans a user in a guild, even if the user isn't in the guild
-    KICK("kicked"), // Kicks a user from a guild
-    MUTE("muted"), // Mutes a user in a guild
-    WARN("warned"), // Warns a user in a guild
-    TEMP_MUTE("temporarily muted"),
-    TEMP_BAN("temporarily banned");
+    BAN("banned", true), // Bans a user
+    UNBAN("unbanned", false), // Unbans a user
+    SOFT_BAN("soft-banned", true), // Bans a user then unbans them, clears messages without actually banning them
+    FORCE_BAN("forcefully banned", false), // Bans a user in a guild, even if the user isn't in the guild
+    KICK("kicked", true), // Kicks a user from a guild
+    MUTE("muted", true), // Mutes a user in a guild
+    WARN("warned", true), // Warns a user in a guild
+    TEMP_MUTE("temporarily muted", true),
+    TEMP_BAN("temporarily banned", true);
     // TODO: Temp command ban?
 
     private String verb;
+    private boolean requiresMember;
 
     // Only the localised version should be used
     private String getVerb() {
@@ -51,4 +52,7 @@ public enum ModAction {
         return Language.i18n(locale, path);
     }
 
+    public boolean doesRequireMember() {
+        return requiresMember;
+    }
 }

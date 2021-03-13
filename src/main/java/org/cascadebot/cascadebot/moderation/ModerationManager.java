@@ -138,6 +138,7 @@ public class ModerationManager {
     }
 
     private boolean runChecks(ModAction action, User target, Member submitter, CommandContext context) {
+        Member memberTarget = context.getGuild().getMember(target);
         if (!context.getGuild().equals(submitter.getGuild())) {
             // This should never really happen, this is here to make sure it definitely never happens
             return false;
@@ -147,7 +148,7 @@ public class ModerationManager {
         } else if (target.equals(context.getSelfUser())) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_bot", action.getName(context.getLocale())));
             return false;
-        } else if (context.getData().getModeration().getRespectBanOrKickHierarchy() && !submitter.canInteract(context.getGuild().getMember(target))) {
+        } else if (context.getData().getModeration().getRespectBanOrKickHierarchy() && memberTarget != null && !submitter.canInteract(memberTarget)) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.user_cannot_action_superior", action.getName(context.getLocale()), target.getName()));
             return false;
         }
