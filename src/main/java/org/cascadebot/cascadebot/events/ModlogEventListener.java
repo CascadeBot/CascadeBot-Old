@@ -978,7 +978,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
-            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.parent", "modlog.general.small_change", oldParent.getName(), newParent.getName()));
+            embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.parent", "modlog.general.small_change", oldParent == null ? "None" : oldParent.getName(), newParent == null ? "None" : newParent.getName())); // TODO language string for none
             ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_UPDATE);
