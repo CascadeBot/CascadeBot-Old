@@ -89,6 +89,7 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     CASCADE_PERMISSIONS_GROUP_PERMISSION_ADD    (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_PERMISSIONS),
     CASCADE_PERMISSIONS_GROUP_PERMISSION_REMOVE (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_PERMISSIONS),
     CASCADE_PERMISSIONS_GROUP_LINK		        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_PERMISSIONS),
+    CASCADE_PERMISSIONS_GROUP_UNLINK		    (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_PERMISSIONS),
 
     CASCADE_PERMISSIONS_USER_PERMISSION_ADD     (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_PERMISSIONS),
     CASCADE_PERMISSIONS_USER_PERMISSION_REMOVE  (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_PERMISSIONS),
