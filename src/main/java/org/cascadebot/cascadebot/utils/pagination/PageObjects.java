@@ -26,12 +26,12 @@ public class PageObjects {
         private final boolean numbersInEmbed;
 
         public EmbedPage(EmbedBuilder embed) {
-            this.embed = embed;
+            this.embed = new EmbedBuilder(embed);
             this.numbersInEmbed = true;
         }
 
         public EmbedPage(EmbedBuilder embed, boolean numbersInEmbed) {
-            this.embed = embed;
+            this.embed = new EmbedBuilder(embed);
             this.numbersInEmbed = numbersInEmbed;
         }
 

@@ -156,7 +156,7 @@
       }
     }
   },
-  "tag": {
+  "tag*": {
     "tag": {
       "_type": "required"
     },
