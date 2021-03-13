@@ -1737,7 +1737,7 @@
       "channel_parent_updated": {
         "select": "channel_parent_updated",
         "display": "Channel parent updated",
-        "description": "The channel `#{0}` changed category"
+        "description": "The channel {0} changed category"
       },
       "voice_channel_bitrate_updated": {
         "select": "voice_channel_bitrate_updated",
@@ -2498,8 +2498,7 @@
       "position": {
         "title": "Channel {0} moved"
       },
-      "old_parent": "Old Parent",
-      "new_parent": "New Parent",
+      "parent": "Parent",
       "nsfw": "NSFW",
       "slowmode": "Slowmode",
       "old_topic": "Old topic",
