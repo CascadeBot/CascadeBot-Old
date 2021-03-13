@@ -100,7 +100,6 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     CASCADE_MODULE_UPDATED				        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE),
 
     CASCADE_COMMAND_RUN				            (MessageType.INFO, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE),
-    CASCADE_COMMAND_RUN_ERROR			        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE),
 
     CASCADE_PLAYLIST_CREATED			        (MessageType.INFO, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE),
 

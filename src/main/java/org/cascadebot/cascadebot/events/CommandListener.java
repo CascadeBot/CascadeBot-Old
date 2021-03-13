@@ -113,7 +113,6 @@ public class CommandListener extends ListenerAdapter {
             modlogEvent = ModlogEvent.CASCADE_COMMAND_RUN;
         } catch (Exception e) {
             Messaging.sendExceptionMessage(event.getChannel(), Language.i18n(guildData.getLocale(), "responses.failed_to_process_command"), e);
-            modlogEvent = ModlogEvent.CASCADE_COMMAND_RUN_ERROR;
         } finally {
             CascadeBot.clearCascadeMDC();
             MainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
