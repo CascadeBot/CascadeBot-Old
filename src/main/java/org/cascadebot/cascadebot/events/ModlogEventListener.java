@@ -101,6 +101,7 @@ import net.dv8tion.jda.api.events.role.update.RoleUpdatePositionEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateDiscriminatorEvent;
 import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -525,8 +526,11 @@ public class ModlogEventListener extends ListenerAdapter {
                 TextChannel oldSystemChannel = ((GuildUpdateSystemChannelEvent) event).getOldSystemChannel();
                 TextChannel newSystemChannel = ((GuildUpdateSystemChannelEvent) event).getNewSystemChannel();
 
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.old_sys", null, oldSystemChannel != null ? oldSystemChannel.getName() : "-"));
-                embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.new_sys", null, newSystemChannel != null ? newSystemChannel.getName() : "-"));
+                embedFieldList.add(new ModlogEmbedField(false,
+                        "modlog.guild.sys_channel",
+                        "modlog.general.small_change",
+                        oldSystemChannel != null ? oldSystemChannel.getAsMention() : "-",
+                        newSystemChannel != null ? newSystemChannel.getAsMention() : "-"));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_SYSTEM_CHANNEL;
             } else if (event instanceof GuildUpdateVanityCodeEvent) {
                 if (((GuildUpdateVanityCodeEvent) event).getOldVanityCode() != null) {
