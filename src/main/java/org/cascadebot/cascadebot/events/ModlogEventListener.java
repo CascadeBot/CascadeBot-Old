@@ -113,7 +113,6 @@ import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
-import org.cascadebot.cascadebot.runnables.ModlogMemberRoleCollectorRunnable;
 import org.cascadebot.cascadebot.utils.Attachment;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
