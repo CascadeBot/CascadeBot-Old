@@ -1483,12 +1483,12 @@
       "guild_member_role_added": {
         "select": "guild_member_role_added",
         "display": "Guild member role added",
-        "description": "Role(s) where added to {0}"
+        "description": "Role(s) were added to {0}"
       },
       "guild_member_role_removed": {
         "select": "guild_member_role_removed",
         "display": "Guild member role removed",
-        "description": "Role(s) where removed from {0}"
+        "description": "Role(s) were removed from {0}"
       },
       "guild_member_nickname_updated": {
         "select": "guild_member_nickname_updated",

@@ -236,7 +236,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 }
                 modlogEvent = ModlogEvent.GUILD_MEMBER_ROLE_ADDED;
                 ModlogEmbedField addedRolesEmbedField = new ModlogEmbedField(false, "modlog.general.added_roles", null);
-                addedRolesEmbedField.addValueObjects(((GuildMemberRoleAddEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n")));
+                addedRolesEmbedField.addValueObjects(((GuildMemberRoleAddEvent) event).getRoles().stream().map(Role::getAsMention).collect(Collectors.joining("\n")));
                 embedFieldList.add(addedRolesEmbedField);
             } else if (event instanceof GuildMemberRoleRemoveEvent) {
                 if (auditLogEntry != null && auditLogEntry.getTargetIdLong() == event.getMember().getIdLong()) {
@@ -244,7 +244,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 }
                 modlogEvent = ModlogEvent.GUILD_MEMBER_ROLE_REMOVED;
                 ModlogEmbedField removedRolesEmbedField = new ModlogEmbedField(false, "modlog.general.removed_roles", null);
-                removedRolesEmbedField.addValueObjects(((GuildMemberRoleRemoveEvent) event).getRoles().stream().map(role -> role.getName() + " (" + role.getId() + ")").collect(Collectors.joining("\n")));
+                removedRolesEmbedField.addValueObjects(((GuildMemberRoleRemoveEvent) event).getRoles().stream().map(Role::getAsMention).collect(Collectors.joining("\n")));
                 embedFieldList.add(removedRolesEmbedField);
             } else if (event instanceof GuildMemberUpdateNicknameEvent) {
                 if (auditLogEntry != null && auditLogEntry.getType() == ActionType.MEMBER_UPDATE) {
