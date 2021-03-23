@@ -7,7 +7,9 @@ package org.cascadebot.cascadebot.utils;
 
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import lombok.experimental.UtilityClass;
+import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -114,7 +116,7 @@ public class DiscordUtils {
     public static TextChannel getTextChannel(Guild guild, String search) {
         List<TextChannel> channels = FinderUtil.findTextChannels(search, guild);
         if (channels.size() > 1) {
-           return null;
+            return null;
         }
 
         TextChannel channel = channels.size() != 1 ? null : channels.get(0);
@@ -203,6 +205,43 @@ public class DiscordUtils {
             // This shouldn't happen but ¯\_(ツ)_/¯
             if (error instanceof RuntimeException) throw (RuntimeException) error;
         };
+    }
+
+    /**
+     * Calculates a channels position.
+     * This method is needed as the ne provided by jda seams to only get the position based on the other channels of the same type.
+     * So for example getting the position of a text channel that is in a category bellow some text channels, but is the only text channel will return 1
+     * despite the voice channels above it. This method solves this problem by doing the calculation manually.
+     *
+     * @param channel The channel to get an absolute position for.
+     * @return The position of the channel.
+     */
+    public static int calcChannelPosition(GuildChannel channel) {
+        if (channel.getParent() != null) {
+            int parentPos = channel.getParent().getPosition();
+            int pos = (int) channel.getGuild().getChannels().stream().filter(channel1 -> channel1.getParent() == null && !(channel instanceof Category)).count();
+            List<Category> categories = channel.getGuild().getCategories();
+            for (int i = 0; i < parentPos - 1; i++) {
+                pos += categories.get(i).getChannels().size();
+            }
+            for (GuildChannel catChannel : channel.getParent().getChannels()) {
+                if (catChannel.getIdLong() == channel.getIdLong()) {
+                    break;
+                }
+                pos++;
+            }
+            return pos;
+        } else {
+            int pos = 1;
+            List<GuildChannel> rootChannels = channel.getGuild().getChannels().stream().filter(channel1 -> channel1.getParent() == null).collect(Collectors.toList());
+            for (GuildChannel rootChannel : rootChannels) {
+                if (rootChannel.getIdLong() == channel.getIdLong()) {
+                    break;
+                }
+                pos++;
+            }
+            return pos;
+        }
     }
 
 }
