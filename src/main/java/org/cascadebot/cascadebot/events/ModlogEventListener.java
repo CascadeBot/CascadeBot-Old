@@ -909,7 +909,8 @@ public class ModlogEventListener extends ListenerAdapter {
             for (ChannelMoveData data : maxMoveData) {
                 ModlogEmbedField field = new ModlogEmbedField(false, "modlog.channel.position.title",
                         "modlog.general.small_change",
-                        String.valueOf(data.oldPos), String.valueOf(data.channel.getPosition()));
+                        DiscordUtils.calcChannelPosition(data.oldPos, data.channel.getType(), data.channel.getGuild()),
+                        DiscordUtils.calcChannelPosition(data.channel));
                 field.addTitleObjects(data.channel.getName());
                 embedParts.add(field);
             }
