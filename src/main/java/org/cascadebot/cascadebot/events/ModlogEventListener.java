@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildChannel;
+import net.dv8tion.jda.api.entities.IPermissionHolder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
@@ -112,6 +113,7 @@ import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
+import org.cascadebot.cascadebot.permissions.objects.PermissionHolder;
 import org.cascadebot.cascadebot.utils.Attachment;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
@@ -751,66 +753,69 @@ public class ModlogEventListener extends ListenerAdapter {
     }
 
     public void onGenericPermissionOverride(GenericPermissionOverrideEvent event) {
-        ModlogEvent modlogEvent = ModlogEvent.CHANNEL_PERMISSIONS_UPDATED;
         Guild guild = event.getGuild();
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         ModlogUtils.getAuditLogFromType(event.getGuild(), event.getChannel().getIdLong(), auditLogEntry -> {
             List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+            ModlogEvent modlogEvent;
             User responsible = null;
             if (auditLogEntry != null) {
                 responsible = auditLogEntry.getUser();
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
-            String permissionsHolderName;
-            if (event.getPermissionHolder() instanceof User) {
-                permissionsHolderName = ((User) event.getPermissionHolder()).getName();
-            } else if (event.getPermissionHolder() instanceof Role) {
-                permissionsHolderName = ((Role) event.getPermissionHolder()).getName();
-            } else {
-                permissionsHolderName = "";
-            }
 
-            String allowedPath;
-            String deniedPath;
             if (event instanceof PermissionOverrideCreateEvent) {
-                allowedPath = "modlog.channel.perm.added_allow";
-                deniedPath = "modlog.channel.perm.added_deny";
+                modlogEvent = ModlogEvent.DEBUG;
             } else if (event instanceof PermissionOverrideDeleteEvent) {
-                allowedPath = "modlog.channel.perm.removed_allow";
-                deniedPath = "modlog.channel.perm.removed_deny";
+                modlogEvent = ModlogEvent.DEBUG;
             } else if (event instanceof PermissionOverrideUpdateEvent) {
-                allowedPath = "modlog.channel.perm.update_allow";
-                deniedPath = "modlog.channel.perm.update_deny";
-                if (((PermissionOverrideUpdateEvent) event).getOldAllow().size() > 0) {
-                    ModlogEmbedField oldAllowed = new ModlogEmbedField(false, "modlog.channel.perm.old_allow", null,
-                            ((PermissionOverrideUpdateEvent) event).getOldAllow().stream().map(Permission::getName).collect(Collectors.joining("\n")));
-                    oldAllowed.addTitleObjects(permissionsHolderName);
-                    embedFieldList.add(oldAllowed);
+                modlogEvent = ModlogEvent.CHANNEL_PERMISSIONS_UPDATED;
+                StringBuilder stringBuilder = new StringBuilder();
+                for (Permission permission : ((PermissionOverrideUpdateEvent) event).getOldDeny()) {
+                    String current = getCurrentPermissionStateForHolder(permission, event.getChannel(), event.getPermissionHolder());
+                    if (!current.equals("x")) {
+                        stringBuilder.append("x > ").append(current).append(": ").append(permission.getName()).append('\n');
+                    }
                 }
-                if (((PermissionOverrideUpdateEvent) event).getOldDeny().size() > 0) {
-                    ModlogEmbedField oldDenied = new ModlogEmbedField(false, "modlog.channel.perm.old_allow", null,
-                            ((PermissionOverrideUpdateEvent) event).getOldDeny().stream().map(Permission::getName).collect(Collectors.joining("\n")));
-                    oldDenied.addTitleObjects(permissionsHolderName);
-                    embedFieldList.add(oldDenied);
+                for (Permission permission : ((PermissionOverrideUpdateEvent) event).getOldInherited()) {
+                    String current = getCurrentPermissionStateForHolder(permission, event.getChannel(), event.getPermissionHolder());
+                    if (!current.equals("\\\\")) {
+                        stringBuilder.append("\\ > ").append(current).append(": ").append(permission.getName()).append('\n');
+                    }
                 }
+                for (Permission permission : ((PermissionOverrideUpdateEvent) event).getOldAllow()) {
+                    String current = getCurrentPermissionStateForHolder(permission, event.getChannel(), event.getPermissionHolder());
+                    if (!current.equals("+")) {
+                        stringBuilder.append("+ > ").append(current).append(": ").append(permission.getName()).append('\n');
+                    }
+                }
+                embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.perm.changed", "modlog.general.variable", stringBuilder.toString()));
             } else {
                 return;
             }
-            if (event.getPermissionOverride().getAllowed().size() > 0) {
-                ModlogEmbedField allowed = new ModlogEmbedField(false, allowedPath, null, event.getPermissionOverride().getAllowed().stream().map(Permission::getName).collect(Collectors.joining("\n")));
-                allowed.addTitleObjects(permissionsHolderName);
-                embedFieldList.add(allowed);
-            }
-            if (event.getPermissionOverride().getDenied().size() > 0) {
-                ModlogEmbedField denied = new ModlogEmbedField(false, deniedPath, null, event.getPermissionOverride().getDenied().stream().map(Permission::getName).collect(Collectors.joining("\n")));
-                denied.addTitleObjects(permissionsHolderName);
-                embedFieldList.add(denied);
-            }
-            embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + event.getChannelType().name().toLowerCase()));
             ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, event.getChannel(), embedFieldList);
+            String holderMention = "";
+            if (event.getPermissionHolder() instanceof User) {
+                holderMention = ((User) event.getPermissionHolder()).getAsMention();
+            } else if (event.getPermissionHolder() instanceof Role) {
+                holderMention = ((Role) event.getPermissionHolder()).getAsMention();
+            }
+            modlogEventStore.setExtraDescriptionInfo(List.of(holderMention));
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), modlogEventStore);
         }, ActionType.CHANNEL_OVERRIDE_UPDATE, ActionType.CHANNEL_UPDATE);
+    }
+
+    private String getCurrentPermissionStateForHolder(Permission permission, GuildChannel channel, IPermissionHolder holder) {
+        if (channel.getPermissionOverride(holder).getAllowed().contains(permission)) {
+            return "+";
+        } else if (channel.getPermissionOverride(holder).getInherit().contains(permission)) {
+            return "\\\\";
+        } else if (channel.getPermissionOverride(holder).getDenied().contains(permission)) {
+            return "x";
+        } else {
+            return "unknown";
+        }
     }
 
     //endregion

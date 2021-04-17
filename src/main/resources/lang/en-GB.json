@@ -1723,7 +1723,7 @@
       "channel_permissions_updated": {
         "select": "channel_permissions_updated",
         "display": "Channel permissions updated",
-        "description": "The channel {0} permissions where changed"
+        "description": "The permissions for {2} on channel {0} were changed"
       },
       "channel_position_updated": {
         "select": "channel_position_updated",
@@ -2501,14 +2501,7 @@
         "unknown": "Unknown"
       },
       "perm": {
-        "added_allow": "Added Allowed permission to {0}",
-        "removed_allow": "Removed Allowed permission from {0}",
-        "update_allow": "New Allowed permission for {0}",
-        "added_deny": "Added Denied permission to {0}",
-        "removed_deny": "Removed Denied permission from {0}",
-        "update_deny": "New Denied permission for {0}",
-        "old_allow": "Old Allowed permission for {0}",
-        "old_deny": "Old Denied permissions for {0}"
+        "changed": "Changed Permission Overrides"
       },
       "position": {
         "title": "Channel {0} moved"

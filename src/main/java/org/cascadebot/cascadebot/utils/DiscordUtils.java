@@ -240,7 +240,7 @@ public class DiscordUtils {
         int i = 1;
         for (GuildChannel channel : guild.getChannels()) {
             if (channel.getType() != ChannelType.CATEGORY) {
-                if (channel.getPosition() != position || channel.getType() != type) {
+                if (channel.getPosition() != position || channel.getType().getSortBucket() != type.getSortBucket()) {
                     i++;
                 } else {
                     break;
