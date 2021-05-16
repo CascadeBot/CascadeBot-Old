@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.management
 
+import com.google.gson.JsonArray
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.CascadeBot
@@ -13,6 +14,7 @@ import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.Config
+import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.data.objects.GuildSettingsCore
 import org.cascadebot.cascadebot.data.objects.GuildSettingsManagement
@@ -26,13 +28,13 @@ import org.cascadebot.cascadebot.moderation.ModlogEmbedField
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart
 import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.cascadebot.cascadebot.utils.ParserUtils
 import org.cascadebot.cascadebot.utils.ReflectionUtils
 import java.io.IOException
 import java.lang.reflect.Field
-import java.util.ArrayList
 import java.util.Arrays
-import java.util.HashMap
 import java.util.stream.Collectors
+import kotlin.math.min
 
 class SettingsCommand : MainCommand() {
     companion object {
@@ -115,8 +117,25 @@ class SettingsCommand : MainCommand() {
                     var value = context.getArg(1)
                     when (field.type) {
                         Boolean::class.javaPrimitiveType -> {
-                            val booleanValue = java.lang.Boolean.parseBoolean(value)
-                            value = booleanValue.toString()
+                            val booleanValue = try {
+                                ParserUtils.parseYesNo(context.locale, value)
+                            } catch (e: IllegalArgumentException) {
+                                val language = Language.getLanguage(context.locale)!!
+                                val yesWords: JsonArray = language.getArray("words.yes_words").orElse(JsonArray())
+                                val noWords: JsonArray = language.getArray("words.no_words").orElse(JsonArray())
+                                var validValues = ""
+                                val loopLength = min(yesWords.size(), noWords.size());
+                                for (i in 0 until loopLength) {
+                                    validValues += "`${yesWords[i].asString}`/`${noWords[i].asString}`"
+                                    // If not the end element, add a comma
+                                    if (i < loopLength - 1) {
+                                        validValues += ", "
+                                    }
+                                }
+                                context.typedMessaging.replyDanger(context.i18n("commands.settings.invalid_boolean", value, validValues))
+                                return
+                            }
+                            value = (if (booleanValue) context.globalEmote("tick") else context.globalEmote("cross")) ?: booleanValue.toString()
                             field.setBoolean(settingsContainer, booleanValue)
                         }
 

@@ -46,7 +46,7 @@ public class UserPermissionListSubCommand extends SubCommand {
         if (context.getArg(1).equalsIgnoreCase("groups")) {
             StringBuilder groupsBuilder = new StringBuilder();
             if (user.getGroupIds().isEmpty()) {
-                context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.list.no_groups"));
+                context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.list.no_groups", member.getUser().getAsTag()));
                 return;
             }
 
@@ -65,7 +65,7 @@ public class UserPermissionListSubCommand extends SubCommand {
             context.getUiMessaging().sendPagedMessage(pages);
         } else if (context.getArg(1).equalsIgnoreCase("permissions")) {
             if (user.getPermissions().isEmpty()) {
-                context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.list.no_permissions"));
+                context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.list.no_permissions", member.getUser().getAsTag()));
                 return;
             }
 
