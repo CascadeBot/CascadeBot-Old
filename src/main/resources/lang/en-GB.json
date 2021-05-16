@@ -248,9 +248,9 @@
       "list": {
         "command": "list",
         "description": "Lists the groups or permissions a user has.",
-        "no_groups": "User has no groups!",
+        "no_groups": "{0} is not a member of any groups!",
         "group_title": "{0}'s groups",
-        "no_permissions": "User has no permissions!",
+        "no_permissions": "{0} has no directly assigned permissions!",
         "perms_title": "{0}'s permissions"
       },
       "test": {
