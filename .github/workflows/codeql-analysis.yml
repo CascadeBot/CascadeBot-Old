@@ -19,6 +19,7 @@ on:
     branches: [ dev ]
   schedule:
     - cron: '18 18 * * 3'
+  workflow_dispatch:
 
 jobs:
   analyze:
