@@ -1,5 +1,12 @@
 package org.cascadebot.cascadebot.utils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import io.github.binaryoverload.JSONConfig;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
+
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -100,6 +107,33 @@ public class ParserUtils {
         } else {
             return 0;
         }
+    }
+
+    public static boolean parseYesNo(Locale locale, String input) {
+        JSONConfig language = Language.getLanguage(locale);
+        if (language == null) {
+            throw new IllegalArgumentException("Language file for locale " + locale.getLanguageCode() + " not found");
+        }
+        JsonArray yesWords = language.getArray("words.yes_words").orElse(new JsonArray());
+        JsonArray noWords = language.getArray("words.no_words").orElse(new JsonArray());
+
+        for (JsonElement yesWord : yesWords) {
+            if (yesWord.isJsonPrimitive()) {
+                if (input.equalsIgnoreCase(yesWord.getAsString())) {
+                    return true;
+                }
+            }
+        }
+
+        for (JsonElement noWord : noWords) {
+            if (noWord.isJsonPrimitive()) {
+                if (input.equalsIgnoreCase(noWord.getAsString())) {
+                    return false;
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("No true/false match found for input " + input);
     }
 
 

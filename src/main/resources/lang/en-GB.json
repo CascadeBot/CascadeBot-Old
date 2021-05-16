@@ -297,13 +297,14 @@
         "description": "Lists the settings that can be changed for the guild."
       },
       "cannot_edit": "You cannot edit this setting! You need the: {0} flag to do this!",
-      "setting_set": "Setting {0} has been set to a value of {1}.",
+      "setting_set": "Setting `{0}` has been set to a value of {1}.",
       "cannot_access": "Could not access that setting!",
       "couldnt_process": "Could not process settings!",
       "setting": "Setting",
       "current_value": "Current value",
       "section_title": "{0} module",
-      "cannot_find_field": "Cannot find that field!"
+      "cannot_find_field": "Cannot find that field!",
+      "invalid_boolean": "The value `{0}` was not a valid boolean value! Please use one of: {1}"
     },
     "tag": {
       "command": "tag",
@@ -1494,7 +1495,9 @@
     "conditions": "conditions",
     "true": "true",
     "false": "false",
-    "command_filters": "command filters"
+    "command_filters": "command filters",
+    "yes_words": ["yes", "true", "on"],
+    "no_words": ["no", "false", "off"]
   },
   "messaging": {
     "loading_page": "Paged message loading...",
