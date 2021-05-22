@@ -7,20 +7,44 @@ package org.cascadebot.cascadebot.utils.lists
 
 class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>) {
 
-    val added: MutableList<T> = ArrayList()
-    val removed: MutableList<T> = ArrayList()
+    private val _added: MutableList<T> = ArrayList()
+
+    private val _removed: MutableList<T> = ArrayList()
+
+    val added
+        get() = _added.toList()
+
+    val removed
+        get() = _removed.toList()
 
     init {
-        for (obj in originalList) {
-            if (!newList.contains(obj)) {
-                removed.add(obj)
+        val addedDiff = newList.toMutableList()
+
+        for (item in originalList) {
+            val iter = addedDiff.iterator()
+            while (iter.hasNext()) {
+                if (iter.next()?.equals(item) == true) {
+                    iter.remove()
+                    break
+                }
             }
         }
-        for (obj in newList) {
-            if (!originalList.contains(obj)) {
-                added.add(obj)
+
+        _added.addAll(addedDiff)
+
+        val removedDiff = originalList.toMutableList()
+
+        for (item in newList) {
+            val iter = removedDiff.iterator()
+            while (iter.hasNext()) {
+                if (iter.next()?.equals(item) == true) {
+                    iter.remove()
+                    break
+                }
             }
         }
+
+        _removed.addAll(removedDiff)
     }
 
 }
