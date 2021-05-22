@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.IPermissionHolder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.PermissionOverride;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
@@ -113,7 +114,6 @@ import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
-import org.cascadebot.cascadebot.permissions.objects.PermissionHolder;
 import org.cascadebot.cascadebot.utils.Attachment;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 import org.cascadebot.cascadebot.utils.CryptUtils;
@@ -135,7 +135,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -410,12 +409,8 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             try {
                 message = CryptUtils.decryptString(Config.INS.getEncryptKey(), iv, messageBytes);
-            } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | ShortBufferException e) {
-                e.printStackTrace();
-                // TODO log these
-                return null;
-            } catch (BadPaddingException e) {
-                e.printStackTrace();
+            } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | ShortBufferException | BadPaddingException e) {
+                CascadeBot.LOGGER.error("Unable to decrypt message!", e);
                 return null;
             }
         } else {
@@ -574,7 +569,7 @@ public class ModlogEventListener extends ListenerAdapter {
         GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
         ModlogUtils.getAuditLogFromType(event.getGuild(), event.getMember().getIdLong(), auditLogEntry -> {
             List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-            List<String> extraDescriptionInfo = List.of();
+            List<String> extraDescriptionInfo;
             ModlogEvent action;
             User responsible = null;
             if (event instanceof GuildVoiceDeafenEvent) {
@@ -808,11 +803,16 @@ public class ModlogEventListener extends ListenerAdapter {
     }
 
     private String getCurrentPermissionStateForHolder(Permission permission, GuildChannel channel, IPermissionHolder holder) {
-        if (channel.getPermissionOverride(holder).getAllowed().contains(permission)) {
+        PermissionOverride permissionOverride = channel.getPermissionOverride(holder);
+        if (permissionOverride == null) {
+            return "unknown";
+        }
+
+        if (permissionOverride.getAllowed().contains(permission)) {
             return "+";
-        } else if (channel.getPermissionOverride(holder).getInherit().contains(permission)) {
+        } else if (permissionOverride.getInherit().contains(permission)) {
             return "\\\\";
-        } else if (channel.getPermissionOverride(holder).getDenied().contains(permission)) {
+        } else if (permissionOverride.getDenied().contains(permission)) {
             return "x";
         } else {
             return "unknown";
@@ -927,7 +927,7 @@ public class ModlogEventListener extends ListenerAdapter {
         }, ActionType.CHANNEL_UPDATE);
     }
 
-    public class ChannelMoveData {
+    public static class ChannelMoveData {
 
         private final ChannelType type;
         private final int oldPos;
@@ -953,7 +953,7 @@ public class ModlogEventListener extends ListenerAdapter {
 
     }
 
-    public class RoleModifyData {
+    public static class RoleModifyData {
 
         private final Member member;
         private final ChangeList<Role> changeList;
