@@ -121,6 +121,7 @@ import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.ModlogUtils;
 import org.cascadebot.cascadebot.utils.SerializableMessage;
 import org.cascadebot.cascadebot.utils.lists.ChangeList;
+import org.cascadebot.cascadebot.utils.lists.CollectionDiff;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
 import org.jetbrains.annotations.NotNull;
 
@@ -183,7 +184,7 @@ public class ModlogEventListener extends ListenerAdapter {
 
                 List<Role> oldRoles = ((EmoteUpdateRolesEvent) event).getOldRoles();
                 List<Role> newRoles = ((EmoteUpdateRolesEvent) event).getNewRoles();
-                ListChanges<Role> roleListChanges = new ListChanges<>(oldRoles, newRoles);
+                CollectionDiff<Role> roleListChanges = new CollectionDiff<>(oldRoles, newRoles);
 
                 if (!roleListChanges.getAdded().isEmpty()) {
                     ModlogEmbedField addedRolesEmbed = new ModlogEmbedField(false, "modlog.general.added_roles", null);
@@ -471,7 +472,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.content_filter.new", "modlog.guild.content_filter." + ((GuildUpdateExplicitContentLevelEvent) event).getNewLevel().name().toLowerCase()));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_EXPLICIT_FILTER;
             } else if (event instanceof GuildUpdateFeaturesEvent) {
-                ListChanges<String> featuresChanged = new ListChanges<>(((GuildUpdateFeaturesEvent) event).getOldFeatures(), ((GuildUpdateFeaturesEvent) event).getNewFeatures());
+                CollectionDiff<String> featuresChanged = new CollectionDiff<>(((GuildUpdateFeaturesEvent) event).getOldFeatures(), ((GuildUpdateFeaturesEvent) event).getNewFeatures());
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.add_feature", null, String.join("\n", featuresChanged.getAdded())));
                 embedFieldList.add(new ModlogEmbedField(false, "modlog.guild.removed_feature", null, String.join("\n", featuresChanged.getRemoved())));
                 modlogEvent = ModlogEvent.GUILD_UPDATE_FEATURES;
@@ -1032,7 +1033,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 EnumSet<Permission> oldPermissions = ((RoleUpdatePermissionsEvent) event).getOldPermissions();
                 EnumSet<Permission> newPermissions = ((RoleUpdatePermissionsEvent) event).getNewPermissions();
 
-                ListChanges<Permission> permissionListChanges = new ListChanges<>(oldPermissions, newPermissions);
+                CollectionDiff<Permission> permissionListChanges = new CollectionDiff<>(oldPermissions, newPermissions);
                 if (!permissionListChanges.getAdded().isEmpty()) {
                     embedFieldList.add(new ModlogEmbedField(false, "modlog.role.added_perm", null, permissionListChanges.getAdded().stream().map(Permission::getName).collect(Collectors.joining("\n"))));
                 }
@@ -1076,34 +1077,5 @@ public class ModlogEventListener extends ListenerAdapter {
         }
     }
     //endregion
-
-    //TODO move this to a util class
-    public static class ListChanges<T> {
-
-        private final List<T> added = new ArrayList<>();
-        private final List<T> removed = new ArrayList<>();
-
-        public ListChanges(Collection<? extends T> originalList, Collection<? extends T> newList) {
-            for (T object : originalList) {
-                if (!newList.contains(object)) {
-                    removed.add(object);
-                }
-            }
-            for (T object : newList) {
-                if (!originalList.contains(object)) {
-                    added.add(object);
-                }
-            }
-        }
-
-        public List<T> getAdded() {
-            return added;
-        }
-
-        public List<T> getRemoved() {
-            return removed;
-        }
-
-    }
 
 }
