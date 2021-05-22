@@ -409,8 +409,12 @@ public class ModlogEventListener extends ListenerAdapter {
             }
             try {
                 message = CryptUtils.decryptString(Config.INS.getEncryptKey(), iv, messageBytes);
-            } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | ShortBufferException | BadPaddingException e) {
+            } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | InvalidKeyException | IllegalBlockSizeException | ShortBufferException e) {
                 CascadeBot.LOGGER.error("Unable to decrypt message!", e);
+                return null;
+            } catch (BadPaddingException e) {
+                // TODO emails? notifications?
+                CascadeBot.LOGGER.error("Unabled to decrypt message due to padding error! **This most likely means the data has been messed with**", e);
                 return null;
             }
         } else {
