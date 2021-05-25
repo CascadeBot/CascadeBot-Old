@@ -24,7 +24,7 @@ import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.CommandFilter;
 import org.cascadebot.cascadebot.data.objects.GuildData;
-import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
@@ -119,7 +119,7 @@ public class CommandListener extends ListenerAdapter {
             if (modlogEvent != null && cmd != null) {
                 List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
                 embedFieldList.add(new ModlogEmbedField(true, "modlog.command.command", "modlog.general.variable", "```" + message + "```"));
-                ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, event.getAuthor(),cmd, embedFieldList);
+                ModlogEventData eventStore = new ModlogEventData(modlogEvent, event.getAuthor(),cmd, embedFieldList);
                 guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
             }
         }

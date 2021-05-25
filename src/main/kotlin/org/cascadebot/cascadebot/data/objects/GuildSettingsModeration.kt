@@ -8,10 +8,8 @@ import club.minnced.discord.webhook.send.WebhookEmbed.EmbedTitle
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder
 import club.minnced.discord.webhook.send.WebhookMessageBuilder
 import de.bild.codec.annotations.Transient
-import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.entities.TextChannel
-import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
@@ -45,12 +43,12 @@ class GuildSettingsModeration {
 
     private val modlogEvents: MutableMap<Long, ChannelModlogEventsInfo> = HashMap()
 
-    fun sendModlogEvent(guildId: Long, modlogEventStore: ModlogEventStore) {
-        val eventsInfo: List<ChannelModlogEventsInfo> = getEventInfoForEvent(modlogEventStore.trigger)
+    fun sendModlogEvent(guildId: Long, modlogEventData: ModlogEventData) {
+        val eventsInfo: List<ChannelModlogEventsInfo> = getEventInfoForEvent(modlogEventData.trigger)
         for (eventInfo in eventsInfo) {
-            eventInfo.sendEvent(GuildDataManager.getGuildData(guildId), modlogEventStore);
+            eventInfo.sendEvent(GuildDataManager.getGuildData(guildId), modlogEventData);
         }
-        CascadeBot.INS.databaseManager.runAsyncTask { database -> database.getCollection("modlog", ChannelModlogEventsInfo.MongoModlogEventObject::class.java).insertOne(ChannelModlogEventsInfo.MongoModlogEventObject(guildId, modlogEventStore, "default" /* TODO change to actual time */), DebugLogCallback("Inserted Event")) }
+        CascadeBot.INS.databaseManager.runAsyncTask { database -> database.getCollection("modlog", ChannelModlogEventsInfo.MongoModlogEventObject::class.java).insertOne(ChannelModlogEventsInfo.MongoModlogEventObject(guildId, modlogEventData, "default" /* TODO change to actual time */), DebugLogCallback("Inserted Event")) }
     }
 
     private fun getEventInfoForEvent(event: ModlogEvent): List<ChannelModlogEventsInfo> {
@@ -160,34 +158,34 @@ class GuildSettingsModeration {
             buildWebhookClient()
         }
 
-        fun sendEvent(guildData: GuildData, modlogEventStore: ModlogEventStore) {
+        fun sendEvent(guildData: GuildData, modlogEventData: ModlogEventData) {
             val webhookEmbedBuilder = WebhookEmbedBuilder()
 
-            val path = "enums.modlogevent.${modlogEventStore.trigger.name.toLowerCase()}.description"
+            val path = "enums.modlogevent.${modlogEventData.trigger.name.toLowerCase()}.description"
             val element = Language.getLanguageOrDefault(guildData.locale).getElement(path)
 
             if (element.isPresent) {
-                val affected = when (modlogEventStore.trigger.affectedDisplayType) {
-                    AffectedDisplayType.NAME -> modlogEventStore.affected.name
-                    AffectedDisplayType.MENTION -> modlogEventStore.affected.mention
-                            ?: modlogEventStore.affected.name
+                val affected = when (modlogEventData.trigger.affectedDisplayType) {
+                    AffectedDisplayType.NAME -> modlogEventData.affected.name
+                    AffectedDisplayType.MENTION -> modlogEventData.affected.mention
+                            ?: modlogEventData.affected.name
                 }
                 webhookEmbedBuilder.setDescription(
                         Language.i18n(
                                 guildData.locale,
                                 path,
                                 affected,
-                                modlogEventStore.responsible?.asMention
+                                modlogEventData.responsible?.asMention
                                         ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized(),
-                                *modlogEventStore.extraDescriptionInfo.toTypedArray()
+                                *modlogEventData.extraDescriptionInfo.toTypedArray()
                         )
                 )
             }
 
-            webhookEmbedBuilder.setTitle(EmbedTitle(Language.i18n(guildData.locale, "enums.modlogevent." + modlogEventStore.trigger.name.toLowerCase() + ".display"), null))
-            val affected: ModlogAffected = modlogEventStore.affected;
+            webhookEmbedBuilder.setTitle(EmbedTitle(Language.i18n(guildData.locale, "enums.modlogevent." + modlogEventData.trigger.name.toLowerCase() + ".display"), null))
+            val affected: ModlogAffected = modlogEventData.affected;
 
-            when (modlogEventStore.trigger.displayType) {
+            when (modlogEventData.trigger.displayType) {
                 ModlogEvent.ModlogDisplayType.AFFECTED_THUMBNAIL -> {
                     webhookEmbedBuilder.setThumbnailUrl(affected.imageUrl)
                 }
@@ -209,15 +207,15 @@ class GuildSettingsModeration {
                 }
             }
 
-            for (embedPart in modlogEventStore.extraInfo) {
+            for (embedPart in modlogEventData.extraInfo) {
                 embedPart.build(guildData.locale, webhookEmbedBuilder)
             }
-            webhookEmbedBuilder.setColor(modlogEventStore.trigger.messageType.color.rgb)
+            webhookEmbedBuilder.setColor(modlogEventData.trigger.messageType.color.rgb)
             webhookEmbedBuilder.setTimestamp(Instant.now())
-            if (modlogEventStore.responsible != null) {
-                val iconUrl = modlogEventStore.responsible.effectiveAvatarUrl
+            if (modlogEventData.responsible != null) {
+                val iconUrl = modlogEventData.responsible.effectiveAvatarUrl
                 // TODO: by user
-                webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventStore.responsible.name + " (" + modlogEventStore.responsible.id + ")", iconUrl))
+                webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventData.responsible.name + " (" + modlogEventData.responsible.id + ")", iconUrl))
             }
             try {
                 webhookClient?.send(WebhookMessageBuilder()
@@ -234,16 +232,16 @@ class GuildSettingsModeration {
         class MongoModlogEventObject {
 
             private var guildId: Long = 0;
-            private var modlogEventStore: ModlogEventStore? = null
+            private var modlogEventData: ModlogEventData? = null
 
             private var createdDate: Date = Date()
             private var tier: String = ""
 
             private constructor()
 
-            constructor(guildId: Long, modlogEventStore: ModlogEventStore, tier: String) {
+            constructor(guildId: Long, modlogEventData: ModlogEventData, tier: String) {
                 this.guildId = guildId
-                this.modlogEventStore = modlogEventStore
+                this.modlogEventData = modlogEventData
                 this.tier = tier
             }
 

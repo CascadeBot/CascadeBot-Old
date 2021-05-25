@@ -10,15 +10,12 @@ import net.dv8tion.jda.api.entities.Role;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
-import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
-import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GroupPermissionLinkRoleSubCommand extends SubCommand {
@@ -40,7 +37,7 @@ public class GroupPermissionLinkRoleSubCommand extends SubCommand {
             if (group.linkRole(role.getIdLong())) {
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.link.success", group.getName(), role.getName()));
                 ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_LINK;
-                ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), group, List.of());
+                ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), group, List.of());
                 eventStore.setExtraDescriptionInfo(List.of(role.getAsMention()));
                 context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
             } else {

@@ -8,13 +8,12 @@ package org.cascadebot.cascadebot.commands.management.tag;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class TagDeleteSubCommand extends SubCommand {
 
@@ -31,7 +30,7 @@ public class TagDeleteSubCommand extends SubCommand {
         if (context.getData().getManagement().removeTag(tagName) && tag != null) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.tag.delete.successfully_deleted_tag"));
             ModlogEvent event = ModlogEvent.CASCADE_TAG_DELETED;
-            ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), tag, new ArrayList<>());
+            ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), tag, new ArrayList<>());
             context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
         } else {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", tagName));

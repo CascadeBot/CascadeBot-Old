@@ -23,7 +23,7 @@ class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>) {
         for (item in originalList) {
             val iter = addedDiff.iterator()
             while (iter.hasNext()) {
-                if (iter.next()?.equals(item) == true) {
+                if (iter.next() == item) {
                     iter.remove()
                     break
                 }
@@ -37,7 +37,7 @@ class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>) {
         for (item in newList) {
             val iter = removedDiff.iterator()
             while (iter.hasNext()) {
-                if (iter.next()?.equals(item) == true) {
+                if (iter.next() == item) {
                     iter.remove()
                     break
                 }

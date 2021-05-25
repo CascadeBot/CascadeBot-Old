@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
@@ -50,7 +50,7 @@ public class TagCreateSubCommand extends SubCommand {
         ModlogEvent event = ModlogEvent.CASCADE_TAG_CREATED;
         List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
         embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(tag.getContent()) + "```"));
-        ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), tag, embedFieldList);
+        ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), tag, embedFieldList);
         context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
     }
 

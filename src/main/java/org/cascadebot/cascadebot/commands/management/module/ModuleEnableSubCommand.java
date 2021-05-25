@@ -11,15 +11,12 @@ import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
-import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
-import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ExtensionsKt;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleEnableSubCommand extends SubCommand {
@@ -40,7 +37,7 @@ public class ModuleEnableSubCommand extends SubCommand {
                     // If the module wasn't enabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.enable.enabled", moduleName));
                     ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;
-                    ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), module, List.of());
+                    ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), module, List.of());
                     eventStore.setExtraDescriptionInfo(List.of("true"));
                     context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 } else {

@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
@@ -74,7 +74,7 @@ public class QueueSaveSubCommand extends SubCommand {
             case NEW:
                 context.getTypedMessaging().replySuccess(context.i18n("commands.queue.save.saved_playlist", context.getArg(0), lambdaScope.name().toLowerCase()));
                 ModlogEvent event = ModlogEvent.CASCADE_PLAYLIST_CREATED;
-                ModlogEventStore eventStore = new ModlogEventStore(event, sender.getUser(), result.getPlaylist(), new ArrayList<>());
+                ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), result.getPlaylist(), new ArrayList<>());
                 context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
                 break;
         }

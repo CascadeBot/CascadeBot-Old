@@ -109,7 +109,7 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
-import org.cascadebot.cascadebot.data.objects.ModlogEventStore;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
@@ -200,7 +200,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 return;
             }
-            ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, user, emote, embedFieldList);
+            ModlogEventData eventStore = new ModlogEventData(modlogEvent, user, emote, embedFieldList);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.EMOTE_CREATE, ActionType.EMOTE_DELETE, ActionType.EMOTE_UPDATE);
     }
@@ -217,7 +217,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedFieldList.add(new ModlogEmbedDescription("modlog.member.joined", user.getAsMention()));
             } else if (event instanceof GuildMemberLeaveEvent) {
                 if (auditLogEntry != null && auditLogEntry.getType().equals(ActionType.KICK)) {
-                    ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.GUILD_MEMBER_LEFT, null, user, embedFieldList);
+                    ModlogEventData eventStore = new ModlogEventData(ModlogEvent.GUILD_MEMBER_LEFT, null, user, embedFieldList);
                     guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
 
                     responsible = auditLogEntry.getUser();
@@ -265,7 +265,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 return;
             }
-            ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
+            ModlogEventData eventStore = new ModlogEventData(modlogEvent, responsible, user, embedFieldList);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.KICK, ActionType.MEMBER_ROLE_UPDATE, ActionType.MEMBER_UPDATE);
     }
@@ -289,7 +289,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find ban entry");
             }
-            ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
+            ModlogEventData eventStore = new ModlogEventData(modlogEvent, responsible, user, embedFieldList);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.BAN);
     }
@@ -306,7 +306,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find unban entry");
             }
-            ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, user, embedFieldList);
+            ModlogEventData eventStore = new ModlogEventData(modlogEvent, responsible, user, embedFieldList);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.UNBAN);
     }
@@ -354,10 +354,10 @@ public class ModlogEventListener extends ListenerAdapter {
                 responsible = null;
             }
             if (message.getUserMentions().size() > 0 || message.getRoleMentions().size() > 0) {
-                ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.GUILD_MESSAGE_DELETED_MENTION, responsible, affected, embedFieldList);
+                ModlogEventData eventStore = new ModlogEventData(ModlogEvent.GUILD_MESSAGE_DELETED_MENTION, responsible, affected, embedFieldList);
                 guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
             }
-            ModlogEventStore eventStore = new ModlogEventStore(ModlogEvent.GUILD_MESSAGE_DELETED, responsible, affected, embedFieldList);
+            ModlogEventData eventStore = new ModlogEventData(ModlogEvent.GUILD_MESSAGE_DELETED, responsible, affected, embedFieldList);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.MESSAGE_DELETE);
     }
@@ -391,7 +391,7 @@ public class ModlogEventListener extends ListenerAdapter {
         embedFieldList.add(oldEmbedField);
         embedFieldList.add(newEmbedField);
         ModlogEvent modlogEvent = ModlogEvent.GUILD_MESSAGE_UPDATED;
-        ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, null, affected, embedFieldList);
+        ModlogEventData eventStore = new ModlogEventData(modlogEvent, null, affected, embedFieldList);
         guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
     }
 
@@ -562,7 +562,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 return;
             }
-            ModlogEventStore eventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
+            ModlogEventData eventStore = new ModlogEventData(modlogEvent, responsible, affected, embedFieldList);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.GUILD_UPDATE);
     }
@@ -624,7 +624,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 return;
             }
-            ModlogEventStore eventStore = new ModlogEventStore(action, responsible, affected, embedFieldList);
+            ModlogEventData eventStore = new ModlogEventData(action, responsible, affected, embedFieldList);
             eventStore.setExtraDescriptionInfo(extraDescriptionInfo);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.MEMBER_VOICE_MOVE, ActionType.MEMBER_VOICE_KICK, ActionType.MEMBER_UPDATE);
@@ -692,7 +692,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 return;
             }
-            ModlogEventStore eventStore = new ModlogEventStore(trigger, responsible, event.getChannel(), embedFieldList);
+            ModlogEventData eventStore = new ModlogEventData(trigger, responsible, event.getChannel(), embedFieldList);
             eventStore.setExtraDescriptionInfo(descriptionParts);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.CHANNEL_UPDATE);
@@ -735,7 +735,7 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 return;
             }
-            ModlogEventStore eventStore = new ModlogEventStore(trigger, responsible, event.getChannel(), embedFieldList);
+            ModlogEventData eventStore = new ModlogEventData(trigger, responsible, event.getChannel(), embedFieldList);
             guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), eventStore);
         }, ActionType.CHANNEL_UPDATE);
     }
@@ -794,15 +794,15 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 return;
             }
-            ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, event.getChannel(), embedFieldList);
+            ModlogEventData modlogEventData = new ModlogEventData(modlogEvent, responsible, event.getChannel(), embedFieldList);
             String holderMention = "";
             if (event.getPermissionHolder() instanceof User) {
                 holderMention = ((User) event.getPermissionHolder()).getAsMention();
             } else if (event.getPermissionHolder() instanceof Role) {
                 holderMention = ((Role) event.getPermissionHolder()).getAsMention();
             }
-            modlogEventStore.setExtraDescriptionInfo(List.of(holderMention));
-            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), modlogEventStore);
+            modlogEventData.setExtraDescriptionInfo(List.of(holderMention));
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), modlogEventData);
         }, ActionType.CHANNEL_OVERRIDE_UPDATE, ActionType.CHANNEL_UPDATE);
     }
 
@@ -838,9 +838,9 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel create entry");
             }
             embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
-            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            modlogEventStore.setExtraDescriptionInfo(List.of(type.name().toLowerCase()));
-            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
+            ModlogEventData modlogEventData = new ModlogEventData(event, responsible, channel, embedFieldList);
+            modlogEventData.setExtraDescriptionInfo(List.of(type.name().toLowerCase()));
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventData);
         }, ActionType.CHANNEL_CREATE);
     }
 
@@ -856,9 +856,9 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel delete entry");
             }
             embedFieldList.add(new ModlogEmbedField(false, "modlog.channel.type.name", "modlog.channel.type." + type.name().toLowerCase()));
-            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            modlogEventStore.setExtraDescriptionInfo(List.of(type.name().toLowerCase()));
-            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
+            ModlogEventData modlogEventData = new ModlogEventData(event, responsible, channel, embedFieldList);
+            modlogEventData.setExtraDescriptionInfo(List.of(type.name().toLowerCase()));
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventData);
         }, ActionType.CHANNEL_DELETE);
     }
 
@@ -874,8 +874,8 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             embedFieldList.add(new ModlogEmbedField(true, "modlog.general.name", "modlog.general.small_change", oldName, channel.getName()));
-            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
+            ModlogEventData modlogEventData = new ModlogEventData(event, responsible, channel, embedFieldList);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventData);
         }, ActionType.CHANNEL_UPDATE);
     }
 
@@ -925,7 +925,7 @@ public class ModlogEventListener extends ListenerAdapter {
                 embedParts.add(field);
             }
             ModlogEvent event = maxMoveData.size() <= 1 ? ModlogEvent.CHANNEL_POSITION_UPDATED : ModlogEvent.MULTIPLE_CHANNEL_POSITION_UPDATED;
-            ModlogEventStore eventStore = new ModlogEventStore(event, responsible, maxMoveData.get(0).channel, embedParts);
+            ModlogEventData eventStore = new ModlogEventData(event, responsible, maxMoveData.get(0).channel, embedParts);
             guildData.getModeration().sendModlogEvent(guild.getIdLong(), eventStore);
 
         }, ActionType.CHANNEL_UPDATE);
@@ -989,8 +989,8 @@ public class ModlogEventListener extends ListenerAdapter {
                 CascadeBot.LOGGER.warn("Modlog: Failed to find channel update entry");
             }
             embedFieldList.add(new ModlogEmbedField(true, "modlog.channel.parent", "modlog.general.small_change", oldParent == null ? "None" : oldParent.getName(), newParent == null ? "None" : newParent.getName())); // TODO language string for none
-            ModlogEventStore modlogEventStore = new ModlogEventStore(event, responsible, channel, embedFieldList);
-            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
+            ModlogEventData modlogEventData = new ModlogEventData(event, responsible, channel, embedFieldList);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventData);
         }, ActionType.CHANNEL_UPDATE);
     }
     //endregion
@@ -1054,9 +1054,9 @@ public class ModlogEventListener extends ListenerAdapter {
             } else {
                 return;
             }
-            ModlogEventStore modlogEventStore = new ModlogEventStore(modlogEvent, responsible, affected, embedFieldList);
-            modlogEventStore.setExtraDescriptionInfo(descriptionStuff);
-            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), modlogEventStore);
+            ModlogEventData modlogEventData = new ModlogEventData(modlogEvent, responsible, affected, embedFieldList);
+            modlogEventData.setExtraDescriptionInfo(descriptionStuff);
+            guildData.getModeration().sendModlogEvent(event.getGuild().getIdLong(), modlogEventData);
         }, ActionType.ROLE_CREATE, ActionType.ROLE_DELETE, ActionType.ROLE_UPDATE);
     }
 
@@ -1064,20 +1064,20 @@ public class ModlogEventListener extends ListenerAdapter {
     public void onUserUpdateName(UserUpdateNameEvent event) {
         List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
         embedFieldList.add(new ModlogEmbedField(false, "modlog.general.name", "modlog.general.small_change", event.getOldName(), event.getNewName()));
-        ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_NAME_UPDATED, event.getUser(), event.getUser(), embedFieldList);
+        ModlogEventData modlogEventData = new ModlogEventData(ModlogEvent.USER_NAME_UPDATED, event.getUser(), event.getUser(), embedFieldList);
         for (Guild guild : CascadeBot.INS.getClient().getMutualGuilds(event.getUser())) {
             GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventData);
         }
     }
 
     public void onUserUpdateDiscriminator(UserUpdateDiscriminatorEvent event) {
         List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
         embedFieldList.add(new ModlogEmbedField(false, "modlog.member.discrim", "modlog.general.small_change", event.getOldDiscriminator(), event.getNewDiscriminator()));
-        ModlogEventStore modlogEventStore = new ModlogEventStore(ModlogEvent.USER_DISCRIMINATOR_UPDATED, event.getUser(), event.getUser(), embedFieldList);
+        ModlogEventData modlogEventData = new ModlogEventData(ModlogEvent.USER_DISCRIMINATOR_UPDATED, event.getUser(), event.getUser(), embedFieldList);
         for (Guild guild : CascadeBot.INS.getClient().getMutualGuilds(event.getUser())) {
             GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventStore);
+            guildData.getModeration().sendModlogEvent(guild.getIdLong(), modlogEventData);
         }
     }
     //endregion

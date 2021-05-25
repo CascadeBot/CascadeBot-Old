@@ -21,7 +21,7 @@ import org.cascadebot.cascadebot.data.objects.GuildSettingsManagement
 import org.cascadebot.cascadebot.data.objects.GuildSettingsModeration
 import org.cascadebot.cascadebot.data.objects.GuildSettingsMusic
 import org.cascadebot.cascadebot.data.objects.GuildSettingsUseful
-import org.cascadebot.cascadebot.data.objects.ModlogEventStore
+import org.cascadebot.cascadebot.data.objects.ModlogEventData
 import org.cascadebot.cascadebot.data.objects.Setting
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField
@@ -158,9 +158,9 @@ class SettingsCommand : MainCommand() {
                     } else {
                         embedFields.add(ModlogEmbedField(true, "modlog.setting.value", "modlog.general.small_change", oldValue, value))
                     }
-                    val modlogEventStore = ModlogEventStore(ModlogEvent.CASCADE_SETTINGS_UPDATED, sender.user, field, embedFields)
-                    modlogEventStore.extraDescriptionInfo = mutableListOf(field.name)
-                    context.data.moderation.sendModlogEvent(context.guild.idLong, modlogEventStore)
+                    val modlogEventData = ModlogEventData(ModlogEvent.CASCADE_SETTINGS_UPDATED, sender.user, field, embedFields)
+                    modlogEventData.extraDescriptionInfo = mutableListOf(field.name)
+                    context.data.moderation.sendModlogEvent(context.guild.idLong, modlogEventData)
                 } catch (e: IllegalAccessException) {
                     context.typedMessaging.replyException(context.i18n("commands.settings.cannot_access"), e)
                 }
