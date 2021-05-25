@@ -1844,17 +1844,25 @@
         "display": "Cascade playlist deleted",
         "description": "Playlist {0} was deleted"
       },
+      "cascade_mute": {
+        "select": "cascade_mute",
+        "display": "Cascade mute",
+        "description": "{0} has been muted"
+      },
       "cascade_temp_mute": {
         "select": "cascade_temp_mute",
-        "display": "Cascade temp mute"
+        "display": "Cascade temporary mute",
+        "description": "{0} has been temporarily muted for {2}"
       },
       "cascade_temp_ban": {
         "select": "cascade_temp_ban",
-        "display": "Cascade temp ban"
+        "display": "Cascade temporary ban",
+        "description": "{0} has been temporarily banned for {2}"
       },
       "cascade_soft_ban": {
         "select": "cascade_soft_ban",
-        "display": "Cascade soft ban"
+        "display": "Cascade soft ban",
+        "description": "{0} has been soft-banned"
       },
       "cascade_purge": {
         "select": "cascade_purge",

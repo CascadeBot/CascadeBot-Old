@@ -13,15 +13,19 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.scheduler.ActionType;
 import org.cascadebot.cascadebot.scheduler.ScheduledAction;
 import org.cascadebot.cascadebot.utils.ExtensionsKt;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModerationManager {
 
@@ -37,6 +41,13 @@ public class ModerationManager {
                         .ban(target, messagesToDelete, reason)
                         .queue(success -> {
                             sendSuccess(context, target, submitter, action, reason);
+                            if (action == ModAction.SOFT_BAN) {
+                                ModlogEventData eventData = new ModlogEventData(ModlogEvent.CASCADE_SOFT_BAN,
+                                        submitter.getUser(),
+                                        target,
+                                        List.of());
+                                context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
+                            }
                         }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, action));
             }, context, action, target);
         }
@@ -66,6 +77,19 @@ public class ModerationManager {
                             delay
                     ));
                     sendTempSuccess(context, target, submitter, ModAction.TEMP_BAN, reason, delay);
+
+                    List<ModlogEmbedPart> embedParts = new ArrayList<>();
+
+                    if (reason != null) {
+                        embedParts.add(new ModlogEmbedField(false, "words.reason", "modlog.general.variable", reason));
+                    }
+
+                    ModlogEventData eventData = new ModlogEventData(ModlogEvent.CASCADE_TEMP_BAN,
+                            submitter.getUser(),
+                            target,
+                            embedParts);
+                    eventData.setExtraDescriptionInfo(List.of(FormatUtils.formatDuration(delay, context.getLocale(), true, true)));
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
                 });
             }, context, ModAction.TEMP_BAN, target);
         }
@@ -73,6 +97,7 @@ public class ModerationManager {
 
     public void softBan(CommandContext context, User target, Member submitter, String reason, int messagesToDelete) {
         if (runChecks(ModAction.SOFT_BAN, target, submitter, context)) {
+            // Modlog event is triggered from the ban method to ensure it's only triggered on success
             ban(context, ModAction.SOFT_BAN, target, submitter, reason, messagesToDelete);
             runWithCheckedExceptions(() -> {
                 context.getGuild()
@@ -106,6 +131,17 @@ public class ModerationManager {
                                 reason))
                         .queue(aVoid -> {
                             sendSuccess(context, target.getUser(), submitter, ModAction.MUTE, reason);
+                            List<ModlogEmbedPart> embedParts = new ArrayList<>();
+
+                            if (reason != null) {
+                                embedParts.add(new ModlogEmbedField(false, "words.reason", "modlog.general.variable", reason));
+                            }
+
+                            ModlogEventData eventData = new ModlogEventData(ModlogEvent.CASCADE_MUTE,
+                                    submitter.getUser(),
+                                    target.getUser(),
+                                    embedParts);
+                            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
                         });
             }, context, ModAction.MUTE, target.getUser());
         }
@@ -132,6 +168,18 @@ public class ModerationManager {
                                     delay
                             ));
                             sendTempSuccess(context, target.getUser(), submitter, ModAction.TEMP_MUTE, reason, delay);
+
+                            List<ModlogEmbedPart> embedParts = new ArrayList<>();
+
+                            if (reason != null) {
+                                embedParts.add(new ModlogEmbedField(false, "words.reason", "modlog.general.variable", reason));
+                            }
+
+                            ModlogEventData eventData = new ModlogEventData(ModlogEvent.CASCADE_TEMP_MUTE,
+                                    submitter.getUser(),
+                                    target.getUser(),
+                                    embedParts);
+                            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
                         });
             }, context, ModAction.TEMP_MUTE, target.getUser());
         }

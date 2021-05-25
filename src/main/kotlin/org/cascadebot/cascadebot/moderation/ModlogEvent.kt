@@ -104,10 +104,12 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
 
     CASCADE_PLAYLIST_CREATED			        (MessageType.INFO, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE),
 
-    CASCADE_TEMP_MUTE				            (MessageType.DANGER, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
-    CASCADE_TEMP_BAN				            (MessageType.DANGER, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
-    CASCADE_SOFT_BAN				            (MessageType.DANGER, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
-    CASCADE_PURGE				                (MessageType.DANGER, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_MUTE				                (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_UNMUTE				                (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_TEMP_MUTE				            (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_TEMP_BAN				            (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_SOFT_BAN				            (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_PURGE				                (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
 
     CASCADE_WHITELIST				            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
     CASCADE_BLACKLIST			    	        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
