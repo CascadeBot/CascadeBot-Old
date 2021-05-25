@@ -49,7 +49,7 @@ public class SeekCommand extends MainCommand {
 
         context.getMusicPlayer().seekTo(millis);
         // TODO: Binary make a method to format time using ICU
-        String formattedTime = FormatUtils.formatTime(millis, Locale.getDefaultLocale(), true);
+        String formattedTime = FormatUtils.formatDuration(millis, Locale.getDefaultLocale(), true);
         context.getTypedMessaging().replySuccess(context.i18n("commands.seek.success", formattedTime));
     }
 

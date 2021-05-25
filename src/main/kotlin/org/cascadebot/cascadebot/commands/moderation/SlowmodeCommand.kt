@@ -52,7 +52,7 @@ class SlowmodeCommand : MainCommand() {
         }
         try {
             channel.manager.setSlowmode(duration.toInt() / 1000).queue {
-                val interval: String = FormatUtils.formatTime(duration, context.locale, true).replace("(0[hms])".toRegex(), "")
+                val interval: String = FormatUtils.formatDuration(duration, context.locale, true).replace("(0[hms])".toRegex(), "")
                 context.typedMessaging.replySuccess(context.i18n("commands.slowmode.success", interval, channel.name))
             }
 

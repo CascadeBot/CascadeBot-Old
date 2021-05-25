@@ -190,7 +190,7 @@ public class ModerationManager {
         // TODO, Use kotlin string extensions when PR #232 is merged.
         builder.addField(
                 context.i18n("words.duration"),
-                FormatUtils.formatTime(delay, context.getLocale(), true)
+                FormatUtils.formatDuration(delay, context.getLocale(), true, true)
                         + " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(delay, ChronoUnit.MILLIS), context.getLocale()) + ")",
                 true
         );
