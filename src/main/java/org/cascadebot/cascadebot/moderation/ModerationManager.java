@@ -42,10 +42,16 @@ public class ModerationManager {
                         .queue(success -> {
                             sendSuccess(context, target, submitter, action, reason);
                             if (action == ModAction.SOFT_BAN) {
+                                List<ModlogEmbedPart> embedParts = new ArrayList<>();
+
+                                if (reason != null) {
+                                    embedParts.add(new ModlogEmbedField(false, "words.reason", "modlog.general.variable", reason));
+                                }
+
                                 ModlogEventData eventData = new ModlogEventData(ModlogEvent.CASCADE_SOFT_BAN,
                                         submitter.getUser(),
                                         target,
-                                        List.of());
+                                        embedParts);
                                 context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
                             }
                         }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, action));
@@ -179,6 +185,7 @@ public class ModerationManager {
                                     submitter.getUser(),
                                     target.getUser(),
                                     embedParts);
+                            eventData.setExtraDescriptionInfo(List.of(FormatUtils.formatDuration(delay, context.getLocale(), true, true)));
                             context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
                         });
             }, context, ModAction.TEMP_MUTE, target.getUser());
