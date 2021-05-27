@@ -8,13 +8,13 @@ package org.cascadebot.cascadebot.commands.moderation
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.exceptions.PermissionException
-import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
+import org.cascadebot.cascadebot.data.objects.ModlogEventData
 import org.cascadebot.cascadebot.messaging.MessagingObjects
-import org.cascadebot.cascadebot.moderation.ModerationManager
+import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.scheduler.ActionType
 import org.cascadebot.cascadebot.scheduler.ScheduledAction
@@ -46,13 +46,22 @@ class UnMuteCommand : MainCommand() {
             }
             context.guild.removeRoleFromMember(targetMember, mutedRole)
                     .reason(context.i18n("mod_actions.unmute.reason", targetMember.user.asTag, context.user.asTag))
-                    .queue(null) {
+                    .queue({
+                        val eventData = ModlogEventData(
+                            ModlogEvent.CASCADE_UNMUTE,
+                            context.user,
+                            targetMember.user,
+                            mutableListOf()
+                        )
+                        context.data.moderation.sendModlogEvent(context.guild.idLong, eventData)
+                        context.typedMessaging.replySuccess(context.i18n("commands.unmute.success", targetMember.asMention))
+                    }, {
                         if (it is PermissionException) {
                             context.uiMessaging.sendBotDiscordPermError(it.permission)
                         } else {
                             context.typedMessaging.replyException("Couldn't unmute the user!", it)
                         }
-                    }
+                    })
         } else {
             context.typedMessaging.replyWarning(context.i18n("commands.unmute.not_muted", targetMember.asMention))
         }

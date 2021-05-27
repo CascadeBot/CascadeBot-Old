@@ -646,6 +646,7 @@
     "unmute": {
       "command": "unmute",
       "description": "Unmutes a member of a guild.",
+      "success": "The user {0} has been unmuted!",
       "not_muted": "The user {0} is not muted!"
     },
     "tempmute": {
@@ -1848,6 +1849,11 @@
         "select": "cascade_mute",
         "display": "Cascade mute",
         "description": "{0} has been muted"
+      },
+      "cascade_unmute": {
+        "select": "cascade_unmute",
+        "display": "Cascade Unmute",
+        "description": "{0} has been unmuted"
       },
       "cascade_temp_mute": {
         "select": "cascade_temp_mute",
