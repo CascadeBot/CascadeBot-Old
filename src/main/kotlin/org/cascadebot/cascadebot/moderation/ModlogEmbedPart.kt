@@ -13,9 +13,16 @@ sealed class ModlogEmbedPart {
 
 class ModlogEmbedField(val inline: Boolean = true,
                        val titleLanguagePath: String,
-                       var valueLanguagePath: String? = null, vararg valueLanguageObjects: Any) : ModlogEmbedPart() {
+                       val valueLanguagePath: String? = null, vararg valueLanguageObjects: Any) : ModlogEmbedPart() {
 
-    constructor() : this(true, "", "")
+    constructor() : this(true, "", "") {
+        if (titleLanguagePath.isNotBlank()) {
+            require(Language.defaultLanguage.getString(titleLanguagePath).isPresent)
+        }
+        if (valueLanguagePath != null && valueLanguagePath.isNotBlank()) {
+            require(Language.defaultLanguage.getString(valueLanguagePath).isPresent)
+        }
+    }
 
     val titleLanguageObjects: MutableList<Any> = mutableListOf()
     val valueLanguageObjects: MutableList<Any> = mutableListOf(*valueLanguageObjects)
@@ -38,7 +45,11 @@ class ModlogEmbedField(val inline: Boolean = true,
 
 class ModlogEmbedDescription(val languagePath: String, vararg languageObjects: String) : ModlogEmbedPart() {
 
-    constructor() : this("")
+    constructor() : this("") {
+        if (languagePath.isNotBlank()) {
+            require(Language.defaultLanguage.getString(languagePath).isPresent)
+        }
+    }
 
     var languageObjects: MutableList<String> = mutableListOf(*languageObjects)
 
@@ -50,7 +61,11 @@ class ModlogEmbedDescription(val languagePath: String, vararg languageObjects: S
 
 class ModlogEmbedFooter(val languagePath: String, val icon: String? = null, vararg languageObjects: String) : ModlogEmbedPart() {
 
-    constructor() : this("", "")
+    constructor() : this("", "") {
+        if (languagePath.isNotBlank()) {
+            require(Language.defaultLanguage.getString(languagePath).isPresent)
+        }
+    }
 
     var languageObjects: MutableList<String> = mutableListOf(*languageObjects)
 
