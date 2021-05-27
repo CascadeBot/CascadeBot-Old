@@ -53,6 +53,13 @@ public class ModerationManager {
                                         target,
                                         embedParts);
                                 context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
+
+                                runWithCheckedExceptions(() -> {
+                                    context.getGuild()
+                                            .unban(target)
+                                            .reason("Softban: Unbanned user")
+                                            .queue(null, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, ModAction.SOFT_BAN));
+                                }, context, ModAction.SOFT_BAN, target);
                             }
                         }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, action));
             }, context, action, target);
@@ -98,19 +105,6 @@ public class ModerationManager {
                     context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
                 });
             }, context, ModAction.TEMP_BAN, target);
-        }
-    }
-
-    public void softBan(CommandContext context, User target, Member submitter, String reason, int messagesToDelete) {
-        if (runChecks(ModAction.SOFT_BAN, target, submitter, context)) {
-            // Modlog event is triggered from the ban method to ensure it's only triggered on success
-            ban(context, ModAction.SOFT_BAN, target, submitter, reason, messagesToDelete);
-            runWithCheckedExceptions(() -> {
-                context.getGuild()
-                        .unban(target)
-                        .reason("Softban: Unbanned user")
-                        .queue(null, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, ModAction.SOFT_BAN));
-            }, context, ModAction.SOFT_BAN, target);
         }
     }
 
