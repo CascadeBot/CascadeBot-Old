@@ -7,7 +7,11 @@ package org.cascadebot.cascadebot.utils
 
 import net.dv8tion.jda.api.entities.Message
 import org.cascadebot.cascadebot.commandmeta.CommandContext
+import org.cascadebot.cascadebot.data.objects.ModlogEventData
 import org.cascadebot.cascadebot.data.objects.PurgeCriteria
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart
+import org.cascadebot.cascadebot.moderation.ModlogEvent
 import java.time.OffsetDateTime
 import java.util.regex.Pattern
 
@@ -58,20 +62,51 @@ object PurgeUtils {
             return
         }
 
+
         if (messageList.size == 1) {
             messageList
-                    .first()
-                    .delete()
-                    .queue({ context.typedMessaging.replySuccess(context.i18n("commands.purge.successfully_done", messageList.size)) })
-                            { context.typedMessaging.replyException(context.i18n("responses.failed_to_run_command"), it) }
+                .first()
+                .delete()
+                .queue({
+                    context.typedMessaging.replySuccess(
+                        context.i18n(
+                            "commands.purge.successfully_done",
+                            messageList.size
+                        )
+                    )
+                    sendPurgeModlogEvent(context, messageList.size)
+                })
+                { context.typedMessaging.replyException(context.i18n("responses.failed_to_run_command"), it) }
         } else {
             context.channel.deleteMessages(messageList)
-                    .queue({ context.typedMessaging.replySuccess(context.i18n("commands.purge.successfully_done", messageList.size)) })
-                    { context.typedMessaging.replyException(context.i18n("responses.failed_to_run_command"), it) }
+                .queue({
+                    context.typedMessaging.replySuccess(
+                        context.i18n(
+                            "commands.purge.successfully_done",
+                            messageList.size
+                        )
+                    )
+                    sendPurgeModlogEvent(context, messageList.size)
+                })
+                { context.typedMessaging.replyException(context.i18n("responses.failed_to_run_command"), it) }
         }
     }
 
-    private fun messageMatchesCriteria(criteria: PurgeCriteria, message: Message, argument: String?) : Boolean {
+    private fun sendPurgeModlogEvent(
+        context: CommandContext,
+        messageCount: Int
+    ) {
+        val eventData = ModlogEventData(
+            ModlogEvent.CASCADE_PURGE,
+            context.user,
+            context.channel,
+            mutableListOf()
+        )
+        eventData.extraDescriptionInfo = mutableListOf(messageCount.toString())
+        context.data.moderation.sendModlogEvent(context.guild.idLong, eventData)
+    }
+
+    private fun messageMatchesCriteria(criteria: PurgeCriteria, message: Message, argument: String?): Boolean {
         return when (criteria) {
             PurgeCriteria.ATTACHMENT -> message.attachments.isNotEmpty()
             PurgeCriteria.BOT -> message.author.isBot

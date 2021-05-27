@@ -1872,7 +1872,8 @@
       },
       "cascade_purge": {
         "select": "cascade_purge",
-        "display": "Cascade purge"
+        "display": "Cascade purge",
+        "description": "Purged {2} messages from {0}"
       },
       "cascade_whitelist": {
         "select": "cascade_whitelist",
