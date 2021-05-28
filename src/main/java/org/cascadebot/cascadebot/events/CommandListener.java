@@ -116,7 +116,7 @@ public class CommandListener extends ListenerAdapter {
         } finally {
             CascadeBot.clearCascadeMDC();
             MainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
-            if (modlogEvent != null && cmd != null) {
+            if (modlogEvent != null && cmd != null && !(cmd instanceof RestrictedCommand)) {
                 List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
                 embedFieldList.add(new ModlogEmbedField(true, "modlog.command.command", "modlog.general.variable", "```" + message + "```"));
                 ModlogEventData eventStore = new ModlogEventData(modlogEvent, event.getAuthor(),cmd, embedFieldList);
