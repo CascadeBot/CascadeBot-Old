@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
 public class Config {
 
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);
@@ -390,6 +389,22 @@ public class Config {
 
     public int getPrometheusPort() {
         return prometheusPort;
+    }
+
+    public byte[] getEncryptKey() {
+        return encryptKey;
+    }
+
+    public String getRedisHost() {
+        return redisHost;
+    }
+
+    public int getRedisPort() {
+        return redisPort;
+    }
+
+    public String getRedisPassword() {
+        return redisPassword;
     }
 
 }
