@@ -126,7 +126,12 @@ class ChannelModlogEventListener : ListenerAdapter() {
             }
 
             is TextChannelUpdatePositionEvent -> {
-                handleChannelUpdatePositionEvents(event.getGuild(), ChannelType.TEXT, event.oldPosition, event.getChannel())
+                handleChannelUpdatePositionEvents(
+                    event.getGuild(),
+                    ChannelType.TEXT,
+                    event.oldPosition,
+                    event.getChannel()
+                )
                 return
             }
 
@@ -367,8 +372,12 @@ class ChannelModlogEventListener : ListenerAdapter() {
                                     event.getChannel(),
                                     event.getPermissionHolder()
                                 )
-                            if (current != "x") {
-                                stringBuilder.append("x > ").append(current).append(": ").append(permission.getName())
+                            if (current != null && current != OverrideStatus.DENY) {
+                                stringBuilder.append(OverrideStatus.DENY.emote)
+                                    .append(" ➜ ")
+                                    .append(current.emote)
+                                    .append(": ")
+                                    .append(permission.getName())
                                     .append('\n')
                             }
                         }
@@ -379,8 +388,12 @@ class ChannelModlogEventListener : ListenerAdapter() {
                                     event.getChannel(),
                                     event.getPermissionHolder()
                                 )
-                            if (current != "\\\\") {
-                                stringBuilder.append("\\ > ").append(current).append(": ").append(permission.getName())
+                            if (current != null && current != OverrideStatus.INHERIT) {
+                                stringBuilder.append(OverrideStatus.INHERIT.emote)
+                                    .append(" ➜ ")
+                                    .append(current.emote)
+                                    .append(": ")
+                                    .append(permission.getName())
                                     .append('\n')
                             }
                         }
@@ -391,8 +404,9 @@ class ChannelModlogEventListener : ListenerAdapter() {
                                     event.getChannel(),
                                     event.getPermissionHolder()
                                 )
-                            if (current != "+") {
-                                stringBuilder.append("+ > ").append(current).append(": ").append(permission.getName())
+                            if (current != null && current != OverrideStatus.ALLOW) {
+                                stringBuilder.append(OverrideStatus.ALLOW.emote).append(" ➜ ").append(current.emote)
+                                    .append(": ").append(permission.getName())
                                     .append('\n')
                             }
                         }
@@ -427,24 +441,36 @@ class ChannelModlogEventListener : ListenerAdapter() {
         permission: Permission,
         channel: GuildChannel,
         holder: IPermissionHolder?
-    ): String {
-        val permissionOverride = channel.getPermissionOverride(holder!!) ?: return "unknown"
+    ): OverrideStatus? {
+        val permissionOverride = channel.getPermissionOverride(holder!!) ?: return null
         return when {
             permissionOverride.allowed.contains(permission) -> {
-                "+"
+                OverrideStatus.ALLOW
             }
 
             permissionOverride.inherit.contains(permission) -> {
-                "\\\\"
+                OverrideStatus.INHERIT
             }
 
             permissionOverride.denied.contains(permission) -> {
-                "x"
+                OverrideStatus.DENY
             }
 
             else -> {
-                "unknown"
+                null
             }
+        }
+    }
+
+    enum class OverrideStatus(val emoteName: String, val text: String) {
+        ALLOW("perm_tick", "+"),
+        DENY("perm_cross", "-"),
+        INHERIT("perm_neutral", "\\\\");
+
+        val emote: String by lazy {
+            val emoteId = Config.INS.globalEmotes[emoteName] ?: return@lazy text
+            val emote = CascadeBot.INS.shardManager.getEmoteById(emoteId) ?: return@lazy text
+            return@lazy emote.asMention
         }
     }
 
