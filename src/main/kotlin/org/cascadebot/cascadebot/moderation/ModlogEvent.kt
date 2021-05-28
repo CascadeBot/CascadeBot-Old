@@ -121,8 +121,8 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     CASCADE_TAG_CREATED			    	        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_CUSTOM_COMMANDS),
     CASCADE_TAG_DELETED			    	        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_CUSTOM_COMMANDS),
     CASCADE_TAG_UPDATED			    	        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_CUSTOM_COMMANDS),
-    // Here temporarily for testing purposes
-    DEBUG                                       (MessageType.DANGER, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.DEBUG);
+    // Here in case a dummy value is required
+    DUMMY                                       (MessageType.DANGER, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.DUMMY);
 
     companion object {
         private val modlogCategoryMap: MutableMap<Category, MutableList<ModlogEvent>> = EnumMap(Category::class.java)
@@ -167,7 +167,7 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
         CASCADE_PERMISSIONS,
         CASCADE_MODERATION,
         CASCADE_CUSTOM_COMMANDS,
-        DEBUG
+        DUMMY
     }
 
     enum class ModlogDisplayType {
