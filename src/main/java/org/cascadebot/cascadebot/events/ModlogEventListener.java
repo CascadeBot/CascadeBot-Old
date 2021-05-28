@@ -766,9 +766,9 @@ public class ModlogEventListener extends ListenerAdapter {
             }
 
             if (event instanceof PermissionOverrideCreateEvent) {
-                modlogEvent = ModlogEvent.DEBUG;
+                modlogEvent = ModlogEvent.DUMMY;
             } else if (event instanceof PermissionOverrideDeleteEvent) {
-                modlogEvent = ModlogEvent.DEBUG;
+                modlogEvent = ModlogEvent.DUMMY;
             } else if (event instanceof PermissionOverrideUpdateEvent) {
                 modlogEvent = ModlogEvent.CHANNEL_PERMISSIONS_UPDATED;
                 StringBuilder stringBuilder = new StringBuilder();
