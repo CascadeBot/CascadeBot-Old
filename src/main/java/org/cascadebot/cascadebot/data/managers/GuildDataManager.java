@@ -7,12 +7,20 @@ package org.cascadebot.cascadebot.data.managers;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.mongodb.client.model.Updates;
 import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.events.GuildSaveListener;
+import org.cascadebot.cascadebot.utils.diff.Diff;
+import org.cascadebot.cascadebot.utils.diff.Difference;
+import org.cascadebot.cascadebot.utils.diff.DifferenceChanged;
+import org.cascadebot.cascadebot.utils.lists.CollectionDiff;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.mongodb.client.model.Filters.eq;
@@ -42,7 +50,32 @@ public final class GuildDataManager {
     public static void update(long id, Bson update) {
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).updateOne(eq("_id", id), update, new DebugLogCallback<>("Updated Guild ID " + id + ":", update));
-        });
+        });;
+    }
+
+    public static void updateDiff(long id, Difference difference) {
+        List<Bson> bsonList = new ArrayList<>();
+        for (Map.Entry<String, Object> added : difference.getAdded().entrySet()) {
+            bsonList.add(Updates.set(added.getKey(), added.getValue()));
+        }
+        for (Map.Entry<String, Diff> changed : difference.getChanged().entrySet()) {
+            if (changed.getValue() instanceof CollectionDiff) {
+                for (Object obj : ((CollectionDiff<?>) changed.getValue()).getAdded()) {
+                    bsonList.add(Updates.addToSet(changed.getKey(), obj));
+                }
+                for (Object obj : ((CollectionDiff<?>) changed.getValue()).getRemoved()) {
+                    bsonList.add(Updates.pull(changed.getKey(), obj));
+                }
+            } else if (changed.getValue() instanceof DifferenceChanged) {
+                bsonList.add(Updates.set(changed.getKey(), ((DifferenceChanged<?>) changed.getValue()).getNewObj()));
+            }
+        }
+        for (String removed : difference.getRemoved().keySet()) {
+            bsonList.add(Updates.unset(removed));
+        }
+        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
+            database.getCollection(COLLECTION, GuildData.class).updateMany(eq("_id", id), Updates.combine(bsonList), new DebugLogCallback<>("Updated Guild ID " + id));
+        });;
     }
 
     public static void insert(long id, GuildData data) {

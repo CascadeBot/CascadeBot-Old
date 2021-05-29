@@ -1,20 +1,39 @@
 package org.cascadebot.cascadebot.data.objects
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.util.ClassUtil.classOf
 import com.google.common.collect.Sets
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
 import de.bild.codec.annotations.Id
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
+import org.cascadebot.cascadebot.utils.diff.DiffUtils
+import org.cascadebot.cascadebot.utils.diff.Difference
 import org.cascadebot.cascadebot.utils.pagination.PageCache
+import java.lang.reflect.Type
 import java.util.Date
+import java.util.concurrent.locks.ReadWriteLock
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import java.util.function.Consumer
+import kotlin.concurrent.withLock
+import kotlin.reflect.jvm.javaType
+import kotlin.reflect.typeOf
 
-class GuildData(@field:Id val guildId: Long) {
+class GuildData(@field:Id val guildId: Long): Cloneable {
+
+    @Transient
+    @kotlin.jvm.Transient
+    var lock: ReadWriteLock = ReentrantReadWriteLock()
 
     private constructor() : this(0L) {
         // Private constructor for MongoDB
@@ -44,12 +63,15 @@ class GuildData(@field:Id val guildId: Long) {
 
     //region Transient fields
     @Transient
+    @kotlin.jvm.Transient
     val buttonsCache = ButtonsCache(5)
 
     @Transient
+    @kotlin.jvm.Transient
     val pageCache = PageCache()
 
     @Transient
+    @kotlin.jvm.Transient
     val permissionsManager = PerGuildPermissionsManager()
     //endregion
 
@@ -109,5 +131,17 @@ class GuildData(@field:Id val guildId: Long) {
 
     //endregion
 
+    public fun write(writer: Consumer<GuildData>) {
+        this.lock.writeLock().withLock {
+            val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
+            writer.accept(copy);
+            val diff: Difference = DiffUtils.diff(this, copy)
+            GuildDataManager.updateDiff(guildId, diff)
+            //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
+        }
+    }
 
 }
+
+
+
