@@ -405,8 +405,11 @@ class ChannelModlogEventListener : ListenerAdapter() {
                                     event.getPermissionHolder()
                                 )
                             if (current != null && current != OverrideStatus.ALLOW) {
-                                stringBuilder.append(OverrideStatus.ALLOW.emote).append(" ➜ ").append(current.emote)
-                                    .append(": ").append(permission.getName())
+                                stringBuilder.append(OverrideStatus.ALLOW.emote)
+                                    .append(" ➜ ")
+                                    .append(current.emote)
+                                    .append(": ")
+                                    .append(permission.getName())
                                     .append('\n')
                             }
                         }

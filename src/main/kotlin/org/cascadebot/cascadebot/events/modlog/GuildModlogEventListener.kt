@@ -360,31 +360,29 @@ class GuildModlogEventListener : ListenerAdapter() {
             }
             message = try {
                 CryptUtils.decryptString(Config.INS.encryptKey, iv, messageBytes)
-            } catch (e: NoSuchPaddingException) {
-                CascadeBot.LOGGER.error("Unable to decrypt message!", e)
-                return null
-            } catch (e: NoSuchAlgorithmException) {
-                CascadeBot.LOGGER.error("Unable to decrypt message!", e)
-                return null
-            } catch (e: InvalidAlgorithmParameterException) {
-                CascadeBot.LOGGER.error("Unable to decrypt message!", e)
-                return null
-            } catch (e: InvalidKeyException) {
-                CascadeBot.LOGGER.error("Unable to decrypt message!", e)
-                return null
-            } catch (e: IllegalBlockSizeException) {
-                CascadeBot.LOGGER.error("Unable to decrypt message!", e)
-                return null
-            } catch (e: ShortBufferException) {
-                CascadeBot.LOGGER.error("Unable to decrypt message!", e)
-                return null
-            } catch (e: BadPaddingException) {
-                // TODO emails? notifications?
-                CascadeBot.LOGGER.error(
-                    "Unabled to decrypt message due to padding error! **This most likely means the data has been messed with**",
-                    e
-                )
-                return null
+            } catch (e: Exception) {
+                when (e) {
+                    is NoSuchPaddingException,
+                    is NoSuchAlgorithmException,
+                    is InvalidAlgorithmParameterException,
+                    is InvalidKeyException,
+                    is IllegalBlockSizeException,
+                    is ShortBufferException -> {
+                        CascadeBot.LOGGER.error("Unable to decrypt message!", e)
+                        return null
+                    }
+
+                    is BadPaddingException -> {
+                        // TODO emails? notifications?
+                        CascadeBot.LOGGER.error(
+                            "Unable to decrypt message due to padding error! **This most likely means the data has been messed with**",
+                            e
+                        )
+                        return null
+                    }
+
+                    else -> return null
+                }
             }
         } else {
             message = messageString
