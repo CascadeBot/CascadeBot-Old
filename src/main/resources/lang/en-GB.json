@@ -1875,13 +1875,26 @@
         "display": "Cascade purge",
         "description": "Purged {2} messages from {0}"
       },
-      "cascade_whitelist": {
-        "select": "cascade_whitelist",
-        "display": "Cascade whitelist"
+      "cascade_filter_create": {
+        "select": "cascade_filter_create",
+        "display": "Command filter created",
+        "description": "The command filter with the name `{0}` has been created!"
       },
-      "cascade_blacklist": {
-        "select": "cascade_blacklist",
-        "display": "Cascade blacklist"
+      "cascade_filter_delete": {
+        "select": "cascade_filter_delete",
+        "display": "Command filter deleted"
+      },
+      "cascade_filter_update": {
+        "select": "cascade_filter_update",
+        "display": "Command filter updated"
+      },
+      "cascade_filter_enable": {
+        "select": "cascade_filter_enable",
+        "display": "Command filter enabled"
+      },
+      "cascade_filter_disable": {
+        "select": "cascade_filter_disable",
+        "display": "Command filter disabled"
       },
       "cascade_script_created": {
         "select": "cascade_script_created",
@@ -2028,7 +2041,9 @@
     "command_filters": "command filters",
     "unknown": "unknown",
     "yes_words": ["yes", "true", "on"],
-    "no_words": ["no", "false", "off"]
+    "no_words": ["no", "false", "off"],
+    "name": "name",
+    "type": "type"
   },
   "messaging": {
     "loading_page": "Paged message loading...",

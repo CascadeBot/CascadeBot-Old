@@ -21,6 +21,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.internal.utils.Checks;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tools.ant.taskdefs.Local;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.data.Config;
@@ -311,16 +312,25 @@ public class FormatUtils {
     }
 
     @Deprecated
-    public static <T extends Enum> String formatEnum(T theEnum) {
+    public static <T extends Enum<T>> String formatEnum(T theEnum) {
         return StringUtils.capitalize(theEnum.name().toLowerCase().replace("_", " "));
     }
 
-    public static <T extends Enum> String formatEnum(T theEnum, Locale locale) {
+    public static <T extends Enum<T>> String formatEnum(T theEnum, Locale locale) {
+        return formatEnum(theEnum, locale, false);
+    }
+
+    public static <T extends Enum<T>> String formatEnum(T theEnum, Locale locale, boolean capitalize) {
         String path = "enums." + theEnum.getClass().getSimpleName().toLowerCase() + "." + theEnum.name().toLowerCase();
         if (!Language.hasLanguageEntry(locale, path)) {
             return formatEnum(theEnum);
         }
-        return Language.i18n(locale, path);
+
+        String i18nEnum = Language.i18n(locale, path);
+        if (capitalize) {
+            i18nEnum = ExtensionsKt.toCapitalized(i18nEnum);
+        }
+        return i18nEnum;
     }
 
     public static String formatUnicode(String stringToFormat) {

@@ -111,8 +111,11 @@ enum class ModlogEvent(@Transient val messageType: MessageType, val displayType:
     CASCADE_SOFT_BAN				            (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
     CASCADE_PURGE				                (MessageType.DANGER, ModlogDisplayType.AFFECTED_THUMBNAIL, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
 
-    CASCADE_WHITELIST				            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
-    CASCADE_BLACKLIST			    	        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_FILTER_CREATE			            (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.NAME, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_FILTER_DELETE		    	        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.NAME, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_FILTER_UPDATE		    	        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.NAME, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_FILTER_ENABLE		    	        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.NAME, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
+    CASCADE_FILTER_DISABLE		    	        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.NAME, Category.CASCADE, Category.CASCADE_MODERATION, Category.MODERATION),
 
     CASCADE_SCRIPT_CREATED				        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_CUSTOM_COMMANDS),
     CASCADE_SCRIPT_DELETED				        (MessageType.WARNING, ModlogDisplayType.PLAIN, AffectedDisplayType.MENTION, Category.CASCADE, Category.CASCADE_CUSTOM_COMMANDS),

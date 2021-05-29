@@ -53,6 +53,9 @@ class ModlogEventData(val trigger: ModlogEvent, @Transient val responsible: User
         is Tag -> {
             ModlogAffected(AffectedType.TAG, affected.name, null, null, null)
         }
+        is CommandFilter -> {
+            ModlogAffected(AffectedType.COMMAND_FILTER, affected.name, null, null, null)
+        }
         else -> {
             ModlogAffected()
         }
@@ -62,7 +65,7 @@ class ModlogEventData(val trigger: ModlogEvent, @Transient val responsible: User
 
     val responsibleId: Long = responsible?.idLong ?: 0
 
-    constructor() : this(ModlogEvent.CASCADE_BLACKLIST, null, "", mutableListOf())
+    constructor() : this(ModlogEvent.DUMMY, null, "", mutableListOf())
 
     init {
         if (!this.affected.affectedType.allowedDisplayTypes.contains(trigger.displayType)) {
