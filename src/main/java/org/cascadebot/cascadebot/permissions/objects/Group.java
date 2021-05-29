@@ -23,10 +23,8 @@ public class Group extends PermissionHolder {
 
     // Base 55 with 5 chars gives 503284375 combinations, we should be ok for uniqueness
     // This is normal alphanumeric with similar characters removed for less errors when inputting
-    @Getter
     private String id = RandomStringUtils.random(5, "abcdefghijkmnopqrstuvwxyzACDEFHJKLMNPRSTUVWXYZ123467890");
 
-    @Getter
     @Setter
     private String name;
 
@@ -51,6 +49,14 @@ public class Group extends PermissionHolder {
     @Override
     HolderType getType() {
         return HolderType.GROUP;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }

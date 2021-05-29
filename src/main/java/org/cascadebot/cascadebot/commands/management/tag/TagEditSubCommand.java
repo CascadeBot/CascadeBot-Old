@@ -6,10 +6,18 @@
 package org.cascadebot.cascadebot.commands.management.tag;
 
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.data.objects.Tag;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
+import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TagEditSubCommand extends SubCommand {
 
@@ -27,9 +35,15 @@ public class TagEditSubCommand extends SubCommand {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
         }
-
+        String oldContent = tag.getContent();
         tag.setContent(context.getMessage(1));
         context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", tagName));
+        ModlogEvent event = ModlogEvent.CASCADE_TAG_UPDATED;
+        List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.old_content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(oldContent) + "```"));
+        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.new_content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(tag.getContent()) + "```"));
+        ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), tag, embedFieldList);
+        context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
     }
 
     @Override

@@ -37,7 +37,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
 public class Config {
 
     private static final Logger LOG = LoggerFactory.getLogger(Config.class);
@@ -82,6 +81,13 @@ public class Config {
     private String youtubeKey;
 
     private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
+
+    private String redisHost;
+    private int redisPort;
+    private String redisPassword;
+
+    private byte[] encryptKey;
+    private byte[] mac;
 
     private Config(String file) throws IOException {
         config = new File(file);
@@ -241,6 +247,36 @@ public class Config {
 
         youtubeKey = config.getString("music_keys.youtube");
 
+        redisHost = config.getString("redis.host");
+        redisPort = config.getInt("redis.port", 6379);
+        redisPassword = config.getString("redis.password");
+
+        String stringKey = config.getString("encryption_key.key");
+        if (stringKey != null) {
+            byte[] keyBytes = stringKey.getBytes();
+            if (keyBytes.length != 16 && keyBytes.length != 24 && keyBytes.length != 32) {
+                CascadeBot.LOGGER.warn("Encryption key invalid size! must be 128, 192, or 265 bits!");
+            } else {
+                this.encryptKey = keyBytes;
+            }
+        }
+
+        String stringMac = config.getString("encryption_key.mac");
+        if (stringMac != null) {
+            byte[] macBytes = stringMac.getBytes();
+            if (macBytes.length != 16) {
+                CascadeBot.LOGGER.warn("Encryption mac invalid size! must be 128, 192, or 265 bits!");
+            } else {
+                this.mac = macBytes;
+            }
+        }
+
+        if (encryptKey == null) {
+            CascadeBot.LOGGER.warn("Encryption key is not set. Encryption will not work!");
+            encryptKey = null;
+            mac = null;
+        }
+
         LOG.info("Finished loading configuration!");
 
     }
@@ -353,6 +389,22 @@ public class Config {
 
     public int getPrometheusPort() {
         return prometheusPort;
+    }
+
+    public byte[] getEncryptKey() {
+        return encryptKey;
+    }
+
+    public String getRedisHost() {
+        return redisHost;
+    }
+
+    public int getRedisPort() {
+        return redisPort;
+    }
+
+    public String getRedisPassword() {
+        return redisPassword;
     }
 
 }

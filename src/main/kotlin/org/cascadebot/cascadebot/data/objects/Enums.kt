@@ -1,10 +1,8 @@
 package org.cascadebot.cascadebot.data.objects
 
-import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.User
+import org.cascadebot.cascadebot.moderation.ModlogEvent.ModlogDisplayType
 import org.cascadebot.cascadebot.utils.PurgeUtils
-import java.util.Arrays
-import java.util.regex.Pattern
 
 enum class PlaylistType {
     GUILD, USER
@@ -86,7 +84,7 @@ enum class LoopMode {
     DISABLED, PLAYLIST, SONG
 }
 
-enum class SavePlaylistResult {
+enum class SavePlaylistResultType {
     ALREADY_EXISTS, OVERWRITE, NEW
 }
 
@@ -132,4 +130,20 @@ enum class ArgumentType {
      * Represents that this is just part of the command and isn't a parameter.
      */
     COMMAND
+}
+
+enum class AffectedType(vararg val allowedDisplayTypes: ModlogDisplayType) {
+    UNKNOWN(ModlogDisplayType.PLAIN),
+    USER(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogDisplayType.PLAIN),
+    ROLE(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.AFFECTED_THUMBNAIL,ModlogDisplayType.PLAIN),
+    EMOTE(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogDisplayType.PLAIN),
+    GUILD(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.AFFECTED_THUMBNAIL, ModlogDisplayType.PLAIN),
+    CHANNEL(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.PLAIN),
+    GROUP(ModlogDisplayType.AFFECTED_AUTHOR, ModlogDisplayType.PLAIN),
+    SETTING(ModlogDisplayType.PLAIN),
+    MODULE(ModlogDisplayType.PLAIN),
+    COMMAND(ModlogDisplayType.PLAIN),
+    PLAYLIST(ModlogDisplayType.PLAIN),
+    TAG(ModlogDisplayType.PLAIN);
+
 }

@@ -7,7 +7,9 @@ package org.cascadebot.cascadebot.utils;
 
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import lombok.experimental.UtilityClass;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -114,7 +116,7 @@ public class DiscordUtils {
     public static TextChannel getTextChannel(Guild guild, String search) {
         List<TextChannel> channels = FinderUtil.findTextChannels(search, guild);
         if (channels.size() > 1) {
-           return null;
+            return null;
         }
 
         TextChannel channel = channels.size() != 1 ? null : channels.get(0);
@@ -201,8 +203,51 @@ public class DiscordUtils {
                 throw (ErrorResponseException) error;
             }
             // This shouldn't happen but ¯\_(ツ)_/¯
-            if (error instanceof RuntimeException) throw (RuntimeException) error;
+            if (error instanceof RuntimeException) {
+                throw (RuntimeException) error;
+            }
         };
+    }
+
+    /**
+     * Calculates a channels position.
+     * This method is needed as the information from the Discord API seams to only get the position based on the other channels of the same type.
+     * So for example getting the position of a voice channel that is in a category below some text channels, but is the only voice channel will return 1
+     * despite the text channels above it. This method solves this problem by counting the number of channels preceding a specific position and type combination.
+     *
+     * @param channel The channel to get the position for.
+     * @return The position of the channel taking into account all other channels.
+     */
+    public static int calcChannelPosition(GuildChannel channel) {
+        return calcChannelPosition(channel.getPosition(), channel.getType(), channel.getGuild());
+    }
+
+    /**
+     * Calculates a channels position.
+     * This method is needed as the information from the Discord API seams to only get the position based on the other channels of the same type.
+     * So for example getting the position of a voice channel that is in a category below some text channels, but is the only voice channel will return 1
+     * despite the text channels above it. This method solves this problem by counting the number of channels preceding a specific position and type combination.
+     *
+     * @param position The channel position to get an absolute position for.
+     * @param type     The type of channel to get the position of.
+     * @param guild    The guild the calculation is being run for.
+     * @return The position of the channel taking into account all other channels.
+     */
+    public static int calcChannelPosition(int position, ChannelType type, Guild guild) {
+        if (type.equals(ChannelType.CATEGORY)) {
+            return position + 1;
+        }
+        int i = 1;
+        for (GuildChannel channel : guild.getChannels()) {
+            if (channel.getType() != ChannelType.CATEGORY) {
+                if (channel.getPosition() != position || channel.getType().getSortBucket() != type.getSortBucket()) {
+                    i++;
+                } else {
+                    break;
+                }
+            }
+        }
+        return i;
     }
 
 }

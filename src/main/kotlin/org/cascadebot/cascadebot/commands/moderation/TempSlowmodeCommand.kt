@@ -61,7 +61,7 @@ class TempSlowmodeCommand : MainCommand() {
         val oldSlowmode = channel.slowmode
         try {
             channel.manager.setSlowmode(longInterval.toInt() / 1000).queue {
-                val textInterval = FormatUtils.formatTime(longInterval, context.locale, true).replace("(0[hm])".toRegex(), "")
+                val textInterval = FormatUtils.formatDuration(longInterval, context.locale, true).replace("(0[hm])".toRegex(), "")
                 ScheduledActionManager.registerScheduledAction(ScheduledAction(
                         ActionType.UNSLOWMODE,
                         ScheduledAction.SlowmodeActionData(channel.idLong, oldSlowmode),
@@ -71,7 +71,7 @@ class TempSlowmodeCommand : MainCommand() {
                         Instant.now(),
                         longDuration
                 ))
-                val textDuration = FormatUtils.formatTime(longDuration, context.locale, true).replace("(0[hm])".toRegex(), "") +
+                val textDuration = FormatUtils.formatDuration(longDuration, context.locale, true).replace("(0[hm])".toRegex(), "") +
                         " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(longDuration, ChronoUnit.SECONDS), context.locale) + ")"
                 context.typedMessaging.replySuccess(context.i18n("commands.tempslowmode.success", textInterval, channel.name, textDuration))
             }

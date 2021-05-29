@@ -18,7 +18,7 @@ import org.cascadebot.cascadebot.data.objects.LoadPlaylistResult;
 import org.cascadebot.cascadebot.data.objects.LoopMode;
 import org.cascadebot.cascadebot.data.objects.Playlist;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
-import org.cascadebot.cascadebot.data.objects.SavePlaylistResult;
+import org.cascadebot.cascadebot.data.objects.SavePlaylistResultType;
 import org.cascadebot.cascadebot.utils.StringsUtil;
 
 import java.util.ArrayList;
@@ -245,13 +245,14 @@ public abstract class CascadePlayer implements IPlayer {
             if (overwrite) {
                 search.setTracks(ids);
                 PlaylistManager.replacePlaylist(search);
-                return SavePlaylistResult.OVERWRITE;
+                return new SavePlaylistResult(SavePlaylistResultType.OVERWRITE, search);
             } else {
-                return SavePlaylistResult.ALREADY_EXISTS;
+                return new SavePlaylistResult(SavePlaylistResultType.ALREADY_EXISTS, null);
             }
         } else {
-            PlaylistManager.savePlaylist(new Playlist(owner, name, scope, ids));
-            return SavePlaylistResult.NEW;
+            Playlist playlist = new Playlist(owner, name, scope, ids);
+            PlaylistManager.savePlaylist(playlist);
+            return new SavePlaylistResult(SavePlaylistResultType.NEW, playlist);
         }
     }
 
@@ -288,6 +289,26 @@ public abstract class CascadePlayer implements IPlayer {
 
     @Override
     public abstract void setVolume(int i);
+
+    public class SavePlaylistResult {
+
+        private SavePlaylistResultType type;
+        private Playlist playlist;
+
+        public SavePlaylistResult(SavePlaylistResultType type, Playlist playlist) {
+            this.type = type;
+            this.playlist = playlist;
+        }
+
+        public Playlist getPlaylist() {
+            return playlist;
+        }
+
+        public SavePlaylistResultType getType() {
+            return type;
+        }
+
+    }
 
 
 }

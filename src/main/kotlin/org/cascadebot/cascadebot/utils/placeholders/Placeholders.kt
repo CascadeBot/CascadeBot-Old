@@ -2,7 +2,6 @@ package org.cascadebot.cascadebot.utils.placeholders
 
 import net.dv8tion.jda.api.events.guild.member.GenericGuildMemberEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
-import net.dv8tion.jda.api.events.guild.member.GuildMemberLeaveEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.language.Language
@@ -11,7 +10,6 @@ import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
-import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects.tags
 import java.time.Duration
 import java.time.OffsetDateTime
 

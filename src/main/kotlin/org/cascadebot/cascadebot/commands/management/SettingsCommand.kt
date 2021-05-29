@@ -13,15 +13,20 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
-import org.cascadebot.cascadebot.data.language.Language.getLanguage
+import org.cascadebot.cascadebot.data.Config
+import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.data.objects.GuildSettingsCore
 import org.cascadebot.cascadebot.data.objects.GuildSettingsManagement
 import org.cascadebot.cascadebot.data.objects.GuildSettingsModeration
 import org.cascadebot.cascadebot.data.objects.GuildSettingsMusic
 import org.cascadebot.cascadebot.data.objects.GuildSettingsUseful
+import org.cascadebot.cascadebot.data.objects.ModlogEventData
 import org.cascadebot.cascadebot.data.objects.Setting
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart
+import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.ParserUtils
 import org.cascadebot.cascadebot.utils.ReflectionUtils
@@ -108,13 +113,14 @@ class SettingsCommand : MainCommand() {
                         context.uiMessaging.replyUsage()
                         return
                     }
+                    val oldValue: String = field.get(settingsContainer).toString()
                     var value = context.getArg(1)
                     when (field.type) {
                         Boolean::class.javaPrimitiveType -> {
                             val booleanValue = try {
                                 ParserUtils.parseYesNo(context.locale, value)
                             } catch (e: IllegalArgumentException) {
-                                val language = getLanguage(context.locale)!!
+                                val language = Language.getLanguage(context.locale)!!
                                 val yesWords: JsonArray = language.getArray("words.yes_words").orElse(JsonArray())
                                 val noWords: JsonArray = language.getArray("words.no_words").orElse(JsonArray())
                                 var validValues = ""
@@ -132,6 +138,7 @@ class SettingsCommand : MainCommand() {
                             value = (if (booleanValue) context.globalEmote("tick") else context.globalEmote("cross")) ?: booleanValue.toString()
                             field.setBoolean(settingsContainer, booleanValue)
                         }
+
                         String::class.java -> {
                             field[settingsContainer] = value
                         }
@@ -140,6 +147,20 @@ class SettingsCommand : MainCommand() {
                         }
                     }
                     context.typedMessaging.replySuccess(context.i18n("commands.settings.setting_set", field.name, value))
+                    val embedFields: MutableList<ModlogEmbedPart> = ArrayList();
+                    if (field.type == Boolean::class.javaPrimitiveType) {
+                        val emote = if (value.toBoolean()) {
+                            Config.INS.globalEmotes["tick"]?.let { CascadeBot.INS.shardManager.getEmoteById(it)?.asMention } ?: ""
+                        } else {
+                            Config.INS.globalEmotes["cross"]?.let { CascadeBot.INS.shardManager.getEmoteById(it)?.asMention } ?: ""
+                        }
+                        embedFields.add(ModlogEmbedField(true, "modlog.setting.value", "modlog.setting.boolean_change", emote, value))
+                    } else {
+                        embedFields.add(ModlogEmbedField(true, "modlog.setting.value", "modlog.general.small_change", oldValue, value))
+                    }
+                    val modlogEventData = ModlogEventData(ModlogEvent.CASCADE_SETTINGS_UPDATED, sender.user, field, embedFields)
+                    modlogEventData.extraDescriptionInfo = mutableListOf(field.name)
+                    context.data.moderation.sendModlogEvent(context.guild.idLong, modlogEventData)
                 } catch (e: IllegalAccessException) {
                     context.typedMessaging.replyException(context.i18n("commands.settings.cannot_access"), e)
                 }

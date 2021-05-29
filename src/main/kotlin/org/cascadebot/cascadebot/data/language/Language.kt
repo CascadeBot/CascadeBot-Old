@@ -14,9 +14,11 @@ object Language {
 
     private val languages: MutableMap<Locale, JSONConfig> = EnumMap(Locale::class.java)
 
+    val defaultLanguage: JSONConfig by lazy { getLanguage(Locale.getDefaultLocale())!! }
+
     init {
         try {
-            loadLanguage(Locale.ENGLISH_UK)
+            loadLanguage(Locale.getDefaultLocale())
         } catch (e: Exception) {
             CascadeBot.LOGGER.error("Could not load language!", e)
             ShutdownHandler.exitWithError()
@@ -48,6 +50,11 @@ object Language {
     @JvmStatic
     fun getLanguage(locale: Locale): JSONConfig? {
         return languages[locale]
+    }
+
+    @JvmStatic
+    fun getLanguageOrDefault(locale: Locale): JSONConfig {
+        return languages[locale] ?: languages[Locale.getDefaultLocale()]!!
     }
 
     @JvmStatic

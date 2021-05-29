@@ -25,7 +25,7 @@ class WelcomeRemoveSubCommand : SubCommand() {
             return
         }
 
-        val index = context.getArgAsInteger(0)!! - 1
+        val index = context.getArgAsInteger(0) - 1
         val welcomeMessages = context.data.management.greetings.welcomeMessages
         if (index < 0 || index >= welcomeMessages.size) {
             context.typedMessaging.replyDanger(context.i18n("commands.welcome.invalid_message_index", welcomeMessages.size))

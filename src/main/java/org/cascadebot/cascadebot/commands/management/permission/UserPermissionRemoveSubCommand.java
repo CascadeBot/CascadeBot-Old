@@ -9,9 +9,13 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
+import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
+
+import java.util.List;
 
 public class UserPermissionRemoveSubCommand extends SubCommand {
 
@@ -32,6 +36,10 @@ public class UserPermissionRemoveSubCommand extends SubCommand {
 
         if (user.removePermission(context.getArg(1))) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));
+            ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_USER_PERMISSION_REMOVE;
+            ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), member.getUser(), List.of());
+            eventStore.setExtraDescriptionInfo(List.of(context.getArg(1)));
+            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
         } else {
             context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.remove.fail", context.getArg(1), member.getUser().getAsTag()));
         }

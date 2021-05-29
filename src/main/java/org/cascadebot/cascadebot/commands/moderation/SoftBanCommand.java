@@ -12,6 +12,7 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
+import org.cascadebot.cascadebot.moderation.ModAction;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
@@ -36,8 +37,9 @@ public class SoftBanCommand extends MainCommand {
             reason = context.getMessage(1);
         }
 
-        CascadeBot.INS.getModerationManager().softBan(
+        CascadeBot.INS.getModerationManager().ban(
                 context,
+                ModAction.SOFT_BAN,
                 targetMember.getUser(),
                 sender,
                 reason,

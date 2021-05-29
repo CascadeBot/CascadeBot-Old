@@ -19,6 +19,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedFooter;
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart;
 import org.cascadebot.cascadebot.utils.lists.WeightedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +46,8 @@ public class DatabaseManager {
                     "org.cascadebot.cascadebot.utils.lists",
                     "org.cascadebot.cascadebot.scheduler",
                     "org.cascadebot.shared"
-            ).register(WeightedList.WeightPair.class).build())
+            ).register(ModlogEmbedPart.class).register(ModlogEmbedField.class).register(ModlogEmbedDescription.class).register(ModlogEmbedFooter.class)
+                    .register(WeightedList.WeightPair.class).build())
     );
 
     @Getter

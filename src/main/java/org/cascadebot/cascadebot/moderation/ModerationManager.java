@@ -13,15 +13,19 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
+import org.cascadebot.cascadebot.data.objects.ModlogEventData;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.scheduler.ActionType;
 import org.cascadebot.cascadebot.scheduler.ScheduledAction;
 import org.cascadebot.cascadebot.utils.ExtensionsKt;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModerationManager {
 
@@ -37,6 +41,26 @@ public class ModerationManager {
                         .ban(target, messagesToDelete, reason)
                         .queue(success -> {
                             sendSuccess(context, target, submitter, action, reason);
+                            if (action == ModAction.SOFT_BAN) {
+                                List<ModlogEmbedPart> embedParts = new ArrayList<>();
+
+                                if (reason != null) {
+                                    embedParts.add(new ModlogEmbedField(false, "words.reason", "modlog.general.variable", reason));
+                                }
+
+                                ModlogEventData eventData = new ModlogEventData(ModlogEvent.CASCADE_SOFT_BAN,
+                                        submitter.getUser(),
+                                        target,
+                                        embedParts);
+                                context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
+
+                                runWithCheckedExceptions(() -> {
+                                    context.getGuild()
+                                            .unban(target)
+                                            .reason("Softban: Unbanned user")
+                                            .queue(null, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, ModAction.SOFT_BAN));
+                                }, context, ModAction.SOFT_BAN, target);
+                            }
                         }, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, action));
             }, context, action, target);
         }
@@ -66,20 +90,21 @@ public class ModerationManager {
                             delay
                     ));
                     sendTempSuccess(context, target, submitter, ModAction.TEMP_BAN, reason, delay);
+
+                    List<ModlogEmbedPart> embedParts = new ArrayList<>();
+
+                    if (reason != null) {
+                        embedParts.add(new ModlogEmbedField(false, "words.reason", "modlog.general.variable", reason));
+                    }
+
+                    ModlogEventData eventData = new ModlogEventData(ModlogEvent.CASCADE_TEMP_BAN,
+                            submitter.getUser(),
+                            target,
+                            embedParts);
+                    eventData.setExtraDescriptionInfo(List.of(FormatUtils.formatDuration(delay, context.getLocale(), true, true)));
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
                 });
             }, context, ModAction.TEMP_BAN, target);
-        }
-    }
-
-    public void softBan(CommandContext context, User target, Member submitter, String reason, int messagesToDelete) {
-        if (runChecks(ModAction.SOFT_BAN, target, submitter, context)) {
-            ban(context, ModAction.SOFT_BAN, target, submitter, reason, messagesToDelete);
-            runWithCheckedExceptions(() -> {
-                context.getGuild()
-                        .unban(target)
-                        .reason("Softban: Unbanned user")
-                        .queue(null, throwable -> FAILURE_CONSUMER.accept(context, throwable, target, ModAction.SOFT_BAN));
-            }, context, ModAction.SOFT_BAN, target);
         }
     }
 
@@ -106,6 +131,17 @@ public class ModerationManager {
                                 reason))
                         .queue(aVoid -> {
                             sendSuccess(context, target.getUser(), submitter, ModAction.MUTE, reason);
+                            List<ModlogEmbedPart> embedParts = new ArrayList<>();
+
+                            if (reason != null) {
+                                embedParts.add(new ModlogEmbedField(false, "words.reason", "modlog.general.variable", reason));
+                            }
+
+                            ModlogEventData eventData = new ModlogEventData(ModlogEvent.CASCADE_MUTE,
+                                    submitter.getUser(),
+                                    target.getUser(),
+                                    embedParts);
+                            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
                         });
             }, context, ModAction.MUTE, target.getUser());
         }
@@ -132,6 +168,19 @@ public class ModerationManager {
                                     delay
                             ));
                             sendTempSuccess(context, target.getUser(), submitter, ModAction.TEMP_MUTE, reason, delay);
+
+                            List<ModlogEmbedPart> embedParts = new ArrayList<>();
+
+                            if (reason != null) {
+                                embedParts.add(new ModlogEmbedField(false, "words.reason", "modlog.general.variable", reason));
+                            }
+
+                            ModlogEventData eventData = new ModlogEventData(ModlogEvent.CASCADE_TEMP_MUTE,
+                                    submitter.getUser(),
+                                    target.getUser(),
+                                    embedParts);
+                            eventData.setExtraDescriptionInfo(List.of(FormatUtils.formatDuration(delay, context.getLocale(), true, true)));
+                            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventData);
                         });
             }, context, ModAction.TEMP_MUTE, target.getUser());
         }
@@ -148,7 +197,7 @@ public class ModerationManager {
         } else if (target.equals(context.getSelfUser())) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_bot", action.getName(context.getLocale())));
             return false;
-        } else if (context.getData().getModeration().getRespectBanOrKickHierarchy() && memberTarget != null && !submitter.canInteract(memberTarget)) {
+        } else if (action != ModAction.UNBAN && context.getData().getModeration().getRespectBanOrKickHierarchy() && memberTarget != null && !submitter.canInteract(memberTarget)) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.user_cannot_action_superior", action.getName(context.getLocale()), target.getName()));
             return false;
         }
@@ -170,7 +219,8 @@ public class ModerationManager {
     }
 
     private void sendSuccess(CommandContext context, User target, Member submitter, ModAction action, String reason) {
-        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("moderation_manager.success", target.getAsTag(), action.getVerb(context.getLocale())), submitter.getUser(), context.getLocale());
+        String user = action.doesRequireMember() ? target.getAsMention() : target.getAsTag();
+        EmbedBuilder builder = MessagingObjects.getStandardMessageEmbed(context.i18n("moderation_manager.success", user, action.getVerb(context.getLocale())), submitter.getUser(), context.getLocale());
 
         if (!StringUtils.isBlank(reason)) {
             builder.addField(context.i18n("words.reason"), reason, false);
@@ -190,7 +240,7 @@ public class ModerationManager {
         // TODO, Use kotlin string extensions when PR #232 is merged.
         builder.addField(
                 context.i18n("words.duration"),
-                FormatUtils.formatTime(delay, context.getLocale(), true)
+                FormatUtils.formatDuration(delay, context.getLocale(), true, true)
                         + " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(delay, ChronoUnit.MILLIS), context.getLocale()) + ")",
                 true
         );

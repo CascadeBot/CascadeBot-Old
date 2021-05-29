@@ -60,6 +60,7 @@ class GuildData(@field:Id val guildId: Long) {
     fun onGuildLoaded() {
         loadMusicSettings()
         permissionsManager.registerPermissions(this)
+        moderation.buildWebhookClients()
     }
 
     private fun loadMusicSettings() {
