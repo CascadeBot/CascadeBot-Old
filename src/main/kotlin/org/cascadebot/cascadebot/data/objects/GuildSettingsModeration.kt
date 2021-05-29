@@ -26,6 +26,8 @@ import java.util.function.Consumer
 @SettingsContainer(module = Module.MODERATION)
 class GuildSettingsModeration {
 
+    var writeMode = false
+
     var modlogChannelNum: Int = 1;
 
     @Setting
@@ -72,6 +74,7 @@ class GuildSettingsModeration {
     }
 
     fun enableEvent(channel: TextChannel, event: ModlogEvent): Boolean {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         if (modlogEvents.containsKey(channel.idLong)) {
             return modlogEvents[channel.idLong]!!.addEvent(event)
         } else {
@@ -81,6 +84,7 @@ class GuildSettingsModeration {
     }
 
     fun disableEvent(channel: TextChannel, event: ModlogEvent): Boolean {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         if (modlogEvents.containsKey(channel.idLong)) {
             return modlogEvents[channel.idLong]!!.removeEvent(event)
         } else {
@@ -89,6 +93,7 @@ class GuildSettingsModeration {
     }
 
     fun enableEventByCategory(channel: TextChannel, category: ModlogEvent.Category) {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         for (modlogEvent in ModlogEvent.getEventsFromCategory(category)) {
             enableEvent(channel, modlogEvent)
         }

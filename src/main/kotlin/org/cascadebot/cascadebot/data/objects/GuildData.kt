@@ -20,6 +20,7 @@ import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 import org.cascadebot.cascadebot.utils.diff.DiffUtils
 import org.cascadebot.cascadebot.utils.diff.Difference
 import org.cascadebot.cascadebot.utils.pagination.PageCache
+import java.lang.UnsupportedOperationException
 import java.lang.reflect.Type
 import java.util.Date
 import java.util.concurrent.locks.ReadWriteLock
@@ -34,6 +35,10 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
     @Transient
     @kotlin.jvm.Transient
     var lock: ReadWriteLock = ReentrantReadWriteLock()
+
+    @Transient
+    @kotlin.jvm.Transient
+    var writeMode = false;
 
     private constructor() : this(0L) {
         // Private constructor for MongoDB
@@ -121,6 +126,8 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
     }
 
     private fun putPersistentButtonGroup(channelId: Long, messageId: Long, buttonGroup: PersistentButtonGroup) {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
+
         if (persistentButtons.containsKey(channelId) && persistentButtons[channelId] != null) {
             persistentButtons[channelId]!![messageId] = buttonGroup
         } else {
@@ -131,14 +138,24 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
 
     //endregion
 
-    public fun write(writer: Consumer<GuildData>) {
+    fun write(writer: Consumer<GuildData>) {
         this.lock.writeLock().withLock {
             val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
+            copy.setAllWriteMode(true)
             writer.accept(copy);
+            copy.setAllWriteMode(false)
             val diff: Difference = DiffUtils.diff(this, copy)
             GuildDataManager.updateDiff(guildId, diff, copy)
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
         }
+    }
+
+    fun setAllWriteMode(mode: Boolean) {
+        writeMode = mode
+        core.writeMode = mode
+        useful.writeMode = mode
+        management.writeMode = mode
+        moderation.writeMode = mode
     }
 
 }

@@ -21,6 +21,8 @@ class GuildSettingsManagement {
     val greetings = Greetings()
     val autoRoles: MutableSet<Long> = mutableSetOf()
 
+    var writeMode = false
+
     fun getTag(key: String): Tag? {
         return tags[key]
     }
@@ -30,10 +32,12 @@ class GuildSettingsManagement {
     }
 
     fun addTag(key: String, tag: Tag) {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         tags[key] = tag
     }
 
     fun removeTag(key: String): Boolean {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         return tags.remove(key) != null
     }
 

@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.messaging.Messaging.sendButtonedMessage
 import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
-import java.util.ArrayList
 
 class TodoList(val ownerId: Long) {
 

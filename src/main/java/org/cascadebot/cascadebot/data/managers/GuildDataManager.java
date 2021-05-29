@@ -35,7 +35,7 @@ public final class GuildDataManager {
 
     private static LoadingCache<Long, GuildData> guilds = Caffeine.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
-            //.removalListener(new GuildSaveListener())
+            //.removalListener(new GuildSaveListener()) TODO do we want to use still use this?
             .recordStats()
             .build(id -> {
                 GuildData dbData = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("_id", id)).first();

@@ -6,6 +6,7 @@ import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Locale
+import java.lang.UnsupportedOperationException
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -36,6 +37,8 @@ class GuildSettingsCore {
     @Setting
     var helpShowAllModules = false
 
+    var writeMode = false
+
     var locale: Locale = Locale.getDefaultLocale()
     var prefix: String = Config.INS.defaultPrefix
 
@@ -44,11 +47,13 @@ class GuildSettingsCore {
 
     //region Modules
     fun enableModule(module: Module): Boolean {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         require(!module.isPrivate) { "This module is not available to be enabled!" }
         return enabledModules.add(module)
     }
 
     fun disableModule(module: Module): Boolean {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         require(!module.isPrivate) { "This module is not available to be disabled!" }
         require(!module.isRequired) { "Cannot disable the ${module.toString().toLowerCase()} module!" }
         return enabledModules.remove(module)
@@ -67,6 +72,7 @@ class GuildSettingsCore {
 
     //region Commands
     fun enableCommand(command: MainCommand) {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         if (command.module().isPrivate) return
         if (commandInfo.contains(command.javaClass)) {
             getGuildCommandInfo(command).enabled = true
@@ -74,6 +80,7 @@ class GuildSettingsCore {
     }
 
     fun enableCommandByModule(module: Module) {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         if (module.isPrivate) return
         for (command in CascadeBot.INS.commandManager.getCommandsByModule(module)) {
             enableCommand(command)
@@ -81,11 +88,13 @@ class GuildSettingsCore {
     }
 
     fun disableCommand(command: MainCommand) {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         if (command.module().isPrivate) return
         getGuildCommandInfo(command).enabled = false
     }
 
     fun disableCommandByModule(module: Module) {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         if (module.isPrivate) return
         for (command in CascadeBot.INS.commandManager.getCommandsByModule(module)) {
             disableCommand(command)
@@ -105,10 +114,12 @@ class GuildSettingsCore {
     }
 
     fun addAlias(command: MainCommand, alias: String): Boolean {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         return getGuildCommandInfo(command).aliases.add(alias)
     }
 
     fun removeAlias(command: MainCommand, alias: String): Boolean {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
         return getGuildCommandInfo(command).aliases.remove(alias)
     }
 
