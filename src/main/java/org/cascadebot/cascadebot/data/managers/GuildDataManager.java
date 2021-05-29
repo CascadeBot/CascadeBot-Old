@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.data.managers;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.mongodb.client.model.Updates;
+import org.bson.BsonDocument;
 import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.database.DebugLogCallback;
@@ -53,7 +54,7 @@ public final class GuildDataManager {
         });;
     }
 
-    public static void updateDiff(long id, Difference difference) {
+    public static void updateDiff(long id, Difference difference, GuildData newData) {
         List<Bson> bsonList = new ArrayList<>();
         for (Map.Entry<String, Object> added : difference.getAdded().entrySet()) {
             bsonList.add(Updates.set(added.getKey(), added.getValue()));
@@ -76,6 +77,7 @@ public final class GuildDataManager {
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).updateMany(eq("_id", id), Updates.combine(bsonList), new DebugLogCallback<>("Updated Guild ID " + id));
         });;
+        guilds.put(newData.getGuildId(), newData);
     }
 
     public static void insert(long id, GuildData data) {

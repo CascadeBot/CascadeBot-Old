@@ -136,7 +136,7 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
             val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
             writer.accept(copy);
             val diff: Difference = DiffUtils.diff(this, copy)
-            GuildDataManager.updateDiff(guildId, diff)
+            GuildDataManager.updateDiff(guildId, diff, copy)
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
         }
     }
