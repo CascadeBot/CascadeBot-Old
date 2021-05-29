@@ -144,6 +144,7 @@ enum class AffectedType(vararg val allowedDisplayTypes: ModlogDisplayType) {
     MODULE(ModlogDisplayType.PLAIN),
     COMMAND(ModlogDisplayType.PLAIN),
     PLAYLIST(ModlogDisplayType.PLAIN),
-    TAG(ModlogDisplayType.PLAIN);
+    TAG(ModlogDisplayType.PLAIN),
+    COMMAND_FILTER(ModlogDisplayType.PLAIN);
 
 }
