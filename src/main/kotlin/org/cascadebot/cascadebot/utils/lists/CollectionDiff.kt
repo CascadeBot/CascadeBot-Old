@@ -5,17 +5,24 @@
 
 package org.cascadebot.cascadebot.utils.lists
 
-class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>) {
+import org.cascadebot.cascadebot.utils.diff.Diff
+
+class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>): Diff {
 
     private val _added: MutableList<T> = ArrayList()
 
     private val _removed: MutableList<T> = ArrayList()
+
+    private val _inBoth: MutableList<T> = ArrayList()
 
     val added
         get() = _added.toList()
 
     val removed
         get() = _removed.toList()
+
+    val inBoth
+        get() = _inBoth.toList()
 
     init {
         val addedDiff = newList.toMutableList()
@@ -45,6 +52,13 @@ class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>) {
         }
 
         _removed.addAll(removedDiff)
+
+        // TODO account for duplicated
+        val both = originalList.toMutableList()
+        both.retainAll(newList)
+
+        _inBoth.addAll(both)
+
     }
 
 }
