@@ -11,6 +11,10 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.objects.CommandFilter
 import org.cascadebot.cascadebot.data.objects.CommandFilter.FilterType
+import org.cascadebot.cascadebot.data.objects.ModlogEventData
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart
+import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.checkerframework.checker.units.qual.s
@@ -63,6 +67,13 @@ class FiltersCreateSubCommand : SubCommand() {
             FormatUtils.formatEnum(commandFilter.type, context.locale),
             commandFilter.name
         ))
+
+        val embedFieldList = mutableListOf<ModlogEmbedPart>()
+
+        embedFieldList.add(ModlogEmbedField(true, "words.type", null, FormatUtils.formatEnum(commandFilter.type, context.locale, true)))
+
+        val eventStore = ModlogEventData(ModlogEvent.CASCADE_FILTER_CREATE, context.user, commandFilter, embedFieldList)
+        context.data.moderation.sendModlogEvent(context.guild.idLong, eventStore)
 
     }
 

@@ -4,6 +4,7 @@ import club.minnced.discord.webhook.send.WebhookEmbed
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.utils.toCapitalized
 
 sealed class ModlogEmbedPart {
 
@@ -37,7 +38,7 @@ class ModlogEmbedField(val inline: Boolean = true,
 
     override fun build(locale: Locale, embedBuilder: WebhookEmbedBuilder) {
         embedBuilder.addField(WebhookEmbed.EmbedField(inline,
-                Language.i18n(locale, titleLanguagePath, *titleLanguageObjects.toTypedArray()),
+                Language.i18n(locale, titleLanguagePath, *titleLanguageObjects.toTypedArray()).toCapitalized(),
                 Language.i18n(locale, valueLanguagePath ?: "modlog.general.variable", *valueLanguageObjects.toTypedArray())))
     }
 
