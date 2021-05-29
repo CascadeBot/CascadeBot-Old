@@ -7,7 +7,10 @@ package org.cascadebot.cascadebot.data.managers;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.mongodb.Block;
+import com.mongodb.async.client.ChangeStreamIterable;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import org.bson.BsonDocument;
 import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.CascadeBot;
@@ -28,7 +31,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 public final class GuildDataManager {
 
-    private static final String COLLECTION = "guilds";
+    public static final String COLLECTION = "guilds";
 
     private static LoadingCache<Long, GuildData> guilds = Caffeine.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
@@ -90,6 +93,10 @@ public final class GuildDataManager {
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).replaceOne(eq("_id", id), data, new DebugLogCallback<>("Replaced Guild ID " + id));
         });
+    }
+
+    public static void replaceInternal(GuildData guildData) {
+        guilds.put(guildData.getGuildId(), guildData);
     }
 
     public static void replaceSync(long id, GuildData data) {

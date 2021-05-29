@@ -12,6 +12,7 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mongodb.async.client.ChangeStreamIterable;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
@@ -32,6 +33,7 @@ import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.events.BotEvents;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
@@ -195,6 +197,17 @@ public class CascadeBot {
                     Config.INS.isSsl()
             );
         }
+
+        databaseManager.runAsyncTask(database -> {
+            ChangeStreamIterable<GuildData> changeStreamIterable = database.getCollection(GuildDataManager.COLLECTION, GuildData.class).watch();
+            new Thread(() -> changeStreamIterable.forEach(guildDataChangeStreamDocument ->
+                    GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument()), (result, throwable) -> {
+                if (throwable != null) {
+                    throwable.printStackTrace();
+                }
+                System.out.println(result);
+            }), "mongoChangeWatch").start();
+        });
 
         musicHandler = new MusicHandler();
 
