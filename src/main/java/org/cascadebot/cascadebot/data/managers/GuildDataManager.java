@@ -22,6 +22,8 @@ import org.cascadebot.cascadebot.utils.diff.Difference;
 import org.cascadebot.cascadebot.utils.diff.DifferenceChanged;
 import org.cascadebot.cascadebot.utils.lists.CollectionDiff;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +37,6 @@ public final class GuildDataManager {
 
     private static LoadingCache<Long, GuildData> guilds = Caffeine.newBuilder()
             .expireAfterAccess(5, TimeUnit.MINUTES)
-            //.removalListener(new GuildSaveListener()) TODO do we want to use still use this?
             .recordStats()
             .build(id -> {
                 GuildData dbData = CascadeBot.INS.getDatabaseManager().getDatabase().getCollection(COLLECTION, GuildData.class).find(eq("_id", id)).first();
@@ -80,7 +81,7 @@ public final class GuildDataManager {
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).updateMany(eq("_id", id), Updates.combine(bsonList), new DebugLogCallback<>("Updated Guild ID " + id));
         });;
-        guilds.put(newData.getGuildId(), newData);
+        replaceInternal(newData);
     }
 
     public static void insert(long id, GuildData data) {
@@ -96,6 +97,26 @@ public final class GuildDataManager {
     }
 
     public static void replaceInternal(GuildData guildData) {
+        GuildData old = guilds.get(guildData.getGuildId());
+        try {
+            Field buttons = guildData.getClass().getDeclaredField("buttonsCache");
+            buttons.setAccessible(true);
+            Field modifiersFieldButtons = Field.class.getDeclaredField("modifiers");
+            modifiersFieldButtons.setAccessible(true);
+            modifiersFieldButtons.setInt(buttons, buttons.getModifiers() & ~Modifier.FINAL);
+
+            buttons.set(guildData, buttons.get(old));
+
+            Field pages = guildData.getClass().getDeclaredField("pageCache");
+            pages.setAccessible(true);
+            Field modifiersFieldPages = Field.class.getDeclaredField("modifiers");
+            modifiersFieldPages.setAccessible(true);
+            modifiersFieldPages.setInt(pages, pages.getModifiers() & ~Modifier.FINAL);
+
+            pages.set(guildData, pages.get(old));
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+        }
+
         guilds.put(guildData.getGuildId(), guildData);
     }
 
