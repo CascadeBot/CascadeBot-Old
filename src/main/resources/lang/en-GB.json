@@ -1887,7 +1887,8 @@
       },
       "cascade_filter_update": {
         "select": "command_filter_update",
-        "display": "Command filter updated"
+        "display": "Command filter updated",
+        "description": "The command filter with the name `{0}` has been updated!\n\nSee what updates have been made below:"
       },
       "cascade_filter_enable": {
         "select": "command_filter_enable",
@@ -2046,7 +2047,8 @@
     "yes_words": ["yes", "true", "on"],
     "no_words": ["no", "false", "off"],
     "name": "name",
-    "type": "type"
+    "type": "type",
+    "operator": "operator"
   },
   "messaging": {
     "loading_page": "Paged message loading...",

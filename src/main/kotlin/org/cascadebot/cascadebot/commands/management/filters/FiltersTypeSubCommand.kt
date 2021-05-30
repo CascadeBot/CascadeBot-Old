@@ -9,9 +9,14 @@ import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.objects.CommandFilter
+import org.cascadebot.cascadebot.data.objects.ModlogEventData
+import org.cascadebot.cascadebot.moderation.ModlogEmbedField
+import org.cascadebot.cascadebot.moderation.ModlogEmbedPart
+import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.language.LanguageUtils
+import org.cascadebot.cascadebot.utils.toCapitalized
 import org.cascadebot.cascadebot.utils.toTitleCase
 
 class FiltersTypeSubCommand : SubCommand() {
@@ -43,10 +48,24 @@ class FiltersTypeSubCommand : SubCommand() {
             return
         }
 
+        val oldType = filter.type
         filter.type = type
         context.typedMessaging.replySuccess(context.i18n("commands.filters.type.success", FormatUtils.formatEnum(type, context.locale), filterName))
 
+        val embedFields = mutableListOf<ModlogEmbedPart>()
 
+        embedFields.add(
+            ModlogEmbedField(
+                false,
+                "words.type",
+                "modlog.general.small_change",
+                FormatUtils.formatEnum(oldType, context.locale).toCapitalized(),
+                FormatUtils.formatEnum(type, context.locale).toCapitalized()
+            )
+        )
+
+        val eventStore = ModlogEventData(ModlogEvent.CASCADE_FILTER_UPDATE, context.user, filter, embedFields)
+        context.data.moderation.sendModlogEvent(context.guild.idLong, eventStore)
     }
 
     override fun command(): String  = "type"
