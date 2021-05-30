@@ -23,12 +23,21 @@ import org.cascadebot.cascadebot.utils.pagination.PageCache
 import java.lang.UnsupportedOperationException
 import java.lang.reflect.Type
 import java.util.Date
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import java.util.function.Consumer
 import kotlin.concurrent.withLock
+<<<<<<< Updated upstream
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.typeOf
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 class GuildData(@field:Id val guildId: Long): Cloneable {
 
@@ -138,9 +147,18 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
 
     //endregion
 
+<<<<<<< Updated upstream
     fun write(writer: Consumer<GuildData>) {
         this.lock.writeLock().withLock {
             val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
+=======
+<<<<<<< Updated upstream
+=======
+    fun write(writer: Consumer<GuildData>) {
+        this.lock.writeLock().withLock {
+            println(this.javaClass.declaredFields.map { it.name })
+            val copy: GuildData = DiffUtils.deepCopy(this);
+>>>>>>> Stashed changes
             copy.setAllWriteMode(true)
             writer.accept(copy);
             copy.setAllWriteMode(false)
@@ -157,6 +175,10 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
         management.writeMode = mode
         moderation.writeMode = mode
     }
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 }
 
