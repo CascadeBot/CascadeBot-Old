@@ -12,7 +12,9 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mongodb.DBRef;
 import com.mongodb.async.client.ChangeStreamIterable;
+import com.mongodb.client.model.changestream.UpdateDescription;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
@@ -27,6 +29,10 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.BsonValue;
+import org.bson.Document;
+import org.bson.codecs.DecoderContext;
+import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
@@ -57,13 +63,18 @@ import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.data.mongodb.util.BsonUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -200,8 +211,24 @@ public class CascadeBot {
 
         databaseManager.runAsyncTask(database -> {
             ChangeStreamIterable<GuildData> changeStreamIterable = database.getCollection(GuildDataManager.COLLECTION, GuildData.class).watch();
-            new Thread(() -> changeStreamIterable.forEach(guildDataChangeStreamDocument ->
-                    GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument()), (result, throwable) -> {
+            new Thread(() -> changeStreamIterable.forEach(guildDataChangeStreamDocument -> {
+                if (guildDataChangeStreamDocument.getFullDocument() != null) {
+                    GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument());
+                } else {
+                    GuildData currentData = GuildDataManager.getGuildData(guildDataChangeStreamDocument.getDocumentKey().get("_id").asNumber().longValue());
+                    UpdateDescription updateDescription = guildDataChangeStreamDocument.getUpdateDescription();
+                    if (updateDescription.getUpdatedFields() != null) {
+                        for (Map.Entry<String, BsonValue> change : updateDescription.getUpdatedFields().entrySet()) {
+                            if (!updateGuildData(change.getKey(), currentData, BsonUtils.toJavaType(change.getValue()))) break;
+                        }
+                    }
+                    if (updateDescription.getRemovedFields() != null) {
+                        for (String removed : updateDescription.getRemovedFields()) {
+                            if (!updateGuildData(removed, currentData, null)) break;
+                        }
+                    }
+                }
+            }, (result, throwable) -> {
                 if (throwable != null) {
                     throwable.printStackTrace();
                 }
@@ -278,6 +305,34 @@ public class CascadeBot {
 
         setupTasks();
 
+    }
+
+    public boolean updateGuildData(String path, GuildData guildData, Object newValue) {
+        String[] split = path.split("\\.");
+        String last = split[split.length - 1];
+        Object current = guildData;
+        for (String part : Arrays.copyOfRange(split, 0, split.length - 1)) {
+            try {
+                Field field = current.getClass().getDeclaredField(part);
+                field.setAccessible(true);
+                current = field.get(current);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                CascadeBot.LOGGER.error("Failed to update guild data", e);
+                return false;
+            }
+        }
+        try {
+            Field field = current.getClass().getDeclaredField(last);
+            field.setAccessible(true);
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            field.set(current, newValue);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            CascadeBot.LOGGER.error("Failed to update guild data", e);
+            return false;
+        }
+        return true;
     }
 
     private void setupTasks() {
