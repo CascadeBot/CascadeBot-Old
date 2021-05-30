@@ -29,7 +29,7 @@ public class GroupPermissionInfoSubCommand extends SubCommand {
             return;
         }
 
-        PermissionCommandUtils.tryGetGroupFromString(context, context.getMessage(0), group -> {
+        PermissionCommandUtils.tryGetGroupFromString(context, context.getData(), context.getMessage(0), group -> {
             if (group.getPermissions().isEmpty() && group.getRoleIds().isEmpty()) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.info.empty_group"));
                 return;

@@ -34,34 +34,40 @@ public class GroupPermissionMoveSubCommand extends SubCommand {
             return;
         }
 
-        PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
-            if (context.getArgs().length > 1 && context.isArgInteger(1)) {
-                context.getData().getManagement().getPermissions().moveGroup(group, context.getArgAsInteger(1));
-                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.move.moved", group.getName(), context.getArg(1)));
-                return;
-            }
-
-            AtomicInteger currIndex = new AtomicInteger(context.getData().getManagement().getPermissions().getGroups().indexOf(group));
-            ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
-                if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
+        context.getData().write(guildData -> {
+            PermissionCommandUtils.tryGetGroupFromString(context, guildData, context.getArg(0), group -> {
+                if (context.getArgs().length > 1 && context.isArgInteger(1)) {
+                    guildData.getManagement().getPermissions().moveGroup(group, context.getArgAsInteger(1));
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.move.moved", group.getName(), context.getArg(1)));
                     return;
                 }
-                context.getData().getManagement().getPermissions().moveGroup(context.getData().getManagement().getPermissions().getGroups().get(currIndex.get()), currIndex.get() - 1);
-                currIndex.addAndGet(-1);
-                message.editMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups())).queue();
-            }));
-            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
-                if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
-                    return;
-                }
-                context.getData().getManagement().getPermissions().moveGroup(context.getData().getManagement().getPermissions().getGroups().get(currIndex.get()), currIndex.get() + 1);
-                currIndex.addAndGet(1);
-                message.editMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups())).queue();
-            }));
 
-            context.getUiMessaging().sendButtonedMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups()), buttonGroup);
-        }, sender.getIdLong());
+                AtomicInteger currIndex = new AtomicInteger(context.getData().getManagement().getPermissions().getGroups().indexOf(group));
+                ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+                buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
+                    if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
+                        return;
+                    }
+                    context.getData().write(guildData1 -> {
+                        guildData1.getManagement().getPermissions().moveGroup(context.getData().getManagement().getPermissions().getGroups().get(currIndex.get()), currIndex.get() - 1);
+                    });
+                    currIndex.addAndGet(-1);
+                    message.editMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups())).queue();
+                }));
+                buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
+                    if (buttonGroup.getOwner().getIdLong() != runner.getIdLong()) {
+                        return;
+                    }
+                    context.getData().write(guildData1 -> {
+                        guildData1.getManagement().getPermissions().moveGroup(context.getData().getManagement().getPermissions().getGroups().get(currIndex.get()), currIndex.get() + 1);
+                    });
+                    currIndex.addAndGet(1);
+                    message.editMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups())).queue();
+                }));
+
+                context.getUiMessaging().sendButtonedMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups()), buttonGroup);
+            }, sender.getIdLong());
+        });
     }
 
     public String getGroupsList(Group targetGroup, List<Group> groups) {

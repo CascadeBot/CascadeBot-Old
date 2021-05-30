@@ -78,6 +78,9 @@ public final class GuildDataManager {
         for (String removed : difference.getRemoved().keySet()) {
             bsonList.add(Updates.unset(removed));
         }
+        if (bsonList.size() == 0) {
+            return;
+        }
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).updateMany(eq("_id", id), Updates.combine(bsonList), new DebugLogCallback<>("Updated Guild ID " + id));
         });;

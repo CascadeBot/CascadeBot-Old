@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.buttons.Button;
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
@@ -24,14 +25,14 @@ import java.util.function.Consumer;
 @UtilityClass
 public class PermissionCommandUtils {
 
-    public static void tryGetGroupFromString(CommandContext context, String s, Consumer<Group> groupConsumer, long sender) {
-        Group groupById = context.getData().getManagement().getPermissions().getGroupById(s);
+    public static void tryGetGroupFromString(CommandContext context, GuildData data, String s, Consumer<Group> groupConsumer, long sender) {
+        Group groupById = data.getManagement().getPermissions().getGroupById(s);
         if (groupById != null) {
             groupConsumer.accept(groupById);
             return;
         }
 
-        List<Group> groupList = context.getData().getManagement().getPermissions().getGroupsByName(s);
+        List<Group> groupList = data.getManagement().getPermissions().getGroupsByName(s);
         if (groupList.size() == 1) {
             groupConsumer.accept(groupList.get(0));
             return;

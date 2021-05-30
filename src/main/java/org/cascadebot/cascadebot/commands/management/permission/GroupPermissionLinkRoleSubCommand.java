@@ -33,17 +33,19 @@ public class GroupPermissionLinkRoleSubCommand extends SubCommand {
             return;
         }
 
-        PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
-            if (group.linkRole(role.getIdLong())) {
-                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.link.success", group.getName(), role.getName()));
-                ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_LINK;
-                ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), group, List.of());
-                eventStore.setExtraDescriptionInfo(List.of(role.getAsMention()));
-                context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
-            } else {
-                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.link.fail", group.getName(), role.getName()));
-            }
-        }, sender.getIdLong());
+        context.getData().write(guildData -> {
+            PermissionCommandUtils.tryGetGroupFromString(context, guildData, context.getArg(0), group -> {
+                if (group.linkRole(role.getIdLong())) {
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.link.success", group.getName(), role.getName()));
+                    ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_LINK;
+                    ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), group, List.of());
+                    eventStore.setExtraDescriptionInfo(List.of(role.getAsMention()));
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+                } else {
+                    context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.link.fail", group.getName(), role.getName()));
+                }
+            }, sender.getIdLong());
+        });
     }
 
     @Override

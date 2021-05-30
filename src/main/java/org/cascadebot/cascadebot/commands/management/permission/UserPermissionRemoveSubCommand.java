@@ -32,17 +32,19 @@ public class UserPermissionRemoveSubCommand extends SubCommand {
             return;
         }
 
-        User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
+        context.getData().write(guildData -> {
+            User user = guildData.getManagement().getPermissions().getPermissionUser(member);
 
-        if (user.removePermission(context.getArg(1))) {
-            context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));
-            ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_USER_PERMISSION_REMOVE;
-            ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), member.getUser(), List.of());
-            eventStore.setExtraDescriptionInfo(List.of(context.getArg(1)));
-            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
-        } else {
-            context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.remove.fail", context.getArg(1), member.getUser().getAsTag()));
-        }
+            if (user.removePermission(context.getArg(1))) {
+                context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));
+                ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_USER_PERMISSION_REMOVE;
+                ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), member.getUser(), List.of());
+                eventStore.setExtraDescriptionInfo(List.of(context.getArg(1)));
+                context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+            } else {
+                context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.remove.fail", context.getArg(1), member.getUser().getAsTag()));
+            }
+        });
     }
 
     @Override
