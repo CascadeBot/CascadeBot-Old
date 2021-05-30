@@ -12,7 +12,6 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mongodb.DBRef;
 import com.mongodb.async.client.ChangeStreamIterable;
 import com.mongodb.client.model.changestream.UpdateDescription;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
@@ -30,9 +29,6 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.BsonValue;
-import org.bson.Document;
-import org.bson.codecs.DecoderContext;
-import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
@@ -73,7 +69,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -211,7 +206,7 @@ public class CascadeBot {
 
         databaseManager.runAsyncTask(database -> {
             ChangeStreamIterable<GuildData> changeStreamIterable = database.getCollection(GuildDataManager.COLLECTION, GuildData.class).watch();
-            new Thread(() -> changeStreamIterable.forEach(guildDataChangeStreamDocument -> {
+            changeStreamIterable.forEach(guildDataChangeStreamDocument -> {
                 if (guildDataChangeStreamDocument.getFullDocument() != null) {
                     GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument());
                 } else {
@@ -219,7 +214,8 @@ public class CascadeBot {
                     UpdateDescription updateDescription = guildDataChangeStreamDocument.getUpdateDescription();
                     if (updateDescription.getUpdatedFields() != null) {
                         for (Map.Entry<String, BsonValue> change : updateDescription.getUpdatedFields().entrySet()) {
-                            if (!updateGuildData(change.getKey(), currentData, BsonUtils.toJavaType(change.getValue()))) break;
+                            if (!updateGuildData(change.getKey(), currentData, BsonUtils.toJavaType(change.getValue())))
+                                break;
                         }
                     }
                     if (updateDescription.getRemovedFields() != null) {
@@ -230,11 +226,12 @@ public class CascadeBot {
                 }
             }, (result, throwable) -> {
                 if (throwable != null) {
-                    throwable.printStackTrace();
+                    CascadeBot.LOGGER.error("Error on change stream", throwable);
                 }
-                System.out.println(result);
-            }), "mongoChangeWatch").start();
+            });
         });
+
+        CascadeBot.LOGGER.info("Watcher setup");
 
         musicHandler = new MusicHandler();
 
