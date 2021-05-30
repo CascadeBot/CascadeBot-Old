@@ -30,20 +30,22 @@ public class TagEditSubCommand extends SubCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        Tag tag = context.getData().getManagement().getTag(tagName);
-        if (tag == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
-            return;
-        }
-        String oldContent = tag.getContent();
-        tag.setContent(context.getMessage(1));
-        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", tagName));
-        ModlogEvent event = ModlogEvent.CASCADE_TAG_UPDATED;
-        List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.old_content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(oldContent) + "```"));
-        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.new_content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(tag.getContent()) + "```"));
-        ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), tag, embedFieldList);
-        context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+        context.getData().write(guildData -> {
+            Tag tag = guildData.getManagement().getTag(tagName);
+            if (tag == null) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
+                return;
+            }
+            String oldContent = tag.getContent();
+            tag.setContent(context.getMessage(1));
+            context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", tagName));
+            ModlogEvent event = ModlogEvent.CASCADE_TAG_UPDATED;
+            List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.old_content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(oldContent) + "```"));
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.new_content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(tag.getContent()) + "```"));
+            ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), tag, embedFieldList);
+            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+        });
     }
 
     @Override
