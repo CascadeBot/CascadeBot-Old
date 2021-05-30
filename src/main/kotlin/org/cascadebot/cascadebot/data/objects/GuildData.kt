@@ -34,7 +34,7 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
 
     @Transient
     @kotlin.jvm.Transient
-    var lock: ReadWriteLock = ReentrantReadWriteLock()
+    val lock: ReadWriteLock = ReentrantReadWriteLock()
 
     @Transient
     @kotlin.jvm.Transient
@@ -105,10 +105,12 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
     }
 
     fun enableFlag(flag: Flag): Boolean {
+        assertWriteMode()
         return enabledFlags.add(flag)
     }
 
     fun disableFlag(flag: Flag): Boolean {
+        assertWriteMode()
         return enabledFlags.remove(flag)
     }
 
@@ -126,7 +128,7 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
     }
 
     private fun putPersistentButtonGroup(channelId: Long, messageId: Long, buttonGroup: PersistentButtonGroup) {
-        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
+        assertWriteMode()
 
         if (persistentButtons.containsKey(channelId) && persistentButtons[channelId] != null) {
             persistentButtons[channelId]!![messageId] = buttonGroup
@@ -156,6 +158,10 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
         useful.writeMode = mode
         management.writeMode = mode
         moderation.writeMode = mode
+    }
+
+    fun assertWriteMode() {
+        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
     }
 
 }

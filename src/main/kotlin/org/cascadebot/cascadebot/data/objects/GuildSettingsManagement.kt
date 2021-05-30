@@ -32,13 +32,17 @@ class GuildSettingsManagement {
     }
 
     fun addTag(key: String, tag: Tag) {
-        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
+        assertWriteMode()
         tags[key] = tag
     }
 
     fun removeTag(key: String): Boolean {
-        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
+        assertWriteMode()
         return tags.remove(key) != null
+    }
+
+    fun assertWriteMode() {
+        if (!writeMode) throw java.lang.UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
     }
 
 }
