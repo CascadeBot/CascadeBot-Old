@@ -1,36 +1,22 @@
 package org.cascadebot.cascadebot.utils.diff;
 
 import com.google.gson.reflect.TypeToken;
-<<<<<<< Updated upstream
-=======
 import de.bild.codec.annotations.Transient;
->>>>>>> Stashed changes
 import lombok.SneakyThrows;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.utils.lists.CollectionDiff;
 
-<<<<<<< Updated upstream
-import java.lang.reflect.Field;
-=======
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
->>>>>>> Stashed changes
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-<<<<<<< Updated upstream
-import java.util.List;
-import java.util.Map;
-=======
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
->>>>>>> Stashed changes
 import java.util.stream.Collectors;
 
 public class DiffUtils {
@@ -43,19 +29,12 @@ public class DiffUtils {
     private static Difference diff(Difference currentDiff, String path, Object oldObj, Object newObj) {
         Type mapType = new TypeToken<Map<String, Object>>() {
         }.getType();
-<<<<<<< Updated upstream
-        Map<String, Object> oldMap = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(oldObj), mapType);
-        Map<String, Object> newMap = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(newObj), mapType);
 
-        List<String> oldKeys = new ArrayList<>(oldMap.keySet());
-        List<String> newKeys = new ArrayList<>(oldMap.keySet());
-=======
         Map<String, Object> oldMap = convertToMap(oldObj);
         Map<String, Object> newMap = convertToMap(newObj);
 
         List<String> oldKeys = new ArrayList<>(oldMap.keySet());
         List<String> newKeys = new ArrayList<>(newMap.keySet());
->>>>>>> Stashed changes
 
         CollectionDiff<String> collectionDiff = new CollectionDiff<>(oldKeys, newKeys);
 
@@ -72,11 +51,7 @@ public class DiffUtils {
             Object newValue = newMap.get(key);
 
             if (!oldValue.equals(newValue)) {
-<<<<<<< Updated upstream
-                System.out.println(Arrays.stream(newValue.getClass().getDeclaredFields()).map(Field::getName).collect(Collectors.joining(", ")));
-=======
                 //System.out.println(Arrays.stream(newValue.getClass().getDeclaredFields()).map(Field::getName).collect(Collectors.joining(", ")));
->>>>>>> Stashed changes
 
                 if (!oldValue.getClass().getTypeName().equals(newValue.getClass().getTypeName())) {
                     DifferenceChanged<?> changed = new DifferenceChanged<>(oldValue, newValue);
@@ -102,9 +77,6 @@ public class DiffUtils {
         return currentDiff;
     }
 
-<<<<<<< Updated upstream
-
-=======
     public static <T> T deepCopy(T original) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         if (original == null) {
             return null;
@@ -186,6 +158,5 @@ public class DiffUtils {
         }
         return map;
     }
->>>>>>> Stashed changes
 
 }
