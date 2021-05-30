@@ -27,9 +27,6 @@ public class DiffUtils {
 
     @SneakyThrows
     private static Difference diff(Difference currentDiff, String path, Object oldObj, Object newObj) {
-        Type mapType = new TypeToken<Map<String, Object>>() {
-        }.getType();
-
         Map<String, Object> oldMap = convertToMap(oldObj);
         Map<String, Object> newMap = convertToMap(newObj);
 
@@ -77,7 +74,7 @@ public class DiffUtils {
         return currentDiff;
     }
 
-    public static <T> T deepCopy(T original) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+    public static <T> T deepCopy(T original) throws InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException {
         if (original == null) {
             return null;
         }
@@ -103,7 +100,8 @@ public class DiffUtils {
             modifiersField.setAccessible(true);
             modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
             Object fieldValue = field.get(original);
-            if (field.getType().isPrimitive()) {
+            if (field.getType().isPrimitive() || field.isEnumConstant() || field.getType() == String.class ||
+                    field.getType().isAssignableFrom(Number.class) || field.getType().isAssignableFrom(Collection.class)) {
                 field.set(newObj, fieldValue);
             } else {
                 field.set(newObj, deepCopy(fieldValue));
@@ -150,7 +148,8 @@ public class DiffUtils {
             modifiersField.setAccessible(true);
             modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
             Object fieldValue = field.get(original);
-            if (field.getType().isPrimitive()) {
+            if (field.getType().isPrimitive() || field.isEnumConstant() || field.getType() == String.class ||
+                    field.getType().isAssignableFrom(Number.class) || field.getType().isAssignableFrom(Collection.class)) {
                 map.put(field.getName(), fieldValue);
             } else {
                 map.put(field.getName(), convertToMap(fieldValue));

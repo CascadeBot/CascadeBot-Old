@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.data.language;
 
 import com.ibm.icu.util.ULocale;
+import de.bild.codec.annotations.Transient;
 import org.cascadebot.cascadebot.CascadeBot;
 
 import java.io.InputStream;
@@ -15,7 +16,8 @@ public enum Locale {
     ENGLISH_UK(ULocale.UK),
     ENGLISH_US(ULocale.US);
 
-    private ULocale locale;
+    @Transient
+    private final ULocale locale;
 
     Locale(ULocale locale) {
         this.locale = locale;
