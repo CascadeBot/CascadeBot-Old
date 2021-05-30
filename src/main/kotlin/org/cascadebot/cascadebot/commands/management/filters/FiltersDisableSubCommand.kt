@@ -8,6 +8,8 @@ package org.cascadebot.cascadebot.commands.management.filters
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.objects.ModlogEventData
+import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
 class FiltersDisableSubCommand : SubCommand() {
@@ -29,6 +31,9 @@ class FiltersDisableSubCommand : SubCommand() {
         if (filter.enabled) {
             filter.enabled = false
             context.typedMessaging.replySuccess(context.i18n("commands.filters.disable.success", name))
+
+            val eventStore = ModlogEventData(ModlogEvent.CASCADE_FILTER_DISABLE, context.user, filter, mutableListOf())
+            context.data.moderation.sendModlogEvent(context.guild.idLong, eventStore)
         } else {
             context.typedMessaging.replyInfo(context.i18n("commands.filters.disable.already_disabled", name))
         }

@@ -1876,25 +1876,28 @@
         "description": "Purged {2} messages from {0}"
       },
       "cascade_filter_create": {
-        "select": "cascade_filter_create",
+        "select": "command_filter_create",
         "display": "Command filter created",
         "description": "The command filter with the name `{0}` has been created!"
       },
       "cascade_filter_delete": {
-        "select": "cascade_filter_delete",
-        "display": "Command filter deleted"
+        "select": "command_filter_delete",
+        "display": "Command filter deleted",
+        "description": "The command filter with the name `{0}` has been deleted!"
       },
       "cascade_filter_update": {
-        "select": "cascade_filter_update",
+        "select": "command_filter_update",
         "display": "Command filter updated"
       },
       "cascade_filter_enable": {
-        "select": "cascade_filter_enable",
-        "display": "Command filter enabled"
+        "select": "command_filter_enable",
+        "display": "Command filter enabled",
+        "description": "|g:perm_tick| The command filter with the name `{0}` has been enabled!"
       },
       "cascade_filter_disable": {
-        "select": "cascade_filter_disable",
-        "display": "Command filter disabled"
+        "select": "command_filter_disable",
+        "display": "Command filter disabled",
+        "description": "|g:perm_cross| The command filter with the name `{0}` has been disabled!"
       },
       "cascade_script_created": {
         "select": "cascade_script_created",
