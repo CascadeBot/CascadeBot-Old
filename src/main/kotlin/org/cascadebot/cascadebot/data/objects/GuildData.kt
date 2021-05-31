@@ -20,6 +20,7 @@ import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 import org.cascadebot.cascadebot.utils.diff.DiffUtils
 import org.cascadebot.cascadebot.utils.diff.Difference
 import org.cascadebot.cascadebot.utils.pagination.PageCache
+import org.slf4j.MDC
 import java.lang.UnsupportedOperationException
 import java.lang.reflect.Type
 import java.util.Date
@@ -29,16 +30,13 @@ import java.util.function.Consumer
 import kotlin.concurrent.withLock
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.typeOf
+import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 
 class GuildData(@field:Id val guildId: Long): Cloneable {
 
     @Transient
     @kotlin.jvm.Transient
     val lock: ReadWriteLock = ReentrantReadWriteLock()
-
-    @Transient
-    @kotlin.jvm.Transient
-    var writeMode = false;
 
     private constructor() : this(0L) {
         // Private constructor for MongoDB
@@ -143,25 +141,13 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
     fun write(writer: Consumer<GuildData>) {
         this.lock.writeLock().withLock {
             val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
-            copy.setAllWriteMode(true)
+            MDC.put("writeMode", true.toString())
             writer.accept(copy);
-            copy.setAllWriteMode(false)
+            MDC.put("writeMode", false.toString())
             val diff: Difference = DiffUtils.diff(this, copy)
             GuildDataManager.updateDiff(guildId, diff, copy)
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
         }
-    }
-
-    fun setAllWriteMode(mode: Boolean) {
-        writeMode = mode
-        core.writeMode = mode
-        useful.writeMode = mode
-        management.writeMode = mode
-        moderation.writeMode = mode
-    }
-
-    fun assertWriteMode() {
-        if (!writeMode) throw UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
     }
 
 }

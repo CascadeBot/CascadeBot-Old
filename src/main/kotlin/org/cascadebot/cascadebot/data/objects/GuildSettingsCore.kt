@@ -6,6 +6,7 @@ import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 import java.lang.UnsupportedOperationException
 import java.util.concurrent.ConcurrentHashMap
 
@@ -36,8 +37,6 @@ class GuildSettingsCore {
 
     @Setting
     var helpShowAllModules = false
-
-    var writeMode = false
 
     var locale: Locale = Locale.getDefaultLocale()
     var prefix: String = Config.INS.defaultPrefix
@@ -138,9 +137,5 @@ class GuildSettingsCore {
     }
 
     //endregion
-
-    fun assertWriteMode() {
-        if (!writeMode) throw java.lang.UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
-    }
 
 }

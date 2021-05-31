@@ -5,6 +5,8 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
+
 @SettingsContainer(module = Module.USEFUL)
 public class GuildSettingsUseful {
 
@@ -18,7 +20,7 @@ public class GuildSettingsUseful {
     }
 
     public TodoList createTodoList(String name, long owner) {
-        if (!writeMode) throw new UnsupportedOperationException("Cannot modify Guild data if not in write mode!");
+        assertWriteMode();
         if (todoLists.containsKey(name)) {
             return null;
         }
@@ -28,12 +30,11 @@ public class GuildSettingsUseful {
     }
 
     public void deleteTodoList(String name) {
-        if (!writeMode) throw new UnsupportedOperationException("Cannot modify Guild data if not in write mode!");
+        assertWriteMode();
         todoLists.remove(name);
     }
 
     public TodoList getTodoListByMessage(long messageId) {
-        if (!writeMode) throw new UnsupportedOperationException("Cannot modify Guild data if not in write mode!");
         TodoList list = null;
         for (Map.Entry<String, TodoList> listEntry : todoLists.entrySet()) {
             if (listEntry.getValue().getMessageId() == messageId) {

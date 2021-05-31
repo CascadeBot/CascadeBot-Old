@@ -9,6 +9,8 @@ import org.cascadebot.cascadebot.permissions.PermissionNode;
 
 import java.util.Set;
 
+import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
+
 @ToString
 @EqualsAndHashCode
 public abstract class PermissionHolder {
@@ -22,10 +24,12 @@ public abstract class PermissionHolder {
     }
 
     public boolean addPermission(String permission) {
+        assertWriteMode();
         return permissions.add(permission);
     }
 
     public boolean removePermission(String permission) {
+        assertWriteMode();
         return permissions.remove(permission);
     }
 

@@ -1,6 +1,8 @@
 package org.cascadebot.cascadebot.data.objects
 
 import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.utils.GuildDataUtils
+import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 import java.util.concurrent.ConcurrentHashMap
 
 @SettingsContainer(module = Module.MANAGEMENT)
@@ -26,8 +28,6 @@ class GuildSettingsManagement {
     val greetings = Greetings()
     val autoRoles: MutableSet<Long> = mutableSetOf()
 
-    var writeMode = false
-
     fun getTag(key: String): Tag? {
         return tags[key]
     }
@@ -46,7 +46,4 @@ class GuildSettingsManagement {
         return tags.remove(key) != null
     }
 
-    fun assertWriteMode() {
-        if (!writeMode) throw java.lang.UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
-    }
 }

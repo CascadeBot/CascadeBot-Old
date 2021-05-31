@@ -16,6 +16,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Set;
 
+import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
+
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -25,7 +27,6 @@ public class Group extends PermissionHolder {
     // This is normal alphanumeric with similar characters removed for less errors when inputting
     private String id = RandomStringUtils.random(5, "abcdefghijkmnopqrstuvwxyzACDEFHJKLMNPRSTUVWXYZ123467890");
 
-    @Setter
     private String name;
 
     private Set<Long> roleIds = Sets.newConcurrentHashSet();
@@ -35,10 +36,12 @@ public class Group extends PermissionHolder {
     }
 
     public boolean linkRole(long roleId) {
+        assertWriteMode();
         return roleIds.add(roleId);
     }
 
     public boolean unlinkRole(long roleId) {
+        assertWriteMode();
         return roleIds.remove(roleId);
     }
 
@@ -59,4 +62,8 @@ public class Group extends PermissionHolder {
         return name;
     }
 
+    public void setName(String name) {
+        assertWriteMode();
+        this.name = name;
+    }
 }

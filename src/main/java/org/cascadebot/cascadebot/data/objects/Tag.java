@@ -16,7 +16,8 @@ import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;
 
 import java.util.regex.Pattern;
 
-@Setter
+import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class Tag extends PermissionObject {
@@ -59,4 +60,18 @@ public class Tag extends PermissionObject {
         return category;
     }
 
+    public void setCategory(String category) {
+        assertWriteMode();
+        this.category = category;
+    }
+
+    public void setContent(String content) {
+        assertWriteMode();
+        this.content = content;
+    }
+
+    public void setName(String name) {
+        assertWriteMode();
+        this.name = name;
+    }
 }

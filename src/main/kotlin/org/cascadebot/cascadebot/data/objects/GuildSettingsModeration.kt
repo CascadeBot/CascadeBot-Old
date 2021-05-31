@@ -16,6 +16,7 @@ import org.cascadebot.cascadebot.data.database.DebugLogCallback
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.moderation.ModlogEvent
+import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 import org.cascadebot.cascadebot.utils.toCapitalized
 import java.net.URL
 import java.time.Instant
@@ -100,6 +101,7 @@ class GuildSettingsModeration {
     }
 
     private fun createModlogEventsInfo(channel: TextChannel, consumer: Consumer<ChannelModlogEventsInfo>) {
+        assertWriteMode()
         val eventsInfo = ChannelModlogEventsInfo()
         eventsInfo.id = modlogChannelNum++
         modlogEvents.put(channel.idLong, eventsInfo)
@@ -109,10 +111,6 @@ class GuildSettingsModeration {
             eventsInfo.buildWebhookClient()
             consumer.accept(eventsInfo)
         }
-    }
-
-    fun assertWriteMode() {
-        if (!writeMode) throw java.lang.UnsupportedOperationException("Cannot modify Guild data if not in write mode!")
     }
 
     class ChannelModlogEventsInfo {
@@ -131,6 +129,7 @@ class GuildSettingsModeration {
         }
 
         constructor(webhookId: Long, webhookToken: String, id: Int) {
+            assertWriteMode()
             this.webhookId = webhookId
             this.webhookToken = webhookToken
             this.id = id
@@ -138,6 +137,7 @@ class GuildSettingsModeration {
         }
 
         fun buildWebhookClient() {
+            assertWriteMode()
             webhookClient = WebhookClientBuilder(webhookId, webhookToken).build()
         }
 
@@ -150,10 +150,12 @@ class GuildSettingsModeration {
         }
 
         fun addEvent(event: ModlogEvent): Boolean {
+            assertWriteMode()
             return events.add(event)
         }
 
         fun removeEvent(event: ModlogEvent): Boolean {
+            assertWriteMode()
             return events.remove(event)
         }
 
