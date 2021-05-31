@@ -21,6 +21,8 @@ import java.util.Collections
 
 class CommandFilter(val name: String) {
 
+    private val objClass = this.javaClass.name
+
     // Constructor for MongoDB
     private constructor() : this("")
 

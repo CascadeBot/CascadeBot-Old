@@ -64,6 +64,8 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
     val music = GuildSettingsMusic()
     //endregion
 
+    val objClass = this.javaClass.packageName + "." + this.javaClass.name
+
     //region Transient fields
     @Transient
     @kotlin.jvm.Transient

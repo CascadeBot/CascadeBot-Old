@@ -212,18 +212,23 @@ public class CascadeBot {
         }
 
         databaseManager.runAsyncTask(database -> {
-            ChangeStreamIterable<GuildData> changeStreamIterable = database.getCollection(GuildDataManager.COLLECTION, GuildData.class).watch()
-                    .fullDocument(FullDocument.UPDATE_LOOKUP); // TODO not this
+            ChangeStreamIterable<GuildData> changeStreamIterable = database.getCollection(GuildDataManager.COLLECTION, GuildData.class).watch();
+                    //.fullDocument(FullDocument.UPDATE_LOOKUP); // TODO not this
             changeStreamIterable.forEach(guildDataChangeStreamDocument -> {
                 if (guildDataChangeStreamDocument.getFullDocument() != null) {
                     GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument());
-                } else {
+                } else if (guildDataChangeStreamDocument.getUpdateDescription() != null) {
                     GuildData currentData = GuildDataManager.getGuildData(guildDataChangeStreamDocument.getDocumentKey().get("_id").asNumber().longValue());
                     UpdateDescription updateDescription = guildDataChangeStreamDocument.getUpdateDescription();
                     if (updateDescription.getUpdatedFields() != null) {
                         for (Map.Entry<String, BsonValue> change : updateDescription.getUpdatedFields().entrySet()) {
-                            if (!updateGuildData(change.getKey(), currentData, bsonValueToJava(change.getValue())))
+                            try {
+                                if (!updateGuildData(change.getKey(), currentData, bsonValueToJava(change.getValue())))
+                                    break;
+                            } catch (ClassNotFoundException e) {
+                                CascadeBot.LOGGER.error("Failed to update data", e);
                                 break;
+                            }
                         }
                     }
                     if (updateDescription.getRemovedFields() != null) {
@@ -312,7 +317,7 @@ public class CascadeBot {
 
     }
 
-    public Object bsonValueToJava(BsonValue bsonValue) {
+    public Object bsonValueToJava(BsonValue bsonValue) throws ClassNotFoundException {
         Object decode;
         if (bsonValue.getBsonType().equals(BsonType.ARRAY)) {
             decode = new ArrayList<>();
@@ -320,7 +325,11 @@ public class CascadeBot {
                 ((List<Object>)decode).add(bsonValueToJava(arrayVale));
             }
         } else if (bsonValue.getBsonType().equals(BsonType.DOCUMENT)) {
-            decode = databaseManager.getCodecRegistry().get(Object.class).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build()); // TODO this can work if we can find the java class, maybe store it?
+            if (bsonValue.asDocument().containsKey("objClass")) {
+                decode = databaseManager.getCodecRegistry().get(Class.forName(bsonValue.asDocument().getString("objClass").getValue())).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build()); // TODO this can work if we can find the java class, maybe store it?
+            } else {
+                decode = bsonValue;
+            }
         } else {
             // This only handles primitives basically
             decode = BsonUtils.toJavaType(bsonValue);
