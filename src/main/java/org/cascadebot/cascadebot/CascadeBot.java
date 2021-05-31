@@ -329,6 +329,7 @@ public class CascadeBot {
                 decode = databaseManager.getCodecRegistry().get(Class.forName(bsonValue.asDocument().getString("objClass").getValue())).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build()); // TODO this can work if we can find the java class, maybe store it?
             } else {
                 decode = bsonValue;
+                CascadeBot.LOGGER.error("Data object doesn't contain object class, so we can't properly decode it!");
             }
         } else {
             // This only handles primitives basically
