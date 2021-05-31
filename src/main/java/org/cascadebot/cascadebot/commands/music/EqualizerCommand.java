@@ -83,7 +83,10 @@ public class EqualizerCommand extends MainCommand {
 
             player.setBand(currentBand.get(), ((float) gain) / 20f);
             if (context.getData().getMusic().getPreserveEqualizer()) {
-                context.getData().getMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
+                int finalGain = gain;
+                context.getData().write(guildData -> {
+                    guildData.getMusic().getEqualizerBands().replace(currentBand.get(), ((float) finalGain) / 20f);
+                });
             }
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
@@ -101,7 +104,10 @@ public class EqualizerCommand extends MainCommand {
 
             player.setBand(currentBand.get(), ((float) gain) / 20f);
             if (context.getData().getMusic().getPreserveEqualizer()) {
-                context.getData().getMusic().getEqualizerBands().replace(currentBand.get(), ((float) gain) / 20f);
+                int finalGain = gain;
+                context.getData().write(guildData -> {
+                    guildData.getMusic().getEqualizerBands().replace(currentBand.get(), ((float) finalGain) / 20f);
+                });
             }
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
