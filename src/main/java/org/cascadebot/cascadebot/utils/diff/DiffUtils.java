@@ -16,6 +16,13 @@ import java.util.stream.Collectors;
 
 public class DiffUtils {
 
+    /**
+     * Find the difference between two arbitrary objects, and return it using the {@link Difference} object
+     *
+     * @param oldObj The old objects to get the difference from
+     * @param newObj The new object to get the difference from
+     * @return a {@link Difference} object
+     */
     public static Difference diff(Object oldObj, Object newObj) {
         return diff(new Difference(), "", oldObj, newObj);
     }
@@ -45,8 +52,6 @@ public class DiffUtils {
             Object newValue = newMap.get(key);
 
             if (!oldValue.equals(newValue)) {
-                System.out.println(Arrays.stream(newValue.getClass().getDeclaredFields()).map(Field::getName).collect(Collectors.joining(", ")));
-
                 if (!oldValue.getClass().getTypeName().equals(newValue.getClass().getTypeName())) {
                     DifferenceChanged<?> changed = new DifferenceChanged<>(oldValue, newValue);
                     currentDiff.changed.put(path + key, changed);
