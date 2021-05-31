@@ -42,7 +42,9 @@ public class TodoSendSubCommand extends SubCommand {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit", owner.getAsMention()));
             } else {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit_no_owner"));
-                context.getData().getUseful().deleteTodoList(todoName);
+                context.getData().write(guildData -> {
+                    context.getData().getUseful().deleteTodoList(todoName);
+                });
             }
             return;
         }
