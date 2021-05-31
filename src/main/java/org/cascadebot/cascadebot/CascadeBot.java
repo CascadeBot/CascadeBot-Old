@@ -13,6 +13,7 @@ import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.async.client.ChangeStreamIterable;
+import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.UpdateDescription;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
@@ -28,7 +29,10 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.BsonReader;
+import org.bson.BsonType;
 import org.bson.BsonValue;
+import org.bson.codecs.DecoderContext;
 import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
@@ -68,7 +72,10 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -205,7 +212,8 @@ public class CascadeBot {
         }
 
         databaseManager.runAsyncTask(database -> {
-            ChangeStreamIterable<GuildData> changeStreamIterable = database.getCollection(GuildDataManager.COLLECTION, GuildData.class).watch();
+            ChangeStreamIterable<GuildData> changeStreamIterable = database.getCollection(GuildDataManager.COLLECTION, GuildData.class).watch()
+                    .fullDocument(FullDocument.UPDATE_LOOKUP); // TODO not this
             changeStreamIterable.forEach(guildDataChangeStreamDocument -> {
                 if (guildDataChangeStreamDocument.getFullDocument() != null) {
                     GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument());
@@ -214,7 +222,7 @@ public class CascadeBot {
                     UpdateDescription updateDescription = guildDataChangeStreamDocument.getUpdateDescription();
                     if (updateDescription.getUpdatedFields() != null) {
                         for (Map.Entry<String, BsonValue> change : updateDescription.getUpdatedFields().entrySet()) {
-                            if (!updateGuildData(change.getKey(), currentData, BsonUtils.toJavaType(change.getValue())))
+                            if (!updateGuildData(change.getKey(), currentData, bsonValueToJava(change.getValue())))
                                 break;
                         }
                     }
@@ -302,6 +310,22 @@ public class CascadeBot {
 
         setupTasks();
 
+    }
+
+    public Object bsonValueToJava(BsonValue bsonValue) {
+        Object decode;
+        if (bsonValue.getBsonType().equals(BsonType.ARRAY)) {
+            decode = new ArrayList<>();
+            for (BsonValue arrayVale : bsonValue.asArray().getValues()) {
+                ((List<Object>)decode).add(bsonValueToJava(arrayVale));
+            }
+        } else if (bsonValue.getBsonType().equals(BsonType.DOCUMENT)) {
+            decode = databaseManager.getCodecRegistry().get(Object.class).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build()); // TODO this can work if we can find the java class, maybe store it?
+        } else {
+            // This only handles primitives basically
+            decode = BsonUtils.toJavaType(bsonValue);
+        }
+        return decode;
     }
 
     public boolean updateGuildData(String path, GuildData guildData, Object newValue) {
