@@ -162,10 +162,6 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
         }
     }
 
-    fun write(writer: (GuildData) -> Unit) {
-        write(Consumer(writer))
-    }
-
     fun <T : Any?> writeInline(writer: Function<GuildData, T>) : T {
         this.lock.writeLock().withLock {
             val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
@@ -177,10 +173,6 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
             return output
         }
-    }
-
-    fun <T: Any?> writeInline(writer: (GuildData)->T) : T {
-        return writeInline(Function(writer))
     }
 
 }
