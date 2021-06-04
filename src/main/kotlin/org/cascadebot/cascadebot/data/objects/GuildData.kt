@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.data.objects
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.util.ClassUtil.classOf
 import com.google.common.collect.Sets
+import com.google.common.math.LongMath
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
@@ -31,12 +32,21 @@ import kotlin.concurrent.withLock
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.typeOf
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.function.Function
+import kotlin.concurrent.getOrSet
 
 class GuildData(@field:Id val guildId: Long): Cloneable {
 
     @Transient
     @kotlin.jvm.Transient
     val lock: ReadWriteLock = ReentrantReadWriteLock()
+
+    companion object {
+
+        val writeMode: ThreadLocal<Boolean> = ThreadLocal()
+
+    }
 
     private constructor() : this(0L) {
         // Private constructor for MongoDB
@@ -143,12 +153,25 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
     fun write(writer: Consumer<GuildData>) {
         this.lock.writeLock().withLock {
             val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
-            MDC.put("writeMode", true.toString())
+            writeMode.set(true)
             writer.accept(copy);
-            MDC.put("writeMode", false.toString())
+            writeMode.set(false)
             val diff: Difference = DiffUtils.diff(this, copy)
             GuildDataManager.updateDiff(guildId, diff, copy)
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
+        }
+    }
+
+    fun <T : Any?> writeInline(writer: Function<GuildData, T>) : T {
+        this.lock.writeLock().withLock {
+            val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
+            writeMode.set(true)
+            val output = writer.apply(copy);
+            writeMode.set(false)
+            val diff: Difference = DiffUtils.diff(this, copy)
+            GuildDataManager.updateDiff(guildId, diff, copy)
+            //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
+            return output
         }
     }
 

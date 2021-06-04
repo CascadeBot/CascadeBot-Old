@@ -33,19 +33,17 @@ public class ModuleDisableSubCommand extends SubCommand {
         if (module != null) {
             String moduleName = ExtensionsKt.toCapitalized(FormatUtils.formatEnum(module, context.getLocale()));
             try {
-                context.getData().write(guildData -> {
-                    if (guildData.getCore().disableModule(module)) {
-                        // If module wasn't already disabled
-                        context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", moduleName));
-                        ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;
-                        ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), module, List.of());
-                        eventStore.setExtraDescriptionInfo(List.of("false"));
-                        context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
-                    } else {
-                        // If module was already disabled
-                        context.getTypedMessaging().replyInfo(context.i18n("commands.module.disable.already_disabled", moduleName));
-                    }
-                });
+                if (context.getData().writeInline(data -> data.getCore().disableModule(module))) {
+                    // If module wasn't already disabled
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", moduleName));
+                    ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;
+                    ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), module, List.of());
+                    eventStore.setExtraDescriptionInfo(List.of("false"));
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+                } else {
+                    // If module was already disabled
+                    context.getTypedMessaging().replyInfo(context.i18n("commands.module.disable.already_disabled", moduleName));
+                }
             } catch (IllegalArgumentException ex) {
                 context.getTypedMessaging().replyDanger(ex.getMessage());
             }
