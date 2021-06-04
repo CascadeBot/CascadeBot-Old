@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.commands.music.SkipCommand
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup
-import java.util.function.Consumer
 
 enum class PersistentButton(@field:Transient val button: Button) {
     TODO_BUTTON_CHECK(
@@ -19,7 +18,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
             UnicodeConstants.TICK,
             IButtonRunnable { runner: Member, channel: TextChannel, message: Message ->
                 GuildDataManager.getGuildData(channel.guild.idLong)
-                    .write(Consumer {
+                    .write {
                         val todoList =
                             it.useful.getTodoListByMessage(message.idLong)
                         if (todoList.canUserEdit(runner.idLong)) {
@@ -28,14 +27,14 @@ enum class PersistentButton(@field:Transient val button: Button) {
                             todoList.addUncheckButton(message)
                             message.editMessage(todoList.todoListMessage).queue()
                         }
-                    })
+                    }
             })
     ),
     TODO_BUTTON_UNCHECK(
         Button.UnicodeButton(
             UnicodeConstants.WHITE_HALLOW_SQUARE,
             IButtonRunnable { runner: Member, channel: TextChannel, message: Message ->
-                GuildDataManager.getGuildData(channel.guild.idLong).write(Consumer {
+                GuildDataManager.getGuildData(channel.guild.idLong).write {
                     val todoList =
                         it.useful.getTodoListByMessage(message.idLong)
                     if (todoList.canUserEdit(runner.idLong)) {
@@ -44,7 +43,7 @@ enum class PersistentButton(@field:Transient val button: Button) {
                         todoList.addCheckButton(message)
                         message.editMessage(todoList.todoListMessage).queue()
                     }
-                })
+                }
             })
     ),
     TODO_BUTTON_NAVIGATE_LEFT(
