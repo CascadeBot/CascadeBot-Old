@@ -33,20 +33,17 @@ public class ModuleEnableSubCommand extends SubCommand {
         if (module != null) {
             String moduleName = ExtensionsKt.toCapitalized(FormatUtils.formatEnum(module, context.getLocale()));
             try {
-                context.getData().write(data -> {
-                    if (data.getCore().enableModule(module)) {
-                        // If the module wasn't enabled
-                        context.getTypedMessaging().replySuccess(context.i18n("commands.module.enable.enabled", moduleName));
-                        ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;
-                        ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), module, List.of());
-                        eventStore.setExtraDescriptionInfo(List.of("true"));
-                        context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
-                    } else {
-                        // If the module was enabled
-                        context.getTypedMessaging().replyInfo(context.i18n("commands.module.enable.already_enabled", moduleName));
-                    }
-                });
-
+                if (context.getData().writeInline(data -> data.getCore().enableModule(module))) {
+                    // If the module wasn't enabled
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.module.enable.enabled", moduleName));
+                    ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;
+                    ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), module, List.of());
+                    eventStore.setExtraDescriptionInfo(List.of("true"));
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+                } else {
+                    // If the module was enabled
+                    context.getTypedMessaging().replyInfo(context.i18n("commands.module.enable.already_enabled", moduleName));
+                }
             } catch (IllegalArgumentException ex) {
                 context.getTypedMessaging().replyDanger(ex.getMessage());
             }
