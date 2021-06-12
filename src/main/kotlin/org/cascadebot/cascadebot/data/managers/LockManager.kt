@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.requests.restaction.PermissionOverrideAction
 import java.time.OffsetDateTime
 import java.util.EnumSet
+import java.util.concurrent.CompletableFuture
 
 enum class Status {
     ALLOW,
@@ -24,7 +25,11 @@ enum class Status {
 
 }
 
-data class LockPermissionState(val target: Status, val selfMember: Status, val createdAt: OffsetDateTime = OffsetDateTime.now())
+data class LockPermissionState(
+    val target: Status,
+    val selfMember: Status,
+    val createdAt: OffsetDateTime = OffsetDateTime.now()
+)
 
 object LockManager {
 
@@ -55,37 +60,68 @@ object LockManager {
         }
     }
 
-    fun lock(channel: TextChannel, target: IPermissionHolder) {
+    fun lock(channel: TextChannel, target: IPermissionHolder, success: () -> Unit, failure: (Throwable) -> Unit) {
         storePermissions(channel, target)
-        channel.upsertPermissionOverride(channel.guild.selfMember).grant(Permission.MESSAGE_WRITE).queue()
-        channel.upsertPermissionOverride(target).deny(Permission.MESSAGE_WRITE).queue()
+
+        CompletableFuture.allOf(
+            channel.upsertPermissionOverride(channel.guild.selfMember).grant(Permission.MESSAGE_WRITE).submit(),
+            channel.upsertPermissionOverride(target).deny(Permission.MESSAGE_WRITE).submit()
+        ).handle { _, throwable -> if (throwable == null) success() else failure(throwable) }
     }
 
-    fun unlock(guild: Guild, channel: TextChannel, target: IPermissionHolder) : Boolean {
-        val state = GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels[channel.id]?.get(target.id)
-                // If there is no state to restore, we can't do anything!
-                ?: return false
+    fun isLocked(channel: TextChannel, target: IPermissionHolder): Boolean {
+        val lockedChannels = GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels
+        val mutableMap = lockedChannels[channel.id] ?: return false
+        return mutableMap.containsKey(target.id)
+    }
+
+    fun unlock(guild: Guild, channel: TextChannel, target: IPermissionHolder, success: (Boolean) -> Unit, failure: (Throwable) -> Unit) {
+        val previousState = GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels[channel.id]?.get(target.id)
+        // If there is no state to restore, we can't do anything!
+            ?: return
         val perm = EnumSet.of(Permission.MESSAGE_WRITE)
 
-        var changed = false;
+        val futures: MutableList<CompletableFuture<*>> = mutableListOf()
 
         val selfPermissionAction = channel.getPermissionOverride(guild.selfMember)?.manager
         if (selfPermissionAction != null) {
-            state.selfMember.apply(selfPermissionAction, perm)
-            selfPermissionAction.queue { if (it.allowedRaw == 0L && it.deniedRaw == 0L) it.delete().queue() }
-            changed = true;
+            // Apply the self member's previous state
+            previousState.selfMember.apply(selfPermissionAction, perm)
+            // Apply the changes to the permission override
+            val submit = selfPermissionAction.submit()
+            // If the permission override has no permissions set after we have reset the perms, delete it to tidy.
+            submit.thenAccept { if (it.allowedRaw == 0L && it.deniedRaw == 0L) it.delete().queue() }
+            futures.add(submit)
         }
 
         val targetPermissionAction = channel.getPermissionOverride(target)?.manager
         if (targetPermissionAction != null) {
-            state.target.apply(targetPermissionAction, perm)
-            targetPermissionAction.queue {
+            // Apply the target's previous state
+            previousState.target.apply(targetPermissionAction, perm)
+            // Apply thr changes to the permission override
+            val submit = targetPermissionAction.submit()
+            // Remove the locked channels entry for this permission override and delete the
+            // override if there are no permissions left on it to tidy.
+            submit.thenAccept {
                 GuildDataManager.getGuildData(guild.idLong).lockedChannels[channel.idLong.toString()]?.remove(target.idLong.toString())
                 if (it.allowedRaw == 0L && it.deniedRaw == 0L) it.delete().queue()
             }
-            changed = true
+            futures.add(submit)
         }
-        return changed
+
+        val bothFutures = CompletableFuture.allOf(*futures.toTypedArray())
+
+        bothFutures.handle { _, throwable ->
+            if (throwable == null) {
+                success(true)
+            } else {
+                failure(throwable)
+            }
+        }
+
+        if (futures.isEmpty()) {
+            success(false)
+        }
     }
 
 }
