@@ -1,6 +1,8 @@
 package org.cascadebot.cascadebot.commands.moderation
 
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.IMentionable
+import net.dv8tion.jda.api.entities.IPermissionHolder
 import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
@@ -12,6 +14,7 @@ import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.managers.LockManager
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
+import java.lang.IllegalStateException
 
 class LockCommand : MainCommand() {
     override fun onCommand(sender: Member, context: CommandContext) {
@@ -25,32 +28,37 @@ class LockCommand : MainCommand() {
         val target: ISnowflake = if (context.args.size == 2) {
             DiscordUtils.getRole(context.getArg(1), context.guild)
                     ?: DiscordUtils.getMember(context.guild, context.getArg(1))
-                    ?: DiscordUtils.getTextChannel(context.guild, context.getArg(1))
                     ?: return context.typedMessaging.replyDanger(context.i18n("commands.lock.invalid_argument", context.getArg(0)))
         } else {
             context.guild.publicRole
         }
 
-        if (target is TextChannel) channel = target;
+        if (target !is IPermissionHolder) error("Target must be a IPermissionHolder")
 
-        val name: String = try {
-            when (target) {
-                is Role -> {
-                    LockManager.lock(channel, target)
-                    "%s %s".format(context.i18n("arguments.role"), target.asMention)
-                }
-                is Member -> {
-                    LockManager.lock(channel, target)
-                    "%s %s".format(context.i18n("arguments.member"), target.asMention)
-                }
-                else -> ""
+        val success = {
+            val name: String = when(target) {
+                is Role -> target.asMention
+                is Member -> target.asMention
+                else -> error("Target must be either a Role or a Member")
             }
-        } catch (e: PermissionException) {
-            context.uiMessaging.sendBotDiscordPermError(e.permission)
-            return
+
+            if (target is Member) {
+                context.typedMessaging.replySuccess((context.i18n("commands.lock.success_member", channel.name, target.asMention)))
+            } else if (target is Role) {
+                context.typedMessaging.replySuccess((context.i18n("commands.lock.success_role", channel.name, target.asMention)))
+            }
+
         }
 
-        context.typedMessaging.replySuccess((context.i18n("commands.lock.success", channel.name, name)))
+        val failure = { throwable: Throwable ->
+            if (throwable is PermissionException) {
+                context.uiMessaging.sendBotDiscordPermError(throwable.permission)
+            } else {
+                context.typedMessaging.replyException("Something went wrong!", throwable)
+            }
+        }
+
+        LockManager.lock(channel, target, success, failure)
     }
 
 
