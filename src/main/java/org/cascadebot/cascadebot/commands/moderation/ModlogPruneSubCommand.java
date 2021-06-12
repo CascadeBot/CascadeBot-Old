@@ -13,7 +13,7 @@ public class ModlogPruneSubCommand extends SubCommand {
         int amount = 0;
         for (long id : context.getData().getModeration().getModlogEvents().keySet()) {
             if (CascadeBot.INS.getShardManager().getTextChannelById(id) == null) {
-                context.getData().getModeration().getModlogEvents().remove(id);
+                context.getData().getModeration().removeModlogEvent(id);
                 amount++;
             }
         }

@@ -20,7 +20,6 @@ import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 import org.cascadebot.cascadebot.utils.toCapitalized
 import java.net.URL
 import java.time.Instant
-import java.util.ArrayList
 import java.util.Date
 import java.util.function.Consumer
 
@@ -53,7 +52,18 @@ class GuildSettingsModeration {
         for (eventInfo in eventsInfo) {
             eventInfo.sendEvent(GuildDataManager.getGuildData(guildId), modlogEventData);
         }
-        CascadeBot.INS.databaseManager.runAsyncTask { database -> database.getCollection("modlog", ChannelModlogEventsInfo.MongoModlogEventObject::class.java).insertOne(ChannelModlogEventsInfo.MongoModlogEventObject(guildId, modlogEventData, "default" /* TODO change to actual time */), DebugLogCallback("Inserted Event")) }
+        CascadeBot.INS.databaseManager.runAsyncTask { database ->
+            database.getCollection(
+                "modlog",
+                ChannelModlogEventsInfo.MongoModlogEventObject::class.java
+            ).insertOne(
+                ChannelModlogEventsInfo.MongoModlogEventObject(
+                    guildId,
+                    modlogEventData,
+                    "default" /* TODO change to actual time */
+                ), DebugLogCallback("Inserted Event")
+            )
+        }
     }
 
     private fun getEventInfoForEvent(event: ModlogEvent): List<ChannelModlogEventsInfo> {
@@ -67,7 +77,17 @@ class GuildSettingsModeration {
     }
 
     fun getModlogEvents(): Map<Long, ChannelModlogEventsInfo> {
-        return modlogEvents
+        return modlogEvents.toMap()
+    }
+
+    fun removeModlogEvent(id: Long): ChannelModlogEventsInfo? {
+        assertWriteMode()
+        return modlogEvents.remove(id)
+    }
+
+    fun clearModlogEvents() {
+        assertWriteMode()
+        return modlogEvents.clear()
     }
 
     fun buildWebhookClients() {
@@ -107,7 +127,8 @@ class GuildSettingsModeration {
         val eventsInfo = ChannelModlogEventsInfo()
         eventsInfo.id = modlogChannelNum++
         modlogEvents.put(channel.idLong, eventsInfo)
-        channel.createWebhook(CascadeBot.INS.client.selfUser.name).setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
+        channel.createWebhook(CascadeBot.INS.client.selfUser.name)
+            .setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
             eventsInfo.webhookId = webhook.idLong
             eventsInfo.webhookToken = webhook.token!!
             eventsInfo.buildWebhookClient()
@@ -168,6 +189,7 @@ class GuildSettingsModeration {
         }
 
         fun setNewWebhook(webhookId: Long, webhookToken: String) {
+            assertWriteMode()
             this.webhookId = webhookId
             this.webhookToken = webhookToken
             buildWebhookClient()
@@ -183,21 +205,28 @@ class GuildSettingsModeration {
                 val affected = when (modlogEventData.trigger.affectedDisplayType) {
                     AffectedDisplayType.NAME -> modlogEventData.affected.name
                     AffectedDisplayType.MENTION -> modlogEventData.affected.mention
-                            ?: modlogEventData.affected.name
+                        ?: modlogEventData.affected.name
                 }
                 webhookEmbedBuilder.setDescription(
-                        Language.i18n(
-                                guildData.locale,
-                                path,
-                                affected,
-                                modlogEventData.responsible?.asMention
-                                        ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized(),
-                                *modlogEventData.extraDescriptionInfo.toTypedArray()
-                        )
+                    Language.i18n(
+                        guildData.locale,
+                        path,
+                        affected,
+                        modlogEventData.responsible?.asMention
+                            ?: Language.i18n(guildData.locale, "words.unknown").toCapitalized(),
+                        *modlogEventData.extraDescriptionInfo.toTypedArray()
+                    )
                 )
             }
 
-            webhookEmbedBuilder.setTitle(EmbedTitle(Language.i18n(guildData.locale, "enums.modlogevent." + modlogEventData.trigger.name.toLowerCase() + ".display"), null))
+            webhookEmbedBuilder.setTitle(
+                EmbedTitle(
+                    Language.i18n(
+                        guildData.locale,
+                        "enums.modlogevent." + modlogEventData.trigger.name.toLowerCase() + ".display"
+                    ), null
+                )
+            )
             val affected: ModlogAffected = modlogEventData.affected;
 
             when (modlogEventData.trigger.displayType) {
@@ -208,11 +237,23 @@ class GuildSettingsModeration {
                 ModlogEvent.ModlogDisplayType.AFFECTED_AUTHOR -> {
                     when (affected.affectedType) {
                         AffectedType.USER -> {
-                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, affected.imageUrl, "https://discord.com/users/" + affected.id))
+                            webhookEmbedBuilder.setAuthor(
+                                WebhookEmbed.EmbedAuthor(
+                                    affected.name,
+                                    affected.imageUrl,
+                                    "https://discord.com/users/" + affected.id
+                                )
+                            )
                         }
 
                         AffectedType.EMOTE -> {
-                            webhookEmbedBuilder.setAuthor(WebhookEmbed.EmbedAuthor(affected.name, affected.imageUrl, null))
+                            webhookEmbedBuilder.setAuthor(
+                                WebhookEmbed.EmbedAuthor(
+                                    affected.name,
+                                    affected.imageUrl,
+                                    null
+                                )
+                            )
                         }
 
                         else -> {
@@ -230,10 +271,16 @@ class GuildSettingsModeration {
             if (modlogEventData.responsible != null) {
                 val iconUrl = modlogEventData.responsible.effectiveAvatarUrl
                 // TODO: by user
-                webhookEmbedBuilder.setFooter(WebhookEmbed.EmbedFooter(modlogEventData.responsible.name + " (" + modlogEventData.responsible.id + ")", iconUrl))
+                webhookEmbedBuilder.setFooter(
+                    WebhookEmbed.EmbedFooter(
+                        modlogEventData.responsible.name + " (" + modlogEventData.responsible.id + ")",
+                        iconUrl
+                    )
+                )
             }
             try {
-                webhookClient?.send(WebhookMessageBuilder()
+                webhookClient?.send(
+                    WebhookMessageBuilder()
                         .setUsername(CascadeBot.INS.client.selfUser.name)
                         .setAvatarUrl(CascadeBot.INS.client.selfUser.effectiveAvatarUrl)
                         .addEmbeds(webhookEmbedBuilder.build())
