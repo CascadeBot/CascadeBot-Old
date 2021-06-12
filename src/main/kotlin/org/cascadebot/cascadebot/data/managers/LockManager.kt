@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.IPermissionHolder
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.requests.restaction.PermissionOverrideAction
+import java.time.OffsetDateTime
 import java.util.EnumSet
 
 enum class Status {
@@ -23,7 +24,7 @@ enum class Status {
 
 }
 
-data class LockPermissionState(val target: Status, val selfMember: Status)
+data class LockPermissionState(val target: Status, val selfMember: Status, val createdAt: OffsetDateTime = OffsetDateTime.now())
 
 object LockManager {
 
