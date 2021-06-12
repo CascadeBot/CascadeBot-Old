@@ -78,7 +78,7 @@ object LockManager {
     fun unlock(guild: Guild, channel: TextChannel, target: IPermissionHolder, success: (Boolean) -> Unit, failure: (Throwable) -> Unit) {
         val previousState = GuildDataManager.getGuildData(channel.guild.idLong).lockedChannels[channel.id]?.get(target.id)
         // If there is no state to restore, we can't do anything!
-            ?: return
+            ?: return success(false)
         val perm = EnumSet.of(Permission.MESSAGE_WRITE)
 
         val futures: MutableList<CompletableFuture<*>> = mutableListOf()

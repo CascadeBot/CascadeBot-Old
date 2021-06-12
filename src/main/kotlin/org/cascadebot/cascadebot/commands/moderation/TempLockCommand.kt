@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.commands.moderation
 
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.IPermissionHolder
 import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
@@ -51,50 +52,49 @@ class TempLockCommand : MainCommand() {
                     ?: DiscordUtils.getMember(context.guild, context.getArg(2))
                     ?: return context.typedMessaging.replyDanger(context.i18n("commands.templock.invalid_argument", context.getArg(2)))
         } else {
-            context.channel
+            context.guild.publicRole
         }
 
-        val toAction = ScheduledAction.LockActionData(channel.idLong, Status.NEUTRAL, 0, 0)
+        // Member and Role are both IPermissionHolder so this should not happen
+        // This check is here to smart-cast target to IPermissionHolder for later code
+        if (target !is IPermissionHolder) error("Target must be a IPermissionHolder")
 
-        var name: String? = null
-        try {
-            when (target) {
-                is Role -> {
-                    toAction.oldPermission = LockManager.getPerm(channel, target).left
+        val unlockFutureData = ScheduledAction.LockActionData(channel.idLong, Status.NEUTRAL, 0, 0)
+        unlockFutureData.oldPermission = LockManager.getPerm(channel, target).target
+        unlockFutureData.targetRoleID = target.idLong
 
-                    LockManager.lock(channel, target)
-
-                    toAction.targetRoleID = target.idLong
-                    name = "%s %s".format(context.i18n("arguments.role"), target.asMention)
-                }
-                is Member -> {
-                    toAction.oldPermission = LockManager.getPerm(channel, target).left
-
-                    LockManager.lock(channel, target)
-
-                    toAction.targetMemberID = target.idLong
-                    name = "%s %s".format(context.i18n("arguments.member"), target.user.asMention)
-                }
-            }
-        } catch (e: PermissionException) {
-            context.uiMessaging.sendBotDiscordPermError(e.permission)
-            return
-        }
-
-        ScheduledActionManager.registerScheduledAction(ScheduledAction(
+        val success = {
+            ScheduledActionManager.registerScheduledAction(ScheduledAction(
                 ActionType.UNLOCK,
-                toAction,
+                unlockFutureData,
                 context.guild.idLong,
                 context.channel.idLong,
                 context.member.idLong,
                 Instant.now(),
                 longDuration
-        ))
+            ))
 
+            val textDuration = FormatUtils.formatTime(longDuration, context.locale, true).replace("(0[hm])".toRegex(), "") +
+                    " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(longDuration, ChronoUnit.MILLIS), context.locale) + ")"
 
-        val textDuration = FormatUtils.formatTime(longDuration, context.locale, true).replace("(0[hm])".toRegex(), "") +
-                " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(longDuration, ChronoUnit.MILLIS), context.locale) + ")"
-        context.typedMessaging.replySuccess(if (target is TextChannel) context.i18n("commands.templock.text_success", target.name, textDuration) else name?.let { context.i18n("commands.templock.success", channel.name, it, textDuration) })
+            val message = when (target) {
+                is Role -> context.i18n("commands.templock.success_role", channel.name, target.asMention, textDuration)
+                is Member -> context.i18n("commands.templock.success_member", channel.name, target.asMention, textDuration)
+                else -> error("Target should be either Role or Member!")
+            }
+
+            context.typedMessaging.replySuccess(message)
+        }
+
+        val failure = { throwable: Throwable ->
+            if (throwable is PermissionException) {
+                context.uiMessaging.sendBotDiscordPermError(throwable.permission)
+            } else {
+                context.typedMessaging.replyException("Something went wrong!", throwable)
+            }
+        }
+
+        LockManager.lock(channel, target, success, failure);
     }
 
 

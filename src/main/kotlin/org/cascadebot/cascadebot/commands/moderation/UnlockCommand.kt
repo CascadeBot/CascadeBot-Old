@@ -2,6 +2,7 @@ package org.cascadebot.cascadebot.commands.moderation
 
 import javassist.NotFoundException
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.IPermissionHolder
 import net.dv8tion.jda.api.entities.ISnowflake
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
@@ -31,31 +32,35 @@ class UnlockCommand : MainCommand() {
             context.guild.publicRole
         }
 
-        var name = ""
-        val completed = try {
-            when (target) {
-                is Role -> {
-                    name = target.asMention
-                    LockManager.unlock(context.guild, channel, target)
+        // Member and Role are both IPermissionHolder so this should not happen
+        // This check is here to smart-cast target to IPermissionHolder for later code
+        if (target !is IPermissionHolder) error("Target must be a IPermissionHolder")
+
+        val success = { completed: Boolean ->
+            if (completed) {
+                when (target) {
+                    is Role -> context.typedMessaging.replySuccess(context.i18n("commands.unlock.success_role", channel.name, target.asMention))
+                    is Member -> context.typedMessaging.replySuccess(context.i18n("commands.unlock.success_member", channel.name, target.asMention))
+                    else -> error("Target should be one of Role or Member")
                 }
-                is Member -> {
-                    name = "%s %s".format(context.i18n("arguments.member"), target.asMention)
-                    LockManager.unlock(context.guild, channel, target)
+            } else {
+                when (target) {
+                    is Role -> context.typedMessaging.replySuccess(context.i18n("commands.unlock.failure_role", channel.name, target.asMention))
+                    is Member -> context.typedMessaging.replySuccess(context.i18n("commands.unlock.failure_member", channel.name, target.asMention))
+                    else -> error("Target should be one of Role or Member")
                 }
-                else -> false
             }
-        } catch (e: PermissionException) {
-            context.uiMessaging.sendBotDiscordPermError(e.permission)
-            return
-        } catch (e: NotFoundException) {
-            context.typedMessaging.replyWarning(context.i18n("commands.unlock.fail", if (target is TextChannel) context.guild.publicRole.asMention else name!!))
-            return
         }
-        if (completed) {
-            context.typedMessaging.replySuccess(context.i18n("commands.unlock.success", channel.name, name))
-        } else {
-            context.typedMessaging.replyDanger(context.i18n("commands.unlock.failure", channel.name, name))
+
+        val failure = { throwable: Throwable ->
+            if (throwable is PermissionException) {
+                context.uiMessaging.sendBotDiscordPermError(throwable.permission)
+            } else {
+                context.typedMessaging.replyException("Something went wrong!", throwable)
+            }
         }
+
+        LockManager.unlock(context.guild, channel, target, success, failure)
     }
 
     override fun command(): String {

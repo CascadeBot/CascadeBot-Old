@@ -33,6 +33,8 @@ class LockCommand : MainCommand() {
             context.guild.publicRole
         }
 
+        // Member and Role are both IPermissionHolder so this should not happen
+        // This check is here to smart-cast target to IPermissionHolder for later code
         if (target !is IPermissionHolder) error("Target must be a IPermissionHolder")
 
         val success = {
