@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.IPermissionHolder
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.requests.restaction.PermissionOverrideAction
-import net.dv8tion.jda.internal.utils.tuple.MutablePair
 import java.util.EnumSet
 
 enum class Status {
@@ -24,22 +23,23 @@ enum class Status {
 
 }
 
+data class LockPermissionState(val target: Status, val selfMember: Status)
+
 object LockManager {
 
-    fun getPerm(channel: TextChannel, target: IPermissionHolder): MutablePair<Status, Status> {
-        // [target, selfMember]
-        val perm = MutablePair<Status, Status>(Status.NEUTRAL, Status.NEUTRAL)
+    fun getPerm(channel: TextChannel, target: IPermissionHolder): LockPermissionState {
+        var perm = LockPermissionState(Status.NEUTRAL, Status.NEUTRAL)
 
         val targetOverride = channel.getPermissionOverride(target)
         if (targetOverride != null) {
-            if (targetOverride.allowed.contains(Permission.MESSAGE_WRITE)) perm.setLeft(Status.ALLOW)
-            if (targetOverride.denied.contains(Permission.MESSAGE_WRITE)) perm.setLeft(Status.DENY)
+            if (targetOverride.allowed.contains(Permission.MESSAGE_WRITE)) perm = perm.copy(target = Status.ALLOW)
+            if (targetOverride.denied.contains(Permission.MESSAGE_WRITE)) perm = perm.copy(target = Status.DENY)
         }
 
         val selfMemberOverride = channel.getPermissionOverride(channel.guild.selfMember)
         if (selfMemberOverride != null) {
-            if (selfMemberOverride.allowed.contains(Permission.MESSAGE_WRITE)) perm.setRight(Status.ALLOW)
-            if (selfMemberOverride.denied.contains(Permission.MESSAGE_WRITE)) perm.setRight(Status.DENY)
+            if (selfMemberOverride.allowed.contains(Permission.MESSAGE_WRITE)) perm = perm.copy(selfMember = Status.ALLOW)
+            if (selfMemberOverride.denied.contains(Permission.MESSAGE_WRITE)) perm = perm.copy(selfMember = Status.DENY)
         }
         return perm
     }
@@ -53,7 +53,6 @@ object LockManager {
             mutableMap[target.id] = getPerm(channel, target)
         }
     }
-
 
     fun lock(channel: TextChannel, target: IPermissionHolder) {
         storePermissions(channel, target)
@@ -71,14 +70,14 @@ object LockManager {
 
         val selfPermissionAction = channel.getPermissionOverride(guild.selfMember)?.manager
         if (selfPermissionAction != null) {
-            state.right.apply(selfPermissionAction, perm)
+            state.selfMember.apply(selfPermissionAction, perm)
             selfPermissionAction.queue { if (it.allowedRaw == 0L && it.deniedRaw == 0L) it.delete().queue() }
             changed = true;
         }
 
         val targetPermissionAction = channel.getPermissionOverride(target)?.manager
         if (targetPermissionAction != null) {
-            state.left.apply(targetPermissionAction, perm)
+            state.target.apply(targetPermissionAction, perm)
             targetPermissionAction.queue {
                 GuildDataManager.getGuildData(guild.idLong).lockedChannels[channel.idLong.toString()]?.remove(target.idLong.toString())
                 if (it.allowedRaw == 0L && it.deniedRaw == 0L) it.delete().queue()
