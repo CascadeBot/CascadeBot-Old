@@ -143,6 +143,8 @@
       "description": "Locks a channel for a member, role or everyone",
       "success_role": "The channel `{0}` has been locked for the role {1}",
       "success_member": "The channel `{0}` has been locked for the member {1}",
+      "already_locked_role": "The channel `{0}` is already locked for the role {1}!",
+      "already_locked_member": "The channel `{0}` is already locked for the member {1}!",
       "invalid_argument": "Could not find a channel, role or member matching `{0}`"
     },
     "templock": {

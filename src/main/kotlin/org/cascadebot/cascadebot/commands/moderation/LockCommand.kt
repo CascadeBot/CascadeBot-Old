@@ -37,6 +37,14 @@ class LockCommand : MainCommand() {
         // This check is here to smart-cast target to IPermissionHolder for later code
         if (target !is IPermissionHolder) error("Target must be a IPermissionHolder")
 
+        if (LockManager.isLocked(channel, target)) {
+            when (target) {
+                is Role -> context.typedMessaging.replyWarning(context.i18n("commands.lock.already_locked_role", channel.name, target.asMention))
+                is Member -> context.typedMessaging.replyWarning(context.i18n("commands.lock.already_locked_member", channel.name, target.asMention))
+            }
+            return
+        }
+
         val success = {
             val name: String = when(target) {
                 is Role -> target.asMention
