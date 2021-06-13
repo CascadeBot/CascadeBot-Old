@@ -19,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.cascadebot.cascadebot.data.managers.LockPermissionState;
 import org.cascadebot.cascadebot.utils.lists.WeightedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ public class DatabaseManager {
                     "org.cascadebot.cascadebot.utils.lists",
                     "org.cascadebot.cascadebot.scheduler",
                     "org.cascadebot.shared"
-            ).register(WeightedList.WeightPair.class).build())
+            ).register(WeightedList.WeightPair.class, LockPermissionState.class).build())
     );
 
     @Getter

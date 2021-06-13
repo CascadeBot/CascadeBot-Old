@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.IPermissionHolder
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.requests.restaction.PermissionOverrideAction
 import java.time.OffsetDateTime
+import java.util.Date
 import java.util.EnumSet
 import java.util.concurrent.CompletableFuture
 
@@ -28,8 +29,12 @@ enum class Status {
 data class LockPermissionState(
     val target: Status,
     val selfMember: Status,
-    val createdAt: OffsetDateTime = OffsetDateTime.now()
-)
+    val createdAt: Date = Date()
+) {
+
+    private constructor() : this(Status.NEUTRAL, Status.NEUTRAL)
+
+}
 
 object LockManager {
 
