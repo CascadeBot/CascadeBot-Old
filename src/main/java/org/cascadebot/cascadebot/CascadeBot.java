@@ -13,7 +13,6 @@ import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.async.client.ChangeStreamIterable;
-import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.UpdateDescription;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
@@ -29,7 +28,6 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
-import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.codecs.DecoderContext;
@@ -72,10 +70,7 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -213,7 +208,7 @@ public class CascadeBot {
 
         databaseManager.runAsyncTask(database -> {
             ChangeStreamIterable<GuildData> changeStreamIterable = database.getCollection(GuildDataManager.COLLECTION, GuildData.class).watch();
-                    //.fullDocument(FullDocument.UPDATE_LOOKUP); // TODO not this
+            //.fullDocument(FullDocument.UPDATE_LOOKUP); // TODO not this
             changeStreamIterable.forEach(guildDataChangeStreamDocument -> {
                 if (guildDataChangeStreamDocument.getFullDocument() != null) {
                     GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument());
@@ -223,9 +218,10 @@ public class CascadeBot {
                     if (updateDescription.getUpdatedFields() != null) {
                         for (Map.Entry<String, BsonValue> change : updateDescription.getUpdatedFields().entrySet()) {
                             try {
-                                if (!updateGuildData(change.getKey(), currentData, bsonValueToJava(change.getValue())))
+                                FieldReturnObject returnObject = getField(change.getKey(), currentData);
+                                if (!updateGuildData(returnObject.field, returnObject.currentObj, bsonValueToJava(change.getValue(), returnObject.field.getType())))
                                     break;
-                            } catch (ClassNotFoundException e) {
+                            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException  e) {
                                 CascadeBot.LOGGER.error("Failed to update data", e);
                                 break;
                             }
@@ -233,7 +229,13 @@ public class CascadeBot {
                     }
                     if (updateDescription.getRemovedFields() != null) {
                         for (String removed : updateDescription.getRemovedFields()) {
-                            if (!updateGuildData(removed, currentData, null)) break;
+                            try {
+                                FieldReturnObject returnObject = getField(removed, currentData);
+                                if (!updateGuildData(returnObject.field, returnObject.currentObj, null)) break;
+                            } catch (NoSuchFieldException | IllegalAccessException e) {
+                                CascadeBot.LOGGER.error("Failed to update data", e);
+                                break;
+                            }
                         }
                     }
                 }
@@ -317,16 +319,11 @@ public class CascadeBot {
 
     }
 
-    public Object bsonValueToJava(BsonValue bsonValue) throws ClassNotFoundException {
+    public Object bsonValueToJava(BsonValue bsonValue, Class<?> itemClass) throws ClassNotFoundException {
         Object decode;
-        if (bsonValue.getBsonType().equals(BsonType.ARRAY)) {
-            decode = new ArrayList<>();
-            for (BsonValue arrayVale : bsonValue.asArray().getValues()) {
-                ((List<Object>)decode).add(bsonValueToJava(arrayVale));
-            }
-        } else if (bsonValue.getBsonType().equals(BsonType.DOCUMENT)) {
+        if (bsonValue.getBsonType().equals(BsonType.DOCUMENT) || bsonValue.getBsonType().equals(BsonType.ARRAY)) {
             if (bsonValue.asDocument().containsKey("objClass")) {
-                decode = databaseManager.getCodecRegistry().get(Class.forName(bsonValue.asDocument().getString("objClass").getValue())).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build()); // TODO this can work if we can find the java class, maybe store it?
+                decode = databaseManager.getCodecRegistry().get(itemClass).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build()); // TODO this can work if we can find the java class, maybe store it?
             } else {
                 decode = bsonValue;
                 CascadeBot.LOGGER.error("Data object doesn't contain object class, so we can't properly decode it!");
@@ -338,22 +335,30 @@ public class CascadeBot {
         return decode;
     }
 
-    public boolean updateGuildData(String path, GuildData guildData, Object newValue) {
+    public FieldReturnObject getField(String path, GuildData guildData) throws NoSuchFieldException, IllegalAccessException {
         String[] split = path.split("\\.");
         String last = split[split.length - 1];
         Object current = guildData;
         for (String part : Arrays.copyOfRange(split, 0, split.length - 1)) {
-            try {
-                Field field = current.getClass().getDeclaredField(part);
-                field.setAccessible(true);
-                current = field.get(current);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                CascadeBot.LOGGER.error("Failed to update guild data", e);
-                return false;
-            }
+            Field field = current.getClass().getDeclaredField(part);
+            field.setAccessible(true);
+            current = field.get(current);
         }
+        return new FieldReturnObject(current, current.getClass().getDeclaredField(last));
+    }
+
+    private static class FieldReturnObject {
+        Object currentObj;
+        Field field;
+
+        FieldReturnObject(Object currentObj, Field field) {
+            this.currentObj = currentObj;
+            this.field = field;
+        }
+    }
+
+    public boolean updateGuildData(Field field, Object current, Object newValue) {
         try {
-            Field field = current.getClass().getDeclaredField(last);
             field.setAccessible(true);
             Field modifiersField = Field.class.getDeclaredField("modifiers");
             modifiersField.setAccessible(true);
