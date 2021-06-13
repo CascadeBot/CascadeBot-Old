@@ -23,7 +23,7 @@ import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Group extends PermissionHolder {
 
-    private final String objClass = this.getClass().getName();
+    
 
     // Base 55 with 5 chars gives 503284375 combinations, we should be ok for uniqueness
     // This is normal alphanumeric with similar characters removed for less errors when inputting

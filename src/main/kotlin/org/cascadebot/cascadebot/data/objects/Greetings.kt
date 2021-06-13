@@ -10,7 +10,7 @@ import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 
 class Greetings {
 
-    private val objClass = this.javaClass.name
+    
 
     var welcomeMessages: WeightedList<String> = WeightedList()
     var welcomeDMMessages: WeightedList<String> = WeightedList()

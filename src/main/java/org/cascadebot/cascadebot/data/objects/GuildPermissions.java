@@ -33,7 +33,7 @@ import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
 
 public class GuildPermissions {
 
-    private final String objClass = this.getClass().getName();
+    
 
     @Getter
     @Setter

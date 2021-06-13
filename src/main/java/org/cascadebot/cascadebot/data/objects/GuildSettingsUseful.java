@@ -10,11 +10,7 @@ import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
 @SettingsContainer(module = Module.USEFUL)
 public class GuildSettingsUseful {
 
-    private final String objClass = this.getClass().getName();
-
     private Map<String, TodoList> todoLists = new ConcurrentHashMap<>();
-
-    boolean writeMode = false;
 
     //region todo list stuff
     public TodoList getTodoList(String name) {

@@ -44,7 +44,7 @@ class GuildSettingsCore {
     private val commandInfo = ConcurrentHashMap<Class<MainCommand>, MutableSet<GuildCommandInfo>>()
     private val enabledModules: MutableSet<Module> = Sets.newConcurrentHashSet(Module.getModules(ModuleFlag.DEFAULT))
 
-    private val objClass = this.javaClass.name
+    
 
     //region Modules
     fun enableModule(module: Module): Boolean {

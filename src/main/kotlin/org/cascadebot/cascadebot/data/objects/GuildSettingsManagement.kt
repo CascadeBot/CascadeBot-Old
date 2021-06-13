@@ -17,7 +17,7 @@ class GuildSettingsManagement {
     @Setting
     var warnOver10Filters = true
 
-    private val objClass = this.javaClass.name
+    
 
     val tags: ConcurrentHashMap<String, Tag> = ConcurrentHashMap()
     val filters: MutableList<CommandFilter> = mutableListOf()

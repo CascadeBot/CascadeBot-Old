@@ -16,7 +16,7 @@ import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 
 class TodoList(val ownerId: Long) {
 
-    private val objClass = this.javaClass.name
+    
 
     val items: MutableList<TodoListItem> = ArrayList()
     var messageId: Long = -1
@@ -58,7 +58,7 @@ class TodoList(val ownerId: Long) {
 
     class TodoListItem {
 
-        private val objClass = this.javaClass.name
+        
 
         var done = false
         var text: String? = null

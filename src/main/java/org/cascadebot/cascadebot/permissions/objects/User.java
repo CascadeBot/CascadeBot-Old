@@ -17,7 +17,7 @@ import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
 @EqualsAndHashCode(callSuper = true)
 public class User extends PermissionHolder {
 
-    private final String objClass = this.getClass().getName();
+    
 
     private final Set<String> groups = Sets.newConcurrentHashSet();
 

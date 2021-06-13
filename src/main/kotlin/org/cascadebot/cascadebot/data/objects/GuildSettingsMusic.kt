@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap
 @SettingsContainer(module = Module.MUSIC)
 class GuildSettingsMusic {
 
-    private val objClass = this.javaClass.name
+    
 
     // TODO: Handle reverting tier for preserve settings
     @Setting

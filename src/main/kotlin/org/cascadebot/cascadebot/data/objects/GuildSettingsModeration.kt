@@ -39,7 +39,7 @@ class GuildSettingsModeration {
     @Setting
     var muteRoleName = "Muted"
 
-    private val objClass = this.javaClass.name
+    
 
     fun getRespectBanOrKickHierarchy(): Boolean {
         return respectBanOrKickHierarchy
@@ -138,7 +138,7 @@ class GuildSettingsModeration {
 
     class ChannelModlogEventsInfo {
 
-        private val objClass = this.javaClass.name
+        
 
         private val events: MutableSet<ModlogEvent> = LinkedHashSet()
         internal var webhookId: Long = 0
