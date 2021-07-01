@@ -9,7 +9,7 @@ body:
     attributes:
       label: Feature you would like to see implemented
       description: Tell us what you would like to see implemented
-      placeholder: Example: Play Top command
+      placeholder: "Example: Play Top command"
     validations:
       required: true
   - type: checkboxes
@@ -33,7 +33,7 @@ body:
     attributes:
       label: Describe the feature in more details
       description: Tell is in as much detail as you can what you would like to see implemented and how you invision it working
-      placeholder: Example: User runs `;playtop <yuotube link>` and the bot would load that song for playing right now.
+      placeholder: "Example: User runs `;playtop <yuotube link>` and the bot would load that song for playing right now."
       render: markdown
     validations:
       required: true
@@ -42,7 +42,7 @@ body:
     attributes:
       label: Is your feature request related to a problem? Please describe
       description: If this is related to a problem you have with the bot then please describe the problem as well as how this feature intends to fix that problem
-      placeholder: Example: `;play` doesn't let you play a song right now, so ther sould be a `;playtop` command in order to allow that to be the case
+      placeholder: "Example: `;play` doesn't let you play a song right now, so ther sould be a `;playtop` command in order to allow that to be the case"
       render: markdown
     validations:
       required: false
@@ -58,7 +58,7 @@ body:
     attributes:
       label: What are some possible alternatives?
       description: Describe any alternative solutions you've considered for this feature
-      placeholder: Example: `;play` could have a sepeate value to allow playing immediately. the usage could look like this `;play <link> [top]`
+      placeholder: "Example: `;play` could have a sepeate value to allow playing immediately. the usage could look like this `;play <link> [top]`"
       render: markdown
     validations:
       required: false
