@@ -1,0 +1,64 @@
+name: Feature request
+about: Suggest an idea for this project
+title: "[Feature Request] "
+labels: new feature
+assignees: ''
+body:
+  - type: input
+    id: feature
+    attributes:
+      label: Feature you would like to see implemented
+      description: Tell us what you would like to see implemented
+      placeholder: Example: Play Top command
+    validations:
+      required: true
+  - type: checkboxes
+    id: module
+    attributes:
+      label: What module do you see this going into in the bot
+      description: Check what module(s) you think this would be a good fit for
+      options:
+        - label: Core
+        - label: Management
+        - label: Music
+        - label: Informational
+        - label: Moderation
+        - label: Fun
+        - label: Useful
+        - label: Other
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Describe the feature in more details
+      description: Tell is in as much detail as you can what you would like to see implemented and how you invision it working
+      placeholder: Example: User runs `;playtop <yuotube link>` and the bot would load that song for playing right now.
+      render: markdown
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Is your feature request related to a problem? Please describe
+      description: If this is related to a problem you have with the bot then please describe the problem as well as how this feature intends to fix that problem
+      placeholder: Example: `;play` doesn't let you play a song right now, so ther sould be a `;playtop` command in order to allow that to be the case
+      render: markdown
+    validations:
+      required: false
+  - type: input
+    id: issue
+    attributes:
+      label: Issue link
+      description: If the problem your facing is related to another bug/feature add a link to that github issue.
+    validations:
+      required: false
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What are some possible alternatives?
+      description: Describe any alternative solutions you've considered for this feature
+      placeholder: Example: `;play` could have a sepeate value to allow playing immediately. the usage could look like this `;play <link> [top]`
+      render: markdown
+    validations:
+      required: false
