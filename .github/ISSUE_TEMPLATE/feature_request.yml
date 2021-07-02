@@ -1,6 +1,7 @@
 name: Feature request
 title: "[Feature Request] "
 labels: new feature
+description: Requests a new feature for CascadeBot
 body:
   - type: input
     id: feature
