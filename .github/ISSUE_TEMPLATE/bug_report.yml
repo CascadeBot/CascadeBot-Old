@@ -15,7 +15,7 @@ body:
     attributes: 
       label: What are the steps to reproduce
       description: If you are unsure of how to reproduce, the give us as much info about what you where doing when the bug happened
-      placeholder: >
+      placeholder: |
         Steps to reproduce the behavior:
         1.
         2.
