@@ -1,6 +1,7 @@
 name: Bug report
 title: "[Bug] "
 labels: bug
+description: report a bug with Cascade Bot
 body:
   - type: textarea
     id: describe
