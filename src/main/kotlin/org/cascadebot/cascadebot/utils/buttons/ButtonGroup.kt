@@ -6,10 +6,12 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote
 import net.dv8tion.jda.api.entities.TextChannel
 import org.cascadebot.cascadebot.CascadeBot
-import org.cascadebot.cascadebot.utils.buttons.Button.EmoteButton
-import org.cascadebot.cascadebot.utils.buttons.Button.UnicodeButton
+/*import org.cascadebot.cascadebot.utils.buttons.Button.EmoteButton
+import org.cascadebot.cascadebot.utils.buttons.Button.UnicodeButton*/
 import java.util.ArrayList
 
+
+@Deprecated("Use CascadeActionRow instead", ReplaceWith("CascadeActionRow", "org.cascadebot.cascadebot.utils.interactions.CascadeActionRow"), DeprecationLevel.ERROR)
 open class ButtonGroup(
         val ownerId: Long,
         val channelId: Long,
@@ -43,7 +45,7 @@ open class ButtonGroup(
             channel.retrieveMessageById(messageId).queue { message: Message ->
                 for (reaction in message.reactions) {
                     val reactionEmote = reaction.reactionEmote
-                    if (button is UnicodeButton && !reactionEmote.isEmote) {
+                    /*if (button is UnicodeButton && !reactionEmote.isEmote) {
                         if (reactionEmote.name == button.unicode) {
                             reaction.removeReaction(CascadeBot.INS.selfUser).queue()
                         }
@@ -51,7 +53,7 @@ open class ButtonGroup(
                         if (reactionEmote.emote.idLong == button.emoteId) {
                             reaction.removeReaction(CascadeBot.INS.selfUser).queue()
                         }
-                    }
+                    }*/
                 }
             }
         }
@@ -75,7 +77,7 @@ open class ButtonGroup(
     }
 
     fun handleButton(clicker: Member?, channel: TextChannel?, buttonMessage: Message?, emote: ReactionEmote) {
-        for (button in buttons) {
+        /*for (button in buttons) {
             if (button is EmoteButton && emote.isEmote) {
                 if (button.emoteId == emote.emote.idLong) {
                     button.runnable.run(clicker, channel, buttonMessage)
@@ -87,7 +89,7 @@ open class ButtonGroup(
                     return
                 }
             }
-        }
+        }*/
     }
 
     fun addButtonsToMessage(message: Message) {

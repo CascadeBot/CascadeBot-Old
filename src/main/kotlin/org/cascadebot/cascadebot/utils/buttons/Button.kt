@@ -7,6 +7,7 @@ import java.util.function.Consumer
 abstract class Button private constructor(var runnable: IButtonRunnable) {
     abstract fun addReaction(message: Message)
 
+    @Deprecated("Use CascadeButton instead", ReplaceWith("CascadeButton", "org.cascadebot.cascadebot.utils.interactions.CascadeButton"), DeprecationLevel.ERROR)
     class EmoteButton(val emoteId: Long, runnable: IButtonRunnable) : Button(runnable) {
         override fun addReaction(message: Message) {
             if (CascadeBot.INS.shardManager.getEmoteById(emoteId) != null) {
@@ -21,6 +22,7 @@ abstract class Button private constructor(var runnable: IButtonRunnable) {
         }
     }
 
+    @Deprecated("Use CascadeButton instead", ReplaceWith("CascadeButton", "org.cascadebot.cascadebot.utils.interactions.CascadeButton"), DeprecationLevel.ERROR)
     class UnicodeButton(val unicode: String, runnable: IButtonRunnable) : Button(runnable) {
         override fun addReaction(message: Message) {
             message.addReaction(unicode).queue(null) { error -> CascadeBot.LOGGER.debug("Failed to add reaction!", error) }
