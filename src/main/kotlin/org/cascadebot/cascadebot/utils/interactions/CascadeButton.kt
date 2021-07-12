@@ -15,7 +15,7 @@ class CascadeButton : CascadeComponent {
 
     private constructor(type: ButtonStyle, consumer: IButtonRunnable) {
         if (type == ButtonStyle.LINK) {
-            throw UnsupportedOperationException("Please use CascadeLinkButton if trying to use a link button")
+            throw UnsupportedOperationException("Please use CascadeLinkButton if trying to use a link button") // TODO implement link buttons
         }
         this.type = type
         this.consumer = consumer
@@ -47,6 +47,10 @@ class CascadeButton : CascadeComponent {
 
     override fun getDiscordComponent(): Component {
         return Button.of(type, id, label, emoji)
+    }
+
+    fun getConsumer() : IButtonRunnable {
+        return consumer
     }
 
     override fun getId(): String {

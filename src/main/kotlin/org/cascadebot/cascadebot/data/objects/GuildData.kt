@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
 import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer
 import org.cascadebot.cascadebot.utils.pagination.PageCache
 import java.util.Date
 
@@ -93,8 +94,12 @@ class GuildData(@field:Id val guildId: Long) {
         if (group is PersistentButtonGroup) {
             putPersistentButtonGroup(channel.idLong, message.idLong, group)
         } else {
-            buttonsCache.put(channel.idLong, message.idLong, group)
+            //buttonsCache.put(channel.idLong, message.idLong, group)
         }
+    }
+
+    fun addComponents(channel: MessageChannel, message: Message, container: ComponentContainer) {
+        buttonsCache.put(channel.idLong, message.idLong, container)
     }
 
     private fun putPersistentButtonGroup(channelId: Long, messageId: Long, buttonGroup: PersistentButtonGroup) {

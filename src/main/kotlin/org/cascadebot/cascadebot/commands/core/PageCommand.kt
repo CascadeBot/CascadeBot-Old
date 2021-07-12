@@ -14,7 +14,7 @@ class PageCommand : CoreCommand() {
     override fun command(): String = "page"
 
     override fun onCommand(sender: Member, context: CommandContext) {
-        if (context.args.isEmpty()) {
+        /*if (context.args.isEmpty()) {
             context.uiMessaging.replyUsage()
             return
         }
@@ -48,7 +48,7 @@ class PageCommand : CoreCommand() {
             }
         } else {
             context.typedMessaging.replyDanger(context.i18n("commands.page.no_pages"))
-        }
+        }*/
     }
 
 }

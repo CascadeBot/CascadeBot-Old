@@ -89,4 +89,8 @@ class CascadeSelectBox : CascadeComponent {
         return id
     }
 
+    fun getConsumer() : ISelectionRunnable {
+        return consumer
+    }
+
 }

@@ -11,7 +11,7 @@ import org.cascadebot.cascadebot.utils.buttons.Button.UnicodeButton*/
 import java.util.ArrayList
 
 
-@Deprecated("Use CascadeActionRow instead", ReplaceWith("CascadeActionRow", "org.cascadebot.cascadebot.utils.interactions.CascadeActionRow"), DeprecationLevel.ERROR)
+@Deprecated("Use CascadeActionRow instead", ReplaceWith("CascadeActionRow", "org.cascadebot.cascadebot.utils.interactions.CascadeActionRow"))
 open class ButtonGroup(
         val ownerId: Long,
         val channelId: Long,

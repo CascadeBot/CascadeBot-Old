@@ -43,13 +43,13 @@ public class PageObjects {
                     if (total > 1) {
                         embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
                     }
-                    message.editMessage(embed.build()).override(true).queue();
+                    message.editMessage(embed.build()).override(true).setActionRows(message.getActionRows()).queue();
                 } else {
                     var messageBuilder = new MessageBuilder().setEmbed(embed.build());
                     if (total > 1) {
                         messageBuilder.append(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total));
                     }
-                    message.editMessage(messageBuilder.build()).override(true).queue();
+                    message.editMessage(messageBuilder.build()).override(true).setActionRows(message.getActionRows()).queue();
 
                 }
             } else {
@@ -57,7 +57,7 @@ public class PageObjects {
                     embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getAuthor().getAvatarUrl());
                 }
                 String content = FormatUtils.formatEmbed(embed.build());
-                message.editMessage(content).override(true).queue();
+                message.editMessage(content).override(true).setActionRows(message.getActionRows()).queue();
             }
         }
 

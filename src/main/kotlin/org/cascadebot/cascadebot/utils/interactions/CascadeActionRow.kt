@@ -1,10 +1,11 @@
 package org.cascadebot.cascadebot.utils.interactions
 
+import net.dv8tion.jda.api.interactions.components.ActionRow
 import net.dv8tion.jda.api.interactions.components.Component
 
 class CascadeActionRow {
 
-    private var componentType: Component.Type? = null
+    var componentType: Component.Type? = null
     private val components: MutableList<CascadeComponent> = mutableListOf()
 
     fun addComponent(component: CascadeComponent) {
@@ -32,6 +33,14 @@ class CascadeActionRow {
             is CascadeSelectBox -> Component.Type.SELECTION_MENU
             else -> Component.Type.UNKNOWN
         }
+    }
+
+    fun toDiscordActionRow() : ActionRow {
+        return ActionRow.of(components.map { it.getDiscordComponent() })
+    }
+
+    fun getComponents() : List<CascadeComponent> {
+        return components.toList()
     }
 
 }

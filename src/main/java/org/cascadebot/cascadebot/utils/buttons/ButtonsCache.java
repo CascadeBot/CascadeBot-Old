@@ -6,12 +6,13 @@
 package org.cascadebot.cascadebot.utils.buttons;
 
 import org.cascadebot.cascadebot.utils.DiscordUtils;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ButtonsCache extends HashMap<Long, LinkedHashMap<Long, ButtonGroup>> { //Long 1 is channel id. long 2 is message id. This uses a linked hashmap so we can remove the oldest button when we get pasted 5 buttons per channel
+public class ButtonsCache extends HashMap<Long, LinkedHashMap<Long, ComponentContainer>> { //Long 1 is channel id. long 2 is message id. This uses a linked hashmap so we can remove the oldest button when we get pasted 5 buttons per channel
 
     private int maxSize;
 
@@ -19,13 +20,13 @@ public class ButtonsCache extends HashMap<Long, LinkedHashMap<Long, ButtonGroup>
         this.maxSize = maxSize;
     }
 
-    public void put(Long channelId, Long messageId, ButtonGroup buttonGroup) {
+    public void put(Long channelId, Long messageId, ComponentContainer componentContainer) {
         if (containsKey(channelId) && get(channelId) != null) {
-            get(channelId).put(messageId, buttonGroup);
+            get(channelId).put(messageId, componentContainer);
         } else {
             put(channelId, new LinkedHashMap<>() {
                 @Override
-                protected boolean removeEldestEntry(final Map.Entry<Long, ButtonGroup> eldest) {
+                protected boolean removeEldestEntry(final Map.Entry<Long, ComponentContainer> eldest) {
                     if (size() > maxSize) {
                         DiscordUtils.getTextChannelById(channelId).retrieveMessageById(eldest.getKey()).queue(buttonedMessage -> buttonedMessage.clearReactions().queue());
                         return true;
@@ -33,7 +34,7 @@ public class ButtonsCache extends HashMap<Long, LinkedHashMap<Long, ButtonGroup>
                     return false;
                 }
             });
-            get(channelId).put(messageId, buttonGroup);
+            get(channelId).put(messageId, componentContainer);
         }
     }
 

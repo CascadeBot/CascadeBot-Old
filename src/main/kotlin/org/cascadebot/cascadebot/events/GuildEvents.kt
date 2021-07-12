@@ -56,12 +56,12 @@ class GuildEvents : ListenerAdapter() {
             } ?: run { greetings.welcomeChannel = null }
         }
 
-        if (greetings.welcomeDMEnabled) {
+        /*if (greetings.welcomeDMEnabled) {
             greetings.getRandomWelcomeDMMsg(event)?.let { message ->
                 event.user.takeUnless { it.isFake }
                         ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
             }
-        }
+        }*/
 
         val iterator = guildData.management.autoRoles.iterator()
         for (nextRoleId in iterator) {
@@ -78,10 +78,10 @@ class GuildEvents : ListenerAdapter() {
         val guildData = GuildDataManager.getGuildData(event.guild.idLong)
         val greetings = guildData.management.greetings
         if (greetings.goodbyeEnabled) {
-            greetings.getRandomGoodbyeMsg(event)?.let { message ->
+            /*greetings.getRandomGoodbyeMsg(event)?.let { message ->
                 event.user.takeUnless { it.isFake }
                         ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
-            }
+            }*/
         }
     }
 
