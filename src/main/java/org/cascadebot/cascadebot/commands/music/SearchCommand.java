@@ -53,7 +53,7 @@ public class SearchCommand extends MainCommand {
                     if (!runner.equals(buttonGroup.getOwner())) {
                         return;
                     }
-                    message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                     context.getMusicPlayer().loadLink(result.getUrl(), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), nothing -> {
                         context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                     }, exception -> {

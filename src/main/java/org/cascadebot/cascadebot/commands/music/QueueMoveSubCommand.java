@@ -99,7 +99,7 @@ public class QueueMoveSubCommand extends SubCommand {
                     movableList.cancelMovingItem();
                     message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
                 } else {
-                    message.delete().queue();
+                    message.getMessage().delete().queue();
                 }
             }));
             context.getUiMessaging().sendButtonedMessage(getMoveEmbed(movableList).build(), group);

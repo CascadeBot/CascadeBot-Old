@@ -57,7 +57,7 @@ public class PermissionCommandUtils {
             if (runner.getIdLong() != firstPageButtons.getOwner().getIdLong()) {
                 return;
             }
-            message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+            message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
         })));
 
         // integer for creating buttons, and numbering the possible groups to select
@@ -121,16 +121,16 @@ public class PermissionCommandUtils {
                 if (runner.getIdLong() != groupPageButtons.getOwner().getIdLong()) {
                     return;
                 }
-                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 groupConsumer.accept(group);
             }));
 
             groupPageButtons.addButton(new Button.UnicodeButton(UnicodeConstants.LEFT_ARROW, (runner, channel, message) -> {
-                handleSwitchButtons(runner, message, groupsEmbed.build(), firstPageButtons, context);
+                handleSwitchButtons(runner, message.getMessage(), groupsEmbed.build(), firstPageButtons, context);
             }));
 
             firstPageButtons.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
-                handleSwitchButtons(runner, message, groupEmbed.build(), groupPageButtons, context);
+                handleSwitchButtons(runner, message.getMessage(), groupEmbed.build(), groupPageButtons, context);
             }));
 
             i++;

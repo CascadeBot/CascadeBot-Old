@@ -27,6 +27,7 @@ import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
 import org.cascadebot.cascadebot.utils.interactions.CascadeComponent;
 import org.cascadebot.cascadebot.utils.interactions.CascadeSelectBox;
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
+import org.cascadebot.cascadebot.utils.interactions.InteractionMessage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -83,7 +84,7 @@ public class ButtonEventListener extends ListenerAdapter {
         }
         CascadeButton finalButton = button;
         event.deferEdit().queue(interactionHook -> {
-            finalButton.getConsumer().run(event.getMember(), event.getTextChannel(), event.getMessage());
+            finalButton.getConsumer().run(event.getMember(), event.getTextChannel(), new InteractionMessage(event.getMessage(), container));
             Metrics.INS.buttonsPressed.labels(finalButton.getId(), "button").inc();
         });
     }
@@ -116,7 +117,7 @@ public class ButtonEventListener extends ListenerAdapter {
 
         CascadeSelectBox finalSelect = select;
         event.deferEdit().queue(interactionHook -> {
-            finalSelect.getConsumer().run(event.getMember(), event.getTextChannel(), event.getMessage(), event.getValues());
+            finalSelect.getConsumer().run(event.getMember(), event.getTextChannel(), new InteractionMessage(event.getMessage(), container), event.getValues());
             Metrics.INS.buttonsPressed.labels(finalSelect.getId(), "select").inc();
         });
     }

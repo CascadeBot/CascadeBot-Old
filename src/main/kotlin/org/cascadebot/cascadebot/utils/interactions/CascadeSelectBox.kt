@@ -85,6 +85,14 @@ class CascadeSelectBox : CascadeComponent {
         return builder.build()
     }
 
+    fun addDefault(value: String) {
+        handleDefault(value, true)
+    }
+
+    fun clearDefaults() {
+        defaults.clear()
+    }
+
     override fun getId(): String {
         return id
     }

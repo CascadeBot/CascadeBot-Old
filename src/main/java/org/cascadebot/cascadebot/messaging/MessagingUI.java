@@ -215,7 +215,7 @@ public class MessagingUI {
 
             ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
-                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 if (playTop) {
                     context.getMusicPlayer().playTrack(selectedTrack);
                 } else {
@@ -224,7 +224,7 @@ public class MessagingUI {
                 context.getUiMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
             }));
             buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.PLAYLIST, (runner, channel, message) -> {
-                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 if (playTop) {
                     List<AudioTrack> currentQueue = new ArrayList<>(context.getMusicPlayer().getQueue());
                     AudioTrack topTrack = tracks.remove(0);

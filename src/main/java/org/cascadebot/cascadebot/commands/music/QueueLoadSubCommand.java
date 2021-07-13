@@ -38,7 +38,7 @@ public class QueueLoadSubCommand extends SubCommand {
                         if (!runner.equals(buttonGroup.getOwner())) {
                             return;
                         }
-                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), ((loadPlaylistResult, newTracks) -> {
                             context.getUiMessaging().sendTracksFound(newTracks);
                         }));
@@ -47,7 +47,7 @@ public class QueueLoadSubCommand extends SubCommand {
                         if (!runner.equals(buttonGroup.getOwner())) {
                             return;
                         }
-                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
                             context.getUiMessaging().sendTracksFound(newTracks);
                         }));

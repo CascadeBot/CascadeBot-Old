@@ -34,7 +34,7 @@ public class DogCommand extends MainCommand {
                 return;
             }
             try {
-                if (message.getEmbeds().size() > 0) {
+                if (message.getMessage().getEmbeds().size() > 0) {
                     EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser(), context.getLocale());
                     embedBuilder.setImage(getDogUrl());
                     message.editMessage(embedBuilder.build()).queue();
@@ -44,7 +44,7 @@ public class DogCommand extends MainCommand {
                         dogButtons.setMessage(dogMessage.getIdLong());
                         context.getData().addButtonGroup(context.getChannel(), dogMessage, dogButtons);
                     });
-                    message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 }
             } catch (IOException e) {
                 message.editMessage(context.i18n("commands.dog.error_loading")).queue();

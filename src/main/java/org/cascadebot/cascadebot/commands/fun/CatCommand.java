@@ -33,7 +33,7 @@ public class CatCommand extends MainCommand {
                     return;
                 }
                 try {
-                    if (message.getEmbeds().size() > 0) {
+                    if (message.getMessage().getEmbeds().size() > 0) {
                         EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser(), context.getLocale());
                         embedBuilder.setImage(getCatUrl());
                         message.editMessage(embedBuilder.build()).queue();
@@ -43,7 +43,7 @@ public class CatCommand extends MainCommand {
                             catButtons.setMessage(catMessage.getIdLong());
                             context.getData().addButtonGroup(context.getChannel(), catMessage, catButtons);
                         });
-                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                     }
                 } catch (IOException e) {
                     message.editMessage(context.i18n("commands.cat.error_loading")).queue();

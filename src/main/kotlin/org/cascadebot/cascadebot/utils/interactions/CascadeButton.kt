@@ -12,6 +12,7 @@ class CascadeButton : CascadeComponent {
     private var label: String? = null
     private var emoji: Emoji? = null
     private lateinit var id: String;
+    var disabled: Boolean = false
 
     private constructor(type: ButtonStyle, consumer: IButtonRunnable) {
         if (type == ButtonStyle.LINK) {
@@ -46,7 +47,13 @@ class CascadeButton : CascadeComponent {
     }
 
     override fun getDiscordComponent(): Component {
-        return Button.of(type, id, label, emoji)
+        var button: Button = Button.of(type, id, label, emoji)
+        if (disabled) {
+            button = button.asDisabled()
+        } else {
+            button = button.asEnabled()
+        }
+        return button
     }
 
     fun getConsumer() : IButtonRunnable {

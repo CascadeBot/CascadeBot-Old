@@ -100,7 +100,7 @@ public class PlayingCommand extends MainCommand {
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.STOP, (runner, channel, message) -> {
             if (context.hasPermission(runner, "stop")) {
                 context.getMusicPlayer().stop();
-                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
             }
         }));
         buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FAST_FORWARD, (runner, channel, message) -> {
@@ -108,7 +108,7 @@ public class PlayingCommand extends MainCommand {
                 context.runOtherCommand("skip", runner, context);
                 message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                 if (player.getPlayingTrack() == null) {
-                    message.clearReactions().queue();
+                    //message.clearReactions().queue(); TODO remove buttons
                 }
             }
         }));
