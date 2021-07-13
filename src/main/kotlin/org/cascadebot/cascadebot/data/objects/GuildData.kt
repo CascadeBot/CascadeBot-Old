@@ -8,11 +8,12 @@ import net.dv8tion.jda.api.entities.MessageChannel
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
-import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
-import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
+import org.cascadebot.cascadebot.utils.interactions.PersistentComponent
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow
+import org.cascadebot.cascadebot.utils.interactions.InteractionCache
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer
 import org.cascadebot.cascadebot.utils.pagination.PageCache
+import org.cascadebot.cascadebot.utils.votes.VoteGroup
 import java.util.Date
 
 class GuildData(@field:Id val guildId: Long) {
@@ -45,7 +46,7 @@ class GuildData(@field:Id val guildId: Long) {
 
     //region Transient fields
     @Transient
-    val buttonsCache = ButtonsCache(5)
+    val componentCache = InteractionCache(5)
 
     @Transient
     val pageCache = PageCache()
@@ -54,12 +55,16 @@ class GuildData(@field:Id val guildId: Long) {
     val permissionsManager = PerGuildPermissionsManager()
     //endregion
 
-    val persistentButtons = HashMap<Long, HashMap<Long, PersistentButtonGroup>>()
+    val persistentComponents = HashMap<Long, HashMap<Long, List<List<PersistentComponent>>>>()
+
+    val voteGroups: MutableList<VoteGroup> = mutableListOf()
 
     //endregion
+
     //region Data Loaded Methods
     fun onGuildLoaded() {
         loadMusicSettings()
+        loadComponents()
         permissionsManager.registerPermissions(this)
     }
 
@@ -77,6 +82,26 @@ class GuildData(@field:Id val guildId: Long) {
         }
     }
 
+    private fun loadComponents() {
+        for (channelEntry in persistentComponents.entries) {
+            val channelId = channelEntry.key
+            for(messageEntry in channelEntry.value.entries) {
+                val messageId = messageEntry.key
+                val container = ComponentContainer()
+                for (storedRow in messageEntry.value) {
+                    val row = CascadeActionRow()
+                    for (storedComp in storedRow) {
+                        row.addComponent(storedComp.component)
+                    }
+                    container.addRow(row)
+                }
+                componentCache.put(channelId, messageId, container)
+            }
+        }
+    }
+    //endregion
+
+    //region Flags
     fun enableFlag(flag: Flag): Boolean {
         return enabledFlags.add(flag)
     }
@@ -88,30 +113,38 @@ class GuildData(@field:Id val guildId: Long) {
     fun isFlagEnabled(flag: Flag): Boolean {
         return enabledFlags.contains(flag)
     }
+    //endregion
 
-    fun addButtonGroup(channel: MessageChannel, message: Message, group: ButtonGroup) {
-        group.setMessage(message.idLong)
-        if (group is PersistentButtonGroup) {
-            putPersistentButtonGroup(channel.idLong, message.idLong, group)
-        } else {
-            //buttonsCache.put(channel.idLong, message.idLong, group)
-        }
-    }
-
+    //region Components
     fun addComponents(channel: MessageChannel, message: Message, container: ComponentContainer) {
-        buttonsCache.put(channel.idLong, message.idLong, container)
+        if (container.persistent) {
+            val containerList: MutableList<List<PersistentComponent>> = mutableListOf()
+            for (row in container.getComponents()) {
+                val rowList: MutableList<PersistentComponent> = mutableListOf()
+                for (component in row.getComponents()) {
+                    rowList.add(PersistentComponent.values().find { it.component == component }!!)
+                }
+                containerList.add(rowList.toList())
+            }
+            putPersistentComponents(channel.idLong, message.idLong, containerList.toList())
+        }
+        componentCache.put(channel.idLong, message.idLong, container)
     }
 
-    private fun putPersistentButtonGroup(channelId: Long, messageId: Long, buttonGroup: PersistentButtonGroup) {
-        if (persistentButtons.containsKey(channelId) && persistentButtons[channelId] != null) {
-            persistentButtons[channelId]!![messageId] = buttonGroup
+    private fun putPersistentComponents(channelId: Long, messageId: Long, persistentComponentList: List<List<PersistentComponent>>) {
+        if (persistentComponents.containsKey(channelId) && persistentComponents[channelId] != null) {
+            persistentComponents[channelId]!![messageId] = persistentComponentList
         } else {
-            persistentButtons[channelId] = HashMap()
-            persistentButtons[channelId]!![messageId] = buttonGroup
+            persistentComponents[channelId] = HashMap()
+            persistentComponents[channelId]!![messageId] = persistentComponentList
         }
     }
 
     //endregion
+
+    fun findVoteGroupByMessageAndChannel(channelId: Long, messageId: Long): VoteGroup? {
+        return voteGroups.find { it.channelId == channelId && it.messageId == messageId }
+    }
 
 
 }

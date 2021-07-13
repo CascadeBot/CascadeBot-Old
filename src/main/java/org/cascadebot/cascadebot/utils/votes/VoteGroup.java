@@ -6,14 +6,16 @@
 package org.cascadebot.cascadebot.utils.votes;
 
 import com.google.common.collect.Sets;
+import de.bild.codec.annotations.Transient;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
-import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -24,25 +26,24 @@ import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class VoteButtonGroup extends PersistentButtonGroup {
+public class VoteGroup {
 
-    private Map<Long, Object> votes = new HashMap<>();
+    private final Map<Long, Object> votes = new HashMap<>();
 
-    private BiConsumer<List<VoteResult>, Message> periodicConsumer;
-
-    private Consumer<List<VoteResult>> finishConsumer;
+    private final VotePeriodicConsumer periodicConsumer;
+    private VoteFinishConsumer finishConsumer;
 
     private Set<Long> allowedUsers;
 
-    private Timer timer = new Timer();
+    @Transient
+    private final Timer timer = new Timer();
 
+    @Transient
     private Timer voteTimer;
 
-    private long timerStartTime = Instant.now().toEpochMilli();
+    private final long timerStartTime = Instant.now().toEpochMilli();
 
     private int timerRunTime;
 
@@ -56,7 +57,7 @@ public class VoteButtonGroup extends PersistentButtonGroup {
         this.isDynamicTiming = isDynamicTiming;
     }
 
-    public void setFinishConsumer(Consumer<List<VoteResult>> finishConsumer) {
+    public void setFinishConsumer(VoteFinishConsumer finishConsumer) {
         this.finishConsumer = finishConsumer;
     }
 
@@ -72,21 +73,67 @@ public class VoteButtonGroup extends PersistentButtonGroup {
         this.timerRunTime = timerRunTime;
     }
 
-    VoteButtonGroup(long ownerId, long channelId, long guildId, BiConsumer<List<VoteResult>, Message> periodicRunnable, Timer voteTimer) {
-        super(ownerId, channelId, guildId);
+    private final long ownerId;
+    private final long channelId;
+    private final long guildId;
+
+    private long messageId = 0L;
+
+    @Transient
+    private Runnable messageSentAction;
+
+    @Transient
+    private ComponentContainer container;
+
+    VoteGroup(long ownerId, long channelId, long guildId, VotePeriodicConsumer periodicRunnable, Timer voteTimer, ComponentContainer container) {
+        this.ownerId = ownerId;
+        this.channelId = channelId;
+        this.guildId = guildId;
         this.periodicConsumer = periodicRunnable;
         if (periodicRunnable != null) {
             setUpVoteProcessConsumer();
         }
         this.voteTimer = voteTimer;
+        this.container = container;
+    }
+
+    public ComponentContainer getComponents() {
+        return container;
+    }
+
+    public void setMessageSentAction(Runnable messageSentAction) {
+        this.messageSentAction = messageSentAction;
+    }
+
+    public long getChannelId() {
+        return channelId;
+    }
+
+    public long getOwnerId() {
+        return ownerId;
+    }
+
+    public long getGuildId() {
+        return guildId;
+    }
+
+    public long getMessageId() {
+        return messageId;
+    }
+
+    public void setMessageId(long messageId) {
+        this.messageId = messageId;
+        if (messageSentAction != null) {
+            messageSentAction.run();
+        }
     }
 
     private void setUpVoteProcessConsumer() {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
-                    periodicConsumer.accept(getOrderedVoteResults(), message);
+                CascadeBot.INS.getShardManager().getGuildById(guildId).getTextChannelById(channelId).retrieveMessageById(messageId).queue(message -> {
+                    periodicConsumer.getConsumer().accept(getOrderedVoteResults(), message);
                 });
             }
         }, 5000, 5000);
@@ -116,7 +163,7 @@ public class VoteButtonGroup extends PersistentButtonGroup {
         int elapsed = (int) FormatUtils.round((timeElapsed / 1000.0), 0);
         int newTimersTime;
 
-        if (!user.isBot() && user.getIdLong() != getOwnerId()) {
+        if (!user.isBot() && user.getIdLong() != ownerId) {
             if (timerRunTime < maxTimerRunTime) {
                 if ((timerRunTime + timerRunTimeSkipAddon) > maxTimerRunTime) {
                     timerRunTime = maxTimerRunTime;
@@ -130,28 +177,29 @@ public class VoteButtonGroup extends PersistentButtonGroup {
                 voteTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
+                        CascadeBot.INS.getShardManager().getGuildById(guildId).getTextChannelById(channelId).retrieveMessageById(messageId).queue(message -> {
                             message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                             voteFinished();
-                            finishConsumer.accept(getOrderedVoteResults());
+                            finishConsumer.getConsumer().accept(CascadeBot.INS.getShardManager().getTextChannelById(channelId), getOrderedVoteResults());
                         }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                     }
                 }, TimeUnit.SECONDS.toMillis(newTimersTime));
             }
-            Member member = CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getMember(user);
+            Member member = CascadeBot.INS.getShardManager().getGuildById(guildId).getMember(user);
 
             int votesNeeded = (int) Math.ceil(member.getVoiceState().getChannel().getMembers().size() / 2.0);
 
             if ((votes.size()) >= votesNeeded - 1) { // - 1 is because the users vote hasn't been added yet
-                CascadeBot.INS.getShardManager().getGuildById(getGuildId()).getTextChannelById(getChannelId()).retrieveMessageById(getMessageId()).queue(message -> {
+                CascadeBot.INS.getShardManager().getGuildById(guildId).getTextChannelById(channelId).retrieveMessageById(messageId).queue(message -> {
                     message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                     voteFinished();
-                    finishConsumer.accept(getOrderedVoteResults());
+                    finishConsumer.getConsumer().accept(CascadeBot.INS.getShardManager().getTextChannelById(channelId), getOrderedVoteResults());
                     stopVote();
                 }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
             }
         }
     }
+
     public Map<Long, Object> getVotes() {
         return votes;
     }
@@ -180,10 +228,7 @@ public class VoteButtonGroup extends PersistentButtonGroup {
      * @return A list of users that are allowed to vote.
      */
     public Set<Long> getAllowedUsers() {
-        if (allowedUsers == null) {
-            allowedUsers = Sets.newConcurrentHashSet();
-        }
-        return Set.copyOf(allowedUsers);
+        return allowedUsers;
     }
 
     public boolean isUserAllowed(long userId) {
@@ -207,6 +252,9 @@ public class VoteButtonGroup extends PersistentButtonGroup {
     public void stopVote() {
         voteTimer.cancel();
         timer.cancel();
+        GuildData guildData = GuildDataManager.getGuildData(CascadeBot.INS.getShardManager().getTextChannelById(channelId).getGuild().getIdLong());
+        guildData.getVoteGroups().remove(this);
+
     }
 
     void voteFinished() {

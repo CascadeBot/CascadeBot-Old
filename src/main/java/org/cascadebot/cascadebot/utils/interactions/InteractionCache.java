@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.utils.buttons;
+package org.cascadebot.cascadebot.utils.interactions;
 
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class ButtonsCache extends HashMap<Long, LinkedHashMap<Long, ComponentContainer>> { //Long 1 is channel id. long 2 is message id. This uses a linked hashmap so we can remove the oldest button when we get pasted 5 buttons per channel
+public class InteractionCache extends HashMap<Long, LinkedHashMap<Long, ComponentContainer>> { //Long 1 is channel id. long 2 is message id. This uses a linked hashmap so we can remove the oldest button when we get pasted 5 buttons per channel
 
     private int maxSize;
 
-    public ButtonsCache(int maxSize) {
+    public InteractionCache(int maxSize) {
         this.maxSize = maxSize;
     }
 

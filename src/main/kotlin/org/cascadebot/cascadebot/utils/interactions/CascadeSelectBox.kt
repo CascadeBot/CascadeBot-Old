@@ -3,23 +3,23 @@ package org.cascadebot.cascadebot.utils.interactions
 import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.interactions.components.Component
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu
-import org.cascadebot.cascadebot.utils.buttons.ISelectionRunnable
 
-class CascadeSelectBox : CascadeComponent {
-    private val id : String
-    private val consumer: ISelectionRunnable
-    private val builder: SelectionMenu.Builder
+class CascadeSelectBox(id: String, val consumer: ISelectionRunnable) : CascadeComponent(id) {
+
+    private val builder: SelectionMenu.Builder = SelectionMenu.create(id)
 
     private var minSelect = 1;
     private var maxSelect = 1;
 
     private val defaults: MutableList<String> = mutableListOf()
 
-    constructor(id: String, consumer: ISelectionRunnable) {
-        this.id = id;
-        builder = SelectionMenu.create(id)
-        this.consumer = consumer
-    }
+    override val discordComponent: Component
+        get() {
+            builder.maxValues = maxSelect;
+            builder.minValues = minSelect;
+            builder.setDefaultValues(defaults)
+            return builder.build()
+        }
 
     fun setMinSelect(num: Int) {
         if (num < 1 || num > maxSelect) {
@@ -78,27 +78,12 @@ class CascadeSelectBox : CascadeComponent {
         builder.placeholder = placeHolder
     }
 
-    override fun getDiscordComponent(): Component {
-        builder.maxValues = maxSelect;
-        builder.minValues = minSelect;
-        builder.setDefaultValues(defaults)
-        return builder.build()
-    }
-
     fun addDefault(value: String) {
         handleDefault(value, true)
     }
 
     fun clearDefaults() {
         defaults.clear()
-    }
-
-    override fun getId(): String {
-        return id
-    }
-
-    fun getConsumer() : ISelectionRunnable {
-        return consumer
     }
 
 }

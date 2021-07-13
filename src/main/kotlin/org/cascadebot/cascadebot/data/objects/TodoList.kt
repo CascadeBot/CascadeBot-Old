@@ -8,10 +8,11 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.UnicodeConstants
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
-import org.cascadebot.cascadebot.messaging.Messaging.sendButtonedMessage
+import org.cascadebot.cascadebot.messaging.Messaging
 import org.cascadebot.cascadebot.messaging.MessagingObjects
-import org.cascadebot.cascadebot.utils.buttons.PersistentButton
-import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
+import org.cascadebot.cascadebot.utils.interactions.PersistentComponent
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer
 import java.util.ArrayList
 
 class TodoList(val ownerId: Long) {
@@ -79,41 +80,45 @@ class TodoList(val ownerId: Long) {
 
     fun send(context: CommandContext, channel: TextChannel?) {
         requireNotNull(channel) { "The channel should exist :(" }
-        val buttonGroup = generateButtons(context.member.idLong, channel.idLong, context.guild.idLong)
+        val buttonGroup = generateButtons(true)
         currentItem = 0
-        sendButtonedMessage(channel, todoListMessage, buttonGroup).thenAccept {
+        Messaging.sendComponentMessage(channel, todoListMessage, buttonGroup).thenAccept {
             messageId = it.idLong
             channelId = it.channel.idLong
         }
     }
 
-    private fun generateButtons(memberId: Long, channelId: Long, guildId: Long): PersistentButtonGroup {
-        val buttonGroup = PersistentButtonGroup(memberId, channelId, guildId)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_LEFT)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_UP)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_DOWN)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_NAVIGATE_RIGHT)
-        buttonGroup.addPersistentButton(PersistentButton.TODO_BUTTON_CHECK)
-        return buttonGroup
+    private fun generateButtons(check: Boolean): ComponentContainer {
+        var container = ComponentContainer()
+        var row = CascadeActionRow()
+        if (check) {
+            row.addComponent(PersistentComponent.TODO_BUTTON_CHECK.component)
+        } else {
+            row.addComponent(PersistentComponent.TODO_BUTTON_UNCHECK.component)
+        }
+        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_LEFT.component)
+        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_UP.component)
+        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_DOWN.component)
+        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_RIGHT.component)
+        container.addRow(row)
+        return container
     }
 
     fun addUncheckButton(message: Message?) {
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
-            val data = GuildDataManager.getGuildData(channel.guild.idLong)
-            val buttonGroup = data.persistentButtons[channelId]!![messageId]
-            buttonGroup!!.addPersistentButton(PersistentButton.TODO_BUTTON_UNCHECK)
-            buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_CHECK)
+            val container = generateButtons(false)
+            val data = GuildDataManager.getGuildData(message?.guild!!.idLong)
+            data.addComponents(channel, message, container)
         }
     }
 
     fun addCheckButton(message: Message?) {
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
-            val data = GuildDataManager.getGuildData(channel.guild.idLong)
-            val buttonGroup = data.persistentButtons[channelId]!![messageId]
-            buttonGroup!!.addPersistentButton(PersistentButton.TODO_BUTTON_CHECK)
-            buttonGroup.removePersistentButton(PersistentButton.TODO_BUTTON_UNCHECK)
+            val container = generateButtons(true)
+            val data = GuildDataManager.getGuildData(message?.guild!!.idLong)
+            data.addComponents(channel, message, container)
         }
     }
 

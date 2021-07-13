@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commands.music.SkipCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.utils.votes.VoteButtonGroup;
+import org.cascadebot.cascadebot.utils.votes.VoteGroup;
 
 public class VoiceEventListener extends ListenerAdapter {
 
@@ -24,7 +24,7 @@ public class VoiceEventListener extends ListenerAdapter {
         if (!event.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) return;
 
         VoiceChannel botCurrentChannel = event.getGuild().getSelfMember().getVoiceState().getChannel();
-        VoteButtonGroup voteButtonGroup = SkipCommand.voteMap.get(event.getGuild().getIdLong());
+        VoteGroup voteButtonGroup = SkipCommand.voteMap.get(event.getGuild().getIdLong());
         long userId = event.getMember().getIdLong();
 
         if (event instanceof GuildVoiceJoinEvent) {

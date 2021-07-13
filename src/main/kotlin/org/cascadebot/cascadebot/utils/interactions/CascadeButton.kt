@@ -13,7 +13,8 @@ open class CascadeButton private constructor (val label: String?, val emoji: Emo
 
     override val discordComponent: Component
         get() {
-            var button: Button = Button.of(type, id, label, null)
+            require(label != null && emoji != null) { "Label and emoji cannot both be null" }
+            var button: Button = Button.of(type, id, label, emoji)
             button = if (disabled) {
                 button.asDisabled()
             } else {

@@ -10,7 +10,9 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
-import org.cascadebot.cascadebot.utils.buttons.PersistentButton;
+import org.cascadebot.cascadebot.utils.interactions.PersistentComponent;
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class VoteButtonGroupBuilder {
+public class VoteGroupBuilder {
 
     private VoteMessageType type;
 
@@ -28,22 +30,22 @@ public class VoteButtonGroupBuilder {
 
     private boolean sent = false;
 
-    private List<PersistentButton> extraButtonList = new ArrayList<>();
+    private List<PersistentComponent> extraButtonList = new ArrayList<>();
     private List<Object> voteButtons = new ArrayList<>();
     private int amount = 1; //Setting this so things don't break
 
     private long voteTime = TimeUnit.SECONDS.toMillis(10);
 
-    private Consumer<List<VoteResult>> finishConsumer;
+    private VoteFinishConsumer finishConsumer;
 
-    private BiConsumer<List<VoteResult>, Message> periodicConsumer;
+    private VotePeriodicConsumer periodicConsumer;
 
     /**
-     * Creates a new build for {@link VoteButtonGroup}
+     * Creates a new build for {@link VoteGroup}
      *
      * @param type The {@link VoteMessageType} to use for voting
      */
-    public VoteButtonGroupBuilder(VoteMessageType type) {
+    public VoteGroupBuilder(VoteMessageType type) {
         this.type = type;
     }
 
@@ -55,7 +57,7 @@ public class VoteButtonGroupBuilder {
      * @param amount The amount of options to have.
      * @return this.
      */
-    public VoteButtonGroupBuilder setOptionsAmount(int amount) {
+    public VoteGroupBuilder setOptionsAmount(int amount) {
         if (type == VoteMessageType.YES_NO) {
             throw new UnsupportedOperationException("Cannot set options amount for yes no votes");
         }
@@ -79,7 +81,7 @@ public class VoteButtonGroupBuilder {
      * @param button the non-vote related button to add.
      * @return this.
      */
-    public VoteButtonGroupBuilder addExtraButton(PersistentButton button) {
+    public VoteGroupBuilder addExtraButton(PersistentComponent button) {
         extraButtonList.add(button);
 
         return this;
@@ -91,7 +93,7 @@ public class VoteButtonGroupBuilder {
      * @param time The length in ms that the vote will run fo.
      * @return this.
      */
-    public VoteButtonGroupBuilder setVoteTime(long time) {
+    public VoteGroupBuilder setVoteTime(long time) {
         this.voteTime = time;
         return this;
     }
@@ -103,7 +105,7 @@ public class VoteButtonGroupBuilder {
      * @param finishConsumer The {@link Consumer}.
      * @return this.
      */
-    public VoteButtonGroupBuilder setVoteFinishConsumer(Consumer<List<VoteResult>> finishConsumer) {
+    public VoteGroupBuilder setVoteFinishConsumer(VoteFinishConsumer finishConsumer) {
         this.finishConsumer = finishConsumer;
         return this;
     }
@@ -115,58 +117,79 @@ public class VoteButtonGroupBuilder {
      * @param periodicConsumer The {@link Consumer}.
      * @return this.
      */
-    public VoteButtonGroupBuilder setPeriodicConsumer(BiConsumer<List<VoteResult>, Message> periodicConsumer) {
+    public VoteGroupBuilder setPeriodicConsumer(VotePeriodicConsumer periodicConsumer) {
         this.periodicConsumer = periodicConsumer;
         return this;
     }
 
     /**
-     * Builds the {@link VoteButtonGroup}
+     * Builds the {@link VoteGroup}
      *
      * @param owner     The owner/initiator of the vote.
      * @param channelId The channel in witch the vote takes place.
      * @param guild     The guild in witch the vote is taking place.
-     * @return a {@link VoteButtonGroup}.
+     * @return a {@link VoteGroup}.
      */
-    public VoteButtonGroup build(long owner, long channelId, long guild) {
-        VoteButtonGroup buttonGroup = new VoteButtonGroup(owner, channelId, guild, periodicConsumer, timer);
+    public VoteGroup build(long owner, long channelId, long guild) {
+        ComponentContainer container = new ComponentContainer();
         switch (type) {
             case YES_NO:
-                buttonGroup.addPersistentButton(PersistentButton.VOTE_BUTTON_YES);
-                buttonGroup.addPersistentButton(PersistentButton.VOTE_BUTTON_NO);
+                CascadeActionRow row = new CascadeActionRow();
+                row.addComponent(PersistentComponent.VOTE_BUTTON_YES.getComponent());
+                row.addComponent(PersistentComponent.VOTE_BUTTON_NO.getComponent());
+                container.addRow(row);
                 break;
             case NUMBERS:
-                for (int i = 0; i < amount; i++) {
-                    buttonGroup.addPersistentButton(PersistentButton.values()[PersistentButton.VOTE_BUTTON_ONE.ordinal() + i]);
+                CascadeActionRow rowN = null;
+                for (int iN = 0; iN < amount; iN++) {
+                    if (iN % 5 == 0) {
+                        if (rowN != null) container.addRow(rowN);
+                        rowN = new CascadeActionRow();
+                    }
+                    rowN.addComponent(PersistentComponent.values()[PersistentComponent.VOTE_BUTTON_ONE.ordinal() + iN].getComponent());
+                }
+                if (rowN != null) {
+                    container.addRow(rowN);
                 }
                 break;
             case LETTERS:
+                CascadeActionRow rowL = null;
                 for (int i = 0; i < amount; i++) {
-                    buttonGroup.addPersistentButton(PersistentButton.values()[PersistentButton.VOTE_BUTTON_A.ordinal() + i]);
+                    if (i % 5 == 0) {
+                        if (rowL != null) container.addRow(rowL);
+                        rowL = new CascadeActionRow();
+                    }
+                    rowL.addComponent(PersistentComponent.values()[PersistentComponent.VOTE_BUTTON_A.ordinal() + i].getComponent());
+                }
+                if (rowL != null) {
+                    container.addRow(rowL);
                 }
                 break;
         }
 
-        for (PersistentButton button : extraButtonList) {
-            buttonGroup.addPersistentButton(button);
+        CascadeActionRow row = new CascadeActionRow();
+        for (PersistentComponent button : extraButtonList) {
+            row.addComponent(button.getComponent());
         }
+        container.addRow(row);
+        VoteGroup voteGroup = new VoteGroup(owner, channelId, guild, periodicConsumer, timer, container);
 
-        buttonGroup.setMessageSentAction(() -> {
+        voteGroup.setMessageSentAction(() -> {
             if (!sent) {
                 sent = true;
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        CascadeBot.INS.getShardManager().getGuildById(buttonGroup.getGuildId()).getTextChannelById(buttonGroup.getChannelId()).retrieveMessageById(buttonGroup.getMessageId()).queue(message -> {
+                        CascadeBot.INS.getShardManager().getGuildById(voteGroup.getGuildId()).getTextChannelById(voteGroup.getChannelId()).retrieveMessageById(voteGroup.getMessageId()).queue(message -> {
                             message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                        buttonGroup.voteFinished();
-                        finishConsumer.accept(buttonGroup.getOrderedVoteResults());
+                        voteGroup.voteFinished();
+                        finishConsumer.getConsumer().accept(voteGroup.getOrderedVoteResults());
                     }
                 }, voteTime);
             }
         });
 
-        return buttonGroup;
+        return voteGroup;
     }
 }

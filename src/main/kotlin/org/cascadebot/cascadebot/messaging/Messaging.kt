@@ -23,10 +23,8 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.metrics.Metrics
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.PasteUtils
-import org.cascadebot.cascadebot.utils.buttons.Button.UnicodeButton
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
-import org.cascadebot.cascadebot.utils.buttons.IButtonRunnable
-import org.cascadebot.cascadebot.utils.buttons.ISelectionRunnable
+import org.cascadebot.cascadebot.utils.interactions.IButtonRunnable
+import org.cascadebot.cascadebot.utils.interactions.ISelectionRunnable
 import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow
 import org.cascadebot.cascadebot.utils.interactions.CascadeButton
 import org.cascadebot.cascadebot.utils.interactions.CascadeSelectBox
@@ -36,7 +34,6 @@ import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageCache
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.TimeUnit
-
 
 object Messaging {
 
@@ -103,6 +100,7 @@ object Messaging {
         return sendComponentMessage(channel, MessageBuilder().append(message).build(), container)
     }
 
+    @JvmStatic
     fun sendComponentMessage(channel: TextChannel, embed: MessageEmbed, container: ComponentContainer): CompletableFuture<Message> {
         return sendComponentMessage(channel, MessageBuilder().setEmbeds(embed).build(), container)
     }
@@ -117,51 +115,31 @@ object Messaging {
         return future
     }
 
-    @JvmStatic
-    fun sendButtonedMessage(channel: TextChannel, message: Message, buttonGroup: ButtonGroup): CompletableFuture<Message> {
-        if (!channel.guild.getMember(CascadeBot.INS.selfUser)!!.hasPermission(channel, Permission.MESSAGE_ADD_REACTION)) {
-            throw DiscordPermissionException(Permission.MESSAGE_ADD_REACTION)
-        }
-        val future = channel.sendMessage(message).submit()
-        future.thenAccept {
-            buttonGroup.addButtonsToMessage(it)
-            GuildDataManager.getGuildData(it.guild.idLong).addButtonGroup(channel, it, buttonGroup)
-        }
-        return future
-    }
+    private val firstPageButton = CascadeButton(ButtonStyle.PRIMARY, "First Page", Emoji.fromUnicode(UnicodeConstants.REWIND),
+        IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
+            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+            handlePage(message, 1, pageGroup!!)
+        })
 
-    @JvmStatic
-    fun sendButtonedMessage(channel: TextChannel, message: String, buttonGroup: ButtonGroup): CompletableFuture<Message> {
-        Checks.notBlank(message, "message")
-        return sendButtonedMessage(channel, MessageBuilder().append(message).build(), buttonGroup)
-    }
+    private val prevPageButton = CascadeButton(ButtonStyle.PRIMARY, "Prev Page", Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
+        IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
+            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+            val newPage = pageGroup!!.currentPage - 1
+            handlePage(message, newPage, pageGroup)
+        })
 
-    @JvmStatic
-    fun sendButtonedMessage(channel: TextChannel, embed: MessageEmbed, buttonGroup: ButtonGroup): CompletableFuture<Message> {
-        return sendButtonedMessage(channel, MessageBuilder().setEmbed(embed).build(), buttonGroup)
-    }
+    private val nextPageButton = CascadeButton(ButtonStyle.PRIMARY, "Next Page", Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
+        IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
+            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+            val newPage = pageGroup!!.currentPage + 1
+            handlePage(message, newPage, pageGroup)
+        })
 
-    private val firstPageButton = CascadeButton(ButtonStyle.PRIMARY, "First Page", Emoji.fromUnicode(UnicodeConstants.REWIND), IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
-        val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-        handlePage(message, 1, pageGroup!!)
-    })
-
-    private val prevPageButton = CascadeButton(ButtonStyle.PRIMARY, "Prev Page", Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW), IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
-        val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-        val newPage = pageGroup!!.currentPage - 1
-        handlePage(message, newPage, pageGroup)
-    })
-
-    private val nextPageButton = CascadeButton(ButtonStyle.PRIMARY, "Next Page", Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW), IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
-        val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-        val newPage = pageGroup!!.currentPage + 1
-        handlePage(message, newPage, pageGroup)
-    })
-
-    private val lastPageButton = CascadeButton(ButtonStyle.PRIMARY, "Last Page", Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD), IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
-        val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-        handlePage(message, pageGroup!!.pageCount, pageGroup)
-    })
+    private val lastPageButton = CascadeButton(ButtonStyle.PRIMARY, "Last Page", Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
+        IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
+            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+            handlePage(message, pageGroup!!.pageCount, pageGroup)
+        })
 
     private fun handlePage(message: InteractionMessage, newPage: Int, pageGroup: PageCache.Pages) {
         if (newPage < 1 || newPage > pageGroup.pageCount) {
@@ -210,11 +188,12 @@ object Messaging {
         }
         val container = ComponentContainer()
         container.addRow(actionRow)
-        val select = CascadeSelectBox("pages-select", ISelectionRunnable {member: Member, textChannel: TextChannel, message: InteractionMessage, selected: List<String> ->
-            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-            var page: Int = selected[0].split(" ")[1].toInt()
-            handlePage(message, page, pageGroup!!)
-        })
+        val select = CascadeSelectBox("pages-select",
+            ISelectionRunnable { member: Member, textChannel: TextChannel, message: InteractionMessage, selected: List<String> ->
+                val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+                var page: Int = selected[0].split(" ")[1].toInt()
+                handlePage(message, page, pageGroup!!)
+            })
         var i = 1;
         for (page in pages) {
             if (page.title != null) {

@@ -22,8 +22,7 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.FormatUtils;
-import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import spark.utils.CollectionUtils;
@@ -76,36 +75,36 @@ public class MessagingUI {
     }
 
     /**
-     * Sends a message with reactions to function as "buttons".
+     * Sends a message with components.
      *
-     * @param message The String message to send.
-     * @param group   The {@link ButtonGroup} to use for buttons.
-     * @see ButtonGroup
+     * @param message   The String message to send.
+     * @param container The {@link ComponentContainer} to use for components.
+     * @see ComponentContainer
      */
-    public void sendButtonedMessage(String message, ButtonGroup group) {
-        Messaging.sendButtonedMessage(context.getChannel(), message, group);
+    public void sendComponentMessage(String message, ComponentContainer container) {
+        Messaging.sendComponentMessage(context.getChannel(), message, container);
+    }
+
+    /**
+     * Sends a message with components.
+     *
+     * @param embed     The {@link MessageEmbed} to use as the message.
+     * @param container The {@link ComponentContainer} to use for components.
+     * @see ComponentContainer
+     */
+    public void sendComponentMessage(MessageEmbed embed, ComponentContainer container) {
+        Messaging.sendComponentMessage(context.getChannel(), embed, container);
     }
 
     /**
      * Sends a message with reactions to function as "buttons".
      *
-     * @param embed The {@link MessageEmbed} to use as the message.
-     * @param group The {@link ButtonGroup} to use for buttons.
-     * @see ButtonGroup
+     * @param message   The message to send.
+     * @param container The {@link ComponentContainer} to use for components.
+     * @see ComponentContainer
      */
-    public void sendButtonedMessage(MessageEmbed embed, ButtonGroup group) {
-        Messaging.sendButtonedMessage(context.getChannel(), embed, group);
-    }
-
-    /**
-     * Sends a message with reactions to function as "buttons".
-     *
-     * @param message The message to send.
-     * @param group   The {@link ButtonGroup} to use for buttons.
-     * @see ButtonGroup
-     */
-    public void sendButtonedMessage(Message message, ButtonGroup group) {
-        Messaging.sendButtonedMessage(context.getChannel(), message, group);
+    public void sendComponentMessage(Message message, ComponentContainer container) {
+        Messaging.sendComponentMessage(context.getChannel(), message, container);
     }
 
     /**

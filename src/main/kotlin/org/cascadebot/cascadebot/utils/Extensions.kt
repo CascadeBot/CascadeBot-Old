@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.utils
 
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
@@ -136,3 +137,11 @@ fun <T> Consumer<T>.toKotlin(): (T) -> Unit = { this.accept(it) }
  * @return The Kotlin Higher order function that represents the Java supplier.
  */
 fun <T> Supplier<T>.toKotlin(): () -> T = { this.get() }
+
+fun Emoji.asString() {
+    if (this.isUnicode) {
+        this.name
+    } else {
+        this.id
+    }
+}

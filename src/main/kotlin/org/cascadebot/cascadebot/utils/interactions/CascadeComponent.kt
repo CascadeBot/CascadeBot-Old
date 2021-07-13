@@ -2,10 +2,8 @@ package org.cascadebot.cascadebot.utils.interactions
 
 import net.dv8tion.jda.api.interactions.components.Component
 
-interface CascadeComponent {
+abstract class CascadeComponent(val id: String) {
 
-    fun getDiscordComponent() : Component
-
-    fun getId() : String
+    abstract val discordComponent : Component
 
 }

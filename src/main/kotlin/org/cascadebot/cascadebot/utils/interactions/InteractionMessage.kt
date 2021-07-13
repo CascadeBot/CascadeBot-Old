@@ -4,17 +4,9 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.requests.restaction.MessageAction
 
-class InteractionMessage {
+class InteractionMessage(val message: Message, val container: ComponentContainer) {
 
-    val message: Message
-    val idLong: Long
-    val container: ComponentContainer
-
-    constructor(message: Message, container: ComponentContainer) {
-        this.message = message;
-        this.idLong = message.idLong
-        this.container = container;
-    }
+    val idLong: Long = message.idLong
 
     fun editMessage(content: String): MessageAction {
         return message.editMessage(content).override(true).setActionRows(container.getComponents().map { it.toDiscordActionRow() })
