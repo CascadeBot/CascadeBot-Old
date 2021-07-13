@@ -4,64 +4,43 @@ import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.dv8tion.jda.api.interactions.components.Component
-import org.cascadebot.cascadebot.utils.buttons.IButtonRunnable
+import org.cascadebot.cascadebot.utils.asString
+import java.lang.IllegalStateException
 
-class CascadeButton : CascadeComponent {
-    private val type: ButtonStyle;
-    private val consumer: IButtonRunnable;
-    private var label: String? = null
-    private var emoji: Emoji? = null
-    private lateinit var id: String;
+open class CascadeButton private constructor (val label: String?, val emoji: Emoji?, val type: ButtonStyle, val consumer: IButtonRunnable) : CascadeComponent(generateId(label, emoji)) {
+
     var disabled: Boolean = false
 
-    private constructor(type: ButtonStyle, consumer: IButtonRunnable) {
+    override val discordComponent: Component
+        get() {
+            var button: Button = Button.of(type, id, label, null)
+            button = if (disabled) {
+                button.asDisabled()
+            } else {
+                button.asEnabled()
+            }
+            return button
+        }
+
+    init {
         if (type == ButtonStyle.LINK) {
             throw UnsupportedOperationException("Please use CascadeLinkButton if trying to use a link button") // TODO implement link buttons
         }
-        this.type = type
-        this.consumer = consumer
     }
 
-    constructor(type: ButtonStyle, label: String, consumer: IButtonRunnable) : this(type, consumer) {
-        this.label = label
-        id = label;
-    }
+    constructor(type: ButtonStyle, label: String, consumer: IButtonRunnable) : this(label, null, type, consumer)
+    constructor(type: ButtonStyle, emoji: Emoji, consumer: IButtonRunnable) : this(null, emoji, type, consumer)
+    constructor(type: ButtonStyle, label: String, emoji: Emoji, consumer: IButtonRunnable) : this(label, emoji, type, consumer)
 
-    constructor(type: ButtonStyle, emoji: Emoji, consumer: IButtonRunnable) : this(type, consumer) {
-        this.emoji = emoji
-        id = if (emoji.isUnicode) {
-            emoji.name
+}
+
+private fun generateId(label: String?, emoji: Emoji?) : String {
+    require(!(label == null && emoji == null)) { "Both the label and emoji cannot be null!" }
+    return if (label != null) {
+        if (emoji != null) {
+            "$label-${emoji.asString()}"
         } else {
-            emoji.id
+            label
         }
-    }
-
-    constructor(type: ButtonStyle, label: String, emoji: Emoji, consumer: IButtonRunnable) : this(type, consumer) {
-        this.label = label
-        this.emoji = emoji
-        id = "$label-" + if (emoji.isUnicode) {
-            emoji.name
-        } else {
-            emoji.id
-        }
-    }
-
-    override fun getDiscordComponent(): Component {
-        var button: Button = Button.of(type, id, label, emoji)
-        if (disabled) {
-            button = button.asDisabled()
-        } else {
-            button = button.asEnabled()
-        }
-        return button
-    }
-
-    fun getConsumer() : IButtonRunnable {
-        return consumer
-    }
-
-    override fun getId(): String {
-        return id
-    }
-
+    } else emoji?.toString() ?: throw IllegalStateException("Both label and emoji cannot be null!")
 }
