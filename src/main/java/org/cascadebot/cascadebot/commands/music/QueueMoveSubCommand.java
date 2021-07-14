@@ -64,22 +64,6 @@ public class QueueMoveSubCommand extends SubCommand {
             movableList.moveSelection(start);
             ComponentContainer container = new ComponentContainer();
             CascadeActionRow actionRow = new CascadeActionRow();
-            actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.ARROW_UP), (runner, channel, message) -> {
-                if (runner.getIdLong() != context.getMember().getIdLong()) {
-                    return;
-                }
-                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
-                movableList.moveSelection(-1);
-                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
-            }));
-            actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN), (runner, channel, message) -> {
-                if (runner.getIdLong() != context.getMember().getIdLong()) {
-                    return;
-                }
-                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
-                movableList.moveSelection(1);
-                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
-            }));
             actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.TICK), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
@@ -94,7 +78,23 @@ public class QueueMoveSubCommand extends SubCommand {
                 }
                 message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
             }));
-            actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.RED_CROSS), (runner, channel, message) -> {
+            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ARROW_UP), (runner, channel, message) -> {
+                if (runner.getIdLong() != context.getMember().getIdLong()) {
+                    return;
+                }
+                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
+                movableList.moveSelection(-1);
+                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
+            }));
+            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN), (runner, channel, message) -> {
+                if (runner.getIdLong() != context.getMember().getIdLong()) {
+                    return;
+                }
+                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
+                movableList.moveSelection(1);
+                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
+            }));
+            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.RED_CROSS), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }

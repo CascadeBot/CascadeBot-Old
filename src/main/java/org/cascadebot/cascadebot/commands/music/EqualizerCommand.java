@@ -52,7 +52,7 @@ public class EqualizerCommand extends MainCommand {
         currentBands.add(0);
         ComponentContainer container = new ComponentContainer();
         CascadeActionRow row = new CascadeActionRow();
-        row.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW), (runner, channel, message) -> {
+        row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
@@ -66,21 +66,7 @@ public class EqualizerCommand extends MainCommand {
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).override(true).queue();
         }));
-        row.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW), (runner, channel, message) -> {
-            if (runner.getIdLong() != sender.getIdLong()) {
-                return;
-            }
-            int newBand = currentBands.get(currentBands.size() - 1);
-            if (newBand >= Equalizer.BAND_COUNT) {
-                newBand = Equalizer.BAND_COUNT;
-            }
-
-            currentBands.clear();
-            currentBands.add(newBand);
-
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).override(true).queue();
-        }));
-        row.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_DOWN), (runner, channel, message) -> {
+        row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_DOWN), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
@@ -101,7 +87,7 @@ public class EqualizerCommand extends MainCommand {
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).override(true).queue();
         }));
-        row.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_UP), (runner, channel, message) -> {
+        row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_UP), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
@@ -119,6 +105,20 @@ public class EqualizerCommand extends MainCommand {
                     context.getData().getMusic().getEqualizerBands().replace(currentBand, ((float) gain) / 20f);
                 }
             }
+
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).override(true).queue();
+        }));
+        row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW), (runner, channel, message) -> {
+            if (runner.getIdLong() != sender.getIdLong()) {
+                return;
+            }
+            int newBand = currentBands.get(currentBands.size() - 1);
+            if (newBand >= Equalizer.BAND_COUNT) {
+                newBand = Equalizer.BAND_COUNT;
+            }
+
+            currentBands.clear();
+            currentBands.add(newBand);
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).override(true).queue();
         }));

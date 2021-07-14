@@ -218,7 +218,7 @@ public class MessagingUI {
 
             ComponentContainer container = new ComponentContainer();
             CascadeActionRow actionRow = new CascadeActionRow();
-            actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.SONG), (runner, channel, message) -> {
+            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.SONG), (runner, channel, message) -> {
                 message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 if (playTop) {
                     context.getMusicPlayer().playTrack(selectedTrack);
@@ -227,7 +227,7 @@ public class MessagingUI {
                 }
                 context.getUiMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
             }));
-            actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.PLAYLIST), (runner, channel, message) -> {
+            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.PLAYLIST), (runner, channel, message) -> {
                 message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 if (playTop) {
                     List<AudioTrack> currentQueue = new ArrayList<>(context.getMusicPlayer().getQueue());

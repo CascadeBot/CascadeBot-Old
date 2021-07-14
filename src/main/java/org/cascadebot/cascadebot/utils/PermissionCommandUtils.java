@@ -58,13 +58,6 @@ public class PermissionCommandUtils {
         ComponentContainer container = new ComponentContainer();
         CascadeActionRow firstPageRow = new CascadeActionRow();
 
-        firstPageRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.RED_CROSS), ((runner, channel, message) -> {
-            if (runner.getIdLong() != sender) {
-                return;
-            }
-            message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-        })));
-
         // integer for creating buttons, and numbering the possible groups to select
         int i = 1;
 
@@ -122,7 +115,12 @@ public class PermissionCommandUtils {
             }
 
             CascadeActionRow groupPageRow = new CascadeActionRow();
-            groupPageRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.TICK), (runner, channel, message) -> {
+
+            groupPageRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.LEFT_ARROW), (runner, channel, message) -> {
+                handleSwitchButtons(runner, message, groupsEmbed.build(), container, firstPageRow, context);
+            }));
+
+            groupPageRow.addComponent(new CascadeButton(ButtonStyle.SUCCESS, "Select", Emoji.fromUnicode(UnicodeConstants.TICK), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
@@ -130,16 +128,18 @@ public class PermissionCommandUtils {
                 groupConsumer.accept(group);
             }));
 
-            groupPageRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.LEFT_ARROW), (runner, channel, message) -> {
-                handleSwitchButtons(runner, message, groupsEmbed.build(), container, firstPageRow, context);
-            }));
-
-            firstPageRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(unicode + "\u20E3"), (runner, channel, message) -> {
+            firstPageRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(unicode + "\u20E3"), (runner, channel, message) -> {
                 handleSwitchButtons(runner, message, groupEmbed.build(), container, groupPageRow, context);
             }));
 
             i++;
         }
+        firstPageRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.RED_CROSS), ((runner, channel, message) -> {
+            if (runner.getIdLong() != sender) {
+                return;
+            }
+            message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+        })));
         container.addRow(firstPageRow);
 
         groupsEmbed.setDescription(groupsBuilder.toString());

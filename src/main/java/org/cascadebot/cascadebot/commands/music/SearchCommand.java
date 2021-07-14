@@ -54,7 +54,7 @@ public class SearchCommand extends MainCommand {
             for (MusicHandler.SearchResult result : searchResults) {
                 i++;
                 char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
-                actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(unicode + "\u20E3"), (runner, channel, message) -> {
+                actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(unicode + "\u20E3"), (runner, channel, message) -> {
                     if (!runner.equals(context.getMember())) {
                         return;
                     }

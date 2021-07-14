@@ -34,9 +34,9 @@ class CascadeActionRow {
                 if (getComponentType(component) != Component.Type.BUTTON) {
                     throw UnsupportedOperationException("Selection boxes and buttons aren't allowed on the same action row")
                 }
-                if (components.size >= 5) {
+                /*if (components.size >= 5) {
                     throw UnsupportedOperationException("Can only Have 5 buttons per action row")
-                }
+                }*/
             }
         }
     }

@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.utils.votes;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.commands.music.SkipCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.messaging.MessageType;
@@ -18,7 +19,7 @@ public enum VotePeriodicConsumer {
             resultsBuilder.append(result.getVote()).append(" (").append(result.getAmount()).append(")\n");
         }
         GuildData data = GuildDataManager.getGuildData(message.getGuild().getIdLong());
-        VoteGroup group = data.getVoteGroups().stream().filter(voteGroup -> voteGroup.getMessageId() == message.getIdLong()).findFirst().get();
+        VoteGroup group = SkipCommand.voteMap.get(message.getGuild().getIdLong());
         CascadeBot.INS.getShardManager().retrieveUserById(group.getOwnerId()).queue(user -> {
             EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, user, data.getLocale())
                     .setTitle(data.getLocale().i18n("commands.skip.skip_vote_title"));

@@ -10,10 +10,9 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.messaging.Messaging
 import org.cascadebot.cascadebot.messaging.MessagingObjects
-import org.cascadebot.cascadebot.utils.interactions.PersistentComponent
 import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer
-import java.util.ArrayList
+import org.cascadebot.cascadebot.utils.interactions.PersistentComponent
 
 class TodoList(val ownerId: Long) {
 
@@ -88,37 +87,40 @@ class TodoList(val ownerId: Long) {
         }
     }
 
+    var container: ComponentContainer? = null;
+    var row: CascadeActionRow? = null;
+
     private fun generateButtons(check: Boolean): ComponentContainer {
-        var container = ComponentContainer()
-        var row = CascadeActionRow()
+        container = ComponentContainer()
+        row = CascadeActionRow()
         if (check) {
-            row.addComponent(PersistentComponent.TODO_BUTTON_CHECK.component)
+            row!!.addComponent(PersistentComponent.TODO_BUTTON_CHECK.component)
         } else {
-            row.addComponent(PersistentComponent.TODO_BUTTON_UNCHECK.component)
+            row!!.addComponent(PersistentComponent.TODO_BUTTON_UNCHECK.component)
         }
-        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_LEFT.component)
-        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_UP.component)
-        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_DOWN.component)
-        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_RIGHT.component)
-        container.addRow(row)
-        return container
+        row!!.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_LEFT.component)
+        row!!.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_UP.component)
+        row!!.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_DOWN.component)
+        row!!.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_RIGHT.component)
+        container!!.addRow(row!!)
+        return container!!
     }
 
     fun addUncheckButton(message: Message?) {
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
-            val container = generateButtons(false)
+            row!!.setComponent(0, PersistentComponent.TODO_BUTTON_UNCHECK.component)
             val data = GuildDataManager.getGuildData(message?.guild!!.idLong)
-            data.addComponents(channel, message, container)
+            data.addComponents(channel, message, container!!)
         }
     }
 
     fun addCheckButton(message: Message?) {
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
-            val container = generateButtons(true)
+            row!!.setComponent(0, PersistentComponent.TODO_BUTTON_CHECK.component)
             val data = GuildDataManager.getGuildData(message?.guild!!.idLong)
-            data.addComponents(channel, message, container)
+            data.addComponents(channel, message, container!!)
         }
     }
 

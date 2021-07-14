@@ -115,27 +115,27 @@ object Messaging {
         return future
     }
 
-    private val firstPageButton = CascadeButton(ButtonStyle.PRIMARY, "First Page", Emoji.fromUnicode(UnicodeConstants.REWIND),
+    private val firstPageButton = CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.REWIND),
         IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             handlePage(message, 1, pageGroup!!)
         })
 
-    private val prevPageButton = CascadeButton(ButtonStyle.PRIMARY, "Prev Page", Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
+    private val prevPageButton = CascadeButton(ButtonStyle.SECONDARY, "Prev Page", Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
         IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             val newPage = pageGroup!!.currentPage - 1
             handlePage(message, newPage, pageGroup)
         })
 
-    private val nextPageButton = CascadeButton(ButtonStyle.PRIMARY, "Next Page", Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
+    private val nextPageButton = CascadeButton(ButtonStyle.SECONDARY, "Next Page", Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
         IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             val newPage = pageGroup!!.currentPage + 1
             handlePage(message, newPage, pageGroup)
         })
 
-    private val lastPageButton = CascadeButton(ButtonStyle.PRIMARY, "Last Page", Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
+    private val lastPageButton = CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
         IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             handlePage(message, pageGroup!!.pageCount, pageGroup)
@@ -160,8 +160,10 @@ object Messaging {
             lastPageButton.disabled = true
         }
 
-        pageGroup.selectBox.clearDefaults()
-        pageGroup.selectBox.addDefault("Page $newPage")
+        if (pageGroup.selectBox != null) {
+            pageGroup.selectBox.clearDefaults()
+            pageGroup.selectBox.addDefault("Page $newPage")
+        }
 
         pageGroup.getPage(newPage).pageShow(message, newPage, pageGroup.pageCount)
         pageGroup.currentPage = newPage
@@ -188,24 +190,27 @@ object Messaging {
         }
         val container = ComponentContainer()
         container.addRow(actionRow)
-        val select = CascadeSelectBox("pages-select",
-            ISelectionRunnable { member: Member, textChannel: TextChannel, message: InteractionMessage, selected: List<String> ->
-                val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-                var page: Int = selected[0].split(" ")[1].toInt()
-                handlePage(message, page, pageGroup!!)
-            })
-        var i = 1;
-        for (page in pages) {
-            if (page.title != null) {
-                select.addOption("Page " + i++, page.title)
-            } else {
-                select.addOption("Page " + i++)
+        var select: CascadeSelectBox? = null;
+            if (pages.size > 2) {
+            select = CascadeSelectBox("pages-select",
+                ISelectionRunnable { member: Member, textChannel: TextChannel, message: InteractionMessage, selected: List<String> ->
+                    val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+                    var page: Int = selected[0].split(" ")[1].toInt()
+                    handlePage(message, page, pageGroup!!)
+                })
+            var i = 1;
+            for (page in pages) {
+                if (page.title != null) {
+                    select.addOption("Page " + i++, page.title)
+                } else {
+                    select.addOption("Page " + i++)
+                }
             }
+            select.addDefault("Page 1")
+            val selectRow = CascadeActionRow()
+            selectRow.addComponent(select)
+            container.addRow(selectRow)
         }
-        select.addDefault("Page 1")
-        val selectRow = CascadeActionRow()
-        selectRow.addComponent(select)
-        container.addRow(selectRow)
         val future = sendComponentMessage(channel, Language.i18n(channel.guild.idLong, "messaging.loading_page"), container)
         future.thenAccept { sentMessage: Message ->
             pages[0].pageShow(InteractionMessage(sentMessage, container), 1, pages.size)

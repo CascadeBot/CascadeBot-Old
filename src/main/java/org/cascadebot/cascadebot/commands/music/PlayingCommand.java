@@ -48,20 +48,20 @@ public class PlayingCommand extends MainCommand {
         }
     });
 
-    private CascadeButton repeat = new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.REPEAT), (runner, channel, message) -> {
+    private CascadeButton repeat = new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.REPEAT), (runner, channel, message) -> {
 
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             handleRepeat(channel.getGuild().getIdLong(), LoopMode.PLAYLIST, message);
         }
     });
 
-    private CascadeButton repeatOne = new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.REPEAT_ONCE), (runner, channel, message) -> {
+    private CascadeButton repeatOne = new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.REPEAT_ONCE), (runner, channel, message) -> {
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             handleRepeat(channel.getGuild().getIdLong(), LoopMode.SONG, message);
         }
     });
 
-    private CascadeButton noRepeat = new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromEmote("norepeat", Config.INS.getGlobalEmotes().get("norepeat"), false), (runner, channel, message) -> {
+    private CascadeButton noRepeat = new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromEmote("norepeat", Config.INS.getGlobalEmotes().get("norepeat"), false), (runner, channel, message) -> {
 
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             handleRepeat(channel.getGuild().getIdLong(), LoopMode.DISABLED, message);
@@ -70,6 +70,8 @@ public class PlayingCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
+        container = new ComponentContainer();
+        mainRow = new CascadeActionRow();
         CascadePlayer player = context.getMusicPlayer();
 
         if (player.getPlayingTrack() == null) {
@@ -81,21 +83,6 @@ public class PlayingCommand extends MainCommand {
         } else {
             mainRow.addComponent(pauseButton);
         }
-        mainRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.STOP), (runner, channel, message) -> {
-            if (context.hasPermission(runner, "stop")) {
-                context.getMusicPlayer().stop();
-                message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-            }
-        }));
-        mainRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD), (runner, channel, message) -> {
-            if (context.hasPermission(runner, "skip")) {
-                context.runOtherCommand("skip", runner, context);
-                message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
-                if (player.getPlayingTrack() == null) {
-                    message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                }
-            }
-        }));
         switch (player.getLoopMode()) {
             case DISABLED:
                 mainRow.addComponent(repeat);
@@ -107,10 +94,25 @@ public class PlayingCommand extends MainCommand {
                 mainRow.addComponent(noRepeat);
                 break;
         }
+        mainRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.STOP), (runner, channel, message) -> {
+            if (context.hasPermission(runner, "stop")) {
+                context.getMusicPlayer().stop();
+                message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+            }
+        }));
+        mainRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD), (runner, channel, message) -> {
+            if (context.hasPermission(runner, "skip")) {
+                context.runOtherCommand("skip", runner, context);
+                message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
+                if (player.getPlayingTrack() == null) {
+                    message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                }
+            }
+        }));
         container.addRow(mainRow);
         if (context.getData().isFlagEnabled(Flag.MUSIC_SERVICES)) {
             CascadeActionRow volumeRow = new CascadeActionRow();
-            volumeRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_DOWN), (runner, channel, message) -> {
+            volumeRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_DOWN), (runner, channel, message) -> {
                 if (context.hasPermission(runner, "volume")) {
                     int volume = context.getMusicPlayer().getVolume();
                     volume -= 10;
@@ -121,7 +123,7 @@ public class PlayingCommand extends MainCommand {
                     message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                 }
             }));
-            volumeRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_UP), (runner, channel, message) -> {
+            volumeRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_UP), (runner, channel, message) -> {
                 if (context.hasPermission(runner, "volume")) {
                     int volume = context.getMusicPlayer().getVolume();
                     volume += 10;
@@ -132,7 +134,7 @@ public class PlayingCommand extends MainCommand {
                     message.editMessage(getSongEmbed(player, context.getGuild().getIdLong())).queue();
                 }
             }));
-            volumeRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.BAR_CHART), (runner, channel, message) -> {
+            volumeRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.BAR_CHART), (runner, channel, message) -> {
                 context.runOtherCommand("equalizer", runner, context);
             }));
             container.addRow(volumeRow);
@@ -205,13 +207,13 @@ public class PlayingCommand extends MainCommand {
         CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(guildId);
         switch (mode) {
             case DISABLED:
-                mainRow.setComponent(3, repeat);
+                mainRow.setComponent(1, repeat);
                 break;
             case PLAYLIST:
-                mainRow.setComponent(3, repeatOne);
+                mainRow.setComponent(1, repeatOne);
                 break;
             case SONG:
-                mainRow.setComponent(3, noRepeat);
+                mainRow.setComponent(1, noRepeat);
                 break;
         }
         player.loopMode(mode);
