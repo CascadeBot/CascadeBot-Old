@@ -20,4 +20,8 @@ class InteractionMessage(val message: Message, val container: ComponentContainer
         return message.editMessage(message).override(true).setActionRows(container.getComponents().map { it.toDiscordActionRow() })
     }
 
+    fun notifyContainerChange(): MessageAction {
+        return message.editMessageComponents().setActionRows(container.getComponents().map { it.toDiscordActionRow() })
+    }
+
 }

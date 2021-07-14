@@ -9,6 +9,16 @@ class ComponentContainer {
         private set
 
     fun addRow(actionRow: CascadeActionRow) {
+        doChecks(actionRow)
+        components.add(actionRow)
+    }
+
+    fun setRow(pos: Int, actionRow: CascadeActionRow) {
+        doChecks(actionRow)
+        components[pos] = actionRow
+    }
+
+    private fun doChecks(actionRow: CascadeActionRow) {
         if (components.size == 0) {
             persistent = actionRow.isPersistent()
         } else {
@@ -20,8 +30,6 @@ class ComponentContainer {
         if (components.size >= 5) {
             throw UnsupportedOperationException("Cannot have more then 5 action rows!")
         }
-
-        components.add(actionRow)
     }
 
     fun getComponents(): List<CascadeActionRow> {

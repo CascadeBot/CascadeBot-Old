@@ -9,9 +9,7 @@ import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
@@ -27,17 +25,15 @@ import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
 import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
 import org.cascadebot.cascadebot.utils.interactions.CascadeSelectBox;
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
-import org.cascadebot.cascadebot.utils.interactions.ISelectionRunnable;
-import org.cascadebot.cascadebot.utils.interactions.InteractionMessage;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class EqualizerCommand extends MainCommand {
 
@@ -129,29 +125,60 @@ public class EqualizerCommand extends MainCommand {
         container.addRow(row);
         CascadeActionRow selectRow = new CascadeActionRow();
         CascadeSelectBox selectBox = new CascadeSelectBox("select-equalizer", (runner, channel, message, selected) -> {
-
+            List<Integer> selectedBands = selected.stream().map(s -> Integer.getInteger(s.split(" ")[1])).collect(Collectors.toList());
+            currentBands.clear();
+            Collections.sort(selectedBands);
+            currentBands.addAll(selectedBands);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
         });
         for (int i = 1; i < Equalizer.BAND_COUNT; i++) {
             selectBox.addOption("Band " + i, false);
         }
-        selectBox.setMaxSelect(Equalizer.BAND_COUNT);
+        selectBox.setMaxSelect(7); // limit to 7 as that's all we can really display.
+        selectRow.addComponent(selectBox);
+        container.addRow(selectRow);
         context.getUiMessaging().sendComponentMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, context.getUser(), context).build(), container);
     }
 
     private String getEqualizerString(Map<Integer, Float> bands, List<Integer> currentBands) {
-        int lowestBand = currentBand - 3;
-        int highestBand = currentBand + 2;
-        int lowestBandDisplay = lowestBand;
-        int highestBandDisplay = highestBand;
+        Set<Integer> bandsToDisplay = new HashSet<>();
+        if (currentBands.size() == 1) {
+            int lowestBand = currentBands.get(0) - 3;
+            int highestBand = currentBands.get(0) + 2;
 
-        if (lowestBand < 0) {
-            highestBandDisplay += Math.abs(lowestBand);
-            lowestBandDisplay = 0;
-        }
+            int lowestBandDisplay = lowestBand;
+            int highestBandDisplay = highestBand;
 
-        if (highestBand >= Equalizer.BAND_COUNT - 1) {
-            lowestBandDisplay -= highestBand - (Equalizer.BAND_COUNT - 2);
-            highestBandDisplay = Equalizer.BAND_COUNT - 2;
+            if (lowestBand < 0) {
+                highestBandDisplay += Math.abs(lowestBand);
+                lowestBandDisplay = 0;
+            }
+
+            if (highestBand >= Equalizer.BAND_COUNT - 1) {
+                lowestBandDisplay -= highestBand - (Equalizer.BAND_COUNT - 2);
+                highestBandDisplay = Equalizer.BAND_COUNT - 2;
+            }
+            for (int i = lowestBandDisplay; i <= highestBandDisplay + 1; i++) {
+                bandsToDisplay.add(i);
+            }
+        } else if (currentBands.size() > 1 && currentBands.size() <= 3) {
+            // Get bands immediately to the left/right of selected bands
+            for (int selectedBand : currentBands) {
+                if (selectedBand == 0) {
+                    bandsToDisplay.add(selectedBand);
+                    bandsToDisplay.add(selectedBand + 1);
+                } else if (selectedBand == Equalizer.BAND_COUNT - 1) {
+                    bandsToDisplay.add(selectedBand - 1);
+                    bandsToDisplay.add(selectedBand);
+                } else {
+                    bandsToDisplay.add(selectedBand - 1);
+                    bandsToDisplay.add(selectedBand);
+                    bandsToDisplay.add(selectedBand + 1);
+                }
+            }
+        } else {
+            // Display all selected bands
+            bandsToDisplay.addAll(currentBands);
         }
 
         List<Integer> heights = new ArrayList<>();
@@ -159,23 +186,23 @@ public class EqualizerCommand extends MainCommand {
         List<String> footer = new ArrayList<>();
         int currentBarNumber = 0;
         int selectedBarNumber = 0;
-        for (int i = lowestBandDisplay; i <= highestBandDisplay + 1; i++) {
-            if (i == currentBand) {
-                if (i < 9) {
-                    footer.add("[0" + (i + 1) + "]");
+        for (int toDisplay: bandsToDisplay) {
+            if (currentBands.contains(toDisplay)) {
+                if (toDisplay < 9) {
+                    footer.add("[0" + (toDisplay + 1) + "]");
                 } else {
-                    footer.add("[" + (i + 1) + "]");
+                    footer.add("[" + (toDisplay + 1) + "]");
                 }
                 selectedBarNumber = currentBarNumber;
             } else {
-                if (i < 9) {
-                    footer.add("(0" + (i + 1) + ")");
+                if (toDisplay < 9) {
+                    footer.add("(0" + (toDisplay + 1) + ")");
                 } else {
-                    footer.add("(" + (i + 1) + ")");
+                    footer.add("(" + (toDisplay + 1) + ")");
                 }
             }
 
-            int bandValue = (int) (bands.get(i) * 20 + 5);
+            int bandValue = (int) (bands.get(toDisplay) * 20 + 5);
             heights.add(bandValue);
             currentBarNumber++;
         }
@@ -221,12 +248,17 @@ public class EqualizerCommand extends MainCommand {
     }
 
     public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, List<Integer> currentBands, User requester, CommandContext context) {
-        String equalizer = getEqualizerString(bands, currentBand);
+        String equalizer = getEqualizerString(bands, currentBands);
 
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(requester, context.getLocale());
-        if (bands.get(currentBand) >= .2) {
+        float total = 0;
+        for (int band: currentBands) {
+            total += bands.get(band);
+        }
+        float adv = total / currentBands.size();
+        if (adv >= .2) {
             builder.setColor(Color.decode("#EE6767")); // Red
-        } else if (bands.get(currentBand) > 0 && bands.get(currentBand) < .2) {
+        } else if (adv > 0 && adv < .2) {
             builder.setColor(Color.decode("#D9E94A")); // Yellow
         } else {
             builder.setColor(Color.decode("#84D6A2")); // Green

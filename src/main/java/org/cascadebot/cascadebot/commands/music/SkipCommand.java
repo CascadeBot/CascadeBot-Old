@@ -32,7 +32,7 @@ import java.util.Optional;
 
 public class SkipCommand extends MainCommand {
 
-    //public static Map<Long, VoteGroup> voteMap = new HashMap<>();
+    public static Map<Long, VoteGroup> voteMap = new HashMap<>();
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
@@ -59,9 +59,8 @@ public class SkipCommand extends MainCommand {
             return;
         }
 
-        Optional<VoteGroup> optional = context.getData().getVoteGroups().stream().filter(voteGroup -> CascadeBot.INS.getShardManager().getGuildChannelById(voteGroup.getChannelId()).getGuild().getIdLong() == context.getGuild().getIdLong()).findFirst();
-        if (optional.isPresent()) {
-            VoteGroup voteGroup = optional.get();
+        if (voteMap.containsKey(context.getGuild().getIdLong())) {
+            VoteGroup voteGroup = voteMap.get(context.getGuild().getIdLong());
             if (context.getArgs().length > 0) {
                 if (context.getArg(0).equalsIgnoreCase("yes")) {
                     if (voteGroup.isUserAllowed(sender.getIdLong())) {
@@ -119,6 +118,7 @@ public class SkipCommand extends MainCommand {
         for (Member member : context.getMusicPlayer().getConnectedChannel().getMembers()) {
             voteGroup.allowUser(member.getIdLong());
         }
+        voteMap.put(context.getGuild().getIdLong(), voteGroup); // TODO I want to get rid of this map, but it's needed for adding/removing users, so maybe add id to vote groups?
     }
 
     @Override

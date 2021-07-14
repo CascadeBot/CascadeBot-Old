@@ -8,9 +8,11 @@ package org.cascadebot.cascadebot.messaging;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.utils.AttachmentOption;
 import net.dv8tion.jda.internal.utils.Checks;
@@ -22,6 +24,8 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.FormatUtils;
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
+import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
@@ -212,8 +216,9 @@ public class MessagingUI {
 
             AudioTrack selectedTrack = tracks.stream().filter(audioTrack -> audioTrack.getIdentifier().equals(matcher.group("v"))).findFirst().orElse(tracks.get(0));
 
-            ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.SONG, (runner, channel, message) -> {
+            ComponentContainer container = new ComponentContainer();
+            CascadeActionRow actionRow = new CascadeActionRow();
+            actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.SONG), (runner, channel, message) -> {
                 message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 if (playTop) {
                     context.getMusicPlayer().playTrack(selectedTrack);
@@ -222,7 +227,7 @@ public class MessagingUI {
                 }
                 context.getUiMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
             }));
-            buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.PLAYLIST, (runner, channel, message) -> {
+            actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.PLAYLIST), (runner, channel, message) -> {
                 message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 if (playTop) {
                     List<AudioTrack> currentQueue = new ArrayList<>(context.getMusicPlayer().getQueue());
@@ -235,6 +240,7 @@ public class MessagingUI {
                 }
                 context.getUiMessaging().sendTracksFound(tracks);
             }));
+            container.addRow(actionRow);
 
             String message = context.i18n("music.misc.load_options", selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
 
@@ -243,7 +249,7 @@ public class MessagingUI {
             embedBuilder.setDescription(message);
 
             try {
-                context.getUiMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+                context.getUiMessaging().sendComponentMessage(embedBuilder.build(), container);
             } catch (PermissionException e) {
                 context.getTypedMessaging().replyInfo(embedBuilder.appendDescription(context.i18n("music.misc.load_options_typed", context.i18n("music.misc.load_option.track"), context.i18n("music.misc.load_option.playlist"))));
 

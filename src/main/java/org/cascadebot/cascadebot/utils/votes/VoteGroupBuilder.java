@@ -58,6 +58,10 @@ public class VoteGroupBuilder {
      * @return this.
      */
     public VoteGroupBuilder setOptionsAmount(int amount) {
+        if (amount < 2) {
+            throw new UnsupportedOperationException("Cannot have less then 2 options");
+        }
+
         if (type == VoteMessageType.YES_NO) {
             throw new UnsupportedOperationException("Cannot set options amount for yes no votes");
         }
@@ -184,7 +188,7 @@ public class VoteGroupBuilder {
                             message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         voteGroup.voteFinished();
-                        finishConsumer.getConsumer().accept(voteGroup.getOrderedVoteResults());
+                        finishConsumer.getConsumer().accept(CascadeBot.INS.getShardManager().getTextChannelById(channelId), voteGroup.getOrderedVoteResults());
                     }
                 }, voteTime);
             }
