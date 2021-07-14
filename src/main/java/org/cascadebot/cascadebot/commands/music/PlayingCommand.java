@@ -61,7 +61,7 @@ public class PlayingCommand extends MainCommand {
         }
     });
 
-    private CascadeButton noRepeat = new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromEmote(CascadeBot.INS.getShardManager().getEmoteById(Config.INS.getGlobalEmotes().get("norepeat"))), (runner, channel, message) -> {
+    private CascadeButton noRepeat = new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromEmote("norepeat", Config.INS.getGlobalEmotes().get("norepeat"), false), (runner, channel, message) -> {
 
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("loop"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             handleRepeat(channel.getGuild().getIdLong(), LoopMode.DISABLED, message);
