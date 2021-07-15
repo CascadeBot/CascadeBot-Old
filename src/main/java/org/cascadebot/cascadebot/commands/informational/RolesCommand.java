@@ -35,7 +35,7 @@ public class RolesCommand extends MainCommand {
                     role.getColor() == null ? context.i18n("words.default") : "#" + Integer.toHexString(role.getColor().getRGB()));
         }
 
-        context.getUiMessaging().sendPagedMessage(PageUtils.splitTableDataToPages(builder.build(), 20));
+        context.getUiMessaging().sendPagedMessage(PageUtils.splitTableDataToCharWithMaxRows(builder.build(), 2000, 20));
     }
 
     @Override
