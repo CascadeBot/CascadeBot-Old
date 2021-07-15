@@ -165,7 +165,7 @@ public class PageUtils {
 
             tableBuilderTemp.addRow(row);
 
-            if (tableBuilderTemp.build().toString().size() > maxChars)
+            if (tableBuilderTemp.build().toString().length() > maxChars)
                 shouldSplit = true;
 
             if (i > maxRows)
@@ -179,6 +179,7 @@ public class PageUtils {
                     tableBuilder.addHeading(head);
                     tableBuilderTemp.addHeading(head);
                 }
+                tableBuilderTemp.addRow(row);
                 i = 0;
             }
             tableBuilder.addRow(row);
