@@ -37,6 +37,8 @@ import java.util.stream.Collectors;
 
 public class EqualizerCommand extends MainCommand {
 
+    private CascadeSelectBox selectBox;
+
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (!CascadeBot.INS.getMusicHandler().getLavalinkEnabled()) {
@@ -64,7 +66,7 @@ public class EqualizerCommand extends MainCommand {
             currentBands.clear();
             currentBands.add(newBand);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
         }));
         row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_DOWN), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
@@ -85,7 +87,7 @@ public class EqualizerCommand extends MainCommand {
                 }
             }
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
         }));
         row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_UP), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
@@ -106,13 +108,13 @@ public class EqualizerCommand extends MainCommand {
                 }
             }
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
         }));
         row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
-            int newBand = currentBands.get(currentBands.size() - 1);
+            int newBand = currentBands.get(currentBands.size() - 1) + 1;
             if (newBand >= Equalizer.BAND_COUNT) {
                 newBand = Equalizer.BAND_COUNT;
             }
@@ -120,18 +122,18 @@ public class EqualizerCommand extends MainCommand {
             currentBands.clear();
             currentBands.add(newBand);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).override(true).queue();
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
         }));
         container.addRow(row);
         CascadeActionRow selectRow = new CascadeActionRow();
-        CascadeSelectBox selectBox = new CascadeSelectBox("select-equalizer", (runner, channel, message, selected) -> {
-            List<Integer> selectedBands = selected.stream().map(s -> Integer.getInteger(s.split(" ")[1])).collect(Collectors.toList());
+        selectBox = new CascadeSelectBox("select-equalizer", (runner, channel, message, selected) -> {
+            List<Integer> selectedBands = selected.stream().map(s -> Integer.parseInt(s.split(" ")[1]) - 1).collect(Collectors.toList());
             currentBands.clear();
             Collections.sort(selectedBands);
             currentBands.addAll(selectedBands);
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
         });
-        for (int i = 1; i < Equalizer.BAND_COUNT; i++) {
+        for (int i = 1; i <= Equalizer.BAND_COUNT; i++) {
             selectBox.addOption("Band " + i, false);
         }
         selectBox.setMaxSelect(7); // limit to 7 as that's all we can really display.
@@ -185,7 +187,7 @@ public class EqualizerCommand extends MainCommand {
 
         List<String> footer = new ArrayList<>();
         int currentBarNumber = 0;
-        int selectedBarNumber = 0;
+        List<Integer> selectedBarNumbers = new ArrayList<>();
         for (int toDisplay: bandsToDisplay) {
             if (currentBands.contains(toDisplay)) {
                 if (toDisplay < 9) {
@@ -193,7 +195,7 @@ public class EqualizerCommand extends MainCommand {
                 } else {
                     footer.add("[" + (toDisplay + 1) + "]");
                 }
-                selectedBarNumber = currentBarNumber;
+                selectedBarNumbers.add(currentBarNumber);
             } else {
                 if (toDisplay < 9) {
                     footer.add("(0" + (toDisplay + 1) + ")");
@@ -230,7 +232,7 @@ public class EqualizerCommand extends MainCommand {
                 if (currentHeight <= barHeight) {
                     int barLocation = barLocations.get(currentBar);
                     char barChar = UnicodeConstants.DOTTED_SQUARE;
-                    if (currentBar == selectedBarNumber) {
+                    if (selectedBarNumbers.contains(currentBar)) {
                         barChar = UnicodeConstants.SQUARE;
                     }
                     lineChars[barLocation] = barChar;
@@ -248,6 +250,11 @@ public class EqualizerCommand extends MainCommand {
     }
 
     public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, List<Integer> currentBands, User requester, CommandContext context) {
+        selectBox.clearDefaults();
+        for (int selected: currentBands) {
+            selectBox.addDefault("Band " + (selected + 1));
+        }
+
         String equalizer = getEqualizerString(bands, currentBands);
 
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(requester, context.getLocale());

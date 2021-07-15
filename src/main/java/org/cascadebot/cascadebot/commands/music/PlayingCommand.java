@@ -33,7 +33,7 @@ import org.cascadebot.cascadebot.utils.interactions.InteractionMessage;
 
 public class PlayingCommand extends MainCommand {
 
-    ComponentContainer container = new ComponentContainer();
+    ComponentContainer container = new ComponentContainer(); // TODO currently as we only create one instance of the play command ever if someone else runs the play command it overrides other instances of these buttons causing issue.
     private CascadeActionRow mainRow = new CascadeActionRow();
 
     private CascadeButton playButton = new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.PLAY), (runner, channel, message) -> {
