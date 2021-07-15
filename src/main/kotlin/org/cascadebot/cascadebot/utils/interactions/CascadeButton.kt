@@ -13,7 +13,6 @@ open class CascadeButton private constructor (val label: String?, val emoji: Emo
 
     override val discordComponent: Component
         get() {
-            require(label != null || emoji != null) { "Label and emoji cannot both be null" }
             var button: Button = Button.of(type, id, label, emoji)
             button = if (disabled) {
                 button.asDisabled()
@@ -24,6 +23,7 @@ open class CascadeButton private constructor (val label: String?, val emoji: Emo
         }
 
     init {
+        require(label != null || emoji != null) { "Label and emoji cannot both be null" }
         if (type == ButtonStyle.LINK) {
             throw UnsupportedOperationException("Please use CascadeLinkButton if trying to use a link button") // TODO implement link buttons
         }
