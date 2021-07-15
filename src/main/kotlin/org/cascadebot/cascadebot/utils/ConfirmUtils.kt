@@ -90,13 +90,13 @@ object ConfirmUtils {
                 val row = CascadeActionRow()
                 container.addRow(row)
 
-                row.addComponent(CascadeButton(ButtonStyle.SUCCESS, Emoji.fromUnicode(UnicodeConstants.TICK), IButtonRunnable { member, _, _ ->
+                row.addComponent(CascadeButton.success(Emoji.fromUnicode(UnicodeConstants.TICK), IButtonRunnable { member, _, _ ->
                     if (member.idLong != confirmationAction.userId)
                         confirmationAction.run()
                 }))
 
                 if (isCancellable) {
-                    row.addComponent(CascadeButton(ButtonStyle.DANGER, Emoji.fromUnicode(UnicodeConstants.RED_CROSS), IButtonRunnable { _, _, _ ->
+                    row.addComponent(CascadeButton.danger(Emoji.fromUnicode(UnicodeConstants.RED_CROSS), IButtonRunnable { _, _, _ ->
                         confirmedMap.remove(actionKey, confirmationAction)
                         sentMessage.delete()
                             .queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE))

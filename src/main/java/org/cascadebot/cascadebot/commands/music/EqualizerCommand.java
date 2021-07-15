@@ -54,7 +54,7 @@ public class EqualizerCommand extends MainCommand {
         currentBands.add(0);
         ComponentContainer container = new ComponentContainer();
         CascadeActionRow row = new CascadeActionRow();
-        row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW), (runner, channel, message) -> {
+        row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
@@ -68,7 +68,7 @@ public class EqualizerCommand extends MainCommand {
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
         }));
-        row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_DOWN), (runner, channel, message) -> {
+        row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.VOLUME_DOWN), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
@@ -89,7 +89,7 @@ public class EqualizerCommand extends MainCommand {
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
         }));
-        row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.VOLUME_UP), (runner, channel, message) -> {
+        row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.VOLUME_UP), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
@@ -110,7 +110,7 @@ public class EqualizerCommand extends MainCommand {
 
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
         }));
-        row.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW), (runner, channel, message) -> {
+        row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }

@@ -33,7 +33,7 @@ public class CatCommand extends MainCommand {
     public void onCommand(Member sender, CommandContext context) {
         ComponentContainer container = new ComponentContainer();
         CascadeActionRow actionRow = new CascadeActionRow();
-        actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.REPEAT), (runner, channel, message) -> {
+        actionRow.addComponent(CascadeButton.primary(Emoji.fromUnicode(UnicodeConstants.REPEAT), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }

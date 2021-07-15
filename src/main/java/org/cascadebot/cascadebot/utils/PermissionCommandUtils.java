@@ -116,11 +116,11 @@ public class PermissionCommandUtils {
 
             CascadeActionRow groupPageRow = new CascadeActionRow();
 
-            groupPageRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.LEFT_ARROW), (runner, channel, message) -> {
+            groupPageRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.LEFT_ARROW), (runner, channel, message) -> {
                 handleSwitchButtons(runner, message, groupsEmbed.build(), container, firstPageRow, context);
             }));
 
-            groupPageRow.addComponent(new CascadeButton(ButtonStyle.SUCCESS, "Select", Emoji.fromUnicode(UnicodeConstants.TICK), (runner, channel, message) -> {
+            groupPageRow.addComponent(CascadeButton.success("Select", Emoji.fromUnicode(UnicodeConstants.TICK), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
@@ -128,13 +128,13 @@ public class PermissionCommandUtils {
                 groupConsumer.accept(group);
             }));
 
-            firstPageRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(unicode + "\u20E3"), (runner, channel, message) -> {
+            firstPageRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(unicode + "\u20E3"), (runner, channel, message) -> {
                 handleSwitchButtons(runner, message, groupEmbed.build(), container, groupPageRow, context);
             }));
 
             i++;
         }
-        firstPageRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.RED_CROSS), ((runner, channel, message) -> {
+        firstPageRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.RED_CROSS), ((runner, channel, message) -> {
             if (runner.getIdLong() != sender) {
                 return;
             }

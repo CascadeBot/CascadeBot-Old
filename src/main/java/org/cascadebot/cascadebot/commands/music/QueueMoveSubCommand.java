@@ -64,7 +64,7 @@ public class QueueMoveSubCommand extends SubCommand {
             movableList.moveSelection(start);
             ComponentContainer container = new ComponentContainer();
             CascadeActionRow actionRow = new CascadeActionRow();
-            actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.TICK), (runner, channel, message) -> {
+            actionRow.addComponent(CascadeButton.primary(Emoji.fromUnicode(UnicodeConstants.TICK), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
@@ -78,7 +78,7 @@ public class QueueMoveSubCommand extends SubCommand {
                 }
                 message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
             }));
-            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ARROW_UP), (runner, channel, message) -> {
+            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_UP), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
@@ -86,7 +86,7 @@ public class QueueMoveSubCommand extends SubCommand {
                 movableList.moveSelection(-1);
                 message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
             }));
-            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN), (runner, channel, message) -> {
+            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
@@ -94,7 +94,7 @@ public class QueueMoveSubCommand extends SubCommand {
                 movableList.moveSelection(1);
                 message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
             }));
-            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.RED_CROSS), (runner, channel, message) -> {
+            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.RED_CROSS), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }

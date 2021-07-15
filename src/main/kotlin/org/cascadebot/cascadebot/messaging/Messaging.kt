@@ -115,27 +115,27 @@ object Messaging {
         return future
     }
 
-    private val firstPageButton = CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.REWIND),
+    private val firstPageButton = CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.REWIND),
         IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             handlePage(message, 1, pageGroup!!)
         })
 
-    private val prevPageButton = CascadeButton(ButtonStyle.SECONDARY, "Prev Page", Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
+    private val prevPageButton = CascadeButton.secondary("Prev Page", Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
         IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             val newPage = pageGroup!!.currentPage - 1
             handlePage(message, newPage, pageGroup)
         })
 
-    private val nextPageButton = CascadeButton(ButtonStyle.SECONDARY, "Next Page", Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
+    private val nextPageButton = CascadeButton.secondary("Next Page", Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
         IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             val newPage = pageGroup!!.currentPage + 1
             handlePage(message, newPage, pageGroup)
         })
 
-    private val lastPageButton = CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
+    private val lastPageButton = CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
         IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             handlePage(message, pageGroup!!.pageCount, pageGroup)

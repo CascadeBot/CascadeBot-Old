@@ -47,7 +47,7 @@ public class GroupPermissionMoveSubCommand extends SubCommand {
             AtomicInteger currIndex = new AtomicInteger(context.getData().getManagement().getPermissions().getGroups().indexOf(group));
             ComponentContainer container = new ComponentContainer();
             CascadeActionRow actionRow = new CascadeActionRow();
-            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ARROW_UP), (runner, channel, message) -> {
+            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_UP), (runner, channel, message) -> {
                 if (sender.getIdLong() != runner.getIdLong()) {
                     return;
                 }
@@ -55,7 +55,7 @@ public class GroupPermissionMoveSubCommand extends SubCommand {
                 currIndex.addAndGet(-1);
                 message.editMessage(getGroupsList(group, context.getData().getManagement().getPermissions().getGroups())).queue();
             }));
-            actionRow.addComponent(new CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN), (runner, channel, message) -> {
+            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN), (runner, channel, message) -> {
                 if (sender.getIdLong() != runner.getIdLong()) {
                     return;
                 }

@@ -38,7 +38,7 @@ public class QueueLoadSubCommand extends SubCommand {
                 case EXISTS_IN_ALL_SCOPES:
                     ComponentContainer container = new ComponentContainer();
                     CascadeActionRow actionRow = new CascadeActionRow();
-                    actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.ONE), ((runner, channel, message) -> {
+                    actionRow.addComponent(CascadeButton.primary(Emoji.fromUnicode(UnicodeConstants.ONE), ((runner, channel, message) -> {
                         if (!runner.equals(context.getMember())) {
                             return;
                         }
@@ -47,7 +47,7 @@ public class QueueLoadSubCommand extends SubCommand {
                             context.getUiMessaging().sendTracksFound(newTracks);
                         }));
                     })));
-                    actionRow.addComponent(new CascadeButton(ButtonStyle.PRIMARY, Emoji.fromUnicode(UnicodeConstants.TWO), ((runner, channel, message) -> {
+                    actionRow.addComponent(CascadeButton.primary(Emoji.fromUnicode(UnicodeConstants.TWO), ((runner, channel, message) -> {
                         if (!runner.equals(context.getMember())) {
                             return;
                         }

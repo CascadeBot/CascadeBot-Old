@@ -18,7 +18,7 @@ import org.cascadebot.cascadebot.utils.interactions.InteractionMessage
 import org.cascadebot.cascadebot.utils.votes.VoteGroup
 
 enum class PersistentComponent(@field:Transient val component: CascadeComponent) {
-    TODO_BUTTON_CHECK(CascadeButton(ButtonStyle.PRIMARY, "Check", Emoji.fromUnicode(UnicodeConstants.TICK),
+    TODO_BUTTON_CHECK(CascadeButton.primary("Check", Emoji.fromUnicode(UnicodeConstants.TICK),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
@@ -30,7 +30,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             todoList.addUncheckButton(message.message)
             message.editMessage(todoList.todoListMessage).queue()
         })),
-    TODO_BUTTON_UNCHECK(CascadeButton(ButtonStyle.PRIMARY, "Uncheck", Emoji.fromUnicode(UnicodeConstants.WHITE_HALLOW_SQUARE),
+    TODO_BUTTON_UNCHECK(CascadeButton.primary("Uncheck", Emoji.fromUnicode(UnicodeConstants.WHITE_HALLOW_SQUARE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
@@ -42,7 +42,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             todoList.addCheckButton(message.message)
             message.editMessage(todoList.todoListMessage).queue()
         })),
-    TODO_BUTTON_NAVIGATE_LEFT(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
+    TODO_BUTTON_NAVIGATE_LEFT(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
@@ -59,7 +59,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             todoList.doCheckToggle(message.message)
             message.editMessage(todoList.todoListMessage).queue()
         })),
-    TODO_BUTTON_NAVIGATE_RIGHT(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
+    TODO_BUTTON_NAVIGATE_RIGHT(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
@@ -76,7 +76,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             todoList.doCheckToggle(message.message)
             message.editMessage(todoList.todoListMessage).queue()
         })),
-    TODO_BUTTON_NAVIGATE_UP(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ARROW_UP),
+    TODO_BUTTON_NAVIGATE_UP(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_UP),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
@@ -91,7 +91,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             todoList.doCheckToggle(message.message)
             message.editMessage(todoList.todoListMessage).queue()
         })),
-    TODO_BUTTON_NAVIGATE_DOWN(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN),
+    TODO_BUTTON_NAVIGATE_DOWN(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
@@ -106,7 +106,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             todoList.doCheckToggle(message.message)
             message.editMessage(todoList.todoListMessage).queue()
         })),
-    VOTE_BUTTON_YES(CascadeButton(ButtonStyle.SUCCESS, Emoji.fromUnicode(UnicodeConstants.TICK),
+    VOTE_BUTTON_YES(CascadeButton.success(Emoji.fromUnicode(UnicodeConstants.TICK),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -115,7 +115,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, UnicodeConstants.TICK)
         })),
-    VOTE_BUTTON_NO(CascadeButton(ButtonStyle.DANGER, Emoji.fromUnicode(UnicodeConstants.RED_CROSS),
+    VOTE_BUTTON_NO(CascadeButton.danger(Emoji.fromUnicode(UnicodeConstants.RED_CROSS),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -124,7 +124,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, UnicodeConstants.RED_CROSS)
         })),
-    VOTE_BUTTON_ONE(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ONE),
+    VOTE_BUTTON_ONE(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ONE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -133,7 +133,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 1)
         })),
-    VOTE_BUTTON_TWO(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.TWO),
+    VOTE_BUTTON_TWO(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.TWO),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -142,7 +142,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 2)
         })),
-    VOTE_BUTTON_THREE(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.THREE),
+    VOTE_BUTTON_THREE(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.THREE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -151,7 +151,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 3)
         })),
-    VOTE_BUTTON_FOUR(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FOUR),
+    VOTE_BUTTON_FOUR(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FOUR),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -160,7 +160,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 4)
         })),
-    VOTE_BUTTON_FIVE(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FIVE),
+    VOTE_BUTTON_FIVE(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FIVE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -169,7 +169,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 5)
         })),
-    VOTE_BUTTON_SIX(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.SIX),
+    VOTE_BUTTON_SIX(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.SIX),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -178,7 +178,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 6)
         })),
-    VOTE_BUTTON_SEVEN(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.SEVEN),
+    VOTE_BUTTON_SEVEN(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.SEVEN),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -187,7 +187,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 7)
         })),
-    VOTE_BUTTON_EIGHT(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.EIGHT),
+    VOTE_BUTTON_EIGHT(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.EIGHT),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -196,7 +196,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 8)
         })),
-    VOTE_BUTTON_NINE(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.NINE),
+    VOTE_BUTTON_NINE(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.NINE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -205,7 +205,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 9)
         })),
-    VOTE_BUTTON_A(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.A),
+    VOTE_BUTTON_A(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.A),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -214,7 +214,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 0)
         })),
-    VOTE_BUTTON_B(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.B),
+    VOTE_BUTTON_B(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.B),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -223,7 +223,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 1)
         })),
-    VOTE_BUTTON_C(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.C),
+    VOTE_BUTTON_C(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.C),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -232,7 +232,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 2)
         })),
-    VOTE_BUTTON_D(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.D),
+    VOTE_BUTTON_D(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.D),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -241,7 +241,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 3)
         })),
-    VOTE_BUTTON_E(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.E),
+    VOTE_BUTTON_E(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.E),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -250,7 +250,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 4)
         })),
-    VOTE_BUTTON_F(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.F),
+    VOTE_BUTTON_F(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.F),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -259,7 +259,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 5)
         })),
-    VOTE_BUTTON_G(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.G),
+    VOTE_BUTTON_G(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.G),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -268,7 +268,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 6)
         })),
-    VOTE_BUTTON_H(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.H),
+    VOTE_BUTTON_H(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.H),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -277,7 +277,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 7)
         })),
-    VOTE_BUTTON_I(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.I),
+    VOTE_BUTTON_I(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.I),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -286,7 +286,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 8)
         })),
-    VOTE_BUTTON_J(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.J),
+    VOTE_BUTTON_J(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.J),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -295,7 +295,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 9)
         })),
-    VOTE_BUTTON_K(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.K),
+    VOTE_BUTTON_K(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.K),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -304,7 +304,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 10)
         })),
-    VOTE_BUTTON_L(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.L),
+    VOTE_BUTTON_L(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.L),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -313,7 +313,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 11)
         })),
-    VOTE_BUTTON_M(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.M),
+    VOTE_BUTTON_M(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.M),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -322,7 +322,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 12)
         })),
-    VOTE_BUTTON_N(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.N),
+    VOTE_BUTTON_N(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.N),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -331,7 +331,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 13)
         })),
-    VOTE_BUTTON_O(CascadeButton(ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.O),
+    VOTE_BUTTON_O(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.O),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
@@ -340,7 +340,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             voteButtonGroup.addVote(runner.user, 14)
         })),
-    SKIP_BUTTON_FORCE(CascadeButton(ButtonStyle.SECONDARY, "Force", Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
+    SKIP_BUTTON_FORCE(CascadeButton.secondary("Force", Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
         IButtonRunnable { runner: Member?, channel: TextChannel, message: InteractionMessage ->
             val data = GuildDataManager.getGuildData(channel.guild.idLong)
             if (!data.management.permissions.hasPermission(
