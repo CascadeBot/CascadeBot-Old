@@ -55,7 +55,7 @@ public final class GuildDataManager {
     public static void update(long id, Bson update) {
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).updateOne(eq("_id", id), update, new DebugLogCallback<>("Updated Guild ID " + id + ":", update));
-        });;
+        });
     }
 
     public static void updateDiff(long id, Difference difference, GuildData newData) {
@@ -83,7 +83,7 @@ public final class GuildDataManager {
         }
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).updateMany(eq("_id", id), Updates.combine(bsonList), new DebugLogCallback<>("Updated Guild ID " + id));
-        });;
+        });
         replaceInternal(newData);
     }
 

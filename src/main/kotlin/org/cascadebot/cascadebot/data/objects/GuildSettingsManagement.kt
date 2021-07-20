@@ -22,10 +22,6 @@ class GuildSettingsManagement {
     val tags: ConcurrentHashMap<String, Tag> = ConcurrentHashMap()
     val filters: MutableList<CommandFilter> = mutableListOf()
     val permissions = GuildPermissions()
-    /*    get() {
-            assertWriteMode()
-            return field
-        }*/
 
     val greetings = Greetings()
     val autoRoles: MutableSet<Long> = mutableSetOf()

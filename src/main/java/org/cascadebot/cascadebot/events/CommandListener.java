@@ -64,7 +64,6 @@ public class CommandListener extends ListenerAdapter {
         MDC.put("cascade.sender", event.getAuthor().toString());
         MDC.put("cascade.shard_info", event.getJDA().getShardInfo().getShardString());
         MDC.put("cascade.channel", event.getChannel().toString());
-        MDC.put("writeMode", String.valueOf(false));
 
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         message = MULTIQUOTE_REGEX.matcher(message).replaceAll("");
