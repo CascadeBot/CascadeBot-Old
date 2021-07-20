@@ -135,6 +135,54 @@ public class PageUtils {
     }
 
     /**
+     * Splits table data out into a pages with maximum amount of character or rows
+     *
+     * @param table  The table to split.
+     * @param maxChars The max character length of outputted pages.
+     * @param maxRows The max row count of outputted pages.
+     * @return A list of pages
+     */
+    public static List<Page> splitTableDataToCharWithMaxRows(Table table, int maxChars, int maxRows) {
+        int i = 0;
+        List<Page> pages = new ArrayList<>();
+        Table.TableBuilder tableBuilder = new Table.TableBuilder();
+        Table.TableBuilder tableBuilderTemp = new Table.TableBuilder();
+        for (String head : table.getHeadings()) {
+            tableBuilder.addHeading(head);
+            tableBuilderTemp.addHeading(head);
+        }
+        for (List<String> row : table.getBody()) {
+            i++;
+            boolean shouldSplit = false;
+
+            tableBuilderTemp.addRow(row);
+
+            if (tableBuilderTemp.build().toString().length() > maxChars)
+                shouldSplit = true;
+
+            if (i > maxRows)
+                shouldSplit = true;
+
+            if (shouldSplit) {
+                pages.add(new PageObjects.TablePage(tableBuilder.build()));
+                tableBuilder = new Table.TableBuilder();
+                tableBuilderTemp = new Table.TableBuilder();
+                for (String head : table.getHeadings()) {
+                    tableBuilder.addHeading(head);
+                    tableBuilderTemp.addHeading(head);
+                }
+                tableBuilderTemp.addRow(row);
+                i = 0;
+            }
+            tableBuilder.addRow(row);
+        }
+        if (tableBuilder.getBody().size() > 0) {
+            pages.add(new PageObjects.TablePage(tableBuilder.build()));
+        }
+        return pages;
+    }
+
+    /**
      * Splits table data out into a pages with content length less then the length provides
      *
      * @param table  The table to split.
