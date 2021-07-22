@@ -87,38 +87,37 @@ class TodoList(val ownerId: Long) {
         }
     }
 
-    var container: ComponentContainer? = null;
-    var row: CascadeActionRow? = null;
-
     private fun generateButtons(check: Boolean): ComponentContainer {
-        container = ComponentContainer()
-        row = CascadeActionRow()
+        val container = ComponentContainer()
+        val row = CascadeActionRow()
         if (check) {
-            row!!.addComponent(PersistentComponent.TODO_BUTTON_CHECK.component)
+            row.addComponent(PersistentComponent.TODO_BUTTON_CHECK.component)
         } else {
-            row!!.addComponent(PersistentComponent.TODO_BUTTON_UNCHECK.component)
+            row.addComponent(PersistentComponent.TODO_BUTTON_UNCHECK.component)
         }
-        row!!.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_LEFT.component)
-        row!!.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_UP.component)
-        row!!.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_DOWN.component)
-        row!!.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_RIGHT.component)
-        container!!.addRow(row!!)
-        return container!!
+        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_LEFT.component)
+        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_UP.component)
+        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_DOWN.component)
+        row.addComponent(PersistentComponent.TODO_BUTTON_NAVIGATE_RIGHT.component)
+        container.addRow(row)
+        return container
     }
 
     fun addUncheckButton(message: Message?) {
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
-            row!!.setComponent(0, PersistentComponent.TODO_BUTTON_UNCHECK.component)
+            val container = GuildDataManager.getGuildData(channel.guild.idLong).componentCache[channelId]!![messageId]
+            container!!.getRow(0).setComponent(0, PersistentComponent.TODO_BUTTON_UNCHECK.component)
             val data = GuildDataManager.getGuildData(message?.guild!!.idLong)
-            data.addComponents(channel, message, container!!)
+            data.addComponents(channel, message, container)
         }
     }
 
     fun addCheckButton(message: Message?) {
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
-            row!!.setComponent(0, PersistentComponent.TODO_BUTTON_CHECK.component)
+            val container = GuildDataManager.getGuildData(channel.guild.idLong).componentCache[channelId]!![messageId]
+            container!!.getRow(0).setComponent(0, PersistentComponent.TODO_BUTTON_CHECK.component)
             val data = GuildDataManager.getGuildData(message?.guild!!.idLong)
             data.addComponents(channel, message, container!!)
         }
