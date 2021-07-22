@@ -33,10 +33,6 @@ import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 import org.cascadebot.cascadebot.utils.interactions.InteractionMessage;
 
 public class PlayingCommand extends MainCommand {
-
-    ComponentContainer container = new ComponentContainer(); // TODO currently as we only create one instance of the play command ever if someone else runs the play command it overrides other instances of these buttons causing issue.
-    private CascadeActionRow mainRow = new CascadeActionRow();
-
     private final CascadeButton playButton = CascadeButton.primary(Emoji.fromUnicode(UnicodeConstants.PLAY), (runner, channel, message) -> {
         if (CascadeBot.INS.getPermissionsManager().isAuthorised(CascadeBot.INS.getCommandManager().getCommandByDefault("resume"), GuildDataManager.getGuildData(channel.getGuild().getIdLong()), runner)) {
             handlePlayPause(channel.getGuild().getIdLong(), message);
@@ -69,8 +65,8 @@ public class PlayingCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        container = new ComponentContainer();
-        mainRow = new CascadeActionRow();
+        ComponentContainer container = new ComponentContainer();
+        CascadeActionRow mainRow = new CascadeActionRow();
         CascadePlayer player = context.getMusicPlayer();
 
         if (player.getPlayingTrack() == null) {
@@ -190,6 +186,8 @@ public class PlayingCommand extends MainCommand {
     }
 
     public void handlePlayPause(long guildId, InteractionMessage buttonMessage) {
+        ComponentContainer container = GuildDataManager.getGuildData(guildId).getComponentCache().get(buttonMessage.getMessage().getChannel().getIdLong()).get(buttonMessage.getIdLong());
+        CascadeActionRow mainRow = container.getRow(0);
         CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(guildId);
         if (player.isPaused()) {
             player.setPaused(false);
@@ -203,6 +201,8 @@ public class PlayingCommand extends MainCommand {
     }
 
     public void handleRepeat(long guildId, LoopMode mode, InteractionMessage buttonMessage) {
+        ComponentContainer container = GuildDataManager.getGuildData(guildId).getComponentCache().get(buttonMessage.getMessage().getChannel().getIdLong()).get(buttonMessage.getIdLong());
+        CascadeActionRow mainRow = container.getRow(0);
         CascadePlayer player = CascadeBot.INS.getMusicHandler().getPlayer(guildId);
         switch (mode) {
             case DISABLED:

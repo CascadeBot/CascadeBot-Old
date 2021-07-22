@@ -37,8 +37,6 @@ import java.util.stream.Collectors;
 
 public class EqualizerCommand extends MainCommand {
 
-    private CascadeSelectBox selectBox;
-
     @Override
     public void onCommand(Member sender, CommandContext context) {
         if (!CascadeBot.INS.getMusicHandler().getLavalinkEnabled()) {
@@ -66,7 +64,8 @@ public class EqualizerCommand extends MainCommand {
             currentBands.clear();
             currentBands.add(newBand);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
         }));
         row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.VOLUME_DOWN), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
@@ -87,7 +86,8 @@ public class EqualizerCommand extends MainCommand {
                 }
             }
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
         }));
         row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.VOLUME_UP), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
@@ -108,7 +108,8 @@ public class EqualizerCommand extends MainCommand {
                 }
             }
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
         }));
         row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW), (runner, channel, message) -> {
             if (runner.getIdLong() != sender.getIdLong()) {
@@ -122,16 +123,18 @@ public class EqualizerCommand extends MainCommand {
             currentBands.clear();
             currentBands.add(newBand);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
         }));
         container.addRow(row);
         CascadeActionRow selectRow = new CascadeActionRow();
-        selectBox = new CascadeSelectBox("select-equalizer", (runner, channel, message, selected) -> {
+        CascadeSelectBox selectBox = new CascadeSelectBox("select-equalizer", (runner, channel, message, selected) -> {
             List<Integer> selectedBands = selected.stream().map(s -> Integer.parseInt(s.split(" ")[1]) - 1).collect(Collectors.toList());
             currentBands.clear();
             Collections.sort(selectedBands);
             currentBands.addAll(selectedBands);
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context).build()).queue();
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
         });
         for (int i = 1; i <= Equalizer.BAND_COUNT; i++) {
             selectBox.addOption("Band " + i, false);
@@ -139,7 +142,7 @@ public class EqualizerCommand extends MainCommand {
         selectBox.setMaxSelect(7); // limit to 7 as that's all we can really display.
         selectRow.addComponent(selectBox);
         container.addRow(selectRow);
-        context.getUiMessaging().sendComponentMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, context.getUser(), context).build(), container);
+        context.getUiMessaging().sendComponentMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, context.getUser(), context, selectBox).build(), container);
     }
 
     private String getEqualizerString(Map<Integer, Float> bands, List<Integer> currentBands) {
@@ -249,7 +252,7 @@ public class EqualizerCommand extends MainCommand {
         return equalizerBuilder.toString();
     }
 
-    public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, List<Integer> currentBands, User requester, CommandContext context) {
+    public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, List<Integer> currentBands, User requester, CommandContext context, CascadeSelectBox selectBox) {
         selectBox.clearDefaults();
         for (int selected: currentBands) {
             selectBox.addDefault("Band " + (selected + 1));
