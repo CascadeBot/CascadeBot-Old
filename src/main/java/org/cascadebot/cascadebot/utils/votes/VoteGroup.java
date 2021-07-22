@@ -85,7 +85,9 @@ public class VoteGroup {
     @Transient
     private ComponentContainer container;
 
-    VoteGroup(long ownerId, long channelId, long guildId, VotePeriodicConsumer periodicRunnable, Timer voteTimer, ComponentContainer container) {
+    private String id;
+
+    VoteGroup(String id, long ownerId, long channelId, long guildId, VoteFinishConsumer finishConsumer, VotePeriodicConsumer periodicRunnable, Timer voteTimer, ComponentContainer container) {
         this.ownerId = ownerId;
         this.channelId = channelId;
         this.guildId = guildId;
@@ -93,8 +95,10 @@ public class VoteGroup {
         if (periodicRunnable != null) {
             setUpVoteProcessConsumer();
         }
+        this.finishConsumer = finishConsumer;
         this.voteTimer = voteTimer;
         this.container = container;
+        this.id = id;
     }
 
     public ComponentContainer getComponents() {
@@ -180,20 +184,25 @@ public class VoteGroup {
                         CascadeBot.INS.getShardManager().getGuildById(guildId).getTextChannelById(channelId).retrieveMessageById(messageId).queue(message -> {
                             message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                             voteFinished();
-                            finishConsumer.getConsumer().accept(CascadeBot.INS.getShardManager().getTextChannelById(channelId), getOrderedVoteResults());
+                            if (finishConsumer != null) {
+                                finishConsumer.getConsumer().accept(CascadeBot.INS.getShardManager().getTextChannelById(channelId), getOrderedVoteResults());
+                            }
                         }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                     }
                 }, TimeUnit.SECONDS.toMillis(newTimersTime));
             }
             Member member = CascadeBot.INS.getShardManager().getGuildById(guildId).getMember(user);
 
-            int votesNeeded = (int) Math.ceil(member.getVoiceState().getChannel().getMembers().size() / 2.0);
+            double members = (double)member.getVoiceState().getChannel().getMembers().size();
+            int votesNeeded = (int) Math.ceil(members / 2.0);
 
             if ((votes.size()) >= votesNeeded - 1) { // - 1 is because the users vote hasn't been added yet
                 CascadeBot.INS.getShardManager().getGuildById(guildId).getTextChannelById(channelId).retrieveMessageById(messageId).queue(message -> {
                     message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                     voteFinished();
-                    finishConsumer.getConsumer().accept(CascadeBot.INS.getShardManager().getTextChannelById(channelId), getOrderedVoteResults());
+                    if (finishConsumer != null) {
+                        finishConsumer.getConsumer().accept(CascadeBot.INS.getShardManager().getTextChannelById(channelId), getOrderedVoteResults());
+                    }
                     stopVote();
                 }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
             }
@@ -253,7 +262,7 @@ public class VoteGroup {
         voteTimer.cancel();
         timer.cancel();
         GuildData guildData = GuildDataManager.getGuildData(CascadeBot.INS.getShardManager().getTextChannelById(channelId).getGuild().getIdLong());
-        guildData.getVoteGroups().remove(this);
+        guildData.getVoteGroups().remove(id);
 
     }
 

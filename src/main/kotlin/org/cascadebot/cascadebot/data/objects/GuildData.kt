@@ -57,7 +57,7 @@ class GuildData(@field:Id val guildId: Long) {
 
     val persistentComponents = HashMap<Long, HashMap<Long, List<List<PersistentComponent>>>>()
 
-    val voteGroups: MutableList<VoteGroup> = mutableListOf()
+    val voteGroups: MutableMap<String, VoteGroup> = mutableMapOf()
 
     //endregion
 
@@ -143,7 +143,7 @@ class GuildData(@field:Id val guildId: Long) {
     //endregion
 
     fun findVoteGroupByMessageAndChannel(channelId: Long, messageId: Long): VoteGroup? {
-        return voteGroups.find { it.channelId == channelId && it.messageId == messageId }
+        return voteGroups.entries.map { it.value }.find { it.channelId == channelId && it.messageId == messageId }
     }
 
 

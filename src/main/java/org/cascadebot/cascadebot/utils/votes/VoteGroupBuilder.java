@@ -8,6 +8,8 @@ package org.cascadebot.cascadebot.utils.votes;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.data.managers.GuildDataManager;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.interactions.PersistentComponent;
@@ -25,6 +27,7 @@ import java.util.function.Consumer;
 public class VoteGroupBuilder {
 
     private VoteMessageType type;
+    private String id;
 
     private Timer timer = new Timer();
 
@@ -45,8 +48,9 @@ public class VoteGroupBuilder {
      *
      * @param type The {@link VoteMessageType} to use for voting
      */
-    public VoteGroupBuilder(VoteMessageType type) {
+    public VoteGroupBuilder(VoteMessageType type, String id) {
         this.type = type;
+        this.id = id;
     }
 
     /**
@@ -176,7 +180,14 @@ public class VoteGroupBuilder {
             row.addComponent(button.getComponent());
         }
         container.addRow(row);
-        VoteGroup voteGroup = new VoteGroup(owner, channelId, guild, periodicConsumer, timer, container);
+        VoteGroup voteGroup = new VoteGroup(id, owner, channelId, guild, finishConsumer, periodicConsumer, timer, container);
+
+        GuildData data =  GuildDataManager.getGuildData(guild);
+        if (data.getVoteGroups().containsKey(id)) {
+            throw new UnsupportedOperationException("Cannot have multiple votes with the same id in a guild!");
+        } else {
+            data.getVoteGroups().put(id, voteGroup);
+        }
 
         voteGroup.setMessageSentAction(() -> {
             if (!sent) {

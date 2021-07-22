@@ -19,7 +19,7 @@ public enum VotePeriodicConsumer {
             resultsBuilder.append(result.getVote()).append(" (").append(result.getAmount()).append(")\n");
         }
         GuildData data = GuildDataManager.getGuildData(message.getGuild().getIdLong());
-        VoteGroup group = SkipCommand.voteMap.get(message.getGuild().getIdLong());
+        VoteGroup group = data.getVoteGroups().get("skip");
         CascadeBot.INS.getShardManager().retrieveUserById(group.getOwnerId()).queue(user -> {
             EmbedBuilder skipVoteEmbed = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, user, data.getLocale())
                     .setTitle(data.getLocale().i18n("commands.skip.skip_vote_title"));

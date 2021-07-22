@@ -32,8 +32,6 @@ import java.util.Optional;
 
 public class SkipCommand extends MainCommand {
 
-    public static Map<Long, VoteGroup> voteMap = new HashMap<>();
-
     @Override
     public void onCommand(Member sender, CommandContext context) {
         AudioTrack track = context.getMusicPlayer().getPlayingTrack();
@@ -59,8 +57,8 @@ public class SkipCommand extends MainCommand {
             return;
         }
 
-        if (voteMap.containsKey(context.getGuild().getIdLong())) {
-            VoteGroup voteGroup = voteMap.get(context.getGuild().getIdLong());
+        if (context.getData().getVoteGroups().containsKey("skip")) {
+            VoteGroup voteGroup = context.getData().getVoteGroups().get("skip");
             if (context.getArgs().length > 0) {
                 if (context.getArg(0).equalsIgnoreCase("yes")) {
                     if (voteGroup.isUserAllowed(sender.getIdLong())) {
@@ -93,7 +91,7 @@ public class SkipCommand extends MainCommand {
             }
         }
 
-        VoteGroupBuilder buttonGroupBuilder = new VoteGroupBuilder(VoteMessageType.YES_NO);
+        VoteGroupBuilder buttonGroupBuilder = new VoteGroupBuilder(VoteMessageType.YES_NO, "skip");
         buttonGroupBuilder.addExtraButton(PersistentComponent.SKIP_BUTTON_FORCE);
         buttonGroupBuilder.setPeriodicConsumer(VotePeriodicConsumer.SKIP);
         buttonGroupBuilder.setVoteFinishConsumer(VoteFinishConsumer.SKIP);
@@ -118,7 +116,6 @@ public class SkipCommand extends MainCommand {
         for (Member member : context.getMusicPlayer().getConnectedChannel().getMembers()) {
             voteGroup.allowUser(member.getIdLong());
         }
-        voteMap.put(context.getGuild().getIdLong(), voteGroup); // TODO I want to get rid of this map, but it's needed for adding/removing users, so maybe add id to vote groups?
     }
 
     @Override
