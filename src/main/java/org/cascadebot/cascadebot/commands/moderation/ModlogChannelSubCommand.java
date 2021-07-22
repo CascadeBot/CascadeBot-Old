@@ -161,7 +161,9 @@ public class ModlogChannelSubCommand extends SubCommand {
     }
 
     private void channelDelete(CommandContext context, TextChannel channel) {
-        context.getData().getModeration().removeModlogEvent(channel.getIdLong());
+        context.getData().write(guildData -> {
+            guildData.getModeration().removeModlogEvent(channel.getIdLong());
+        });
         context.getTypedMessaging().replySuccess("Successfully deleted channel!");
     }
 
@@ -171,7 +173,7 @@ public class ModlogChannelSubCommand extends SubCommand {
             return;
         }
         channel.deleteWebhookById(String.valueOf(context.getData().getModeration().getModlogEvents().get(channel.getIdLong()).getWebhookId())).queue(aVoid -> {
-            context.getTypedMessaging().replySuccess("Successfully enabled channel!");
+            context.getTypedMessaging().replySuccess("Successfully disabled channel!");
         }, throwable -> {
             context.getTypedMessaging().replyDanger("Failed to disable events! The bot probably doesn't have permissions to delete webhooks.");
         });
@@ -183,7 +185,9 @@ public class ModlogChannelSubCommand extends SubCommand {
             return;
         }
         channel.createWebhook("cascade-modlog").queue(webhook -> {
-            context.getData().getModeration().getModlogEvents().get(channel.getIdLong()).setNewWebhook(webhook.getIdLong(), webhook.getToken());
+            context.getData().write(guildData -> {
+                guildData.getModeration().getModlogEvents().get(channel.getIdLong()).setNewWebhook(webhook.getIdLong(), webhook.getToken());
+            });
             context.getTypedMessaging().replySuccess("Successfully disabled channel!");
         }, throwable -> {
             context.getTypedMessaging().replyDanger("Failed to enable events! The bot probably doesn't have permissions to create webhooks.");

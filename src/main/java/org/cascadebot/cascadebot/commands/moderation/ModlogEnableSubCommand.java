@@ -57,7 +57,7 @@ public class ModlogEnableSubCommand extends SubCommand {
         List<ModlogEvent> failedEvents = new ArrayList<>();
         List<ModlogEvent> succeed = new ArrayList<>();
         for (ModlogEvent event : modlogEvents) {
-            if (context.getData().getModeration().enableEvent(textChannel, event)) {
+            if (context.getData().writeInline(guildData -> guildData.getModeration().enableEvent(textChannel, event))) {
                 succeed.add(event);
             } else {
                 failedEvents.add(event);

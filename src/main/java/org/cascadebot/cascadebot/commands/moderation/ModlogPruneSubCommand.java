@@ -7,17 +7,21 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 public class ModlogPruneSubCommand extends SubCommand {
 
     public void onCommand(Member sender, CommandContext context) {
-        int amount = 0;
-        for (long id : context.getData().getModeration().getModlogEvents().keySet()) {
-            if (CascadeBot.INS.getShardManager().getTextChannelById(id) == null) {
-                context.getData().getModeration().removeModlogEvent(id);
-                amount++;
+        AtomicInteger amount = new AtomicInteger(0);
+        context.getData().write(guildData -> {
+            for (long id : context.getData().getModeration().getModlogEvents().keySet()) {
+                if (CascadeBot.INS.getShardManager().getTextChannelById(id) == null) {
+                    context.getData().getModeration().removeModlogEvent(id);
+                    amount.getAndIncrement();
+                }
             }
-        }
-        context.getTypedMessaging().replySuccess("Removed all events from " + amount + " deleted channels");
+        });
+        context.getTypedMessaging().replySuccess("Removed all events from " + amount.get() + " deleted channels");
     }
 
     public String command() {

@@ -56,9 +56,11 @@ public class ModlogClearSubCommand extends SubCommand {
                                     }
                                 }
                             }
-                            for (Long id : delete) {
-                                context.getData().getModeration().removeModlogEvent(id);
-                            }
+                            context.getData().write(guildData -> {
+                                for (Long id : delete) {
+                                    guildData.getModeration().removeModlogEvent(id);
+                                }
+                            });
                             context.getTypedMessaging().replySuccess("Deleted events from " + delete.size() + " disabled channel");
                         });
             }

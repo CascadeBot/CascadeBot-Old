@@ -56,7 +56,7 @@ public class ModlogDisableSubCommand extends SubCommand {
         List<ModlogEvent> failedEvents = new ArrayList<>();
         List<ModlogEvent> succeed = new ArrayList<>();
         for (ModlogEvent event : modlogEvents) {
-            if (context.getData().getModeration().disableEvent(textChannel, event)) {
+            if (context.getData().writeInline(guildData -> guildData.getModeration().disableEvent(textChannel, event))) {
                 succeed.add(event);
             } else {
                 failedEvents.add(event);
