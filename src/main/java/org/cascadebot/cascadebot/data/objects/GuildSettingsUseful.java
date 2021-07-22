@@ -5,6 +5,8 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
+
 @SettingsContainer(module = Module.USEFUL)
 public class GuildSettingsUseful {
 
@@ -16,6 +18,7 @@ public class GuildSettingsUseful {
     }
 
     public TodoList createTodoList(String name, long owner) {
+        assertWriteMode();
         if (todoLists.containsKey(name)) {
             return null;
         }
@@ -25,6 +28,7 @@ public class GuildSettingsUseful {
     }
 
     public void deleteTodoList(String name) {
+        assertWriteMode();
         todoLists.remove(name);
     }
 

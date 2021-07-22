@@ -30,7 +30,7 @@ public class ModlogClearSubCommand extends SubCommand {
                 ConfirmUtils.registerForConfirmation(sender.getIdLong(), clearAction, context.getChannel(), MessageType.WARNING,
                         "Confirm that you want to remove ALL events", 0, TimeUnit.SECONDS.toMillis(5),
                         true, () -> {
-                            context.getData().getModeration().getModlogEvents().clear();
+                            context.getData().getModeration().clearModlogEvents();
                             context.getTypedMessaging().replySuccess("Removed all modlog events!");
                         });
             }
@@ -57,7 +57,7 @@ public class ModlogClearSubCommand extends SubCommand {
                                 }
                             }
                             for (Long id : delete) {
-                                context.getData().getModeration().getModlogEvents().remove(id);
+                                context.getData().getModeration().removeModlogEvent(id);
                             }
                             context.getTypedMessaging().replySuccess("Deleted events from " + delete.size() + " disabled channel");
                         });

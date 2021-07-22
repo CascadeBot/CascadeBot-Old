@@ -35,6 +35,11 @@ public class EqualizerResetSubCommand extends SubCommand {
             bands.put(i, 0.0f);
         }
 
+        if (context.getData().getMusic().getPreserveEqualizer()) {
+            context.getData().write(guildData -> {
+                guildData.getMusic().setEqualizerBands(bands);
+            });
+        }
         ((CascadeLavalinkPlayer) context.getMusicPlayer()).setBands(bands);
         context.getTypedMessaging().replySuccess(context.i18n("commands.equalizer.reset.success"));
     }

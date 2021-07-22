@@ -18,31 +18,34 @@ public class TodoAddSubCommand extends SubCommand {
         }
 
         String todoName = context.getArg(0).toLowerCase();
-        TodoList todoList = context.getData().getUseful().getTodoList(todoName);
+        context.getData().write(guildData -> {
+            TodoList todoList = guildData.getUseful().getTodoList(todoName);
 
-        if (todoList == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", todoName));
-            return;
-        }
-
-        if (!todoList.canUserEdit(context.getMember().getIdLong())) {
-            Member owner = context.getGuild().getMemberById(todoList.getOwnerId());
-            if (owner != null) {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit", owner.getAsMention()));
-            } else {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit_no_owner"));
-                context.getData().getUseful().deleteTodoList(todoName);
+            if (todoList == null) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", todoName));
+                return;
             }
-            return;
-        }
 
-        int index = todoList.addTodoItem(context.getMessage(1)) + 1;
-        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-        builder.setTitle(context.i18n("commands.todo.add.embed_title"));
-        builder.addField(context.i18n("commands.todo.embed_position_field"), String.valueOf(index), true);
-        builder.addField(context.i18n("commands.todo.embed_item_field"), context.getMessage(1), true);
-        context.getTypedMessaging().replySuccess(builder);
-        todoList.edit(context);
+            if (!todoList.canUserEdit(context.getMember().getIdLong())) {
+                Member owner = context.getGuild().getMemberById(todoList.getOwnerId());
+                if (owner != null) {
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit", owner.getAsMention()));
+                } else {
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit_no_owner"));
+                    context.getData().getUseful().deleteTodoList(todoName);
+                }
+                return;
+            }
+
+            int index = todoList.addTodoItem(context.getMessage(1)) + 1;
+            EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+            builder.setTitle(context.i18n("commands.todo.add.embed_title"));
+            builder.addField(context.i18n("commands.todo.embed_position_field"), String.valueOf(index), true);
+            builder.addField(context.i18n("commands.todo.embed_item_field"), context.getMessage(1), true);
+            context.getTypedMessaging().replySuccess(builder);
+            todoList.edit(context);
+
+        });
     }
 
     @Override

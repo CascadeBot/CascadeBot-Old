@@ -42,6 +42,13 @@ abstract class ExecutableCommand {
         return command()
     }
 
+    fun fullCommand(locale: Locale): String {
+        if (this is SubCommand) {
+            return this.getParent().command(locale) + " " + command(locale)
+        }
+        return command(locale)
+    }
+
     fun description(locale: Locale): String? {
         return if (Language.hasLanguageEntry(locale, descriptionPath) || description() == null) {
             Language.i18n(locale, descriptionPath)

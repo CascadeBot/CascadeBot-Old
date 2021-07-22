@@ -20,18 +20,20 @@ public class GroupPermissionDeleteSubCommand extends SubCommand {
             return;
         }
 
-        PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
-            if (context.getData().getManagement().getPermissions().deleteGroup(group.getId())) {
-                // If the group existed to delete and has been successfully deleted.
-                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.delete.success", group.getName(), group.getId()));
-                ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_DELETED;
-                ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), group, new ArrayList<>());
-                context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
-            } else {
-                // Throwing an exception here because this *should* never happen
-                throw new IllegalStateException("Couldn't delete group!");
-            }
-        }, sender.getIdLong());
+        context.getData().write(guildData -> {
+            PermissionCommandUtils.tryGetGroupFromString(context, guildData, context.getArg(0), group -> {
+                if (guildData.getManagement().getPermissions().deleteGroup(group.getId())) {
+                    // If the group existed to delete and has been successfully deleted.
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.delete.success", group.getName(), group.getId()));
+                    ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_DELETED;
+                    ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), group, new ArrayList<>());
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+                } else {
+                    // Throwing an exception here because this *should* never happen
+                    throw new IllegalStateException("Couldn't delete group!");
+                }
+            }, sender.getIdLong());
+        });
     }
 
     @Override

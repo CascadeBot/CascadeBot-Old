@@ -18,20 +18,22 @@ public class TodoCreateSubCommand extends SubCommand {
         // Warn if the original argument contains uppercase letters
         boolean warnUppercase = !context.getArg(0).equals(context.getArg(0).toLowerCase());
         String todoName = context.getArg(0).toLowerCase();
-        TodoList todoList = context.getData().getUseful().createTodoList(todoName, context.getMember().getIdLong());
+        context.getData().write(guildData -> {
+            TodoList todoList = guildData.getUseful().createTodoList(todoName, context.getMember().getIdLong());
 
-        if (todoList == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.create.list_exists"));
-            return;
-        }
+            if (todoList == null) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.create.list_exists"));
+                return;
+            }
 
-        String message = context.i18n("commands.todo.create.created", todoName);
+            String message = context.i18n("commands.todo.create.created", todoName);
 
-        if (warnUppercase) {
-            message += "\n\n" + context.i18n("commands.todo.create.warn_uppercase", todoName);
-        }
+            if (warnUppercase) {
+                message += "\n\n" + context.i18n("commands.todo.create.warn_uppercase", todoName);
+            }
 
-        context.getTypedMessaging().replySuccess(message);
+            context.getTypedMessaging().replySuccess(message);
+        });
     }
 
     @Override

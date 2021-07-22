@@ -19,6 +19,7 @@ public class GuildSaveListener implements RemovalListener<Long, GuildData> {
     @Override
     public void onRemoval(@Nullable Long aLong, @Nullable GuildData data, @Nonnull RemovalCause removalCause) {
         if (aLong == null) return;
+        if (removalCause == RemovalCause.REPLACED) return;
         GuildDataManager.replace(aLong, data);
         CascadeBot.LOGGER.debug("Guild with ID: {} was saved to the database as it was removed from the map due to: {}", aLong, removalCause.toString());
         // TODO: FUTURE: Use this for statistics?

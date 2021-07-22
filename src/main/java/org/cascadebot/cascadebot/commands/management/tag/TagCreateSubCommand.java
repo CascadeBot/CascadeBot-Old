@@ -43,15 +43,18 @@ public class TagCreateSubCommand extends SubCommand {
             message += "\n\n" + context.i18n("commands.tag.create.warn_uppercase");
         }
 
-        Tag tag = new Tag(context.getArg(0), context.getMessage(1), "tag");
-        context.getData().getManagement().addTag(context.getArg(0), tag);
-        context.getData().getPermissionsManager().registerGuildPermission(tag.getInternalPermission());
-        context.getTypedMessaging().replySuccess(message);
-        ModlogEvent event = ModlogEvent.CASCADE_TAG_CREATED;
-        List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
-        embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(tag.getContent()) + "```"));
-        ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), tag, embedFieldList);
-        context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+        String finalMessage = message;
+        context.getData().write(guildData -> {
+            Tag tag = new Tag(context.getArg(0), context.getMessage(1), "tag");
+            guildData.getManagement().addTag(context.getArg(0), tag);
+            guildData.getPermissionsManager().registerGuildPermission(tag.getInternalPermission());
+            context.getTypedMessaging().replySuccess(finalMessage);
+            ModlogEvent event = ModlogEvent.CASCADE_TAG_CREATED;
+            List<ModlogEmbedPart> embedFieldList = new ArrayList<>();
+            embedFieldList.add(new ModlogEmbedField(false, "modlog.tag.content", "modlog.general.variable", "```" + MarkdownSanitizer.sanitize(tag.getContent()) + "```"));
+            ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), tag, embedFieldList);
+            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+        });
     }
 
     @Override

@@ -33,7 +33,7 @@ public class ModuleDisableSubCommand extends SubCommand {
         if (module != null) {
             String moduleName = ExtensionsKt.toCapitalized(FormatUtils.formatEnum(module, context.getLocale()));
             try {
-                if (context.getData().getCore().disableModule(module)) {
+                if (context.getData().writeInline(data -> data.getCore().disableModule(module))) {
                     // If module wasn't already disabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.disable.disabled", moduleName));
                     ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;

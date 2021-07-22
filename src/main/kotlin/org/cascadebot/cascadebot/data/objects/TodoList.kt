@@ -10,11 +10,13 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.messaging.Messaging.sendButtonedMessage
 import org.cascadebot.cascadebot.messaging.MessagingObjects
+import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
-import java.util.ArrayList
 
 class TodoList(val ownerId: Long) {
+
+    
 
     val items: MutableList<TodoListItem> = ArrayList()
     var messageId: Long = -1
@@ -29,20 +31,24 @@ class TodoList(val ownerId: Long) {
     }
 
     fun addTodoItem(text: String?): Int {
+        assertWriteMode()
         val item = TodoListItem(text)
         items.add(item)
         return items.indexOf(item)
     }
 
     fun removeTodoItem(id: Int): TodoListItem {
+        assertWriteMode()
         return items.removeAt(id)
     }
 
     fun addEditUser(member: Member) {
+        assertWriteMode()
         users.add(member.idLong)
     }
 
     fun removeEditUser(member: Member) {
+        assertWriteMode()
         users.remove(member.idLong)
     }
 
@@ -51,6 +57,8 @@ class TodoList(val ownerId: Long) {
     }
 
     class TodoListItem {
+
+        
 
         var done = false
         var text: String? = null
@@ -66,6 +74,7 @@ class TodoList(val ownerId: Long) {
     }
 
     fun edit(context: CommandContext) {
+        assertWriteMode()
         if (messageId == -1L || channelId == -1L) return
         val originalChannel = context.guild.getTextChannelById(channelId)
         if (originalChannel != null && originalChannel.idLong == channelId) {
@@ -98,6 +107,7 @@ class TodoList(val ownerId: Long) {
     }
 
     fun addUncheckButton(message: Message?) {
+        assertWriteMode()
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
             val data = GuildDataManager.getGuildData(channel.guild.idLong)
@@ -108,6 +118,7 @@ class TodoList(val ownerId: Long) {
     }
 
     fun addCheckButton(message: Message?) {
+        assertWriteMode()
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
             val data = GuildDataManager.getGuildData(channel.guild.idLong)
@@ -118,6 +129,7 @@ class TodoList(val ownerId: Long) {
     }
 
     fun doCheckToggle(message: Message?) {
+        assertWriteMode()
         val item = items[this.currentItem]
         if (item.done) {
             addUncheckButton(message)

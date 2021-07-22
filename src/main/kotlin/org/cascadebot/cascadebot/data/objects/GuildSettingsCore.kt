@@ -6,6 +6,8 @@ import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
+import java.lang.UnsupportedOperationException
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -42,13 +44,17 @@ class GuildSettingsCore {
     private val commandInfo = ConcurrentHashMap<Class<MainCommand>, MutableSet<GuildCommandInfo>>()
     private val enabledModules: MutableSet<Module> = Sets.newConcurrentHashSet(Module.getModules(ModuleFlag.DEFAULT))
 
+    
+
     //region Modules
     fun enableModule(module: Module): Boolean {
+        assertWriteMode()
         require(!module.isPrivate) { "This module is not available to be enabled!" }
         return enabledModules.add(module)
     }
 
     fun disableModule(module: Module): Boolean {
+        assertWriteMode()
         require(!module.isPrivate) { "This module is not available to be disabled!" }
         require(!module.isRequired) { "Cannot disable the ${module.toString().toLowerCase()} module!" }
         return enabledModules.remove(module)
@@ -67,6 +73,7 @@ class GuildSettingsCore {
 
     //region Commands
     fun enableCommand(command: MainCommand) {
+        assertWriteMode()
         if (command.module().isPrivate) return
         if (commandInfo.contains(command.javaClass)) {
             getGuildCommandInfo(command).enabled = true
@@ -74,6 +81,7 @@ class GuildSettingsCore {
     }
 
     fun enableCommandByModule(module: Module) {
+        assertWriteMode()
         if (module.isPrivate) return
         for (command in CascadeBot.INS.commandManager.getCommandsByModule(module)) {
             enableCommand(command)
@@ -81,11 +89,13 @@ class GuildSettingsCore {
     }
 
     fun disableCommand(command: MainCommand) {
+        assertWriteMode()
         if (command.module().isPrivate) return
         getGuildCommandInfo(command).enabled = false
     }
 
     fun disableCommandByModule(module: Module) {
+        assertWriteMode()
         if (module.isPrivate) return
         for (command in CascadeBot.INS.commandManager.getCommandsByModule(module)) {
             disableCommand(command)
@@ -105,10 +115,12 @@ class GuildSettingsCore {
     }
 
     fun addAlias(command: MainCommand, alias: String): Boolean {
+        assertWriteMode()
         return getGuildCommandInfo(command).aliases.add(alias)
     }
 
     fun removeAlias(command: MainCommand, alias: String): Boolean {
+        assertWriteMode()
         return getGuildCommandInfo(command).aliases.remove(alias)
     }
 

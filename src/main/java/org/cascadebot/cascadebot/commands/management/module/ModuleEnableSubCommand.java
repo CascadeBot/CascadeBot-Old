@@ -33,7 +33,7 @@ public class ModuleEnableSubCommand extends SubCommand {
         if (module != null) {
             String moduleName = ExtensionsKt.toCapitalized(FormatUtils.formatEnum(module, context.getLocale()));
             try {
-                if (context.getCoreSettings().enableModule(module)) {
+                if (context.getData().writeInline(data -> data.getCore().enableModule(module))) {
                     // If the module wasn't enabled
                     context.getTypedMessaging().replySuccess(context.i18n("commands.module.enable.enabled", moduleName));
                     ModlogEvent event = ModlogEvent.CASCADE_MODULE_UPDATED;

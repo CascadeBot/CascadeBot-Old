@@ -20,18 +20,20 @@ public class TagCategorySubCommand extends SubCommand {
             return;
         }
 
-        Tag tag = context.getData().getManagement().getTag(context.getArg(0));
+        context.getData().write(guildData -> {
+            Tag tag = context.getData().getManagement().getTag(context.getArg(0));
 
-        String tagName = context.getArg(0).toLowerCase();
-        String category = context.getArg(1).toLowerCase();
+            String tagName = context.getArg(0).toLowerCase();
+            String category = context.getArg(1).toLowerCase();
 
-        if (tag == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
-            return;
-        }
+            if (tag == null) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
+                return;
+            }
 
-        tag.setCategory(category);
-        context.getTypedMessaging().replySuccess(context.i18n("commands.tag.category.successfully_set_tag", tagName, category));
+            tag.setCategory(category);
+            context.getTypedMessaging().replySuccess(context.i18n("commands.tag.category.successfully_set_tag", tagName, category));
+        });
     }
 
     @Override

@@ -25,12 +25,13 @@ public class GroupPermissionCreateSubCommand extends SubCommand {
             return;
         }
 
-        Group group = context.getData().getManagement().getPermissions().createGroup(context.getArg(0));
-        context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create.success", context.getArg(0), group.getId()));
-        ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_CREATED;
-        ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), group, new ArrayList<>());
-        context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
-
+        context.getData().write(guildData -> {
+            Group group = guildData.getManagement().getPermissions().createGroup(context.getArg(0));
+            context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create.success", context.getArg(0), group.getId()));
+            ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_CREATED;
+            ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), group, new ArrayList<>());
+            context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+        });
     }
 
     @Override

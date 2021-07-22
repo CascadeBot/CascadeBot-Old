@@ -17,30 +17,31 @@ public class TodoAddUserSubCommand extends SubCommand {
         }
 
         String todoName = context.getArg(0).toLowerCase();
-        TodoList todoList = context.getData().getUseful().getTodoList(todoName);
+        context.getData().write(guildData -> {
+            TodoList todoList = guildData.getUseful().getTodoList(todoName);
 
-        if (todoList == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", todoName));
-            return;
-        }
+            if (todoList == null) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", todoName));
+                return;
+            }
 
-        if (todoList.getOwnerId() != context.getMember().getIdLong()) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.owner_only"));
-            return;
-        }
+            if (todoList.getOwnerId() != context.getMember().getIdLong()) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.owner_only"));
+                return;
+            }
 
-        //TODO allow multiple users to be added/removed at once
-        Member target = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
+            //TODO allow multiple users to be added/removed at once
+            Member target = DiscordUtils.getMember(context.getGuild(), context.getArg(1));
 
-        if (target == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.user_not_found", context.getArg(1)));
-            return;
-        }
+            if (target == null) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.user_not_found", context.getArg(1)));
+                return;
+            }
 
-        todoList.addEditUser(target);
+            todoList.addEditUser(target);
 
-        context.getTypedMessaging().replySuccess(context.i18n("commands.todo.adduser.added", target.getUser().getAsTag(), todoName));
-
+            context.getTypedMessaging().replySuccess(context.i18n("commands.todo.adduser.added", target.getUser().getAsTag(), todoName));
+        });
     }
 
     @Override

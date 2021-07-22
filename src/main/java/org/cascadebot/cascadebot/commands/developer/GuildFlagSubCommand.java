@@ -14,7 +14,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
-import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
@@ -59,15 +58,16 @@ public class GuildFlagSubCommand extends SubCommand {
                 }
             }
 
-            GuildData guildData = GuildDataManager.getGuildData(guild.getIdLong());
-
-            if (guildData.isFlagEnabled(flag)) {
-                guildData.disableFlag(flag);
-                context.getTypedMessaging().replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag, guildData.getLocale()), guild.getName(), guild.getId());
-            } else {
-                guildData.enableFlag(flag);
-                context.getTypedMessaging().replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag, guildData.getLocale()), guild.getName(), guild.getId());
-            }
+            Guild finalGuild = guild;
+            GuildDataManager.getGuildData(guild.getIdLong()).write(guildData -> {
+                if (guildData.isFlagEnabled(flag)) {
+                    guildData.disableFlag(flag);
+                    context.getTypedMessaging().replySuccess("Disabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag, guildData.getLocale()), finalGuild.getName(), finalGuild.getId());
+                } else {
+                    guildData.enableFlag(flag);
+                    context.getTypedMessaging().replySuccess("Enabled flag `%s` for guild `%s (%s)`", FormatUtils.formatEnum(flag, guildData.getLocale()), finalGuild.getName(), finalGuild.getId());
+                }
+            });
 
         }
     }

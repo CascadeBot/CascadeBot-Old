@@ -23,46 +23,48 @@ public class TodoRemoveSubCommand extends SubCommand {
         }
 
         String todoName = context.getArg(0).toLowerCase();
-        TodoList todoList = context.getData().getUseful().getTodoList(todoName);
+        context.getData().write(guildData -> {
+            TodoList todoList = guildData.getUseful().getTodoList(todoName);
 
-        if (todoList == null) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", todoName));
-            return;
-        }
-
-        if (!todoList.canUserEdit(context.getMember().getIdLong())) {
-            Member owner = context.getGuild().getMemberById(todoList.getOwnerId());
-            if (owner != null) {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit", owner.getAsMention()));
-            } else {
-                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit_no_owner"));
-                context.getData().getUseful().deleteTodoList(todoName);
+            if (todoList == null) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.list_does_not_exist", todoName));
+                return;
             }
-            return;
-        }
 
-        int index = context.getArgAsInteger(1) - 1;
+            if (!todoList.canUserEdit(context.getMember().getIdLong())) {
+                Member owner = context.getGuild().getMemberById(todoList.getOwnerId());
+                if (owner != null) {
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit", owner.getAsMention()));
+                } else {
+                    context.getTypedMessaging().replyDanger(context.i18n("commands.todo.cannot_edit_no_owner"));
+                    context.getData().getUseful().deleteTodoList(todoName);
+                }
+                return;
+            }
 
-        if (index < 0 || index > todoList.getItems().size()) {
-            context.getTypedMessaging().replyDanger(context.i18n("commands.todo.remove.item_does_not_exist"));
-            return;
-        }
+            int index = context.getArgAsInteger(1) - 1;
 
-        TodoList.TodoListItem item = todoList.removeTodoItem(index);
-        EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
-        builder.setTitle(context.i18n("commands.todo.remove.embed_title"));
-        builder.addField(context.i18n("commands.todo.embed_list_field"), todoName, false);
-        builder.addField(context.i18n("commands.todo.embed_item_field"), item.getText(), false);
-        context.getTypedMessaging().replySuccess(builder);
+            if (index < 0 || index > todoList.getItems().size()) {
+                context.getTypedMessaging().replyDanger(context.i18n("commands.todo.remove.item_does_not_exist"));
+                return;
+            }
 
-        if (todoList.getItems().size() == 0) {
-            context.getData().getUseful().deleteTodoList(todoName);
-            context.reply(context.i18n("commands.todo.remove.deleted"));
-        }
+            TodoList.TodoListItem item = todoList.removeTodoItem(index);
+            EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
+            builder.setTitle(context.i18n("commands.todo.remove.embed_title"));
+            builder.addField(context.i18n("commands.todo.embed_list_field"), todoName, false);
+            builder.addField(context.i18n("commands.todo.embed_item_field"), item.getText(), false);
+            context.getTypedMessaging().replySuccess(builder);
 
-        todoList.setCurrentItem(Math.max(todoList.getCurrentItem() - 1, 0));
+            if (todoList.getItems().size() == 0) {
+                guildData.getUseful().deleteTodoList(todoName);
+                context.reply(context.i18n("commands.todo.remove.deleted"));
+            }
 
-        todoList.edit(context);
+            todoList.setCurrentItem(Math.max(todoList.getCurrentItem() - 1, 0));
+
+            todoList.edit(context);
+        });
     }
 
     @Override

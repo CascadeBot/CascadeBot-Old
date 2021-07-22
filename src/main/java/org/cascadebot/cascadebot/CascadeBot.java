@@ -12,6 +12,8 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mongodb.async.client.ChangeStreamIterable;
+import com.mongodb.client.model.changestream.UpdateDescription;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
@@ -26,12 +28,16 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
+import org.bson.BsonType;
+import org.bson.BsonValue;
+import org.bson.codecs.DecoderContext;
 import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.events.BotEvents;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
@@ -55,13 +61,17 @@ import org.cascadebot.shared.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
+import org.springframework.data.mongodb.util.BsonUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -196,6 +206,48 @@ public class CascadeBot {
             );
         }
 
+        databaseManager.runAsyncTask(database -> {
+            ChangeStreamIterable<GuildData> changeStreamIterable = database.getCollection(GuildDataManager.COLLECTION, GuildData.class).watch();
+            //.fullDocument(FullDocument.UPDATE_LOOKUP); // TODO not this
+            changeStreamIterable.forEach(guildDataChangeStreamDocument -> {
+                if (guildDataChangeStreamDocument.getFullDocument() != null) {
+                    GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument());
+                } else if (guildDataChangeStreamDocument.getUpdateDescription() != null) {
+                    GuildData currentData = GuildDataManager.getGuildData(guildDataChangeStreamDocument.getDocumentKey().get("_id").asNumber().longValue());
+                    UpdateDescription updateDescription = guildDataChangeStreamDocument.getUpdateDescription();
+                    if (updateDescription.getUpdatedFields() != null) {
+                        for (Map.Entry<String, BsonValue> change : updateDescription.getUpdatedFields().entrySet()) {
+                            try {
+                                FieldReturnObject returnObject = getField(change.getKey(), currentData);
+                                if (!updateGuildData(returnObject.field, returnObject.currentObj, bsonValueToJava(change.getValue(), returnObject.field.getType())))
+                                    break;
+                            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException  e) {
+                                CascadeBot.LOGGER.error("Failed to update data", e);
+                                break;
+                            }
+                        }
+                    }
+                    if (updateDescription.getRemovedFields() != null) {
+                        for (String removed : updateDescription.getRemovedFields()) {
+                            try {
+                                FieldReturnObject returnObject = getField(removed, currentData);
+                                if (!updateGuildData(returnObject.field, returnObject.currentObj, null)) break;
+                            } catch (NoSuchFieldException | IllegalAccessException e) {
+                                CascadeBot.LOGGER.error("Failed to update data", e);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }, (result, throwable) -> {
+                if (throwable != null) {
+                    CascadeBot.LOGGER.error("Error on change stream", throwable);
+                }
+            });
+        });
+
+        CascadeBot.LOGGER.info("Watcher setup");
+
         musicHandler = new MusicHandler();
 
         eventWaiter = new EventWaiter();
@@ -265,6 +317,58 @@ public class CascadeBot {
 
         setupTasks();
 
+    }
+
+    public Object bsonValueToJava(BsonValue bsonValue, Class<?> itemClass) throws ClassNotFoundException {
+        Object decode;
+        if (bsonValue.getBsonType().equals(BsonType.DOCUMENT) || bsonValue.getBsonType().equals(BsonType.ARRAY)) {
+            if (bsonValue.asDocument().containsKey("objClass")) {
+                decode = databaseManager.getCodecRegistry().get(itemClass).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build()); // TODO this can work if we can find the java class, maybe store it?
+            } else {
+                decode = bsonValue;
+                CascadeBot.LOGGER.error("Data object doesn't contain object class, so we can't properly decode it!");
+            }
+        } else {
+            // This only handles primitives basically
+            decode = BsonUtils.toJavaType(bsonValue);
+        }
+        return decode;
+    }
+
+    public FieldReturnObject getField(String path, GuildData guildData) throws NoSuchFieldException, IllegalAccessException {
+        String[] split = path.split("\\.");
+        String last = split[split.length - 1];
+        Object current = guildData;
+        for (String part : Arrays.copyOfRange(split, 0, split.length - 1)) {
+            Field field = current.getClass().getDeclaredField(part);
+            field.setAccessible(true);
+            current = field.get(current);
+        }
+        return new FieldReturnObject(current, current.getClass().getDeclaredField(last));
+    }
+
+    private static class FieldReturnObject {
+        Object currentObj;
+        Field field;
+
+        FieldReturnObject(Object currentObj, Field field) {
+            this.currentObj = currentObj;
+            this.field = field;
+        }
+    }
+
+    public boolean updateGuildData(Field field, Object current, Object newValue) {
+        try {
+            field.setAccessible(true);
+            Field modifiersField = Field.class.getDeclaredField("modifiers");
+            modifiersField.setAccessible(true);
+            modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+            field.set(current, newValue);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            CascadeBot.LOGGER.error("Failed to update guild data", e);
+            return false;
+        }
+        return true;
     }
 
     private void setupTasks() {

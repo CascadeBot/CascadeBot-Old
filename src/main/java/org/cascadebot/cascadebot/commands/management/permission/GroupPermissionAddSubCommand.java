@@ -29,17 +29,19 @@ public class GroupPermissionAddSubCommand extends SubCommand {
             return;
         }
 
-        PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
-            if (group.addPermission(context.getArg(1))) {
-                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.add.success", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
-                ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_PERMISSION_ADD;
-                ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), group, List.of());
-                eventStore.setExtraDescriptionInfo(List.of(context.getArg(1)));
-                context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
-            } else {
-                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.add.fail", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
-            }
-        }, sender.getIdLong());
+        context.getData().write(guildData -> {
+            PermissionCommandUtils.tryGetGroupFromString(context, guildData, context.getArg(0), group -> {
+                if (group.addPermission(context.getArg(1))) {
+                    context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.add.success", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
+                    ModlogEvent event = ModlogEvent.CASCADE_PERMISSIONS_GROUP_PERMISSION_ADD;
+                    ModlogEventData eventStore = new ModlogEventData(event, sender.getUser(), group, List.of());
+                    eventStore.setExtraDescriptionInfo(List.of(context.getArg(1)));
+                    context.getData().getModeration().sendModlogEvent(context.getGuild().getIdLong(), eventStore);
+                } else {
+                    context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.add.fail", context.getArg(1), group.getName() + "(" + group.getId() + ")"));
+                }
+            }, sender.getIdLong());
+        });
     }
 
     @Override

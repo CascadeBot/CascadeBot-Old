@@ -36,7 +36,10 @@ public class GroupPermissionSwitchSubCommand extends SubCommand {
             }
         }
 
-        context.getData().getManagement().getPermissions().setMode(mode);
+        PermissionMode finalMode = mode;
+        context.getData().write(guildData -> {
+            guildData.getManagement().getPermissions().setMode(finalMode);
+        });
         context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.switch.success", FormatUtils.formatEnum(mode, context.getLocale())));
     }
 

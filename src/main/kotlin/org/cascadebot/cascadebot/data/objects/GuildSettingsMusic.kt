@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentHashMap
 @SettingsContainer(module = Module.MUSIC)
 class GuildSettingsMusic {
 
+    
+
     // TODO: Handle reverting tier for preserve settings
     @Setting
     var preserveVolume = true

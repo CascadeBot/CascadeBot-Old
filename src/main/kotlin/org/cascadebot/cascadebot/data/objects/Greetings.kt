@@ -10,6 +10,8 @@ import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 
 class Greetings {
 
+    
+
     var welcomeMessages: WeightedList<String> = WeightedList()
     var welcomeDMMessages: WeightedList<String> = WeightedList()
     var goodbyeMessages: WeightedList<String> = WeightedList()

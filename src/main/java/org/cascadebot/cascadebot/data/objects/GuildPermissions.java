@@ -29,7 +29,11 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
+
 public class GuildPermissions {
+
+    
 
     @Getter
     @Setter
@@ -158,6 +162,7 @@ public class GuildPermissions {
     }
 
     public Group createGroup(String name) {
+        assertWriteMode();
         Set<String> ids = groups.stream().map(Group::getId).collect(Collectors.toSet());
         Group group;
         int iterations = 0;
@@ -174,6 +179,7 @@ public class GuildPermissions {
     }
 
     public boolean deleteGroup(String id) {
+        assertWriteMode();
         return groups.removeIf(group -> group.getId().equals(id));
     }
 
@@ -218,6 +224,7 @@ public class GuildPermissions {
     }
 
     public void moveGroup(Group group, int position) throws IndexOutOfBoundsException {
+        assertWriteMode();
         groups.remove(group);
         groups.add(position, group);
     }

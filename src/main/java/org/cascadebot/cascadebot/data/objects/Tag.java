@@ -16,10 +16,13 @@ import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;
 
 import java.util.regex.Pattern;
 
-@Setter
+import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class Tag extends PermissionObject {
+
+    
 
     // https://regex101.com/r/hlsgVW/1
     private static final Pattern TAG_PATTERN = Pattern.compile("\\{([A-z]+)(?::((?:,?\\w+)+))?}");
@@ -59,4 +62,18 @@ public class Tag extends PermissionObject {
         return category;
     }
 
+    public void setCategory(String category) {
+        assertWriteMode();
+        this.category = category;
+    }
+
+    public void setContent(String content) {
+        assertWriteMode();
+        this.content = content;
+    }
+
+    public void setName(String name) {
+        assertWriteMode();
+        this.name = name;
+    }
 }
