@@ -18,6 +18,10 @@ class ComponentContainer {
         components[pos] = actionRow
     }
 
+    fun getRow(pos: Int): CascadeActionRow {
+        return components[pos]
+    }
+
     private fun doChecks(actionRow: CascadeActionRow) {
         if (components.size == 0) {
             persistent = actionRow.isPersistent()
