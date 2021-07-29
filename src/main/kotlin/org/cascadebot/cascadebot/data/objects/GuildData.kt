@@ -46,6 +46,10 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
 
         val writeMode: ThreadLocal<Boolean> = ThreadLocal()
 
+        init {
+            writeMode.set(false)
+        }
+
     }
 
     private constructor() : this(0L) {

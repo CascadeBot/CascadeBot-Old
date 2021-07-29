@@ -221,7 +221,7 @@ public class CascadeBot {
                                 FieldReturnObject returnObject = getField(change.getKey(), currentData);
                                 if (!updateGuildData(returnObject.field, returnObject.currentObj, bsonValueToJava(change.getValue(), returnObject.field.getType())))
                                     break;
-                            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException  e) {
+                            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
                                 CascadeBot.LOGGER.error("Failed to update data", e);
                                 break;
                             }
@@ -322,15 +322,14 @@ public class CascadeBot {
     public Object bsonValueToJava(BsonValue bsonValue, Class<?> itemClass) throws ClassNotFoundException {
         Object decode;
         if (bsonValue.getBsonType().equals(BsonType.DOCUMENT) || bsonValue.getBsonType().equals(BsonType.ARRAY)) {
-            if (bsonValue.asDocument().containsKey("objClass")) {
-                decode = databaseManager.getCodecRegistry().get(itemClass).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build()); // TODO this can work if we can find the java class, maybe store it?
-            } else {
-                decode = bsonValue;
-                CascadeBot.LOGGER.error("Data object doesn't contain object class, so we can't properly decode it!");
-            }
+            decode = databaseManager.getCodecRegistry().get(itemClass).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build());
         } else {
             // This only handles primitives basically
-            decode = BsonUtils.toJavaType(bsonValue);
+            if (int.class == itemClass && bsonValue.getBsonType().equals(BsonType.DOUBLE)) { // https://stackoverflow.com/questions/60809700/in-mongodb-integer-datatype-is-automatically-type-cast-to-doube
+                decode = ((Double)BsonUtils.toJavaType(bsonValue)).intValue();
+            } else {
+                decode = itemClass.cast(BsonUtils.toJavaType(bsonValue));
+            }
         }
         return decode;
     }

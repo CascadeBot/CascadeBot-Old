@@ -162,7 +162,6 @@ class GuildSettingsModeration {
         }
 
         fun buildWebhookClient() {
-            assertWriteMode()
             webhookClient = WebhookClientBuilder(webhookId, webhookToken).build()
         }
 
