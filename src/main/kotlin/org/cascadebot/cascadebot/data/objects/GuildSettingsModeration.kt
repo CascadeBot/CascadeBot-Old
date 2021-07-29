@@ -45,7 +45,7 @@ class GuildSettingsModeration {
         return respectBanOrKickHierarchy
     }
 
-    private val modlogEvents: MutableMap<Long, ChannelModlogEventsInfo> = HashMap()
+    private val modlogEvents: MutableMap<String, ChannelModlogEventsInfo> = HashMap()
 
     fun sendModlogEvent(guildId: Long, modlogEventData: ModlogEventData) {
         val eventsInfo: List<ChannelModlogEventsInfo> = getEventInfoForEvent(modlogEventData.trigger)
@@ -76,11 +76,11 @@ class GuildSettingsModeration {
         return channelModlogEventsInfos
     }
 
-    fun getModlogEvents(): Map<Long, ChannelModlogEventsInfo> {
+    fun getModlogEvents(): Map<String, ChannelModlogEventsInfo> {
         return modlogEvents.toMap()
     }
 
-    fun removeModlogEvent(id: Long): ChannelModlogEventsInfo? {
+    fun removeModlogEvent(id: String): ChannelModlogEventsInfo? {
         assertWriteMode()
         return modlogEvents.remove(id)
     }
@@ -98,8 +98,8 @@ class GuildSettingsModeration {
 
     fun enableEvent(channel: TextChannel, event: ModlogEvent): Boolean {
         assertWriteMode()
-        if (modlogEvents.containsKey(channel.idLong)) {
-            return modlogEvents[channel.idLong]!!.addEvent(event)
+        if (modlogEvents.containsKey(channel.idLong.toString())) {
+            return modlogEvents[channel.idLong.toString()]!!.addEvent(event)
         } else {
             createModlogEventsInfo(channel, Consumer { it.addEvent(event) })
             return true
@@ -108,8 +108,8 @@ class GuildSettingsModeration {
 
     fun disableEvent(channel: TextChannel, event: ModlogEvent): Boolean {
         assertWriteMode()
-        if (modlogEvents.containsKey(channel.idLong)) {
-            return modlogEvents[channel.idLong]!!.removeEvent(event)
+        if (modlogEvents.containsKey(channel.idLong.toString())) {
+            return modlogEvents[channel.idLong.toString()]!!.removeEvent(event)
         } else {
             return false
         }
@@ -126,7 +126,7 @@ class GuildSettingsModeration {
         assertWriteMode()
         val eventsInfo = ChannelModlogEventsInfo()
         eventsInfo.id = modlogChannelNum++
-        modlogEvents.put(channel.idLong, eventsInfo)
+        modlogEvents.put(channel.idLong.toString(), eventsInfo)
         channel.createWebhook(CascadeBot.INS.client.selfUser.name)
             .setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
             eventsInfo.webhookId = webhook.idLong

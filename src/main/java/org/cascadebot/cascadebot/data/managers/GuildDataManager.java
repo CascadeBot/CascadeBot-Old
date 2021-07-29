@@ -59,6 +59,7 @@ public final class GuildDataManager {
     }
 
     public static void updateDiff(long id, Difference difference, GuildData newData) {
+        CascadeBot.LOGGER.info(CascadeBot.getGSON().toJson(difference));
         List<Bson> bsonList = new ArrayList<>();
         for (Map.Entry<String, Object> added : difference.getAdded().entrySet()) {
             bsonList.add(Updates.set(added.getKey(), added.getValue()));
@@ -81,6 +82,8 @@ public final class GuildDataManager {
         if (bsonList.size() == 0) {
             return;
         }
+        Bson update = Updates.combine(bsonList);
+        CascadeBot.LOGGER.info(update.toString());
         CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
             database.getCollection(COLLECTION, GuildData.class).updateMany(eq("_id", id), Updates.combine(bsonList), new DebugLogCallback<>("Updated Guild ID " + id));
         });

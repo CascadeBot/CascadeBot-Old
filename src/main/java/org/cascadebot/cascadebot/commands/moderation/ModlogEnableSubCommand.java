@@ -8,7 +8,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.language.Language;
-import org.cascadebot.cascadebot.data.objects.LoopMode;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.moderation.ModlogEvent;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -20,6 +19,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class ModlogEnableSubCommand extends SubCommand {
@@ -42,7 +42,7 @@ public class ModlogEnableSubCommand extends SubCommand {
         for (String event : events) {
             if (EnumUtils.isValidEnumIgnoreCase(ModlogEvent.class, event.toUpperCase())) {
                 modlogEvents.add(ModlogEvent.valueOf(event.toUpperCase())); // TODO reverse language to get event
-            } else if (EnumUtils.isValidEnumIgnoreCase(ModlogEvent.Category.class, event.toUpperCase())){
+            } else if (EnumUtils.isValidEnumIgnoreCase(ModlogEvent.Category.class, event.toUpperCase())) {
                 ModlogEvent.Category category = ModlogEvent.Category.valueOf(event.toUpperCase());
                 List<ModlogEvent> additionalEvents = ModlogEvent.Companion.getEventsFromCategory(category);
                 modlogEvents.addAll(additionalEvents);
@@ -56,12 +56,19 @@ public class ModlogEnableSubCommand extends SubCommand {
         }
         List<ModlogEvent> failedEvents = new ArrayList<>();
         List<ModlogEvent> succeed = new ArrayList<>();
-        for (ModlogEvent event : modlogEvents) {
-            if (context.getData().writeInline(guildData -> guildData.getModeration().enableEvent(textChannel, event))) {
-                succeed.add(event);
-            } else {
-                failedEvents.add(event);
+        AtomicBoolean finished = new AtomicBoolean(false);
+        context.getData().write(guildData -> {
+            for (ModlogEvent event : modlogEvents) {
+                if (guildData.getModeration().enableEvent(textChannel, event)) {
+                    succeed.add(event);
+                } else {
+                    failedEvents.add(event);
+                }
             }
+            finished.set(true);
+        });
+        while (!finished.get()) {
+
         }
         List<Page> pageList = new ArrayList<>();
         if (failedEvents.size() == modlogEvents.size()) {
@@ -80,7 +87,7 @@ public class ModlogEnableSubCommand extends SubCommand {
         if (succeed.size() > 0) {
             List<String> pageValues = PageUtils.splitString(succeed.stream().map(event -> Language.i18n(context.getLocale(), "enums.modlogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining("\n")), 1000, '\n');
             int subPage = 1;
-            for (String pageValue: pageValues) {
+            for (String pageValue : pageValues) {
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.setColor(MessageType.SUCCESS.getColor());
                 embedBuilder.setTitle("Enabled Events");
@@ -96,7 +103,7 @@ public class ModlogEnableSubCommand extends SubCommand {
         if (failedEvents.size() > 0) {
             List<String> pageValues = PageUtils.splitString(failedEvents.stream().map(event -> Language.i18n(context.getLocale(), "enums.modlogevent." + event.name().toLowerCase() + ".display")).collect(Collectors.joining("\n")), 1000, '\n');
             int subPage = 1;
-            for (String pageValue: pageValues) {
+            for (String pageValue : pageValues) {
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.setColor(MessageType.WARNING.getColor());
                 embedBuilder.setTitle("Failed to enable events");
@@ -112,7 +119,7 @@ public class ModlogEnableSubCommand extends SubCommand {
         if (failed.size() > 0) {
             List<String> pageValues = PageUtils.splitString(String.join("\n", failed), 1000, '\n');
             int subPage = 1;
-            for (String pageValue: pageValues) {
+            for (String pageValue : pageValues) {
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.setColor(MessageType.DANGER.getColor());
                 embedBuilder.setTitle("Failed to find events");

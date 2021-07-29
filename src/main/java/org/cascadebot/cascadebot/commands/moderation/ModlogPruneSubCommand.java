@@ -14,7 +14,7 @@ public class ModlogPruneSubCommand extends SubCommand {
     public void onCommand(Member sender, CommandContext context) {
         AtomicInteger amount = new AtomicInteger(0);
         context.getData().write(guildData -> {
-            for (long id : context.getData().getModeration().getModlogEvents().keySet()) {
+            for (String id : context.getData().getModeration().getModlogEvents().keySet()) {
                 if (CascadeBot.INS.getShardManager().getTextChannelById(id) == null) {
                     context.getData().getModeration().removeModlogEvent(id);
                     amount.getAndIncrement();

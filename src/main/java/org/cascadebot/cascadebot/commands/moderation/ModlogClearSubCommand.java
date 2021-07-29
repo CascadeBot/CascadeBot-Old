@@ -43,8 +43,8 @@ public class ModlogClearSubCommand extends SubCommand {
                 ConfirmUtils.registerForConfirmation(sender.getIdLong(), clearDisabledAction, context.getChannel(), MessageType.WARNING,
                         "Confirm that you want to remove all events in disabled channels", 0, TimeUnit.SECONDS.toMillis(5),
                         true, () -> {
-                            List<Long> delete = new ArrayList<>();
-                            for (Map.Entry<Long, GuildSettingsModeration.ChannelModlogEventsInfo> entry : context.getData().getModeration().getModlogEvents().entrySet()) {
+                            List<String> delete = new ArrayList<>();
+                            for (Map.Entry<String, GuildSettingsModeration.ChannelModlogEventsInfo> entry : context.getData().getModeration().getModlogEvents().entrySet()) {
                                 TextChannel textChannel = CascadeBot.INS.getClient().getTextChannelById(entry.getKey());
                                 if (textChannel == null) {
                                     continue;
@@ -57,7 +57,7 @@ public class ModlogClearSubCommand extends SubCommand {
                                 }
                             }
                             context.getData().write(guildData -> {
-                                for (Long id : delete) {
+                                for (String id : delete) {
                                     guildData.getModeration().removeModlogEvent(id);
                                 }
                             });

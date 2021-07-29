@@ -34,8 +34,14 @@ public class DiffUtils {
         Map<String, Object> oldMap = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(oldObj), mapType);
         Map<String, Object> newMap = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(newObj), mapType);
 
+        diffMap(currentDiff, path, oldMap, newMap);
+
+        return currentDiff;
+    }
+
+    private static Difference diffMap(Difference currentDiff, String path, Map oldMap, Map newMap) {
         List<String> oldKeys = new ArrayList<>(oldMap.keySet());
-        List<String> newKeys = new ArrayList<>(oldMap.keySet());
+        List<String> newKeys = new ArrayList<>(newMap.keySet());
 
         CollectionDiff<String> collectionDiff = new CollectionDiff<>(oldKeys, newKeys);
 
@@ -67,7 +73,9 @@ public class DiffUtils {
                 } else if (oldValue instanceof Collection) {
                     CollectionDiff<?> changed = new CollectionDiff<>((Collection<?>) oldValue, (Collection<?>) newValue);
                     currentDiff.changed.put(path + key, changed);
-                } else {
+                } else if (oldValue instanceof Map) {
+                    diffMap(currentDiff, path + key + ".", (Map)oldValue, (Map)newValue);
+                } else  {
                     diff(currentDiff, path + key + ".", oldValue, newValue);
                 }
             }
@@ -75,7 +83,5 @@ public class DiffUtils {
 
         return currentDiff;
     }
-
-
 
 }

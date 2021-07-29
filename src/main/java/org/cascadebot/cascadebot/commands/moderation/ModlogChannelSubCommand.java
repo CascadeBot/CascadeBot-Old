@@ -162,7 +162,7 @@ public class ModlogChannelSubCommand extends SubCommand {
 
     private void channelDelete(CommandContext context, TextChannel channel) {
         context.getData().write(guildData -> {
-            guildData.getModeration().removeModlogEvent(channel.getIdLong());
+            guildData.getModeration().removeModlogEvent(String.valueOf(channel.getIdLong()));
         });
         context.getTypedMessaging().replySuccess("Successfully deleted channel!");
     }

@@ -28,6 +28,7 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.TypeUtils;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.codecs.DecoderContext;
@@ -339,9 +340,13 @@ public class CascadeBot {
         String last = split[split.length - 1];
         Object current = guildData;
         for (String part : Arrays.copyOfRange(split, 0, split.length - 1)) {
-            Field field = current.getClass().getDeclaredField(part);
-            field.setAccessible(true);
-            current = field.get(current);
+            if (TypeUtils.isAssignable(current.getClass(), Map.class)) {
+                current = ((Map)current).get(part);
+            } else {
+                Field field = current.getClass().getDeclaredField(part);
+                field.setAccessible(true);
+                current = field.get(current);
+            }
         }
         return new FieldReturnObject(current, current.getClass().getDeclaredField(last));
     }

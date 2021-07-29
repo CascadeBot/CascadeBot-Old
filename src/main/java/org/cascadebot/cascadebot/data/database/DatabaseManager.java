@@ -13,10 +13,20 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.connection.netty.NettyStreamFactory;
+import de.bild.codec.CodecConfiguration;
+import de.bild.codec.CodecResolver;
 import de.bild.codec.PojoCodecProvider;
+import de.bild.codec.PolymorphicCodec;
+import de.bild.codec.TypeCodecRegistry;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.TypeUtils;
+import org.bson.BsonReader;
+import org.bson.BsonWriter;
 import org.bson.Document;
+import org.bson.codecs.DecoderContext;
+import org.bson.codecs.DocumentCodec;
+import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
@@ -27,8 +37,12 @@ import org.cascadebot.cascadebot.utils.lists.WeightedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DatabaseManager {
