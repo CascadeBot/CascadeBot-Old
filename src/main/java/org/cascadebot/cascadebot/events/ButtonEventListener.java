@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.Component;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.metrics.Metrics;
@@ -53,7 +54,8 @@ public class ButtonEventListener extends ListenerAdapter {
             }
         }
         if (button == null) {
-            // TODO log as this should not be possible
+            // this should not be possible because as long as the container is in the cache, it will be able to find the button as the button is on the message that the container applies to.
+            CascadeBot.LOGGER.error("Button was null when it should not be able to be null! Something is broken! Maybe race condition?");
             return;
         }
         CascadeButton finalButton = button;

@@ -116,27 +116,27 @@ object Messaging {
     }
 
     private val firstPageButton = CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.REWIND),
-        IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
+        IButtonRunnable { _, textChannel, message ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             handlePage(message, 1, pageGroup!!)
         })
 
     private val prevPageButton = CascadeButton.secondary("Prev Page", Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
-        IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
+        IButtonRunnable { _, textChannel, message ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             val newPage = pageGroup!!.currentPage - 1
             handlePage(message, newPage, pageGroup)
         })
 
     private val nextPageButton = CascadeButton.secondary("Next Page", Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
-        IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
+        IButtonRunnable { _, textChannel, message ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             val newPage = pageGroup!!.currentPage + 1
             handlePage(message, newPage, pageGroup)
         })
 
     private val lastPageButton = CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
-        IButtonRunnable { _: Member?, textChannel: TextChannel, message: InteractionMessage ->
+        IButtonRunnable { _, textChannel, message ->
             val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             handlePage(message, pageGroup!!.pageCount, pageGroup)
         })
