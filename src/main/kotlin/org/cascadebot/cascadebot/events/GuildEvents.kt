@@ -58,8 +58,7 @@ class GuildEvents : ListenerAdapter() {
 
         if (greetings.welcomeDMEnabled) {
             greetings.getRandomWelcomeDMMsg(event)?.let { message ->
-                event.user.takeUnless { it.isFake }
-                        ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
+                event.user.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
             }
         }
 
@@ -79,8 +78,7 @@ class GuildEvents : ListenerAdapter() {
         val greetings = guildData.management.greetings
         if (greetings.goodbyeEnabled) {
             greetings.getRandomGoodbyeMsg(event)?.let { message ->
-                event.user.takeUnless { it.isFake }
-                        ?.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
+                event.user.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
             }
         }
     }

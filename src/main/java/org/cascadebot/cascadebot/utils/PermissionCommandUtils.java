@@ -7,16 +7,20 @@ package org.cascadebot.cascadebot.utils;
 
 import lombok.experimental.UtilityClass;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.permissions.objects.Group;
-import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
+import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
+import org.cascadebot.cascadebot.utils.interactions.InteractionMessage;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -51,14 +55,8 @@ public class PermissionCommandUtils {
 
         EmbedBuilder groupsEmbed = new EmbedBuilder();
 
-        ButtonGroup firstPageButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
-
-        firstPageButtons.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, ((runner, channel, message) -> {
-            if (runner.getIdLong() != firstPageButtons.getOwner().getIdLong()) {
-                return;
-            }
-            message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-        })));
+        ComponentContainer container = new ComponentContainer();
+        CascadeActionRow firstPageRow = new CascadeActionRow();
 
         // integer for creating buttons, and numbering the possible groups to select
         int i = 1;
@@ -116,40 +114,45 @@ public class PermissionCommandUtils {
                 groupEmbed.addField(context.i18n("words.linked_roles"), "```" + rolesBuilder.toString() + "```", false);
             }
 
-            ButtonGroup groupPageButtons = new ButtonGroup(sender, context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            groupPageButtons.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
-                if (runner.getIdLong() != groupPageButtons.getOwner().getIdLong()) {
+            CascadeActionRow groupPageRow = new CascadeActionRow();
+
+            groupPageRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.LEFT_ARROW), (runner, channel, message) -> {
+                handleSwitchButtons(runner, message, groupsEmbed.build(), container, firstPageRow, context);
+            }));
+
+            groupPageRow.addComponent(CascadeButton.success("Select", Emoji.fromUnicode(UnicodeConstants.TICK), (runner, channel, message) -> {
+                if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
-                message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 groupConsumer.accept(group);
             }));
 
-            groupPageButtons.addButton(new Button.UnicodeButton(UnicodeConstants.LEFT_ARROW, (runner, channel, message) -> {
-                handleSwitchButtons(runner, message, groupsEmbed.build(), firstPageButtons, context);
-            }));
-
-            firstPageButtons.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
-                handleSwitchButtons(runner, message, groupEmbed.build(), groupPageButtons, context);
+            firstPageRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(unicode + "\u20E3"), (runner, channel, message) -> {
+                handleSwitchButtons(runner, message, groupEmbed.build(), container, groupPageRow, context);
             }));
 
             i++;
         }
+        firstPageRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.RED_CROSS), ((runner, channel, message) -> {
+            if (runner.getIdLong() != sender) {
+                return;
+            }
+            message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+        })));
+        container.addRow(firstPageRow);
 
         groupsEmbed.setDescription(groupsBuilder.toString());
-        context.getUiMessaging().sendButtonedMessage(groupsEmbed.build(), firstPageButtons);
+        context.getUiMessaging().sendComponentMessage(groupsEmbed.build(), container);
     }
 
-    private static void handleSwitchButtons(Member member, Message message, MessageEmbed embedToSwitchTo, ButtonGroup buttonsToSwitchTo, CommandContext context) {
-        if (member.getIdLong() != buttonsToSwitchTo.getOwner().getIdLong()) {
+    private static void handleSwitchButtons(Member member, InteractionMessage message, MessageEmbed embedToSwitchTo, ComponentContainer container, CascadeActionRow buttonsToSwitchTo, CommandContext context) {
+        if (member.getIdLong() != context.getMember().getIdLong()) {
             return;
         }
+        container.setRow(0, buttonsToSwitchTo);
         message.editMessage(embedToSwitchTo).override(true).queue();
-        message.clearReactions().queue(aVoid -> {
-            buttonsToSwitchTo.addButtonsToMessage(message);
-            buttonsToSwitchTo.setMessage(message.getIdLong());
-            context.getData().addButtonGroup(context.getChannel(), message, buttonsToSwitchTo);
-        });
+        context.getData().addComponents(context.getChannel(), message.getMessage(), container);
     }
 
 }

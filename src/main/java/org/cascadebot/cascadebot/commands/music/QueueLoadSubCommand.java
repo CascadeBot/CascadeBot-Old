@@ -5,7 +5,9 @@
 
 package org.cascadebot.cascadebot.commands.music;
 
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -14,8 +16,9 @@ import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
-import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
+import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 
 public class QueueLoadSubCommand extends SubCommand {
 
@@ -33,26 +36,28 @@ public class QueueLoadSubCommand extends SubCommand {
                     context.getUiMessaging().sendTracksFound(tracks);
                     break;
                 case EXISTS_IN_ALL_SCOPES:
-                    ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-                    buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.ONE, ((runner, channel, message) -> {
-                        if (!runner.equals(buttonGroup.getOwner())) {
+                    ComponentContainer container = new ComponentContainer();
+                    CascadeActionRow actionRow = new CascadeActionRow();
+                    actionRow.addComponent(CascadeButton.primary(Emoji.fromUnicode(UnicodeConstants.ONE), ((runner, channel, message) -> {
+                        if (!runner.equals(context.getMember())) {
                             return;
                         }
-                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), ((loadPlaylistResult, newTracks) -> {
                             context.getUiMessaging().sendTracksFound(newTracks);
                         }));
                     })));
-                    buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.TWO, ((runner, channel, message) -> {
-                        if (!runner.equals(buttonGroup.getOwner())) {
+                    actionRow.addComponent(CascadeButton.primary(Emoji.fromUnicode(UnicodeConstants.TWO), ((runner, channel, message) -> {
+                        if (!runner.equals(context.getMember())) {
                             return;
                         }
-                        message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                        message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                         context.getMusicPlayer().loadPlaylist(context.getArg(0), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), PlaylistType.GUILD, ((loadPlaylistResult, newTracks) -> {
                             context.getUiMessaging().sendTracksFound(newTracks);
                         }));
                     })));
-                    context.getUiMessaging().sendButtonedMessage(context.i18n("commands.queue.load.load_track"), buttonGroup);
+                    container.addRow(actionRow);
+                    context.getUiMessaging().sendComponentMessage(context.i18n("commands.queue.load.load_track"), container);
                     break;
                 case DOESNT_EXIST:
                     context.getTypedMessaging().replyDanger(context.i18n("commands.queue.load.cannot_find_playlist", context.getArg(0)));

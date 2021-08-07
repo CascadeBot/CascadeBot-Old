@@ -8,7 +8,9 @@ package org.cascadebot.cascadebot.commands.fun;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
@@ -18,43 +20,44 @@ import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.WebUtils;
-import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
+import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 
 import java.io.IOException;
-
+import java.util.stream.Collectors;
 
 public class DogCommand extends MainCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        ButtonGroup dogButtons = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-        dogButtons.addButton(new Button.UnicodeButton(UnicodeConstants.REPEAT, (member, channel, message) -> {
-            if (member.getIdLong() != dogButtons.getOwner().getIdLong()) {
+        ComponentContainer container = new ComponentContainer();
+        CascadeActionRow actionRow = new CascadeActionRow();
+        actionRow.addComponent(CascadeButton.primary(Emoji.fromUnicode(UnicodeConstants.REPEAT), (runner, channel, message) -> {
+            if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
             try {
-                if (message.getEmbeds().size() > 0) {
+                if (message.getMessage().getEmbeds().size() > 0) {
                     EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser(), context.getLocale());
                     embedBuilder.setImage(getDogUrl());
                     message.editMessage(embedBuilder.build()).queue();
                 } else {
                     context.getUiMessaging().replyImage(getDogUrl()).thenAccept(dogMessage -> {
-                        dogButtons.addButtonsToMessage(dogMessage);
-                        dogButtons.setMessage(dogMessage.getIdLong());
-                        context.getData().addButtonGroup(context.getChannel(), dogMessage, dogButtons);
+                        dogMessage.editMessageComponents().setActionRows(container.getComponents().stream().map(CascadeActionRow::toDiscordActionRow).collect(Collectors.toList())).queue();
+                        context.getData().addComponents(channel, dogMessage, container);
                     });
-                    message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 }
             } catch (IOException e) {
                 message.editMessage(context.i18n("commands.dog.error_loading")).queue();
             }
         }));
+        container.addRow(actionRow);
         try {
             context.getUiMessaging().replyImage(getDogUrl()).thenAccept(message -> {
-                dogButtons.addButtonsToMessage(message);
-                dogButtons.setMessage(message.getIdLong());
-                context.getData().addButtonGroup(context.getChannel(), message, dogButtons);
+                message.editMessageComponents().setActionRows(container.getComponents().stream().map(CascadeActionRow::toDiscordActionRow).collect(Collectors.toList())).queue();
+                context.getData().addComponents(context.getChannel(), message, container);
             });
         } catch (IOException e) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.dog.error_loading"));
