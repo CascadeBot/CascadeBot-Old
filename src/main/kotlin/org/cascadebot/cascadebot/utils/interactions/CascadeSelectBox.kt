@@ -8,8 +8,20 @@ class CascadeSelectBox(id: String, val consumer: ISelectionRunnable) : CascadeCo
 
     private val builder: SelectionMenu.Builder = SelectionMenu.create(id)
 
-    private var minSelect = 1;
-    private var maxSelect = 1;
+    private var minSelect = 1
+        set(value) {
+            if (value < 1 || value > maxSelect) {
+                throw UnsupportedOperationException("Minimum selection number cannot be less then 1 or greater then the max select value")
+            }
+            field = value
+        }
+    private var maxSelect = 1
+        set(value) {
+            if (value > 25 || value < minSelect) {
+                throw UnsupportedOperationException("Maximum selection number cannot be greater then 25 or less then the min select value")
+            }
+            field = value
+        }
 
     private val defaults: MutableList<String> = mutableListOf()
 
@@ -21,19 +33,6 @@ class CascadeSelectBox(id: String, val consumer: ISelectionRunnable) : CascadeCo
             return builder.build()
         }
 
-    fun setMinSelect(num: Int) {
-        if (num < 1 || num > maxSelect) {
-            throw UnsupportedOperationException("Minimum selection number cannot be less then 1 or greater then the max select value")
-        }
-        minSelect = num;
-    }
-
-    fun setMaxSelect(num: Int) {
-        if (num > 25 || num < minSelect) {
-            throw UnsupportedOperationException("Maximum selection number cannot be greater then 25 or less then the min select value")
-        }
-        maxSelect = num;
-    }
 
     fun addOption(label: String, default: Boolean = false) {
         builder.addOption(label, label)
