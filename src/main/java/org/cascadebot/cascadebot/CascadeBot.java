@@ -15,8 +15,10 @@ import com.google.gson.GsonBuilder;
 import com.mongodb.async.client.ChangeStreamIterable;
 import com.mongodb.client.model.changestream.UpdateDescription;
 import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
+import de.bild.codec.ReflectionHelper;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
+import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
@@ -29,6 +31,8 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.TypeUtils;
+import org.bson.BsonDocument;
+import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonValue;
 import org.bson.codecs.DecoderContext;
@@ -69,11 +73,19 @@ import redis.clients.jedis.exceptions.JedisConnectionException;
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class CascadeBot {
@@ -219,9 +231,17 @@ public class CascadeBot {
                     if (updateDescription.getUpdatedFields() != null) {
                         for (Map.Entry<String, BsonValue> change : updateDescription.getUpdatedFields().entrySet()) {
                             try {
-                                FieldReturnObject returnObject = getField(change.getKey(), currentData);
-                                if (!updateGuildData(returnObject.field, returnObject.currentObj, bsonValueToJava(change.getValue(), returnObject.field.getType())))
-                                    break;
+                                ReturnObject returnObject = getField(change.getKey(), currentData);
+                                if (returnObject instanceof FieldReturnObject) {
+                                    FieldReturnObject fieldReturnObject = (FieldReturnObject) returnObject;
+                                    if (!updateGuildData(fieldReturnObject.getField(), fieldReturnObject.getCurrentObj(), bsonValueToJava(change.getValue(), fieldReturnObject.getField().getType()))) {
+                                        break;
+                                    }
+                                } else if (returnObject instanceof SimpleMapReturnObject) {
+                                    SimpleMapReturnObject mapReturnObject = (SimpleMapReturnObject) returnObject;
+                                    mapReturnObject.getMap().put(mapReturnObject.getKey(), bsonValueToJava(change.getValue(), mapReturnObject.valueClass));
+                                }
+
                             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
                                 CascadeBot.LOGGER.error("Failed to update data", e);
                                 break;
@@ -231,8 +251,16 @@ public class CascadeBot {
                     if (updateDescription.getRemovedFields() != null) {
                         for (String removed : updateDescription.getRemovedFields()) {
                             try {
-                                FieldReturnObject returnObject = getField(removed, currentData);
-                                if (!updateGuildData(returnObject.field, returnObject.currentObj, null)) break;
+                                ReturnObject returnObject = getField(removed, currentData);
+                                if (returnObject instanceof FieldReturnObject) {
+                                    FieldReturnObject fieldReturnObject = (FieldReturnObject) returnObject;
+                                    if (!updateGuildData(fieldReturnObject.getField(), fieldReturnObject.getCurrentObj(), null)) {
+                                        break;
+                                    }
+                                } else if (returnObject instanceof SimpleMapReturnObject) {
+                                    SimpleMapReturnObject mapReturnObject = (SimpleMapReturnObject) returnObject;
+                                    mapReturnObject.getMap().remove(mapReturnObject.getKey());
+                                }
                             } catch (NoSuchFieldException | IllegalAccessException e) {
                                 CascadeBot.LOGGER.error("Failed to update data", e);
                                 break;
@@ -320,45 +348,134 @@ public class CascadeBot {
 
     }
 
+    private boolean updateSimpleMapData(Map<String, Object> map, String key, Object bsonValueToJava) {
+        map.put(key, bsonValueToJava);
+        return true;
+    }
+
     public Object bsonValueToJava(BsonValue bsonValue, Class<?> itemClass) throws ClassNotFoundException {
-        Object decode;
-        if (bsonValue.getBsonType().equals(BsonType.DOCUMENT) || bsonValue.getBsonType().equals(BsonType.ARRAY)) {
+        Object decode = null;
+        if (bsonValue.getBsonType().equals(BsonType.DOCUMENT)) {
             decode = databaseManager.getCodecRegistry().get(itemClass).decode(bsonValue.asDocument().asBsonReader(), DecoderContext.builder().build());
         } else {
             // This only handles primitives basically
             if (int.class == itemClass && bsonValue.getBsonType().equals(BsonType.DOUBLE)) { // https://stackoverflow.com/questions/60809700/in-mongodb-integer-datatype-is-automatically-type-cast-to-doube
-                decode = ((Double)BsonUtils.toJavaType(bsonValue)).intValue();
+                decode = ((Double) BsonUtils.toJavaType(bsonValue)).intValue();
             } else {
-                decode = itemClass.cast(BsonUtils.toJavaType(bsonValue));
+                Object converted = BsonUtils.toJavaType(bsonValue);
+
+                if (converted instanceof Object[]) {
+                    Object[] objects = (Object[]) converted;
+
+                    Class<?> type = null;
+
+                    Type collectionInterface = ReflectionHelper.findInterface(itemClass, Collection.class);
+                    if (collectionInterface != null) {
+                        if (collectionInterface instanceof ParameterizedType && !TypeUtils.containsTypeVariables(collectionInterface)) {
+                            ParameterizedType parameterizedType = (ParameterizedType) collectionInterface;
+                            type = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                        }
+                    } else if (itemClass.isArray()) {
+                        type = itemClass.getComponentType();
+                    }
+
+                    if (type == null) {
+                        throw new IllegalStateException(String.format("Cannot assign array to non-collection / non-array class \"%s\"", itemClass));
+                    }
+
+                    for (int i = 0; i < objects.length; i++) {
+                        objects[i] = bsonValueToJava((BsonValue) objects[i], type);
+                    }
+
+                    if (itemClass.isArray()) {
+                        Object[] arrayOfXType = (Object[]) Array.newInstance(itemClass.getComponentType(), objects.length);
+                        System.arraycopy(objects, 0, arrayOfXType, 0, objects.length);
+                        decode = arrayOfXType;
+                    } else if (itemClass.isAssignableFrom(Collection.class)) {
+                        Collection<Object> collection = (Collection<Object>) converted;
+                        collection.clear();
+                        collection.addAll(Arrays.asList(objects));
+                        decode = collection;
+                    }
+                }
             }
         }
+
+        if (decode == null) {
+            throw new IllegalStateException(String.format("Could not convert value to class \"%s\"", itemClass));
+        }
+
         return decode;
     }
 
-    public FieldReturnObject getField(String path, GuildData guildData) throws NoSuchFieldException, IllegalAccessException {
+    private <T> List<T> getGenericList(Class<T> type, Object... params) {
+        List<T> l = new ArrayList<T>();
+        for (int i = 0; i < params.length; i++) {
+            l.add((T) params[i]);
+        }
+        return l;
+    }
+
+    public ReturnObject getField(String path, GuildData guildData) throws NoSuchFieldException, IllegalAccessException {
         String[] split = path.split("\\.");
         String last = split[split.length - 1];
         Object current = guildData;
         for (String part : Arrays.copyOfRange(split, 0, split.length - 1)) {
             if (TypeUtils.isAssignable(current.getClass(), Map.class)) {
-                current = ((Map)current).get(part);
+                current = ((Map) current).get(part);
             } else {
                 Field field = current.getClass().getDeclaredField(part);
                 field.setAccessible(true);
                 current = field.get(current);
             }
         }
-        return new FieldReturnObject(current, current.getClass().getDeclaredField(last));
+        if (TypeUtils.isAssignable(current.getClass(), Map.class)) {
+            Type mapInterface = ReflectionHelper.findInterface(current.getClass(), Map.class);
+            if (mapInterface instanceof ParameterizedType && !TypeUtils.containsTypeVariables(mapInterface)) {
+                ParameterizedType parameterizedType = (ParameterizedType) mapInterface;
+                Class<?> keyClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                Class<?> valueClass = (Class<?>) parameterizedType.getActualTypeArguments()[1];
+
+                if (keyClass == String.class) {
+                    return new SimpleMapReturnObject((Map<String, Object>) current, last, valueClass);
+                }
+            }
+        } else {
+            return new FieldReturnObject(current, current.getClass().getDeclaredField(last));
+        }
+        return null;
     }
 
-    private static class FieldReturnObject {
-        Object currentObj;
-        Field field;
+    interface ReturnObject {
+
+    }
+
+    @Getter
+    private static class FieldReturnObject implements ReturnObject {
+
+        private final Object currentObj;
+        private final Field field;
 
         FieldReturnObject(Object currentObj, Field field) {
             this.currentObj = currentObj;
             this.field = field;
         }
+
+    }
+
+    @Getter
+    private static class SimpleMapReturnObject implements ReturnObject {
+
+        private final Map<String, Object> map;
+        private final String key;
+        private final Class<?> valueClass;
+
+        public SimpleMapReturnObject(Map<String, Object> map, String key, Class<?> valueClass) {
+            this.map = map;
+            this.key = key;
+            this.valueClass = valueClass;
+        }
+
     }
 
     public boolean updateGuildData(Field field, Object current, Object newValue) {
@@ -394,8 +511,9 @@ public class CascadeBot {
     @Nonnull
     public JDA getClient() {
         for (JDA jda : shardManager.getShardCache()) {
-            if (jda.getStatus() == JDA.Status.LOADING_SUBSYSTEMS || jda.getStatus() == JDA.Status.CONNECTED)
+            if (jda.getStatus() == JDA.Status.LOADING_SUBSYSTEMS || jda.getStatus() == JDA.Status.CONNECTED) {
                 return jda;
+            }
         }
         throw new IllegalStateException("getClient was called when no shards were connected!");
     }
