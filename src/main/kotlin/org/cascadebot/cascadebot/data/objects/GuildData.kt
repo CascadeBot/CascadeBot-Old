@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Function
 import kotlin.concurrent.getOrSet
 
-class GuildData(@field:Id val guildId: Long): Cloneable {
+class GuildData(@field:Id val guildId: Long) {
 
     @Transient
     @kotlin.jvm.Transient
@@ -44,6 +44,8 @@ class GuildData(@field:Id val guildId: Long): Cloneable {
 
     companion object {
 
+        @Transient
+        @kotlin.jvm.Transient
         val writeMode: ThreadLocal<Boolean> = ThreadLocal()
 
         init {
