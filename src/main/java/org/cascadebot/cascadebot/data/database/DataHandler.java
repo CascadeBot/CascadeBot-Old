@@ -1,5 +1,6 @@
 package org.cascadebot.cascadebot.data.database;
 
+import com.mongodb.client.model.Updates;
 import org.bson.BsonDocument;
 import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.utils.diff.Difference;
@@ -17,11 +18,17 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class DataHandler<T> {
 
-    public <Y> Y deepCopy(Y original) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, IOException, ClassNotFoundException {
+    public T deepCopy(T original) throws IOException, NoSuchFieldException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        return deepCopyRec(original);
+    }
+
+    private <Y> Y deepCopyRec(Y original) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, NoSuchFieldException, IOException, ClassNotFoundException {
         if (original == null) {
             return null;
         }
@@ -88,11 +95,54 @@ public class DataHandler<T> {
         modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
     }
 
-    /*public Difference diff(T original, T changed) {
-
+    public Bson diffUpdate(T original, T changed) {
+        List<Bson> updates = new ArrayList<>();
+        diffUpdateRec(original, changed, updates);
+        return Updates.combine(updates);
     }
 
-    public Bson getUpdate(Difference difference) {
+    private <Y> List<Bson> diffUpdateRec(Y original, Y changed, List<Bson> updates) {
+        if (original.getClass().isPrimitive()) {
+
+        } else if (original.getClass().isArray()) {
+            throw new UnsupportedOperationException();
+        } else if (original instanceof Map) {
+            Set<? extends Map.Entry<?, ?>> entrySetOrig = ((Map<?, ?>) original).entrySet();
+            Set<? extends Map.Entry<?, ?>> entrySetChanged = ((Map<?, ?>) changed).entrySet();
+            if (entrySetOrig.isEmpty() && entrySetChanged.isEmpty()) {
+                return updates;
+            }
+
+            boolean stringKey;
+            if (!entrySetOrig.isEmpty()) {
+                Map.Entry entry = entrySetOrig.iterator().next();
+                if (entry.getKey() instanceof String) {
+                    stringKey = true;
+                } else {
+                    stringKey = false;
+                }
+            } else {
+                Map.Entry entry = entrySetChanged.iterator().next();
+                if (entry.getKey() instanceof String) {
+                    stringKey = true;
+                } else {
+                    stringKey = false;
+                }
+            }
+
+            if (stringKey) {
+                // Update it as if it where an object
+            } else {
+                // Covert to an array, and then pass it back in to this method
+            }
+        } else if (original instanceof Collection) {
+
+        }
+
+        return updates;
+    }
+
+    /*public Bson getUpdate(Difference difference) {
 
     }*/
 
