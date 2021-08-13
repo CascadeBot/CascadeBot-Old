@@ -4,6 +4,8 @@ import com.mongodb.client.model.Updates;
 import org.bson.BsonDocument;
 import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.utils.diff.Difference;
+import org.cascadebot.cascadebot.utils.lists.ChangeList;
+import org.cascadebot.cascadebot.utils.lists.CollectionDiff;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,14 +43,14 @@ public class DataHandler<T> {
             Map<?, ?> map = (Map<?, ?>) original;
             Map newMap = (Map) original.getClass().getDeclaredConstructor().newInstance();
             for (Map.Entry entry : map.entrySet()) {
-                newMap.put(deepCopy(entry.getKey()), deepCopy(entry.getValue()));
+                newMap.put(deepCopyRec(entry.getKey()), deepCopyRec(entry.getValue()));
             }
             return (Y) newMap;
         } else if (original instanceof Collection) {
             Collection<?> collection = (Collection<?>) original;
             Collection newCol = (Collection) original.getClass().getDeclaredConstructor().newInstance();
             for (Object obj : collection) {
-                newCol.add(deepCopy(obj));
+                newCol.add(deepCopyRec(obj));
             }
             return (Y) newCol;
         } else if (original instanceof Serializable) {
@@ -75,7 +77,7 @@ public class DataHandler<T> {
                 }
                 field.setAccessible(true);
                 Object fieldOrig = field.get(original);
-                Object copy = deepCopy(fieldOrig);
+                Object copy = deepCopyRec(fieldOrig);
 
                 Field toEdit = obj.getClass().getDeclaredField(field.getName());
                 makeAccessible(toEdit);
@@ -97,13 +99,17 @@ public class DataHandler<T> {
 
     public Bson diffUpdate(T original, T changed) {
         List<Bson> updates = new ArrayList<>();
-        diffUpdateRec(original, changed, updates);
+        diffUpdateRec(original, changed, "", updates);
         return Updates.combine(updates);
     }
 
-    private <Y> List<Bson> diffUpdateRec(Y original, Y changed, List<Bson> updates) {
+    private <Y> List<Bson> diffUpdateRec(Y original, Y changed, String path, List<Bson> updates) {
+        if (original.equals(changed)) {
+            return updates;
+        }
+        String objPath = path.substring(0, path.lastIndexOf('.'));
         if (original.getClass().isPrimitive()) {
-
+            // Trim last . off of path and then save
         } else if (original.getClass().isArray()) {
             throw new UnsupportedOperationException();
         } else if (original instanceof Map) {
@@ -131,19 +137,34 @@ public class DataHandler<T> {
             }
 
             if (stringKey) {
-                // Update it as if it where an object
+                CollectionDiff<Map.Entry> diff = new CollectionDiff(entrySetOrig, entrySetChanged, Map.Entry.comparingByKey());
+                for (Map.Entry added : diff.getAdded()) {
+                    updates.add(Updates.set(path + added.getKey(), added.getValue()));
+                }
+                for (Map.Entry removed : diff.getRemoved()) {
+                    updates.add(Updates.unset(path + removed.getKey()));
+                }
+                for (Map.Entry both : diff.getInBoth()) {
+                    diffUpdateRec(((Map<?, ?>) original).get(both.getKey()), ((Map<?, ?>) changed).get(both.getKey()), path + both.getKey() + ".", updates);
+                }
             } else {
-                // Covert to an array, and then pass it back in to this method
+                diffUpdateRec(entrySetOrig, entrySetChanged, path, updates);
             }
         } else if (original instanceof Collection) {
+            updates.add(Updates.set(objPath, changed)); // TODO look into updating individual objects in array (UpdateOptions?)
 
+            /*CollectionDiff diff = new CollectionDiff((Collection)original, (Collection)changed);
+            for (Object added : diff.getAdded()) {
+                updates.add(Updates.set(objPath, added));
+            }
+            for (Object removed : diff.getRemoved()) {
+                updates.add(Updates.)
+            }*/
+        } else {
+            // TODO object
         }
 
         return updates;
     }
-
-    /*public Bson getUpdate(Difference difference) {
-
-    }*/
 
 }
