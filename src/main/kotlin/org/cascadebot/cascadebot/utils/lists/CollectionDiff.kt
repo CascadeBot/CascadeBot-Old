@@ -7,7 +7,9 @@ package org.cascadebot.cascadebot.utils.lists
 
 import org.cascadebot.cascadebot.utils.diff.Diff
 
-class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>): Diff {
+class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>, comparator: Comparator<T>?): Diff {
+
+    constructor(originalList: Collection<T>, newList: Collection<T>): this(originalList, newList, null)
 
     private val _added: MutableList<T> = ArrayList()
 
@@ -30,9 +32,16 @@ class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>): Di
         for (item in originalList) {
             val iter = addedDiff.iterator()
             while (iter.hasNext()) {
-                if (iter.next() == item) {
-                    iter.remove()
-                    break
+                if (comparator == null) {
+                    if (iter.next() == item) {
+                        iter.remove()
+                        break
+                    }
+                } else {
+                    if (comparator.compare(iter.next(), item) == 0) {
+                        iter.remove()
+                        break
+                    }
                 }
             }
         }
@@ -44,9 +53,16 @@ class CollectionDiff<T>(originalList: Collection<T>, newList: Collection<T>): Di
         for (item in newList) {
             val iter = removedDiff.iterator()
             while (iter.hasNext()) {
-                if (iter.next() == item) {
-                    iter.remove()
-                    break
+                if (comparator == null) {
+                    if (iter.next() == item) {
+                        iter.remove()
+                        break
+                    }
+                } else {
+                    if (comparator.compare(iter.next(), item) == 0) {
+                        iter.remove()
+                        break
+                    }
                 }
             }
         }
