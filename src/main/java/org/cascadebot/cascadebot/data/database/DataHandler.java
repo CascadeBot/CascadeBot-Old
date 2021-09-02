@@ -6,10 +6,9 @@ import com.mongodb.client.model.changestream.UpdateDescription;
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
 import org.bson.BsonValue;
+import org.bson.codecs.DecoderContext;
 import org.bson.conversions.Bson;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.utils.diff.Difference;
-import org.cascadebot.cascadebot.utils.lists.ChangeList;
 import org.cascadebot.cascadebot.utils.lists.CollectionDiff;
 
 import java.io.ByteArrayInputStream;
@@ -22,6 +21,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -77,12 +77,10 @@ public class DataHandler<T> {
             Y obj = (Y) constructor.newInstance();
 
             for(Field field : original.getClass().getDeclaredFields()) {
-                /* TODO copy transient stuffs so we don't have to specifically copy those
-                Ideas:
-                - Store a map of the hashCodes encountered plus their copy and if we encounter the same one then use the copy from the map instead of diffing in order to avoid a stack overflow
-                - Look into how gson is able to create any object no matter what constructor it has
-                 */
                 if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
+                    if (!Modifier.isStatic(field.getModifiers())) {
+                        field.set(obj, field.get(original));
+                    }
                     continue;
                 }
                 field.setAccessible(true);
@@ -181,117 +179,6 @@ public class DataHandler<T> {
         }
 
         return updates;
-    }
-
-    public T handleChangeStream(ChangeStreamDocument<T> changeStreamDocument, T original) throws NoSuchFieldException, IllegalAccessException {
-        if (changeStreamDocument.getFullDocument() != null) {
-            return changeStreamDocument.getFullDocument(); // TODO copy over transient
-        } else {
-            UpdateDescription updateDescription = changeStreamDocument.getUpdateDescription();
-            T current = original;
-            if (updateDescription.getRemovedFields() != null) {
-                current = handleRemoved(updateDescription.getRemovedFields(), current);
-            }
-            if (updateDescription.getUpdatedFields() != null) {
-                current = handleUpdates(updateDescription.getUpdatedFields(), current);
-            }
-            return current;  // TODO copy over transient
-        }
-    }
-
-    private T handleRemoved(List<String> removed, T original) throws NoSuchFieldException, IllegalAccessException {
-        for (String removedPath: removed) {
-            List<String> path = List.of(removedPath.split("\\."));
-            handleRemovedRec(original, path);
-        }
-        return original;
-    }
-
-    private <Y> void handleRemovedRec(Y currentObj, List<String> path) throws NoSuchFieldException, IllegalAccessException {
-        if (path.size() == 1) {
-            removeItem(currentObj, path.get(0));
-        } else {
-            String item = path.remove(0);
-            if (currentObj instanceof Map) {
-                handleRemovedRec(((Map<?, ?>) currentObj).get(item), path);
-            } else {
-                Field field = currentObj.getClass().getDeclaredField(item);
-                makeAccessible(field);
-                handleRemovedRec(field.get(currentObj), path);
-            }
-        }
-    }
-
-    private <Y> void removeItem(Y obj, String item) throws NoSuchFieldException, IllegalAccessException {
-        // We only need to account for maps and objects as arrays are updated, never removed
-        if (obj instanceof Map) {
-            ((Map<?, ?>) obj).remove(item);
-        } else {
-            Field field = obj.getClass().getDeclaredField(item);
-            makeAccessible(field);
-            field.set(obj, null);
-        }
-    }
-
-    private T handleUpdates(BsonDocument updates, T original) throws NoSuchFieldException, IllegalAccessException {
-        handleUpdatesRec(original, null, updates);
-        return original;
-    }
-
-    private <Y> void handleUpdatesRec(Y currentObj, String currentItem, BsonValue currentValue) throws NoSuchFieldException, IllegalAccessException {
-        switch (currentValue.getBsonType()) {
-            case DOCUMENT:
-                if (currentObj instanceof Map) {
-                    if (currentItem != null && !((Map<?, ?>) currentObj).containsKey(currentItem)) {
-                        updateItem(currentObj, currentItem, currentValue);
-                    } else {
-                        for (Map.Entry<String, BsonValue> entry: currentValue.asDocument().entrySet()) {
-                            Object newObj = ((Map<?, ?>) currentObj).get(entry.getKey());
-                            handleUpdatesRec(newObj, entry.getKey(), entry.getValue());
-                        }
-                    }
-                } else {
-                    Field field = null;
-                    if (currentItem != null) {
-                        field = currentObj.getClass().getDeclaredField(currentItem);
-                        makeAccessible(field);
-                    }
-                    if (field != null && field.get(currentObj) == null) {
-                        updateItem(currentObj, currentItem, currentValue);
-                    } else {
-                        for (Map.Entry<String, BsonValue> entry: currentValue.asDocument().entrySet()) {
-                            Field field2 = currentObj.getClass().getDeclaredField(entry.getKey());
-                            makeAccessible(field2);
-                            handleUpdatesRec(field2.get(currentObj), entry.getKey(), entry.getValue());
-                        }
-                    }
-                }
-                break;
-            case ARRAY:
-                if (currentObj instanceof Map) {
-                    Map<Object, Object> map = new HashMap<>();
-                    for (BsonValue bsonValue: currentValue.asArray()) {
-                        BsonDocument doc = bsonValue.asDocument();
-                        Object key = doc.get("key"); // TODO somehow get the key and value type from the map so we can convert it to java
-                        Object value = doc.get("value");
-                        map.put(key, value);
-                        // TODO replace map
-                    }
-                } else {
-                    updateArray(currentObj, currentItem, currentValue.asArray());
-                }
-                break;
-            default:
-                updateItem(currentObj, currentItem, currentValue);
-        }
-    }
-
-    private <Y> void updateItem(Y obj, String toSet, BsonValue currentValue) {
-        // Convert the item to java, and then update it depending on what obj is
-    }
-
-    private <Y> void updateArray(Y obj, String toSet, BsonArray array) {
-        // Replace the array
     }
 
 }
