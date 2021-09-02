@@ -22,7 +22,6 @@ import java.util.regex.Pattern;
 import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@AllArgsConstructor
 public class Tag extends PermissionObject implements BsonObject {
 
     // https://regex101.com/r/hlsgVW/1
@@ -31,6 +30,12 @@ public class Tag extends PermissionObject implements BsonObject {
     private String name;
     private String content;
     private String category;
+
+    public Tag(String name, String content, String category) {
+        this.name = name;
+        this.content = content;
+        this.category = category;
+    }
 
     public String formatTag(CommandContext commandContext) {
         return PlaceholderObjects.getTags().formatMessage(commandContext.getLocale(), content, commandContext);
