@@ -6,7 +6,9 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
@@ -14,8 +16,9 @@ import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.MovableAudioTrack;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
+import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 import org.cascadebot.cascadebot.utils.move.MovableList;
 
 import java.util.List;
@@ -59,24 +62,9 @@ public class QueueMoveSubCommand extends SubCommand {
             List<MovableAudioTrack> movableAudioTracks = context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList());;
             MovableList<MovableAudioTrack> movableList = new MovableList<>(movableAudioTracks);
             movableList.moveSelection(start);
-            ButtonGroup group = new ButtonGroup(context.getMember().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-            group.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_UP, (runner, channel, message) -> {
-                if (runner.getIdLong() != context.getMember().getIdLong()) {
-                    return;
-                }
-                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
-                movableList.moveSelection(-1);
-                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
-            }));
-            group.addButton(new Button.UnicodeButton(UnicodeConstants.ARROW_DOWN, (runner, channel, message) -> {
-                if (runner.getIdLong() != context.getMember().getIdLong()) {
-                    return;
-                }
-                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
-                movableList.moveSelection(1);
-                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
-            }));
-            group.addButton(new Button.UnicodeButton(UnicodeConstants.TICK, (runner, channel, message) -> {
+            ComponentContainer container = new ComponentContainer();
+            CascadeActionRow actionRow = new CascadeActionRow();
+            actionRow.addComponent(CascadeButton.primary(Emoji.fromUnicode(UnicodeConstants.TICK), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
@@ -90,7 +78,23 @@ public class QueueMoveSubCommand extends SubCommand {
                 }
                 message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
             }));
-            group.addButton(new Button.UnicodeButton(UnicodeConstants.RED_CROSS, (runner, channel, message) -> {
+            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_UP), (runner, channel, message) -> {
+                if (runner.getIdLong() != context.getMember().getIdLong()) {
+                    return;
+                }
+                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
+                movableList.moveSelection(-1);
+                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
+            }));
+            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN), (runner, channel, message) -> {
+                if (runner.getIdLong() != context.getMember().getIdLong()) {
+                    return;
+                }
+                movableList.notifyListChange(context.getMusicPlayer().getQueue().stream().map(MovableAudioTrack::new).collect(Collectors.toList()));
+                movableList.moveSelection(1);
+                message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
+            }));
+            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.RED_CROSS), (runner, channel, message) -> {
                 if (runner.getIdLong() != context.getMember().getIdLong()) {
                     return;
                 }
@@ -99,10 +103,11 @@ public class QueueMoveSubCommand extends SubCommand {
                     movableList.cancelMovingItem();
                     message.editMessage(getMoveEmbed(movableList).build()).override(true).queue();
                 } else {
-                    message.delete().queue();
+                    message.getMessage().delete().queue();
                 }
             }));
-            context.getUiMessaging().sendButtonedMessage(getMoveEmbed(movableList).build(), group);
+            container.addRow(actionRow);
+            context.getUiMessaging().sendComponentMessage(getMoveEmbed(movableList).build(), container);
         } else {
             context.getUiMessaging().replyUsage();
         }

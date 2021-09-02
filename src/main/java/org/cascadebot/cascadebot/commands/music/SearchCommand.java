@@ -6,8 +6,11 @@
 package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.exceptions.PermissionException;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -22,8 +25,9 @@ import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.StringsUtil;
-import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
+import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 
 import java.util.concurrent.TimeUnit;
 
@@ -43,17 +47,18 @@ public class SearchCommand extends MainCommand {
                 return;
             }
 
-            ButtonGroup buttonGroup = new ButtonGroup(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
+            ComponentContainer container = new ComponentContainer();
+            CascadeActionRow actionRow = new CascadeActionRow();
             int i = 0;
             StringBuilder messageBuilder = new StringBuilder();
             for (MusicHandler.SearchResult result : searchResults) {
                 i++;
                 char unicode = (char) (0x0030 + i); //This is setting up the first unicode character to be 003n where n is equal to i.
-                buttonGroup.addButton(new Button.UnicodeButton(unicode + "\u20E3", (runner, channel, message) -> {
-                    if (!runner.equals(buttonGroup.getOwner())) {
+                actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(unicode + "\u20E3"), (runner, channel, message) -> {
+                    if (!runner.equals(context.getMember())) {
                         return;
                     }
-                    message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
+                    message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                     context.getMusicPlayer().loadLink(result.getUrl(), new TrackData(sender.getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong()), nothing -> {
                         context.getTypedMessaging().replyWarning(context.i18n("commands.search.cannot_find_video"));
                     }, exception -> {
@@ -75,12 +80,14 @@ public class SearchCommand extends MainCommand {
                 messageBuilder.append('\n');
             }
 
+            container.addRow(actionRow);
+
             EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser(), context.getLocale());
             embedBuilder.setTitle(context.i18n("commands.search.found_result", searchResults.size()));
             embedBuilder.setDescription(messageBuilder.toString());
 
             try {
-                context.getUiMessaging().sendButtonedMessage(embedBuilder.build(), buttonGroup);
+                context.getUiMessaging().sendComponentMessage(embedBuilder.build(), container);
             } catch (PermissionException e) {
                 embedBuilder.appendDescription("\n\n" + context.i18n("responses.type_one_of"));
                 for (int index = 1; index <= searchResults.size(); index++) {

@@ -18,15 +18,12 @@ import org.cascadebot.cascadebot.data.database.BsonObject
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
-import org.cascadebot.cascadebot.utils.buttons.ButtonsCache
-import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
-import org.cascadebot.cascadebot.utils.diff.DiffUtils
-import org.cascadebot.cascadebot.utils.diff.Difference
+import org.cascadebot.cascadebot.utils.interactions.PersistentComponent
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow
+import org.cascadebot.cascadebot.utils.interactions.InteractionCache
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer
 import org.cascadebot.cascadebot.utils.pagination.PageCache
-import org.slf4j.MDC
-import java.lang.UnsupportedOperationException
-import java.lang.reflect.Type
+import org.cascadebot.cascadebot.utils.votes.VoteGroup
 import java.util.Date
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
@@ -90,7 +87,7 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
     //region Transient fields
     @Transient
     @kotlin.jvm.Transient
-    val buttonsCache = ButtonsCache(5)
+    val componentCache = InteractionCache(5)
 
     @Transient
     @kotlin.jvm.Transient
@@ -101,12 +98,16 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
     val permissionsManager = PerGuildPermissionsManager()
     //endregion
 
-    val persistentButtons = HashMap<Long, HashMap<Long, PersistentButtonGroup>>()
+    val persistentComponents = HashMap<Long, HashMap<Long, List<List<PersistentComponent>>>>()
+
+    val voteGroups: MutableMap<String, VoteGroup> = mutableMapOf()
 
     //endregion
+
     //region Data Loaded Methods
     fun onGuildLoaded() {
         loadMusicSettings()
+        loadComponents()
         permissionsManager.registerPermissions(this)
         moderation.buildWebhookClients()
     }
@@ -125,6 +126,26 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
         }
     }
 
+    private fun loadComponents() {
+        for (channelEntry in persistentComponents.entries) {
+            val channelId = channelEntry.key
+            for(messageEntry in channelEntry.value.entries) {
+                val messageId = messageEntry.key
+                val container = ComponentContainer()
+                for (storedRow in messageEntry.value) {
+                    val row = CascadeActionRow()
+                    for (storedComp in storedRow) {
+                        row.addComponent(storedComp.component)
+                    }
+                    container.addRow(row)
+                }
+                componentCache.put(channelId, messageId, container)
+            }
+        }
+    }
+    //endregion
+
+    //region Flags
     fun enableFlag(flag: Flag): Boolean {
         assertWriteMode()
         return enabledFlags.add(flag)
@@ -138,29 +159,40 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
     fun isFlagEnabled(flag: Flag): Boolean {
         return enabledFlags.contains(flag)
     }
+    //endregion
 
-    fun addButtonGroup(channel: MessageChannel, message: Message, group: ButtonGroup) {
-        group.setMessage(message.idLong)
-        if (group is PersistentButtonGroup) {
-            putPersistentButtonGroup(channel.idLong, message.idLong, group)
-        } else {
-            buttonsCache.put(channel.idLong, message.idLong, group)
+    //region Components
+    fun addComponents(channel: MessageChannel, message: Message, container: ComponentContainer) {
+        if (container.persistent) {
+            val containerList: MutableList<List<PersistentComponent>> = mutableListOf()
+            for (row in container.getComponents()) {
+                val rowList: MutableList<PersistentComponent> = mutableListOf()
+                for (component in row.getComponents()) {
+                    rowList.add(PersistentComponent.values().find { it.component == component }!!)
+                }
+                containerList.add(rowList.toList())
+            }
+            putPersistentComponents(channel.idLong, message.idLong, containerList.toList())
         }
+        componentCache.put(channel.idLong, message.idLong, container)
     }
 
-    private fun putPersistentButtonGroup(channelId: Long, messageId: Long, buttonGroup: PersistentButtonGroup) {
+    private fun putPersistentComponents(channelId: Long, messageId: Long, persistentComponentList: List<List<PersistentComponent>>) {
         assertWriteMode()
 
-        if (persistentButtons.containsKey(channelId) && persistentButtons[channelId] != null) {
-            persistentButtons[channelId]!![messageId] = buttonGroup
+        if (persistentComponents.containsKey(channelId) && persistentComponents[channelId] != null) {
+            persistentComponents[channelId]!![messageId] = persistentComponentList
         } else {
-            persistentButtons[channelId] = HashMap()
-            persistentButtons[channelId]!![messageId] = buttonGroup
+            persistentComponents[channelId] = HashMap()
+            persistentComponents[channelId]!![messageId] = persistentComponentList
         }
     }
 
     //endregion
 
+    fun findVoteGroupByMessageAndChannel(channelId: Long, messageId: Long): VoteGroup? {
+        return voteGroups.entries.map { it.value }.find { it.channelId == channelId && it.messageId == messageId }
+    }
     fun write(writer: Consumer<GuildData>) {
         this.lock.writeLock().withLock {
             val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)

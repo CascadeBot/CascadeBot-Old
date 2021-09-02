@@ -7,8 +7,10 @@ package org.cascadebot.cascadebot.commands.music;
 
 import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
@@ -19,15 +21,19 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.buttons.Button;
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup;
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
+import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
+import org.cascadebot.cascadebot.utils.interactions.CascadeSelectBox;
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class EqualizerCommand extends MainCommand {
 
@@ -42,45 +48,83 @@ public class EqualizerCommand extends MainCommand {
             return;
         }
         CascadeLavalinkPlayer player = (CascadeLavalinkPlayer) context.getMusicPlayer();
-        AtomicInteger currentBand = new AtomicInteger();
-        ButtonGroup buttonGroup = new ButtonGroup(context.getUser().getIdLong(), context.getChannel().getIdLong(), context.getGuild().getIdLong());
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.BACKWARD_ARROW, (runner, channel, message) -> {
-            if (runner.getIdLong() != buttonGroup.getOwnerId()) {
+        List<Integer> currentBands = new ArrayList<>();
+        currentBands.add(0);
+        ComponentContainer container = new ComponentContainer();
+        CascadeActionRow row = new CascadeActionRow();
+        row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW), (runner, channel, message) -> {
+            if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
-            int newBand = currentBand.decrementAndGet();
+            int newBand = currentBands.get(0) - 1;
             if (newBand < 0) {
-                return;
+                newBand = 0;
             }
 
-            currentBand.set(newBand);
+            currentBands.clear();
+            currentBands.add(newBand);
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
         }));
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.FORWARD_ARROW, (runner, channel, message) -> {
-            if (runner.getIdLong() != buttonGroup.getOwnerId()) {
+        row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.VOLUME_DOWN), (runner, channel, message) -> {
+            if (runner.getIdLong() != sender.getIdLong()) {
                 return;
             }
-            int newBand = currentBand.incrementAndGet();
+
+            for (int currentBand : currentBands) {
+                int gain = (int) (player.getCurrentBands().get(currentBand) * 20);
+                gain -= 1;
+                if (gain < -5) {
+                    continue;
+                }
+
+                player.setBand(currentBand, ((float) gain) / 20f);
+
+                if (context.getData().getMusic().getPreserveEqualizer()) {
+                    context.getData().getMusic().getEqualizerBands().replace(currentBand, ((float) gain) / 20f);
+                }
+            }
+
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
+        }));
+        row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.VOLUME_UP), (runner, channel, message) -> {
+            if (runner.getIdLong() != sender.getIdLong()) {
+                return;
+            }
+
+            for (int currentBand : currentBands) {
+                int gain = (int) (player.getCurrentBands().get(currentBand) * 20);
+                gain += 1;
+                if (gain > 5) {
+                    continue;
+                }
+
+                player.setBand(currentBand, ((float) gain) / 20f);
+
+                if (context.getData().getMusic().getPreserveEqualizer()) {
+                int finalGain = gain;
+                context.getData().write(guildData -> {
+                    guildData.getMusic().getEqualizerBands().replace(currentBand.get(), ((float) finalGain) / 20f);
+                });
+                }
+            }
+
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
+        }));
+        row.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW), (runner, channel, message) -> {
+            if (runner.getIdLong() != sender.getIdLong()) {
+                return;
+            }
+            int newBand = currentBands.get(currentBands.size() - 1) + 1;
             if (newBand >= Equalizer.BAND_COUNT) {
-                return;
+                newBand = Equalizer.BAND_COUNT;
             }
 
-            currentBand.set(newBand);
-
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
-        }));
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_DOWN, (runner, channel, message) -> {
-            if (runner.getIdLong() != buttonGroup.getOwnerId()) {
-                return;
-            }
-
-            int gain = (int) (player.getCurrentBands().get(currentBand.get()) * 20);
-            gain -= 1;
-            if (gain < -5) {
-                return;
-            }
-
+            currentBands.clear();
+            currentBands.add(newBand);
             player.setBand(currentBand.get(), ((float) gain) / 20f);
             if (context.getData().getMusic().getPreserveEqualizer()) {
                 int finalGain = gain;
@@ -89,70 +133,91 @@ public class EqualizerCommand extends MainCommand {
                 });
             }
 
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
         }));
-        buttonGroup.addButton(new Button.UnicodeButton(UnicodeConstants.VOLUME_UP, (runner, channel, message) -> {
-            if (runner.getIdLong() != buttonGroup.getOwnerId()) {
-                return;
-            }
-
-            int gain = (int) (player.getCurrentBands().get(currentBand.get()) * 20);
-            gain += 1;
-            if (gain > 5) {
-                return;
-            }
-
-            player.setBand(currentBand.get(), ((float) gain) / 20f);
-            if (context.getData().getMusic().getPreserveEqualizer()) {
-                int finalGain = gain;
-                context.getData().write(guildData -> {
-                    guildData.getMusic().getEqualizerBands().replace(currentBand.get(), ((float) finalGain) / 20f);
-                });
-            }
-
-            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), runner.getUser(), context).build()).override(true).queue();
-        }));
-        context.getUiMessaging().sendButtonedMessage(getEqualizerEmbed(player.getCurrentBands(), currentBand.get(), context.getUser(), context).build(), buttonGroup);
+        container.addRow(row);
+        CascadeActionRow selectRow = new CascadeActionRow();
+        CascadeSelectBox selectBox = new CascadeSelectBox("select-equalizer", (runner, channel, message, selected) -> {
+            List<Integer> selectedBands = selected.stream().map(s -> Integer.parseInt(s.split(" ")[1]) - 1).collect(Collectors.toList());
+            currentBands.clear();
+            Collections.sort(selectedBands);
+            currentBands.addAll(selectedBands);
+            CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
+            message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
+        });
+        for (int i = 1; i <= Equalizer.BAND_COUNT; i++) {
+            selectBox.addOption("Band " + i, false);
+        }
+        selectBox.setMaxSelect(7); // limit to 7 as that's all we can really display.
+        selectRow.addComponent(selectBox);
+        container.addRow(selectRow);
+        context.getUiMessaging().sendComponentMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, context.getUser(), context, selectBox).build(), container);
     }
 
-    private String getEqualizerString(Map<Integer, Float> bands, int currentBand) {
-        int lowestBand = currentBand - 3;
-        int highestBand = currentBand + 2;
-        int lowestBandDisplay = lowestBand;
-        int highestBandDisplay = highestBand;
+    private String getEqualizerString(Map<Integer, Float> bands, List<Integer> currentBands) {
+        Set<Integer> bandsToDisplay = new HashSet<>();
+        if (currentBands.size() == 1) {
+            int lowestBand = currentBands.get(0) - 3;
+            int highestBand = currentBands.get(0) + 2;
 
-        if (lowestBand < 0) {
-            highestBandDisplay += Math.abs(lowestBand);
-            lowestBandDisplay = 0;
-        }
+            int lowestBandDisplay = lowestBand;
+            int highestBandDisplay = highestBand;
 
-        if (highestBand >= Equalizer.BAND_COUNT - 1) {
-            lowestBandDisplay -= highestBand - (Equalizer.BAND_COUNT - 2);
-            highestBandDisplay = Equalizer.BAND_COUNT - 2;
+            if (lowestBand < 0) {
+                highestBandDisplay += Math.abs(lowestBand);
+                lowestBandDisplay = 0;
+            }
+
+            if (highestBand >= Equalizer.BAND_COUNT - 1) {
+                lowestBandDisplay -= highestBand - (Equalizer.BAND_COUNT - 2);
+                highestBandDisplay = Equalizer.BAND_COUNT - 2;
+            }
+            for (int i = lowestBandDisplay; i <= highestBandDisplay + 1; i++) {
+                bandsToDisplay.add(i);
+            }
+        } else if (currentBands.size() > 1 && currentBands.size() <= 3) {
+            // Get bands immediately to the left/right of selected bands
+            for (int selectedBand : currentBands) {
+                if (selectedBand == 0) {
+                    bandsToDisplay.add(selectedBand);
+                    bandsToDisplay.add(selectedBand + 1);
+                } else if (selectedBand == Equalizer.BAND_COUNT - 1) {
+                    bandsToDisplay.add(selectedBand - 1);
+                    bandsToDisplay.add(selectedBand);
+                } else {
+                    bandsToDisplay.add(selectedBand - 1);
+                    bandsToDisplay.add(selectedBand);
+                    bandsToDisplay.add(selectedBand + 1);
+                }
+            }
+        } else {
+            // Display all selected bands
+            bandsToDisplay.addAll(currentBands);
         }
 
         List<Integer> heights = new ArrayList<>();
 
         List<String> footer = new ArrayList<>();
         int currentBarNumber = 0;
-        int selectedBarNumber = 0;
-        for (int i = lowestBandDisplay; i <= highestBandDisplay + 1; i++) {
-            if (i == currentBand) {
-                if (i < 9) {
-                    footer.add("[0" + (i + 1) + "]");
+        List<Integer> selectedBarNumbers = new ArrayList<>();
+        for (int toDisplay: bandsToDisplay) {
+            if (currentBands.contains(toDisplay)) {
+                if (toDisplay < 9) {
+                    footer.add("[0" + (toDisplay + 1) + "]");
                 } else {
-                    footer.add("[" + (i + 1) + "]");
+                    footer.add("[" + (toDisplay + 1) + "]");
                 }
-                selectedBarNumber = currentBarNumber;
+                selectedBarNumbers.add(currentBarNumber);
             } else {
-                if (i < 9) {
-                    footer.add("(0" + (i + 1) + ")");
+                if (toDisplay < 9) {
+                    footer.add("(0" + (toDisplay + 1) + ")");
                 } else {
-                    footer.add("(" + (i + 1) + ")");
+                    footer.add("(" + (toDisplay + 1) + ")");
                 }
             }
 
-            int bandValue = (int) (bands.get(i) * 20 + 5);
+            int bandValue = (int) (bands.get(toDisplay) * 20 + 5);
             heights.add(bandValue);
             currentBarNumber++;
         }
@@ -180,7 +245,7 @@ public class EqualizerCommand extends MainCommand {
                 if (currentHeight <= barHeight) {
                     int barLocation = barLocations.get(currentBar);
                     char barChar = UnicodeConstants.DOTTED_SQUARE;
-                    if (currentBar == selectedBarNumber) {
+                    if (selectedBarNumbers.contains(currentBar)) {
                         barChar = UnicodeConstants.SQUARE;
                     }
                     lineChars[barLocation] = barChar;
@@ -197,13 +262,23 @@ public class EqualizerCommand extends MainCommand {
         return equalizerBuilder.toString();
     }
 
-    public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, int currentBand, User requester, CommandContext context) {
-        String equalizer = getEqualizerString(bands, currentBand);
+    public EmbedBuilder getEqualizerEmbed(Map<Integer, Float> bands, List<Integer> currentBands, User requester, CommandContext context, CascadeSelectBox selectBox) {
+        selectBox.clearDefaults();
+        for (int selected: currentBands) {
+            selectBox.addDefault("Band " + (selected + 1));
+        }
+
+        String equalizer = getEqualizerString(bands, currentBands);
 
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder(requester, context.getLocale());
-        if (bands.get(currentBand) >= .2) {
+        float total = 0;
+        for (int band: currentBands) {
+            total += bands.get(band);
+        }
+        float adv = total / currentBands.size();
+        if (adv >= .2) {
             builder.setColor(Color.decode("#EE6767")); // Red
-        } else if (bands.get(currentBand) > 0 && bands.get(currentBand) < .2) {
+        } else if (adv > 0 && adv < .2) {
             builder.setColor(Color.decode("#D9E94A")); // Yellow
         } else {
             builder.setColor(Color.decode("#84D6A2")); // Green

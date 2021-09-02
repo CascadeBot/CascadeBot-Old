@@ -5,13 +5,15 @@
 
 package org.cascadebot.cascadebot.utils.pagination;
 
+import org.cascadebot.cascadebot.utils.interactions.CascadeSelectBox;
+
 import java.util.HashMap;
 import java.util.List;
 
 public class PageCache extends HashMap<Long, PageCache.Pages> {
 
-    public void put(long messageId, List<Page> pages) {
-        this.put(messageId, new Pages(pages));
+    public void put(long messageId, List<Page> pages, CascadeSelectBox selectBox) {
+        this.put(messageId, new Pages(pages, selectBox));
     }
 
     public class Pages {
@@ -20,9 +22,12 @@ public class PageCache extends HashMap<Long, PageCache.Pages> {
 
         int currentPage;
 
-        Pages(List<Page> pages) {
+        CascadeSelectBox selectBox;
+
+        Pages(List<Page> pages, CascadeSelectBox selectBox) {
             this.pages = pages;
             currentPage = 1;
+            this.selectBox = selectBox;
         }
 
         public int getCurrentPage() {
@@ -43,6 +48,10 @@ public class PageCache extends HashMap<Long, PageCache.Pages> {
 
         public List<Page> getPages() {
             return List.copyOf(pages);
+        }
+
+        public CascadeSelectBox getSelectBox() {
+            return selectBox;
         }
     }
 

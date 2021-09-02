@@ -8,9 +8,10 @@ package org.cascadebot.cascadebot.utils
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.ListMultimap
 import net.dv8tion.jda.api.Permission
-import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.TextChannel
+import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.dv8tion.jda.api.requests.ErrorResponse
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.UnicodeConstants
@@ -18,9 +19,10 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.Messaging.sendMessage
 import org.cascadebot.cascadebot.tasks.Task
-import org.cascadebot.cascadebot.utils.buttons.Button.UnicodeButton
-import org.cascadebot.cascadebot.utils.buttons.ButtonGroup
-import org.cascadebot.cascadebot.utils.buttons.IButtonRunnable
+import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow
+import org.cascadebot.cascadebot.utils.interactions.CascadeButton
+import org.cascadebot.cascadebot.utils.interactions.ComponentContainer
+import org.cascadebot.cascadebot.utils.interactions.IButtonRunnable
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 
@@ -84,22 +86,26 @@ object ConfirmUtils {
         }
         if (channel.guild.getMember(CascadeBot.INS.selfUser)!!.hasPermission(channel, Permission.MESSAGE_ADD_REACTION)) {
             Task.getScheduler().schedule({
-                val group = ButtonGroup(userId, channel.idLong, channel.guild.idLong)
+                val container = ComponentContainer()
+                val row = CascadeActionRow()
+                container.addRow(row)
 
-                group.addButton(UnicodeButton(UnicodeConstants.TICK, IButtonRunnable { runner: Member, _, _ ->
-                    if (runner.idLong != confirmationAction.userId) return@IButtonRunnable
-                    confirmationAction.run()
+                row.addComponent(CascadeButton.success(Emoji.fromUnicode(UnicodeConstants.TICK), IButtonRunnable { member, _, _ ->
+                    if (member.idLong != confirmationAction.userId)
+                        confirmationAction.run()
                 }))
 
                 if (isCancellable) {
-                    group.addButton(UnicodeButton(UnicodeConstants.RED_CROSS, IButtonRunnable { _, _, _ ->
+                    row.addComponent(CascadeButton.danger(Emoji.fromUnicode(UnicodeConstants.RED_CROSS), IButtonRunnable { _, _, _ ->
                         confirmedMap.remove(actionKey, confirmationAction)
-                        sentMessage.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE))
+                        sentMessage.delete()
+                            .queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE))
                     }))
                 }
-                group.addButtonsToMessage(sentMessage)
-                group.setMessage(sentMessage.idLong)
-                guildData.addButtonGroup(channel, sentMessage, group)
+
+                sentMessage.editMessageComponents(container.getComponents().map { it.toDiscordActionRow() }).override(true).queue()
+
+                guildData.addComponents(channel, sentMessage, container)
             }, buttonDelay, TimeUnit.MILLISECONDS)
         }
         Task.getScheduler().schedule({
