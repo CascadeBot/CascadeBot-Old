@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import org.bson.BsonDocument;
+import org.bson.BsonValue;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.database.BsonObject;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +50,19 @@ public class GuildSettingsUseful implements BsonObject {
 
     @Override
     public void fromBson(@NotNull BsonDocument bsonDocument) {
-
+        if (bsonDocument.containsKey("todoLists")) {
+            BsonDocument todoListBson = bsonDocument.get("todoLists").asDocument();
+            for (Map.Entry<String, BsonValue> entry : todoListBson.entrySet()) {
+                BsonDocument todoDoc = entry.getValue().asDocument();
+                if (todoLists.containsKey(entry.getKey())) {
+                    todoLists.get(entry.getKey()).fromBson(todoDoc);
+                } else {
+                    TodoList todoList = new TodoList(todoDoc.get("ownerId").asNumber().longValue());
+                    todoList.fromBson(todoDoc);
+                    todoLists.put(entry.getKey(), todoList);
+                }
+            }
+        }
     }
 
 }

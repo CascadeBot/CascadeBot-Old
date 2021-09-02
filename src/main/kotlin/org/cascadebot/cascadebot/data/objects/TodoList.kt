@@ -4,9 +4,11 @@ import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
 import net.dv8tion.jda.api.entities.TextChannel
+import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.UnicodeConstants
 import org.cascadebot.cascadebot.commandmeta.CommandContext
+import org.cascadebot.cascadebot.data.database.BsonObject
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.messaging.Messaging.sendButtonedMessage
 import org.cascadebot.cascadebot.messaging.MessagingObjects
@@ -14,7 +16,7 @@ import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 import org.cascadebot.cascadebot.utils.buttons.PersistentButton
 import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 
-class TodoList(val ownerId: Long) {
+class TodoList(val ownerId: Long) : BsonObject {
 
     val items: MutableList<TodoListItem> = ArrayList()
     var messageId: Long = -1
@@ -168,4 +170,25 @@ class TodoList(val ownerId: Long) {
             embedBuilder.appendDescription(pageBuilder.toString())
             return embedBuilder.build()
         }
+
+    override fun fromBson(bsonDocument: BsonDocument) {
+        if (bsonDocument.contains("channelId")) {
+            channelId = bsonDocument["channelId"]!!.asNumber().longValue()
+        }
+        if (bsonDocument.contains("messageId")) {
+            messageId = bsonDocument["messageId"]!!.asNumber().longValue()
+        }
+        if (bsonDocument.contains("currentItem")) {
+            currentItem = bsonDocument["currentItem"]!!.asNumber().intValue()
+        }
+        if (bsonDocument.contains("items")) {
+            items.clear();
+            for (item in bsonDocument["items"]!!.asArray()) {
+                val todoItem = TodoListItem(item.asDocument()["text"]!!.asString().value)
+                todoItem.done = item.asDocument()["done"]!!.asBoolean().value
+                items.add(todoItem)
+            }
+        }
+        CascadeBot.INS.client.getTextChannelById(channelId)!!.editMessageById(messageId, todoListMessage).queue()
+    }
 }
