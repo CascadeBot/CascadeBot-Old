@@ -143,7 +143,42 @@ class GuildSettingsCore : BsonObject {
     //endregion
 
     override fun fromBson(bsonDocument: BsonDocument) {
-
+        if (bsonDocument.contains("mentionPrefix")) {
+            mentionPrefix = bsonDocument["mentionPrefix"]!!.asBoolean().value
+        }
+        if (bsonDocument.contains("deleteCommand")) {
+            deleteCommand = bsonDocument["deleteCommand"]!!.asBoolean().value
+        }
+        if (bsonDocument.contains("useEmbedForMessages")) {
+            useEmbedForMessages = bsonDocument["useEmbedForMessages"]!!.asBoolean().value
+        }
+        if (bsonDocument.contains("showPermErrors")) {
+            showPermErrors = bsonDocument["showPermErrors"]!!.asBoolean().value
+        }
+        if (bsonDocument.contains("showModuleErrors")) {
+            showModuleErrors = bsonDocument["showModuleErrors"]!!.asBoolean().value
+        }
+        if (bsonDocument.contains("adminsHaveAllPerms")) {
+            adminsHaveAllPerms = bsonDocument["adminsHaveAllPerms"]!!.asBoolean().value
+        }
+        if (bsonDocument.contains("helpHideCommandsNoPermission")) {
+            helpHideCommandsNoPermission = bsonDocument["helpHideCommandsNoPermission"]!!.asBoolean().value
+        }
+        if (bsonDocument.contains("helpShowAllModules")) {
+            helpShowAllModules = bsonDocument["helpShowAllModules"]!!.asBoolean().value
+        }
+        if (bsonDocument.contains("locale")) {
+            locale = Locale.valueOf(bsonDocument["locale"]!!.asString().value)
+        }
+        if (bsonDocument.contains("prefix")) {
+            prefix = bsonDocument["prefix"]!!.asString().value
+        }
+        if (bsonDocument.contains("enabledModules")) {
+            enabledModules.clear();
+            for(module in bsonDocument["enabledModules"]!!.asArray()) {
+                enabledModules.add(Module.valueOf(module.asString().value))
+            }
+        }
     }
 
 }
