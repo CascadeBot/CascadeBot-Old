@@ -19,6 +19,7 @@ import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
+import org.cascadebot.cascadebot.utils.ifContains
 import org.cascadebot.cascadebot.utils.toCapitalized
 import java.net.URL
 import java.time.Instant
@@ -28,15 +29,13 @@ import java.util.function.Consumer
 @SettingsContainer(module = Module.MODERATION)
 class GuildSettingsModeration : BsonObject {
 
-    var writeMode = false
-
     var modlogChannelNum: Int = 1;
 
     @Setting
-    val purgePinnedMessages: Boolean = false
+    var purgePinnedMessages: Boolean = false
 
     @Setting
-    private val respectBanOrKickHierarchy = true
+    private var respectBanOrKickHierarchy = true
 
     @Setting
     var muteRoleName = "Muted"
@@ -136,7 +135,7 @@ class GuildSettingsModeration : BsonObject {
         }
     }
 
-    class ChannelModlogEventsInfo {
+    class ChannelModlogEventsInfo : BsonObject {
 
         private val events: MutableSet<ModlogEvent> = LinkedHashSet()
         internal var webhookId: Long = 0
@@ -305,10 +304,49 @@ class GuildSettingsModeration : BsonObject {
             }
 
         }
+
+        override fun fromBson(bsonDocument: BsonDocument) {
+            bsonDocument.ifContains("events") {
+                events.clear()
+                for (event in it.asArray()) {
+                    events.add(ModlogEvent.valueOf(event.asString().value))
+                }
+            }
+            bsonDocument.ifContains("webhookId") {
+                webhookId = it.asNumber().longValue()
+            }
+            bsonDocument.ifContains("webhookToken") {
+                webhookToken = it.asString().value
+            }
+            bsonDocument.ifContains("id") {
+                id = it.asNumber().intValue()
+            }
+        }
     }
 
     override fun fromBson(bsonDocument: BsonDocument) {
-
+        bsonDocument.ifContains("modlogChannelNum") {
+            modlogChannelNum = it.asNumber().intValue()
+        }
+        bsonDocument.ifContains("purgePinnedMessages") {
+            purgePinnedMessages = it.asBoolean().value
+        }
+        bsonDocument.ifContains("respectBanOrKickHierarchy") {
+            respectBanOrKickHierarchy = it.asBoolean().value
+        }
+        bsonDocument.ifContains("muteRoleName") {
+            muteRoleName = it.asString().value
+        }
+        bsonDocument.ifContains("modlogEvents") {
+            for (entry in it.asDocument()) {
+                if (modlogEvents.containsKey(entry.key)) {
+                    modlogEvents[entry.key]!!.fromBson(entry.value.asDocument())
+                } else {
+                    val eventInfo = ChannelModlogEventsInfo()
+                    eventInfo.fromBson(entry.value.asDocument())
+                }
+            }
+        }
     }
 
 }
