@@ -20,6 +20,11 @@ import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.moderation.ModlogEvent
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 import org.cascadebot.cascadebot.utils.ifContains
+import org.cascadebot.cascadebot.utils.ifContainsArray
+import org.cascadebot.cascadebot.utils.ifContainsBoolean
+import org.cascadebot.cascadebot.utils.ifContainsDocument
+import org.cascadebot.cascadebot.utils.ifContainsInt
+import org.cascadebot.cascadebot.utils.ifContainsString
 import org.cascadebot.cascadebot.utils.toCapitalized
 import java.net.URL
 import java.time.Instant
@@ -306,9 +311,9 @@ class GuildSettingsModeration : BsonObject {
         }
 
         override fun fromBson(bsonDocument: BsonDocument) {
-            bsonDocument.ifContains("events") {
+            bsonDocument.ifContainsArray("events") {
                 events.clear()
-                for (event in it.asArray()) {
+                for (event in it) {
                     events.add(ModlogEvent.valueOf(event.asString().value))
                 }
             }
@@ -325,20 +330,12 @@ class GuildSettingsModeration : BsonObject {
     }
 
     override fun fromBson(bsonDocument: BsonDocument) {
-        bsonDocument.ifContains("modlogChannelNum") {
-            modlogChannelNum = it.asNumber().intValue()
-        }
-        bsonDocument.ifContains("purgePinnedMessages") {
-            purgePinnedMessages = it.asBoolean().value
-        }
-        bsonDocument.ifContains("respectBanOrKickHierarchy") {
-            respectBanOrKickHierarchy = it.asBoolean().value
-        }
-        bsonDocument.ifContains("muteRoleName") {
-            muteRoleName = it.asString().value
-        }
-        bsonDocument.ifContains("modlogEvents") {
-            for (entry in it.asDocument()) {
+        bsonDocument.ifContainsInt("modlogChannelNum") { modlogChannelNum = it }
+        bsonDocument.ifContainsBoolean("purgePinnedMessages") { purgePinnedMessages = it }
+        bsonDocument.ifContainsBoolean("respectBanOrKickHierarchy") { respectBanOrKickHierarchy = it }
+        bsonDocument.ifContainsString("muteRoleName") { muteRoleName = it }
+        bsonDocument.ifContainsDocument("modlogEvents") {
+            for (entry in it) {
                 if (modlogEvents.containsKey(entry.key)) {
                     modlogEvents[entry.key]!!.fromBson(entry.value.asDocument())
                 } else {

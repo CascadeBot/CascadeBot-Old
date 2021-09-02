@@ -9,19 +9,22 @@ import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.TextChannel
+import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.Config
+import org.cascadebot.cascadebot.data.database.BsonObject
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
+import org.cascadebot.cascadebot.utils.ifContainsArray
+import org.cascadebot.cascadebot.utils.ifContainsBoolean
+import org.cascadebot.cascadebot.utils.ifContainsString
 import org.cascadebot.cascadebot.utils.language.LanguageUtils
 import org.cascadebot.cascadebot.utils.toCapitalized
 import java.util.Collections
 
-class CommandFilter(val name: String) {
-
-    
+class CommandFilter(val name: String) : BsonObject {
 
     // Constructor for MongoDB
     private constructor() : this("")
@@ -195,6 +198,42 @@ class CommandFilter(val name: String) {
     enum class FilterMatch {
 
         MATCH, NOT_MATCH, NEUTRAL
+    }
+
+    override fun fromBson(bsonDocument: BsonDocument) {
+        bsonDocument.ifContainsString("type") {
+            type = FilterType.valueOf(it)
+        }
+        bsonDocument.ifContainsString("operator") {
+            operator = FilterOperator.valueOf(it)
+        }
+        bsonDocument.ifContainsBoolean("enabled") {
+            enabled = it
+        }
+        bsonDocument.ifContainsArray("commands") {
+            commands.clear()
+            for (commandBson in it) {
+                commands.add(commandBson.asString().value)
+            }
+        }
+        bsonDocument.ifContainsArray("channelIds") {
+            channelIds.clear()
+            for (idBson in it) {
+                channelIds.add(idBson.asNumber().longValue())
+            }
+        }
+        bsonDocument.ifContainsArray("userIds") {
+            userIds.clear()
+            for (idBson in it) {
+                userIds.add(idBson.asNumber().longValue())
+            }
+        }
+        bsonDocument.ifContainsArray("roleIds") {
+            roleIds.clear()
+            for (idBson in it) {
+                roleIds.add(idBson.asNumber().longValue())
+            }
+        }
     }
 
 }

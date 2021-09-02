@@ -11,14 +11,19 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.internal.utils.Checks;
+import org.bson.BsonDocument;
+import org.bson.BsonValue;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
+import org.cascadebot.cascadebot.data.database.BsonObject;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.permissions.objects.Result;
 import org.cascadebot.cascadebot.permissions.objects.User;
+import org.cascadebot.cascadebot.utils.BsonUtilsKt;
 import org.cascadebot.shared.SecurityLevel;
+import org.jetbrains.annotations.NotNull;
 import spark.utils.CollectionUtils;
 
 import java.util.ArrayList;
@@ -31,7 +36,7 @@ import java.util.stream.Collectors;
 
 import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
 
-public class GuildPermissions {
+public class GuildPermissions implements BsonObject {
 
     @Getter
     @Setter
@@ -227,4 +232,29 @@ public class GuildPermissions {
         groups.add(position, group);
     }
 
+    @Override
+    public void fromBson(@NotNull BsonDocument bsonDocument) {
+        if (bsonDocument.containsKey("mode")) {
+            mode = PermissionMode.valueOf(bsonDocument.get("mode").asString().getValue());
+        }
+        if (bsonDocument.containsKey("groups")) {
+            groups.clear();
+            for (BsonValue bsonGroup : bsonDocument.get("groups").asArray()) {
+                BsonDocument doc = bsonGroup.asDocument();
+                Group group = new Group(doc.get("name").asString().getValue());
+                group.fromBson(doc);
+            }
+        }
+        if (bsonDocument.containsKey("users")) {
+            users.clear();
+            for (BsonValue entry : bsonDocument.get("users").asArray()) {
+                BsonDocument doc = entry.asDocument();
+                long id = doc.get("key").asNumber().longValue();
+                BsonDocument userDoc = doc.get("value").asDocument();
+                User user = new User();
+                user.fromBson(userDoc);
+                users.put(id, user);
+            }
+        }
+    }
 }

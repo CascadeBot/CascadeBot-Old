@@ -5,6 +5,9 @@ import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.database.BsonObject
 import org.cascadebot.cascadebot.utils.GuildDataUtils
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
+import org.cascadebot.cascadebot.utils.ifContains
+import org.cascadebot.cascadebot.utils.ifContainsArray
+import org.cascadebot.cascadebot.utils.ifContainsDocument
 import java.util.concurrent.ConcurrentHashMap
 
 @SettingsContainer(module = Module.MANAGEMENT)
@@ -45,7 +48,47 @@ class GuildSettingsManagement : BsonObject {
     }
 
     override fun fromBson(bsonDocument: BsonDocument) {
-
+        bsonDocument.ifContains("allowTagCommands") {
+            allowTagCommands = it.asBoolean().value
+        }
+        bsonDocument.ifContains("displayFilterError") {
+            displayFilterError = it.asBoolean().value
+        }
+        bsonDocument.ifContains("warnOver10Filters") {
+            warnOver10Filters = it.asBoolean().value
+        }
+        bsonDocument.ifContainsDocument("tags") {
+            for (entry in it) {
+                if (tags.contains(entry.key)) {
+                    tags[entry.key]!!.fromBson(entry.value.asDocument())
+                } else {
+                    val doc = entry.value.asDocument()
+                    val tag = Tag(doc["name"]!!.asString().value, doc["content"]!!.asString().value, doc["category"]!!.asString().value)
+                    tags[entry.key] = tag
+                }
+            }
+        }
+        bsonDocument.ifContainsArray("filters") {
+            filters.clear()
+            for (bsonFilter in it) {
+                val doc = it.asDocument()
+                val filer = CommandFilter(doc["name"]!!.asString().value)
+                filer.fromBson(doc)
+                filters.add(filer)
+            }
+        }
+        bsonDocument.ifContainsDocument("permissions") {
+            permissions.fromBson(it)
+        }
+        bsonDocument.ifContainsDocument("greetings") {
+            greetings.fromBson(it)
+        }
+        bsonDocument.ifContainsArray("autoRoles") {
+            autoRoles.clear()
+            for (bsonRole in it) {
+                autoRoles.add(bsonRole.asNumber().longValue())
+            }
+        }
     }
 
 }

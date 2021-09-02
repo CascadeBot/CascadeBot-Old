@@ -3,9 +3,13 @@ package org.cascadebot.cascadebot.permissions.objects;
 import com.google.common.collect.Sets;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.bson.BsonDocument;
+import org.bson.BsonValue;
+import org.cascadebot.cascadebot.data.database.BsonObject;
 import org.cascadebot.cascadebot.data.objects.PermissionAction;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.PermissionNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -13,7 +17,7 @@ import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
 
 @ToString
 @EqualsAndHashCode
-public abstract class PermissionHolder {
+public abstract class PermissionHolder implements BsonObject {
 
     private Set<String> permissions = Sets.newConcurrentHashSet();
 
@@ -48,4 +52,13 @@ public abstract class PermissionHolder {
         GROUP, USER
     }
 
+    @Override
+    public void fromBson(@NotNull BsonDocument bsonDocument) {
+        if (bsonDocument.containsKey("permissions")) {
+            permissions.clear();
+            for (BsonValue permBson : bsonDocument.get("permissions").asArray()) {
+                permissions.add(permBson.asString().getValue());
+            }
+        }
+    }
 }

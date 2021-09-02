@@ -3,14 +3,16 @@ package org.cascadebot.cascadebot.data.objects
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
+import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.data.database.BsonObject
 import org.cascadebot.cascadebot.data.language.Language
+import org.cascadebot.cascadebot.utils.ifContainsDocument
+import org.cascadebot.cascadebot.utils.ifContainsLong
 import org.cascadebot.cascadebot.utils.lists.WeightedList
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 
-class Greetings {
-
-    
+class Greetings : BsonObject {
 
     var welcomeMessages: WeightedList<String> = WeightedList()
     var welcomeDMMessages: WeightedList<String> = WeightedList()
@@ -48,6 +50,33 @@ class Greetings {
     fun getRandomGoodbyeMsg(event: GuildMemberRemoveEvent): String? {
         return goodbyeMessages.randomItem?.let {
             PlaceholderObjects.goodbyes.formatMessage(Language.getGuildLocale(event.guild.idLong), it, event)
+        }
+    }
+
+    override fun fromBson(bsonDocument: BsonDocument) {
+        bsonDocument.ifContainsDocument("welcomeMessages") {
+            welcomeMessages = WeightedList(it["seed"]?.asNumber()?.longValue())
+            for (itemBson in it["internalList"]!!.asArray()) {
+                val doc = itemBson.asDocument()
+                welcomeMessages.add(doc["item"]!!.asString().value, doc["weight"]!!.asNumber().intValue())
+            }
+        }
+        bsonDocument.ifContainsDocument("welcomeDMMessages") {
+            welcomeMessages = WeightedList(it["seed"]?.asNumber()?.longValue())
+            for (itemBson in it["internalList"]!!.asArray()) {
+                val doc = itemBson.asDocument()
+                welcomeMessages.add(doc["item"]!!.asString().value, doc["weight"]!!.asNumber().intValue())
+            }
+        }
+        bsonDocument.ifContainsDocument("goodbyeMessages") {
+            welcomeMessages = WeightedList(it["seed"]?.asNumber()?.longValue())
+            for (itemBson in it["internalList"]!!.asArray()) {
+                val doc = itemBson.asDocument()
+                welcomeMessages.add(doc["item"]!!.asString().value, doc["weight"]!!.asNumber().intValue())
+            }
+        }
+        bsonDocument.ifContainsLong("welcomeChannelId") {
+            welcomeChannelId = it
         }
     }
 

@@ -9,6 +9,9 @@ import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.database.BsonObject
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
+import org.cascadebot.cascadebot.utils.ifContainsArray
+import org.cascadebot.cascadebot.utils.ifContainsBoolean
+import org.cascadebot.cascadebot.utils.ifContainsString
 import java.lang.UnsupportedOperationException
 import java.util.concurrent.ConcurrentHashMap
 
@@ -143,41 +146,21 @@ class GuildSettingsCore : BsonObject {
     //endregion
 
     override fun fromBson(bsonDocument: BsonDocument) {
-        if (bsonDocument.contains("mentionPrefix")) {
-            mentionPrefix = bsonDocument["mentionPrefix"]!!.asBoolean().value
-        }
-        if (bsonDocument.contains("deleteCommand")) {
-            deleteCommand = bsonDocument["deleteCommand"]!!.asBoolean().value
-        }
-        if (bsonDocument.contains("useEmbedForMessages")) {
-            useEmbedForMessages = bsonDocument["useEmbedForMessages"]!!.asBoolean().value
-        }
-        if (bsonDocument.contains("showPermErrors")) {
-            showPermErrors = bsonDocument["showPermErrors"]!!.asBoolean().value
-        }
-        if (bsonDocument.contains("showModuleErrors")) {
-            showModuleErrors = bsonDocument["showModuleErrors"]!!.asBoolean().value
-        }
-        if (bsonDocument.contains("adminsHaveAllPerms")) {
-            adminsHaveAllPerms = bsonDocument["adminsHaveAllPerms"]!!.asBoolean().value
-        }
-        if (bsonDocument.contains("helpHideCommandsNoPermission")) {
-            helpHideCommandsNoPermission = bsonDocument["helpHideCommandsNoPermission"]!!.asBoolean().value
-        }
-        if (bsonDocument.contains("helpShowAllModules")) {
-            helpShowAllModules = bsonDocument["helpShowAllModules"]!!.asBoolean().value
-        }
-        if (bsonDocument.contains("locale")) {
-            locale = Locale.valueOf(bsonDocument["locale"]!!.asString().value)
-        }
-        if (bsonDocument.contains("prefix")) {
-            prefix = bsonDocument["prefix"]!!.asString().value
-        }
-        if (bsonDocument.contains("enabledModules")) {
+        bsonDocument.ifContainsBoolean("mentionPrefix") { mentionPrefix = it }
+        bsonDocument.ifContainsBoolean("deleteCommand") { deleteCommand = it }
+        bsonDocument.ifContainsBoolean("useEmbedForMessages") { useEmbedForMessages = it }
+        bsonDocument.ifContainsBoolean("showPermErrors") { showPermErrors = it }
+        bsonDocument.ifContainsBoolean("showModuleErrors") { showModuleErrors = it }
+        bsonDocument.ifContainsBoolean("adminsHaveAllPerms") { adminsHaveAllPerms = it }
+        bsonDocument.ifContainsBoolean("helpHideCommandsNoPermission") { helpHideCommandsNoPermission = it }
+        bsonDocument.ifContainsBoolean("helpShowAllModules") { helpShowAllModules = it }
+        bsonDocument.ifContainsString("locale") { locale = Locale.valueOf(it) }
+        bsonDocument.ifContainsString("prefix") { prefix = it }
+        bsonDocument.ifContainsArray("enabledModules") { array ->
             enabledModules.clear();
-            for(module in bsonDocument["enabledModules"]!!.asArray()) {
-                enabledModules.add(Module.valueOf(module.asString().value))
-            }
+            array.map{ it.asString().value } // Convert each array value to a string
+                .map { string -> Module.valueOf(string) } // Map each value to a Module enum
+                .forEach { enabledModules.add(it) }
         }
     }
 

@@ -35,6 +35,10 @@ import kotlin.concurrent.withLock
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.typeOf
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
+import org.cascadebot.cascadebot.utils.ifContains
+import org.cascadebot.cascadebot.utils.ifContainsArray
+import org.cascadebot.cascadebot.utils.ifContainsDocument
+import org.cascadebot.cascadebot.utils.ifContainsLong
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Function
 import kotlin.concurrent.getOrSet
@@ -183,20 +187,16 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
     }
 
     override fun fromBson(bsonDocument: BsonDocument) {
-        if (bsonDocument.contains("enabledFlags")) {
+        bsonDocument.ifContainsArray("enabledFlags") { array ->
             enabledFlags.clear();
-            for (bsonFlag in bsonDocument["enabledFlags"]!!.asArray()) {
-                val flag: String = bsonFlag.asString().value
-                enabledFlags.add(Flag.valueOf(flag))
-            }
+            array.map { it.asString().value }
+                .map { Flag.valueOf(it) }
+                .forEach { enabledFlags.add(it) }
         }
-        if (bsonDocument.contains("mutedRoleId")) {
-            mutedRoleId = bsonDocument["mutedRoleId"]!!.asNumber().longValue();
-        }
-        if (bsonDocument.contains("persistentButtons")) {
-            val buttons = bsonDocument["persistentButtons"]!!.asArray()
+        bsonDocument.ifContainsLong("mutedRoleId") { mutedRoleId = it }
+        bsonDocument.ifContainsArray("persistentButtons") {
             persistentButtons.clear()
-            for (entry in buttons) {
+            for (entry in it) {
                 val channelId = entry.asDocument()["key"]!!.asNumber().longValue()
                 val messages = entry.asDocument()["value"]!!.asArray();
                 val messageMap = HashMap<Long, PersistentButtonGroup>()
@@ -210,26 +210,11 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
                 persistentButtons[channelId] = messageMap
             }
         }
-        if (bsonDocument.contains("core")) {
-            val coreDoc = bsonDocument["core"]!!.asDocument();
-            core.fromBson(coreDoc)
-        }
-        if (bsonDocument.contains("useful")) {
-            val usefulDoc = bsonDocument["useful"]!!.asDocument();
-            useful.fromBson(usefulDoc)
-        }
-        if (bsonDocument.contains("moderation")) {
-            val moderationDoc = bsonDocument["moderation"]!!.asDocument()
-            moderation.fromBson(moderationDoc)
-        }
-        if (bsonDocument.contains("management")) {
-            val managementDoc = bsonDocument["management"]!!.asDocument()
-            management.fromBson(managementDoc)
-        }
-        if (bsonDocument.contains("music")) {
-            val musicDoc = bsonDocument["music"]!!.asDocument()
-            music.fromBson(musicDoc)
-        }
+        bsonDocument.ifContainsDocument("core") { core.fromBson(it) }
+        bsonDocument.ifContainsDocument("useful") { useful.fromBson(it) }
+        bsonDocument.ifContainsDocument("moderation") { moderation.fromBson(it) }
+        bsonDocument.ifContainsDocument("management") { management.fromBson(it) }
+        bsonDocument.ifContainsDocument("music") { music.fromBson(it) }
     }
 
 }
