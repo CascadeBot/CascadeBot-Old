@@ -11,7 +11,10 @@ import de.bild.codec.annotations.Id
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
+import org.bson.BsonArray
+import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.data.database.BsonObject
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
@@ -36,7 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Function
 import kotlin.concurrent.getOrSet
 
-class GuildData(@field:Id val guildId: Long) {
+class GuildData(@field:Id val guildId: Long): BsonObject {
 
     @Transient
     @kotlin.jvm.Transient
@@ -177,6 +180,46 @@ class GuildData(@field:Id val guildId: Long) {
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
             return output
         }
+    }
+
+    override fun fromBson(bsonDocument: BsonDocument) {
+        if (bsonDocument.contains("enabledFlags")) {
+            enabledFlags.clear();
+            for (bsonFlag in bsonDocument["enabledFlags"]!!.asArray()) {
+                val flag: String = bsonFlag.asString().value
+                enabledFlags.add(Flag.valueOf(flag))
+            }
+        }
+        if (bsonDocument.contains("mutedRoleId")) {
+            mutedRoleId = bsonDocument["mutedRoleId"]!!.asNumber().longValue();
+        }
+        if (bsonDocument.contains("persistentButtons")) {
+            val buttons = bsonDocument["persistentButtons"]!!.asArray()
+            persistentButtons.clear()
+            for (entry in buttons) {
+                val channelId = entry.asDocument()["key"]!!.asNumber().longValue()
+                val messages = entry.asDocument()["value"]!!.asArray();
+                val messageMap = HashMap<Long, PersistentButtonGroup>()
+                for (message in messages) {
+                    val messageId = message.asDocument()["key"]!!.asNumber().longValue()
+                    val buttonObject = message.asDocument()["value"]!!.asDocument();
+                    val group = PersistentButtonGroup(buttonObject["ownerId"]!!.asNumber().longValue(), buttonObject["channelId"]!!.asNumber().longValue(), buttonObject["guildId"]!!.asNumber().longValue())
+                    group.fromBson(buttonObject);
+                    messageMap[messageId] = group;
+                }
+                persistentButtons[channelId] = messageMap
+            }
+        }
+        val coreDoc = bsonDocument["core"]!!.asDocument();
+        core.fromBson(coreDoc)
+        val usefulDoc = bsonDocument["useful"]!!.asDocument();
+        useful.fromBson(usefulDoc)
+        val moderationDoc = bsonDocument["moderation"]!!.asDocument()
+        moderation.fromBson(moderationDoc)
+        val managementDoc = bsonDocument["management"]!!.asDocument()
+        management.fromBson(managementDoc)
+        val musicDoc = bsonDocument["music"]!!.asDocument()
+        music.fromBson(musicDoc)
     }
 
 }

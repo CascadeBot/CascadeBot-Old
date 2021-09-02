@@ -227,7 +227,7 @@ public class CascadeBot {
                     GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument());
                 } else if (guildDataChangeStreamDocument.getUpdateDescription() != null) {
                     GuildData currentData = GuildDataManager.getGuildData(guildDataChangeStreamDocument.getDocumentKey().get("_id").asNumber().longValue());
-                    
+
                 }
             }, (result, throwable) -> {
                 if (throwable != null) {

@@ -10,8 +10,10 @@ import club.minnced.discord.webhook.send.WebhookMessageBuilder
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Icon
 import net.dv8tion.jda.api.entities.TextChannel
+import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.data.database.BsonObject
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
@@ -24,7 +26,7 @@ import java.util.Date
 import java.util.function.Consumer
 
 @SettingsContainer(module = Module.MODERATION)
-class GuildSettingsModeration {
+class GuildSettingsModeration : BsonObject {
 
     var writeMode = false
 
@@ -38,8 +40,6 @@ class GuildSettingsModeration {
 
     @Setting
     var muteRoleName = "Muted"
-
-    
 
     fun getRespectBanOrKickHierarchy(): Boolean {
         return respectBanOrKickHierarchy
@@ -137,8 +137,6 @@ class GuildSettingsModeration {
     }
 
     class ChannelModlogEventsInfo {
-
-        
 
         private val events: MutableSet<ModlogEvent> = LinkedHashSet()
         internal var webhookId: Long = 0
@@ -307,6 +305,10 @@ class GuildSettingsModeration {
             }
 
         }
+    }
+
+    override fun fromBson(bsonDocument: BsonDocument) {
+
     }
 
 }

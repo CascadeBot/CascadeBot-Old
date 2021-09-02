@@ -1,10 +1,12 @@
 package org.cascadebot.cascadebot.data.objects
 
 import com.google.common.collect.Sets
+import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
+import org.cascadebot.cascadebot.data.database.BsonObject
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 import java.lang.UnsupportedOperationException
@@ -12,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 
 @SettingsContainer(module = Module.CORE)
-class GuildSettingsCore {
+class GuildSettingsCore : BsonObject {
 
     @Setting
     var mentionPrefix = false
@@ -139,5 +141,9 @@ class GuildSettingsCore {
     }
 
     //endregion
+
+    override fun fromBson(bsonDocument: BsonDocument) {
+
+    }
 
 }

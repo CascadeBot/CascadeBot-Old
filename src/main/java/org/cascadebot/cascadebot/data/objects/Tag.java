@@ -22,8 +22,6 @@ import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
 @AllArgsConstructor
 public class Tag extends PermissionObject {
 
-    
-
     // https://regex101.com/r/hlsgVW/1
     private static final Pattern TAG_PATTERN = Pattern.compile("\\{([A-z]+)(?::((?:,?\\w+)+))?}");
 

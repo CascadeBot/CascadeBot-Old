@@ -1,6 +1,9 @@
 package org.cascadebot.cascadebot.data.objects;
 
+import org.bson.BsonDocument;
 import org.cascadebot.cascadebot.commandmeta.Module;
+import org.cascadebot.cascadebot.data.database.BsonObject;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode;
 
 @SettingsContainer(module = Module.USEFUL)
-public class GuildSettingsUseful {
+public class GuildSettingsUseful implements BsonObject {
 
     private Map<String, TodoList> todoLists = new ConcurrentHashMap<>();
 
@@ -43,5 +46,10 @@ public class GuildSettingsUseful {
         return list;
     }
     //endregion
+
+    @Override
+    public void fromBson(@NotNull BsonDocument bsonDocument) {
+
+    }
 
 }

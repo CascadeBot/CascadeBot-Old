@@ -1,9 +1,11 @@
 package org.cascadebot.cascadebot.utils.buttons
 
+import org.bson.BsonDocument
+import org.cascadebot.cascadebot.data.database.BsonObject
 import java.util.ArrayList
 import java.util.stream.Collectors
 
-open class PersistentButtonGroup : ButtonGroup {
+open class PersistentButtonGroup : ButtonGroup, BsonObject {
     private val persistentButtons: MutableList<PersistentButton> = ArrayList()
 
     private constructor() : super(-1, -1, -1) {}
@@ -29,4 +31,12 @@ open class PersistentButtonGroup : ButtonGroup {
         persistentButtons.remove(persistentButton)
         super.removeButton(persistentButton.button)
     }
+
+    override fun fromBson(bsonDocument: BsonDocument) {
+        // TODO maybe implement everything else? It's not really needed though as it's handled in guild data
+        for (button in bsonDocument["persistentButtons"]!!.asArray()) {
+            persistentButtons.add(PersistentButton.valueOf(button.asString().value))
+        }
+    }
+
 }

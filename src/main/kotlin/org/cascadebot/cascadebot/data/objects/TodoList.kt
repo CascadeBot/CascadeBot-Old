@@ -16,8 +16,6 @@ import org.cascadebot.cascadebot.utils.buttons.PersistentButtonGroup
 
 class TodoList(val ownerId: Long) {
 
-    
-
     val items: MutableList<TodoListItem> = ArrayList()
     var messageId: Long = -1
     var channelId: Long = -1
