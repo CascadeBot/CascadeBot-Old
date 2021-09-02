@@ -32,10 +32,13 @@ import kotlin.concurrent.withLock
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.typeOf
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
+import org.cascadebot.cascadebot.utils.diff.DiffUtils
+import org.cascadebot.cascadebot.utils.diff.Difference
 import org.cascadebot.cascadebot.utils.ifContains
 import org.cascadebot.cascadebot.utils.ifContainsArray
 import org.cascadebot.cascadebot.utils.ifContainsDocument
 import org.cascadebot.cascadebot.utils.ifContainsLong
+import java.util.ArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.function.Function
 import kotlin.concurrent.getOrSet
@@ -227,20 +230,27 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
         }
         bsonDocument.ifContainsLong("mutedRoleId") { mutedRoleId = it }
         bsonDocument.ifContainsArray("persistentButtons") {
-            persistentButtons.clear()
+            persistentComponents.clear()
             for (entry in it) {
                 val channelId = entry.asDocument()["key"]!!.asNumber().longValue()
                 val messages = entry.asDocument()["value"]!!.asArray();
-                val messageMap = HashMap<Long, PersistentButtonGroup>()
+                val messageMap = HashMap<Long, List<List<PersistentComponent>>>()
                 for (message in messages) {
                     val messageId = message.asDocument()["key"]!!.asNumber().longValue()
-                    val buttonObject = message.asDocument()["value"]!!.asDocument();
-                    val group = PersistentButtonGroup(buttonObject["ownerId"]!!.asNumber().longValue(), buttonObject["channelId"]!!.asNumber().longValue(), buttonObject["guildId"]!!.asNumber().longValue())
-                    group.fromBson(buttonObject);
-                    messageMap[messageId] = group;
+                    val rowObj = message.asDocument()["value"]!!.asArray();
+                    val messageComp: MutableList<List<PersistentComponent>> = mutableListOf()
+                    for (rowBson in rowObj) {
+                        val rowComp: MutableList<PersistentComponent> = mutableListOf()
+                        for (compBson in rowBson.asArray()) {
+                            rowComp.add(PersistentComponent.valueOf(compBson.asString().value))
+                        }
+                        messageComp.add(rowComp)
+                    }
+                    messageMap[messageId] = messageComp
                 }
-                persistentButtons[channelId] = messageMap
+                persistentComponents[channelId] = messageMap
             }
+            loadComponents()
         }
         bsonDocument.ifContainsDocument("core") { core.fromBson(it) }
         bsonDocument.ifContainsDocument("useful") { useful.fromBson(it) }

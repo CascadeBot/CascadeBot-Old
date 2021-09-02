@@ -38,7 +38,7 @@ public class GroupPermissionMoveSubCommand extends SubCommand {
         }
 
         context.getData().write(guildData -> {
-        PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
+        PermissionCommandUtils.tryGetGroupFromString(context, context.getData(), context.getArg(0), group -> {
             if (context.getArgs().length > 1 && context.isArgInteger(1)) {
                 context.getData().getManagement().getPermissions().moveGroup(group, context.getArgAsInteger(1));
                 context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.move.moved", group.getName(), context.getArg(1)));

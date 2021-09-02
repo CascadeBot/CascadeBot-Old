@@ -106,7 +106,7 @@ public class EqualizerCommand extends MainCommand {
                 if (context.getData().getMusic().getPreserveEqualizer()) {
                 int finalGain = gain;
                 context.getData().write(guildData -> {
-                    guildData.getMusic().getEqualizerBands().replace(currentBand.get(), ((float) finalGain) / 20f);
+                    guildData.getMusic().getEqualizerBands().replace(currentBand, ((float) finalGain) / 20f);
                 });
                 }
             }
@@ -125,13 +125,6 @@ public class EqualizerCommand extends MainCommand {
 
             currentBands.clear();
             currentBands.add(newBand);
-            player.setBand(currentBand.get(), ((float) gain) / 20f);
-            if (context.getData().getMusic().getPreserveEqualizer()) {
-                int finalGain = gain;
-                context.getData().write(guildData -> {
-                    guildData.getMusic().getEqualizerBands().replace(currentBand.get(), ((float) finalGain) / 20f);
-                });
-            }
 
             CascadeSelectBox innerSelectBox = (CascadeSelectBox) context.getData().getComponentCache().get(channel.getIdLong()).get(message.getIdLong()).getRow(1).getComponents().get(0);
             message.editMessage(getEqualizerEmbed(player.getCurrentBands(), currentBands, runner.getUser(), context, innerSelectBox).build()).queue();
