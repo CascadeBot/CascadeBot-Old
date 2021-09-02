@@ -210,16 +210,26 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
                 persistentButtons[channelId] = messageMap
             }
         }
-        val coreDoc = bsonDocument["core"]!!.asDocument();
-        core.fromBson(coreDoc)
-        val usefulDoc = bsonDocument["useful"]!!.asDocument();
-        useful.fromBson(usefulDoc)
-        val moderationDoc = bsonDocument["moderation"]!!.asDocument()
-        moderation.fromBson(moderationDoc)
-        val managementDoc = bsonDocument["management"]!!.asDocument()
-        management.fromBson(managementDoc)
-        val musicDoc = bsonDocument["music"]!!.asDocument()
-        music.fromBson(musicDoc)
+        if (bsonDocument.contains("core")) {
+            val coreDoc = bsonDocument["core"]!!.asDocument();
+            core.fromBson(coreDoc)
+        }
+        if (bsonDocument.contains("useful")) {
+            val usefulDoc = bsonDocument["useful"]!!.asDocument();
+            useful.fromBson(usefulDoc)
+        }
+        if (bsonDocument.contains("moderation")) {
+            val moderationDoc = bsonDocument["moderation"]!!.asDocument()
+            moderation.fromBson(moderationDoc)
+        }
+        if (bsonDocument.contains("management")) {
+            val managementDoc = bsonDocument["management"]!!.asDocument()
+            management.fromBson(managementDoc)
+        }
+        if (bsonDocument.contains("music")) {
+            val musicDoc = bsonDocument["music"]!!.asDocument()
+            music.fromBson(musicDoc)
+        }
     }
 
 }
