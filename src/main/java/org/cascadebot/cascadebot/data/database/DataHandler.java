@@ -1,14 +1,9 @@
 package org.cascadebot.cascadebot.data.database;
 
 import com.mongodb.client.model.Updates;
-import com.mongodb.client.model.changestream.ChangeStreamDocument;
-import com.mongodb.client.model.changestream.UpdateDescription;
-import org.bson.BsonArray;
-import org.bson.BsonDocument;
-import org.bson.BsonValue;
-import org.bson.codecs.DecoderContext;
+import de.bild.codec.annotations.Transient;
+import org.apache.commons.lang3.ClassUtils;
 import org.bson.conversions.Bson;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.utils.lists.CollectionDiff;
 
 import java.io.ByteArrayInputStream;
@@ -21,16 +16,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class DataHandler<T> {
 
@@ -42,11 +34,11 @@ public class DataHandler<T> {
         if (original == null) {
             return null;
         }
-        System.out.println(original.getClass().getName());
-        if (original.getClass().isPrimitive()) {
+        //System.out.println(original.getClass().getName());
+        if (ClassUtils.isPrimitiveOrWrapper(original.getClass())) {
             return original; // TODO does this work?
         } else if (original.getClass().isArray()) {
-            throw new UnsupportedOperationException();
+            return original;
         } else if (original instanceof Map) {
             Map<?, ?> map = (Map<?, ?>) original;
             Map newMap = (Map) original.getClass().getDeclaredConstructor().newInstance();
@@ -61,7 +53,7 @@ public class DataHandler<T> {
                 newCol.add(deepCopyRec(obj));
             }
             return (Y) newCol;
-        } else if (original instanceof Serializable) {
+        } /*else if (original instanceof Serializable) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
             objectOutputStream.writeObject(original);
@@ -69,7 +61,7 @@ public class DataHandler<T> {
             ObjectInputStream objectInputStream = new ObjectInputStream(in);
             Y copy = (Y) objectInputStream.readObject();
             return copy;
-        } else {
+        }*/ else {
             Constructor constructor;
             try {
                 constructor = (Constructor) original.getClass().getDeclaredConstructor();
@@ -79,7 +71,7 @@ public class DataHandler<T> {
             constructor.setAccessible(true);
             Y obj = (Y) constructor.newInstance();
 
-            for(Field field : original.getClass().getDeclaredFields()) {
+            for (Field field : original.getClass().getDeclaredFields()) {
                 makeAccessible(field);
                 if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
                     if (!Modifier.isStatic(field.getModifiers())) {
@@ -174,17 +166,18 @@ public class DataHandler<T> {
             updates.add(Updates.set(objPath, changed)); // TODO look into updating individual objects in array (UpdateOptions?)
         } else {
             for (Field field : original.getClass().getDeclaredFields()) {
+                if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers()) || field.isAnnotationPresent(Transient.class)) {
+                    continue;
+                }
                 makeAccessible(field);
                 String name = field.getName();
                 Object orig = field.get(original);
-                Field changedField = changed.getClass().getDeclaredField(name);
-                makeAccessible(changedField);
-                Object chan = changedField.get(changed);
+                Object chan = field.get(changed);
                 if (orig == null && chan != null) {
                     updates.add(Updates.set(path + name, chan));
                 } else if (chan == null && orig != null) {
                     updates.add(Updates.unset(path + name));
-                }  else {
+                } else {
                     diffUpdateRec(orig, chan, path + name + ".", updates);
                 }
             }
