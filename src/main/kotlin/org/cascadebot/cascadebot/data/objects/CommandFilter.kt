@@ -13,6 +13,7 @@ import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.database.BsonObject
+import org.cascadebot.cascadebot.data.database.DataHandler
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.messaging.MessageType
@@ -234,6 +235,10 @@ class CommandFilter(val name: String) : BsonObject {
                 roleIds.add(idBson.asNumber().longValue())
             }
         }
+    }
+
+    override fun handleRemove(tree: DataHandler.RemovedTree) {
+
     }
 
 }
