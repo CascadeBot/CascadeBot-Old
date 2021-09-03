@@ -333,9 +333,39 @@
       "_type": "optional"
     }
   },
+  "lock": {
+    "channel": {
+      "_type": "required",
+      "role*": {
+        "_aliases": ["member"],
+        "_type": "required"
+      }
+    }
+  },
+  "templock*" : {
+    "duration" : {
+      "_type" : "required",
+      "channel": {
+        "_type": "required",
+        "role*": {
+          "_aliases": ["member"],
+          "_type": "required"
+        }
+      }
+    }
+  },
   "loop*": {
     "mode": {
       "_type": "optional"
+    }
+  },
+  "unlock": {
+    "channel": {
+      "_type": "required",
+      "role*": {
+        "_aliases": ["member"],
+        "_type": "required"
+      }
     }
   },
   "play*": {

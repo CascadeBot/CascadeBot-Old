@@ -44,7 +44,10 @@ object Messaging {
         return if (embed) {
             channel.sendMessage(MessagingObjects.getMessageTypeEmbedBuilder(type).setDescription(message).build()).submit()
         } else {
-            channel.sendMessage(MessagingObjects.getMessageTypeMessageBuilder(type).append(message).build()).submit()
+            channel.sendMessage(MessagingObjects.getMessageTypeMessageBuilder(type)
+                    .append(message)
+                    .denyMentions(Message.MentionType.EVERYONE, Message.MentionType.HERE, Message.MentionType.ROLE).build())
+                    .submit()
         }
     }
 
@@ -54,7 +57,10 @@ object Messaging {
         return if (embed) {
             channel.sendMessage(builder.setColor(type.color).build()).submit()
         } else {
-            channel.sendMessage(type.emoji + " " + FormatUtils.formatEmbed(builder.build())).submit()
+            channel.sendMessage(MessageBuilder()
+                    .denyMentions(Message.MentionType.EVERYONE, Message.MentionType.HERE, Message.MentionType.ROLE)
+                    .setContent(type.emoji + " " + FormatUtils.formatEmbed(builder.build()))
+                    .build()).submit()
         }
     }
 

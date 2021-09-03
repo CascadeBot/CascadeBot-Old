@@ -127,16 +127,40 @@
       "description": "Sets the slowmode of a channel",
       "time_exceeded": "Maximum time for slowmode of channels is 6 hours",
       "success": "Slowmode set to {0} in {1}",
-      "reset" : {
-        "command" : "reset",
+      "reset": {
+        "command": "reset",
         "description": "Resets the slowmode to off",
-        "reset_success" : "Slowmode reset in {0}"
+        "reset_success": "Slowmode reset in {0}"
       }
     },
-    "tempslowmode":{
-      "command" : "tempslowmode",
-      "description" : "Sets the slowmode of a channel temporarily",
-      "success" : "Slowmode set to {0} in {1}\nThis will be reset in {2}"
+    "tempslowmode": {
+      "command": "tempslowmode",
+      "description": "Sets the slowmode of a channel temporarily",
+      "success": "Slowmode set to {0} in {1}\nThis will be reset in {2}"
+    },
+    "lock": {
+      "command": "lock",
+      "description": "Locks a channel for a member, role or everyone",
+      "success_role": "The channel `{0}` has been locked for the role {1}",
+      "success_member": "The channel `{0}` has been locked for the member {1}",
+      "already_locked_role": "The channel `{0}` is already locked for the role {1}!",
+      "already_locked_member": "The channel `{0}` is already locked for the member {1}!",
+      "invalid_argument": "Could not find a channel, role or member matching `{0}`"
+    },
+    "templock": {
+      "command": "templock",
+      "descripton": "Locks a channel for a member, role or everyone for a given amount of time",
+      "success_role": "The channel `{0}` has been locked for the role {1}\nThis will be reset in {2}",
+      "success_member": "The channel `{0}` has been locked for the member {1}\nThis will be reset in {2}"
+    },
+    "unlock": {
+      "command": "unlock",
+      "description": "Unlocks a channel for a member, role or everyone",
+      "success_role" : "The channel `{0}` has been unlocked for the role {1}",
+      "success_member" : "The channel `{0}` has been unlocked for the member {1}",
+      "failure_role": "The channel `{0}` is not locked for the role {1}",
+      "failure_member": "The channel `{0}` is not locked for the member {1}",
+      "invalid_argument": "Could not find a channel, role or member matching `{0}`"
     },
     "userinfo": {
       "command": "userinfo",
@@ -1673,11 +1697,13 @@
     "volume": "volume",
     "weight": "weight",
     "words": "words",
-    "filters#type#whitelist": {
-      "name": "whitelist"
+    "guild#flag#list": {
+      "name": "list",
+      "description": "Lists all flags."
     },
-    "filters#operator#or": {
-      "name": "or"
+    "guild#save#all": {
+      "name": "all",
+      "description": "Saves all guilds."
     },
     "userperms#list#user#permissions": {
       "name": "permissions",
@@ -1687,13 +1713,8 @@
       "name": "groups",
       "description": "Lists the groups a user has."
     },
-    "guild#save#all": {
-      "name": "all",
-      "description": "Saves all guilds."
-    },
-    "guild#flag#list": {
-      "name": "list",
-      "description": "Lists all flags."
+    "color#red#green#blue": {
+      "description": "Gets the information of a colour from the red, green and blue values."
     },
     "random#max": {
       "description": "Random number between 1 and the max you specify."
@@ -1701,8 +1722,11 @@
     "random#min#max": {
       "description": "Random number between the min and the max."
     },
-    "color#red#green#blue": {
-      "description": "Gets the information of a colour from the red, green and blue values."
+    "filters#operator#or": {
+      "name": "or"
+    },
+    "filters#type#whitelist": {
+      "name": "whitelist"
     }
   },
   "utils": {

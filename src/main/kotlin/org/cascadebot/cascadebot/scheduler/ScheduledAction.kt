@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import org.bson.types.ObjectId
 import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.data.managers.Status
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -82,6 +83,12 @@ data class ScheduledAction(
         // Mongo Constructor
         @Suppress("unused")
         private constructor() : this(0L, 0)
+    }
+
+    class LockActionData(var targetChannelID: Long, var oldPermission: Status, var targetMemberID: Long = 0, var targetRoleID: Long = 0) : ActionData {
+        // Mongo Constructor
+        @Suppress("unused")
+        private constructor() : this(0L, Status.NEUTRAL, 0L, 0L)
     }
 
 }

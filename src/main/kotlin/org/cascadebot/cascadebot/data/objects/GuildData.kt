@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Locale
+import org.cascadebot.cascadebot.data.managers.LockPermissionState
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.interactions.PersistentComponent
 import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow
@@ -43,6 +44,9 @@ class GuildData(@field:Id val guildId: Long) {
     val management = GuildSettingsManagement()
     val music = GuildSettingsMusic()
     //endregion
+
+    // <Channel ID, <Target ID, >>
+    var lockedChannels: MutableMap<String, MutableMap<String, LockPermissionState>> = mutableMapOf()
 
     //region Transient fields
     @Transient
