@@ -16,6 +16,7 @@ import org.bson.BsonValue;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
 import org.cascadebot.cascadebot.data.database.BsonObject;
+import org.cascadebot.cascadebot.data.database.DataHandler;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.permissions.objects.Group;
@@ -256,5 +257,10 @@ public class GuildPermissions implements BsonObject {
                 users.put(id, user);
             }
         }
+    }
+
+    @Override
+    public void handleRemove(@NotNull DataHandler.RemovedTree tree) {
+
     }
 }

@@ -7,8 +7,10 @@ import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.database.BsonObject
+import org.cascadebot.cascadebot.data.database.DataHandler
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
+import org.cascadebot.cascadebot.utils.ifContains
 import org.cascadebot.cascadebot.utils.ifContainsArray
 import org.cascadebot.cascadebot.utils.ifContainsBoolean
 import org.cascadebot.cascadebot.utils.ifContainsString
@@ -162,6 +164,10 @@ class GuildSettingsCore : BsonObject {
                 .map { string -> Module.valueOf(string) } // Map each value to a Module enum
                 .forEach { enabledModules.add(it) }
         }
+    }
+
+    override fun handleRemove(tree: DataHandler.RemovedTree) {
+
     }
 
 }

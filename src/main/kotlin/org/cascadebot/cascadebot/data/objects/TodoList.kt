@@ -9,6 +9,7 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.UnicodeConstants
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.database.BsonObject
+import org.cascadebot.cascadebot.data.database.DataHandler
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.messaging.Messaging
 import org.cascadebot.cascadebot.messaging.MessagingObjects
@@ -58,8 +59,6 @@ class TodoList(val ownerId: Long) : BsonObject {
     }
 
     class TodoListItem {
-
-        
 
         var done = false
         var text: String? = null
@@ -198,5 +197,9 @@ class TodoList(val ownerId: Long) : BsonObject {
             }
         }
         CascadeBot.INS.client.getTextChannelById(channelId)!!.editMessageById(messageId, todoListMessage).queue()
+    }
+
+    override fun handleRemove(tree: DataHandler.RemovedTree) {
+
     }
 }

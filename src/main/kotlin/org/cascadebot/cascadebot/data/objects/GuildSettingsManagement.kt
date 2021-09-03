@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.data.objects
 import org.bson.BsonDocument
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.database.BsonObject
+import org.cascadebot.cascadebot.data.database.DataHandler
 import org.cascadebot.cascadebot.utils.GuildDataUtils
 import org.cascadebot.cascadebot.utils.GuildDataUtils.assertWriteMode
 import org.cascadebot.cascadebot.utils.ifContains
@@ -88,6 +89,19 @@ class GuildSettingsManagement : BsonObject {
             for (bsonRole in it) {
                 autoRoles.add(bsonRole.asNumber().longValue())
             }
+        }
+    }
+
+    override fun handleRemove(tree: DataHandler.RemovedTree) {
+        tree.ifContains("tags") {
+            for (entry in tags.entries) {
+                it.ifContains(entry.key) {
+                    tags.remove(entry.key)
+                }
+            }
+        }
+        tree.ifContains("greetings") {
+            greetings.handleRemove(it)
         }
     }
 

@@ -15,6 +15,7 @@ import org.bson.BsonArray
 import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.database.BsonObject
+import org.cascadebot.cascadebot.data.database.DataHandler
 import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
@@ -257,6 +258,18 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
         bsonDocument.ifContainsDocument("moderation") { moderation.fromBson(it) }
         bsonDocument.ifContainsDocument("management") { management.fromBson(it) }
         bsonDocument.ifContainsDocument("music") { music.fromBson(it) }
+    }
+
+    override fun handleRemove(tree: DataHandler.RemovedTree) {
+        tree.ifContains("useful") {
+            useful.handleRemove(it)
+        }
+        tree.ifContains("moderation") {
+            moderation.handleRemove(it)
+        }
+        tree.ifContains("management") {
+            management.handleRemove(it)
+        }
     }
 
 }

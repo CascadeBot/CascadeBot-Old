@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.data.objects
 import org.bson.BsonDocument
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.database.BsonObject
+import org.cascadebot.cascadebot.data.database.DataHandler
 import org.cascadebot.cascadebot.utils.ifContainsArray
 import org.cascadebot.cascadebot.utils.ifContainsBoolean
 import org.cascadebot.cascadebot.utils.ifContainsInt
@@ -44,6 +45,10 @@ class GuildSettingsMusic : BsonObject {
                 equalizerBands[doc["key"]!!.asNumber().intValue()] = doc["value"]!!.asDouble().value.toFloat()
             }
         }
+    }
+
+    override fun handleRemove(tree: DataHandler.RemovedTree) {
+
     }
 
 }

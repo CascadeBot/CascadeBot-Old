@@ -23,11 +23,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DataHandler<T> {
 
@@ -179,6 +182,46 @@ public class DataHandler<T> {
         }
 
         return updates;
+    }
+
+    public static class RemovedTree {
+        private String name;
+        public List<RemovedTree> children = new ArrayList<>();
+
+        public RemovedTree(String name) {
+            this.name = name;
+        }
+
+        public RemovedTree getChild(String name) {
+            return children.stream().filter(removedTree -> removedTree.name.equals(name)).findFirst().orElse(null);
+        }
+
+        public static RemovedTree buildTree(String name, List<String> paths) {
+            Map<String, List<String>> map = new HashMap<>();
+            RemovedTree tree = new RemovedTree(name);
+            if (paths.size() == 0) {
+                return tree;
+            }
+            for (String path : paths) {
+                String[] split = path.split("\\.");
+                String newPath = String.join(".", Arrays.copyOfRange(split, 1, split.length - 1));
+                if (newPath.isEmpty()) {
+                    map.put(split[0], new ArrayList<>());
+                    continue;
+                }
+                if (map.containsKey(split[0])) {
+                    map.get(split[0]).add(newPath);
+                } else {
+                    List<String> strings = new ArrayList<>();
+                    strings.add(newPath);
+                    map.put(split[0], strings);
+                }
+            }
+            for (Map.Entry<String, List<String>> entry : map.entrySet()) {
+                tree.children.add(RemovedTree.buildTree(entry.getKey(), entry.getValue()));
+            }
+            return tree;
+        }
     }
 
 }

@@ -14,6 +14,7 @@ import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.database.BsonObject
+import org.cascadebot.cascadebot.data.database.DataHandler
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
@@ -133,11 +134,11 @@ class GuildSettingsModeration : BsonObject {
         modlogEvents.put(channel.idLong.toString(), eventsInfo)
         channel.createWebhook(CascadeBot.INS.client.selfUser.name)
             .setAvatar(Icon.from(URL(CascadeBot.INS.client.selfUser.avatarUrl).openStream())).queue { webhook ->
-            eventsInfo.webhookId = webhook.idLong
-            eventsInfo.webhookToken = webhook.token!!
-            eventsInfo.buildWebhookClient()
-            consumer.accept(eventsInfo)
-        }
+                eventsInfo.webhookId = webhook.idLong
+                eventsInfo.webhookToken = webhook.token!!
+                eventsInfo.buildWebhookClient()
+                consumer.accept(eventsInfo)
+            }
     }
 
     class ChannelModlogEventsInfo : BsonObject {
@@ -327,6 +328,10 @@ class GuildSettingsModeration : BsonObject {
                 id = it.asNumber().intValue()
             }
         }
+
+        override fun handleRemove(tree: DataHandler.RemovedTree) {
+
+        }
     }
 
     override fun fromBson(bsonDocument: BsonDocument) {
@@ -341,6 +346,16 @@ class GuildSettingsModeration : BsonObject {
                 } else {
                     val eventInfo = ChannelModlogEventsInfo()
                     eventInfo.fromBson(entry.value.asDocument())
+                }
+            }
+        }
+    }
+
+    override fun handleRemove(tree: DataHandler.RemovedTree) {
+        tree.ifContains("modlogEvents") {
+            for (entry in modlogEvents.entries) {
+                it.ifContains(entry.key) {
+                    modlogEvents.remove(entry.key)
                 }
             }
         }

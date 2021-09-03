@@ -39,6 +39,7 @@ import org.bson.codecs.DecoderContext;
 import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.database.DataHandler;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
@@ -227,7 +228,12 @@ public class CascadeBot {
                     GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument());
                 } else if (guildDataChangeStreamDocument.getUpdateDescription() != null) {
                     GuildData currentData = GuildDataManager.getGuildData(guildDataChangeStreamDocument.getDocumentKey().get("_id").asNumber().longValue());
-
+                    if (guildDataChangeStreamDocument.getUpdateDescription().getUpdatedFields() != null) {
+                        currentData.fromBson(guildDataChangeStreamDocument.getUpdateDescription().getUpdatedFields());
+                    }
+                    if (guildDataChangeStreamDocument.getUpdateDescription().getRemovedFields() != null) {
+                        currentData.handleRemove(DataHandler.RemovedTree.buildTree("guild", guildDataChangeStreamDocument.getUpdateDescription().getRemovedFields()));
+                    }
                 }
             }, (result, throwable) -> {
                 if (throwable != null) {

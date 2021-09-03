@@ -6,7 +6,9 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent
 import org.bson.BsonDocument
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.database.BsonObject
+import org.cascadebot.cascadebot.data.database.DataHandler
 import org.cascadebot.cascadebot.data.language.Language
+import org.cascadebot.cascadebot.utils.ifContains
 import org.cascadebot.cascadebot.utils.ifContainsDocument
 import org.cascadebot.cascadebot.utils.ifContainsLong
 import org.cascadebot.cascadebot.utils.lists.WeightedList
@@ -77,6 +79,12 @@ class Greetings : BsonObject {
         }
         bsonDocument.ifContainsLong("welcomeChannelId") {
             welcomeChannelId = it
+        }
+    }
+
+    override fun handleRemove(tree: DataHandler.RemovedTree) {
+        tree.ifContains("welcomeChannelId") {
+            welcomeChannelId = null
         }
     }
 

@@ -9,6 +9,6 @@ public interface BsonObject {
 
     void fromBson(@NotNull BsonDocument bsonDocument);
 
-    //void handleRemove(@NotNull List<String> paths); // TODO not list string
+    void handleRemove(@NotNull DataHandler.RemovedTree tree);
 
 }

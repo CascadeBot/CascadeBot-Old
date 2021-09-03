@@ -4,6 +4,8 @@ import org.bson.BsonDocument;
 import org.bson.BsonValue;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.database.BsonObject;
+import org.cascadebot.cascadebot.data.database.DataHandler;
+import org.cascadebot.cascadebot.utils.RemovedTreeUtilsKt;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -63,6 +65,19 @@ public class GuildSettingsUseful implements BsonObject {
                 }
             }
         }
+    }
+
+    @Override
+    public void handleRemove(@NotNull DataHandler.RemovedTree tree) {
+        RemovedTreeUtilsKt.ifContains(tree, "todoLists", (child) -> {
+            for (Map.Entry<String, TodoList> entry : todoLists.entrySet()) {
+                RemovedTreeUtilsKt.ifContains(child, entry.getKey(), (nothing) -> {
+                    todoLists.remove(entry.getKey());
+                    return null;
+                });
+            }
+            return null;
+        });
     }
 
 }

@@ -14,6 +14,7 @@ import org.bson.BsonDocument;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.data.database.BsonObject;
+import org.cascadebot.cascadebot.data.database.DataHandler;
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;
 import org.jetbrains.annotations.NotNull;
 
@@ -94,5 +95,10 @@ public class Tag extends PermissionObject implements BsonObject {
         if (bsonDocument.containsKey("category")) {
             category = bsonDocument.get("category").asString().getValue();
         }
+    }
+
+    @Override
+    public void handleRemove(@NotNull DataHandler.RemovedTree tree) {
+
     }
 }
