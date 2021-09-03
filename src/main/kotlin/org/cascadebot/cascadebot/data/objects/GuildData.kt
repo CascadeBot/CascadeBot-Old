@@ -203,7 +203,7 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
             writeMode.set(true)
             writer.accept(copy);
             writeMode.set(false)
-            GuildDataManager.updateBson(guildId, CascadeBot.INS.databaseManager.guildDataDataHandler.diffUpdate(this, copy))
+            GuildDataManager.updateBson(guildId, CascadeBot.INS.databaseManager.guildDataDataHandler.diffUpdate(this, copy), copy)
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
         }
     }
@@ -214,7 +214,7 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
             writeMode.set(true)
             val output = writer.apply(copy);
             writeMode.set(false)
-            GuildDataManager.updateBson(guildId, CascadeBot.INS.databaseManager.guildDataDataHandler.diffUpdate(this, copy))
+            GuildDataManager.updateBson(guildId, CascadeBot.INS.databaseManager.guildDataDataHandler.diffUpdate(this, copy), copy)
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
             return output
         }

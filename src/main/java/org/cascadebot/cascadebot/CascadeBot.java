@@ -226,7 +226,7 @@ public class CascadeBot {
             changeStreamIterable.forEach(guildDataChangeStreamDocument -> {
                 if (guildDataChangeStreamDocument.getFullDocument() != null) {
                     GuildDataManager.replaceInternal(guildDataChangeStreamDocument.getFullDocument());
-                } else if (guildDataChangeStreamDocument.getUpdateDescription() != null) {
+                } else {
                     GuildData currentData = GuildDataManager.getGuildData(guildDataChangeStreamDocument.getDocumentKey().get("_id").asNumber().longValue());
                     if (guildDataChangeStreamDocument.getUpdateDescription().getUpdatedFields() != null) {
                         currentData.fromBson(guildDataChangeStreamDocument.getUpdateDescription().getUpdatedFields());
