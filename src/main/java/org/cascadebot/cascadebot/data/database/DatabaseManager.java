@@ -29,6 +29,7 @@ import org.bson.codecs.DocumentCodec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedDescription;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedField;
 import org.cascadebot.cascadebot.moderation.ModlogEmbedFooter;
@@ -66,6 +67,8 @@ public class DatabaseManager {
 
     @Getter
     private String databaseName;
+
+    private final DataHandler<GuildData> guildDataDataHandler = new DataHandler<>();
 
     public DatabaseManager(String username, char[] password, String databaseName, List<String> hosts, boolean ssl) {
         MongoClientSettings.Builder settingsBuilder = MongoClientSettings.builder();
@@ -143,4 +146,7 @@ public class DatabaseManager {
         return CODEC_REGISTRY;
     }
 
+    public DataHandler<GuildData> getGuildDataDataHandler() {
+        return guildDataDataHandler;
+    }
 }

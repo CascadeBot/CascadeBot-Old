@@ -58,6 +58,12 @@ public final class GuildDataManager {
         });
     }
 
+    public static void updateBson(long id, Bson update) {
+        CascadeBot.INS.getDatabaseManager().runAsyncTask(database -> {
+            database.getCollection(COLLECTION, GuildData.class).updateMany(eq("_id", id), update, new DebugLogCallback<>("Updated Guild ID " + id));
+        });
+    }
+
     public static void updateDiff(long id, Difference difference, GuildData newData) {
         CascadeBot.LOGGER.info(CascadeBot.getGSON().toJson(difference));
         List<Bson> bsonList = new ArrayList<>();

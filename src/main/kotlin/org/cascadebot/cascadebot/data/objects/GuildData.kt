@@ -199,24 +199,22 @@ class GuildData(@field:Id val guildId: Long): BsonObject {
     }
     fun write(writer: Consumer<GuildData>) {
         this.lock.writeLock().withLock {
-            val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
+            val copy: GuildData = CascadeBot.INS.databaseManager.guildDataDataHandler.deepCopy(this)
             writeMode.set(true)
             writer.accept(copy);
             writeMode.set(false)
-            val diff: Difference = DiffUtils.diff(this, copy)
-            GuildDataManager.updateDiff(guildId, diff, copy)
+            GuildDataManager.updateBson(guildId, CascadeBot.INS.databaseManager.guildDataDataHandler.diffUpdate(this, copy))
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
         }
     }
 
     fun <T : Any?> writeInline(writer: Function<GuildData, T>) : T {
         this.lock.writeLock().withLock {
-            val copy: GuildData = CascadeBot.getGSON().fromJson(CascadeBot.getGSON().toJson(this), this.javaClass)
+            val copy: GuildData = CascadeBot.INS.databaseManager.guildDataDataHandler.deepCopy(this)
             writeMode.set(true)
             val output = writer.apply(copy);
             writeMode.set(false)
-            val diff: Difference = DiffUtils.diff(this, copy)
-            GuildDataManager.updateDiff(guildId, diff, copy)
+            GuildDataManager.updateBson(guildId, CascadeBot.INS.databaseManager.guildDataDataHandler.diffUpdate(this, copy))
             //println(GsonBuilder().setPrettyPrinting().create().toJson(diff))
             return output
         }
