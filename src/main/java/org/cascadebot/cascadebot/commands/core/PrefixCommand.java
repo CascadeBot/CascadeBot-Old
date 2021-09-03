@@ -19,7 +19,9 @@ public class PrefixCommand extends CoreCommand {
 
             if (context.testForArg("reset")) {
                 if (context.hasPermission("prefix.reset")) {
-                    context.getCoreSettings().setPrefix(Config.INS.getDefaultPrefix());
+                    context.getData().write(guildData -> {
+                        guildData.getCore().setPrefix(Config.INS.getDefaultPrefix());
+                    });
                     context.getTypedMessaging().replyInfo(context.i18n("commands.prefix.prefix_reset", Config.INS.getDefaultPrefix()));
                 } else {
                     context.getUiMessaging().sendPermissionError("prefix.reset");
@@ -36,7 +38,9 @@ public class PrefixCommand extends CoreCommand {
                 context.getTypedMessaging().replyDanger(context.i18n("commands.prefix.prefix_too_long"));
                 return;
             }
-            context.getCoreSettings().setPrefix(newPrefix);
+            context.getData().write(guildData -> {
+                guildData.getCore().setPrefix(newPrefix);
+            });
             context.getTypedMessaging().replyInfo(context.i18n("commands.prefix.new_prefix", newPrefix));
         } else {
             context.getTypedMessaging().replyInfo(context.i18n("commands.prefix.current_prefix", context.getCoreSettings().getPrefix()));

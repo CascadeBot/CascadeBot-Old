@@ -80,6 +80,7 @@ public class DataHandler<T> {
             Y obj = (Y) constructor.newInstance();
 
             for(Field field : original.getClass().getDeclaredFields()) {
+                makeAccessible(field);
                 if (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers())) {
                     if (!Modifier.isStatic(field.getModifiers())) {
                         field.set(obj, field.get(original));
@@ -121,7 +122,12 @@ public class DataHandler<T> {
         if (original.equals(changed)) {
             return updates;
         }
-        String objPath = path.substring(0, path.lastIndexOf('.'));
+        String objPath;
+        if (!path.isEmpty()) {
+            objPath = path.substring(0, path.lastIndexOf('.'));
+        } else {
+            objPath = "";
+        }
         if (original.getClass().isPrimitive() || String.class.isAssignableFrom(original.getClass())) {
             updates.add(Updates.set(objPath, changed));
         } else if (original.getClass().isArray()) {
@@ -168,9 +174,12 @@ public class DataHandler<T> {
             updates.add(Updates.set(objPath, changed)); // TODO look into updating individual objects in array (UpdateOptions?)
         } else {
             for (Field field : original.getClass().getDeclaredFields()) {
+                makeAccessible(field);
                 String name = field.getName();
                 Object orig = field.get(original);
-                Object chan = changed.getClass().getDeclaredField(name).get(changed);
+                Field changedField = changed.getClass().getDeclaredField(name);
+                makeAccessible(changedField);
+                Object chan = changedField.get(changed);
                 if (orig == null && chan != null) {
                     updates.add(Updates.set(path + name, chan));
                 } else if (chan == null && orig != null) {
