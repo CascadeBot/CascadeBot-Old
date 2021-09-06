@@ -8,13 +8,12 @@ package org.cascadebot.cascadebot.commands.management
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import java.lang.reflect.Field
 
-class AutoRoleListSubCommand : SubCommand() {
+class AutoRoleListSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isNotEmpty()) {

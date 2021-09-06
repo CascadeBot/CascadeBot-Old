@@ -7,11 +7,11 @@ package org.cascadebot.cascadebot.commands.management.welcome
 
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 
-class WelcomeChannelSubCommand : SubCommand() {
+class WelcomeChannelSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.size > 1) {

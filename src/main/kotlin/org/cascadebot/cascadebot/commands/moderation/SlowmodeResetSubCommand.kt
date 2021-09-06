@@ -5,11 +5,11 @@ import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 
-class SlowmodeResetSubCommand : SubCommand() {
+class SlowmodeResetSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         var channel: TextChannel = context.channel

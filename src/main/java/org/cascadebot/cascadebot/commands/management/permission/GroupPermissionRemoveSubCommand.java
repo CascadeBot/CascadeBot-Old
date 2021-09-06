@@ -8,11 +8,11 @@ package org.cascadebot.cascadebot.commands.management.permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
-public class GroupPermissionRemoveSubCommand extends SubCommand {
+public class GroupPermissionRemoveSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

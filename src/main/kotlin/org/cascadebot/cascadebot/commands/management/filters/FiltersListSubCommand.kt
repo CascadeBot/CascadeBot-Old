@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.commands.management.filters
 
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.utils.toCapitalized
 import org.cascadebot.cascadebot.utils.toSentenceCase
 import org.cascadebot.cascadebot.utils.toTitleCase
 
-class FiltersListSubCommand : SubCommand() {
+class FiltersListSubCommand : DeprecatedSubCommand() {
 
     private val FILTERS_LISTED: Int = 5
 

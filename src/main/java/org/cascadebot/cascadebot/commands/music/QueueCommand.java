@@ -13,7 +13,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadePlayer;
 import org.cascadebot.cascadebot.music.TrackData;
@@ -87,7 +87,7 @@ public class QueueCommand extends MainCommand {
     }
 
     @Override
-    public Set<SubCommand> subCommands() {
+    public Set<DeprecatedSubCommand> subCommands() {
         return Set.of(new QueueSaveSubCommand(), new QueueLoadSubCommand(), new QueueMoveSubCommand(), new QueueRemoveSubCommand());
     }
 

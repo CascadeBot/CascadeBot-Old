@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.Flag;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -23,7 +23,7 @@ import org.cascadebot.shared.Regex;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class GuildFlagSubCommand extends SubCommand {
+public class GuildFlagSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

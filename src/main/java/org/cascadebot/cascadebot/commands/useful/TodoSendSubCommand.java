@@ -3,12 +3,12 @@ package org.cascadebot.cascadebot.commands.useful;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.data.objects.TodoList;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
-public class TodoSendSubCommand extends SubCommand {
+public class TodoSendSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

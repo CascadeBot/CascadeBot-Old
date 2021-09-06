@@ -7,14 +7,14 @@ package org.cascadebot.cascadebot.commands.management.filters
 
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.data.objects.CommandFilter
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.language.LanguageUtils
 import org.cascadebot.cascadebot.utils.toTitleCase
 
-class FiltersOperatorSubCommand : SubCommand() {
+class FiltersOperatorSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isEmpty()) {

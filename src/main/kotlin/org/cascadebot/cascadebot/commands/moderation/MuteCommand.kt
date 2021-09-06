@@ -11,7 +11,7 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
@@ -48,7 +48,7 @@ class MuteCommand : MainCommand() {
 
     override fun module(): Module = Module.MODERATION
 
-    override fun subCommands(): Set<SubCommand> = setOf(MuteRoleSubCommand(), MuteChannelSetupSubCommand())
+    override fun subCommands(): Set<DeprecatedSubCommand> = setOf(MuteRoleSubCommand(), MuteChannelSetupSubCommand())
 
     override fun permission(): CascadePermission = CascadePermission.of("mute", false, Permission.MANAGE_ROLES)
 }

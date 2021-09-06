@@ -7,12 +7,12 @@ package org.cascadebot.cascadebot.commands.management.welcome
 
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
-class WelcomeDMRemoveSubCommand : SubCommand() {
+class WelcomeDMRemoveSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.size != 1) {

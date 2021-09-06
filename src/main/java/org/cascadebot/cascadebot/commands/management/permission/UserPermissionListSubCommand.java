@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.permissions.objects.User;
@@ -21,7 +21,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserPermissionListSubCommand extends SubCommand {
+public class UserPermissionListSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

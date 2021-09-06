@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.commands.management.welcome
 
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
@@ -16,7 +16,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import kotlin.math.round
 import kotlin.math.roundToInt
 
-class WelcomeWeightSubCommand : SubCommand() {
+class WelcomeWeightSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.size == 1 || context.args.size > 2) {

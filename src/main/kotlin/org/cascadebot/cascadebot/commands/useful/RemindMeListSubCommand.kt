@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.commands.useful
 import com.ibm.icu.text.DateFormat
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
@@ -21,7 +21,7 @@ import java.time.Duration
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-class RemindMeListSubCommand : SubCommand() {
+class RemindMeListSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         val actions = ScheduledActionManager.scheduledActions.keys.filter {

@@ -7,10 +7,10 @@ package org.cascadebot.cascadebot.commands.management.filters
 
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
-class FiltersDisableSubCommand : SubCommand() {
+class FiltersDisableSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isEmpty()) {

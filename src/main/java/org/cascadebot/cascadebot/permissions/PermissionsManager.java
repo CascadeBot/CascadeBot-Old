@@ -10,6 +10,7 @@ import io.github.binaryoverload.JSONConfig;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedExecutableCommand;
 import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
@@ -65,7 +66,7 @@ public class PermissionsManager {
                 continue;
             }
             registerPermission(command.permission());
-            for (ExecutableCommand subCommand : command.subCommands()) {
+            for (DeprecatedExecutableCommand subCommand : command.subCommands()) {
                 if (subCommand.permission() == null) {
                     continue;
                 }
@@ -154,19 +155,19 @@ public class PermissionsManager {
     }
 
     public boolean isAuthorised(ExecutableCommand command, GuildData guildData, Member member) {
-        if (command instanceof RestrictedCommand) {
+        /*if (command instanceof RestrictedCommand) {
             SecurityLevel userLevel = getUserSecurityLevel(member.getIdLong());
             if (userLevel == null) {
                 return false;
             }
             SecurityLevel levelToCheck = ((RestrictedCommand) command).commandLevel();
             return userLevel.isAuthorised(levelToCheck);
-        } else {
-            if (command.permission() == null) {
+        } else {*/
+            if (command.getPermission() == null) {
                 return true;
             }
-            return guildData.getManagement().getPermissions().hasPermission(member, command.permission(), guildData.getCore());
-        }
+            return guildData.getManagement().getPermissions().hasPermission(member, CascadePermission.of(command.getPermission(), false) /* TODO fix this */, guildData.getCore());
+        //}
         // return false;
     }
 

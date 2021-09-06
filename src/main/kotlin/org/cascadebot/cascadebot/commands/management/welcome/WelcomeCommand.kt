@@ -9,18 +9,13 @@ import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
-import org.cascadebot.cascadebot.messaging.MessageType
-import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.pagination.Page
-import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 import org.cascadebot.cascadebot.utils.placeholders.getPlaceholderUsagePage
-import org.cascadebot.cascadebot.utils.toPercentage
-import org.cascadebot.cascadebot.utils.truncate
 
 class WelcomeCommand : MainCommand() {
 
@@ -44,6 +39,6 @@ class WelcomeCommand : MainCommand() {
         )
     }
 
-    override fun subCommands(): Set<SubCommand> = setOf(WelcomeAddSubCommand(), WelcomeChannelSubCommand(), WelcomeClearSubCommand(), WelcomeRemoveSubCommand(), WelcomeWeightSubCommand(), WelcomeListSubCommand())
+    override fun subCommands(): Set<DeprecatedSubCommand> = setOf(WelcomeAddSubCommand(), WelcomeChannelSubCommand(), WelcomeClearSubCommand(), WelcomeRemoveSubCommand(), WelcomeWeightSubCommand(), WelcomeListSubCommand())
 
 }

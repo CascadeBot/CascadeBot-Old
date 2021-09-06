@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.VoiceChannel
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.Messaging
 import org.cascadebot.cascadebot.permissions.CascadePermission
@@ -22,7 +22,7 @@ import org.cascadebot.cascadebot.utils.ConfirmUtils
 import org.cascadebot.cascadebot.utils.getMutedRole
 import java.util.concurrent.CompletableFuture
 
-class MuteChannelSetupSubCommand : SubCommand() {
+class MuteChannelSetupSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (!context.selfMember.hasPermission(Permission.MANAGE_CHANNEL)) {

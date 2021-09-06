@@ -9,14 +9,14 @@ import com.sedmelluq.discord.lavaplayer.filter.equalizer.Equalizer;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class EqualizerResetSubCommand extends SubCommand {
+public class EqualizerResetSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

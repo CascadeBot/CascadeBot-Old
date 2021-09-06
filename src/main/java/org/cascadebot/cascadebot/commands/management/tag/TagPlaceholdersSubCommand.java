@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.commands.management.tag;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.pagination.Page;
@@ -19,7 +19,7 @@ import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;
 
 import java.util.List;
 
-public class TagPlaceholdersSubCommand extends SubCommand {
+public class TagPlaceholdersSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

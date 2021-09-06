@@ -8,13 +8,13 @@ package org.cascadebot.cascadebot.commands.management.filters
 import net.dv8tion.jda.api.entities.Member
 import org.apache.commons.lang3.EnumUtils
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.data.objects.CommandFilter
 import org.cascadebot.cascadebot.data.objects.CommandFilter.FilterType
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
 
-class FiltersCreateSubCommand : SubCommand() {
+class FiltersCreateSubCommand : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isEmpty() || context.args.size > 2) {

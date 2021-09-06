@@ -10,14 +10,13 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -296,7 +295,7 @@ public class EqualizerCommand extends MainCommand {
     }
 
     @Override
-    public Set<SubCommand> subCommands() {
+    public Set<DeprecatedSubCommand> subCommands() {
         return Set.of(new EqualizerResetSubCommand());
     }
 }

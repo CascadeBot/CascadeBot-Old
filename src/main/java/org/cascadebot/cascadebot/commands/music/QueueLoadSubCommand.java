@@ -7,11 +7,10 @@ package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.music.TrackData;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -20,7 +19,7 @@ import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
 import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 
-public class QueueLoadSubCommand extends SubCommand {
+public class QueueLoadSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

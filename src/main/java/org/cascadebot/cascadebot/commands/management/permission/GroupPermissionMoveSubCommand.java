@@ -7,11 +7,10 @@ package org.cascadebot.cascadebot.commands.management.permission;
 
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
@@ -23,7 +22,7 @@ import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GroupPermissionMoveSubCommand extends SubCommand {
+public class GroupPermissionMoveSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) { // TODO add a confirm button, primary to the left

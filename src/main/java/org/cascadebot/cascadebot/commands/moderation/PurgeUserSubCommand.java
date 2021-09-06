@@ -7,7 +7,7 @@ package org.cascadebot.cascadebot.commands.moderation;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class PurgeUserSubCommand extends SubCommand {
+public class PurgeUserSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

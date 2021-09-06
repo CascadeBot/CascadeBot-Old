@@ -26,26 +26,22 @@ import org.cascadebot.cascadebot.messaging.MessagingTyped
 import org.cascadebot.cascadebot.messaging.MessagingUI
 import org.cascadebot.cascadebot.music.CascadePlayer
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.cascadebot.cascadebot.utils.interactions.InteractionMessage
 
 data class CommandContext(
-        val command: ExecutableCommand?,
-        val jda: JDA,
-        val channel: TextChannel,
-        val message: Message,
-        val guild: Guild,
-        val data: GuildData,
-        val args: Array<String>,
-        val member: Member,
-        var trigger: String,
-        val mention: Boolean
+    val jda: JDA,
+    val channel: TextChannel,
+    val message: InteractionMessage,
+    val guild: Guild,
+    val data: GuildData,
+    val member: Member,
+    var trigger: String,
+    val mention: Boolean
 ) {
     val typedMessaging = MessagingTyped(this)
     val timedMessaging = MessagingTimed(this)
     val uiMessaging = MessagingUI(this)
     val directMessaging = MessagingDirectMessage(this)
-
-    val locale: Locale
-        get() = data.locale
 
     val musicPlayer: CascadePlayer
         get() = CascadeBot.INS.musicHandler.getPlayer(guild.idLong)!!
@@ -59,57 +55,6 @@ data class CommandContext(
     val selfMember: Member
         get() = guild.getMember(selfUser)!!
 
-    @JvmOverloads
-    fun getMessage(start: Int, end: Int = args.size): String {
-        return ArrayUtils.subarray(args, start, end).joinToString(" ")
-    }
-
-    fun getArg(index: Int): String = args[index]
-
-    fun isArgInteger(index: Int): Boolean = args[index].toIntOrNull() != null
-
-    fun getArgAsInteger(index: Int): Int = args[index].toInt()
-
-    fun isArgLong(index: Int): Boolean = args[index].toLongOrNull() != null
-
-    fun getArgAsLong(index: Int): Long = args[index].toLong()
-
-    @Deprecated("This is only here for Java interop. Should not be used in Kotlin!", ReplaceWith("data.coreSettings"))
-    fun getCoreSettings() : GuildSettingsCore = data.core
-
-    /**
-     * Tests for an argument of a particular id. This check it exists at the position and,
-     * if the argument is a command arg, whether the localised command matches the input.
-     *
-     * @param id The argument id relative to the command
-     * @return Whether the argument is present and correct in the arguments
-     */
-    fun testForArg(id: String): Boolean {
-        val requiredArgsCount = StringUtils.countMatches(id, '.') + 1
-        /*
-            Tests to make sure that we're not trying to get an argument out of range
-
-            For command of ;test <user> command
-            If id given is user.command and args.length is 1 or 0, then the number of separators + 1
-            (1 in this case) will be greater than to the number of args so we return false since
-            there could not physically be an arg at that position.
-
-            This guarantees there will always be an arg to check at the position.
-            It's a lazy check because it doesn't check arguments after, that is the role of the command
-            to check the arg length explicitly.
-         */
-        if (args.size < requiredArgsCount) return false
-        val argId = (command?.absoluteCommand ?: "") + "." + id
-        val argument = CascadeBot.INS.argumentManager.getArgument(argId) ?: return false
-        // If the argument doesn't exist, it can't be valid!
-        if (argument.type != ArgumentType.COMMAND) {
-            // If it's not a command, we know that the arg exists so return true.
-            return true
-        }
-
-        return args[requiredArgsCount - 1].equals(argument.name(locale), ignoreCase = true)
-    }
-
     fun reply(message: String) {
         require(!message.isBlank()) { "The message cannot be blank!" }
         channel.sendMessage(message).queue()
@@ -121,26 +66,6 @@ data class CommandContext(
 
     fun i18n(path: String, vararg args: Any): String {
         return Language.i18n(guild.idLong, path, *args)
-    }
-
-    @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
-    fun getUsage(): String? {
-        return getUsage(this.command!!)
-    }
-
-    @Deprecated("Use MessagingUi replyUsage instead", ReplaceWith("uiMessaging.replyUsage"))
-    fun getUsage(command: ExecutableCommand): String? {
-        val parentArg = CascadeBot.INS.argumentManager.getArgument(command.absoluteCommand)
-        return if (parentArg != null) {
-            var parent: String? = null
-            if (command is SubCommand) {
-                parent = command.parent()
-            }
-            val commandString: String = data.core.prefix + if (parent == null) "" else "$parent "
-            parentArg.getUsageString(locale, commandString)
-        } else {
-            "`" + data.core.prefix + command.command(locale) + "` - " + command.description(locale)
-        }
     }
 
     /**
@@ -190,16 +115,6 @@ data class CommandContext(
 
     fun hasPermission(member: Member?, channel: GuildChannel?, permission: CascadePermission?): Boolean {
         return permission != null && data.management.permissions.hasPermission(member, channel, permission, data.core)
-    }
-
-    fun runOtherCommand(command: String?, sender: Member?, context: CommandContext) {
-        val commandMain = CascadeBot.INS.commandManager.getCommandByDefault(command)
-                ?: throw IllegalArgumentException("Cannot find that command!")
-        if (hasPermission(commandMain.permission())) {
-            commandMain.onCommand(member, context)
-        } else {
-            context.uiMessaging.sendPermissionError(commandMain.permission())
-        }
     }
 
     //endregion

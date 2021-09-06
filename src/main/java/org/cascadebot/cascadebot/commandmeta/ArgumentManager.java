@@ -56,7 +56,7 @@ public class ArgumentManager {
      * @param command The command to get the argument for
      * @return The command argument containing all the sub arguments
      */
-    public Argument getCommandArgument(ExecutableCommand command) {
+    public Argument getCommandArgument(DeprecatedExecutableCommand command) {
         return getArgument(command.getAbsoluteCommand());
     }
 

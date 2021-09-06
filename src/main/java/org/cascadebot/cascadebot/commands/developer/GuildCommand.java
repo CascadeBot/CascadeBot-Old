@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.shared.SecurityLevel;
 
 import java.util.Set;
@@ -37,7 +37,7 @@ public class GuildCommand extends RestrictedCommand {
     }
 
     @Override
-    public Set<SubCommand> subCommands() {
+    public Set<DeprecatedSubCommand> subCommands() {
         return Set.of(new GuildSaveSubCommand(), new GuildLeaveSubCommand(), new GuildFlagSubCommand(), new GuildInfoSubCommand());
     }
 

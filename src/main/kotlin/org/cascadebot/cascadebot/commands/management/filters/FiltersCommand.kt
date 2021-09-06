@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
 class FiltersCommand : MainCommand() {
@@ -22,7 +22,7 @@ class FiltersCommand : MainCommand() {
 
     override fun module(): Module = Module.MANAGEMENT
 
-    override fun subCommands(): Set<SubCommand> = setOf(
+    override fun subCommands(): Set<DeprecatedSubCommand> = setOf(
             FiltersListSubCommand(),
             FiltersCreateSubCommand(),
             FiltersDeleteSubCommand(),

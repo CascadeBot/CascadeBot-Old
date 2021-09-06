@@ -8,7 +8,7 @@ package org.cascadebot.cascadebot.commands.music;
 import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.data.objects.PlaylistType;
 import org.cascadebot.cascadebot.data.objects.SavePlaylistResult;
 import org.cascadebot.cascadebot.messaging.MessageType;
@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.utils.ConfirmUtils;
 
 import java.util.concurrent.TimeUnit;
 
-public class QueueSaveSubCommand extends SubCommand {
+public class QueueSaveSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

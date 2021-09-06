@@ -6,17 +6,14 @@
 package org.cascadebot.cascadebot.commands.management.filters
 
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.CommandManager
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import org.cascadebot.cascadebot.utils.DiscordUtils
 
-class FiltersCommandsSubCommand : SubCommand() {
+class FiltersCommandsSubCommand : DeprecatedSubCommand() {
     
     override fun onCommand(sender: Member, context: CommandContext) {
         if (context.args.isEmpty()) {

@@ -7,11 +7,10 @@ package org.cascadebot.cascadebot.commands.useful
 
 import com.ibm.icu.text.DateFormat
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.scheduler.ActionType
@@ -67,7 +66,7 @@ class RemindMeCommand : MainCommand() {
 
     override fun command(): String = "remindme"
 
-    override fun subCommands(): Set<SubCommand> = setOf(RemindMeListSubCommand())
+    override fun subCommands(): Set<DeprecatedSubCommand> = setOf(RemindMeListSubCommand())
 
     override fun module(): Module = Module.USEFUL
 

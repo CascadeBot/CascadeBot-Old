@@ -17,14 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CommandManager {
+@Deprecated
+public class DeprecatedCommandManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommandManager.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DeprecatedCommandManager.class);
 
     @Getter
     private List<MainCommand> commands;
 
-    public CommandManager() {
+    public DeprecatedCommandManager() {
         long start = System.currentTimeMillis();
         try {
             List<MainCommand> commands = new ArrayList<>();

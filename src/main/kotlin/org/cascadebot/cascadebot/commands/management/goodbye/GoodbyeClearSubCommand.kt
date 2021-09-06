@@ -7,12 +7,12 @@ package org.cascadebot.cascadebot.commands.management.goodbye
 
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.ConfirmUtils
 
-class GoodbyeClearSubCommand : SubCommand() {
+class GoodbyeClearSubCommand : DeprecatedSubCommand() {
 
     private val actionKey = "goodbye-clear"
 

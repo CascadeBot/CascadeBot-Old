@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.FormatUtils
@@ -68,7 +68,7 @@ class SlowmodeCommand : MainCommand() {
         return "slowmode"
     }
 
-    override fun subCommands(): Set<SubCommand> {
+    override fun subCommands(): Set<DeprecatedSubCommand> {
         return setOf(SlowmodeResetSubCommand())
     }
 

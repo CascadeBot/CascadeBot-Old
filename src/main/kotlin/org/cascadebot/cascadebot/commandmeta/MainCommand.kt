@@ -8,11 +8,11 @@ package org.cascadebot.cascadebot.commandmeta
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
 
-abstract class MainCommand : ExecutableCommand() {
+abstract class MainCommand : DeprecatedExecutableCommand() {
 
     abstract fun module(): Module
 
-    open fun subCommands(): Set<SubCommand> = setOf()
+    open fun subCommands(): Set<DeprecatedSubCommand> = setOf()
 
     fun globalAliases(locale: Locale): Set<String> {
         val element = Language.getLanguage(locale)!!.getElement("commands.$absoluteCommand.aliases")

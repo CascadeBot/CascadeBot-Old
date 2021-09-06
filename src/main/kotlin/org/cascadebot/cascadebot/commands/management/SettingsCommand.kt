@@ -12,7 +12,7 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.data.language.Language.getLanguage
 import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.data.objects.GuildSettingsCore
@@ -159,7 +159,7 @@ class SettingsCommand : MainCommand() {
         return CascadePermission.of("settings", false, Permission.MANAGE_SERVER)
     }
 
-    override fun subCommands(): Set<SubCommand> {
+    override fun subCommands(): Set<DeprecatedSubCommand> {
         return java.util.Set.of(SettingsListSubCommand(settingsClasses))
     }
 

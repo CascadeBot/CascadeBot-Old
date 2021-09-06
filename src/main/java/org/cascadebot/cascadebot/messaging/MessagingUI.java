@@ -12,14 +12,13 @@ import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.exceptions.PermissionException;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.utils.AttachmentOption;
 import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedExecutableCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.EventWaiter;
@@ -177,7 +176,7 @@ public class MessagingUI {
         replyUsage(context.getCommand());
     }
 
-    public void replyUsage(ExecutableCommand command) {
+    public void replyUsage(DeprecatedExecutableCommand command) {
         String usage = context.getUsage(command);
         List<Page> pages = PageUtils.splitStringToEmbedPages(usage, context.i18n("commands.usage.title", command.fullCommand(context.getLocale())), 1000, '\n');
         pages.addAll(command.additionalUsagePages(context.getLocale()));

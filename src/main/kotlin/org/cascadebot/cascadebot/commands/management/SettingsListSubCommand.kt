@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Member
 import org.apache.commons.lang3.StringUtils
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
@@ -20,7 +20,7 @@ import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import java.lang.reflect.Field
 import java.util.Map
 
-class SettingsListSubCommand(private val settingsClasses: List<Class<*>>) : SubCommand() {
+class SettingsListSubCommand(private val settingsClasses: List<Class<*>>) : DeprecatedSubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         val pages = mutableListOf<Page>()

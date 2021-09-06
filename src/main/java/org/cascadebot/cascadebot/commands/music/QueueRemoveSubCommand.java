@@ -7,10 +7,10 @@ package org.cascadebot.cascadebot.commands.music;
 
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
-public class QueueRemoveSubCommand extends SubCommand {
+public class QueueRemoveSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {

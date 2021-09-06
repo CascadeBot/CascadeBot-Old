@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedExecutableCommand;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
@@ -39,7 +39,7 @@ public class DumpCommand extends RestrictedCommand {
                         command.command(),
                         command.module().toString(),
                         command.permission() == null ? "No permission" : command.permission().toString(),
-                        command.subCommands().stream().map(ExecutableCommand::command).collect(Collectors.toSet()).toString()
+                        command.subCommands().stream().map(DeprecatedExecutableCommand::command).collect(Collectors.toSet()).toString()
                 );
             }
             context.getTypedMessaging().replyInfo("**Commands**\n" + PasteUtils.paste(builder.build().toString()));

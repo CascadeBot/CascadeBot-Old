@@ -8,10 +8,9 @@ package org.cascadebot.cascadebot.commands.music;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.commandmeta.DeprecatedSubCommand;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.music.MovableAudioTrack;
@@ -24,7 +23,7 @@ import org.cascadebot.cascadebot.utils.move.MovableList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class QueueMoveSubCommand extends SubCommand {
+public class QueueMoveSubCommand extends DeprecatedSubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
