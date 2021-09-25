@@ -40,7 +40,6 @@ create table guild_modules
     useful        boolean not null,
     moderation    boolean not null,
     management    boolean not null,
-    music         boolean not null,
     informational boolean not null,
     fun           boolean not null,
     constraint guild_modules_pk
@@ -276,30 +275,3 @@ create table guild_perms_groups_roles
         foreign key (group_id, guild_id) references guild_perms_groups
             on delete cascade
 );
-
-create table guild_settings_music
-(
-    guild_id           bigint not null,
-    preverse_volume    boolean  default true,
-    preserve_equalizer boolean  default true,
-    join_on_play       boolean  default true,
-    volume             smallint default 100,
-    constraint guilds_settings_music_pk
-        primary key (guild_id),
-    constraint guilds_settings_music_fk
-        foreign key (guild_id) references guilds
-            on delete cascade
-);
-
-create table guild_equalizer_bands
-(
-    id       smallint not null,
-    guild_id bigint   not null,
-    value    real     not null,
-    constraint guild_equalizer_bands_pk
-        primary key (id, guild_id),
-    constraint guild_equalizer_bands_fk
-        foreign key (guild_id) references guilds
-            on delete cascade
-);
-
