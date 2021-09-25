@@ -31,7 +31,6 @@ import org.cascadebot.cascadebot.utils.interactions.InteractionMessage
 data class CommandContext(
     val jda: JDA,
     val channel: TextChannel,
-    val message: InteractionMessage,
     val guild: Guild,
     val data: GuildData,
     val member: Member,

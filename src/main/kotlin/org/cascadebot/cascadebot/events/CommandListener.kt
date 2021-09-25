@@ -60,7 +60,7 @@ class CommandListener : ListenerAdapter() {
         val command = CascadeBot.INS.commandManager.getCommand(event.commandIdLong, event.commandPath) ?: return // TODO check for guild commands and if one isn't found reply with some sort of message saying the command doesn't exist
 
         event.deferReply()
-        dispatchCommand(command, args, context)
+        dispatchCommand(command, args, CommandContext(event.jda, event.textChannel, event.guild!!))
     }
 
     private fun processFilters(cmd: MainCommand, context: CommandContext): Boolean {
