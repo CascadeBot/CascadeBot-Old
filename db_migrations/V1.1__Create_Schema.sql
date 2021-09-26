@@ -6,12 +6,12 @@ create type greeting_type as enum ('WELCOME', 'WELCOME_DM', 'GOODBYE');
 
 create type filter_criteria_type as enum ('CHANNEL', 'ROLE', 'USER');
 
-create table guilds
+create table guild
 (
     guild_id   bigint not null,
     created_at timestamp default CURRENT_TIMESTAMP,
     removed_at timestamp,
-    constraint guilds_pk
+    constraint guild_pk
         primary key (guild_id)
 );
 
@@ -28,11 +28,11 @@ create table guild_settings_core
     constraint guild_core_settings_pk
         primary key (guild_id),
     constraint guild_settings_core_fk
-        foreign key (guild_id) references guilds
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create table guild_modules
+create table guild_module
 (
     guild_id      bigint  not null,
     core          boolean not null,
@@ -40,10 +40,10 @@ create table guild_modules
     moderation    boolean not null,
     management    boolean not null,
     informational boolean not null,
-    constraint guild_modules_pk
+    constraint guild_module_pk
         primary key (guild_id),
-    constraint guild_modules_fk
-        foreign key (guild_id) references guilds
+    constraint guild_module_fk
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
@@ -57,20 +57,20 @@ create table guild_todolist
     constraint guild_todolist_pk
         primary key (name, guild_id),
     constraint guild_todolist_fk
-        foreign key (guild_id) references guilds
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create table guild_todolist_items
+create table guild_todolist_item
 (
     id            serial,
     todolist_name varchar(255),
     guild_id      bigint,
     text          varchar(255) not null,
     done          boolean      not null,
-    constraint guild_todolist_items_pk
+    constraint guild_todolist_item_pk
         primary key (id),
-    constraint guild_todolist_items_fk
+    constraint guild_todolist_item_fk
         foreign key (guild_id, todolist_name) references guild_todolist (guild_id, name)
             on delete cascade
 );
@@ -85,21 +85,21 @@ create table guild_settings_moderation
     constraint guild_settings_moderation_pk
         primary key (guild_id),
     constraint guild_settings_moderation_fk
-        foreign key (guild_id) references guilds
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create table guild_modlog_events
+create table guild_modlog
 (
-    id            varchar(10) not null,
+    id            serial,
     channel_id    bigint      not null,
     guild_id      bigint      not null,
     webhook_id    bigint,
     webhook_token varchar(255),
-    constraint guild_modlog_events_pk
+    constraint guild_modlog_pk
         primary key (id, channel_id, guild_id),
-    constraint guild_modlog_events_fk
-        foreign key (guild_id) references guilds
+    constraint guild_modlog_fk
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
@@ -111,24 +111,24 @@ create table guild_settings_management
     constraint guild_settings_management_pk
         primary key (guild_id),
     constraint guild_settings_management_fk
-        foreign key (guild_id) references guilds
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create table guild_tags
+create table guild_tag
 (
     guild_id bigint       not null,
     name     varchar(255) not null,
     content  text         not null,
     category varchar(255) not null,
-    constraint guild_tags_pk
+    constraint guild_tag_pk
         primary key (guild_id, name),
-    constraint guild_tags_fk
-        foreign key (guild_id) references guilds
+    constraint guild_tag_fk
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create table guild_filters
+create table guild_filter
 (
     name     varchar(255)    not null,
     guild_id bigint          not null,
@@ -136,140 +136,143 @@ create table guild_filters
     type     filter_type     not null,
     operator filter_operator not null,
     commands varchar(255)[]  not null,
-    constraint guild_command_filters_pk
+    constraint guild_command_filter_pk
         primary key (name, guild_id),
-    constraint guild_command_filters_fk
-        foreign key (guild_id) references guilds
+    constraint guild_command_filter_fk
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create table guild_perms_groups
+create table guild_permission_group
 (
     group_id varchar(10)  not null,
     guild_id bigint       not null,
     name     varchar(255) not null,
-    constraint guild_permissions_groups_pk
+    constraint guild_permission_group_pk
         primary key (group_id, guild_id),
-    constraint guild_permissions_groups_fk
-        foreign key (guild_id) references guilds
+    constraint guild_permission_group_fk
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create table guild_perms_users
+create table guild_permission_user
 (
     user_id  bigint not null,
     guild_id bigint not null,
-    constraint guild_permissions_users_pk
+    constraint guild_permission_user_pk
         primary key (user_id, guild_id),
-    constraint guild_permissions_users_fk
-        foreign key (guild_id) references guilds
+    constraint guild_permission_user_fk
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create table guild_perms_user_membership
+create table guild_permission_user_membership
 (
     group_id varchar(10) not null,
     user_id  bigint      not null,
     guild_id bigint      not null,
-    constraint guild_permissions_user_membership_pk
+    constraint guild_permission_user_membership_pk
         primary key (group_id, user_id, guild_id),
-    constraint guild_permissions_user_membership_user_fk
-        foreign key (user_id, guild_id) references guild_perms_users
+    constraint guild_permission_user_membership_user_fk
+        foreign key (user_id, guild_id) references guild_permission_user
             on delete cascade,
-    constraint guild_permissions_user_membership_group_fk
-        foreign key (group_id, guild_id) references guild_perms_groups
+    constraint guild_permission_user_membership_group_fk
+        foreign key (group_id, guild_id) references guild_permission_group
             on delete cascade
 );
 
-create table guild_autoroles
+create table guild_autorole
 (
+    id       serial,
     guild_id bigint,
     role_id  bigint,
-    constraint guild_autoroles_fk
-        foreign key (guild_id) references guilds
+    constraint guild_autorole_pk
+        primary key (id),
+    constraint guild_autorole_fk
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create unique index guild_autoroles_role_id_uindex
-    on guild_autoroles (role_id);
+create unique index guild_autorole_role_id_uindex
+    on guild_autorole (role_id);
 
-create table guild_greetings
+create table guild_greeting
 (
     id       serial,
     guild_id bigint,
     type     greeting_type,
     content  text,
     weight   integer,
-    constraint guild_greetings_pk
+    constraint guild_greeting_pk
         primary key (id),
-    constraint guild_greetings_fk
-        foreign key (guild_id) references guilds
+    constraint guild_greeting_fk
+        foreign key (guild_id) references guild
             on delete cascade
 );
 
-create table guild_filters_criteria
+create table guild_filter_criteria
 (
     id          serial,
     filter_name varchar(255)         not null,
     guild_id    bigint               not null,
     type        filter_criteria_type not null,
     criteria_id bigint               not null,
-    constraint guild_filters_criteria_pk
+    constraint guild_filter_criteria_pk
         primary key (id),
-    constraint guild_filters_criteria_fk
-        foreign key (filter_name, guild_id) references guild_filters
+    constraint guild_filter_criteria_fk
+        foreign key (filter_name, guild_id) references guild_filter
             on delete cascade
 );
 
-create table guild_modlog_events_enabled
+create table guild_modlog_event_enabled
 (
     id         serial,
-    modlog_id  varchar(10),
+    modlog_id  integer,
     channel_id bigint,
     guild_id   bigint,
     event      varchar(255) not null,
-    constraint guild_modlog_events_enabled_pk
+    constraint guild_modlog_event_enabled_pk
         primary key (id),
-    constraint guild_modlog_events_enabled_fk
-        foreign key (modlog_id, channel_id, guild_id) references guild_modlog_events
+    constraint guild_modlog_event_enabled_fk
+        foreign key (modlog_id, channel_id, guild_id) references guild_modlog
             on delete cascade
 );
 
-create table guild_perms_groups_entries
+create table guild_permission_group_entry
 (
     id         serial,
     group_id   varchar(10)  not null,
     guild_id   bigint       not null,
     permission varchar(255) not null,
-    constraint guild_perms_groups_entries_pk
+    constraint guild_permission_group_entry_pk
         primary key (id),
-    constraint guild_perms_groups_entries_fk
-        foreign key (group_id, guild_id) references guild_perms_groups
+    constraint guild_permission_group_entry_fk
+        foreign key (group_id, guild_id) references guild_permission_group
             on delete cascade
 );
 
-create table guild_perms_users_entries
+create table guild_permission_user_entry
 (
     id         serial,
     user_id    bigint       not null,
     guild_id   bigint       not null,
     permission varchar(255) not null,
-    constraint guild_perms_users_entries_pk
+    constraint guild_permission_user_entry_pk
         primary key (id),
-    constraint guild_perms_users_entries_fk
-        foreign key (user_id, guild_id) references guild_perms_users
+    constraint guild_permission_user_entry_fk
+        foreign key (user_id, guild_id) references guild_permission_user
             on delete cascade
 );
 
-create table guild_perms_groups_roles
+create table guild_permission_group_role
 (
     id       serial,
     group_id varchar(10) not null,
     guild_id bigint      not null,
     role_id  bigint      not null,
-    constraint guild_perms_groups_roles_pk
+    constraint guild_permission_group_role_pk
         primary key (id),
-    constraint guild_perms_groups_entries_fk
-        foreign key (group_id, guild_id) references guild_perms_groups
+    constraint guild_permission_group_role_fk
+        foreign key (group_id, guild_id) references guild_permission_group
             on delete cascade
 );

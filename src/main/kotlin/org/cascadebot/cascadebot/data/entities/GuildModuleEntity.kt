@@ -11,8 +11,8 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "guild_modules")
-class GuildModulesEntity(guildId: Long) {
+@Table(name = "guild_module")
+class GuildModuleEntity(guildId: Long) {
 
     @Id
     @Column(name = "guild_id")
