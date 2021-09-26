@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.PostgresManager;
 import org.cascadebot.cascadebot.data.database.DatabaseManager;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
@@ -170,6 +171,8 @@ public class CascadeBot {
                     Config.INS.isSsl()
             );
         }
+
+        PostgresManager postgresManager = new PostgresManager("localhost", "postgres", "postgres", "jvs123", "");
 
         musicHandler = new MusicHandler();
 
