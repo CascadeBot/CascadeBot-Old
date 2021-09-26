@@ -55,6 +55,7 @@
     <appender name="METRICS" class="io.prometheus.client.logback.InstrumentedAppender" />
 
     <logger name="org.mongodb.driver.cluster" level="ERROR"/>
+    <logger name="org.hibernate.SQL" level="DEBUG"/>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
