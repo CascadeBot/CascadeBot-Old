@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.data.entities
 
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 import java.io.Serializable
 import java.util.UUID
 import javax.persistence.Column
@@ -12,32 +14,37 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.IdClass
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
 @Table(name = "guild_modlog")
 @IdClass(GuildModlogId::class)
-class GuildModlogEntity {
+class GuildModlogEntity(guildId: Long, channelId: Long) {
 
     @Id
     @Column(name = "id")
     @GeneratedValue
-    val id: Int = 0
+    val id: UUID = UUID.randomUUID()
 
     @Id
     @Column(name = "guild_id")
-    val guildId: Long = 0
+    val guildId: Long = guildId
 
     @Id
     @Column(name = "channel_id")
-    val channelId: Long = 0
+    val channelId: Long = channelId
 
     @Column(name = "webhook_id")
-    val webhookId: Long? = null
+    var webhookId: Long? = null
 
     @Column(name = "webhook_token")
-    val webhookToken: String? = null
+    var webhookToken: String? = null
+
+    @OneToMany(mappedBy = "id")
+    @Cascade(CascadeType.ALL)
+    val eventsEnabled: List<GuildModlogEventEnabledEntity> = listOf()
 
 }
 
-data class GuildModlogId(val id: Int, val guildId: Long, val channelId: Long) : Serializable
+data class GuildModlogId(val id: UUID, val guildId: Long, val channelId: Long) : Serializable
