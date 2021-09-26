@@ -18,7 +18,6 @@ create table guilds
 create table guild_settings_core
 (
     guild_id              bigint not null,
-    mention_prefix        boolean default false,
     delete_command        boolean default true,
     use_embeds            boolean default true,
     perm_errors           boolean default true,
@@ -41,7 +40,6 @@ create table guild_modules
     moderation    boolean not null,
     management    boolean not null,
     informational boolean not null,
-    fun           boolean not null,
     constraint guild_modules_pk
         primary key (guild_id),
     constraint guild_modules_fk
