@@ -63,7 +63,7 @@ create table guild_todolist
 
 create table guild_todolist_item
 (
-    id            serial,
+    id            uuid default gen_random_uuid(),
     todolist_name varchar(255),
     guild_id      bigint,
     text          varchar(255) not null,
@@ -91,7 +91,7 @@ create table guild_settings_moderation
 
 create table guild_modlog
 (
-    id            serial,
+    id            uuid default gen_random_uuid(),
     channel_id    bigint      not null,
     guild_id      bigint      not null,
     webhook_id    bigint,
@@ -183,7 +183,7 @@ create table guild_permission_user_membership
 
 create table guild_autorole
 (
-    id       serial,
+    id       uuid default gen_random_uuid(),
     guild_id bigint,
     role_id  bigint,
     constraint guild_autorole_pk
@@ -198,7 +198,7 @@ create unique index guild_autorole_role_id_uindex
 
 create table guild_greeting
 (
-    id       serial,
+    id       uuid default gen_random_uuid(),
     guild_id bigint,
     type     greeting_type,
     content  text,
@@ -212,7 +212,7 @@ create table guild_greeting
 
 create table guild_filter_criteria
 (
-    id          serial,
+    id          uuid default gen_random_uuid(),
     filter_name varchar(255)         not null,
     guild_id    bigint               not null,
     type        filter_criteria_type not null,
@@ -226,8 +226,8 @@ create table guild_filter_criteria
 
 create table guild_modlog_event_enabled
 (
-    id         serial,
-    modlog_id  integer,
+    id         uuid default gen_random_uuid(),
+    modlog_id  uuid,
     channel_id bigint,
     guild_id   bigint,
     event      varchar(255) not null,
@@ -240,7 +240,7 @@ create table guild_modlog_event_enabled
 
 create table guild_permission_group_entry
 (
-    id         serial,
+    id         uuid default gen_random_uuid(),
     group_id   varchar(10)  not null,
     guild_id   bigint       not null,
     permission varchar(255) not null,
@@ -253,7 +253,7 @@ create table guild_permission_group_entry
 
 create table guild_permission_user_entry
 (
-    id         serial,
+    id         uuid default gen_random_uuid(),
     user_id    bigint       not null,
     guild_id   bigint       not null,
     permission varchar(255) not null,
@@ -266,7 +266,7 @@ create table guild_permission_user_entry
 
 create table guild_permission_group_role
 (
-    id       serial,
+    id       uuid default gen_random_uuid(),
     group_id varchar(10) not null,
     guild_id bigint      not null,
     role_id  bigint      not null,
