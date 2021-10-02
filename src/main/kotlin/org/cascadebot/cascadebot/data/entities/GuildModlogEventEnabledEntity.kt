@@ -17,16 +17,17 @@ import javax.persistence.Table
 class GuildModlogEventEnabledEntity(modlogId: UUID, channelId: Long, guildId: Long, event: String) {
 
     @Id
+    @Column(name = "id", nullable = false)
     @GeneratedValue
     val id: UUID = UUID.randomUUID()
 
-    @Column(name = "modlog_id")
+    @Column(name = "modlog_id", nullable = false)
     val modlogId: UUID = modlogId
 
-    @Column(name = "channel_id")
+    @Column(name = "channel_id", nullable = false)
     val channelId: Long = channelId
 
-    @Column(name = "guild_id")
+    @Column(name = "guild_id", nullable = false)
     val guildId: Long = guildId
 
     @Column(name = "event", nullable = false)

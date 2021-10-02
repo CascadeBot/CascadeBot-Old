@@ -15,13 +15,13 @@ import javax.persistence.Table
 class GuildSettingsManagementEntity(guildId: Long) {
 
     @Id
-    @Column(name = "guild_id")
+    @Column(name = "guild_id", nullable = false)
     val guildId: Long = guildId
 
-    @Column(name = "display_filter_error")
+    @Column(name = "display_filter_error", nullable = false)
     val displayFilterError: Boolean = true
 
-    @Column(name = "warn_over_10")
+    @Column(name = "warn_over_10", nullable = false)
     val warnOver10: Boolean = true
 
 }

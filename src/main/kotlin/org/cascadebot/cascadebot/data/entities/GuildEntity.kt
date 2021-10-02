@@ -17,7 +17,7 @@ import javax.persistence.Table
 class GuildEntity(guildId: Long) {
 
     @Id
-    @Column(name = "guild_id")
+    @Column(name = "guild_id", nullable = false)
     var guildId: Long = guildId
 
     @Column(name = "created_at")

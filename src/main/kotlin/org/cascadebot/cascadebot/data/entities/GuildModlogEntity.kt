@@ -23,16 +23,16 @@ import javax.persistence.Table
 class GuildModlogEntity(guildId: Long, channelId: Long) {
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @GeneratedValue
     val id: UUID = UUID.randomUUID()
 
     @Id
-    @Column(name = "guild_id")
+    @Column(name = "guild_id", nullable = false)
     val guildId: Long = guildId
 
     @Id
-    @Column(name = "channel_id")
+    @Column(name = "channel_id", nullable = false)
     val channelId: Long = channelId
 
     @Column(name = "webhook_id")

@@ -15,28 +15,28 @@ import javax.persistence.Table
 class GuildSettingsCoreEntity(guildId: Long) {
 
     @Id
-    @Column(name = "guild_id")
+    @Column(name = "guild_id", nullable = false)
     var guildId = guildId
 
-    @Column(name = "delete_command")
+    @Column(name = "delete_command", nullable = false)
     var deleteCommand: Boolean = true
 
-    @Column(name = "use_embeds")
+    @Column(name = "use_embeds", nullable = false)
     var useEmbeds: Boolean = true
 
-    @Column(name = "perm_errors")
+    @Column(name = "perm_errors", nullable = false)
     var permErrors: Boolean = true
 
-    @Column(name = "module_errors")
+    @Column(name = "module_errors", nullable = false)
     var moduleErrors: Boolean = true
 
-    @Column(name = "admins_all_perms")
+    @Column(name = "admins_all_perms", nullable = false)
     var adminsAllPerms: Boolean = true
 
-    @Column(name = "help_hide_no_perms")
+    @Column(name = "help_hide_no_perms", nullable = false)
     var helpHideNoPerms: Boolean = true
 
-    @Column(name = "help_show_all_modules")
+    @Column(name = "help_show_all_modules", nullable = false)
     var helpShowAllModules: Boolean = false
 
 

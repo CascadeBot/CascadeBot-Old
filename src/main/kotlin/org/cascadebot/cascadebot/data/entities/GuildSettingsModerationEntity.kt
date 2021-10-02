@@ -15,19 +15,19 @@ import javax.persistence.Table
 class GuildSettingsModerationEntity(guildId: Long) {
 
     @Id
-    @Column(name = "guild_id")
+    @Column(name = "guild_id", nullable = false)
     val guildId: Long = guildId
 
-    @Column(name = "purge_pinned")
+    @Column(name = "purge_pinned", nullable = false)
     var purgePinned: Boolean = true
 
-    @Column(name = "respect_hierarchy")
+    @Column(name = "respect_hierarchy", nullable = false)
     var respectHierarchy: Boolean = true
 
-    @Column(name = "mute_role_name")
+    @Column(name = "mute_role_name", nullable = false)
     var muteRoleName: String = "Muted"
 
-    @Column(name = "mute_role_id")
+    @Column(name = "mute_role_id", nullable = false)
     var muteRoleId: Long? = null
 
 }
