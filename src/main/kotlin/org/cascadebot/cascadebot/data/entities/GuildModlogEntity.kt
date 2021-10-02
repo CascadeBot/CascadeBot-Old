@@ -14,6 +14,8 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.IdClass
+import javax.persistence.JoinColumn
+import javax.persistence.JoinColumns
 import javax.persistence.OneToMany
 import javax.persistence.Table
 
@@ -41,8 +43,13 @@ class GuildModlogEntity(guildId: Long, channelId: Long) {
     @Column(name = "webhook_token")
     var webhookToken: String? = null
 
-    @OneToMany(mappedBy = "id")
+    @OneToMany()
     @Cascade(CascadeType.ALL)
+    @JoinColumns(
+        JoinColumn(name = "modlog_id", referencedColumnName = "id"),
+        JoinColumn(name = "guild_id", referencedColumnName = "guild_id"),
+        JoinColumn(name = "channel_id", referencedColumnName = "channel_id")
+    )
     val eventsEnabled: List<GuildModlogEventEnabledEntity> = listOf()
 
 }
