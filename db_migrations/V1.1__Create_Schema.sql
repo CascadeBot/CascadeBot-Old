@@ -120,7 +120,7 @@ create table guild_tag
     guild_id bigint       not null,
     name     varchar(255) not null,
     content  text         not null,
-    category varchar(255) not null,
+    category varchar(255),
     constraint guild_tag_pk
         primary key (guild_id, name),
     constraint guild_tag_fk
@@ -184,8 +184,8 @@ create table guild_permission_user_membership
 create table guild_autorole
 (
     id       uuid default gen_random_uuid(),
-    guild_id bigint,
-    role_id  bigint,
+    guild_id bigint not null,
+    role_id  bigint not null,
     constraint guild_autorole_pk
         primary key (id),
     constraint guild_autorole_fk
@@ -227,9 +227,9 @@ create table guild_filter_criteria
 create table guild_modlog_event_enabled
 (
     id         uuid default gen_random_uuid(),
-    modlog_id  uuid,
-    channel_id bigint,
-    guild_id   bigint,
+    modlog_id  uuid not null,
+    channel_id bigint not null,
+    guild_id   bigint not null,
     event      varchar(255) not null,
     constraint guild_modlog_event_enabled_pk
         primary key (id),
