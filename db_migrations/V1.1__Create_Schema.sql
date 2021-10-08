@@ -53,7 +53,7 @@ create table guild_todolist
     guild_id     bigint       not null,
     message_id   bigint,
     channel_id   bigint,
-    current_item integer,
+    current_item integer    default 0,
     constraint guild_todolist_pk
         primary key (name, guild_id),
     constraint guild_todolist_fk
