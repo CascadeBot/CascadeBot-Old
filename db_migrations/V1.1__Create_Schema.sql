@@ -53,7 +53,7 @@ create table guild_todolist
     guild_id     bigint       not null,
     message_id   bigint,
     channel_id   bigint,
-    current_item integer    default 0,
+    current_item integer default 0,
     constraint guild_todolist_pk
         primary key (name, guild_id),
     constraint guild_todolist_fk
@@ -92,8 +92,8 @@ create table guild_settings_moderation
 create table guild_modlog
 (
     id            uuid default gen_random_uuid(),
-    channel_id    bigint      not null,
-    guild_id      bigint      not null,
+    channel_id    bigint not null,
+    guild_id      bigint not null,
     webhook_id    bigint,
     webhook_token varchar(255),
     constraint guild_modlog_pk
@@ -145,9 +145,9 @@ create table guild_filter
 
 create table guild_permission_group
 (
-    group_id varchar(10)  not null,
-    guild_id bigint       not null,
-    name     varchar(255) not null,
+    group_id    varchar(10)  not null,
+    guild_id    bigint       not null,
+    name        varchar(255) not null,
     permissions varchar(255)[] default [],
     roles       bigint[]       default [],
     constraint guild_permission_group_pk
@@ -159,8 +159,8 @@ create table guild_permission_group
 
 create table guild_permission_user
 (
-    user_id  bigint not null,
-    guild_id bigint not null,
+    user_id     bigint not null,
+    guild_id    bigint not null,
     permissions varchar(255)[] default [],
     constraint guild_permission_user_pk
         primary key (user_id, guild_id),
@@ -230,9 +230,9 @@ create table guild_filter_criteria
 create table guild_modlog_event_enabled
 (
     id         uuid default gen_random_uuid(),
-    modlog_id  uuid not null,
-    channel_id bigint not null,
-    guild_id   bigint not null,
+    modlog_id  uuid         not null,
+    channel_id bigint       not null,
+    guild_id   bigint       not null,
     event      varchar(255) not null,
     constraint guild_modlog_event_enabled_pk
         primary key (id),
