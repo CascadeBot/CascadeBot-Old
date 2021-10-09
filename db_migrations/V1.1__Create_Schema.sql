@@ -4,7 +4,7 @@ create type filter_operator as enum ('AND', 'OR');
 
 create type greeting_type as enum ('WELCOME', 'WELCOME_DM', 'GOODBYE');
 
-create type filter_criteria_type as enum ('CHANNEL', 'ROLE', 'USER');
+create type filter_target_type as enum ('CHANNEL', 'ROLE', 'USER');
 
 create table guild
 (
@@ -148,8 +148,8 @@ create table guild_permission_group
     group_id    varchar(10)  not null,
     guild_id    bigint       not null,
     name        varchar(255) not null,
-    permissions varchar(255)[] default [],
-    roles       bigint[]       default [],
+    permissions varchar(255)[] default array[]::varchar(255)[],
+    roles       bigint[]       default array[]::bigint[],
     constraint guild_permission_group_pk
         primary key (group_id, guild_id),
     constraint guild_permission_group_fk
@@ -161,7 +161,7 @@ create table guild_permission_user
 (
     user_id     bigint not null,
     guild_id    bigint not null,
-    permissions varchar(255)[] default [],
+    permissions varchar(255)[] default array[]::varchar(255)[],
     constraint guild_permission_user_pk
         primary key (user_id, guild_id),
     constraint guild_permission_user_fk
@@ -218,8 +218,8 @@ create table guild_filter_criteria
     id          uuid default gen_random_uuid(),
     filter_name varchar(255)         not null,
     guild_id    bigint               not null,
-    type        filter_criteria_type not null,
-    criteria_id bigint               not null,
+    type        filter_target_type   not null,
+    target_id   bigint               not null,
     constraint guild_filter_criteria_pk
         primary key (id),
     constraint guild_filter_criteria_fk
