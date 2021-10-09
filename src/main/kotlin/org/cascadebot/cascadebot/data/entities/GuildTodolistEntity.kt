@@ -5,11 +5,16 @@
 
 package org.cascadebot.cascadebot.data.entities
 
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.IdClass
+import javax.persistence.JoinColumn
+import javax.persistence.JoinColumns
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -33,6 +38,14 @@ class GuildTodolistEntity(name: String, guildId: Long) {
 
     @Column(name = "current_item", nullable = false)
     val currentItem: Int = 0
+
+    @OneToMany()
+    @Cascade(CascadeType.ALL)
+    @JoinColumns(
+        JoinColumn(name = "modlog_name", referencedColumnName = "name"),
+        JoinColumn(name = "guild_id", referencedColumnName = "guild_id"),
+    )
+    val todolistItems: List<GuildTodolistItemEntity> = listOf()
 
 }
 
