@@ -42,7 +42,7 @@ class GuildTodolistEntity(name: String, guildId: Long) {
     @OneToMany()
     @Cascade(CascadeType.ALL)
     @JoinColumns(
-        JoinColumn(name = "modlog_name", referencedColumnName = "name"),
+        JoinColumn(name = "todolist_name", referencedColumnName = "name"),
         JoinColumn(name = "guild_id", referencedColumnName = "guild_id"),
     )
     val todolistItems: List<GuildTodolistItemEntity> = listOf()
