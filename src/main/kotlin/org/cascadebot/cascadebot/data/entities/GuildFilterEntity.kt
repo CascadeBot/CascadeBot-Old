@@ -27,12 +27,12 @@ class GuildFilterEntity(name: String, guildId: Long, type: CommandFilter.FilterT
     @Column(name = "enabled", nullable = false)
     var enabled: Boolean = true
 
-    @Column(name = "filter_type", nullable = false)
+    @Column(name = "type", nullable = false)
     @Type(type = "psql-enum")
     @Enumerated(EnumType.STRING)
     var type: CommandFilter.FilterType = type
 
-    @Column(name = "filter_operator", nullable = false)
+    @Column(name = "operator", nullable = false)
     @Type(type = "psql-enum")
     @Enumerated(EnumType.STRING)
     var operator: CommandFilter.FilterOperator = operator
