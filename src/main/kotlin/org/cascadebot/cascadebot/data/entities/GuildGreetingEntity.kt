@@ -27,7 +27,7 @@ class GuildGreetingEntity(guildId: Long, type: GreetingType, content: String) {
     val guildId: Long = guildId
 
     @Column(name = "type", nullable = false)
-    @Type(type = "org.cascadebot.cascadebot.data.EnumDBType")
+    @Type(type = "psql-enum")
     @Enumerated(EnumType.STRING)
     var type: GreetingType = type
 

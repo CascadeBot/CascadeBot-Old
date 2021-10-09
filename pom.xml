@@ -381,6 +381,11 @@
             <version>${hibernate.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.vladmihalcea</groupId>
+            <artifactId>hibernate-types-55</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgres.version}</version>
