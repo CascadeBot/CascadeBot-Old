@@ -148,6 +148,8 @@ create table guild_permission_group
     group_id varchar(10)  not null,
     guild_id bigint       not null,
     name     varchar(255) not null,
+    permissions varchar(255)[] default [],
+    roles       bigint[]       default [],
     constraint guild_permission_group_pk
         primary key (group_id, guild_id),
     constraint guild_permission_group_fk
@@ -159,6 +161,7 @@ create table guild_permission_user
 (
     user_id  bigint not null,
     guild_id bigint not null,
+    permissions varchar(255)[] default [],
     constraint guild_permission_user_pk
         primary key (user_id, guild_id),
     constraint guild_permission_user_fk
@@ -235,44 +238,5 @@ create table guild_modlog_event_enabled
         primary key (id),
     constraint guild_modlog_event_enabled_fk
         foreign key (modlog_id, channel_id, guild_id) references guild_modlog
-            on delete cascade
-);
-
-create table guild_permission_group_entry
-(
-    id         uuid default gen_random_uuid(),
-    group_id   varchar(10)  not null,
-    guild_id   bigint       not null,
-    permission varchar(255) not null,
-    constraint guild_permission_group_entry_pk
-        primary key (id),
-    constraint guild_permission_group_entry_fk
-        foreign key (group_id, guild_id) references guild_permission_group
-            on delete cascade
-);
-
-create table guild_permission_user_entry
-(
-    id         uuid default gen_random_uuid(),
-    user_id    bigint       not null,
-    guild_id   bigint       not null,
-    permission varchar(255) not null,
-    constraint guild_permission_user_entry_pk
-        primary key (id),
-    constraint guild_permission_user_entry_fk
-        foreign key (user_id, guild_id) references guild_permission_user
-            on delete cascade
-);
-
-create table guild_permission_group_role
-(
-    id       uuid default gen_random_uuid(),
-    group_id varchar(10) not null,
-    guild_id bigint      not null,
-    role_id  bigint      not null,
-    constraint guild_permission_group_role_pk
-        primary key (id),
-    constraint guild_permission_group_role_fk
-        foreign key (group_id, guild_id) references guild_permission_group
             on delete cascade
 );
