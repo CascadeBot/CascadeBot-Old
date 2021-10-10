@@ -33,7 +33,7 @@ class GuildPermissionUserEntity(id: Long, guildId: Long) {
 
     @ManyToMany(mappedBy = "users")
     val groups: MutableSet<GuildPermissionGroupEntity> = mutableSetOf()
-    
+
 }
 
 data class GuildPermissionUserId(val id: Long, val guildId: Long) : Serializable

@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.data.entities
 
-import org.hibernate.cfg.Environment
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity

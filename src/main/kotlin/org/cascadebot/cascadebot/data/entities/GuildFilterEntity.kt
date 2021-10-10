@@ -14,7 +14,12 @@ import javax.persistence.Table
 @Entity
 @Table(name = "guild_filter")
 @IdClass(GuildFilterId::class)
-class GuildFilterEntity(name: String, guildId: Long, type: CommandFilter.FilterType, operator: CommandFilter.FilterOperator) {
+class GuildFilterEntity(
+    name: String,
+    guildId: Long,
+    type: CommandFilter.FilterType,
+    operator: CommandFilter.FilterOperator
+) {
 
     @Id
     @Column(name = "name", nullable = false)

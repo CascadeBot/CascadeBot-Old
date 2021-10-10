@@ -40,5 +40,4 @@ class GuildSettingsCoreEntity(guildId: Long) {
     var helpShowAllModules: Boolean = false
 
 
-
 }
