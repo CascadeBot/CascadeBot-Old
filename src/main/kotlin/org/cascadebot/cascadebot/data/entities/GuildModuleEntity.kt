@@ -15,7 +15,7 @@ import javax.persistence.Table
 class GuildModuleEntity(guildId: Long) {
 
     @Id
-    @Column(name = "guild_id", nullable = false)
+    @Column(name = "guild_id")
     val guildId: Long = guildId
 
     @Column(name = "core", nullable = false)

@@ -19,7 +19,7 @@ import javax.persistence.Table
 class GuildFilterCriteriaEntity(filterName: String, guildId: Long, targetType: FilterTargetType, targetId: Long) {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     val id: UUID = UUID.randomUUID()
 
     @Column(name = "filter_name", nullable = false)

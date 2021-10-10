@@ -20,11 +20,11 @@ import javax.persistence.Table
 class GuildPermissionUserEntity(id: Long, guildId: Long) {
 
     @Id
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     val id: Long = id
 
     @Id
-    @Column(name = "guild_id", nullable = false)
+    @Column(name = "guild_id")
     val guildId: Long = guildId
 
     @Column(name = "permissions", columnDefinition = "varchar(255)[]", nullable = false)

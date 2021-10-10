@@ -16,7 +16,7 @@ import javax.persistence.Table
 class GuildAutoRoleEntity(guildId: Long, roleId: Long) {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     val id: UUID = UUID.randomUUID()
 
     @Column(name = "guild_id", nullable = false)

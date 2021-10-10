@@ -18,11 +18,11 @@ import javax.persistence.Table
 class GuildTagEntity(guildId: Long, name: String, content: String) {
 
     @Id
-    @Column(name = "guild_id", nullable = false)
+    @Column(name = "guild_id")
     val guildId: Long = guildId
 
     @Id
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     val name: String = name
 
     @Column(name = "content", nullable = false)

@@ -11,7 +11,7 @@ import javax.persistence.Table
 class GuildTodolistItemEntity(todolistName: String, guildId: Long, text: String) {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     val id: UUID = UUID.randomUUID()
 
     @Column(name = "todolist_name", nullable = false)

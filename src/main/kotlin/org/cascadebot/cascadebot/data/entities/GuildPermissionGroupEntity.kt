@@ -25,13 +25,13 @@ import javax.persistence.Table
 class GuildPermissionGroupEntity(name: String, guildId: Long) {
 
     @Id
-    @Column(name = "group_id", nullable = false)
+    @Column(name = "group_id")
     // Base 55 with 5 chars gives 503284375 combinations, we should be ok for uniqueness
     // This is normal alphanumeric with similar characters removed for less errors when inputting
     val id: String = RandomStringUtils.random(5, "abcdefghijkmnopqrstuvwxyzACDEFHJKLMNPRSTUVWXYZ123467890")
 
     @Id
-    @Column(name = "guild_id", nullable = false)
+    @Column(name = "guild_id")
     val guildId: Long = guildId
 
     @Column(name = "name", nullable = false)

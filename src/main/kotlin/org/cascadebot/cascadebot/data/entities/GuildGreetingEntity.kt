@@ -20,7 +20,7 @@ import javax.persistence.Table
 class GuildGreetingEntity(guildId: Long, type: GreetingType, content: String) {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     val id: UUID = UUID.randomUUID()
 
     @Column(name = "guild_id", nullable = false)

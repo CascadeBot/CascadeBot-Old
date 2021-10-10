@@ -18,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Playlist {
 
-    @Id
+    text[]
     private ObjectId playlistId = ObjectId.get();
 
     private String name;

@@ -17,7 +17,7 @@ import javax.persistence.Table
 class GuildModlogEventEnabledEntity(modlogId: UUID, channelId: Long, guildId: Long, event: String) {
 
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id")
     @GeneratedValue
     val id: UUID = UUID.randomUUID()
 

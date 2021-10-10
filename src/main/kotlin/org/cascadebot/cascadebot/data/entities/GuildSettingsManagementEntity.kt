@@ -15,7 +15,7 @@ import javax.persistence.Table
 class GuildSettingsManagementEntity(guildId: Long) {
 
     @Id
-    @Column(name = "guild_id", nullable = false)
+    @Column(name = "guild_id")
     val guildId: Long = guildId
 
     @Column(name = "display_filter_error", nullable = false)
