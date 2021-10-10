@@ -46,7 +46,7 @@ class GuildModlogEntity(guildId: Long, channelId: Long) {
     @OneToMany()
     @Cascade(CascadeType.ALL)
     @JoinColumns(
-        JoinColumn(name = "modlog_id", referencedColumnName = "id"),
+        JoinColumn(name = "id", referencedColumnName = "modlog_id"),
         JoinColumn(name = "guild_id", referencedColumnName = "guild_id"),
         JoinColumn(name = "channel_id", referencedColumnName = "channel_id")
     )
