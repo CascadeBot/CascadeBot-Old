@@ -6,12 +6,17 @@
 package org.cascadebot.cascadebot.data.entities
 
 import org.apache.commons.lang3.RandomStringUtils
+import org.hibernate.annotations.Cascade
+import org.hibernate.annotations.CascadeType
 import org.hibernate.annotations.Type
 import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.IdClass
+import javax.persistence.JoinColumn
+import javax.persistence.JoinTable
+import javax.persistence.ManyToMany
 import javax.persistence.Table
 
 @Entity
@@ -39,6 +44,15 @@ class GuildPermissionGroupEntity(name: String, guildId: Long) {
     @Column(name = "roles", columnDefinition = "bigint[]", nullable = false)
     @Type(type = "list-array")
     val roles: MutableList<String> = mutableListOf()
+
+    @ManyToMany
+    @Cascade(CascadeType.ALL)
+    @JoinTable(
+        name = "guild_permission_user_membership",
+        joinColumns = [JoinColumn(name = "group_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id")]
+    )
+    val users: MutableSet<GuildPermissionUserEntity> = mutableSetOf()
 
 }
 
