@@ -33,6 +33,7 @@ import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.shared.Regex;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
+import org.hibernate.Session;
 import org.slf4j.MDC;
 
 import java.util.Arrays;
@@ -45,6 +46,8 @@ public class CommandListener extends ListenerAdapter {
     private static final ThreadGroup COMMAND_THREADS = new ThreadGroup("Command Threads");
     private static final AtomicInteger threadCounter = new AtomicInteger(0);
     private static final ExecutorService COMMAND_POOL = ThreadPoolExecutorLogged.newCachedThreadPool(r -> new Thread(COMMAND_THREADS, r, "Command Pool-" + threadCounter.incrementAndGet()), CascadeBot.LOGGER);
+
+    private static final ThreadLocal<Session> sqlSession = new ThreadLocal<>();
 
     private static final Pattern MULTIQUOTE_REGEX = Pattern.compile("[\"'](?=[\"'])");
 
@@ -184,6 +187,8 @@ public class CommandListener extends ListenerAdapter {
 
     private boolean dispatchCommand(final ExecutableCommand command, final CommandContext context) {
         COMMAND_POOL.submit(() -> {
+            Session commandSession = CascadeBot.INS.getPostgresManager().getSessionFactory().openSession();
+            sqlSession.set(commandSession);
             MDC.put("cascade.sender", context.getMember().toString());
             MDC.put("cascade.guild", context.getGuild().toString());
             MDC.put("cascade.channel", context.getChannel().toString());
@@ -196,7 +201,7 @@ public class CommandListener extends ListenerAdapter {
 
             Metrics.INS.commandsExecuted.labels(command.getClass().getSimpleName()).inc();
             Summary.Timer commandTimer = Metrics.INS.commandExecutionTime.labels(command.getClass().getSimpleName()).startTimer();
-            try {
+            try (commandSession) {
                 command.onCommand(context.getMember(), context);
             } catch (Exception e) {
                 Metrics.INS.commandsErrored.labels(command.getClass().getSimpleName()).inc();
@@ -206,6 +211,7 @@ public class CommandListener extends ListenerAdapter {
             } finally {
                 CascadeBot.clearCascadeMDC();
                 commandTimer.observeDuration();
+                sqlSession.remove();
             }
         });
         deleteMessages(command, context);
@@ -241,5 +247,8 @@ public class CommandListener extends ListenerAdapter {
         COMMAND_POOL.shutdown();
     }
 
+    public static ThreadLocal<Session> getSqlSession() {
+        return sqlSession;
+    }
 
 }
