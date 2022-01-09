@@ -71,6 +71,7 @@ public class CascadeBot {
     private ArgumentManager argumentManager;
     private CommandManager commandManager;
     private DatabaseManager databaseManager;
+    private PostgresManager postgresManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
 
@@ -172,7 +173,7 @@ public class CascadeBot {
             );
         }
 
-        PostgresManager postgresManager = new PostgresManager("localhost", "postgres", "postgres", "jvs123", "");
+        postgresManager = new PostgresManager(Config.INS.getSqlHost(), Config.INS.getSqlDatabase(), Config.INS.getSqlUsername(), Config.INS.getSqlPassword(), Config.INS.getOptions());
 
         musicHandler = new MusicHandler();
 

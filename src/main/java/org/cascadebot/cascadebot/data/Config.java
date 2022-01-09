@@ -72,6 +72,12 @@ public class Config {
 
     private String connectionString;
 
+    private String sqlHost;
+    private String sqlDatabase;
+    private String sqlUsername;
+    private String sqlPassword;
+    private Map<String, String> options;
+
     private int shardNum;
 
     private String guildWelcomeMessage;
@@ -164,6 +170,17 @@ public class Config {
             }
             this.ssl = warnOnDefault(config, "database.ssl", false);
         }
+
+        this.sqlHost = config.getString("sql.host");
+        this.sqlUsername = config.getString("sql.username");
+        this.sqlPassword = config.getString("sql.password");
+        this.sqlDatabase = config.getString("sql.database");
+        Map<String, String> options = new HashMap<>();
+        ConfigurationSection section = config.getConfigurationSection("sql.options");
+        for (String key : section.getKeys(false)) {
+            options.put(key, section.getString(key));
+        }
+        this.options = options;
 
         this.prometheusPort = config.getInt("stats_port", 6060);
 
@@ -313,6 +330,26 @@ public class Config {
 
     public List<String> getHosts() {
         return hosts;
+    }
+
+    public String getSqlHost() {
+        return sqlHost;
+    }
+
+    public String getSqlDatabase() {
+        return sqlDatabase;
+    }
+
+    public String getSqlUsername() {
+        return sqlUsername;
+    }
+
+    public String getSqlPassword() {
+        return sqlPassword;
+    }
+
+    public Map<String, String> getOptions() {
+        return options;
     }
 
     public boolean isSsl() {

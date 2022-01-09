@@ -10,13 +10,15 @@ import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
 import org.reflections.Reflections
+import org.yaml.snakeyaml.util.UriEncoder
 import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.util.Properties
 import java.util.function.Consumer
 import javax.persistence.Entity
 import org.cascadebot.cascadebot.data.transaction as kotlinTransaction
 
-class PostgresManager(hosts: String, database: String, username: String, password: String, val options: String) {
+class PostgresManager(hosts: String, database: String, username: String, password: String, val options: Map<String, String>) {
 
     val hosts: String = urlEncode(hosts)
     val database: String = urlEncode(database)
@@ -24,7 +26,13 @@ class PostgresManager(hosts: String, database: String, username: String, passwor
     val password: String = urlEncode(password)
 
     private val connectionString: String by lazy {
-        "jdbc:postgresql://$hosts/$database?user=$username&password=$password${if (options.isNotBlank()) "&$options" else ""}"
+        "jdbc:postgresql://$hosts/$database?user=$username&password=$password${if (options.isNotEmpty()) { 
+            var builder: StringBuilder = StringBuilder()
+            for (entry in options.entries) {
+                builder.append('&').append(URLEncoder.encode(entry.key, StandardCharsets.UTF_8)).append('=').append(URLEncoder.encode(entry.value, StandardCharsets.UTF_8))
+            }
+            builder.toString();
+        } else ""}"
     }
 
     val sessionFactory: SessionFactory
