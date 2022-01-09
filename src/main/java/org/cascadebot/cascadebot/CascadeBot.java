@@ -296,6 +296,10 @@ public class CascadeBot {
         return databaseManager;
     }
 
+    public PostgresManager getPostgresManager() {
+        return postgresManager;
+    }
+
     public PermissionsManager getPermissionsManager() {
         return permissionsManager;
     }
