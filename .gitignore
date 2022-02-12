@@ -27,3 +27,5 @@ config.yml
 
 *.iml
 TestCommand.java
+
+*.env*
