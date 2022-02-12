@@ -46,7 +46,7 @@ class GuildModlogEntity(guildId: Long, channelId: Long) {
     @OneToMany()
     @Cascade(CascadeType.ALL)
     @JoinColumns(
-        JoinColumn(name = "id", referencedColumnName = "modlog_id"),
+        JoinColumn(name = "modlog_id", referencedColumnName = "id"),
         JoinColumn(name = "guild_id", referencedColumnName = "guild_id"),
         JoinColumn(name = "channel_id", referencedColumnName = "channel_id")
     )
@@ -54,4 +54,6 @@ class GuildModlogEntity(guildId: Long, channelId: Long) {
 
 }
 
-data class GuildModlogId(val id: UUID, val guildId: Long, val channelId: Long) : Serializable
+data class GuildModlogId(val id: UUID, val guildId: Long, val channelId: Long) : Serializable {
+    constructor() : this(UUID.randomUUID(), 0, 0)
+}

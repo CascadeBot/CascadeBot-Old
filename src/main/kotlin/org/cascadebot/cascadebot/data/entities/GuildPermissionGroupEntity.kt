@@ -49,11 +49,13 @@ class GuildPermissionGroupEntity(name: String, guildId: Long) {
     @Cascade(CascadeType.ALL)
     @JoinTable(
         name = "guild_permission_user_membership",
-        joinColumns = [JoinColumn(name = "group_id")],
-        inverseJoinColumns = [JoinColumn(name = "user_id")]
+        joinColumns = [JoinColumn(name = "group_id"), JoinColumn(name = "guild_id")],
+        inverseJoinColumns = [JoinColumn(name = "user_id"), JoinColumn(name = "user_guild_id")]
     )
     val users: MutableSet<GuildPermissionUserEntity> = mutableSetOf()
 
 }
 
-data class GuildPermissionGroupId(val id: String, val guildId: Long) : Serializable
+data class GuildPermissionGroupId(val id: String, val guildId: Long) : Serializable {
+
+}

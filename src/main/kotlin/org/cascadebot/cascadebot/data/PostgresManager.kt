@@ -5,19 +5,16 @@
 
 package org.cascadebot.cascadebot.data
 
-import org.cascadebot.cascadebot.data.Postgres.transaction
 import org.cascadebot.cascadebot.events.CommandListener
+import org.cascadebot.cascadebot.utils.ReflectionUtils
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
 import org.reflections.Reflections
-import org.yaml.snakeyaml.util.UriEncoder
 import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 import java.util.Properties
 import java.util.function.Consumer
 import javax.persistence.Entity
-import org.cascadebot.cascadebot.data.transaction as kotlinTransaction
 
 class PostgresManager(hosts: String, database: String, username: String, password: String, val options: Map<String, String>) {
 
@@ -49,10 +46,12 @@ class PostgresManager(hosts: String, database: String, username: String, passwor
 
         val dbConfig = Configuration()
 
-        val reflections = Reflections("org.cascadebot.cascadebot.data.entities")
-        val classes: Set<Class<*>> = reflections.getTypesAnnotatedWith(Entity::class.java)
+        val entityReflections = Reflections("org.cascadebot.cascadebot.data.entities")
+        val classes: Set<Class<*>> = entityReflections.getTypesAnnotatedWith(Entity::class.java)
 
         classes.forEach { dbConfig.addAnnotatedClass(it) }
+
+        dbConfig.addPackage("org.cascadebot.cascadebot.data.entities")
 
         val hibernateProperties = Properties()
 
@@ -66,39 +65,36 @@ class PostgresManager(hosts: String, database: String, username: String, passwor
         sessionFactory = dbConfig.buildSessionFactory()
     }
 
-}
-
-fun transaction(postgresManager: PostgresManager, work: Session.()->Unit) {
-    if (CommandListener.getSqlSession().get() != null) {
-        createTransaction(CommandListener.getSqlSession().get(), work)
-    } else {
-        val session = postgresManager.sessionFactory.openSession()
-        session.use {
-            createTransaction(it, work)
+    fun <T : Any> transaction(work: Session.()->T?) : T? {
+        if (CommandListener.getSqlSession().get() != null) {
+            return createTransaction(CommandListener.getSqlSession().get(), work)
+        } else {
+            val session = this.sessionFactory.openSession()
+            session.use {
+                return createTransaction(it, work)
+            }
         }
     }
+
+    fun <T : Any>transaction(work: java.util.function.Function<Session, T?>) : T? {
+        return transaction() kotlinTransaction@{
+            return@kotlinTransaction work.apply(this)
+        }
+    }
+
 }
 
-private fun createTransaction(session: Session, work: Session.()->Unit) {
+private fun <T : Any> createTransaction(session: Session, work: Session.()->T?) : T? {
     try {
         session.transaction.timeout = 3
         session.transaction.begin()
 
-        work(session);
+        val value = work(session);
 
         session.transaction.commit()
+        return value;
     } catch (e: RuntimeException) {
         session.transaction.rollback()
         throw e; // TODO: Or display error?
     }
 }
-
-object Postgres {
-    @JvmStatic
-    fun transaction(postgresManager: PostgresManager, work: Consumer<Session>) {
-        kotlinTransaction(postgresManager) {
-            work.accept(this)
-        }
-    }
-}
-

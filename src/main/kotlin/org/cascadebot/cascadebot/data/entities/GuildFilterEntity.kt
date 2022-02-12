@@ -3,6 +3,7 @@ package org.cascadebot.cascadebot.data.entities
 import org.cascadebot.cascadebot.data.objects.CommandFilter
 import org.hibernate.annotations.Type
 import java.io.Serializable
+import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -48,4 +49,6 @@ class GuildFilterEntity(
 
 }
 
-data class GuildFilterId(val name: String, val guildId: Long) : Serializable
+data class GuildFilterId(val name: String, val guildId: Long) : Serializable {
+    constructor() : this("", 0)
+}

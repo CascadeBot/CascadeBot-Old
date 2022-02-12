@@ -33,4 +33,6 @@ class GuildTagEntity(guildId: Long, name: String, content: String) {
 
 }
 
-data class GuildTagId(val guildId: Long, val name: String) : Serializable
+data class GuildTagId(val guildId: Long, val name: String) : Serializable {
+    constructor() : this(0, "")
+}

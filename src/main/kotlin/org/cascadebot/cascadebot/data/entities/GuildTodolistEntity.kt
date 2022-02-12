@@ -49,4 +49,6 @@ class GuildTodolistEntity(name: String, guildId: Long) {
 
 }
 
-data class GuildTodolistId(val name: String, val guildId: Long) : Serializable
+data class GuildTodolistId(val name: String, val guildId: Long) : Serializable {
+    constructor() : this("", 0)
+}

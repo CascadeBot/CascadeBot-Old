@@ -176,9 +176,11 @@ public class Config {
         this.sqlPassword = config.getString("sql.password");
         this.sqlDatabase = config.getString("sql.database");
         Map<String, String> options = new HashMap<>();
-        ConfigurationSection section = config.getConfigurationSection("sql.options");
-        for (String key : section.getKeys(false)) {
-            options.put(key, section.getString(key));
+        if (config.contains("sql.options")) {
+            ConfigurationSection section = config.getConfigurationSection("sql.options");
+            for (String key : section.getKeys(false)) {
+                options.put(key, section.getString(key));
+            }
         }
         this.options = options;
 
