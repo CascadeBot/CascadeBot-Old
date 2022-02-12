@@ -3,10 +3,9 @@ package org.cascadebot.cascadebot.data.managers
 import com.google.common.util.concurrent.ThreadFactoryBuilder
 import com.mongodb.client.FindIterable
 import com.mongodb.client.model.Filters.eq
-import org.bson.types.ObjectId
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.database.DebugLogCallback
-import org.cascadebot.cascadebot.scheduler.ScheduledAction
+import org.cascadebot.cascadebot.data.entities.ScheduledActionEntity
 import java.time.Duration
 import java.util.Collections
 import java.util.concurrent.ScheduledFuture
@@ -17,7 +16,7 @@ object ScheduledActionManager {
 
     private val COLLECTION: String = "scheduled_actions"
 
-    var scheduledActions: MutableMap<ScheduledAction, ScheduledFuture<*>> = Collections.synchronizedMap(mutableMapOf())
+    var scheduledActions: MutableMap<ScheduledActionEntity, ScheduledFuture<*>> = Collections.synchronizedMap(mutableMapOf())
 
     private val executor = ScheduledThreadPoolExecutor(10,
             ThreadFactoryBuilder().setNameFormat("scheduled-action-%d").build()
@@ -25,7 +24,7 @@ object ScheduledActionManager {
 
     @JvmStatic
     @JvmOverloads
-    fun registerScheduledAction(action: ScheduledAction, new: Boolean = true): Duration {
+    fun registerScheduledAction(action: ScheduledActionEntity, new: Boolean = true): Duration {
         require(!scheduledActions.containsKey(action)) { "You cannot register duplicate scheduled actions! Action: $action" }
         require(action.type.verifyDataType(action.data)) { "The type of data is not valid for this action type! Expected: ${action.type.expectedClass.simpleName}, Actual: ${action.data::class.simpleName}" }
         val schedule = executor.schedule(action, action.delay, TimeUnit.MILLISECONDS)
@@ -34,39 +33,33 @@ object ScheduledActionManager {
         return Duration.between(action.creationTime, action.executionTime)
     }
 
-    fun saveScheduledAction(action: ScheduledAction) {
+    fun saveScheduledAction(action: ScheduledActionEntity) {
         CascadeBot.INS.databaseManager.runAsyncTask {
-            it.getCollection(COLLECTION, ScheduledAction::class.java).insertOne(
+            it.getCollection(COLLECTION, ScheduledActionEntity::class.java).insertOne(
                     action,
                     DebugLogCallback("Inserted new scheduled action: $action")
             )
         }
     }
 
-    fun deleteScheduledAction(id: ObjectId) {
-        scheduledActions.entries.removeIf { it.key.id == id }
-        CascadeBot.INS.databaseManager.runAsyncTask {
-            it.getCollection(COLLECTION, ScheduledAction::class.java).deleteOne(
-                    eq("_id", id),
-                    DebugLogCallback("Deleted scheduled action! Id: $id")
-            )
-        }
+    fun deleteScheduledAction(id: Int) {
+        // TODO this
     }
 
-    fun find(condition: (ScheduledAction) -> Boolean): ScheduledAction? {
+    fun find(condition: (ScheduledActionEntity) -> Boolean): ScheduledActionEntity? {
         return scheduledActions.keys.find(condition)
     }
 
-    fun filter(condition: (ScheduledAction) -> Boolean): List<ScheduledAction> {
+    fun filter(condition: (ScheduledActionEntity) -> Boolean): List<ScheduledActionEntity> {
         return scheduledActions.keys.filter(condition)
     }
 
-    fun removeIf(condition: (ScheduledAction) -> Boolean): Boolean {
+    fun removeIf(condition: (ScheduledActionEntity) -> Boolean): Boolean {
         return scheduledActions.entries.removeIf { condition(it.key) }
     }
 
-    private fun getScheduledActions(guildId: Long? = null): FindIterable<ScheduledAction> {
-        val collection = CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledAction::class.java)
+    private fun getScheduledActions(guildId: Long? = null): FindIterable<ScheduledActionEntity> {
+        val collection = CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledActionEntity::class.java)
         return if (guildId == null) collection.find() else collection.find(eq("guildId", guildId))
     }
 

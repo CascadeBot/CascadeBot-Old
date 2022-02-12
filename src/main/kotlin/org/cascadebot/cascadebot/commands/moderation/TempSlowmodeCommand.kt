@@ -9,8 +9,8 @@ import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import org.cascadebot.cascadebot.scheduler.ActionType
-import org.cascadebot.cascadebot.scheduler.ScheduledAction
+import org.cascadebot.cascadebot.data.entities.ActionType
+import org.cascadebot.cascadebot.data.entities.ScheduledActionEntity
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.ParserUtils
@@ -62,15 +62,17 @@ class TempSlowmodeCommand : MainCommand() {
         try {
             channel.manager.setSlowmode(longInterval.toInt() / 1000).queue {
                 val textInterval = FormatUtils.formatTime(longInterval, context.locale, true).replace("(0[hm])".toRegex(), "")
-                ScheduledActionManager.registerScheduledAction(ScheduledAction(
+                ScheduledActionManager.registerScheduledAction(
+                    ScheduledActionEntity(
                         ActionType.UNSLOWMODE,
-                        ScheduledAction.SlowmodeActionData(channel.idLong, oldSlowmode),
+                        ScheduledActionEntity.SlowmodeActionData(channel.idLong, oldSlowmode),
                         context.guild.idLong,
                         context.channel.idLong,
                         context.member.idLong,
                         Instant.now(),
                         longDuration
-                ))
+                )
+                )
                 val textDuration = FormatUtils.formatTime(longDuration, context.locale, true).replace("(0[hm])".toRegex(), "") +
                         " (" + context.i18n("words.until") + " " + FormatUtils.formatDateTime(OffsetDateTime.now().plus(longDuration, ChronoUnit.SECONDS), context.locale) + ")"
                 context.typedMessaging.replySuccess(context.i18n("commands.tempslowmode.success", textInterval, channel.name, textDuration))

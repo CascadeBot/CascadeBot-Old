@@ -1,4 +1,4 @@
-package org.cascadebot.cascadebot.scheduler
+package org.cascadebot.cascadebot.data.entities
 
 import net.dv8tion.jda.api.MessageBuilder
 import net.dv8tion.jda.api.entities.IMentionable
@@ -17,10 +17,10 @@ import java.time.ZoneOffset
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
-enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (ScheduledAction) -> Unit) {
-    REMINDER(ScheduledAction.ReminderActionData::class, ::reminderAction),
-    UNMUTE(ScheduledAction.ModerationActionData::class, { action ->
-        if (action.data is ScheduledAction.ModerationActionData) {
+enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (ScheduledActionEntity) -> Unit) {
+    REMINDER(ScheduledActionEntity.ReminderActionData::class, ::reminderAction),
+    UNMUTE(ScheduledActionEntity.ModerationActionData::class, { action ->
+        if (action.data is ScheduledActionEntity.ModerationActionData) {
             action.guild?.let { guild ->
                 val member = guild.getMemberById(action.data.targetId)
                 if (member != null) {
@@ -41,8 +41,8 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
             }
         }
     }),
-    UNBAN(ScheduledAction.ModerationActionData::class, { action ->
-        if (action.data is ScheduledAction.ModerationActionData) {
+    UNBAN(ScheduledActionEntity.ModerationActionData::class, { action ->
+        if (action.data is ScheduledActionEntity.ModerationActionData) {
             action.guild?.let { guild ->
                 guild.unban(action.data.targetId.toString()).apply {
                     val userName = org.cascadebot.cascadebot.CascadeBot.INS.shardManager.getUserById(action.data.targetId)
@@ -61,8 +61,8 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
             }
         }
     }),
-    UNSLOWMODE(ScheduledAction.SlowmodeActionData::class, { action ->
-        if (action.data is ScheduledAction.SlowmodeActionData) {
+    UNSLOWMODE(ScheduledActionEntity.SlowmodeActionData::class, { action ->
+        if (action.data is ScheduledActionEntity.SlowmodeActionData) {
             action.guild?.let { guild ->
                 val targetChannel = guild.getGuildChannelById(action.data.targetId)
                 targetChannel?.manager?.setSlowmode(action.data.oldSlowmode)?.queue(null, {
@@ -76,11 +76,11 @@ enum class ActionType(val expectedClass: KClass<*>, val dataConsumer: (Scheduled
         }
     });
 
-    fun verifyDataType(data: ScheduledAction.ActionData) = data::class.isSubclassOf(expectedClass)
+    fun verifyDataType(data: ScheduledActionEntity.ActionData) = data::class.isSubclassOf(expectedClass)
 }
 
-private fun reminderAction(action: ScheduledAction) {
-    if (action.data is ScheduledAction.ReminderActionData) {
+private fun reminderAction(action: ScheduledActionEntity) {
+    if (action.data is ScheduledActionEntity.ReminderActionData) {
         val warningText = if (Duration.between(action.executionTime, Instant.now()).seconds >= 5) {
             val locale = Language.getGuildLocale(action.guildId)
             Language.i18n(locale, "scheduled_actions.reminder_overdue", FormatUtils.formatDateTime(action.executionTime.atOffset(ZoneOffset.UTC), locale))

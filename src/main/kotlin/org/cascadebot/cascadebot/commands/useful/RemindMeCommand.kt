@@ -7,15 +7,14 @@ package org.cascadebot.cascadebot.commands.useful
 
 import com.ibm.icu.text.DateFormat
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.exceptions.ErrorResponseException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import org.cascadebot.cascadebot.scheduler.ActionType
-import org.cascadebot.cascadebot.scheduler.ScheduledAction
+import org.cascadebot.cascadebot.data.entities.ActionType
+import org.cascadebot.cascadebot.data.entities.ScheduledActionEntity
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.ParserUtils
 import java.time.Duration
@@ -44,9 +43,9 @@ class RemindMeCommand : MainCommand() {
         }
 
         ScheduledActionManager.registerScheduledAction(
-                ScheduledAction(
+                ScheduledActionEntity(
                         ActionType.REMINDER,
-                        ScheduledAction.ReminderActionData(message, dm),
+                        ScheduledActionEntity.ReminderActionData(message, dm),
                         context.guild.idLong,
                         context.channel.idLong,
                         context.user.idLong,

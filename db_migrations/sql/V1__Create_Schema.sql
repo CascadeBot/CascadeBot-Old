@@ -6,6 +6,8 @@ create type greeting_type as enum ('WELCOME', 'WELCOME_DM', 'GOODBYE');
 
 create type filter_target_type as enum ('CHANNEL', 'ROLE', 'USER');
 
+create type scheduled_action_type as enum ('REMINDER', 'UNMUTE', 'UNBAN', 'UNSLOWMODE');
+
 create table guild
 (
     guild_id   bigint not null,
@@ -238,5 +240,33 @@ create table guild_modlog_event_enabled
         primary key (id),
     constraint guild_modlog_event_enabled_fk
         foreign key (modlog_id, channel_id, guild_id) references guild_modlog
+            on delete cascade
+);
+
+create table scheduled_action_data
+(
+    id bigserial,
+    target_id bigint,
+    reminder text,
+    is_dm bool,
+    old_slowmode int,
+    constraint scheduled_action_data_pk
+        primary key (id)
+);
+
+create table scheduled_action
+(
+    id bigserial,
+    type scheduled_action_type not null,
+    data_id int not null,
+    guild_id bigint not null,
+    channel_id bigint not null,
+    user_id bigint not null,
+    creation_time timestamp not null,
+    execution_time timestamp not null,
+    constraint scheduled_action_pk
+        primary key (id),
+    constraint scheduled_action_data_fk
+        foreign key (data_id) references scheduled_action_data
             on delete cascade
 );

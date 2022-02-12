@@ -13,7 +13,7 @@ import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import org.cascadebot.cascadebot.scheduler.ScheduledAction
+import org.cascadebot.cascadebot.data.entities.ScheduledActionEntity
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
@@ -25,7 +25,7 @@ class RemindMeListSubCommand : SubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
         val actions = ScheduledActionManager.scheduledActions.keys.filter {
-            it.data is ScheduledAction.ReminderActionData &&
+            it.data is ScheduledActionEntity.ReminderActionData &&
                     it.userId == context.user.idLong
         }.sortedByDescending { it.executionTime }
 
@@ -35,13 +35,13 @@ class RemindMeListSubCommand : SubCommand() {
             title {
                 name = context.i18n("commands.remindme.list.your_reminders")
             }
-            val thisChannelCount = actions.count { it.channelId == context.channel.idLong && it.data is ScheduledAction.ReminderActionData && !it.data.isDM}
-            val dmCount = actions.count { it.data is ScheduledAction.ReminderActionData && it.data.isDM}
+            val thisChannelCount = actions.count { it.channelId == context.channel.idLong && it.data is ScheduledActionEntity.ReminderActionData && !it.data.isDM}
+            val dmCount = actions.count { it.data is ScheduledActionEntity.ReminderActionData && it.data.isDM}
             description = context.i18n("commands.remindme.list.summary_page", thisChannelCount, context.channel.asMention, dmCount, actions.size)
         }, false))
 
         for (action in actions) {
-            require(action.data is ScheduledAction.ReminderActionData)
+            require(action.data is ScheduledActionEntity.ReminderActionData)
 
             val absoluteDateTime = FormatUtils.formatDateTime(OffsetDateTime.now().plus(Duration.ofMillis(action.delay)), DateFormat.SHORT, DateFormat.LONG, context.locale)
             pages.add(PageObjects.EmbedPage(embed(MessageType.INFO, context.user) {

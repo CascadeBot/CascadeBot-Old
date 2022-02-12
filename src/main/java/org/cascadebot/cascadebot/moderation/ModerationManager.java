@@ -14,8 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.scheduler.ActionType;
-import org.cascadebot.cascadebot.scheduler.ScheduledAction;
+import org.cascadebot.cascadebot.data.entities.ActionType;
+import org.cascadebot.cascadebot.data.entities.ScheduledActionEntity;
 import org.cascadebot.cascadebot.utils.ExtensionsKt;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
@@ -56,9 +56,9 @@ public class ModerationManager {
         if (runChecks(ModAction.TEMP_BAN, target, submitter, context)) {
             runWithCheckedExceptions(() -> {
                 context.getGuild().ban(target, 7).reason(reason).queue(success -> {
-                    ScheduledActionManager.registerScheduledAction(new ScheduledAction(
+                    ScheduledActionManager.registerScheduledAction(new ScheduledActionEntity(
                             ActionType.UNBAN,
-                            new ScheduledAction.ModerationActionData(target.getIdLong()),
+                            new ScheduledActionEntity.ModerationActionData(target.getIdLong()),
                             context.getGuild().getIdLong(),
                             context.getChannel().getIdLong(),
                             submitter.getIdLong(),
@@ -122,9 +122,9 @@ public class ModerationManager {
                                 reason,
                                 FormatUtils.formatDateTime(OffsetDateTime.now().plus(delay, ChronoUnit.MILLIS), context.getLocale())))
                         .queue(aVoid -> {
-                            ScheduledActionManager.registerScheduledAction(new ScheduledAction(
+                            ScheduledActionManager.registerScheduledAction(new ScheduledActionEntity(
                                     ActionType.UNMUTE,
-                                    new ScheduledAction.ModerationActionData(target.getIdLong()),
+                                    new ScheduledActionEntity.ModerationActionData(target.getIdLong()),
                                     context.getGuild().getIdLong(),
                                     context.getChannel().getIdLong(),
                                     submitter.getIdLong(),
