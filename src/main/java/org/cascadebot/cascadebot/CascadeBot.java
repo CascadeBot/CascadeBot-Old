@@ -161,18 +161,6 @@ public class CascadeBot {
             builder.setPrettyPrinting();
         }
 
-        if (Config.INS.getConnectionString() != null) {
-            databaseManager = new DatabaseManager(Config.INS.getConnectionString());
-        } else {
-            databaseManager = new DatabaseManager(
-                    Config.INS.getUsername(),
-                    Config.INS.getPassword(),
-                    Config.INS.getDatabase(),
-                    Config.INS.getHosts(),
-                    Config.INS.isSsl()
-            );
-        }
-
         postgresManager = new PostgresManager(Config.INS.getSqlHost(), Config.INS.getSqlDatabase(), Config.INS.getSqlUsername(), Config.INS.getSqlPassword(), Config.INS.getOptions());
 
         musicHandler = new MusicHandler();
