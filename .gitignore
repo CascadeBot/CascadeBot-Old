@@ -23,6 +23,7 @@ target/
 *.yml
 config.yml
 !config.example.yml
+!docker-compose.yml
 
 *.iml
 TestCommand.java

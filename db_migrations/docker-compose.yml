@@ -1,0 +1,12 @@
+version: '3.3'
+services:
+  flyway:
+    image: flyway/flyway
+    env_file:
+      - flyway.env
+    environment:
+      - FLYWAY_EDITION=community
+      - FLYWAY_BASELINE_VERSION=0
+      - FLYWAY_VALIDATE_MIGRATION_NAMING=true
+    volumes:
+      - ./sql:/flyway/sql
