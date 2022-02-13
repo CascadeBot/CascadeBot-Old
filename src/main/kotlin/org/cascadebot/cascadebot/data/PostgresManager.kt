@@ -76,11 +76,22 @@ class PostgresManager(hosts: String, database: String, username: String, passwor
         }
     }
 
-    /*fun <T : Any>transaction(work: java.util.function.Function<Session, T?>) : T? {
-        return transaction() kotlinTransaction@{
-            return@kotlinTransaction work.apply(this)
+    fun transaction(work: Session.()->Unit) {
+        if (CommandListener.getSqlSession().get() != null) {
+            createTransaction(CommandListener.getSqlSession().get(), work)
+        } else {
+            val session = this.sessionFactory.openSession()
+            session.use {
+                createTransaction(it, work)
+            }
         }
-    }*/
+    }
+
+    fun transaction(work: Consumer<Session>) {
+        transaction() kotlinTransaction@{
+            work.accept(this)
+        }
+    }
 
 }
 
