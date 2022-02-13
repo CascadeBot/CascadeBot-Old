@@ -6,8 +6,11 @@
 package org.cascadebot.cascadebot.commands.management.tag;
 
 import net.dv8tion.jda.api.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
+import org.cascadebot.cascadebot.data.entities.GuildTagId;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
@@ -22,7 +25,10 @@ public class TagEditSubCommand extends SubCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        Tag tag = context.getData().getManagement().getTag(tagName);
+        GuildTagEntity tag = CascadeBot.INS.getPostgresManager().transaction(session -> {
+            return session.get(GuildTagEntity.class, new GuildTagId(context.getGuild().getIdLong(), tagName));
+        });
+
         if (tag == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
@@ -30,6 +36,10 @@ public class TagEditSubCommand extends SubCommand {
 
         tag.setContent(context.getMessage(1));
         context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", tagName));
+
+        CascadeBot.INS.getPostgresManager().transactionNoReturn(session -> {
+            session.save(tag);
+        });
     }
 
     @Override

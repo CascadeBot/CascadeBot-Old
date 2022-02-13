@@ -40,9 +40,8 @@ public class TagCreateSubCommand extends SubCommand {
         }
 
         GuildTagEntity guildTagEntity = new GuildTagEntity(context.getGuild().getIdLong(), context.getArg(0), context.getMessage(1));
-        CascadeBot.INS.getPostgresManager().transaction(session -> {
+        CascadeBot.INS.getPostgresManager().transactionNoReturn(session -> {
             session.save(guildTagEntity);
-            return null;
         });
         context.getData().getPermissionsManager().registerGuildPermission(guildTagEntity.getInternalPermission());
         context.getTypedMessaging().replySuccess(message);

@@ -6,9 +6,14 @@
 package org.cascadebot.cascadebot.commands.management.tag;
 
 import net.dv8tion.jda.api.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.utils.DatabaseUtilsKt;
+
+import java.util.Map;
 
 public class TagDeleteSubCommand extends SubCommand {
 
@@ -21,7 +26,15 @@ public class TagDeleteSubCommand extends SubCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        if (context.getData().getManagement().removeTag(tagName)) {
+        Integer deletedNum = CascadeBot.INS.getPostgresManager().transaction(session -> {
+            return DatabaseUtilsKt.deleteById(
+                    session,
+                    GuildTagEntity.class,
+                    Map.of("name", tagName, "guild_id", context.getGuild().getIdLong())
+            );
+        });
+
+        if (deletedNum != null && deletedNum > 0) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.tag.delete.successfully_deleted_tag"));
         } else {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.delete.tag_doesnt_exist", tagName));
