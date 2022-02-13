@@ -5,9 +5,12 @@
 
 package org.cascadebot.cascadebot.data.entities
 
+import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.data.objects.PermissionObject
+import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects.tags
 import java.io.Serializable
+import java.util.regex.Pattern
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -33,6 +36,10 @@ class GuildTagEntity(guildId: Long, name: String, content: String): PermissionOb
     @Column(name = "category")
     var category: String? = null
 
+    fun formatTag(commandContext: CommandContext): String {
+        return tags.formatMessage(commandContext.locale, content, commandContext)
+    }
+
     fun getPermission(): String {
         return (if (category != null) {
             "$category."
@@ -45,6 +52,12 @@ class GuildTagEntity(guildId: Long, name: String, content: String): PermissionOb
 
     fun cascadeModule(): Module {
         return Module.MANAGEMENT
+    }
+
+    companion object {
+        // https://regex101.com/r/hlsgVW/1
+        @JvmStatic
+        val TAG_PATTERN = Pattern.compile("\\{([A-z]+)(?::((?:,?\\w+)+))?}")
     }
 
 }
