@@ -222,6 +222,9 @@ data class CommandContext(
     fun <T : Any> getDataObject(javaClass: Class<T>): T? {
         return CascadeBot.INS.postgresManager.transaction {
             return@transaction get(javaClass, guild.idLong)
+    fun saveDataObject(obj: Any) {
+        return CascadeBot.INS.postgresManager.transactionNoReturn {
+            session.save(obj)
         }
     }
 

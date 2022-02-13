@@ -40,9 +40,7 @@ public class TagCreateSubCommand extends SubCommand {
         }
 
         GuildTagEntity guildTagEntity = new GuildTagEntity(context.getGuild().getIdLong(), context.getArg(0), context.getMessage(1));
-        context.transactionNoReturn(session -> {
-            session.save(guildTagEntity);
-        });
+        context.saveDataObject(guildTagEntity);
         context.getData().getPermissionsManager().registerGuildPermission(guildTagEntity.getInternalPermission());
         context.getTypedMessaging().replySuccess(message);
     }

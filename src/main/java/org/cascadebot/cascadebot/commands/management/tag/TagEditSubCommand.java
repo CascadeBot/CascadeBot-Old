@@ -6,12 +6,10 @@
 package org.cascadebot.cascadebot.commands.management.tag;
 
 import net.dv8tion.jda.api.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTagId;
-import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class TagEditSubCommand extends SubCommand {
@@ -35,11 +33,8 @@ public class TagEditSubCommand extends SubCommand {
         }
 
         tag.setContent(context.getMessage(1));
+        context.saveDataObject(tag);
         context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", tagName));
-
-        context.transactionNoReturn(session -> {
-            session.save(tag);
-        });
     }
 
     @Override
