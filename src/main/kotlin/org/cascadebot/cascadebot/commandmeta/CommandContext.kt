@@ -217,7 +217,7 @@ data class CommandContext(
         return getGlobalEmote(key)?.asMention ?: ""
     }
 
-    fun <T> getDataObject(javaClass: Class<T>): T? {
+    fun <T : Any> getDataObject(javaClass: Class<T>): T? {
         return CascadeBot.INS.postgresManager.transaction {
             return@transaction get(javaClass, guild.idLong)
         }

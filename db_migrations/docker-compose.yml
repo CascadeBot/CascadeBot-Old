@@ -2,6 +2,7 @@ version: '3.3'
 services:
   flyway:
     image: flyway/flyway
+    network_mode: "host"
     env_file:
       - flyway.env
     environment:
