@@ -5,11 +5,15 @@
 
 package org.cascadebot.cascadebot.commands.management.tag;
 
+import kotlin.jvm.functions.Function1;
 import net.dv8tion.jda.api.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.hibernate.Session;
 
 public class TagCreateSubCommand extends SubCommand {
 
@@ -35,9 +39,12 @@ public class TagCreateSubCommand extends SubCommand {
             message += "\n\n" + context.i18n("commands.tag.create.warn_uppercase");
         }
 
-        Tag tag = new Tag(context.getArg(0), context.getMessage(1), "tag");
-        context.getData().getManagement().addTag(context.getArg(0), tag);
-        context.getData().getPermissionsManager().registerGuildPermission(tag.getInternalPermission());
+        GuildTagEntity guildTagEntity = new GuildTagEntity(context.getGuild().getIdLong(), context.getArg(0), context.getMessage(1));
+        CascadeBot.INS.getPostgresManager().transaction(session -> {
+            session.save(guildTagEntity);
+            return null;
+        });
+        context.getData().getPermissionsManager().registerGuildPermission(guildTagEntity.getInternalPermission());
         context.getTypedMessaging().replySuccess(message);
     }
 

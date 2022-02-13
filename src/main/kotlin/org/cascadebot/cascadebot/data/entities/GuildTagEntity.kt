@@ -5,6 +5,8 @@
 
 package org.cascadebot.cascadebot.data.entities
 
+import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.data.objects.PermissionObject
 import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -15,7 +17,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "guild_tag")
 @IdClass(GuildTagId::class)
-class GuildTagEntity(guildId: Long, name: String, content: String) {
+class GuildTagEntity(guildId: Long, name: String, content: String): PermissionObject() {
 
     @Id
     @Column(name = "guild_id")
@@ -30,6 +32,20 @@ class GuildTagEntity(guildId: Long, name: String, content: String) {
 
     @Column(name = "category")
     var category: String? = null
+
+    fun getPermission(): String {
+        return (if (category != null) {
+            "$category."
+        } else {""}) + name;
+    }
+
+    fun getParent(): String {
+        return "tag"
+    }
+
+    fun cascadeModule(): Module {
+        return Module.MANAGEMENT
+    }
 
 }
 
