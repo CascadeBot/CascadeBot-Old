@@ -219,9 +219,13 @@ data class CommandContext(
         return getGlobalEmote(key)?.asMention ?: ""
     }
 
-    fun <T : Any> getDataObject(javaClass: Class<T>): T? {
+    @JvmOverloads
+    fun <T : Any> getDataObject(javaClass: Class<T>, key: java.io.Serializable = guild.idLong): T? {
         return CascadeBot.INS.postgresManager.transaction {
-            return@transaction get(javaClass, guild.idLong)
+            return@transaction get(javaClass, key)
+        }
+    }
+
     fun saveDataObject(obj: Any) {
         return CascadeBot.INS.postgresManager.transactionNoReturn {
             session.save(obj)

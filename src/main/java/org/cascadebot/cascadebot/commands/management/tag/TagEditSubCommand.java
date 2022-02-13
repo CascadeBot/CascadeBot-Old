@@ -23,9 +23,7 @@ public class TagEditSubCommand extends SubCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        GuildTagEntity tag = context.transaction(session -> {
-            return session.get(GuildTagEntity.class, new GuildTagId(context.getGuildId(), tagName));
-        });
+        GuildTagEntity tag = context.getDataObject(GuildTagEntity.class, new GuildTagId(context.getGuildId(), tagName));
 
         if (tag == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));

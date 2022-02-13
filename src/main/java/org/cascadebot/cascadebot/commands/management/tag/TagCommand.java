@@ -10,6 +10,8 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
+import org.cascadebot.cascadebot.data.entities.GuildTagId;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.objects.Tag;
@@ -33,12 +35,13 @@ public class TagCommand extends MainCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        if (!context.getData().getManagement().hasTag(context.getArg(0))) {
+        GuildTagEntity tag = context.getDataObject(GuildTagEntity.class, new GuildTagId(context.getGuildId(), tagName));
+
+        if (tag == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
         }
 
-        Tag tag = context.getData().getManagement().getTag(tagName);
         context.reply(tag.formatTag(context));
     }
 

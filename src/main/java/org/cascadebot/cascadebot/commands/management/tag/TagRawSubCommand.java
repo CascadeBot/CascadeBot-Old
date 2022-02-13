@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
+import org.cascadebot.cascadebot.data.entities.GuildTagId;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
@@ -23,13 +25,13 @@ public class TagRawSubCommand extends SubCommand {
         }
 
         String tagName = context.getArg(0).toLowerCase();
+        GuildTagEntity tag = context.getDataObject(GuildTagEntity.class, new GuildTagId(context.getGuildId(), tagName));
 
-        if (!context.getData().getManagement().hasTag(tagName)) {
+        if (tag == null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.cannot_find_tag", tagName));
             return;
         }
 
-        Tag tag = context.getData().getManagement().getTag(tagName);
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(context.i18n("words.tag") + ": " + tagName);
         builder.setDescription("```" + tag.getContent() + "```");
