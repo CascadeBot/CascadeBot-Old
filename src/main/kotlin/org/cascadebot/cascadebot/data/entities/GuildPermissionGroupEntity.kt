@@ -57,5 +57,5 @@ class GuildPermissionGroupEntity(name: String, guildId: Long) {
 }
 
 data class GuildPermissionGroupId(val id: String, val guildId: Long) : Serializable {
-
+    constructor(): this("", 0)
 }

@@ -36,4 +36,6 @@ class GuildPermissionUserEntity(id: Long, guildId: Long) {
 
 }
 
-data class GuildPermissionUserId(val id: Long, val guildId: Long) : Serializable
+data class GuildPermissionUserId(val id: Long, val guildId: Long) : Serializable {
+    constructor(): this(0, 0)
+}
