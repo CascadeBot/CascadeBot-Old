@@ -161,7 +161,7 @@ public class CascadeBot {
             builder.setPrettyPrinting();
         }
 
-        postgresManager = new PostgresManager(Config.INS.getSqlHost(), Config.INS.getSqlDatabase(), Config.INS.getSqlUsername(), Config.INS.getSqlPassword(), Config.INS.getOptions());
+        postgresManager = new PostgresManager(Config.INS.getDatabaseConnectionString());
 
         musicHandler = new MusicHandler();
 

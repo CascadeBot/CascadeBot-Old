@@ -16,21 +16,7 @@ import java.util.Properties
 import java.util.function.Consumer
 import javax.persistence.Entity
 
-class PostgresManager(hosts: String, database: String, username: String, password: String, val options: Map<String, String>) {
-
-    val database: String = urlEncode(database)
-    val username: String = urlEncode(username)
-    val password: String = urlEncode(password)
-
-    private val connectionString: String by lazy {
-        "jdbc:postgresql://$hosts/${this.database}?user=${this.username}&password=${this.password}${if (options.isNotEmpty()) { 
-            var builder: StringBuilder = StringBuilder()
-            for (entry in options.entries) {
-                builder.append('&').append(urlEncode(entry.key)).append('=').append(urlEncode(entry.value))
-            }
-            builder.toString();
-        } else ""}"
-    }
+class PostgresManager(connectionString: String) {
 
     val sessionFactory: SessionFactory
 
@@ -39,10 +25,7 @@ class PostgresManager(hosts: String, database: String, username: String, passwor
     }
 
     init {
-        require(hosts.isNotBlank()) { "hosts cannot be empty or blank!" }
-        require(database.isNotBlank()) { "database cannot be empty or blank!" }
-        require(username.isNotBlank()) { "username cannot be empty or blank!" }
-        require(password.isNotBlank()) { "password cannot be empty or blank!" }
+        require(connectionString.isNotBlank()) { "connection string cannot be empty or blank!" }
 
         val dbConfig = Configuration()
 
@@ -60,6 +43,7 @@ class PostgresManager(hosts: String, database: String, username: String, passwor
         hibernateProperties["hibernate.connection.driver_class"] = "org.postgresql.Driver"
         hibernateProperties["hibernate.connection.url"] = connectionString
         hibernateProperties["hibernate.hikari.maximumPoolSize"] = "20"
+        hibernateProperties["hibernate.types.print.banner"] = "false"
 
         dbConfig.addProperties(hibernateProperties)
         sessionFactory = dbConfig.buildSessionFactory()
@@ -76,7 +60,7 @@ class PostgresManager(hosts: String, database: String, username: String, passwor
         }
     }
 
-    fun transaction(work: Session.()->Unit) {
+    fun transactionNoReturn(work: Session.()->Unit) {
         if (CommandListener.getSqlSession().get() != null) {
             createTransaction(CommandListener.getSqlSession().get(), work)
         } else {
@@ -87,8 +71,8 @@ class PostgresManager(hosts: String, database: String, username: String, passwor
         }
     }
 
-    fun transaction(work: Consumer<Session>) {
-        transaction() kotlinTransaction@{
+    fun transactionNoReturn(work: Consumer<Session>) {
+        transactionNoReturn() kotlinTransaction@{
             work.accept(this)
         }
     }

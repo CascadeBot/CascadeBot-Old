@@ -19,6 +19,7 @@ import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
 import org.cascadebot.shared.Auth;
 import org.cascadebot.shared.SecurityLevel;
+import org.eclipse.jetty.util.UrlEncoded;
 import org.simpleyaml.configuration.ConfigurationSection;
 import org.simpleyaml.configuration.file.FileConfiguration;
 import org.simpleyaml.configuration.file.YamlConfiguration;
@@ -30,12 +31,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 @Getter
 public class Config {
@@ -64,19 +68,7 @@ public class Config {
     private String hasteServer;
     private String hasteLink;
 
-    private String username;
-    private char[] password;
-    private String database;
-    private List<String> hosts;
-    private boolean ssl;
-
-    private String connectionString;
-
-    private String sqlHost;
-    private String sqlDatabase;
-    private String sqlUsername;
-    private String sqlPassword;
-    private Map<String, String> options;
+    private String databaseConnectionString;
 
     private int shardNum;
 
@@ -154,35 +146,53 @@ public class Config {
             return;
         }
 
-        if (config.contains("database.connection_string") && !config.getString("database.connection_string").isBlank()) {
-            this.connectionString = config.getString("database.connection_string");
-        } else {
-            this.username = config.getString("database.username");
-            var passwordTemp = config.getString("database.password");
-            if (passwordTemp != null) {
-                this.password = passwordTemp.toCharArray();
+        ConfigurationSection databaseSection = config.getConfigurationSection("database");
+
+        if (databaseSection.contains("connection_string")) {
+            this.databaseConnectionString = config.getString("database.connection_string");
+            if (!databaseConnectionString.startsWith("jdbc:")) {
+                databaseConnectionString = "jdbc:" + databaseConnectionString;
             }
-            this.database = config.getString("database.database");
-            this.hosts = config.getStringList("database.hosts");
-            if (this.hosts.size() == 0 || this.hosts.stream().allMatch(String::isBlank)) {
-                LOG.error("There are no valid hosts specified, exiting!");
+            try {
+                new URI(databaseConnectionString.substring(5));
+            } catch (URISyntaxException e) {
+                LOG.error("Database connection string provided is not valid!");
                 ShutdownHandler.exitWithError();
+                return;
             }
-            this.ssl = warnOnDefault(config, "database.ssl", false);
+        } else {
+            if (!Stream.of("host", "username", "password").allMatch(databaseSection::contains)) {
+                LOG.error("Database host, username and password are required!");
+                ShutdownHandler.exitWithError();
+                return;
+            }
+
+            String host = config.getString("database.host");
+            int port = config.getInt("database.port", 5432);
+            String username = config.getString("database.username");
+            String password = config.getString("database.password");
+            String database = config.getString("database.database", "postgres");
+            Map<String, String> options = new HashMap<>();
+            if (config.contains("database.options")) {
+                ConfigurationSection section = config.getConfigurationSection("sql.options");
+                for (String key : section.getKeys(false)) {
+                    options.put(key, section.getString(key));
+                }
+            }
+
+            StringBuilder connectionStringBuilder = new StringBuilder("jdbc:postgresql://");
+            connectionStringBuilder.append(UrlEncoded.encodeString(host)).append(":").append(port)
+                    .append("/").append(database)
+                    .append("?").append("user=").append(URLEncoder.encode(username, StandardCharsets.UTF_8))
+                    .append("&password=").append(URLEncoder.encode(password, StandardCharsets.UTF_8));
+
+            options.forEach((key, value) -> connectionStringBuilder.append("&").append(URLEncoder.encode(key, StandardCharsets.UTF_8))
+                    .append("=")
+                    .append(URLEncoder.encode(value, StandardCharsets.UTF_8)));
+
+            this.databaseConnectionString = connectionStringBuilder.toString();
         }
 
-        this.sqlHost = config.getString("sql.host");
-        this.sqlUsername = config.getString("sql.username");
-        this.sqlPassword = config.getString("sql.password");
-        this.sqlDatabase = config.getString("sql.database");
-        Map<String, String> options = new HashMap<>();
-        if (config.contains("sql.options")) {
-            ConfigurationSection section = config.getConfigurationSection("sql.options");
-            for (String key : section.getKeys(false)) {
-                options.put(key, section.getString(key));
-            }
-        }
-        this.options = options;
 
         this.prometheusPort = config.getInt("stats_port", 6060);
 
@@ -227,7 +237,7 @@ public class Config {
         ConfigurationSection configGlobalEmotes = config.getConfigurationSection("global_emotes");
         if (configGlobalEmotes != null) {
             for (String emoteKey : configGlobalEmotes.getKeys(false)) {
-                Long emoteId = configGlobalEmotes.getLong(emoteKey);
+                long emoteId = configGlobalEmotes.getLong(emoteKey);
                 if (emoteId > 0) {
                     this.globalEmotes.put(emoteKey, emoteId);
                 }
@@ -268,7 +278,7 @@ public class Config {
     private <T> T warnOnDefault(FileConfiguration config, String path, T defaultValue) {
         T object = (T) config.get(path);
         if (object == null) {
-            LOG.warn("Value for key: {} was not provided! Using default value: \"{}\"", path, String.valueOf(defaultValue));
+            LOG.warn("Value for key: {} was not provided! Using default value: \"{}\"", path, defaultValue);
             return defaultValue;
         } else {
             return object;
@@ -316,50 +326,6 @@ public class Config {
 
     public String getHasteLink() {
         return hasteLink;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public char[] getPassword() {
-        return password;
-    }
-
-    public String getDatabase() {
-        return database;
-    }
-
-    public List<String> getHosts() {
-        return hosts;
-    }
-
-    public String getSqlHost() {
-        return sqlHost;
-    }
-
-    public String getSqlDatabase() {
-        return sqlDatabase;
-    }
-
-    public String getSqlUsername() {
-        return sqlUsername;
-    }
-
-    public String getSqlPassword() {
-        return sqlPassword;
-    }
-
-    public Map<String, String> getOptions() {
-        return options;
-    }
-
-    public boolean isSsl() {
-        return ssl;
-    }
-
-    public String getConnectionString() {
-        return connectionString;
     }
 
     public int getShardNum() {
