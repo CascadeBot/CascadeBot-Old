@@ -22,9 +22,6 @@ import java.util.regex.Pattern;
 @AllArgsConstructor
 public class Tag extends PermissionObject {
 
-    // https://regex101.com/r/hlsgVW/1
-    private static final Pattern TAG_PATTERN = Pattern.compile("\\{([A-z]+)(?::((?:,?\\w+)+))?}");
-
     private String name;
     private String content;
     private String category;
