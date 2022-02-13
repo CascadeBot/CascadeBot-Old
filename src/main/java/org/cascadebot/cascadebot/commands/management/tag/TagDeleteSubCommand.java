@@ -26,11 +26,11 @@ public class TagDeleteSubCommand extends SubCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        Integer deletedNum = CascadeBot.INS.getPostgresManager().transaction(session -> {
+        Integer deletedNum = context.transaction(session -> {
             return DatabaseUtilsKt.deleteById(
                     session,
                     GuildTagEntity.class,
-                    Map.of("name", tagName, "guild_id", context.getGuild().getIdLong())
+                    Map.of("name", tagName, "guild_id", context.getGuildId())
             );
         });
 

@@ -25,8 +25,8 @@ public class TagEditSubCommand extends SubCommand {
 
         String tagName = context.getArg(0).toLowerCase();
 
-        GuildTagEntity tag = CascadeBot.INS.getPostgresManager().transaction(session -> {
-            return session.get(GuildTagEntity.class, new GuildTagId(context.getGuild().getIdLong(), tagName));
+        GuildTagEntity tag = context.transaction(session -> {
+            return session.get(GuildTagEntity.class, new GuildTagId(context.getGuildId(), tagName));
         });
 
         if (tag == null) {
@@ -37,7 +37,7 @@ public class TagEditSubCommand extends SubCommand {
         tag.setContent(context.getMessage(1));
         context.getTypedMessaging().replySuccess(context.i18n("commands.tag.edit.successfully_edited_tag", tagName));
 
-        CascadeBot.INS.getPostgresManager().transactionNoReturn(session -> {
+        context.transactionNoReturn(session -> {
             session.save(tag);
         });
     }
