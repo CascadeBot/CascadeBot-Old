@@ -26,6 +26,8 @@ import org.cascadebot.cascadebot.messaging.MessagingTyped
 import org.cascadebot.cascadebot.messaging.MessagingUI
 import org.cascadebot.cascadebot.music.CascadePlayer
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.hibernate.Session
+import java.util.function.Consumer
 
 data class CommandContext(
         val command: ExecutableCommand?,
@@ -221,6 +223,22 @@ data class CommandContext(
         return CascadeBot.INS.postgresManager.transaction {
             return@transaction get(javaClass, guild.idLong)
         }
+    }
+
+    fun getGuildId(): Long {
+        return guild.idLong
+    }
+
+    fun <T : Any> transaction(work: Session.()->T?) : T? {
+        return CascadeBot.INS.postgresManager.transaction(work)
+    }
+
+    fun transactionNoReturn(work: Session.()->Unit) {
+        CascadeBot.INS.postgresManager.transactionNoReturn(work)
+    }
+
+    fun transactionNoReturn(work: Consumer<Session>) {
+        CascadeBot.INS.postgresManager.transactionNoReturn(work)
     }
 
 }
