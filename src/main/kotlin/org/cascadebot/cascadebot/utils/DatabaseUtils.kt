@@ -7,26 +7,33 @@ package org.cascadebot.cascadebot.utils
 
 import org.hibernate.Session
 
-fun <T> Session.deleteById(clazz: Class<*>, columnName: String, id: T): Int {
-    val builder = session.criteriaBuilder
-    var criteria = builder.createCriteriaDelete(clazz)
-    val root = criteria.root
+fun <T : Any> Session.deleteById(clazz: Class<*>, columnName: String, id: T): Int {
+    return deleteById(clazz, mapOf(columnName to id))
+}
 
-    criteria = criteria.where(builder.equal(root.get<T>(columnName), id))
+fun Session.deleteById(clazz: Class<*>, keys: Map<String, Any>): Int {
+    val builder = criteriaBuilder
+    var criteria = builder.createCriteriaDelete(clazz)
+    require(keys.isNotEmpty()) { "Keys must not be empty!" }
+
+    keys.forEach {
+        criteria = criteria.where(builder.equal(criteria.root.get<Any>(it.key), it.value))
+    }
 
     return createQuery(criteria).executeUpdate()
 }
 
-fun Session.deleteById(clazz: Class<*>, keys: Map<String, Any>) : Int{
-    val builder = session.criteriaBuilder
-    var criteria = builder.createCriteriaDelete(clazz)
-    val root = criteria.root
+fun <K : Any, V : Any> Session.listOf(clazz: Class<V>, columnName: String, id: K): MutableList<V> {
+    return listOf(clazz, mapOf(columnName to id))
+}
 
-    require(keys.isNotEmpty()) { "Keys must not be empty!" }
+fun <T> Session.listOf(clazz: Class<T>, keys: Map<String, Any>): MutableList<T> {
+    val builder = criteriaBuilder
+    var criteria = builder.createQuery(clazz)
 
     keys.forEach {
-        criteria = criteria.where(builder.equal(root.get<Any>(it.key), it.value))
+        criteria = criteria.where(builder.equal(criteria.from(clazz).get<Any>(it.key), it.value))
     }
 
-    return createQuery(criteria).executeUpdate()
+    return this.createQuery(criteria).list();
 }
