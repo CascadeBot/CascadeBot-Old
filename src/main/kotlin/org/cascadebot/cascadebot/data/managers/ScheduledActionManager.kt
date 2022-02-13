@@ -11,6 +11,7 @@ import java.util.Collections
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.ScheduledThreadPoolExecutor
 import java.util.concurrent.TimeUnit
+import javax.persistence.criteria.CriteriaQuery
 
 object ScheduledActionManager {
 
@@ -58,9 +59,16 @@ object ScheduledActionManager {
         return scheduledActions.entries.removeIf { condition(it.key) }
     }
 
-    private fun getScheduledActions(guildId: Long? = null): FindIterable<ScheduledActionEntity> {
-        val collection = CascadeBot.INS.databaseManager.database.getCollection(COLLECTION, ScheduledActionEntity::class.java)
-        return if (guildId == null) collection.find() else collection.find(eq("guildId", guildId))
+    private fun getScheduledActions(guildId: Long? = null): List<ScheduledActionEntity> {
+        return CascadeBot.INS.postgresManager.transaction {
+            val builder = criteriaBuilder
+            var criteria: CriteriaQuery<ScheduledActionEntity> = builder.createQuery(ScheduledActionEntity::class.java)
+            val root = criteria.from(ScheduledActionEntity::class.java)
+            if (guildId != null) {
+                criteria = criteria.where(builder.equal(root.get<Long>("guild_id"), guildId))
+            }
+            return@transaction this.createQuery(criteria).list();
+        } ?: listOf()
     }
 
     @JvmStatic
