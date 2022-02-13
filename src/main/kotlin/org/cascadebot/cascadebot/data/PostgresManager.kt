@@ -76,11 +76,11 @@ class PostgresManager(hosts: String, database: String, username: String, passwor
         }
     }
 
-    fun <T : Any>transaction(work: java.util.function.Function<Session, T?>) : T? {
+    /*fun <T : Any>transaction(work: java.util.function.Function<Session, T?>) : T? {
         return transaction() kotlinTransaction@{
             return@kotlinTransaction work.apply(this)
         }
-    }
+    }*/
 
 }
 
