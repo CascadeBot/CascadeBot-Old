@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 
@@ -21,8 +22,9 @@ public class GroupPermissionCreateSubCommand extends SubCommand {
             return;
         }
 
-        Group group = context.getData().getManagement().getPermissions().createGroup(context.getArg(0));
-        context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create.success", context.getArg(0), group.getId()));
+        GuildPermissionGroupEntity group = new GuildPermissionGroupEntity(context.getArg(0), context.getGuildId());
+        context.saveDataObject(group);
+        context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create.success", context.getArg(0)));
     }
 
     @Override

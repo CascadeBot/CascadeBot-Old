@@ -153,6 +153,7 @@
     "groupperms": {
       "command": "groupperms",
       "description": "Interact with permission groups.",
+      "no_group": "group `{0}` doesn't exist",
       "add": {
         "command": "add",
         "description": "Adds a permission to a group.",
@@ -168,12 +169,13 @@
       "create": {
         "command": "create",
         "description": "Creates a group.",
-        "success": "Created group `{0}` with id `{1}`"
+        "success": "Created group `{0}`"
       },
       "delete": {
         "command": "delete",
         "description": "Deletes a group.",
-        "success": "Deleted group `{0}` with id `{1}`"
+        "failed": "Failed to delete group `{0}`",
+        "success": "Deleted group `{0}`"
       },
       "info": {
         "command": "info",

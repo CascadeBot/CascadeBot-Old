@@ -34,7 +34,7 @@ class GuildPermissionGroupEntity(name: String, guildId: Long) {
 
     @Column(name = "permissions", columnDefinition = "varchar(255)[]", nullable = false)
     @Type(type = "list-array")
-    val permissions: MutableList<String> = mutableListOf()
+    val permissions: MutableSet<String> = mutableSetOf()
 
     @Column(name = "roles", columnDefinition = "bigint[]", nullable = false)
     @Type(type = "list-array")
@@ -51,6 +51,6 @@ class GuildPermissionGroupEntity(name: String, guildId: Long) {
 
 }
 
-data class GuildPermissionGroupId(val id: String, val guildId: Long) : Serializable {
+data class GuildPermissionGroupId(val name: String, val guildId: Long) : Serializable {
     constructor(): this("", 0)
 }
