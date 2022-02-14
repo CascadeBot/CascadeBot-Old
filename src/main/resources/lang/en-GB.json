@@ -267,19 +267,18 @@
     "module": {
       "command": "module",
       "description": "Interacts with modules by enabling, disabling or listing them.",
+      "cannot_find_module": "We couldn't find that module. Use `|%|module list` for a list of modules.",
       "disable": {
         "command": "disable",
         "description": "Disables the specified module.",
         "disabled": "The module `{0}` has been disabled!",
-        "already_disabled": "The module `{0}` is already disabled!",
-        "cannot_find_module": "We couldn't find that module. Use `|%|module list` for a list of modules."
+        "already_disabled": "The module `{0}` is already disabled!"
       },
       "enable": {
         "command": "enable",
         "description": "Enables the specified module.",
         "enabled": "The module `{0}` has been enabled!",
-        "already_enabled": "The module `{0}` is already enabled!",
-        "cannot_find_module": "We couldn't find that module. Use `|%|module list` for a list of modules."
+        "already_enabled": "The module `{0}` is already enabled!"
       },
       "list": {
         "command": "list",
