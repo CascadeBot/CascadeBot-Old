@@ -5,11 +5,11 @@
 
 package org.cascadebot.cascadebot.data.entities
 
+import org.cascadebot.cascadebot.commandmeta.Module
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Table
-import org.cascadebot.cascadebot.commandmeta.Module
 
 @Entity
 @Table(name = "guild_module")
@@ -34,14 +34,16 @@ class GuildModuleEntity(guildId: Long) {
     @Column(name = "informational", nullable = false)
     var informational: Boolean = true
 
-    val moduleMap : Map<Module, Boolean>
-        get() = mapOf(
-            Module.CORE to core,
-            Module.USEFUL to useful,
-            Module.MODERATION to moderation,
-            Module.MANAGEMENT to management,
-            Module.INFORMATIONAL to informational
-        )
+    fun getModuleEnabled(mod: Module): Boolean {
+        return when (mod) {
+            Module.CORE -> core
+            Module.MANAGEMENT -> management
+            Module.INFORMATIONAL -> informational
+            Module.MODERATION -> moderation
+            Module.USEFUL -> useful
+            else -> error("Module not support")
+        }
+    }
 
     fun setModuleEnabled(mod: Module, enabled: Boolean) {
         when (mod) {

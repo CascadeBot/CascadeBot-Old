@@ -40,7 +40,7 @@ public class ModuleEnableSubCommand extends SubCommand {
 
         String moduleName = ExtensionsKt.toCapitalized(FormatUtils.formatEnum(module, context.getLocale()));
 
-        Boolean moduleEnabled = guildModuleEntity.getModuleMap().get(module);
+        boolean moduleEnabled = guildModuleEntity.getModuleEnabled(module);
 
         if (moduleEnabled) {
             // If module was already disabled
