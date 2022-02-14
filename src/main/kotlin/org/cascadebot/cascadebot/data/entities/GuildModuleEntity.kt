@@ -19,18 +19,18 @@ class GuildModuleEntity(guildId: Long) {
     val guildId: Long = guildId
 
     @Column(name = "core", nullable = false)
-    val core: Boolean = true
+    var core: Boolean = true
 
     @Column(name = "useful", nullable = false)
-    val useful: Boolean = true
+    var useful: Boolean = true
 
     @Column(name = "moderation", nullable = false)
-    val moderation: Boolean = true
+    var moderation: Boolean = true
 
     @Column(name = "management", nullable = false)
-    val management: Boolean = true
+    var management: Boolean = true
 
     @Column(name = "informational", nullable = false)
-    val informational: Boolean = true
+    var informational: Boolean = true
 
 }
