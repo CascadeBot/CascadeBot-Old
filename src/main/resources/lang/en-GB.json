@@ -164,7 +164,7 @@
         "command": "remove",
         "description": "Removes a permission from the group.",
         "success": "Successfully removed permission `{0}` from group `{1}`",
-        "fail": "Couldn't remove permission `{0}` from group `{1}` as they already have the permission"
+        "fail": "Couldn't remove permission `{0}` from group `{1}` as they don't have the permission"
       },
       "create": {
         "command": "create",
