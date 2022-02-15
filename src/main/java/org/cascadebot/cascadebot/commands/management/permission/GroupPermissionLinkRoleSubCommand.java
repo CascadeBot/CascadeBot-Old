@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.entities.Role;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
@@ -29,13 +31,18 @@ public class GroupPermissionLinkRoleSubCommand extends SubCommand {
             return;
         }
 
-        PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(0), group -> {
-            if (group.linkRole(role.getIdLong())) {
-                context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.link.success", group.getName(), role.getName()));
-            } else {
-                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.link.fail", group.getName(), role.getName()));
-            }
-        }, sender.getIdLong());
+        GuildPermissionGroupEntity group = context.getDataObject(GuildPermissionGroupEntity.class, new GuildPermissionGroupId(context.getArg(0), context.getGuildId()));
+
+        if (group == null) {
+            context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.no_group", context.getArg(0)));
+            return;
+        }
+
+        if (group.getRoles().add(role.getIdLong())) {
+            context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.link.success", group.getName(), role.getName()));
+        } else {
+            context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.link.fail", group.getName(), role.getName()));
+        }
     }
 
     @Override

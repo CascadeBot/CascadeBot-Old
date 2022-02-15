@@ -38,7 +38,7 @@ class GuildPermissionGroupEntity(name: String, guildId: Long) {
 
     @Column(name = "roles", columnDefinition = "bigint[]", nullable = false)
     @Type(type = "list-array")
-    val roles: MutableList<String> = mutableListOf()
+    val roles: MutableSet<Long> = mutableSetOf()
 
     @ManyToMany
     @Cascade(CascadeType.ALL)

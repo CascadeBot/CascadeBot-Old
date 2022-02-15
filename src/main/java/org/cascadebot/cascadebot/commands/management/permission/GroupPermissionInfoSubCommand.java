@@ -11,8 +11,9 @@ import net.dv8tion.jda.api.entities.Role;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
@@ -29,50 +30,56 @@ public class GroupPermissionInfoSubCommand extends SubCommand {
             return;
         }
 
-        PermissionCommandUtils.tryGetGroupFromString(context, context.getMessage(0), group -> {
-            if (group.getPermissions().isEmpty() && group.getRoleIds().isEmpty()) {
-                context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.info.empty_group"));
-                return;
+        GuildPermissionGroupEntity group = context.getDataObject(GuildPermissionGroupEntity.class, new GuildPermissionGroupId(context.getArg(0), context.getGuildId()));
+
+        if (group == null) {
+            context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.no_group", context.getArg(0)));
+            return;
+        }
+
+
+        if (group.getPermissions().isEmpty() && group.getRoles().isEmpty()) {
+            context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.info.empty_group"));
+            return;
+        }
+
+        List<Page> pageList = new ArrayList<>();
+        StringBuilder rolesBuilder = new StringBuilder();
+        StringBuilder permissionBuilder = new StringBuilder();
+
+        for (Long roleId : group.getRoles()) {
+            Role role = context.getGuild().getRoleById(roleId);
+            if (role == null) {
+                continue;
             }
+            rolesBuilder.append(role.getName()).append(" (").append(roleId).append(")\n");
+        }
 
-            List<Page> pageList = new ArrayList<>();
-            StringBuilder rolesBuilder = new StringBuilder();
-            StringBuilder permissionBuilder = new StringBuilder();
+        for (String perm : group.getPermissions()) {
+            permissionBuilder.append(perm).append('\n');
+        }
 
-            for (Long roleId : group.getRoleIds()) {
-                Role role = context.getGuild().getRoleById(roleId);
-                if (role == null) {
-                    continue;
-                }
-                rolesBuilder.append(role.getName()).append(" (").append(roleId).append(")\n");
+        if (!group.getRoles().isEmpty()) {
+            List<String> rolesPageContent = PageUtils.splitString(rolesBuilder.toString(), 1000, '\n');
+            for (String roleContent : rolesPageContent) {
+                EmbedBuilder rolesEmbedBuilder = new EmbedBuilder();
+                rolesEmbedBuilder.setTitle(context.i18n("words.linked_roles"));
+                rolesEmbedBuilder.setDescription("```" + roleContent + "```");
+                pageList.add(new PageObjects.EmbedPage(rolesEmbedBuilder));
             }
+        }
 
-            for (String perm : group.getPermissions()) {
-                permissionBuilder.append(perm).append('\n');
+        if (!group.getPermissions().isEmpty()) {
+            List<String> permissionsPageContent = PageUtils.splitString(permissionBuilder.toString(), 1000, '\n');
+            for (String permsContent : permissionsPageContent) {
+                EmbedBuilder permissionsEmbedBuilder = new EmbedBuilder();
+                permissionsEmbedBuilder.setTitle(context.i18n("words.permissions"));
+                permissionsEmbedBuilder.setDescription("```" + permsContent + "```");
+                pageList.add(new PageObjects.EmbedPage(permissionsEmbedBuilder));
             }
+        }
 
-            if (!group.getRoleIds().isEmpty()) {
-                List<String> rolesPageContent = PageUtils.splitString(rolesBuilder.toString(), 1000, '\n');
-                for (String roleContent : rolesPageContent) {
-                    EmbedBuilder rolesEmbedBuilder = new EmbedBuilder();
-                    rolesEmbedBuilder.setTitle(context.i18n("words.linked_roles"));
-                    rolesEmbedBuilder.setDescription("```" + roleContent + "```");
-                    pageList.add(new PageObjects.EmbedPage(rolesEmbedBuilder));
-                }
-            }
-
-            if (!group.getPermissions().isEmpty()) {
-                List<String> permissionsPageContent = PageUtils.splitString(permissionBuilder.toString(), 1000, '\n');
-                for (String permsContent : permissionsPageContent) {
-                    EmbedBuilder permissionsEmbedBuilder = new EmbedBuilder();
-                    permissionsEmbedBuilder.setTitle(context.i18n("words.permissions"));
-                    permissionsEmbedBuilder.setDescription("```" + permsContent + "```");
-                    pageList.add(new PageObjects.EmbedPage(permissionsEmbedBuilder));
-                }
-            }
-
-            context.getUiMessaging().sendPagedMessage(pageList);
-        }, sender.getIdLong());
+        context.getUiMessaging().sendPagedMessage(pageList);
     }
 
     @Override

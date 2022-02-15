@@ -10,9 +10,11 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
 import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
+import org.cascadebot.cascadebot.utils.DatabaseUtilsKt;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
@@ -30,12 +32,15 @@ public class GroupPermissionListSubCommand extends SubCommand {
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < context.getData().getManagement().getPermissions().getGroups().size(); i++) {
-            Group group = context.getData().getManagement().getPermissions().getGroups().get(i);
+        List<GuildPermissionGroupEntity> groupEntities = context.transaction(session -> {
+            return DatabaseUtilsKt.listOf(session, GuildPermissionGroupEntity.class, "guild_id", context.getGuildId());
+        });
+        for (int i = 0; i < groupEntities.size(); i++) {
+            GuildPermissionGroupEntity group = groupEntities.get(i); // TODO this doesn't work
             if (context.getData().getManagement().getPermissions().getMode().equals(PermissionMode.HIERARCHICAL)) {
                 stringBuilder.append(i).append(": ");
             }
-            stringBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
+            stringBuilder.append(group.getName()).append("\n");
         }
 
         List<String> stringPages = PageUtils.splitString(stringBuilder.toString(), 1000, '\n');
