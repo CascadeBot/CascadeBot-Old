@@ -37,3 +37,11 @@ fun <T> Session.listOf(clazz: Class<T>, keys: Map<String, Any>): MutableList<T> 
 
     return this.createQuery(criteria).list();
 }
+
+fun <T> Session.count(clazz: Class<*>, columnName: String, id: T): Int {
+    val query = createQuery("select count(*) from :clazz where :column=:id") // TODO I have no idea if this works
+    query.setParameter("clazz", clazz.simpleName)
+    query.setParameter("column", columnName)
+    query.setParameter("id", id)
+    return query.uniqueResult() as Int
+}

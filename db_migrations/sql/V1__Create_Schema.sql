@@ -149,6 +149,7 @@ create table guild_permission_group
 (
     guild_id    bigint       not null,
     name        varchar(255) not null,
+    position    int          not null,
     permissions varchar(255)[] default array[]::varchar(255)[],
     roles       bigint[]       default array[]::bigint[],
     constraint guild_permission_group_pk

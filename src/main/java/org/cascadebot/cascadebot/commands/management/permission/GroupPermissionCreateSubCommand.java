@@ -12,6 +12,9 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
+import org.cascadebot.cascadebot.utils.DatabaseUtilsKt;
+
+import java.util.List;
 
 public class GroupPermissionCreateSubCommand extends SubCommand {
 
@@ -22,7 +25,16 @@ public class GroupPermissionCreateSubCommand extends SubCommand {
             return;
         }
 
+        Integer amount = context.transaction(session -> {
+            return DatabaseUtilsKt.count(session, GuildPermissionGroupEntity.class, "guild_id", context.getGuildId());
+        });
+
+        if (amount == null) {
+            throw new UnsupportedOperationException("Count returned null in group create. This shouldn't happen!");
+        }
+
         GuildPermissionGroupEntity group = new GuildPermissionGroupEntity(context.getArg(0), context.getGuildId());
+        group.setPosition(amount);
         context.saveDataObject(group);
         context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.create.success", context.getArg(0)));
     }

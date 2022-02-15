@@ -5,11 +5,11 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DatabaseUtilsKt;
-import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
-import java.util.Map;
+import java.util.List;
 
 public class GroupPermissionDeleteSubCommand extends SubCommand {
 
@@ -20,15 +20,30 @@ public class GroupPermissionDeleteSubCommand extends SubCommand {
             return;
         }
 
-        Integer lines = context.transaction(session -> {
-            return DatabaseUtilsKt.deleteById(session, GuildPermissionGroupEntity.class,
-                    Map.of("guild_id", context.getGuildId(), "name", context.getArg(0)));
+        GuildPermissionGroupEntity group = context.getDataObject(GuildPermissionGroupEntity.class, new GuildPermissionGroupId(context.getArg(0), context.getGuildId()));
+
+        if (group == null) {
+            context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.no_group", context.getArg(0)));
+            return;
+        }
+
+        int pos = group.getPosition();
+
+        context.transactionNoReturn(session -> {
+            session.delete(group);
         });
 
-        if (lines != null && lines > 0) {
-            context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.delete.success", context.getArg(0)));
-        } else {
-            context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.delete.failed", context.getArg(0)));
+        context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.delete.success", context.getArg(0)));
+
+        List<GuildPermissionGroupEntity> groupEntities = context.transaction(session -> { // TODO get all groups with position bigger then the delete one instead of ALL groups
+            return DatabaseUtilsKt.listOf(session, GuildPermissionGroupEntity.class, "guild_id", context.getGuildId());
+        });
+
+        for (GuildPermissionGroupEntity entity : groupEntities) { // move everything higher than the deleted group down one
+            if (entity.getPosition() > pos) {
+                entity.setPosition(entity.getPosition() - 1);
+                context.saveDataObject(entity);
+            }
         }
     }
 

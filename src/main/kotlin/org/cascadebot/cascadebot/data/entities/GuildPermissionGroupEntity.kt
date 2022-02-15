@@ -22,7 +22,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "guild_permission_group")
 @IdClass(GuildPermissionGroupId::class)
-class GuildPermissionGroupEntity(name: String, guildId: Long) {
+class GuildPermissionGroupEntity(name: String, guildId: Long) : Comparable<GuildPermissionGroupEntity> {
 
     @Id
     @Column(name = "guild_id")
@@ -31,6 +31,9 @@ class GuildPermissionGroupEntity(name: String, guildId: Long) {
     @Id
     @Column(name = "name", nullable = false)
     var name: String = name
+
+    @Column(name = "position", nullable = false)
+    var position: Int = 0
 
     @Column(name = "permissions", columnDefinition = "varchar(255)[]", nullable = false)
     @Type(type = "list-array")
@@ -48,6 +51,10 @@ class GuildPermissionGroupEntity(name: String, guildId: Long) {
         inverseJoinColumns = [JoinColumn(name = "user_id"), JoinColumn(name = "user_guild_id")]
     )
     val users: MutableSet<GuildPermissionUserEntity> = mutableSetOf()
+
+    override fun compareTo(other: GuildPermissionGroupEntity): Int {
+        return this.position.compareTo(other.position)
+    }
 
 }
 
