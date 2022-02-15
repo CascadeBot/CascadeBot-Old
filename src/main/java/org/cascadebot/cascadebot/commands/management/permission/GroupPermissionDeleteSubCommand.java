@@ -38,6 +38,10 @@ public class GroupPermissionDeleteSubCommand extends SubCommand {
         List<GuildPermissionGroupEntity> groupEntities = context.transaction(session -> { // TODO get all groups with position bigger then the delete one instead of ALL groups
             return DatabaseUtilsKt.listOf(session, GuildPermissionGroupEntity.class, "guild_id", context.getGuildId());
         });
+        
+        if (groupEntities == null) {
+            throw new UnsupportedOperationException("Group entities returned null in group delete. This shouldn't happen!");
+        }
 
         for (GuildPermissionGroupEntity entity : groupEntities) { // move everything higher than the deleted group down one
             if (entity.getPosition() > pos) {
