@@ -35,10 +35,13 @@ public class GroupPermissionListSubCommand extends SubCommand {
         List<GuildPermissionGroupEntity> groupEntities = context.transaction(session -> {
             return DatabaseUtilsKt.listOf(session, GuildPermissionGroupEntity.class, "guild_id", context.getGuildId());
         });
-        for (int i = 0; i < groupEntities.size(); i++) {
-            GuildPermissionGroupEntity group = groupEntities.get(i); // TODO this doesn't work
+        if (groupEntities == null) {
+            throw new UnsupportedOperationException("Group entities returned null in group list. This shouldn't happen!");
+        }
+        groupEntities.sort(GuildPermissionGroupEntity::compareTo);
+        for (GuildPermissionGroupEntity group : groupEntities) {
             if (context.getData().getManagement().getPermissions().getMode().equals(PermissionMode.HIERARCHICAL)) {
-                stringBuilder.append(i).append(": ");
+                stringBuilder.append(group.getPosition()).append(": ");
             }
             stringBuilder.append(group.getName()).append("\n");
         }
