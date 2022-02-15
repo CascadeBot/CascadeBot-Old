@@ -37,6 +37,7 @@ public class GroupPermissionRemoveSubCommand extends SubCommand {
 
         if (group.getPermissions().remove(context.getArg(1))) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.remove.success", context.getArg(1), group.getName()));
+            context.saveDataObject(group);
         } else {
             context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.remove.fail", context.getArg(1), group.getName()));
         }

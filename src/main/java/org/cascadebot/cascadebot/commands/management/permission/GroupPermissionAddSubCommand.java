@@ -36,6 +36,7 @@ public class GroupPermissionAddSubCommand extends SubCommand {
 
         if (group.getPermissions().add(context.getArg(1))) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.add.success", context.getArg(1), group.getName()));
+            context.saveDataObject(group);
         } else {
             context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.add.fail", context.getArg(1), group.getName()));
         }
