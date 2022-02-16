@@ -5,6 +5,7 @@
 
 package org.cascadebot.cascadebot.data.entities
 
+import org.cascadebot.cascadebot.data.objects.PermissionMode
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -19,9 +20,12 @@ class GuildSettingsManagementEntity(guildId: Long) {
     val guildId: Long = guildId
 
     @Column(name = "display_filter_error", nullable = false)
-    val displayFilterError: Boolean = true
+    var displayFilterError: Boolean = true
+
+    @Column(name = "permission_mode")
+    var permissionMode: PermissionMode = PermissionMode.MOST_RESTRICTIVE
 
     @Column(name = "warn_over_10", nullable = false)
-    val warnOver10: Boolean = true
+    var warnOver10: Boolean = true
 
 }

@@ -10,6 +10,7 @@ import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity;
 import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
@@ -18,7 +19,11 @@ public class GroupPermissionSwitchSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        PermissionMode mode = context.getData().getManagement().getPermissions().getMode();
+        GuildSettingsManagementEntity management = context.getDataObject(GuildSettingsManagementEntity.class);
+        if (management == null) {
+            management = new GuildSettingsManagementEntity(context.getGuildId());
+        }
+        PermissionMode mode = management.getPermissionMode();
         if (context.getArgs().length > 1) {
             mode = EnumUtils.getEnumIgnoreCase(PermissionMode.class, context.getArg(0));
             if (mode == null) {
@@ -36,7 +41,8 @@ public class GroupPermissionSwitchSubCommand extends SubCommand {
             }
         }
 
-        context.getData().getManagement().getPermissions().setMode(mode);
+        management.setPermissionMode(mode);
+        context.saveDataObject(management);
         context.getTypedMessaging().replySuccess(context.i18n("commands.groupperms.switch.success", FormatUtils.formatEnum(mode, context.getLocale())));
     }
 

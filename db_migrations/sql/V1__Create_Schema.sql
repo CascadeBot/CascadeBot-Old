@@ -8,6 +8,8 @@ create type filter_target_type as enum ('CHANNEL', 'ROLE', 'USER');
 
 create type scheduled_action_type as enum ('REMINDER', 'UNMUTE', 'UNBAN', 'UNSLOWMODE');
 
+create type permissions_mode as enum ('HIERARCHICAL', 'MOST_RESTRICTIVE');
+
 create table guild
 (
     guild_id   bigint not null,
@@ -109,6 +111,7 @@ create table guild_settings_management
 (
     guild_id             bigint not null,
     display_filter_error boolean default false,
+    permission_mode      permissions_mode default 'MOST_RESTRICTIVE',
     warn_over_10         boolean default true,
     constraint guild_settings_management_pk
         primary key (guild_id),
