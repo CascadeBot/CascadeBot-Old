@@ -10,6 +10,9 @@ import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.Id
 import javax.persistence.IdClass
+import javax.persistence.JoinColumn
+import javax.persistence.JoinColumns
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -46,6 +49,12 @@ class GuildFilterEntity(
     @Column(name = "commands", columnDefinition = "varchar(255)[]", nullable = false)
     @Type(type = "list-array")
     val commands: MutableList<String> = mutableListOf()
+
+    @OneToMany
+    @JoinColumns(
+        value = [JoinColumn(name = "filter_name"), JoinColumn(name = "guild_id")]
+    )
+    val channels: MutableList<GuildFilterChannelEntity> = mutableListOf()
 
 }
 

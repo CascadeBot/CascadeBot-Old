@@ -151,6 +151,18 @@ create table guild_filter
             on delete cascade
 );
 
+create table guild_filter_channels
+(
+    filter_name varchar(255) not null,
+    guild_id    bigint       not null,
+    channel_id  bigint       not null,
+    constraint guild_command_filter_channels_pk
+        primary key (filter_name, guild_id, channel_id),
+    constraint guild_command_filter_channels_fk
+        foreign key (filter_name, guild_id) references guild_filter(name, guild_id)
+            on delete cascade
+);
+
 create table guild_permission_group
 (
     guild_id    bigint       not null,
