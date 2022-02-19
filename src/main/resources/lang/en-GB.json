@@ -205,7 +205,8 @@
         "command": "move",
         "description": "Moves groups around in the hierarchy.",
         "wrong_mode": "Cannot move groups in most restrictive mode",
-        "moved": "Moved group {0} to position {1}"
+        "moved": "Moved group {0} to position {1}",
+        "failed": "Failed to move group {0}"
       },
       "switch": {
         "command": "switch",
