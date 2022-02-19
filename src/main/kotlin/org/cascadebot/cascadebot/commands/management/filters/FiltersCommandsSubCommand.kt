@@ -97,6 +97,7 @@ class FiltersCommandsSubCommand : SubCommand() {
                 context.uiMessaging.replyUsage()
             }
         }
+        context.saveDataObject(filter)
     }
 
     override fun command(): String = "commands"

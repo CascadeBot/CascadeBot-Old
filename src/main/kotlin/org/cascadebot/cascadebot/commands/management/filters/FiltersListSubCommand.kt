@@ -8,9 +8,11 @@ package org.cascadebot.cascadebot.commands.management.filters
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildFilterEntity
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.cascadebot.cascadebot.utils.listOf
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import org.cascadebot.cascadebot.utils.toCapitalized
@@ -25,7 +27,10 @@ class FiltersListSubCommand : SubCommand() {
 
         val pages: MutableList<Page> = mutableListOf()
 
-        val filters = context.data.management.filters
+        val filters = context.transaction {
+            listOf(GuildFilterEntity::class.java, "guild_id", context.getGuildId())
+        }
+            ?: throw UnsupportedOperationException("TODO") //TODO message
         pages.add(PageObjects.EmbedPage(embed(MessageType.INFO) {
             title {
                 name = context.i18n("words.command_filters").toTitleCase()

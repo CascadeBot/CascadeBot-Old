@@ -10,6 +10,9 @@ import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildFilterEntity
+import org.cascadebot.cascadebot.data.entities.GuildFilterId
+import org.cascadebot.cascadebot.data.entities.GuildFilterUserEntity
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
@@ -31,7 +34,7 @@ class FiltersUsersSubCommand : SubCommand() {
         }
 
         val filterName = args[0]
-        val filter = context.data.management.filters.find { it.name == filterName }
+        val filter = context.getDataObject(GuildFilterEntity::class.java, GuildFilterId(filterName, context.getGuildId()))
 
         if (filter == null) {
             context.typedMessaging.replyDanger(context.i18n("commands.filters.doesnt_exist", filterName))
@@ -52,7 +55,7 @@ class FiltersUsersSubCommand : SubCommand() {
                     return
                 }
 
-                if (filter.userIds.add(user.idLong)) {
+                if (filter.users.add(GuildFilterUserEntity(filter.name, filter.guildId, user.idLong))) {
                     context.typedMessaging.replySuccess(context.i18n("commands.filters.users.link.success", user.asMention, filterName))
                 } else {
                     context.typedMessaging.replyInfo(context.i18n("commands.filters.users.link.already_exists", user.asMention, filterName))
@@ -71,7 +74,7 @@ class FiltersUsersSubCommand : SubCommand() {
                     return
                 }
 
-                if (filter.userIds.remove(user.idLong)) {
+                if (filter.users.remove(GuildFilterUserEntity(filter.name, filter.guildId, user.idLong))) {
                     context.typedMessaging.replySuccess(context.i18n("commands.filters.users.unlink.success", user.asMention, filterName))
                 } else {
                     context.typedMessaging.replyDanger(context.i18n("commands.filters.users.unlink.didnt_exist", user.asMention, filterName))
@@ -83,8 +86,8 @@ class FiltersUsersSubCommand : SubCommand() {
                     title {
                         name = context.i18n("commands.filters.users.list.embed_title", filterName)
                     }
-                    description = filter.userIds
-                            .mapNotNull { context.guild.getMemberById(it)?.asMention }
+                    description = filter.users
+                            .mapNotNull { context.guild.getMemberById(it.userId)?.asMention }
                             .joinToString("\n")
                             .ifBlank { context.i18n("commands.filters.users.list.no_filters") }
                 })

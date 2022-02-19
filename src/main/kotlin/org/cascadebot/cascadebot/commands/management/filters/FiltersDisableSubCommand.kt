@@ -8,6 +8,8 @@ package org.cascadebot.cascadebot.commands.management.filters
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildFilterEntity
+import org.cascadebot.cascadebot.data.entities.GuildFilterId
 import org.cascadebot.cascadebot.permissions.CascadePermission
 
 class FiltersDisableSubCommand : SubCommand() {
@@ -19,7 +21,7 @@ class FiltersDisableSubCommand : SubCommand() {
         }
 
         val name = context.getArg(0)
-        val filter = context.data.management.filters.find { it.name == name }
+        val filter = context.getDataObject(GuildFilterEntity::class.java, GuildFilterId(name, context.getGuildId()))
 
         if (filter == null) {
             context.typedMessaging.replyDanger(context.i18n("commands.filters.doesnt_exist", name))
@@ -32,6 +34,8 @@ class FiltersDisableSubCommand : SubCommand() {
         } else {
             context.typedMessaging.replyInfo(context.i18n("commands.filters.disable.already_disabled", name))
         }
+
+        context.saveDataObject(filter)
     }
 
     override fun command(): String = "disable"

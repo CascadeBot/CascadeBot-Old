@@ -8,6 +8,8 @@ package org.cascadebot.cascadebot.commands.management.filters
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildFilterEntity
+import org.cascadebot.cascadebot.data.entities.GuildFilterId
 import org.cascadebot.cascadebot.data.objects.CommandFilter
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
@@ -23,7 +25,7 @@ class FiltersOperatorSubCommand : SubCommand() {
         }
 
         val filterName = context.getArg(0)
-        val filter = context.data.management.filters.find { it.name == filterName }
+        val filter = context.getDataObject(GuildFilterEntity::class.java, GuildFilterId(filterName, context.getGuildId()))
 
         if (filter == null) {
             context.typedMessaging.replyDanger(context.i18n("commands.filters.doesnt_exist", filterName))
@@ -46,7 +48,7 @@ class FiltersOperatorSubCommand : SubCommand() {
         filter.operator = operator
         context.typedMessaging.replySuccess(context.i18n("commands.filters.operator.success", FormatUtils.formatEnum(operator, context.locale), filterName))
 
-
+        context.saveDataObject(filter)
     }
 
     override fun command(): String  = "operator"
