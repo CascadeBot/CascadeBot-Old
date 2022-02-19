@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.Messaging
 import org.cascadebot.cascadebot.permissions.CascadePermission
@@ -110,7 +111,7 @@ class MuteChannelSetupSubCommand : SubCommand() {
                     EmbedBuilder()
                             .setTitle(context.i18n("commands.mute.channelsetup.embed_title"))
                             .setDescription("$successText\n\n$failureText".trim()),
-                    context.data.core.useEmbedForMessages
+                    context.getDataObject(GuildSettingsCoreEntity::class.java)!!.useEmbeds
             )
         }
     }

@@ -8,6 +8,7 @@ package org.cascadebot.cascadebot.commands.moderation
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.getMutedRole
@@ -29,7 +30,10 @@ class MuteRoleSubCommand : SubCommand() {
             return
         }
 
-        context.data.mutedRoleId = newRole.idLong
+        val moderation = context.getDataObject(GuildSettingsModerationEntity::class.java)
+            ?: throw UnsupportedOperationException("TODO") // TODO message
+        moderation.muteRoleId = newRole.idLong
+        context.saveDataObject(moderation)
         context.typedMessaging.replySuccess(context.i18n("commands.mute.role.set_role", newRole.asMention))
     }
 
