@@ -9,6 +9,9 @@ import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.TextChannel
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildFilterChannelEntity
+import org.cascadebot.cascadebot.data.entities.GuildFilterEntity
+import org.cascadebot.cascadebot.data.entities.GuildFilterId
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
@@ -30,7 +33,7 @@ class FiltersChannelsSubCommand : SubCommand() {
         }
 
         val filterName = args[0]
-        val filter = context.data.management.filters.find { it.name == filterName }
+        val filter = context.getDataObject(GuildFilterEntity::class.java, GuildFilterId(filterName, context.getGuildId()))
 
         if (filter == null) {
             context.typedMessaging.replyDanger(context.i18n("commands.filters.doesnt_exist", filterName))
@@ -51,7 +54,7 @@ class FiltersChannelsSubCommand : SubCommand() {
                     return
                 }
 
-                if (filter.channelIds.add(channel.idLong)) {
+                if (filter.channels.add(GuildFilterChannelEntity(filter.name, filter.guildId, channel.idLong))) {
                     context.typedMessaging.replySuccess(context.i18n("commands.filters.channels.link.success", channel.asMention, filterName))
                 } else {
                     context.typedMessaging.replyInfo(context.i18n("commands.filters.channels.link.already_exists", channel.asMention, filterName))
@@ -70,7 +73,7 @@ class FiltersChannelsSubCommand : SubCommand() {
                     return
                 }
 
-                if (filter.channelIds.remove(channel.idLong)) {
+                if (filter.channels.remove(GuildFilterChannelEntity(filter.name, filter.guildId, channel.idLong))) {
                     context.typedMessaging.replySuccess(context.i18n("commands.filters.channels.unlink.success", channel.asMention, filterName))
                 } else {
                     context.typedMessaging.replyDanger(context.i18n("commands.filters.channels.unlink.didnt_exist", channel.asMention, filterName))
@@ -82,8 +85,8 @@ class FiltersChannelsSubCommand : SubCommand() {
                     title {
                         name = context.i18n("commands.filters.channels.list.embed_title", filterName)
                     }
-                    description = filter.channelIds
-                            .mapNotNull { context.guild.getTextChannelById(it)?.asMention }
+                    description = filter.channels
+                            .mapNotNull { context.guild.getTextChannelById(it.channelId)?.asMention }
                             .joinToString("\n")
                             .ifBlank { context.i18n("commands.filters.channels.list.no_filters") }
                 })
@@ -92,6 +95,7 @@ class FiltersChannelsSubCommand : SubCommand() {
                 context.uiMessaging.replyUsage()
             }
         }
+        context.saveDataObject(filter)
     }
 
     override fun command(): String = "channels"

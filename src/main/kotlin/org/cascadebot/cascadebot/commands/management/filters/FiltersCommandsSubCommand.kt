@@ -11,6 +11,8 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.CommandManager
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildFilterEntity
+import org.cascadebot.cascadebot.data.entities.GuildFilterId
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
@@ -32,7 +34,7 @@ class FiltersCommandsSubCommand : SubCommand() {
         }
 
         val filterName = args[0]
-        val filter = context.data.management.filters.find { it.name == filterName }
+        val filter = context.getDataObject(GuildFilterEntity::class.java, GuildFilterId(filterName, context.getGuildId()))
 
         if (filter == null) {
             context.typedMessaging.replyDanger(context.i18n("commands.filters.doesnt_exist", filterName))
@@ -46,8 +48,8 @@ class FiltersCommandsSubCommand : SubCommand() {
                     return
                 }
 
-                val commandInput = if (args[1].startsWith(context.data.core.prefix)) args[1].substring(context.data.core.prefix.length) else args[1]
-                val command: String? = CascadeBot.INS.commandManager.getCommand(commandInput, context.data)?.command()
+                val commandInput = args[1]
+                val command: String? = CascadeBot.INS.commandManager.getCommand(commandInput, context.getGuildId())?.command()
 
                 if (command == null) {
                     context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_command_matching", args[1]))
@@ -55,9 +57,9 @@ class FiltersCommandsSubCommand : SubCommand() {
                 }
 
                 if (filter.commands.add(command)) {
-                    context.typedMessaging.replySuccess(context.i18n("commands.filters.commands.link.success", context.data.core.prefix + command, filterName))
+                    context.typedMessaging.replySuccess(context.i18n("commands.filters.commands.link.success", command, filterName))
                 } else {
-                    context.typedMessaging.replyInfo(context.i18n("commands.filters.commands.link.already_exists", context.data.core.prefix + command, filterName))
+                    context.typedMessaging.replyInfo(context.i18n("commands.filters.commands.link.already_exists", command, filterName))
                 }
             }
             context.testForArg("unlink") -> {
@@ -66,8 +68,8 @@ class FiltersCommandsSubCommand : SubCommand() {
                     return
                 }
 
-                val commandInput = if (args[1].startsWith(context.data.core.prefix)) args[1].substring(context.data.core.prefix.length) else args[1]
-                val command: String? = CascadeBot.INS.commandManager.getCommand(commandInput, context.data)?.command()
+                val commandInput = args[1]
+                val command: String? = CascadeBot.INS.commandManager.getCommand(commandInput, context.getGuildId())?.command()
 
                 if (command == null) {
                     context.typedMessaging.replyDanger(context.i18n("responses.cannot_find_command_matching", args[1]))
@@ -75,9 +77,9 @@ class FiltersCommandsSubCommand : SubCommand() {
                 }
 
                 if (filter.commands.remove(command)) {
-                    context.typedMessaging.replySuccess(context.i18n("commands.filters.commands.unlink.success", context.data.core.prefix + command, filterName))
+                    context.typedMessaging.replySuccess(context.i18n("commands.filters.commands.unlink.success", command, filterName))
                 } else {
-                    context.typedMessaging.replyDanger(context.i18n("commands.filters.commands.unlink.didnt_exist", context.data.core.prefix + command, filterName))
+                    context.typedMessaging.replyDanger(context.i18n("commands.filters.commands.unlink.didnt_exist", command, filterName))
                 }
             }
 
@@ -87,7 +89,7 @@ class FiltersCommandsSubCommand : SubCommand() {
                         name = context.i18n("commands.filters.commands.list.embed_title", filterName)
                     }
                     description = filter.commands
-                            .joinToString("\n") { context.data.core.prefix + it }
+                            .joinToString("\n") { it }
                             .ifBlank { context.i18n("commands.filters.commands.list.no_filters") }
                 })
             }
