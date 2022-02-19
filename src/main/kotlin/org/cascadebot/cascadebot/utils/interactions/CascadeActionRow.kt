@@ -20,6 +20,10 @@ class CascadeActionRow {
         components[pos] = component
     }
 
+    fun deleteComponent(pos: Int) {
+        components.removeAt(pos)
+    }
+
     private fun doComponentChecks(component: CascadeComponent) {
         if (componentType == null) {
             persistent = PersistentComponent.values().map { it.component }.contains(component)
