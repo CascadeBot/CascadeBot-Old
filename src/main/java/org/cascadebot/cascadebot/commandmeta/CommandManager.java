@@ -7,8 +7,9 @@ package org.cascadebot.cascadebot.commandmeta;
 
 import lombok.Getter;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
-import org.cascadebot.cascadebot.data.objects.GuildData;
+import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity;
 import org.cascadebot.cascadebot.utils.ReflectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,30 +43,29 @@ public class CommandManager {
         }
     }
 
-    public MainCommand getCommand(String command) {
-        for (MainCommand cmd : commands) {
-            if (cmd.command().equals(command)) return cmd;
-        }
-        return null;
-    }
-
-    public MainCommand getCommand(String command, GuildData data) {
-        for (MainCommand cmd : commands) {
-            if (data.getCore().getCommandAliases(cmd).contains(command)) {
+    public MainCommand getCommand(String command, long guildId) {
+        /*for (MainCommand cmd : commands) { TODO aliases? We might just want to expand the language capabilities of this in general
+            if (data.getCore().getCommandAliases(cmd).equals(command)) {
                 return cmd;
             }
-        }
+        }*/
 
         // Fallback to default if cannot find command
-        for (MainCommand cmd : commands) {
-            if (cmd.command(data.getLocale()).equals(command)) {
-                return cmd;
-            } else if (cmd.globalAliases(data.getLocale()).contains(command)) {
-                return cmd;
+
+        return CascadeBot.INS.getPostgresManager().transaction(session -> {
+            GuildSettingsCoreEntity coreEntity = session.get(GuildSettingsCoreEntity.class, guildId);
+            if (coreEntity == null) {
+                return null;
             }
-        }
-        // Fallback to default if cannot find command
-        return getCommand(command);
+            for (MainCommand cmd : commands) {
+                if (cmd.command(coreEntity.getLocale()).equals(command)) {
+                    return cmd;
+                } else if (cmd.globalAliases(coreEntity.getLocale()).contains(command)) {
+                    return cmd;
+                }
+            }
+            return null;
+        });
     }
 
     public List<MainCommand> getCommandsByModule(Module type) {
