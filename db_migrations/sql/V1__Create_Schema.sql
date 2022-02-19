@@ -10,6 +10,8 @@ create type scheduled_action_type as enum ('REMINDER', 'UNMUTE', 'UNBAN', 'UNSLO
 
 create type permissions_mode as enum ('HIERARCHICAL', 'MOST_RESTRICTIVE');
 
+create type locale as enum ('ENGLISH_UK', 'ENGLISH_US');
+
 create table guild
 (
     guild_id   bigint not null,
@@ -22,6 +24,7 @@ create table guild
 create table guild_settings_core
 (
     guild_id              bigint not null,
+    locale                locale  default 'ENGLISH_UK',
     delete_command        boolean default true,
     use_embeds            boolean default true,
     perm_errors           boolean default true,

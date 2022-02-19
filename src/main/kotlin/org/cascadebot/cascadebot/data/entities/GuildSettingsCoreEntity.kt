@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.data.entities
 
 import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.data.language.Locale
 import org.cascadebot.cascadebot.data.objects.Setting
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
 import javax.persistence.Column
@@ -21,6 +22,9 @@ class GuildSettingsCoreEntity(guildId: Long) {
     @Id
     @Column(name = "guild_id")
     var guildId = guildId
+
+    @Column(name = "locale")
+    var locale: Locale = Locale.ENGLISH_UK
 
     @Column(name = "delete_command", nullable = false)
     @Setting

@@ -48,7 +48,7 @@ data class CommandContext(
     val directMessaging = MessagingDirectMessage(this)
 
     val locale: Locale
-        get() = data.locale
+        get() = getDataObject(GuildSettingsCoreEntity::class.java)!!.locale
 
     val musicPlayer: CascadePlayer
         get() = CascadeBot.INS.musicHandler.getPlayer(guild.idLong)!!
