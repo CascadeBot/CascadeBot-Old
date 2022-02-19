@@ -32,6 +32,8 @@ public class GroupPermissionMoveSubCommand extends SubCommand {
     private CascadeButton confirmButton;
     private CascadeButton cancelButton;
 
+    private final int SHOW_MOVE_ELEMENTS = 10;
+
     @Override
     public void onCommand(Member sender, CommandContext context) { // TODO add a confirm button, primary to the left
         GuildSettingsManagementEntity management = context.getDataObject(GuildSettingsManagementEntity.class);
@@ -147,42 +149,75 @@ public class GroupPermissionMoveSubCommand extends SubCommand {
         container.addRow(actionRow);
     }
 
+    /**
+     * Generates a message showing a list showing elements in a list to move a group to.
+     * Displays {@code SHOW_MOVE_ELEMENTS} number of elements.
+     * <br>
+     * <ul>
+     *     <li>By default, each element is prefixed with a hollow diamond (◇) to show a position in the list.</li>
+     *     <li>The current position (If visible within the elements) is shown using a filled diamond (◆).</li>
+     *     <li>The target position is shown using a filled arrow (⮕) in active moving mode or a hollow arrow (⇨)</li>
+     * </ul>
+     *
+     * @param moving Whether the list is current in active moving mode or not.
+     * @param entities The list of entities to display in the list.
+     * @param currentPos The position of the group that is going to be moved.
+     * @param targetPos The position of the group that the current group will be moved to.
+     * @return The formatted message.
+     */
     private String getGroupMessage(boolean moving, List<GuildPermissionGroupEntity> entities, int currentPos, int targetPos) {
-        int show = 10;
-        int min = Math.max(0, currentPos - (show / 2));
+
+        /*
+         * Show either (SHOW_MOVE_ELEMENTS / 2) elements or the number of elements before the target on top, whichever
+         * is smallest.
+         *
+         * e.g. If target position is index 2, there will be 2 items on top. However, if target position is 10 then there
+         * will be 5 elements on top.
+         */
+        int topItems = Math.min(targetPos, SHOW_MOVE_ELEMENTS / 2);
+        // The bottom items is whatever is left over. This will be max of SHOW_MOVE_ELEMENTS and min of (SHOW_MOVE_ELEMENTS / 2)
+        int bottomItems = SHOW_MOVE_ELEMENTS - topItems;
+
+        // Show SHOW_MOVE_ELEMENTS elements either side of the target position
+        int min = Math.max(0, targetPos - topItems);
+        int max = Math.min(entities.size() - 1, targetPos + bottomItems);
+
+        // Hollow diamond
+        String miscChar = "\u25c7";
+        // Filled diamond
+        String currentPositionChar = "\u25c6";
+        // Filled right arrow | hollow filled arrow
+        String targetPositionChar = moving ? "\u2b95" : "\u21e8";
+
         StringBuilder stringBuilder = new StringBuilder();
-        if (moving) {
-            for (int i = (currentPos - 1); i >= min; i--) {
-                show--;
-                // Filled diamond || Hollow Diamond
-                stringBuilder.append(i == targetPos ? "\u25c6" : "\u25c7");
 
-                stringBuilder.append(" ").append(entities.get(i).getName());
-            }
-            // Black filled arrow
-            stringBuilder.append("\u27a1 ").append(entities.get(currentPos).getName());
-            int max = Math.min(entities.size() - 1, currentPos + 1 + show);
-            for (int i = (currentPos + 1); i <= max; i++) {
-                // Filled diamond || Hollow Diamond
-                stringBuilder.append(i == targetPos ? "\u25c6" : "\u25c7");
-
-                stringBuilder.append(" ").append(entities.get(i).getName());
-            }
-        } else {
-            for (int i = (currentPos - 1); i >= min; i--) {
-                show--;
-                // Hollow diamond
-                stringBuilder.append("\u25c7").append(" ").append(entities.get(i).getName());
-            }
-            // Rightwards hollow arrow
-            stringBuilder.append("\u21e8 ").append(entities.get(currentPos).getName());
-            int max = Math.min(entities.size() - 1, currentPos + 1 + show);
-            for (int i = (currentPos + 1); i <= max; i++) {
-                // Hollow diamond
-                stringBuilder.append("\u25c7").append(" ").append(entities.get(i).getName());
-            }
+        // If items on screen doesn't start with the first element, show a continuation indicator
+        if (min > 0) {
+            stringBuilder.append("...\n");
         }
-        return stringBuilder.toString();
+
+        for (int i = min; i <= max; i++) {
+            // All lines that are not current or target position are default a hollow diamond
+            String lineChar = miscChar;
+            // If the current position and target position is the same, stack both icons
+            if (i == currentPos && i == targetPos) {
+                lineChar = targetPositionChar + currentPositionChar;
+            } else if (i == currentPos) {
+                lineChar = currentPositionChar;
+            } else if (i == targetPos) {
+                lineChar = targetPositionChar;
+            }
+            // Item character (◇|◆|➜|⇨) followed by space, group name and newline
+            stringBuilder.append(lineChar).append(" ").append(entities.get(i).getName()).append('\n');
+
+        }
+
+        // If items on screen doesn't end with the last element, show a continuation indicator
+        if (max < (entities.size() - 1)) {
+            stringBuilder.append("...");
+        }
+
+        return stringBuilder.toString().trim();
     }
 
     private boolean moveGroup(CommandContext context, GuildPermissionGroupEntity group, int pos) {
