@@ -6,13 +6,13 @@
 package org.cascadebot.cascadebot.commands.management
 
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.Role
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildAutoRoleEntity
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import java.lang.reflect.Field
+import org.cascadebot.cascadebot.utils.listOf
 
 class AutoRoleListSubCommand : SubCommand() {
 
@@ -21,14 +21,13 @@ class AutoRoleListSubCommand : SubCommand() {
             context.uiMessaging.replyUsage()
             return
         }
-        val roles = context.data.management.autoRoles.map { context.guild.getRoleById(it) ?: it }
+        val roles = context.transaction {
+            listOf(GuildAutoRoleEntity::class.java, "guild_id", context.getGuildId())
+        }
+            ?: throw UnsupportedOperationException("TODO") // TODO message
         val autoRoles = StringBuilder()
         for (role in roles) {
-            when (role) {
-                is Role -> autoRoles.append(role.asMention).append(" (${role.id})")
-                is Long -> autoRoles.append("<@$role>")
-            }
-            autoRoles.append("\n")
+            autoRoles.append("<@${role.roleId}>").append('\n')
         }
         val embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.user, context.locale)
         embedBuilder.setTitle(context.i18n("words.autorole"))

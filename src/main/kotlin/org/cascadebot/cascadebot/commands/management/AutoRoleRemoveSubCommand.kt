@@ -9,8 +9,10 @@ import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Role
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildAutoRoleEntity
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
+import org.cascadebot.cascadebot.utils.deleteById
 
 class AutoRoleRemoveSubCommand : SubCommand() {
 
@@ -30,7 +32,11 @@ class AutoRoleRemoveSubCommand : SubCommand() {
             }
         }
 
-        context.data.management.autoRoles.removeAll(roles.map { it.idLong })
+        context.transactionNoReturn {
+            for (role in roles) {
+                deleteById(GuildAutoRoleEntity::class.java, "role_id", role.idLong)
+            }
+        }
 
         if (roles.isEmpty()) {
             check(errorInputs.isNotEmpty()) { "Error inputs should contain data if no roles have been successfully parsed!" }

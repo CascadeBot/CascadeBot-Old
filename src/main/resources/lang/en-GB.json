@@ -359,7 +359,9 @@
         "command": "add",
         "description": "Adds a role to the AutoRole list.",
         "add_success": "Successfully added the roles to AutoRole!",
-        "added_roles": "Added roles:"
+        "add_failed": "Failed to add the roles to AutoRole!",
+        "added_roles": "Added roles:",
+        "higher_roles": "Higher roles that couldn't be added:"
       },
       "remove": {
         "command": "remove",
