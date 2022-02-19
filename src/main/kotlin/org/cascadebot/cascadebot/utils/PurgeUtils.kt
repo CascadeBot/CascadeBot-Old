@@ -7,6 +7,8 @@ package org.cascadebot.cascadebot.utils
 
 import net.dv8tion.jda.api.entities.Message
 import org.cascadebot.cascadebot.commandmeta.CommandContext
+import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity
+import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
 import org.cascadebot.cascadebot.data.objects.PurgeCriteria
 import java.time.OffsetDateTime
 import java.util.regex.Pattern
@@ -44,7 +46,9 @@ object PurgeUtils {
             }
 
             // If the setting "purgePinnedMessages" is false and the message is pinned, the message is skipped.
-            if (!context.data.moderation.purgePinnedMessages && message.isPinned) {
+            val moderationEntity = context.getDataObject(GuildSettingsModerationEntity::class.java)
+                ?: throw UnsupportedOperationException("TODO") //TODO message
+            if (!moderationEntity.purgePinned && message.isPinned) {
                 continue
             }
 
