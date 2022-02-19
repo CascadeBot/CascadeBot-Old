@@ -11,6 +11,7 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
+import org.cascadebot.cascadebot.data.entities.GuildTagId;
 import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.hibernate.Session;
@@ -28,7 +29,8 @@ public class TagCreateSubCommand extends SubCommand {
         boolean warnUppercase = !context.getArg(0).equals(context.getArg(0).toLowerCase());
         String tagName = context.getArg(0).toLowerCase();
 
-        if (context.getData().getManagement().hasTag(tagName)) {
+        GuildTagEntity existing = context.getDataObject(GuildTagEntity.class, new GuildTagId(context.getGuildId(), tagName));
+        if (existing != null) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.tag.create.tag_already_exists", tagName));
             return;
         }
@@ -41,7 +43,6 @@ public class TagCreateSubCommand extends SubCommand {
 
         GuildTagEntity guildTagEntity = new GuildTagEntity(context.getGuild().getIdLong(), context.getArg(0), context.getMessage(1));
         context.saveDataObject(guildTagEntity);
-        context.getData().getPermissionsManager().registerGuildPermission(guildTagEntity.getInternalPermission());
         context.getTypedMessaging().replySuccess(message);
     }
 

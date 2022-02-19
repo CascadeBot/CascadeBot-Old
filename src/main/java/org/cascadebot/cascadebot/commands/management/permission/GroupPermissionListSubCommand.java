@@ -11,9 +11,9 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
+import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity;
 import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.DatabaseUtilsKt;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
@@ -26,21 +26,25 @@ public class GroupPermissionListSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getData().getManagement().getPermissions().getGroups().isEmpty()) {
+        List<GuildPermissionGroupEntity> groupEntities = context.transaction(session -> {
+            return DatabaseUtilsKt.listOf(session, GuildPermissionGroupEntity.class, "guild_id", context.getGuildId());
+        });
+        if (groupEntities == null) {
+            throw new UnsupportedOperationException("TODO"); //TODO message
+        }
+        if (groupEntities.size() == 0) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.groupperms.list.no_groups"));
             return;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        List<GuildPermissionGroupEntity> groupEntities = context.transaction(session -> {
-            return DatabaseUtilsKt.listOf(session, GuildPermissionGroupEntity.class, "guild_id", context.getGuildId());
-        });
-        if (groupEntities == null) {
-            throw new UnsupportedOperationException("Group entities returned null in group list. This shouldn't happen!");
-        }
         groupEntities.sort(GuildPermissionGroupEntity::compareTo);
         for (GuildPermissionGroupEntity group : groupEntities) {
-            if (context.getData().getManagement().getPermissions().getMode().equals(PermissionMode.HIERARCHICAL)) {
+            GuildSettingsManagementEntity guildSettingsManagement = context.getDataObject(GuildSettingsManagementEntity.class);
+            if (guildSettingsManagement == null) {
+                throw new UnsupportedOperationException("TODO"); // TODO message
+            }
+            if (guildSettingsManagement.getPermissionMode().equals(PermissionMode.HIERARCHICAL)) {
                 stringBuilder.append(group.getPosition()).append(": ");
             }
             stringBuilder.append(group.getName()).append("\n");

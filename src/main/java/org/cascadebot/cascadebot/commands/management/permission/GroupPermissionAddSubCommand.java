@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.commands.management.permission;
 
 import net.dv8tion.jda.api.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
@@ -22,7 +23,7 @@ public class GroupPermissionAddSubCommand extends SubCommand {
             return;
         }
 
-        if (!context.getData().getPermissionsManager().isValidPermission(context.getArg(1))) {
+        if (!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getArg(1))) { // TODO guild level checking
             context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
             return;
         }

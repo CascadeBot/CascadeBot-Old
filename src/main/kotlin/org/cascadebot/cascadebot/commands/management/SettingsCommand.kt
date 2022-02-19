@@ -102,11 +102,11 @@ class SettingsCommand : MainCommand() {
                 try {
                     val settingAnnotation = field.getAnnotation(Setting::class.java)
                     if (settingAnnotation != null) {
-                        if (!context.data.enabledFlags.containsAll(listOf(*settingAnnotation.flagRequired))) {
+                        /*if (!context.data.enabledFlags.containsAll(listOf(*settingAnnotation.flagRequired))) { TODO flags?
                             val niceName = i18n(context.guild.idLong, "settings." + field.declaringClass.getAnnotation(SettingsContainer::class.java).module.name.toLowerCase() + "." + field.name + ".nice_name")
                             context.typedMessaging.replyDanger(context.i18n("commands.settings.cannot_edit", niceName))
                             return
-                        }
+                        }*/
                     }
                     if (context.args.size != 2) {
                         context.uiMessaging.replyUsage()

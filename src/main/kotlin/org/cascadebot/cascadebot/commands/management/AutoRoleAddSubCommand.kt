@@ -54,8 +54,6 @@ class AutoRoleAddSubCommand : SubCommand() {
             }
         }
 
-        context.data.management.autoRoles.addAll(roles.map { it.idLong })
-
         val resultBuilder = StringBuilder()
         var resultType: MessageType
         if (!roles.isEmpty()) {

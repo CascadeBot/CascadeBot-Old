@@ -37,7 +37,7 @@ class StatsCommand : CoreCommand() {
                 "online_shards"         to shardManager.shardsRunning.toString(),
                 "gateway_ping"          to "${context.channel.jda.gatewayPing}ms",
                 "rest_ping"             to "${context.channel.jda.restPing.complete()}ms",
-                "shard_status"          to FormatUtils.formatEnum(shardManager.getStatus(context.channel.jda.shardInfo.shardId), context.data.locale),
+                "shard_status"          to FormatUtils.formatEnum(shardManager.getStatus(context.channel.jda.shardInfo.shardId), context.locale),
                 "shard_id"              to (context.channel.jda.shardInfo.shardId + 1).toString()
         )
 
