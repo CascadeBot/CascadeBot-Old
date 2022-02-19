@@ -25,7 +25,6 @@ import org.cascadebot.cascadebot.messaging.MessagingDirectMessage
 import org.cascadebot.cascadebot.messaging.MessagingTimed
 import org.cascadebot.cascadebot.messaging.MessagingTyped
 import org.cascadebot.cascadebot.messaging.MessagingUI
-import org.cascadebot.cascadebot.music.CascadePlayer
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.hibernate.Session
 import java.util.function.Consumer
@@ -49,9 +48,6 @@ data class CommandContext(
 
     val locale: Locale
         get() = getDataObject(GuildSettingsCoreEntity::class.java)!!.locale
-
-    val musicPlayer: CascadePlayer
-        get() = CascadeBot.INS.musicHandler.getPlayer(guild.idLong)!!
 
     val user: User
         get() = member.user

@@ -41,7 +41,6 @@ import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
 import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
-import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.cascadebot.cascadebot.utils.EventWaiter;
@@ -76,7 +75,6 @@ public class CascadeBot {
     private ModerationManager moderationManager;
 
     private OkHttpClient httpClient;
-    private MusicHandler musicHandler;
     private EventWaiter eventWaiter;
 
     public static void main(String[] args) {
@@ -163,8 +161,6 @@ public class CascadeBot {
 
         postgresManager = new PostgresManager(Config.INS.getDatabaseConnectionString());
 
-        musicHandler = new MusicHandler();
-
         eventWaiter = new EventWaiter();
         gson = builder.create();
 
@@ -188,13 +184,6 @@ public class CascadeBot {
                     })
                     .setBulkDeleteSplittingEnabled(false)
                     .setEnableShutdownHook(false);
-
-            if (musicHandler.getLavalinkEnabled()) {
-                defaultShardManagerBuilder.addEventListeners(musicHandler.getLavaLink());
-                defaultShardManagerBuilder.setVoiceDispatchInterceptor(musicHandler.getLavaLink().getVoiceInterceptor());
-            } else {
-                defaultShardManagerBuilder.setAudioSendFactory(new NativeAudioSendFactory());
-            }
 
             shardManager = defaultShardManagerBuilder.build();
         } catch (LoginException e) {
@@ -230,12 +219,7 @@ public class CascadeBot {
     }
 
     private void setupTasks() {
-        new Task("prune-players") {
-            @Override
-            protected void execute() {
-                musicHandler.purgeDisconnectedPlayers();
-            }
-        }.start(TimeUnit.MINUTES.toMillis(5), TimeUnit.MINUTES.toMillis(15));
+
     }
 
 
@@ -298,10 +282,6 @@ public class CascadeBot {
 
     public OkHttpClient getHttpClient() {
         return httpClient;
-    }
-
-    public MusicHandler getMusicHandler() {
-        return musicHandler;
     }
 
     public EventWaiter getEventWaiter() {

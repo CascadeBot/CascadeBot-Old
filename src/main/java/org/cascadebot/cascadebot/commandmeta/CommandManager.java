@@ -43,6 +43,15 @@ public class CommandManager {
         }
     }
 
+    public MainCommand getCommand(String command) {
+        for (MainCommand cmd : commands) {
+            if (cmd.command().equals(command)) {
+                return cmd;
+            }
+        }
+        return null;
+    }
+
     public MainCommand getCommand(String command, long guildId) {
         /*for (MainCommand cmd : commands) { TODO aliases? We might just want to expand the language capabilities of this in general
             if (data.getCore().getCommandAliases(cmd).equals(command)) {

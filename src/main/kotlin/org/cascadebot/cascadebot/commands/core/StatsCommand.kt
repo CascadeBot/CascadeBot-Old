@@ -30,7 +30,6 @@ class StatsCommand : CoreCommand() {
         val fields = mapOf(
                 "total_guilds"          to shardManager.guilds.size.toString(),
                 "active_guilds"         to shardManager.guildCache.size().toString(),
-                "active_voice_channels" to CascadeBot.INS.musicHandler.players.count { it.value.connectedChannel != null }.toString(),
                 "ram_usage"             to FileUtils.byteCountToDisplaySize(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()),
                 "cpu_load"              to "${(osBean.processCpuLoad * 100).roundToInt()}%",
                 "total_shards"          to shardManager.shardsTotal.toString(),

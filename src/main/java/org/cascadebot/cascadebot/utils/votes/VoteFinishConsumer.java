@@ -13,15 +13,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public enum VoteFinishConsumer {
-    SKIP((channel, results) -> {
-        GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
-        if (results.size() != 0 && results.get(0).getVote().equals(UnicodeConstants.TICK)) {
-            Messaging.sendMessage(MessageType.INFO, channel, data.getLocale().i18n("commands.skip.skipping"), data.getCore().getUseEmbedForMessages());
-            CascadeBot.INS.getMusicHandler().getPlayer(channel.getGuild().getIdLong()).skip();
-        } else {
-            Messaging.sendMessage(MessageType.INFO, channel, data.getLocale().i18n("commands.skip.not_skipping"), data.getCore().getUseEmbedForMessages());
-        }
-    });
+    DUMMY(((textChannel, voteResults) -> {
+
+    }));
 
     private final BiConsumer<TextChannel, List<VoteResult>> consumer;
     VoteFinishConsumer(BiConsumer<TextChannel, List<VoteResult>> consumer) {

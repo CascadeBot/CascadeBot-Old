@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.dv8tion.jda.api.requests.ErrorResponse
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.UnicodeConstants
-import org.cascadebot.cascadebot.commands.music.SkipCommand
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.interactions.CascadeButton
@@ -339,23 +338,6 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
                 return@IButtonRunnable
             }
             voteButtonGroup.addVote(runner.user, 14)
-        })),
-    SKIP_BUTTON_FORCE(CascadeButton.secondary("Force", Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
-        IButtonRunnable { runner: Member?, channel: TextChannel, message: InteractionMessage ->
-            val data = GuildDataManager.getGuildData(channel.guild.idLong)
-            if (!data.management.permissions.hasPermission(
-                    runner,
-                    channel,
-                    CascadeBot.INS.permissionsManager.getPermission("skip.force"),
-                    data.core
-                )
-            ) {
-                return@IButtonRunnable
-            }
-            message.message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE))
-            val voteButtonGroup = data.findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
-            voteButtonGroup!!.stopVote()
-            CascadeBot.INS.musicHandler.getPlayer(channel.guild.idLong)!!.skip()
         }));
 
 }

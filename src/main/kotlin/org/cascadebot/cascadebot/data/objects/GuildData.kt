@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageChannel
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.language.Locale
-import org.cascadebot.cascadebot.music.CascadeLavalinkPlayer
 import org.cascadebot.cascadebot.utils.interactions.PersistentComponent
 import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow
 import org.cascadebot.cascadebot.utils.interactions.InteractionCache
@@ -63,23 +62,8 @@ class GuildData(@field:Id val guildId: Long) {
 
     //region Data Loaded Methods
     fun onGuildLoaded() {
-        loadMusicSettings()
         loadComponents()
         permissionsManager.registerPermissions(this)
-    }
-
-    private fun loadMusicSettings() {
-        val player = CascadeBot.INS.musicHandler.getPlayer(guildId)!!
-        if (music.preserveVolume) {
-            player.volume = music.volume
-        }
-        if (music.preserveEqualizer) {
-            if (CascadeBot.INS.musicHandler.lavalinkEnabled) {
-                if (player is CascadeLavalinkPlayer) {
-                    player.setBands(music.equalizerBands)
-                }
-            }
-        }
     }
 
     private fun loadComponents() {
