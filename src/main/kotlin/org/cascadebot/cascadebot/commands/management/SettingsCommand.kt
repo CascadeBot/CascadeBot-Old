@@ -13,6 +13,9 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity
+import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity
+import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
 import org.cascadebot.cascadebot.data.language.Language.getLanguage
 import org.cascadebot.cascadebot.data.language.Language.i18n
 import org.cascadebot.cascadebot.data.objects.GuildSettingsCore
@@ -64,20 +67,20 @@ class SettingsCommand : MainCommand() {
                     .collect(Collectors.toMap({ it.key }, { it.value }))
         }
 
-        fun getSettingsContainer(field: Field, context: CommandContext): Any {
+        fun getSettingsContainer(field: Field, context: CommandContext): Any? {
             return when (field.declaringClass) {
-                GuildSettingsCore::class.java -> context.data.core
-                GuildSettingsManagement::class.java -> context.data.management
-                GuildSettingsModeration::class.java -> context.data.moderation
-                GuildSettingsMusic::class.java -> context.data.music
-                GuildSettingsUseful::class.java -> context.data.useful
-                else -> context.data.core
+                GuildSettingsCoreEntity::class.java -> context.getDataObject(GuildSettingsCoreEntity::class.java)
+                GuildSettingsManagementEntity::class.java -> context.getDataObject(GuildSettingsManagementEntity::class.java)
+                GuildSettingsModerationEntity::class.java -> context.getDataObject(GuildSettingsModerationEntity::class.java)
+                else -> null
             }
         }
 
         init {
             try {
-                ReflectionUtils.getClasses("org.cascadebot.cascadebot.data.objects").stream().filter { classToFilter: Class<*> -> classToFilter.getAnnotation(SettingsContainer::class.java) != null }.forEach { e: Class<*> -> settingsClasses.add(e) }
+                ReflectionUtils.getClasses("org.cascadebot.cascadebot.data.entities").stream()
+                    .filter { classToFilter: Class<*> -> classToFilter.getAnnotation(SettingsContainer::class.java) != null }
+                    .forEach { e: Class<*> -> settingsClasses.add(e) }
             } catch (e: ClassNotFoundException) {
                 CascadeBot.LOGGER.error("Could not load settings!", e)
             } catch (e: IOException) {
@@ -94,6 +97,7 @@ class SettingsCommand : MainCommand() {
 
             if (field != null) {
                 val settingsContainer: Any = getSettingsContainer(field, context)
+                    ?: throw UnsupportedOperationException("TODO") // TODO message
 
                 try {
                     val settingAnnotation = field.getAnnotation(Setting::class.java)
@@ -139,6 +143,7 @@ class SettingsCommand : MainCommand() {
                             return
                         }
                     }
+                    context.saveDataObject(settingsContainer)
                     context.typedMessaging.replySuccess(context.i18n("commands.settings.setting_set", field.name, value))
                 } catch (e: IllegalAccessException) {
                     context.typedMessaging.replyException(context.i18n("commands.settings.cannot_access"), e)

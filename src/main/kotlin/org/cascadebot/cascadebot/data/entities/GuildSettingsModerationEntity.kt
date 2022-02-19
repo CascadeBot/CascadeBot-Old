@@ -5,12 +5,16 @@
 
 package org.cascadebot.cascadebot.data.entities
 
+import org.cascadebot.cascadebot.commandmeta.Module
+import org.cascadebot.cascadebot.data.objects.Setting
+import org.cascadebot.cascadebot.data.objects.SettingsContainer
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
+@SettingsContainer(module = Module.MODERATION)
 @Table(name = "guild_settings_moderation")
 class GuildSettingsModerationEntity(guildId: Long) {
 
@@ -19,9 +23,11 @@ class GuildSettingsModerationEntity(guildId: Long) {
     val guildId: Long = guildId
 
     @Column(name = "purge_pinned", nullable = false)
+    @Setting
     var purgePinned: Boolean = true
 
     @Column(name = "respect_hierarchy", nullable = false)
+    @Setting
     var respectHierarchy: Boolean = true
 
     @Column(name = "mute_role_name", nullable = false)
