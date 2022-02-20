@@ -29,7 +29,7 @@ class FiltersCreateSubCommand : SubCommand() {
 
         val name = context.getArg(0)
 
-        val filter = context.getDataObject(GuildFilterEntity::class.java, GuildFilterId(name, context.getGuildId()))
+        var filter = context.getDataObject(GuildFilterEntity::class.java, GuildFilterId(name, context.getGuildId()))
         if (filter != null) {
             context.typedMessaging.replyDanger(context.i18n(
                     "commands.filters.create.already_exists",
@@ -38,9 +38,10 @@ class FiltersCreateSubCommand : SubCommand() {
             return
         }
 
+        filter = GuildFilterEntity(name, context.getGuildId(), FilterType.BLACKLIST, CommandFilter.FilterOperator.OR)
+
         // Args in the format "<name> [type]"
         if (context.args.size == 1) {
-            val filter = GuildFilterEntity(name, context.getGuildId(), FilterType.BLACKLIST, CommandFilter.FilterOperator.OR)
             context.saveDataObject(filter)
             val amount = context.transaction {
                 count(GuildFilterEntity::class.java, "guild_id", context.getGuildId())
@@ -59,31 +60,31 @@ class FiltersCreateSubCommand : SubCommand() {
             ))
         } else {
             val type = context.getArg(1)
-            if (EnumUtils.isValidEnumIgnoreCase(FilterType::class.java, type)) {
-                val filter = GuildFilterEntity(name, context.getGuildId(), FilterType.BLACKLIST, CommandFilter.FilterOperator.OR)
-                filter.type = EnumUtils.getEnumIgnoreCase(FilterType::class.java, type)
-                val amount = context.transaction {
-                    count(GuildFilterEntity::class.java, "guild_id", context.getGuildId())
-                }
-                    ?: throw UnsupportedOperationException("TODO") //TODO message
-                val managementSettings = context.getDataObject(GuildSettingsManagementEntity::class.java)
-                    ?: throw UnsupportedOperationException("TODO") //TODO message
 
-                if (amount >= 10 && managementSettings.warnOver10) {
-                    context.typedMessaging.replyWarning(context.i18n("commands.filters.create.over10warning"))
-                }
-                context.typedMessaging.replySuccess(context.i18n(
-                        "commands.filters.create.created_filter",
-                        FormatUtils.formatEnum(filter.type, context.locale),
-                        filter.name
-                ))
-            } else {
+            if (!EnumUtils.isValidEnumIgnoreCase(FilterType::class.java, type)) {
                 context.typedMessaging.replyDanger(context.i18n(
-                        "commands.filters.create.type_invalid",
-                        type,
-                        FilterType.values().joinToString(", ") { filterType -> "`" + FormatUtils.formatEnum(filterType, context.locale) + "`" }
+                    "commands.filters.create.type_invalid",
+                    type,
+                    FilterType.values().joinToString(", ") { filterType -> "`" + FormatUtils.formatEnum(filterType, context.locale) + "`" }
                 ))
             }
+
+            filter.type = EnumUtils.getEnumIgnoreCase(FilterType::class.java, type)
+            val amount = context.transaction {
+                count(GuildFilterEntity::class.java, "guild_id", context.getGuildId())
+            }
+                ?: throw UnsupportedOperationException("TODO") //TODO message
+            val managementSettings = context.getDataObject(GuildSettingsManagementEntity::class.java)
+                ?: throw UnsupportedOperationException("TODO") //TODO message
+
+            if (amount >= 10 && managementSettings.warnOver10) {
+                context.typedMessaging.replyWarning(context.i18n("commands.filters.create.over10warning"))
+            }
+            context.typedMessaging.replySuccess(context.i18n(
+                    "commands.filters.create.created_filter",
+                    FormatUtils.formatEnum(filter.type, context.locale),
+                    filter.name
+            ))
         }
     }
 
