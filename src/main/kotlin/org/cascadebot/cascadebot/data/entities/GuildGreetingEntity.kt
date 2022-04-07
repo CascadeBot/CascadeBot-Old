@@ -19,13 +19,14 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "guild_greeting")
-@IdClass(GuildFilterId::class)
+@IdClass(GuildGreetingId::class)
 class GuildGreetingEntity(guildId: Long, type: GreetingType, content: String) {
 
     @Id
     @Column(name = "id")
     val id: UUID = UUID.randomUUID()
 
+    @Id
     @Column(name = "guild_id", nullable = false)
     val guildId: Long = guildId
 

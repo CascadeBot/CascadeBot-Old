@@ -8,9 +8,12 @@ package org.cascadebot.cascadebot.commands.management.welcome
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
+import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.cascadebot.cascadebot.utils.listOf
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import kotlin.math.round
@@ -25,14 +28,23 @@ class WelcomeWeightSubCommand : SubCommand() {
         }
 
         if (context.args.isEmpty()) {
-            val welcomeMessages = context.data.management.greetings.welcomeMessages
+            val welcomeMessages = context.transaction {
+                return@transaction listOf(
+                    GuildGreetingEntity::class.java,
+                    mapOf(Pair("guild_id", context.getGuildId()), Pair("type", GreetingType.WELCOME))
+                )
+            } ?: throw UnsupportedOperationException("This shouldn't happen")
+            var totalWeight = 0
+            for (item in welcomeMessages) {
+                totalWeight += item.weight;
+            }
             val pages = mutableListOf<Page>()
-            for (item in welcomeMessages.itemsAndWeighting) {
+            for (item in welcomeMessages) {
                 pages.add(PageObjects.EmbedPage(embed(MessageType.INFO, context.user) {
                     title { name = context.i18n("commands.welcome.weight.embed_title") }
                     field {
                         name = context.i18n("commands.welcome.embed_message")
-                        value = item.item
+                        value = item.content
                     }
                     field {
                         name = context.i18n("commands.welcome.embed_weight")
@@ -41,14 +53,23 @@ class WelcomeWeightSubCommand : SubCommand() {
                     }
                     field {
                         name = context.i18n("commands.welcome.proportion_title")
-                        value = round((item.weight.toDouble() / welcomeMessages.totalWeight.toDouble()) * 100).toInt().toString() + "%"
+                        value = round((item.weight.toDouble() / totalWeight.toDouble()) * 100).toInt().toString() + "%"
                         inline = true
                     }
                 }))
             }
             context.uiMessaging.sendPagedMessage(pages)
         } else {
-            val welcomeMessages = context.data.management.greetings.welcomeMessages
+            val welcomeMessages = context.transaction {
+                return@transaction listOf(
+                    GuildGreetingEntity::class.java,
+                    mapOf(Pair("guild_id", context.getGuildId()), Pair("type", GreetingType.WELCOME))
+                )
+            } ?: throw UnsupportedOperationException("This shouldn't happen")
+            var totalWeight = 0
+            for (item in welcomeMessages) {
+                totalWeight += item.weight;
+            }
             if (welcomeMessages.size == 0) {
                 context.typedMessaging.replyDanger(context.i18n("commands.welcome.no_messages"))
                 return
@@ -72,28 +93,29 @@ class WelcomeWeightSubCommand : SubCommand() {
                 return
             }
 
-            val oldWeight = welcomeMessages.getItemWeight(index)
+            val oldWeight = welcomeMessages[index].weight
 
             if (oldWeight == weight) {
                 context.typedMessaging.replyInfo(embed(MessageType.INFO, context.user) {
                     title { name = context.i18n("commands.welcome.weight.same_weight_title") }
-                    description = context.i18n("commands.welcome.weight.same_weight_text", weight, welcomeMessages[index].item
-                            ?: "Message unavailable!")
+                    description = context.i18n("commands.welcome.weight.same_weight_text", weight,
+                        welcomeMessages[index].content
+                    )
                     field {
                         name = context.i18n("commands.welcome.proportion_title")
-                        value = context.i18n("commands.welcome.weight.proportion_text", (welcomeMessages.getItemProportion(index) * 100).roundToInt())
+                        value = context.i18n("commands.welcome.weight.proportion_text", ((weight.toDouble() / totalWeight.toDouble()) * 100).roundToInt())
                     }
                 })
                 return
             }
 
-            welcomeMessages.setItemWeight(index, weight)
+            welcomeMessages[index].weight = weight
 
             context.typedMessaging.replySuccess(embed(MessageType.SUCCESS, context.user) {
                 title {
                     name = context.i18n("commands.welcome.weight.set_weight_title")
                 }
-                description = context.i18n("commands.welcome.weight.set_weight_text", welcomeMessages[index].item ?: "Message unavailable!")
+                description = context.i18n("commands.welcome.weight.set_weight_text", welcomeMessages[index].content)
                 field {
                     name = context.i18n("commands.welcome.weight.old_weight")
                     value = oldWeight.toString()
@@ -106,7 +128,7 @@ class WelcomeWeightSubCommand : SubCommand() {
                 }
                 field {
                     name = context.i18n("commands.welcome.proportion_title")
-                    value = context.i18n("commands.welcome.weight.proportion_text", (welcomeMessages.getItemProportion(index) * 100).roundToInt())
+                    value = context.i18n("commands.welcome.weight.proportion_text", ((weight.toDouble() / totalWeight.toDouble()) * 100).roundToInt())
                 }
             })
 

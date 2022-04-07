@@ -8,9 +8,12 @@ package org.cascadebot.cascadebot.commands.management.welcome
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
+import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.ConfirmUtils
+import org.cascadebot.cascadebot.utils.deleteById
 
 class WelcomeDMClearSubCommand : SubCommand() {
 
@@ -28,16 +31,19 @@ class WelcomeDMClearSubCommand : SubCommand() {
         }
 
         ConfirmUtils.registerForConfirmation(context.user.idLong,
-                actionKey,
-                context.channel,
-                MessageType.WARNING,
-                context.i18n("commands.welcome.dm.clear.confirm_warning"),
-                isCancellable = true,
-                action = Runnable {
-                    context.data.management.greetings.welcomeDMMessages.clear()
-                    context.data.management.greetings.welcomeChannel = null
-                    context.typedMessaging.replySuccess(context.i18n("commands.welcome.dm.clear.clear_success"))
+            actionKey,
+            context.channel,
+            MessageType.WARNING,
+            context.i18n("commands.welcomedm.clear.confirm_warning"),
+            isCancellable = true,
+            action = {
+                context.transaction {
+                    deleteById(
+                        GuildGreetingEntity::class.java,
+                        mapOf(Pair("guild_id", context.getGuildId()), Pair("type", GreetingType.WELCOME_DM)))
                 }
+                context.typedMessaging.replySuccess(context.i18n("commands.welcomedm.clear.clear_success"))
+            }
         )
     }
 

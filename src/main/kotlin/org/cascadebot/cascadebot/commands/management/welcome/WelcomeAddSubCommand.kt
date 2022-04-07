@@ -8,10 +8,13 @@ package org.cascadebot.cascadebot.commands.management.welcome
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
+import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
+import org.cascadebot.cascadebot.utils.listOf
 
 class WelcomeAddSubCommand : SubCommand() {
 
@@ -23,11 +26,14 @@ class WelcomeAddSubCommand : SubCommand() {
 
         val message = context.getMessage(0)
 
-        val welcomeMessages = context.data.management.greetings.welcomeMessages
-        welcomeMessages.add(message)
+        val greeting = GuildGreetingEntity(context.getGuildId(), GreetingType.WELCOME, message);
+        context.saveDataObject(greeting);
 
-        val index = welcomeMessages.indexOf(message)
-        val proportion = welcomeMessages.getItemProportion(index)
+        val greetings = context.transaction {
+            return@transaction listOf(GuildGreetingEntity::class.java, mapOf(Pair("guild_id", context.getGuildId()), Pair("type", GreetingType.WELCOME)))
+        }
+
+        val proportion = greeting.weight;
 
         context.typedMessaging.replySuccess(embed(MessageType.SUCCESS) {
             title {
@@ -35,7 +41,7 @@ class WelcomeAddSubCommand : SubCommand() {
             }
             description = "${context.i18n("commands.welcome.add.success_text_1")}\n" +
                     "```\n$message\n```\n" +
-                    context.i18n("commands.welcome.add.success_text_2", welcomeMessages.size, FormatUtils.round(proportion * 100, 0).toInt())
+                    context.i18n("commands.welcome.add.success_text_2", greetings!!.size, FormatUtils.round((proportion * 100).toDouble(), 0).toInt())
         })
 
     }

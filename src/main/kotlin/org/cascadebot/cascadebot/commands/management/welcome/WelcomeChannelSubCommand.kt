@@ -6,10 +6,15 @@
 package org.cascadebot.cascadebot.commands.management.welcome
 
 import net.dv8tion.jda.api.entities.Member
+import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildGreetingChannelEntity
+import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
+import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
+import org.cascadebot.cascadebot.utils.listOf
 
 class WelcomeChannelSubCommand : SubCommand() {
 
@@ -21,16 +26,17 @@ class WelcomeChannelSubCommand : SubCommand() {
 
         if (context.args.isEmpty()) {
             context.typedMessaging.replyInfo(run {
-                val greetings = context.data.management.greetings
-                if (greetings.welcomeChannel != null) {
-                    context.i18n("commands.welcome.current_channel", greetings.welcomeChannel?.asMention!!)
+                val greetings = context.getDataObject(GuildGreetingChannelEntity::class.java) ?: throw UnsupportedOperationException("This shouldn't happen")
+                if (greetings.channelId != null) {
+                    val channel = CascadeBot.INS.client.getGuildChannelById(greetings.channelId)
+                    context.i18n("commands.welcome.current_channel", channel?.asMention!!)
                 } else {
                     context.i18n("commands.welcome.no_channel_set")
                 }
             })
         } else {
             if (context.testForArg("clear")) {
-                context.data.management.greetings.welcomeChannel = null
+                context.saveDataObject(GuildGreetingChannelEntity(context.getGuildId(), null))
                 context.typedMessaging.replySuccess(context.i18n("commands.welcome.channel.clear_success"))
                 return
             }
@@ -41,7 +47,7 @@ class WelcomeChannelSubCommand : SubCommand() {
                 return
             }
 
-            context.data.management.greetings.welcomeChannel = channel
+            context.saveDataObject(GuildGreetingChannelEntity(context.getGuildId(), channel.idLong))
 
             context.typedMessaging.replySuccess(context.i18n("commands.welcome.channel.set_success", channel.asMention))
         }

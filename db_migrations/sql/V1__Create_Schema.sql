@@ -113,9 +113,9 @@ create table guild_modlog
 create table guild_settings_management
 (
     guild_id             bigint not null,
-    display_filter_error boolean default false,
+    display_filter_error boolean          default false,
     permission_mode      permissions_mode default 'MOST_RESTRICTIVE',
-    warn_over_10         boolean default true,
+    warn_over_10         boolean          default true,
     constraint guild_settings_management_pk
         primary key (guild_id),
     constraint guild_settings_management_fk
@@ -159,7 +159,7 @@ create table guild_filter_channels
     constraint guild_command_filter_channels_pk
         primary key (filter_name, guild_id, channel_id),
     constraint guild_command_filter_channels_fk
-        foreign key (filter_name, guild_id) references guild_filter(name, guild_id)
+        foreign key (filter_name, guild_id) references guild_filter (name, guild_id)
             on delete cascade
 );
 
@@ -167,11 +167,11 @@ create table guild_filter_users
 (
     filter_name varchar(255) not null,
     guild_id    bigint       not null,
-    user_id  bigint       not null,
+    user_id     bigint       not null,
     constraint guild_command_filter_users_pk
         primary key (filter_name, guild_id, user_id),
     constraint guild_command_filter_user_fk
-        foreign key (filter_name, guild_id) references guild_filter(name, guild_id)
+        foreign key (filter_name, guild_id) references guild_filter (name, guild_id)
             on delete cascade
 );
 
@@ -179,11 +179,11 @@ create table guild_filter_roles
 (
     filter_name varchar(255) not null,
     guild_id    bigint       not null,
-    role_id  bigint       not null,
+    role_id     bigint       not null,
     constraint guild_command_filter_roles_pk
         primary key (filter_name, guild_id, role_id),
     constraint guild_command_filter_roles_fk
-        foreign key (filter_name, guild_id) references guild_filter(name, guild_id)
+        foreign key (filter_name, guild_id) references guild_filter (name, guild_id)
             on delete cascade
 );
 
@@ -192,8 +192,8 @@ create table guild_permission_group
     guild_id    bigint       not null,
     name        varchar(255) not null,
     position    int          not null,
-    permissions varchar(255)[] default array[]::varchar(255)[],
-    roles       bigint[]       default array[]::bigint[],
+    permissions varchar(255)[] default array []::varchar(255)[],
+    roles       bigint[]       default array []::bigint[],
     constraint guild_permission_group_pk
         primary key (name, guild_id),
     constraint guild_permission_group_fk
@@ -205,7 +205,7 @@ create table guild_permission_user
 (
     user_id     bigint not null,
     guild_id    bigint not null,
-    permissions varchar(255)[] default array[]::varchar(255)[],
+    permissions varchar(255)[] default array []::varchar(255)[],
     constraint guild_permission_user_pk
         primary key (user_id, guild_id),
     constraint guild_permission_user_fk
@@ -251,8 +251,19 @@ create table guild_greeting
     content  text,
     weight   integer,
     constraint guild_greeting_pk
-        primary key (id),
+        primary key (id, guild_id),
     constraint guild_greeting_fk
+        foreign key (guild_id) references guild
+            on delete cascade
+);
+
+create table guild_greeting_channel
+(
+    guild_id    bigint,
+    channel_id  bigint,
+    constraint guild_greeting_channel_pk
+        primary key (guild_id),
+    constraint guild_greeting_channel_fk
         foreign key (guild_id) references guild
             on delete cascade
 );
@@ -260,10 +271,10 @@ create table guild_greeting
 create table guild_filter_criteria
 (
     id          uuid default gen_random_uuid(),
-    filter_name varchar(255)         not null,
-    guild_id    bigint               not null,
-    type        filter_target_type   not null,
-    target_id   bigint               not null,
+    filter_name varchar(255)       not null,
+    guild_id    bigint             not null,
+    type        filter_target_type not null,
+    target_id   bigint             not null,
     constraint guild_filter_criteria_pk
         primary key (id),
     constraint guild_filter_criteria_fk
@@ -287,10 +298,10 @@ create table guild_modlog_event_enabled
 
 create table scheduled_action_data
 (
-    id bigserial,
-    target_id bigint,
-    reminder text,
-    is_dm bool,
+    id           bigserial,
+    target_id    bigint,
+    reminder     text,
+    is_dm        bool,
     old_slowmode int,
     constraint scheduled_action_data_pk
         primary key (id)
@@ -298,14 +309,14 @@ create table scheduled_action_data
 
 create table scheduled_action
 (
-    id bigserial,
-    type scheduled_action_type not null,
-    data_id int not null,
-    guild_id bigint not null,
-    channel_id bigint not null,
-    user_id bigint not null,
-    creation_time timestamp not null,
-    execution_time timestamp not null,
+    id             bigserial,
+    type           scheduled_action_type not null,
+    data_id        int                   not null,
+    guild_id       bigint                not null,
+    channel_id     bigint                not null,
+    user_id        bigint                not null,
+    creation_time  timestamp             not null,
+    execution_time timestamp             not null,
     constraint scheduled_action_pk
         primary key (id),
     constraint scheduled_action_data_fk
