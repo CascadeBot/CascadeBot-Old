@@ -7,16 +7,19 @@ package org.cascadebot.cascadebot.data.entities
 
 import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.hibernate.annotations.Type
+import java.io.Serializable
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.Id
+import javax.persistence.IdClass
 import javax.persistence.Table
 
 @Entity
 @Table(name = "guild_greeting")
+@IdClass(GuildFilterId::class)
 class GuildGreetingEntity(guildId: Long, type: GreetingType, content: String) {
 
     @Id
@@ -37,4 +40,8 @@ class GuildGreetingEntity(guildId: Long, type: GreetingType, content: String) {
     @Column(name = "weight", nullable = false)
     var weight: Int = 1
 
+}
+
+data class GuildGreetingId(val id: UUID, val guildId: Long) : Serializable {
+    constructor() : this(UUID.randomUUID(), 0)
 }

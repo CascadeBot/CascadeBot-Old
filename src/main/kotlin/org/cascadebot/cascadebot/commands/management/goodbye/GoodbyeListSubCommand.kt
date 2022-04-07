@@ -8,9 +8,12 @@ package org.cascadebot.cascadebot.commands.management.goodbye
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
+import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
+import org.cascadebot.cascadebot.utils.listOf
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
@@ -24,10 +27,18 @@ class GoodbyeListSubCommand : SubCommand() {
             context.uiMessaging.replyUsage()
             return
         }
-        val goodbyeMessages = context.data.management.greetings.goodbyeMessages
+        val goodbyeMessages = context.transaction {
+            return@transaction listOf(
+                GuildGreetingEntity::class.java,
+                mapOf(Pair("guild_id", context.getGuildId()), Pair("type", GreetingType.GOODBYE))
+            )
+        } ?: throw UnsupportedOperationException("This shouldn't happen")
 
-        val totalWeight = goodbyeMessages.totalWeight
-        val items = goodbyeMessages.itemsAndWeighting
+        var totalWeight = 0;
+        for (greeting in goodbyeMessages) {
+            totalWeight += greeting.weight;
+        }
+        val items = goodbyeMessages;
 
         val overviewPage = PageObjects.EmbedPage(embed(MessageType.INFO) {
             title { name = context.i18n("commands.goodbye.messages_title") }
@@ -38,16 +49,17 @@ class GoodbyeListSubCommand : SubCommand() {
             }
             field {
                 name = context.i18n("commands.goodbye.embed_total_weight")
-                value = goodbyeMessages.totalWeight.toString()
+                value = totalWeight.toString()
                 inline = true
             }
             field {
                 name = context.i18n("commands.goodbye.embed_quick_overview")
                 value = run {
                     var result = ""
-                    for ((item, weight) in items.take(10)) {
+                    for (item in items.take(10)) {
                         if (item == null) continue
-                        result += item.truncate(25).padEnd(25) + " - " + (weight.toDouble() / totalWeight.toDouble()).toPercentage() + "\n"
+                        result += item.content.truncate(25)
+                            .padEnd(25) + " - " + (item.weight.toDouble() / totalWeight.toDouble()).toPercentage() + "\n"
                     }
                     if (items.size > 10) result += context.i18n("commands.goodbye.quick_overview_more", items.size - 10)
                     result
@@ -57,22 +69,21 @@ class GoodbyeListSubCommand : SubCommand() {
 
         val pages: MutableList<PageObjects.EmbedPage> = mutableListOf(overviewPage)
 
-        for ((message, weight) in items) {
-            check(message != null) { "The message should never be null!" }
+        for (item in items) {
             pages.add(PageObjects.EmbedPage(embed(MessageType.INFO) {
                 title { name = context.i18n("commands.goodbye.messages_title") }
                 field {
                     name = context.i18n("commands.goodbye.embed_message")
-                    value = PlaceholderObjects.goodbyes.highlightMessage(message)
+                    value = PlaceholderObjects.goodbyes.highlightMessage(item.content)
                 }
                 field {
                     name = context.i18n("commands.goodbye.proportion_title")
-                    value = (weight.toDouble() / totalWeight.toDouble()).toPercentage()
+                    value = (item.weight.toDouble() / totalWeight.toDouble()).toPercentage()
                     inline = true
                 }
                 field {
                     name = context.i18n("commands.goodbye.embed_weight")
-                    value = weight.toString()
+                    value = item.weight.toString()
                     inline = true
                 }
             }))

@@ -63,9 +63,9 @@ public final class GuildDataManager {
         });
     }
 
-    public static GuildData getGuildData(long id) {
-        return guilds.get(id);
-    }
+    //public static GuildData getGuildData(long id) {
+    //    return guilds.get(id);
+    //}
 
     public static LoadingCache<Long, GuildData> getGuilds() {
         return guilds;

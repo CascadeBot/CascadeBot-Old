@@ -203,6 +203,13 @@ data class CommandContext(
         }
     }
 
+    fun <T : Any> deleteDataObject(javaClass: Class<T>, key: java.io.Serializable = guild.idLong) {
+        CascadeBot.INS.postgresManager.transaction {
+            return@transaction deleteDataObject(javaClass, key)
+        }
+    }
+
+
     fun saveDataObject(obj: Any) {
         return CascadeBot.INS.postgresManager.transactionNoReturn {
             session.save(obj)

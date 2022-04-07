@@ -8,9 +8,12 @@ package org.cascadebot.cascadebot.commands.management.goodbye
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
+import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
+import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.ConfirmUtils
+import org.cascadebot.cascadebot.utils.deleteById
 
 class GoodbyeClearSubCommand : SubCommand() {
 
@@ -33,8 +36,11 @@ class GoodbyeClearSubCommand : SubCommand() {
                 MessageType.WARNING,
                 context.i18n("commands.goodbye.clear.confirm_warning"),
                 isCancellable = true,
-                action = Runnable {
-                    context.data.management.greetings.goodbyeMessages.clear()
+                action = {
+                    context.transaction {
+                        deleteById(GuildGreetingEntity::class.java,
+                            mapOf(Pair("guild_id", context.getGuildId()), Pair("type", GreetingType.GOODBYE)))
+                    }
                     context.typedMessaging.replySuccess(context.i18n("commands.goodbye.clear.clear_success"))
                 }
         )
