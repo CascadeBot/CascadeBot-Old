@@ -5,7 +5,7 @@
 
 package org.cascadebot.cascadebot.move;
 
-import org.cascadebot.cascadebot.utils.move.MovableList;
+import org.cascadebot.cascadebot.utils.move.legacy.MovableList;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

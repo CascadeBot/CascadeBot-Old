@@ -3,7 +3,7 @@
  * Licensed under the MIT license.
  */
 
-package org.cascadebot.cascadebot.utils.move;
+package org.cascadebot.cascadebot.utils.move.legacy;
 
 public interface MovableItem {
 

@@ -6,7 +6,7 @@
 package org.cascadebot.cascadebot.move;
 
 import lombok.Getter;
-import org.cascadebot.cascadebot.utils.move.MovableItem;
+import org.cascadebot.cascadebot.utils.move.legacy.MovableItem;
 
 public class TestMovableItem implements MovableItem {
 
