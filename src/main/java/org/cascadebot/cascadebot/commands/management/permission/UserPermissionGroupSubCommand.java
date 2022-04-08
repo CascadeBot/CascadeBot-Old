@@ -9,10 +9,12 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupId;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionUserEntity;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionUserId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
-import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
 public class UserPermissionGroupSubCommand extends SubCommand {
 
@@ -34,23 +36,32 @@ public class UserPermissionGroupSubCommand extends SubCommand {
             return;
         }
 
-        PermissionCommandUtils.tryGetGroupFromString(context, context.getArg(2), group -> {
-            User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
-            if (context.testForArg("put")) {
-                if (user.addGroup(group)) {
-                    context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.put.success", member.getUser().getAsTag(), group.getName()));
-                } else {
-                    context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.put.fail", member.getUser().getAsTag(), group.getName()));
-                }
-            } else if (context.testForArg("remove")) {
-                if (user.removeGroup(group)) {
-                    context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.remove.success", member.getUser().getAsTag(), group.getName()));
-                } else {
-                    context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.remove.fail", member.getUser().getAsTag(), group.getName()));
-                }
-            }
-        }, sender.getIdLong());
+        GuildPermissionGroupEntity group = context.transaction(session -> {
+            return session.get(GuildPermissionGroupEntity.class, new GuildPermissionGroupId(context.getArg(2), context.getGuildId()));
+        });
+        if (group == null) {
+            context.reply("Group not found"); // TODO language
+        }
 
+        GuildPermissionUserEntity user = context.getDataObject(GuildPermissionUserEntity.class, new GuildPermissionUserId(member.getIdLong(), context.getGuildId()));
+        if (user == null) {
+            user = new GuildPermissionUserEntity(member.getIdLong(), context.getGuildId());
+        }
+        if (context.testForArg("put")) {
+            if (user.getGroups().add(group)) {
+                context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.put.success", member.getUser().getAsTag(), group.getName()));
+            } else {
+                context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.put.fail", member.getUser().getAsTag(), group.getName()));
+            }
+        } else if (context.testForArg("remove")) {
+            if (user.getGroups().remove(group)) {
+                context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.group.remove.success", member.getUser().getAsTag(), group.getName()));
+            } else {
+                context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.group.remove.fail", member.getUser().getAsTag(), group.getName()));
+            }
+        }
+
+        context.saveDataObject(user);
 
     }
 

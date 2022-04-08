@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.utils.FormatUtils;
@@ -51,24 +52,24 @@ public class PageObjects {
 
         @Override
         public void pageShow(InteractionMessage message, int page, int total) {
-            GuildData data = GuildDataManager.getGuildData(message.getMessage().getTextChannel().getGuild().getIdLong());
-            if (data.getCore().getUseEmbedForMessages()) {
+            //GuildData data = GuildDataManager.getGuildData(message.getMessage().getTextChannel().getGuild().getIdLong());
+            if (true) {
                 if (numbersInEmbed) {
                     if (total > 1) {
-                        embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getMessage().getAuthor().getAvatarUrl());
+                        embed.setFooter(Language.i18n(Locale.ENGLISH_UK /* TODO get local */, "page_objects.page_footer", page, total), message.getMessage().getAuthor().getAvatarUrl());
                     }
                     message.editMessage(embed.build()).queue();
                 } else {
                     var messageBuilder = new MessageBuilder().setEmbed(embed.build());
                     if (total > 1) {
-                        messageBuilder.append(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total));
+                        messageBuilder.append(Language.i18n(Locale.ENGLISH_UK /* TODO get local */, "page_objects.page_footer", page, total));
                     }
                     message.editMessage(messageBuilder.build()).queue();
 
                 }
             } else {
                 if (total > 1) {
-                    embed.setFooter(Language.i18n(data.getLocale(), "page_objects.page_footer", page, total), message.getMessage().getAuthor().getAvatarUrl());
+                    embed.setFooter(Language.i18n(Locale.ENGLISH_UK /* TODO get local */, "page_objects.page_footer", page, total), message.getMessage().getAuthor().getAvatarUrl());
                 }
                 String content = FormatUtils.formatEmbed(embed.build());
                 message.editMessage(content).queue();

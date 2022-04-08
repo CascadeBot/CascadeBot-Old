@@ -6,11 +6,13 @@
 package org.cascadebot.cascadebot.commands.management.permission;
 
 import net.dv8tion.jda.api.entities.Member;
+import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionUserEntity;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionUserId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
 public class UserPermissionAddSubCommand extends SubCommand {
@@ -28,18 +30,23 @@ public class UserPermissionAddSubCommand extends SubCommand {
             return;
         }
 
-        User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
+        GuildPermissionUserEntity user = context.getDataObject(GuildPermissionUserEntity.class, new GuildPermissionUserId(member.getIdLong(), context.getGuildId()));
+        if (user == null) {
+            user = new GuildPermissionUserEntity(member.getIdLong(), context.getGuildId());
+        }
 
-        if (!context.getData().getPermissionsManager().isValidPermission(context.getArg(1))) {
+        if (!CascadeBot.INS.getPermissionsManager().isValidPermission(context.getArg(1))) {
             context.getTypedMessaging().replyDanger(context.i18n("responses.permission_not_exist", context.getArg(1)));
             return;
         }
 
-        if (user.addPermission(context.getArg(1))) {
-            context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.add.success", context.getArg(1), member.getUser().getAsTag()));
-        } else {
+        if (user.getPermissions().contains(context.getArg(1))) {
             context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.add.fail", context.getArg(1), member.getUser().getAsTag()));
+            return;
         }
+
+        context.saveDataObject(user);
+        context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.add.success", context.getArg(1), member.getUser().getAsTag()));
     }
 
     @Override

@@ -10,6 +10,9 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionUserEntity;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionUserId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.permissions.objects.User;
@@ -41,18 +44,20 @@ public class UserPermissionListSubCommand extends SubCommand {
             return;
         }
 
-        User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
+        GuildPermissionUserEntity user = context.getDataObject(GuildPermissionUserEntity.class, new GuildPermissionUserId(member.getIdLong(), context.getGuildId()));
+        if (user == null) {
+            user = new GuildPermissionUserEntity(member.getIdLong(), context.getGuildId());
+        }
 
         if (context.getArg(1).equalsIgnoreCase("groups")) {
             StringBuilder groupsBuilder = new StringBuilder();
-            if (user.getGroupIds().isEmpty()) {
+            if (user.getGroups().isEmpty()) {
                 context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.list.no_groups", member.getUser().getAsTag()));
                 return;
             }
 
-            for (String id : user.getGroupIds()) {
-                Group group = context.getData().getManagement().getPermissions().getGroupById(id);
-                groupsBuilder.append(group.getName()).append(" (").append(group.getId()).append(")\n");
+            for (GuildPermissionGroupEntity group : user.getGroups()) {
+                groupsBuilder.append(group.getName()).append('\n');
             }
             List<String> pageContent = PageUtils.splitString(groupsBuilder.toString(), 1000, '\n');
             List<Page> pages = new ArrayList<>();

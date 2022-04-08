@@ -17,7 +17,7 @@ public class UserPermissionTestSubCommand extends SubCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length < 2) {
+        /*if (context.getArgs().length < 2) {
             context.getUiMessaging().replyUsage();
             return;
         }
@@ -38,7 +38,7 @@ public class UserPermissionTestSubCommand extends SubCommand {
             context.getTypedMessaging().replyInfo(context.i18n("commands.userperms.test.has", target.getUser().getAsTag(), perm.getPermission(context.getLocale())));
         } else {
             context.getTypedMessaging().replyInfo(context.i18n("commands.userperms.test.does_not_have", target.getUser().getAsTag(), perm.getPermission(context.getLocale())));
-        }
+        }*/
     }
 
     @Override

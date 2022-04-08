@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionUserEntity;
+import org.cascadebot.cascadebot.data.entities.GuildPermissionUserId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
@@ -28,9 +30,12 @@ public class UserPermissionRemoveSubCommand extends SubCommand {
             return;
         }
 
-        User user = context.getData().getManagement().getPermissions().getPermissionUser(member);
+        GuildPermissionUserEntity user = context.getDataObject(GuildPermissionUserEntity.class, new GuildPermissionUserId(member.getIdLong(), context.getGuildId()));
+        if (user == null) {
+            user = new GuildPermissionUserEntity(member.getIdLong(), context.getGuildId());
+        }
 
-        if (user.removePermission(context.getArg(1))) {
+        if (user.getPermissions().remove(context.getArg(1))) {
             context.getTypedMessaging().replySuccess(context.i18n("commands.userperms.remove.success", context.getArg(1), member.getUser().getAsTag()));
         } else {
             context.getTypedMessaging().replyWarning(context.i18n("commands.userperms.remove.fail", context.getArg(1), member.getUser().getAsTag()));
