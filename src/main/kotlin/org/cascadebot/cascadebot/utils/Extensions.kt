@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
 import net.dv8tion.jda.api.exceptions.PermissionException
+import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.data.objects.GuildData
 import java.util.function.Consumer
@@ -82,8 +84,10 @@ fun Double.toPercentage(dp: Int = 0): String {
  * @see getOrCreateMutedRole
  */
 fun Guild.getMutedRole(): Role {
-    val guildData = GuildDataManager.getGuildData(this.idLong)
-    return this.getRoleById(guildData.mutedRoleId) ?: getOrCreateMutedRole(this, guildData)
+    val moderationSettings = CascadeBot.INS.postgresManager.transaction {
+        get(GuildSettingsModerationEntity::class.java, idLong)
+    } ?: throw UnsupportedOperationException("This shouldn't happen");
+    return moderationSettings.muteRoleId?.let { this.getRoleById(it) } ?: getOrCreateMutedRole(this, moderationSettings)
 }
 
 /**
@@ -101,9 +105,8 @@ fun Guild.getMutedRole(): Role {
  * @throws InsufficientPermissionException If the logged in account does not have the [Permission.MANAGE_ROLES] Permission.
  * @throws IllegalArgumentException If the guildData does not match the guild.
  */
-private fun getOrCreateMutedRole(guild: Guild, guildData: GuildData): Role {
-    require(guild.idLong == guildData.guildId)
-    val muteRoleName = guildData.moderation.muteRoleName
+private fun getOrCreateMutedRole(guild: Guild, moderationSettings: GuildSettingsModerationEntity): Role {
+    val muteRoleName = moderationSettings.muteRoleName
     val roleByName = guild.getRolesByName(muteRoleName, true)
     return if (roleByName.isEmpty()) {
         guild.createRole().setName(muteRoleName).complete().also {
@@ -114,7 +117,12 @@ private fun getOrCreateMutedRole(guild: Guild, guildData: GuildData): Role {
         }
     } else {
         roleByName[0]
-    }.also { guildData.mutedRoleId = it.idLong }
+    }.also {
+        moderationSettings.muteRoleId = it.idLong
+        CascadeBot.INS.postgresManager.transaction {
+            save(moderationSettings)
+        }
+    }
 }
 
 /**

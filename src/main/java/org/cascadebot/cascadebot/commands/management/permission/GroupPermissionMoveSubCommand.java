@@ -77,6 +77,7 @@ public class GroupPermissionMoveSubCommand extends SubCommand {
             moveGroup(context, movedInfo.getMovedItem(), movedInfo.getMovedTo());
         });
         movableList.send(context.getChannel());
+        // TODO add refresh button?
     }
 
     private boolean moveGroup(CommandContext context, GuildPermissionGroupEntity group, int pos) {

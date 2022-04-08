@@ -19,7 +19,7 @@ import org.cascadebot.cascadebot.utils.votes.VoteGroup
 enum class PersistentComponent(@field:Transient val component: CascadeComponent) {
     TODO_BUTTON_CHECK(CascadeButton.primary("Check", Emoji.fromUnicode(UnicodeConstants.TICK),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val todoList =
+            /*val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
             if (!todoList.canUserEdit(runner.idLong)) {
                 return@IButtonRunnable
@@ -27,11 +27,11 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             val item = todoList.items[todoList.currentItem]
             item.done = true
             todoList.addUncheckButton(message.message)
-            message.editMessage(todoList.todoListMessage).queue()
+            message.editMessage(todoList.todoListMessage).queue()*/
         })),
     TODO_BUTTON_UNCHECK(CascadeButton.primary("Uncheck", Emoji.fromUnicode(UnicodeConstants.WHITE_HALLOW_SQUARE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val todoList =
+            /*val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
             if (!todoList.canUserEdit(runner.idLong)) {
                 return@IButtonRunnable
@@ -39,11 +39,11 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             val item = todoList.items[todoList.currentItem]
             item.done = false
             todoList.addCheckButton(message.message)
-            message.editMessage(todoList.todoListMessage).queue()
+            message.editMessage(todoList.todoListMessage).queue()*/
         })),
     TODO_BUTTON_NAVIGATE_LEFT(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val todoList =
+            /*val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
             if (!todoList.canUserEdit(runner.idLong)) {
                 return@IButtonRunnable
@@ -56,11 +56,11 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             val newPos = Math.max(start - 10, 0)
             todoList.currentItem = newPos
             todoList.doCheckToggle(message.message)
-            message.editMessage(todoList.todoListMessage).queue()
+            message.editMessage(todoList.todoListMessage).queue()*/
         })),
     TODO_BUTTON_NAVIGATE_RIGHT(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val todoList =
+            /*val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
             if (!todoList.canUserEdit(runner.idLong)) {
                 return@IButtonRunnable
@@ -73,11 +73,11 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             todoList.currentItem = end + 1
             todoList.doCheckToggle(message.message)
-            message.editMessage(todoList.todoListMessage).queue()
+            message.editMessage(todoList.todoListMessage).queue()*/
         })),
     TODO_BUTTON_NAVIGATE_UP(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_UP),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val todoList =
+            /*val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
             if (!todoList.canUserEdit(runner.idLong)) {
                 return@IButtonRunnable
@@ -88,11 +88,11 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             todoList.currentItem = newItem
             todoList.doCheckToggle(message.message)
-            message.editMessage(todoList.todoListMessage).queue()
+            message.editMessage(todoList.todoListMessage).queue()*/
         })),
     TODO_BUTTON_NAVIGATE_DOWN(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ARROW_DOWN),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val todoList =
+            /*val todoList =
                 GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
             if (!todoList.canUserEdit(runner.idLong)) {
                 return@IButtonRunnable
@@ -103,241 +103,241 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
             }
             todoList.currentItem = newItem
             todoList.doCheckToggle(message.message)
-            message.editMessage(todoList.todoListMessage).queue()
+            message.editMessage(todoList.todoListMessage).queue()*/
         })),
     VOTE_BUTTON_YES(CascadeButton.success(Emoji.fromUnicode(UnicodeConstants.TICK),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, UnicodeConstants.TICK)
+            voteButtonGroup.addVote(runner.user, UnicodeConstants.TICK)*/
         })),
     VOTE_BUTTON_NO(CascadeButton.danger(Emoji.fromUnicode(UnicodeConstants.RED_CROSS),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, UnicodeConstants.RED_CROSS)
+            voteButtonGroup.addVote(runner.user, UnicodeConstants.RED_CROSS)*/
         })),
     VOTE_BUTTON_ONE(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.ONE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 1)
+            voteButtonGroup.addVote(runner.user, 1)*/
         })),
     VOTE_BUTTON_TWO(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.TWO),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 2)
+            voteButtonGroup.addVote(runner.user, 2)*/
         })),
     VOTE_BUTTON_THREE(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.THREE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 3)
+            voteButtonGroup.addVote(runner.user, 3)*/
         })),
     VOTE_BUTTON_FOUR(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FOUR),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 4)
+            voteButtonGroup.addVote(runner.user, 4)*/
         })),
     VOTE_BUTTON_FIVE(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FIVE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 5)
+            voteButtonGroup.addVote(runner.user, 5)*/
         })),
     VOTE_BUTTON_SIX(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.SIX),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 6)
+            voteButtonGroup.addVote(runner.user, 6)*/
         })),
     VOTE_BUTTON_SEVEN(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.SEVEN),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 7)
+            voteButtonGroup.addVote(runner.user, 7)*/
         })),
     VOTE_BUTTON_EIGHT(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.EIGHT),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 8)
+            voteButtonGroup.addVote(runner.user, 8)*/
         })),
     VOTE_BUTTON_NINE(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.NINE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 9)
+            voteButtonGroup.addVote(runner.user, 9)*/
         })),
     VOTE_BUTTON_A(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.A),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 0)
+            voteButtonGroup.addVote(runner.user, 0)*/
         })),
     VOTE_BUTTON_B(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.B),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 1)
+            voteButtonGroup.addVote(runner.user, 1)*/
         })),
     VOTE_BUTTON_C(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.C),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 2)
+            voteButtonGroup.addVote(runner.user, 2)*/
         })),
     VOTE_BUTTON_D(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.D),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 3)
+            voteButtonGroup.addVote(runner.user, 3)*/
         })),
     VOTE_BUTTON_E(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.E),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 4)
+            voteButtonGroup.addVote(runner.user, 4)*/
         })),
     VOTE_BUTTON_F(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.F),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 5)
+            voteButtonGroup.addVote(runner.user, 5)*/
         })),
     VOTE_BUTTON_G(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.G),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 6)
+            voteButtonGroup.addVote(runner.user, 6)*/
         })),
     VOTE_BUTTON_H(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.H),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 7)
+            voteButtonGroup.addVote(runner.user, 7)*/
         })),
     VOTE_BUTTON_I(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.I),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 8)
+            voteButtonGroup.addVote(runner.user, 8)*/
         })),
     VOTE_BUTTON_J(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.J),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 9)
+            voteButtonGroup.addVote(runner.user, 9)*/
         })),
     VOTE_BUTTON_K(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.K),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 10)
+            voteButtonGroup.addVote(runner.user, 10)*/
         })),
     VOTE_BUTTON_L(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.L),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 11)
+            voteButtonGroup.addVote(runner.user, 11)*/
         })),
     VOTE_BUTTON_M(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.M),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 12)
+            voteButtonGroup.addVote(runner.user, 12)*/
         })),
     VOTE_BUTTON_N(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.N),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 13)
+            voteButtonGroup.addVote(runner.user, 13)*/
         })),
     VOTE_BUTTON_O(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.O),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            val voteButtonGroup =
+            /*val voteButtonGroup =
                 GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
             if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
                 return@IButtonRunnable
             }
-            voteButtonGroup.addVote(runner.user, 14)
+            voteButtonGroup.addVote(runner.user, 14)*/
         }));
 
 }

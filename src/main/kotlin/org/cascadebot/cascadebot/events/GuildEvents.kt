@@ -18,8 +18,15 @@ import net.dv8tion.jda.api.requests.ErrorResponse
 import org.apache.commons.lang3.StringUtils
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.Config
+import org.cascadebot.cascadebot.data.entities.GuildAutoRoleEntity
+import org.cascadebot.cascadebot.data.entities.GuildGreetingChannelEntity
+import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
+import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
+import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.utils.DiscordUtils
+import org.cascadebot.cascadebot.utils.listOf
+import org.cascadebot.cascadebot.utils.lists.WeightedList
 import java.util.function.Consumer
 
 class GuildEvents : ListenerAdapter() {
@@ -34,7 +41,7 @@ class GuildEvents : ListenerAdapter() {
     }
 
     override fun onGuildMessageDelete(event: GuildMessageDeleteEvent) {
-        GuildDataManager.getGuildData(event.guild.idLong).pageCache.remove(event.messageIdLong)
+        //GuildDataManager.getGuildData(event.guild.idLong).pageCache.remove(event.messageIdLong)
     }
 
     override fun onGuildLeave(event: GuildLeaveEvent) {
@@ -47,44 +54,102 @@ class GuildEvents : ListenerAdapter() {
     }
 
     override fun onGuildMemberJoin(event: GuildMemberJoinEvent) {
-        val guildData = GuildDataManager.getGuildData(event.guild.idLong)
-        val greetings = guildData.management.greetings
-        if (greetings.welcomeEnabled) {
-            greetings.welcomeChannel?.let {
-                greetings.getRandomWelcomeMsg(event)?.let { message -> it.sendMessage(message).queue() }
-            } ?: run { greetings.welcomeChannel = null }
+
+        val greetings = CascadeBot.INS.postgresManager.transaction {
+            return@transaction listOf(GuildGreetingEntity::class.java, "guild_id", event.guild.idLong)
         }
 
-        if (greetings.welcomeDMEnabled) {
-            greetings.getRandomWelcomeDMMsg(event)?.let { message ->
-                event.user.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
+        val greetingMap: MutableMap<GreetingType, WeightedList<GuildGreetingEntity>> = mutableMapOf();
+
+        if (greetings != null) {
+            for (greeting in greetings) {
+                if (greetingMap.contains(greeting.type)) {
+                    greetingMap[greeting.type]!!.add(greeting, greeting.weight)
+                } else {
+                    val list : WeightedList<GuildGreetingEntity> = WeightedList()
+                    list.add(greeting, greeting.weight)
+                    greetingMap[greeting.type] = list;
+                }
             }
         }
 
-        val iterator = guildData.management.autoRoles.iterator()
-        for (nextRoleId in iterator) {
-            val role = event.guild.getRoleById(nextRoleId)
+        for (entry in greetingMap) {
+            if (entry.key == GreetingType.GOODBYE) {
+                continue;
+            }
+            val toSend = entry.value.randomItem!!;
+
+            if (entry.key == GreetingType.WELCOME) {
+                var channelEntity = CascadeBot.INS.postgresManager.transaction {
+                    get(GuildGreetingChannelEntity::class.java, event.guild.idLong)
+                } ?: continue
+
+                val channel = channelEntity.channelId?.let { CascadeBot.INS.client.getTextChannelById(it) } ?: continue
+                channel.sendMessage(toSend.content).queue()
+                continue
+            }
+
+            event.member.user.openPrivateChannel().queue {
+                it.sendMessage(toSend.content).queue()
+            }
+        }
+
+        val roles = CascadeBot.INS.postgresManager.transaction {
+            return@transaction listOf(GuildAutoRoleEntity::class.java, "guild_id", event.guild.idLong)
+        } ?: return
+        for (nextRoleId in roles) {
+            val role = event.guild.getRoleById(nextRoleId.roleId)
             if (role != null) {
                 event.guild.addRoleToMember(event.member, role).queue(null, null)
             } else {
-                iterator.remove()
+                CascadeBot.INS.postgresManager.transaction {
+                    delete(nextRoleId)
+                }
             }
         }
     }
 
     override fun onGuildMemberRemove(event: GuildMemberRemoveEvent) {
-        val guildData = GuildDataManager.getGuildData(event.guild.idLong)
-        val greetings = guildData.management.greetings
-        if (greetings.goodbyeEnabled) {
-            greetings.getRandomGoodbyeMsg(event)?.let { message ->
-                event.user.let { channel -> channel.openPrivateChannel().queue(Consumer { it.sendMessage(message).queue() }, DiscordUtils.handleExpectedErrors(ErrorResponse.CANNOT_SEND_TO_USER)) }
+        val greetings = CascadeBot.INS.postgresManager.transaction {
+            return@transaction listOf(GuildGreetingEntity::class.java, "guild_id", event.guild.idLong)
+        }
+
+        val greetingMap: MutableMap<GreetingType, WeightedList<GuildGreetingEntity>> = mutableMapOf();
+
+        if (greetings != null) {
+            for (greeting in greetings) {
+                if (greetingMap.contains(greeting.type)) {
+                    greetingMap[greeting.type]!!.add(greeting, greeting.weight)
+                } else {
+                    val list : WeightedList<GuildGreetingEntity> = WeightedList()
+                    list.add(greeting, greeting.weight)
+                    greetingMap[greeting.type] = list;
+                }
+            }
+        }
+
+        for (entry in greetingMap) {
+            if (entry.key != GreetingType.GOODBYE) {
+                continue;
+            }
+            val toSend = entry.value.randomItem!!;
+
+            event.user.openPrivateChannel().queue {
+                it.sendMessage(toSend.content).queue()
             }
         }
     }
 
     override fun onRoleDelete(event: RoleDeleteEvent) {
-        for (group in GuildDataManager.getGuildData(event.guild.idLong).management.permissions.groups) {
-            group.unlinkRole(event.role.idLong)
+        val groups = CascadeBot.INS.postgresManager.transaction {
+            listOf(GuildPermissionGroupEntity::class.java, "guild_id", event.guild.idLong)
+        } ?: return
+        for (group in groups) {
+            if (group.roles.remove(event.role.idLong)) {
+                CascadeBot.INS.postgresManager.transaction {
+                    save(group)
+                }
+            }
         }
     }
 }

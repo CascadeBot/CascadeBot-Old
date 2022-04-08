@@ -109,7 +109,7 @@ object Messaging {
     fun sendComponentMessage(channel: TextChannel, message: Message, container: ComponentContainer): CompletableFuture<Message> {
         val future = channel.sendMessage(message).setActionRows(container.getComponents().map { it.toDiscordActionRow() }).submit()
         future.thenAccept {
-            GuildDataManager.getGuildData(it.guild.idLong).addComponents(channel, it, container)
+            //GuildDataManager.getGuildData(it.guild.idLong).addComponents(channel, it, container)
         }
 
         return future
@@ -117,28 +117,28 @@ object Messaging {
 
     private val firstPageButton = CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.REWIND),
         IButtonRunnable { _, textChannel, message ->
-            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-            handlePage(message, 1, pageGroup!!)
+            //val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+            //handlePage(message, 1, pageGroup!!)
         })
 
     private val prevPageButton = CascadeButton.secondary("Prev Page", Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
         IButtonRunnable { _, textChannel, message ->
-            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+            /*val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             val newPage = pageGroup!!.currentPage - 1
-            handlePage(message, newPage, pageGroup)
+            handlePage(message, newPage, pageGroup)*/
         })
 
     private val nextPageButton = CascadeButton.secondary("Next Page", Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
         IButtonRunnable { _, textChannel, message ->
-            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+            /*val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
             val newPage = pageGroup!!.currentPage + 1
-            handlePage(message, newPage, pageGroup)
+            handlePage(message, newPage, pageGroup)*/
         })
 
     private val lastPageButton = CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.FAST_FORWARD),
         IButtonRunnable { _, textChannel, message ->
-            val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
-            handlePage(message, pageGroup!!.pageCount, pageGroup)
+            /*val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+            handlePage(message, pageGroup!!.pageCount, pageGroup)*/
         })
 
     private fun handlePage(message: InteractionMessage, newPage: Int, pageGroup: PageCache.Pages) {
@@ -194,9 +194,9 @@ object Messaging {
             if (pages.size > 2) {
             select = CascadeSelectBox("pages-select",
                 ISelectionRunnable { member: Member, textChannel: TextChannel, message: InteractionMessage, selected: List<String> ->
-                    val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
+                    /*val pageGroup = GuildDataManager.getGuildData(textChannel.guild.idLong).pageCache[message.idLong]
                     var page: Int = selected[0].split(" ")[1].toInt()
-                    handlePage(message, page, pageGroup!!)
+                    handlePage(message, page, pageGroup!!)*/
                 })
             var i = 1;
             for (page in pages) {
@@ -214,8 +214,8 @@ object Messaging {
         val future = sendComponentMessage(channel, Language.i18n(channel.guild.idLong, "messaging.loading_page"), container)
         future.thenAccept { sentMessage: Message ->
             pages[0].pageShow(InteractionMessage(sentMessage, container), 1, pages.size)
-            val guildData = GuildDataManager.getGuildData(channel.guild.idLong)
-            guildData.pageCache.put(sentMessage.idLong, pages, select)
+            /*val guildData = GuildDataManager.getGuildData(channel.guild.idLong)
+            guildData.pageCache.put(sentMessage.idLong, pages, select)*/
         }
         return future
     }

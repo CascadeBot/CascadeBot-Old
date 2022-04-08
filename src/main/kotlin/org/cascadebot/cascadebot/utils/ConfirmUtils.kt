@@ -67,12 +67,12 @@ object ConfirmUtils {
             isCancellable: Boolean,
             action: Runnable
     ): Boolean {
-        val guildData = GuildDataManager.getGuildData(channel.guild.idLong)
+        //val guildData = GuildDataManager.getGuildData(channel.guild.idLong)
         val confirmationAction: ConfirmationAction
-        val useEmbed = guildData.core.useEmbedForMessages
+        //val useEmbed = guildData.core.useEmbedForMessages
         val sentMessage: Message
         try {
-            sentMessage = sendMessage(type, channel, message, useEmbed).get()
+            sentMessage = sendMessage(type, channel, message, true).get()
             confirmationAction = ConfirmationAction(userId, sentMessage, action)
             confirmedMap.put(actionKey, confirmationAction)
         } catch (e: ExecutionException) {
@@ -105,7 +105,7 @@ object ConfirmUtils {
 
                 sentMessage.editMessageComponents(container.getComponents().map { it.toDiscordActionRow() }).override(true).queue()
 
-                guildData.addComponents(channel, sentMessage, container)
+                //guildData.addComponents(channel, sentMessage, container)
             }, buttonDelay, TimeUnit.MILLISECONDS)
         }
         Task.getScheduler().schedule({

@@ -38,7 +38,6 @@ import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.events.GuildEvents;
 import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
-import org.cascadebot.cascadebot.events.VoiceEventListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
@@ -171,7 +170,6 @@ public class CascadeBot {
                     .addEventListeners(new GuildEvents())
                     .addEventListeners(new BotEvents())
                     .addEventListeners(new ButtonEventListener())
-                    .addEventListeners(new VoiceEventListener())
                     .addEventListeners(new JDAEventMetricsListener())
                     .addEventListeners(eventWaiter)
                     .setToken(Config.INS.getBotToken())

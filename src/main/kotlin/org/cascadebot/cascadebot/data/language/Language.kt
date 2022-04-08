@@ -6,6 +6,7 @@ import net.dv8tion.jda.internal.utils.Checks
 import org.apache.commons.lang3.ArrayUtils
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.ShutdownHandler
+import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity
 import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.utils.FormatUtils
 import java.util.EnumMap
@@ -62,7 +63,7 @@ object Language {
             if (languages[locale]!!.getString(path).isPresent) {
                 val format = MessageFormat(languages[locale]!!.getString(path).get(), locale.uLocale)
                 var message = format.format(args)
-                message = FormatUtils.formatPrefix(GuildDataManager.getGuildData(guildId).core.prefix, message)
+                message = FormatUtils.formatPrefix(";", message)
                 FormatUtils.formatUnicode(message)
             } else {
                 CascadeBot.LOGGER.warn("Cannot find a language string matching the path '{}'", path)
@@ -76,7 +77,10 @@ object Language {
 
     @JvmStatic
     fun getGuildLocale(guildId: Long): Locale {
-        return GuildDataManager.getGuildData(guildId).locale
+        val coreSettings = CascadeBot.INS.postgresManager.transaction {
+            return@transaction get(GuildSettingsCoreEntity::class.java, guildId)
+        } ?: throw UnsupportedOperationException("This shouldn't happen")
+        return coreSettings.locale
     }
 
     @JvmStatic

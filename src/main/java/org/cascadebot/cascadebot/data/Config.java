@@ -15,7 +15,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.ShutdownHandler;
 import org.cascadebot.cascadebot.messaging.NoOpWebhookClient;
-import org.cascadebot.cascadebot.music.MusicHandler;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
 import org.cascadebot.shared.Auth;
 import org.cascadebot.shared.SecurityLevel;
@@ -78,8 +77,6 @@ public class Config {
     private long officialServerId;
 
     private String youtubeKey;
-
-    private List<MusicHandler.MusicNode> musicNodes = new ArrayList<>();
 
     private Config(String file) throws IOException {
         config = new File(file);
@@ -247,19 +244,6 @@ public class Config {
         this.hasteServer = warnOnDefault(config, "haste.server", "https://hastebin.com/documents");
         this.hasteLink = warnOnDefault(config, "haste.link", "https://hastebin.com/");
 
-        if (config.contains("nodes")) {
-            List<Map<?, ?>> rawNodes = config.getMapList("nodes");
-            for (Map<?, ?> rawNode : rawNodes) {
-                String address = (String) rawNode.get("address");
-                String password = (String) rawNode.get("password");
-                try {
-                    musicNodes.add(new MusicHandler.MusicNode(new URI(address), password));
-                } catch (URISyntaxException e) {
-                    LOG.warn("Invalid url for node provided", e);
-                }
-            }
-        }
-
         String secret = warnOnDefault(config, "web.secret_key", "");
 
         try {
@@ -330,10 +314,6 @@ public class Config {
 
     public int getShardNum() {
         return shardNum;
-    }
-
-    public List<MusicHandler.MusicNode> getMusicNodes() {
-        return musicNodes;
     }
 
     public long getOfficialServerId() {
