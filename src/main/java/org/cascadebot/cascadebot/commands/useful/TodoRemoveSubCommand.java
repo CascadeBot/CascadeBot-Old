@@ -7,7 +7,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistId;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistItemEntity;
-import org.cascadebot.cascadebot.data.objects.TodoList;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 

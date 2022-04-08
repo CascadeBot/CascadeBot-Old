@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot;
 import lombok.experimental.UtilityClass;
 import org.cascadebot.cascadebot.commands.developer.EvalCommand;
 import org.cascadebot.cascadebot.data.Config;
-import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.events.CommandListener;
 import org.cascadebot.cascadebot.tasks.Task;
 import org.cascadebot.shared.ExitCodes;
@@ -59,7 +58,6 @@ public class ShutdownHandler {
     private static void shutdown() {
         CascadeBot.LOGGER.info("Bot shutting down gracefully!");
         long startTime = System.currentTimeMillis(); // Ensures all data is saved before exiting
-        GuildDataManager.getGuilds().asMap().forEach(GuildDataManager::replaceSync);
         CascadeBot.LOGGER.info("Took " + (System.currentTimeMillis() - startTime) + "ms to save!");
         Config.INS.getEventWebhook().send("\u2705 Shutting down gracefully! Took " + (System.currentTimeMillis() - startTime) + "ms to save!").join();
         EvalCommand.shutdownEvalPool();

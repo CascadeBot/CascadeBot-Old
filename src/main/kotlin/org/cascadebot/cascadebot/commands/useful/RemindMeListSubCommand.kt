@@ -5,26 +5,15 @@
 
 package org.cascadebot.cascadebot.commands.useful
 
-import com.ibm.icu.text.DateFormat
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
-import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
-import org.cascadebot.cascadebot.messaging.MessageType
-import org.cascadebot.cascadebot.messaging.embed
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import org.cascadebot.cascadebot.data.entities.ScheduledActionEntity
-import org.cascadebot.cascadebot.utils.FormatUtils
-import org.cascadebot.cascadebot.utils.pagination.Page
-import org.cascadebot.cascadebot.utils.pagination.PageObjects
-import java.time.Duration
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 
 class RemindMeListSubCommand : SubCommand() {
 
     override fun onCommand(sender: Member, context: CommandContext) {
-        val actions = ScheduledActionManager.scheduledActions.keys.filter {
+        /*val actions = ScheduledActionManager.scheduledActions.keys.filter {
             it.data is ScheduledActionEntity.ReminderActionData &&
                     it.userId == context.user.idLong
         }.sortedByDescending { it.executionTime }
@@ -71,7 +60,7 @@ class RemindMeListSubCommand : SubCommand() {
         }
 
         context.uiMessaging.sendPagedMessage(pages)
-
+*/
     }
 
     override fun command(): String = "list"

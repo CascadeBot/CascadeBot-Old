@@ -5,16 +5,12 @@
 
 package org.cascadebot.cascadebot.commands.management.tag;
 
-import kotlin.jvm.functions.Function1;
 import net.dv8tion.jda.api.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTagId;
-import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.hibernate.Session;
 
 public class TagCreateSubCommand extends SubCommand {
 

@@ -6,7 +6,6 @@
 package org.cascadebot.cascadebot.commands.management.filters
 
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand

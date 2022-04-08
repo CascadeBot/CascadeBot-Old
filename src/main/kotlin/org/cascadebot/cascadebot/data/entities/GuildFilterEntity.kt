@@ -15,7 +15,6 @@ import org.cascadebot.cascadebot.utils.language.LanguageUtils
 import org.cascadebot.cascadebot.utils.toCapitalized
 import org.hibernate.annotations.Type
 import java.io.Serializable
-import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType

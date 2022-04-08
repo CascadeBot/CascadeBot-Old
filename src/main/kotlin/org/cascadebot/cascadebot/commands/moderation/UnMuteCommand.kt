@@ -7,15 +7,11 @@ package org.cascadebot.cascadebot.commands.moderation
 
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import org.cascadebot.cascadebot.messaging.MessagingObjects
 import org.cascadebot.cascadebot.permissions.CascadePermission
-import org.cascadebot.cascadebot.data.entities.ActionType
-import org.cascadebot.cascadebot.data.entities.ScheduledActionEntity
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.getMutedRole
 
@@ -37,7 +33,7 @@ class UnMuteCommand : MainCommand() {
         val mutedRole = context.guild.getMutedRole()
 
         if (targetMember.roles.contains(mutedRole)) {
-            ScheduledActionManager.removeIf {
+            /*ScheduledActionManager.removeIf {
                 if (it.type != ActionType.UNMUTE) return@removeIf false
                 if (it.data !is ScheduledActionEntity.ModerationActionData) return@removeIf false
                 it.data.targetId == targetMember.idLong
@@ -50,7 +46,7 @@ class UnMuteCommand : MainCommand() {
                         } else {
                             context.typedMessaging.replyException("Couldn't unmute the user!", it)
                         }
-                    }
+                    }*/
         } else {
             context.typedMessaging.replyWarning(context.i18n("commands.unmute.not_muted", targetMember.asMention))
         }

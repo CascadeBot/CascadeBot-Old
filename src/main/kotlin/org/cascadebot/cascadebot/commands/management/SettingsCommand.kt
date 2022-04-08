@@ -17,12 +17,6 @@ import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity
 import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity
 import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
 import org.cascadebot.cascadebot.data.language.Language.getLanguage
-import org.cascadebot.cascadebot.data.language.Language.i18n
-import org.cascadebot.cascadebot.data.objects.GuildSettingsCore
-import org.cascadebot.cascadebot.data.objects.GuildSettingsManagement
-import org.cascadebot.cascadebot.data.objects.GuildSettingsModeration
-import org.cascadebot.cascadebot.data.objects.GuildSettingsMusic
-import org.cascadebot.cascadebot.data.objects.GuildSettingsUseful
 import org.cascadebot.cascadebot.data.objects.Setting
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
 import org.cascadebot.cascadebot.permissions.CascadePermission

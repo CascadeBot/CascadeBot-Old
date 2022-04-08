@@ -14,7 +14,6 @@ import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTagId;
 import org.cascadebot.cascadebot.data.language.Language;
 import org.cascadebot.cascadebot.data.language.Locale;
-import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;

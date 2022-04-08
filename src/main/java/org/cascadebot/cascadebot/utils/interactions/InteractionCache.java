@@ -6,7 +6,6 @@
 package org.cascadebot.cascadebot.utils.interactions;
 
 import org.cascadebot.cascadebot.utils.DiscordUtils;
-import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

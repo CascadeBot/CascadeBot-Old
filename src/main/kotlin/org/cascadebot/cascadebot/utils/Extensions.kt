@@ -10,11 +10,8 @@ import net.dv8tion.jda.api.entities.Emoji
 import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException
-import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
-import org.cascadebot.cascadebot.data.managers.GuildDataManager
-import org.cascadebot.cascadebot.data.objects.GuildData
 import java.util.function.Consumer
 import java.util.function.Function
 import java.util.function.Supplier

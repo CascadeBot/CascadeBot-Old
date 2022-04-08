@@ -5,9 +5,7 @@
 
 package org.cascadebot.cascadebot.commands.management.permission;
 
-import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
-import org.cascadebot.cascadebot.UnicodeConstants;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
@@ -17,15 +15,11 @@ import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity;
 import org.cascadebot.cascadebot.data.objects.PermissionMode;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DatabaseUtilsKt;
-import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
 import org.cascadebot.cascadebot.utils.interactions.CascadeButton;
-import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 import org.cascadebot.cascadebot.utils.move.MovableList;
 
 import javax.persistence.Query;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class GroupPermissionMoveSubCommand extends SubCommand {
 

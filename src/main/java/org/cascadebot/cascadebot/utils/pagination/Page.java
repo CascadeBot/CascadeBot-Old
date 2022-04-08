@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.utils.pagination;
 
-import net.dv8tion.jda.api.entities.Message;
 import org.cascadebot.cascadebot.utils.interactions.InteractionMessage;
 
 public interface Page {

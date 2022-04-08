@@ -6,7 +6,6 @@
 package org.cascadebot.cascadebot.commands.management.tag;
 
 import net.dv8tion.jda.api.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTagEntity;

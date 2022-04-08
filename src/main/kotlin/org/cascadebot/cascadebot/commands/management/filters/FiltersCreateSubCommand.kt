@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.entities.GuildFilterEntity
 import org.cascadebot.cascadebot.data.entities.GuildFilterId
 import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity
-import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
 import org.cascadebot.cascadebot.data.objects.CommandFilter
 import org.cascadebot.cascadebot.data.objects.CommandFilter.FilterType
 import org.cascadebot.cascadebot.permissions.CascadePermission

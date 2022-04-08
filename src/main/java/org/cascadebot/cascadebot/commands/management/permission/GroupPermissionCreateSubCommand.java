@@ -11,10 +11,7 @@ import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.objects.Group;
 import org.cascadebot.cascadebot.utils.DatabaseUtilsKt;
-
-import java.util.List;
 
 public class GroupPermissionCreateSubCommand extends SubCommand {
 

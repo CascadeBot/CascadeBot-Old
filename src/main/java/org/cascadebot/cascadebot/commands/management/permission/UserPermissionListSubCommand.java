@@ -14,8 +14,6 @@ import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionUserEntity;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionUserId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.objects.Group;
-import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;

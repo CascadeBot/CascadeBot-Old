@@ -5,7 +5,6 @@
 
 package org.cascadebot.cascadebot.data.entities
 
-import org.apache.commons.lang3.RandomStringUtils
 import org.hibernate.annotations.Cascade
 import org.hibernate.annotations.CascadeType
 import org.hibernate.annotations.Type

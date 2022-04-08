@@ -5,7 +5,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistId;
-import org.cascadebot.cascadebot.data.objects.TodoList;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class TodoCreateSubCommand extends SubCommand {

@@ -14,8 +14,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;
 
-import java.util.regex.Pattern;
-
 @Setter
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

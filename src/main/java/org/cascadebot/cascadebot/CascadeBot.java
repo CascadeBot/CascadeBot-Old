@@ -12,7 +12,6 @@ import ch.qos.logback.core.ConsoleAppender;
 import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sedmelluq.discord.lavaplayer.jdaudp.NativeAudioSendFactory;
 import io.sentry.Sentry;
 import io.sentry.SentryClient;
 import net.dv8tion.jda.api.JDA;
@@ -30,9 +29,6 @@ import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.PostgresManager;
-import org.cascadebot.cascadebot.data.database.DatabaseManager;
-import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
 import org.cascadebot.cascadebot.events.BotEvents;
 import org.cascadebot.cascadebot.events.ButtonEventListener;
 import org.cascadebot.cascadebot.events.CommandListener;
@@ -41,7 +37,6 @@ import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
-import org.cascadebot.cascadebot.tasks.Task;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
 import org.cascadebot.shared.Version;
@@ -53,9 +48,7 @@ import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class CascadeBot {
 
@@ -69,7 +62,6 @@ public class CascadeBot {
     private ShardManager shardManager;
     private ArgumentManager argumentManager;
     private CommandManager commandManager;
-    private DatabaseManager databaseManager;
     private PostgresManager postgresManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
@@ -197,9 +189,6 @@ public class CascadeBot {
         permissionsManager = new PermissionsManager();
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
-        ScheduledActionManager.loadAndRegister();
-
-        Metrics.INS.cacheMetrics.addCache("guilds", GuildDataManager.getGuilds());
 
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
@@ -261,10 +250,6 @@ public class CascadeBot {
 
     public CommandManager getCommandManager() {
         return commandManager;
-    }
-
-    public DatabaseManager getDatabaseManager() {
-        return databaseManager;
     }
 
     public PostgresManager getPostgresManager() {

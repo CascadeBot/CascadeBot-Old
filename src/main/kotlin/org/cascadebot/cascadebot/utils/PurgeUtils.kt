@@ -7,7 +7,6 @@ package org.cascadebot.cascadebot.utils
 
 import net.dv8tion.jda.api.entities.Message
 import org.cascadebot.cascadebot.commandmeta.CommandContext
-import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity
 import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
 import org.cascadebot.cascadebot.data.objects.PurgeCriteria
 import java.time.OffsetDateTime

@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
-import org.cascadebot.cascadebot.data.managers.ScheduledActionManager
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import javax.persistence.Column
@@ -17,7 +16,6 @@ import javax.persistence.InheritanceType
 import javax.persistence.JoinColumn
 import javax.persistence.OneToOne
 import javax.persistence.Table
-
 
 @Entity
 @Table(name = "scheduled_action")
@@ -84,7 +82,7 @@ class ScheduledActionEntity(
         try {
             type.dataConsumer(this)
         } finally {
-            ScheduledActionManager.deleteScheduledAction(this.id)
+            //ScheduledActionManager.deleteScheduledAction(this.id)
         }
     }
 

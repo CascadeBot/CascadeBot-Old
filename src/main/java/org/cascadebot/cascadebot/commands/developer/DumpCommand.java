@@ -5,21 +5,11 @@
 
 package org.cascadebot.cascadebot.commands.developer;
 
-import com.google.gson.GsonBuilder;
 import net.dv8tion.jda.api.entities.Member;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
-import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.PasteUtils;
-import org.cascadebot.cascadebot.utils.Table;
 import org.cascadebot.shared.SecurityLevel;
-
-import java.util.Comparator;
-import java.util.stream.Collectors;
 
 public class DumpCommand extends RestrictedCommand {
 

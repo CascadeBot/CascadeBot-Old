@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionUserEntity;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionUserId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.permissions.objects.User;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
 public class UserPermissionRemoveSubCommand extends SubCommand {

@@ -5,23 +5,19 @@
 
 package org.cascadebot.cascadebot.utils.votes;
 
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.GuildData;
 import org.cascadebot.cascadebot.data.objects.VoteMessageType;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
-import org.cascadebot.cascadebot.utils.interactions.PersistentComponent;
 import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
+import org.cascadebot.cascadebot.utils.interactions.PersistentComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class VoteGroupBuilder {

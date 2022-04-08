@@ -6,21 +6,16 @@
 package org.cascadebot.cascadebot.data.objects;
 
 import com.google.common.collect.ImmutableSet;
-import net.dv8tion.jda.api.entities.Guild;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.PermissionNode;
 import org.cascadebot.cascadebot.permissions.PermissionsManager;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class PerGuildPermissionsManager {
 
@@ -31,10 +26,10 @@ public class PerGuildPermissionsManager {
     }
 
     // Method that registers all hte permissions after the data was loaded
-    public void registerPermissions(GuildData data) {
-        for (Map.Entry<String, Tag> entry : data.getManagement().getTags().entrySet()) {
-            registerGuildPermission(entry.getValue().getInternalPermission());
-        }
+    public void registerPermissions(Long guildId) {
+        /*for (Map.Entry<String, Tag> entry : data.getManagement().getTags().entrySet()) {
+            registerGuildPermission(CascadePermission.of(entry.getValue().getPermission(), false));
+        }*/
     }
 
     public boolean registerGuildPermission(CascadePermission permission) {

@@ -7,7 +7,6 @@ import org.apache.commons.lang3.ArrayUtils
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.ShutdownHandler
 import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity
-import org.cascadebot.cascadebot.data.managers.GuildDataManager
 import org.cascadebot.cascadebot.utils.FormatUtils
 import java.util.EnumMap
 

@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.internal.utils.Checks;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.Environment;
+import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.permissions.objects.Group;
@@ -38,19 +39,19 @@ public class GuildPermissions {
     private List<Group> groups = Collections.synchronizedList(new ArrayList<>());
     private Map<Long, User> users = new ConcurrentHashMap<>();
 
-    public boolean hasPermission(Member member, CascadePermission permission, GuildSettingsCore settings) {
+    public boolean hasPermission(Member member, CascadePermission permission, GuildSettingsCoreEntity settings) {
         return hasPermission(member, null, permission, settings);
     }
 
-    public boolean hasPermission(Member sender, GuildChannel channel, CascadePermission permission, GuildSettingsCore settings) {
+    public boolean hasPermission(Member sender, GuildChannel channel, CascadePermission permission, GuildSettingsCoreEntity settings) {
         return evalPermission(sender, channel, permission, settings).isAllowed();
     }
 
-    public Result evalPermission(Member member, CascadePermission permission, GuildSettingsCore settings) {
+    public Result evalPermission(Member member, CascadePermission permission, GuildSettingsCoreEntity settings) {
         return evalPermission(member, null, permission, settings);
     }
 
-    public Result evalPermission(Member member, GuildChannel channel, CascadePermission permission, GuildSettingsCore settings) {
+    public Result evalPermission(Member member, GuildChannel channel, CascadePermission permission, GuildSettingsCoreEntity settings) {
 
         Checks.notNull(member, "member");
         Checks.notNull(permission, "permission");
@@ -67,7 +68,7 @@ public class GuildPermissions {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         }
         // By default all members with the administrator perm have access to all perms; this can be turned off
-        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.getAdminsHaveAllPerms()) {
+        if (member.hasPermission(Permission.ADMINISTRATOR) && settings.getAdminsAllPerms()) {
             return Result.of(PermissionAction.ALLOW, Result.ResultCause.GUILD);
         }
 

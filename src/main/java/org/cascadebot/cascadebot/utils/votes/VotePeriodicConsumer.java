@@ -1,12 +1,6 @@
 package org.cascadebot.cascadebot.utils.votes;
 
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
-import org.cascadebot.cascadebot.CascadeBot;
-import org.cascadebot.cascadebot.data.managers.GuildDataManager;
-import org.cascadebot.cascadebot.data.objects.GuildData;
-import org.cascadebot.cascadebot.messaging.MessageType;
-import org.cascadebot.cascadebot.messaging.MessagingObjects;
 
 import java.util.List;
 import java.util.function.BiConsumer;

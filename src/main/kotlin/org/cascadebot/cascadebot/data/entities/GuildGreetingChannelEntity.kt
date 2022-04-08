@@ -1,12 +1,9 @@
 package org.cascadebot.cascadebot.data.entities;
 
-import java.io.Serializable
-import java.util.UUID
 import javax.persistence.Column
-import javax.persistence.Entity;
+import javax.persistence.Entity
 import javax.persistence.Id
-import javax.persistence.IdClass;
-import javax.persistence.Table;
+import javax.persistence.Table
 
 @Entity
 @Table(name = "guild_greeting_channel")

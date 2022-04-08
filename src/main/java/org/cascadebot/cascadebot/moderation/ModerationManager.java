@@ -12,11 +12,10 @@ import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
-import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity;
-import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
-import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.data.entities.ActionType;
+import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity;
 import org.cascadebot.cascadebot.data.entities.ScheduledActionEntity;
+import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.utils.ExtensionsKt;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
@@ -57,7 +56,7 @@ public class ModerationManager {
         if (runChecks(ModAction.TEMP_BAN, target, submitter, context)) {
             runWithCheckedExceptions(() -> {
                 context.getGuild().ban(target, 7).reason(reason).queue(success -> {
-                    ScheduledActionManager.registerScheduledAction(new ScheduledActionEntity(
+                    /*ScheduledActionManager.registerScheduledAction(new ScheduledActionEntity(
                             ActionType.UNBAN,
                             new ScheduledActionEntity.ModerationActionData(target.getIdLong()),
                             context.getGuild().getIdLong(),
@@ -65,7 +64,7 @@ public class ModerationManager {
                             submitter.getIdLong(),
                             Instant.now(),
                             delay
-                    ));
+                    ));*/
                     sendTempSuccess(context, target, submitter, ModAction.TEMP_BAN, reason, delay);
                 });
             }, context, ModAction.TEMP_BAN, target);
@@ -123,7 +122,7 @@ public class ModerationManager {
                                 reason,
                                 FormatUtils.formatDateTime(OffsetDateTime.now().plus(delay, ChronoUnit.MILLIS), context.getLocale())))
                         .queue(aVoid -> {
-                            ScheduledActionManager.registerScheduledAction(new ScheduledActionEntity(
+                            /*ScheduledActionManager.registerScheduledAction(new ScheduledActionEntity(
                                     ActionType.UNMUTE,
                                     new ScheduledActionEntity.ModerationActionData(target.getIdLong()),
                                     context.getGuild().getIdLong(),
@@ -131,7 +130,7 @@ public class ModerationManager {
                                     submitter.getIdLong(),
                                     Instant.now(),
                                     delay
-                            ));
+                            ));*/
                             sendTempSuccess(context, target.getUser(), submitter, ModAction.TEMP_MUTE, reason, delay);
                         });
             }, context, ModAction.TEMP_MUTE, target.getUser());

@@ -5,7 +5,6 @@ import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.dv8tion.jda.api.interactions.components.Component
 import org.cascadebot.cascadebot.utils.asString
-import java.lang.IllegalStateException
 
 class CascadeButton private constructor (val type: ButtonStyle, val label: String?, val emoji: Emoji?, val consumer: IButtonRunnable) : CascadeComponent(generateId(label, emoji)) {
 

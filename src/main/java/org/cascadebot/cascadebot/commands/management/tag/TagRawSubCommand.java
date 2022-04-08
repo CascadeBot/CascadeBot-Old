@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTagId;
-import org.cascadebot.cascadebot.data.objects.Tag;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 

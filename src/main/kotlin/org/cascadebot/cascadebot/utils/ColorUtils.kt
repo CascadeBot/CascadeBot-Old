@@ -1,8 +1,6 @@
 package org.cascadebot.cascadebot.utils
 
 import com.google.gson.JsonPrimitive
-import lombok.AllArgsConstructor
-import lombok.Getter
 import net.dv8tion.jda.api.entities.MessageEmbed
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.data.language.Language
