@@ -15,6 +15,11 @@ class CascadeActionRow {
         components.add(component)
     }
 
+    fun addComponent(index: Int, component: CascadeComponent) {
+        doComponentChecks(component)
+        components.add(index, component)
+    }
+
     fun setComponent(pos: Int, component: CascadeComponent) {
         doComponentChecks(component)
         components[pos] = component
