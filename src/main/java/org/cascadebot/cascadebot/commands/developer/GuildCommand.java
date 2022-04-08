@@ -38,7 +38,7 @@ public class GuildCommand extends RestrictedCommand {
 
     @Override
     public Set<SubCommand> subCommands() {
-        return Set.of(new GuildSaveSubCommand(), new GuildLeaveSubCommand(), new GuildFlagSubCommand(), new GuildInfoSubCommand());
+        return Set.of(new GuildLeaveSubCommand());
     }
 
     @Override
