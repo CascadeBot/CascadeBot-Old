@@ -182,12 +182,12 @@ public class VoteGroupBuilder {
         container.addRow(row);
         VoteGroup voteGroup = new VoteGroup(id, owner, channelId, guild, finishConsumer, periodicConsumer, timer, container);
 
-        GuildData data =  GuildDataManager.getGuildData(guild);
+        /*GuildData data =  GuildDataManager.getGuildData(guild);
         if (data.getVoteGroups().containsKey(id)) {
             throw new UnsupportedOperationException("Cannot have multiple votes with the same id in a guild!");
         } else {
             data.getVoteGroups().put(id, voteGroup);
-        }
+        }*/
 
         voteGroup.setMessageSentAction(() -> {
             if (!sent) {

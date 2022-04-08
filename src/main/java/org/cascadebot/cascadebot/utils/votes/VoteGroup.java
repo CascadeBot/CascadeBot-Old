@@ -261,8 +261,8 @@ public class VoteGroup {
     public void stopVote() {
         voteTimer.cancel();
         timer.cancel();
-        GuildData guildData = GuildDataManager.getGuildData(CascadeBot.INS.getShardManager().getTextChannelById(channelId).getGuild().getIdLong());
-        guildData.getVoteGroups().remove(id);
+        /*GuildData guildData = GuildDataManager.getGuildData(CascadeBot.INS.getShardManager().getTextChannelById(channelId).getGuild().getIdLong());
+        guildData.getVoteGroups().remove(id);*/
 
     }
 

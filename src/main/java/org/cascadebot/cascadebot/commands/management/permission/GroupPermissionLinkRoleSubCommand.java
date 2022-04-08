@@ -14,7 +14,6 @@ import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
-import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
 public class GroupPermissionLinkRoleSubCommand extends SubCommand {
 

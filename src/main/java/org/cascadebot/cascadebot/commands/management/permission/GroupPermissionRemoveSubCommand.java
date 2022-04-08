@@ -13,7 +13,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity;
 import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupId;
 import org.cascadebot.cascadebot.permissions.CascadePermission;
-import org.cascadebot.cascadebot.utils.PermissionCommandUtils;
 
 public class GroupPermissionRemoveSubCommand extends SubCommand {
 

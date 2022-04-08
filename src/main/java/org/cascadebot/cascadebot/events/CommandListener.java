@@ -20,7 +20,12 @@ import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.entities.GuildFilterEntity;
+import org.cascadebot.cascadebot.data.entities.GuildModuleEntity;
+import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity;
+import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity;
 import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
 import org.cascadebot.cascadebot.data.managers.GuildDataManager;
 import org.cascadebot.cascadebot.data.objects.CommandFilter;
 import org.cascadebot.cascadebot.data.objects.GuildData;
@@ -29,6 +34,7 @@ import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.metrics.Metrics;
+import org.cascadebot.cascadebot.utils.DatabaseUtilsKt;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.shared.Regex;
@@ -37,6 +43,7 @@ import org.hibernate.Session;
 import org.slf4j.MDC;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
@@ -65,19 +72,7 @@ public class CommandListener extends ListenerAdapter {
         String message = Regex.MULTISPACE_REGEX.matcher(event.getMessage().getContentRaw()).replaceAll(" ");
         message = MULTIQUOTE_REGEX.matcher(message).replaceAll("");
 
-        GuildData guildData;
-        try {
-            guildData = GuildDataManager.getGuildData(event.getGuild().getIdLong());
-            if (guildData == null) {
-                // This should *hopefully* never happen but just in case :D
-                throw new IllegalStateException(String.format("Guild data for guild ID: %s is null!", event.getGuild().getId()));
-            }
-        } catch (Exception e) {
-            Messaging.sendExceptionMessage(event.getChannel(), "We have failed to process your guild data!", e);
-            return;
-        }
-
-        String prefix = guildData.getCore().getPrefix();
+        String prefix = ";";
         boolean isMention = false;
 
         String commandWithArgs = null;
@@ -86,10 +81,7 @@ public class CommandListener extends ListenerAdapter {
 
         if (message.startsWith(prefix)) {
             commandWithArgs = message.substring(prefix.length()); // Remove prefix from command
-        } else if (guildData.getCore().getMentionPrefix() && message.matches("^<@!?" + event.getJDA().getSelfUser().getId() + ">.*")) {
-            commandWithArgs = message.substring(message.indexOf('>') + 1).trim();
-            isMention = true;
-        } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(guildData.getLocale(), "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(guildData.getCore().getPrefix())) {
+        } else if (message.startsWith(Config.INS.getDefaultPrefix() + Language.i18n(Locale.ENGLISH_UK /* TODO local */, "commands.prefix.command")) && !Config.INS.getDefaultPrefix().equals(prefix)) {
             commandWithArgs = message.substring(Config.INS.getDefaultPrefix().length());
         } else {
             return;
@@ -105,22 +97,30 @@ public class CommandListener extends ListenerAdapter {
         MDC.put("cascade.args", Arrays.toString(args));
 
         try {
-            processCommands(event, guildData, trigger, args, isMention);
+            processCommands(event, trigger, args, isMention);
         } catch (Exception e) {
-            Messaging.sendExceptionMessage(event.getChannel(), Language.i18n(guildData.getLocale(), "responses.failed_to_process_command"), e);
+            Messaging.sendExceptionMessage(event.getChannel(), Language.i18n(Locale.ENGLISH_UK /* TODO local */, "responses.failed_to_process_command"), e);
             return;
         } finally {
             CascadeBot.clearCascadeMDC();
         }
     }
 
-    private void processCommands(GuildMessageReceivedEvent event, GuildData guildData, String trigger, String[] args, boolean isMention) {
-        MainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, guildData);
-        CommandContext context = new CommandContext(cmd, event.getJDA(), event.getChannel(), event.getMessage(), event.getGuild(), guildData, args, event.getMember(), trigger, isMention);
+    private void processCommands(GuildMessageReceivedEvent event, String trigger, String[] args, boolean isMention) {
+        MainCommand cmd = CascadeBot.INS.getCommandManager().getCommand(trigger, event.getGuild().getIdLong());
+        CommandContext context = new CommandContext(cmd, event.getJDA(), event.getChannel(), event.getMessage(), event.getGuild(), args, event.getMember(), trigger, isMention);
+        GuildSettingsCoreEntity coreSettings = context.getDataObject(GuildSettingsCoreEntity.class);
+        if (coreSettings == null) {
+            throw new UnsupportedOperationException("This shouldn't happen");
+        }
+        GuildModuleEntity guildModuleEntity = context.getDataObject(GuildModuleEntity.class);
+        if (guildModuleEntity == null) {
+            throw new UnsupportedOperationException("This shouldn't happen");
+        }
         if (cmd != null) {
             Metrics.INS.commandsSubmitted.labels(cmd.getClass().getSimpleName()).inc();
-            if (!cmd.module().isPrivate() && !guildData.getCore().isModuleEnabled(cmd.module())) {
-                if (guildData.getCore().getShowModuleErrors() || Environment.isDevelopment()) {
+            if (!cmd.module().isPrivate() && !guildModuleEntity.getModuleEnabled(cmd.module())) {
+                if (coreSettings.getModuleErrors() || Environment.isDevelopment()) {
                     EmbedBuilder builder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.DANGER, event.getAuthor(), context.getLocale())
                             .setDescription(context.i18n("responses.module_for_command_disabled", FormatUtils.formatEnum(cmd.module(), context.getLocale()), trigger));
                     context.getTimedMessaging().sendAutoDeleteMessage(builder.build(), 5000);
@@ -134,8 +134,12 @@ public class CommandListener extends ListenerAdapter {
             }
 
             if (!processFilters(cmd, context)) {
+                GuildSettingsManagementEntity managementSettings = context.getDataObject(GuildSettingsManagementEntity.class);
+                if (managementSettings == null) {
+                    throw new UnsupportedOperationException("This shouldn't happen");
+                }
                 // TODO: Moderation log event
-                if (context.getData().getManagement().getDisplayFilterError()) {
+                if (managementSettings.getDisplayFilterError()) {
                     var message = context.i18n("commands.filters.message_blocked") +
                             (context.getMember().hasPermission(Permission.ADMINISTRATOR) ? context.i18n("commands.filters.message_blocked_admin") : "");
                     context.getTypedMessaging().replyDanger(message);
@@ -149,25 +153,21 @@ public class CommandListener extends ListenerAdapter {
                 }
             }
             dispatchCommand(cmd, context);
-        } else {
-            if (guildData.getManagement().getAllowTagCommands()) {
-                String tagName = trigger.toLowerCase();
-                if (guildData.getManagement().hasTag(tagName)) {
-                    Tag tag = guildData.getManagement().getTag(tagName);
-
-                    context.reply(tag.formatTag(context)); //TODO perms for tags
-                    CascadeBot.LOGGER.info("Tag {} executed by {} with args {}", tagName, context.getUser().getAsTag(), Arrays.toString(context.getArgs()));
-                }
-            }
         }
     }
 
     private boolean processFilters(MainCommand cmd, CommandContext context) {
-        for (CommandFilter filter : context.getData().getManagement().getFilters()) {
-            if (filter.evaluateFilter(cmd.command(), context.getChannel(), context.getMember()) == CommandFilter.FilterResult.DENY
+        List<GuildFilterEntity> filters = context.transaction(session -> {
+            return DatabaseUtilsKt.listOf(session, GuildFilterEntity.class, "guild_id", context.getGuildId());
+        });
+        if (filters == null) {
+            return false;
+        }
+        for (GuildFilterEntity guildFilterEntity : filters) {
+            /*if (filter.evaluateFilter(cmd.command(), context.getChannel(), context.getMember()) == CommandFilter.FilterResult.DENY
                     && !context.hasPermission("filters.bypass"))  {
                 return false;
-            }
+            }*/
         }
         return true;
     }
@@ -175,7 +175,7 @@ public class CommandListener extends ListenerAdapter {
     private boolean processSubCommands(MainCommand cmd, String[] args, CommandContext parentCommandContext) {
         for (ExecutableCommand subCommand : cmd.subCommands()) {
             if (subCommand.command(parentCommandContext.getLocale()).equalsIgnoreCase(args[0])) {
-                CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), parentCommandContext.getData(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.getMention());
+                CommandContext subCommandContext = new CommandContext(subCommand, parentCommandContext.getJda(), parentCommandContext.getChannel(), parentCommandContext.getMessage(), parentCommandContext.getGuild(), ArrayUtils.remove(args, 0), parentCommandContext.getMember(), parentCommandContext.getTrigger() + " " + args[0], parentCommandContext.getMention());
                 if (!isAuthorised(cmd, subCommandContext)) {
                     return false;
                 }
@@ -219,9 +219,13 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private boolean isAuthorised(ExecutableCommand command, CommandContext context) {
-        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getData(), context.getMember())) {
+        GuildSettingsCoreEntity coreSettings = context.getDataObject(GuildSettingsCoreEntity.class);
+        if (coreSettings == null) {
+            throw new UnsupportedOperationException("This shouldn't happen");
+        }
+        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getMember())) {
             if (!(command instanceof RestrictedCommand)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
-                if (context.getCoreSettings().getShowPermErrors()) {
+                if (coreSettings.getPermErrors()) {
                     context.getUiMessaging().sendPermissionError(command.permission());
                 }
             }
@@ -231,7 +235,11 @@ public class CommandListener extends ListenerAdapter {
     }
 
     private void deleteMessages(ExecutableCommand command, CommandContext context) {
-        if (context.getCoreSettings().getDeleteCommand() && command.deleteMessages()) {
+        GuildSettingsCoreEntity coreSettings = context.getDataObject(GuildSettingsCoreEntity.class);
+        if (coreSettings == null) {
+            throw new UnsupportedOperationException("This shouldn't happen");
+        }
+        if (coreSettings.getDeleteCommand() && command.deleteMessages()) {
             if (context.getGuild().getSelfMember().hasPermission(context.getChannel(), Permission.MESSAGE_MANAGE)) {
                 context.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
             } else {

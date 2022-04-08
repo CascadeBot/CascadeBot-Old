@@ -64,7 +64,7 @@ public class MessagingUI {
      * @return A {@link CompletableFuture<Message>} so you can interact with the message after it sends.
      */
     public CompletableFuture<Message> replyImage(String url) {
-        if (context.getCoreSettings().getUseEmbedForMessages()) {
+        if (true) {
             EmbedBuilder embedBuilder = MessagingObjects.getClearThreadLocalEmbedBuilder(context.getUser(), context.getLocale());
             embedBuilder.setImage(url);
             return context.getChannel().sendMessage(embedBuilder.build()).submit();
@@ -147,7 +147,7 @@ public class MessagingUI {
                     MessageType.DANGER,
                     context.getChannel(),
                     MessagingObjects.getStandardMessageEmbed(message, context.getUser(), context.getLocale()),
-                    context.getCoreSettings().getUseEmbedForMessages()
+                    true
             ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         } else {
             String message = context.i18n("responses.no_cascade_perm", permission.getPermission(context.getLocale()));
@@ -155,7 +155,7 @@ public class MessagingUI {
                     MessageType.DANGER,
                     context.getChannel(),
                     MessagingObjects.getStandardMessageEmbed(message, context.getUser(), context.getLocale()),
-                    context.getCoreSettings().getUseEmbedForMessages()
+                    true
             ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         }
     }
@@ -178,10 +178,10 @@ public class MessagingUI {
     }
 
     public void replyUsage(ExecutableCommand command) {
-        String usage = context.getUsage(command);
+        /*String usage = context.getUsage(command);
         List<Page> pages = PageUtils.splitStringToEmbedPages(usage, context.i18n("commands.usage.title", command.fullCommand(context.getLocale())), 1000, '\n');
         pages.addAll(command.additionalUsagePages(context.getLocale()));
-        sendPagedMessage(pages);
+        sendPagedMessage(pages);*/
     }
 
     public void sendTracksFound(List<AudioTrack> tracks) {
@@ -201,74 +201,6 @@ public class MessagingUI {
             }
             builder.addField(context.i18n("words.author"), track.getInfo().author, true);
             context.getTypedMessaging().replySuccess(builder);
-        }
-    }
-
-    public void checkPlaylistOrSong(String input, List<AudioTrack> tracks, CommandContext context, boolean playTop) {
-        if (tracks.size() > 1) {
-
-            Matcher matcher = YOUTUBE_VIDEO_REGEX.matcher(input);
-            if (!matcher.find() || matcher.group("v") == null) {
-                context.getMusicPlayer().addTracks(tracks);
-                context.getUiMessaging().sendTracksFound(tracks);
-                return;
-            }
-
-            AudioTrack selectedTrack = tracks.stream().filter(audioTrack -> audioTrack.getIdentifier().equals(matcher.group("v"))).findFirst().orElse(tracks.get(0));
-
-            ComponentContainer container = new ComponentContainer();
-            CascadeActionRow actionRow = new CascadeActionRow();
-            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.SONG), (runner, channel, message) -> {
-                message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                if (playTop) {
-                    context.getMusicPlayer().playTrack(selectedTrack);
-                } else {
-                    context.getMusicPlayer().addTrack(selectedTrack);
-                }
-                context.getUiMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
-            }));
-            actionRow.addComponent(CascadeButton.secondary(Emoji.fromUnicode(UnicodeConstants.PLAYLIST), (runner, channel, message) -> {
-                message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
-                if (playTop) {
-                    List<AudioTrack> currentQueue = new ArrayList<>(context.getMusicPlayer().getQueue());
-                    AudioTrack topTrack = tracks.remove(0);
-                    currentQueue.addAll(0, tracks);
-                    context.getMusicPlayer().setQueue(new LinkedList<>(currentQueue));
-                    context.getMusicPlayer().playTrack(topTrack);
-                } else {
-                    context.getMusicPlayer().addTracks(tracks);
-                }
-                context.getUiMessaging().sendTracksFound(tracks);
-            }));
-            container.addRow(actionRow);
-
-            String message = context.i18n("music.misc.load_options", selectedTrack.getInfo().title, context.i18n("music.misc.num_tracks", tracks.size()));
-
-            EmbedBuilder embedBuilder = MessagingObjects.getMessageTypeEmbedBuilder(MessageType.INFO, context.getUser(), context.getLocale());
-            embedBuilder.setTitle(context.i18n("music.misc.load_options_title"));
-            embedBuilder.setDescription(message);
-
-            try {
-                context.getUiMessaging().sendComponentMessage(embedBuilder.build(), container);
-            } catch (PermissionException e) {
-                context.getTypedMessaging().replyInfo(embedBuilder.appendDescription(context.i18n("music.misc.load_options_typed", context.i18n("music.misc.load_option.track"), context.i18n("music.misc.load_option.playlist"))));
-
-                CascadeBot.INS.getEventWaiter().waitForResponse(context.getUser(), context.getChannel(),
-                        new EventWaiter.TextResponse(event -> {
-                            context.getMusicPlayer().addTrack(selectedTrack);
-                            context.getUiMessaging().sendTracksFound(Collections.singletonList(selectedTrack));
-                        }, context.i18n("music.misc.load_option.track")),
-                        new EventWaiter.TextResponse(event -> {
-                            context.getMusicPlayer().addTracks(tracks);
-                            context.getUiMessaging().sendTracksFound(tracks);
-                        }, context.i18n("music.misc.load_option.playlist")));
-            }
-
-        } else if (tracks.size() == 1) {
-            context.getMusicPlayer().addTracks(tracks);
-            context.getUiMessaging().sendTracksFound(tracks);
-        } else {
-            context.getTypedMessaging().replyDanger(context.i18n("music.misc.cannot_find_tracks"));
         }
     }
 

@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.exceptions.HierarchyException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
+import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity;
 import org.cascadebot.cascadebot.data.managers.ScheduledActionManager;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
 import org.cascadebot.cascadebot.data.entities.ActionType;
@@ -138,6 +139,10 @@ public class ModerationManager {
     }
 
     private boolean runChecks(ModAction action, User target, Member submitter, CommandContext context) {
+        GuildSettingsModerationEntity moderationSettings = context.getDataObject(GuildSettingsModerationEntity.class);
+        if (moderationSettings == null) {
+            throw new UnsupportedOperationException("This shouldn't happen");
+        }
         Member memberTarget = context.getGuild().getMember(target);
         if (!context.getGuild().equals(submitter.getGuild())) {
             // This should never really happen, this is here to make sure it definitely never happens
@@ -148,7 +153,7 @@ public class ModerationManager {
         } else if (target.equals(context.getSelfUser())) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.cannot_action_bot", action.getName(context.getLocale())));
             return false;
-        } else if (context.getData().getModeration().getRespectBanOrKickHierarchy() && memberTarget != null && !submitter.canInteract(memberTarget)) {
+        } else if (moderationSettings.getRespectHierarchy() && memberTarget != null && !submitter.canInteract(memberTarget)) {
             context.getTypedMessaging().replyWarning(context.i18n("moderation_manager.user_cannot_action_superior", action.getName(context.getLocale()), target.getName()));
             return false;
         }

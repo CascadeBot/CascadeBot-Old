@@ -101,13 +101,13 @@ public class ButtonEventListener extends ListenerAdapter {
     private ComponentContainer getContainerFromEvent(GenericComponentInteractionCreateEvent event) {
         if (event.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) event.getChannel();
-            GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
+            /*GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
             InteractionCache cache = data.getComponentCache();
             if (cache.containsKey(channel.getIdLong())) {
                 if (cache.get(channel.getIdLong()).containsKey(event.getMessageIdLong())) {
                     return cache.get(channel.getIdLong()).get(event.getMessageIdLong());
                 }
-            }
+            }*/
         }
         return null;
     }
@@ -116,11 +116,11 @@ public class ButtonEventListener extends ListenerAdapter {
     public void onMessageDelete(MessageDeleteEvent e) {
         if (e.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) e.getChannel();
-            GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
+            /*GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
             InteractionCache cache = data.getComponentCache();
             if (cache.containsKey(channel.getIdLong())) {
                 cache.get(channel.getIdLong()).remove(e.getMessageIdLong());
-            }
+            }*/
         }
     }
 
