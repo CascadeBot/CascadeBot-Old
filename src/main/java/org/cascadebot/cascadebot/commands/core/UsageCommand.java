@@ -22,7 +22,7 @@ public class UsageCommand extends CoreCommand {
             return;
         }
 
-        MainCommand command = CascadeBot.INS.getCommandManager().getCommand(context.getArg(0), context.getData());
+        MainCommand command = CascadeBot.INS.getCommandManager().getCommand(context.getArg(0), context.getGuildId());
         // If the user isn't authorised to run the command (i.e. it's a dev command) then we pretend it doesn't exist ✨
         if (command == null || (command instanceof RestrictedCommand && !Security.isAuthorised(sender.getIdLong(), ((RestrictedCommand) command).commandLevel()))) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.usage.command_not_found", context.getArg(0)));

@@ -45,7 +45,7 @@ public class CatCommand extends MainCommand {
                 } else {
                     context.getUiMessaging().replyImage(getCatUrl()).thenAccept(catMessage -> {
                         catMessage.editMessageComponents().setActionRows(container.getComponents().stream().map(CascadeActionRow::toDiscordActionRow).collect(Collectors.toList())).queue();
-                        context.getData().addComponents(channel, catMessage, container);
+                        //context.getData().addComponents(channel, catMessage, container);
                     });
                     message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 }
@@ -57,7 +57,7 @@ public class CatCommand extends MainCommand {
         try {
             context.getUiMessaging().replyImage(getCatUrl()).thenAccept(message -> {
                 message.editMessageComponents().setActionRows(container.getComponents().stream().map(CascadeActionRow::toDiscordActionRow).collect(Collectors.toList())).queue();
-                context.getData().addComponents(context.getChannel(), message, container);
+                //context.getData().addComponents(context.getChannel(), message, container);
             });
         } catch (IOException e) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.cat.error_loading"));

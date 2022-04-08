@@ -45,7 +45,7 @@ public class DogCommand extends MainCommand {
                 } else {
                     context.getUiMessaging().replyImage(getDogUrl()).thenAccept(dogMessage -> {
                         dogMessage.editMessageComponents().setActionRows(container.getComponents().stream().map(CascadeActionRow::toDiscordActionRow).collect(Collectors.toList())).queue();
-                        context.getData().addComponents(channel, dogMessage, container);
+                        //context.getData().addComponents(channel, dogMessage, container);
                     });
                     message.getMessage().delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE));
                 }
@@ -57,7 +57,7 @@ public class DogCommand extends MainCommand {
         try {
             context.getUiMessaging().replyImage(getDogUrl()).thenAccept(message -> {
                 message.editMessageComponents().setActionRows(container.getComponents().stream().map(CascadeActionRow::toDiscordActionRow).collect(Collectors.toList())).queue();
-                context.getData().addComponents(context.getChannel(), message, container);
+                //context.getData().addComponents(context.getChannel(), message, container);
             });
         } catch (IOException e) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.dog.error_loading"));

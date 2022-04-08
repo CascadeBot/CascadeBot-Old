@@ -25,7 +25,7 @@ public class DumpCommand extends RestrictedCommand {
 
     @Override
     public void onCommand(Member sender, CommandContext context) {
-        if (context.getArgs().length < 1) {
+        /*if (context.getArgs().length < 1) {
             context.getTypedMessaging().replyDanger("Hmmm either pick: `threads`, `commands`, `permissions`, `args` or `guild`");
             return;
         }
@@ -59,7 +59,7 @@ public class DumpCommand extends RestrictedCommand {
             context.getTypedMessaging().replyInfo("**Arguments**\n" + PasteUtils.paste(builder.toString()));
         } else {
             context.getTypedMessaging().replyDanger("I can't find that argument!");
-        }
+        }*/
     }
 
     @Override
