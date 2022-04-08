@@ -31,10 +31,13 @@ class GuildTodolistEntity(name: String, guildId: Long) {
     val guildId: Long = guildId
 
     @Column(name = "message_id", nullable = true)
-    val messageId: Long? = null
+    var messageId: Long? = null
 
     @Column(name = "channel_id", nullable = true)
-    val channelId: Long? = null
+    var channelId: Long? = null
+
+    @Column(name = "owner_id", nullable = true)
+    var ownerId: Long? = null
 
     @Column(name = "current_item", nullable = false)
     val currentItem: Int = 0
@@ -46,6 +49,14 @@ class GuildTodolistEntity(name: String, guildId: Long) {
         JoinColumn(name = "guild_id", referencedColumnName = "guild_id"),
     )
     val todolistItems: List<GuildTodolistItemEntity> = listOf()
+
+    @OneToMany()
+    @Cascade(CascadeType.ALL)
+    @JoinColumns(
+        JoinColumn(name = "todolist_name", referencedColumnName = "name"),
+        JoinColumn(name = "guild_id", referencedColumnName = "guild_id"),
+    )
+    val members: List<GuildTodolistMemberEntity> = listOf();
 
 }
 

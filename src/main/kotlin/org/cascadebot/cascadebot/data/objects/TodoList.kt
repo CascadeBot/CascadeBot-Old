@@ -106,14 +106,14 @@ class TodoList(val ownerId: Long) {
     fun setChecked(message: Message?, check: Boolean) {
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
-            val container = GuildDataManager.getGuildData(channel.guild.idLong).componentCache[channelId]!![messageId]
+            /*val container = GuildDataManager.getGuildData(channel.guild.idLong).componentCache[channelId]!![messageId]
             container!!.getRow(0).setComponent(0, if (check) {
                 PersistentComponent.TODO_BUTTON_CHECK.component
             } else {
                 PersistentComponent.TODO_BUTTON_UNCHECK.component
             })
             val data = GuildDataManager.getGuildData(message?.guild!!.idLong)
-            data.addComponents(channel, message, container)
+            data.addComponents(channel, message, container)*/
         }
     }
 

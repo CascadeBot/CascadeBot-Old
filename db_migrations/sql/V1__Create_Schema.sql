@@ -60,7 +60,8 @@ create table guild_todolist
     guild_id     bigint       not null,
     message_id   bigint,
     channel_id   bigint,
-    current_item integer default 0,
+    owner_id     bigint,
+    current_item integer default 0, /* TODO do we need this? */
     constraint guild_todolist_pk
         primary key (name, guild_id),
     constraint guild_todolist_fk
@@ -78,6 +79,18 @@ create table guild_todolist_item
     constraint guild_todolist_item_pk
         primary key (id),
     constraint guild_todolist_item_fk
+        foreign key (guild_id, todolist_name) references guild_todolist (guild_id, name)
+            on delete cascade
+);
+
+create table guild_todolist_member
+(
+    todolist_name varchar(255),
+    guild_id      bigint,
+    member        bigint not null,
+    constraint guild_todolist_member_pk
+        primary key (todolist_name, guild_id, member),
+    constraint guild_todolist_member_fk
         foreign key (guild_id, todolist_name) references guild_todolist (guild_id, name)
             on delete cascade
 );
@@ -259,8 +272,8 @@ create table guild_greeting
 
 create table guild_greeting_channel
 (
-    guild_id    bigint,
-    channel_id  bigint,
+    guild_id   bigint,
+    channel_id bigint,
     constraint guild_greeting_channel_pk
         primary key (guild_id),
     constraint guild_greeting_channel_fk
