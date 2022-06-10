@@ -151,7 +151,7 @@ public class CascadeBot {
             builder.setPrettyPrinting();
         }
 
-        postgresManager = new PostgresManager(Config.INS.getDatabaseConnectionString());
+        postgresManager = new PostgresManager();
 
         eventWaiter = new EventWaiter();
         gson = builder.create();

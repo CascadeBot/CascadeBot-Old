@@ -56,6 +56,7 @@
 
     <logger name="org.mongodb.driver.cluster" level="ERROR"/>
     <logger name="org.hibernate.SQL" level="DEBUG"/>
+    <logger name="org.flywaydb.core.internal.license.VersionPrinter" level="OFF"/>
 
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>

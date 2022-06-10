@@ -67,6 +67,9 @@ public class Config {
     private String hasteLink;
 
     private String databaseConnectionString;
+    private String databaseUsername;
+    private String databasePassword;
+    private boolean databaseFlywayEnabled;
 
     private int shardNum;
 
@@ -144,8 +147,19 @@ public class Config {
 
         ConfigurationSection databaseSection = config.getConfigurationSection("database");
 
+        this.databaseFlywayEnabled = databaseSection.getBoolean("flyway_migrate", true);
+
         if (databaseSection.contains("connection_string")) {
+            if (!Stream.of("username", "password").allMatch(databaseSection::contains)) {
+                LOG.error("Database username and password are required!");
+                ShutdownHandler.exitWithError();
+                return;
+            }
+
             this.databaseConnectionString = config.getString("database.connection_string");
+            this.databaseUsername = config.getString("database.username", "postgres");
+            this.databasePassword = config.getString("database.password");
+
             if (!databaseConnectionString.startsWith("jdbc:")) {
                 databaseConnectionString = "jdbc:" + databaseConnectionString;
             }
@@ -165,7 +179,7 @@ public class Config {
 
             String host = config.getString("database.host");
             int port = config.getInt("database.port", 5432);
-            String username = config.getString("database.username");
+            String username = config.getString("database.username", "postgres");
             String password = config.getString("database.password");
             String database = config.getString("database.database", "postgres");
             Map<String, String> options = new HashMap<>();
@@ -178,15 +192,15 @@ public class Config {
 
             StringBuilder connectionStringBuilder = new StringBuilder("jdbc:postgresql://");
             connectionStringBuilder.append(UrlEncoded.encodeString(host)).append(":").append(port)
-                    .append("/").append(database)
-                    .append("?").append("user=").append(URLEncoder.encode(username, StandardCharsets.UTF_8))
-                    .append("&password=").append(URLEncoder.encode(password, StandardCharsets.UTF_8));
+                    .append("/").append(database);
 
             options.forEach((key, value) -> connectionStringBuilder.append("&").append(URLEncoder.encode(key, StandardCharsets.UTF_8))
                     .append("=")
                     .append(URLEncoder.encode(value, StandardCharsets.UTF_8)));
 
             this.databaseConnectionString = connectionStringBuilder.toString();
+            this.databaseUsername = username;
+            this.databasePassword = password;
         }
 
 
@@ -337,6 +351,22 @@ public class Config {
 
     public int getPrometheusPort() {
         return prometheusPort;
+    }
+
+    public String getDatabaseConnectionString() {
+        return databaseConnectionString;
+    }
+
+    public String getDatabaseUsername() {
+        return databaseUsername;
+    }
+
+    public String getDatabasePassword() {
+        return databasePassword;
+    }
+
+    public boolean isDatabaseFlywayEnabled() {
+        return databaseFlywayEnabled;
     }
 
 }
