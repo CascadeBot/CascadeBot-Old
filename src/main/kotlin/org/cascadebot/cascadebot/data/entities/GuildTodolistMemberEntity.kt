@@ -26,6 +26,6 @@ class GuildTodolistMemberEntity(todolistName: String, guildId: Long, memberId: L
 
 }
 
-class GuildTodolistMemberId(todolistName: String, guildId: Long, memberId: Long) : Serializable {
+data class GuildTodolistMemberId(val todolistName: String, val guildId: Long, val memberId: Long) : Serializable {
     constructor() : this("", 0, 0)
 }
