@@ -1,12 +1,16 @@
 package org.cascadebot.cascadebot.utils.interactions
 
 import net.dv8tion.jda.api.entities.Emoji
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.dv8tion.jda.api.interactions.components.Component
 import org.cascadebot.cascadebot.utils.asString
 
-class CascadeButton private constructor (val type: ButtonStyle, val label: String?, val emoji: Emoji?, val consumer: IButtonRunnable) : CascadeComponent(generateId(label, emoji)) {
+typealias ButtonRunnable = (runner: Member, owner: Member, channel: TextChannel, message: InteractionMessage) -> Unit
+
+class CascadeButton private constructor (val type: ButtonStyle, val label: String?, val emoji: Emoji?, val consumer: ButtonRunnable) : CascadeComponent(generateId(label, emoji)) {
 
     var disabled: Boolean = false
 
@@ -21,32 +25,32 @@ class CascadeButton private constructor (val type: ButtonStyle, val label: Strin
 
     companion object {
         @JvmStatic
-        fun primary(label: String, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, label, null, consumer)
+        fun primary(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, label, null, consumer)
         @JvmStatic
-        fun primary(emoji: Emoji, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, null, emoji, consumer)
+        fun primary(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, null, emoji, consumer)
         @JvmStatic
-        fun primary(label: String, emoji: Emoji, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, label, emoji, consumer)
+        fun primary(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, label, emoji, consumer)
 
         @JvmStatic
-        fun secondary(label: String, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, label, null, consumer)
+        fun secondary(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, label, null, consumer)
         @JvmStatic
-        fun secondary(emoji: Emoji, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, null, emoji, consumer)
+        fun secondary(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, null, emoji, consumer)
         @JvmStatic
-        fun secondary(label: String, emoji: Emoji, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, label, emoji, consumer)
+        fun secondary(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, label, emoji, consumer)
 
         @JvmStatic
-        fun success(label: String, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, label, null, consumer)
+        fun success(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, label, null, consumer)
         @JvmStatic
-        fun success(emoji: Emoji, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, null, emoji, consumer)
+        fun success(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, null, emoji, consumer)
         @JvmStatic
-        fun success(label: String, emoji: Emoji, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, label, emoji, consumer)
+        fun success(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, label, emoji, consumer)
 
         @JvmStatic
-        fun danger(label: String, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.DANGER, label, null, consumer)
+        fun danger(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.DANGER, label, null, consumer)
         @JvmStatic
-        fun danger(emoji: Emoji, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.DANGER, null, emoji, consumer)
+        fun danger(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.DANGER, null, emoji, consumer)
         @JvmStatic
-        fun danger(label: String, emoji: Emoji, consumer: IButtonRunnable) = CascadeButton(ButtonStyle.DANGER, label, emoji, consumer)
+        fun danger(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.DANGER, label, emoji, consumer)
     }
 
 }

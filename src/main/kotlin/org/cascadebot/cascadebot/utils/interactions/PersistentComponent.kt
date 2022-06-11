@@ -7,18 +7,7 @@ import net.dv8tion.jda.api.entities.TextChannel
 import org.cascadebot.cascadebot.UnicodeConstants
 
 enum class PersistentComponent(@field:Transient val component: CascadeComponent) {
-    TODO_BUTTON_CHECK(CascadeButton.primary("Check", Emoji.fromUnicode(UnicodeConstants.TICK),
-        IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-            /*val todoList =
-                GuildDataManager.getGuildData(channel.guild.idLong).useful.getTodoListByMessage(message.idLong)
-            if (!todoList.canUserEdit(runner.idLong)) {
-                return@IButtonRunnable
-            }
-            val item = todoList.items[todoList.currentItem]
-            item.done = true
-            todoList.addUncheckButton(message.message)
-            message.editMessage(todoList.todoListMessage).queue()*/
-        })),
+    TODO_BUTTON_CHECK(CascadeButton.primary("Check", Emoji.fromUnicode(UnicodeConstants.TICK), ::todoButtonCheck)),
     TODO_BUTTON_UNCHECK(CascadeButton.primary("Uncheck", Emoji.fromUnicode(UnicodeConstants.WHITE_HALLOW_SQUARE),
         IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
             /*val todoList =
