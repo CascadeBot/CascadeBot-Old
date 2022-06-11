@@ -7,6 +7,9 @@ import net.dv8tion.jda.api.requests.restaction.MessageAction
 
 class InteractionMessage(val message: Message, val container: ComponentContainer) {
 
+    /**
+     * Message ID
+     */
     val idLong: Long = message.idLong
 
     fun editMessage(content: String): MessageAction {
@@ -14,7 +17,7 @@ class InteractionMessage(val message: Message, val container: ComponentContainer
     }
 
     fun editMessage(embed: MessageEmbed): MessageAction {
-        return message.editMessage(embed).override(true).setActionRows(container.getComponents().map { it.toDiscordActionRow() })
+        return message.editMessageEmbeds(embed).override(true).setActionRows(container.getComponents().map { it.toDiscordActionRow() })
     }
 
     fun editMessage(message: Message): MessageAction {
