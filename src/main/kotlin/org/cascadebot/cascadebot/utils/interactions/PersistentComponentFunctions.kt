@@ -34,3 +34,14 @@ fun todoButtonCheck(runner: Member, owner: Member, channel: TextChannel, message
 
     message.editMessage(todoList.todoListMessage)
 }
+
+fun voteButton(index: Int): ButtonRunnable {
+    return fun(runner: Member, owner: Member, channel: TextChannel, message: InteractionMessage) {
+        val voteButtonGroup =
+            GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
+        if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
+            return
+        }
+        voteButtonGroup.addVote(runner.user, index)
+    }
+}
