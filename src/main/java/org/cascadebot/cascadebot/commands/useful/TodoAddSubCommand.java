@@ -42,8 +42,8 @@ public class TodoAddSubCommand extends SubCommand {
             return;
         }
         GuildTodolistItemEntity item = new GuildTodolistItemEntity(todoList.getName(), todoList.getGuildId(), context.getMessage(1));
-        todoList.getTodolistItems().add(item);
-        int index = todoList.getTodolistItems().indexOf(item) + 1;
+        todoList.getItems().add(item);
+        int index = todoList.getItems().indexOf(item) + 1;
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(context.i18n("commands.todo.add.embed_title"));
         builder.addField(context.i18n("commands.todo.embed_position_field"), String.valueOf(index), true);

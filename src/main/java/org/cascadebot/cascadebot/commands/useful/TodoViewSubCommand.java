@@ -49,13 +49,13 @@ public class TodoViewSubCommand extends SubCommand {
         List<Page> pages = new ArrayList<>();
         StringBuilder currentPage = new StringBuilder();
 
-        if (todoList.getTodolistItems().size() == 0) {
+        if (todoList.getItems().size() == 0) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.no_items"));
             return;
         }
 
-        for (int i = 0; i < todoList.getTodolistItems().size(); i++) {
-            GuildTodolistItemEntity item = todoList.getTodolistItems().get(i);
+        for (int i = 0; i < todoList.getItems().size(); i++) {
+            GuildTodolistItemEntity item = todoList.getItems().get(i);
 
             if (i % 20 == 0 && i != 0) {
                 EmbedBuilder builder = new EmbedBuilder();

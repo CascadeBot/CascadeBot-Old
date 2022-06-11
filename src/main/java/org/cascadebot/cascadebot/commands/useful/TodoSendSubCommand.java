@@ -56,12 +56,12 @@ public class TodoSendSubCommand extends SubCommand {
             return;
         }
 
-        if (todoList.getTodolistItems().size() == 0) {
+        if (todoList.getItems().size() == 0) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.no_items"));
             return;
         }
 
-        MovableList<GuildTodolistItemEntity> movableList = MovableList.wrap(todoList.getTodolistItems());
+        MovableList<GuildTodolistItemEntity> movableList = MovableList.wrap(todoList.getItems());
         movableList.setDisplayFunction(GuildTodolistItemEntity::getText);
         movableList.setUsageRestriction(member -> {
             return todoList.getMembers().stream().anyMatch(todoListMember -> todoListMember.getMemberId() == member) || Objects.equals(todoList.getOwnerId(), member);

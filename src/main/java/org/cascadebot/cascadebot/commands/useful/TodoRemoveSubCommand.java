@@ -49,19 +49,19 @@ public class TodoRemoveSubCommand extends SubCommand {
 
         int index = context.getArgAsInteger(1) - 1;
 
-        if (index < 0 || index > todoList.getTodolistItems().size()) {
+        if (index < 0 || index > todoList.getItems().size()) {
             context.getTypedMessaging().replyDanger(context.i18n("commands.todo.remove.item_does_not_exist"));
             return;
         }
 
-        GuildTodolistItemEntity item = todoList.getTodolistItems().remove(index);
+        GuildTodolistItemEntity item = todoList.getItems().remove(index);
         EmbedBuilder builder = MessagingObjects.getClearThreadLocalEmbedBuilder();
         builder.setTitle(context.i18n("commands.todo.remove.embed_title"));
         builder.addField(context.i18n("commands.todo.embed_list_field"), todoName, false);
         builder.addField(context.i18n("commands.todo.embed_item_field"), item.getText(), false);
         context.getTypedMessaging().replySuccess(builder);
 
-        if (todoList.getTodolistItems().size() == 0) {
+        if (todoList.getItems().size() == 0) {
             context.transactionNoReturn(session -> {
                 session.delete(todoList);
             });
