@@ -1,10 +1,14 @@
 package org.cascadebot.cascadebot.utils.interactions
 
 import net.dv8tion.jda.api.entities.Emoji
+import net.dv8tion.jda.api.entities.Member
+import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.interactions.components.Component
 import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu
 
-class CascadeSelectBox(id: String, val consumer: ISelectionRunnable) : CascadeComponent(id) {
+typealias SelectionRunnable = (runner: Member, owner: Member, channel: TextChannel, message: InteractionMessage, selected: List<String>) -> Unit
+
+class CascadeSelectBox(id: String, val consumer: SelectionRunnable) : CascadeComponent(id) {
 
     private val builder: SelectionMenu.Builder = SelectionMenu.create(id)
 
