@@ -131,7 +131,7 @@ class GuildTodolistEntity(name: String, guildId: Long) {
         return container
     }
 
-    fun setChecked(message: Message?, check: Boolean) {
+    fun setChecked(message: Message, check: Boolean) {
         val channelId = this.channelId ?: error("Channel ID must not be null")
         val channel = CascadeBot.INS.client.getTextChannelById(channelId)
         if (channel != null) {
@@ -141,7 +141,7 @@ class GuildTodolistEntity(name: String, guildId: Long) {
             } else {
                 PersistentComponent.TODO_BUTTON_UNCHECK.component
             })
-            val data = GuildDataManager.getGuildData(message?.guild!!.idLong)
+            val data = GuildDataManager.getGuildData(message.guild.idLong)
             data.addComponents(channel, message, container)
         }
     }
