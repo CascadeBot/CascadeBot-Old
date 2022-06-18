@@ -1,54 +1,57 @@
 package org.cascadebot.cascadebot.utils.interactions
 
 import net.dv8tion.jda.api.interactions.components.ActionRow
-import net.dv8tion.jda.api.interactions.components.Component
 
 class CascadeActionRow {
 
-    var componentType: Component.Type? = null
-    private val components: MutableList<CascadeComponent> = mutableListOf()
+    private var components: MutableList<CascadeComponent> = mutableListOf()
 
     val persistent
         get() = components.any { it.persistent }
 
     fun addComponent(component: CascadeComponent) {
-        doComponentChecks(component)
+        // Add to copy so that list isn't changed until checks have been done
+        doComponentChecks(components.toMutableList().apply { add(component) })
         components.add(component)
     }
 
     fun addComponent(index: Int, component: CascadeComponent) {
-        doComponentChecks(component)
+        // Add to copy so that list isn't changed until checks have been done
+        doComponentChecks(components.toMutableList().apply { add(index, component) })
         components.add(index, component)
     }
 
-    fun setComponent(pos: Int, component: CascadeComponent) {
-        doComponentChecks(component)
-        components[pos] = component
+    fun setComponent(index: Int, component: CascadeComponent) {
+        // Set in copy so that list isn't changed until checks have been done
+        doComponentChecks(components.toMutableList().apply { this[index] = component })
+        components[index] = component
     }
 
-    fun deleteComponent(pos: Int) {
-        components.removeAt(pos)
+    fun deleteComponent(index: Int) {
+        components.removeAt(index)
     }
 
-    private fun doComponentChecks(component: CascadeComponent) {
-        if (componentType == null) {
-            componentType = component.componentType
-            return
+    private fun doComponentChecks(components: List<CascadeComponent>) {
+
+        if (components.isEmpty()) return
+
+        // Check that all values are only true or only false, not a mix
+        require(components.groupBy { it.persistent }.size > 1) {
+            "Cannot mix non-persistent items and persistent items in a row"
         }
 
-        require(persistent == component.persistent) { "Cannot mix non-persistent items and persistent items in a row" }
-        require(components.none { it.uniqueId == component.uniqueId }) { "The component with unique id ${component.uniqueId} already exists in this row"}
+        // Check that all component unique IDs are distinct
+        require(components.distinctBy { it.uniqueId }.size == components.size) {
+            "The row contains a duplicate component ID"
+        }
 
-        // TODO if this gets too much to handle this way add getCompatibleComponents and getMaxComponents methods to cascade component to simplify this. Maybe do it anyways for future proofing.
-        if (componentType == Component.Type.SELECTION_MENU) {
-            throw UnsupportedOperationException("Only one section box is allowed per action row and selection boxes and buttons aren't allowed together")
-        } else if (componentType == Component.Type.BUTTON) {
-            if (component.componentType != Component.Type.BUTTON) {
-                throw UnsupportedOperationException("Selection boxes and buttons aren't allowed on the same action row")
-            }
-            /*if (components.size >= 5) {
-                throw UnsupportedOperationException("Can only Have 5 buttons per action row")
-            }*/
+        require(components.groupBy { it.componentType }.size == 1) {
+            "Cannot mix different types of components on a single row"
+        }
+
+        // Since all component types are the same, we can use the first one to determine the max per row
+        require(components.size <= components[0].componentType.maxPerRow) {
+            "Cannot add component to row as the maximum number of components (${components[0].componentType.maxPerRow}) has been reached"
         }
     }
 
