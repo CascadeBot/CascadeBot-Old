@@ -3,13 +3,6 @@ package org.cascadebot.cascadebot.data.objects
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.utils.PurgeUtils
 
-enum class PlaylistType {
-    GUILD, USER
-}
-
-enum class SearchResultType {
-    VIDEO, PLAYLIST
-}
 
 /**
  * Criteria for the [PurgeUtils.purge] method that checks
