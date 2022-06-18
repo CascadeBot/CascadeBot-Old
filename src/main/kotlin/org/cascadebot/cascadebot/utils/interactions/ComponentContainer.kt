@@ -1,8 +1,10 @@
 package org.cascadebot.cascadebot.utils.interactions
 
+import net.dv8tion.jda.api.interactions.components.ActionRow
+
 class ComponentContainer {
 
-    private val components: MutableList<CascadeActionRow> =
+    private var components: MutableList<CascadeActionRow> =
         mutableListOf() // TODO make this able to contain more then just action rows (will probably do when discord allows more then just action row)
 
     private val persistent
@@ -34,6 +36,14 @@ class ComponentContainer {
 
     fun getComponents(): List<CascadeActionRow> {
         return components.toList()
+    }
+
+    companion object {
+        fun fromDiscordObjects(actionRows: List<ActionRow>): ComponentContainer {
+            val componentContainer = ComponentContainer()
+            componentContainer.components = actionRows.map { CascadeActionRow.fromDiscordActionRow(it) }.toMutableList()
+            return componentContainer
+        }
     }
 
 }

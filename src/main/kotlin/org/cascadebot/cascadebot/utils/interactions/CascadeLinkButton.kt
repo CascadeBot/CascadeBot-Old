@@ -17,10 +17,6 @@ class CascadeLinkButton private constructor (val link: String, val label: String
         @JvmStatic
         @JvmOverloads
         fun of(link: String, label: String? = null, emoji: Emoji? = null) = CascadeLinkButton(link, label, emoji, false)
-
-        @JvmStatic
-        @JvmOverloads
-        fun ofPersistent(link: String, label: String? = null, emoji: Emoji? = null) = CascadeLinkButton(link, label, emoji, true)
     }
 
 }

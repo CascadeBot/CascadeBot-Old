@@ -6,6 +6,7 @@
 package org.cascadebot.cascadebot.events;
 
 import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
 import net.dv8tion.jda.api.events.interaction.GenericComponentInteractionCreateEvent;
@@ -33,29 +34,24 @@ public class ButtonEventListener extends ListenerAdapter {
         if (container == null) {
             return;
         }
-        CascadeButton button = null;
-        for (CascadeActionRow actionRow : container.getComponents()) {
-            if (Objects.equals(actionRow.getComponentType(), Component.Type.BUTTON)) {
-                for (CascadeComponent buttonToCheck : actionRow.getComponents()) {
-                    if (buttonToCheck.getId().equals(event.getComponentId())) {
-                        button = (CascadeButton) buttonToCheck;
-                        break;
-                    }
-                }
-                if (button != null) {
-                    break;
-                }
-            }
-        }
+
+        CascadeButton button = container.getComponents().stream()
+                .flatMap((row) -> row.getComponents().stream())
+                .filter(CascadeButton.class::isInstance)
+                .map(CascadeButton.class::cast)
+                .filter(buttonToCheck -> buttonToCheck.getId().equals(event.getComponentId()))
+                .findFirst()
+                .orElse(null);
+
         if (button == null) {
             // this should not be possible because as long as the container is in the cache, it will be able to find the button as the button is on the message that the container applies to.
             CascadeBot.LOGGER.error("Button was null when it should not be able to be null! Something is broken! Maybe race condition?");
             return;
         }
-        CascadeButton finalButton = button;
+        
         event.deferEdit().queue(interactionHook -> {
-            finalButton.getConsumer().run(event.getMember(), event.getTextChannel(), new InteractionMessage(event.getMessage(), container));
-            Metrics.INS.buttonsPressed.labels(finalButton.getId(), "button").inc();
+            button.getConsumer().invoke(event.getMember(), null /* TODO: Owner? */ , event.getTextChannel(), new InteractionMessage(event.getMessage(), container));
+            Metrics.INS.buttonsPressed.labels(button.getId(), "button").inc();
         });
     }
 
@@ -95,13 +91,8 @@ public class ButtonEventListener extends ListenerAdapter {
     private ComponentContainer getContainerFromEvent(GenericComponentInteractionCreateEvent event) {
         if (event.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) event.getChannel();
-            /*GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
-            InteractionCache cache = data.getComponentCache();
-            if (cache.containsKey(channel.getIdLong())) {
-                if (cache.get(channel.getIdLong()).containsKey(event.getMessageIdLong())) {
-                    return cache.get(channel.getIdLong()).get(event.getMessageIdLong());
-                }
-            }*/
+            Message message = channel.retrieveMessageById(event.getMessageIdLong()).complete();
+            return ComponentContainer.Companion.fromDiscordObjects(message.getActionRows());
         }
         return null;
     }

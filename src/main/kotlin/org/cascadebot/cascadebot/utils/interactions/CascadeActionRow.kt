@@ -63,4 +63,12 @@ class CascadeActionRow {
         return components.toList()
     }
 
+    companion object {
+        fun fromDiscordActionRow(row: ActionRow): CascadeActionRow {
+            val cascadeRow = CascadeActionRow()
+            cascadeRow.components = row.components.mapNotNull { CascadeComponent.fromDiscordComponent(it) }.toMutableList()
+            return cascadeRow
+        }
+    }
+
 }
