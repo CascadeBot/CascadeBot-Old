@@ -167,11 +167,7 @@ public class VoteGroup {
 
         if (!user.isBot() && user.getIdLong() != ownerId) {
             if (timerRunTime < maxTimerRunTime) {
-                if ((timerRunTime + timerRunTimeSkipAddon) > maxTimerRunTime) {
-                    timerRunTime = maxTimerRunTime;
-                } else {
-                    timerRunTime += timerRunTimeSkipAddon;
-                }
+                timerRunTime = Math.max(timerRunTime + timerRunTimeSkipAddon, maxTimerRunTime);
                 newTimersTime = timerRunTime - elapsed;
 
                 voteTimer.cancel();
@@ -191,7 +187,7 @@ public class VoteGroup {
             }
             Member member = CascadeBot.INS.getShardManager().getGuildById(guildId).getMember(user);
 
-            double members = (double)member.getVoiceState().getChannel().getMembers().size();
+            double members = member.getVoiceState().getChannel().getMembers().size();
             int votesNeeded = (int) Math.ceil(members / 2.0);
 
             if ((votes.size()) >= votesNeeded - 1) { // - 1 is because the users vote hasn't been added yet
