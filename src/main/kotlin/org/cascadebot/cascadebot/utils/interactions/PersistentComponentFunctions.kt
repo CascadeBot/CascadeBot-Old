@@ -12,7 +12,7 @@ import org.cascadebot.cascadebot.data.entities.GuildTodolistEntity
 import org.cascadebot.cascadebot.data.objects.MoveDirection
 
 fun todoButtonToggle(checked: Boolean): ButtonRunnable {
-    return fun(runner: Member, owner: Member, channel: TextChannel, message: InteractionMessage) {
+    return fun(runner: Member, _: Member, _: TextChannel, message: InteractionMessage) {
         val todoListOption = CascadeBot.INS.postgresManager.transaction {
             val query = this.createQuery("FROM GuildTodolistEntity T where T.message_id = :message_id", GuildTodolistEntity::class.java)
             query.setParameter("message_id", message.idLong)
@@ -38,7 +38,7 @@ fun todoButtonToggle(checked: Boolean): ButtonRunnable {
 
 }
 fun todoButtonNavigation(direction: MoveDirection): ButtonRunnable {
-    return fun(runner: Member, owner: Member, channel: TextChannel, message: InteractionMessage) {
+    return fun(runner: Member, _: Member, _: TextChannel, message: InteractionMessage) {
         val todoListOption = CascadeBot.INS.postgresManager.transaction {
             val query = this.createQuery("FROM GuildTodolistEntity T where T.message_id = :message_id", GuildTodolistEntity::class.java)
             query.setParameter("message_id", message.idLong)
