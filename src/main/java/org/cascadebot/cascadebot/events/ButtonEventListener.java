@@ -62,29 +62,22 @@ public class ButtonEventListener extends ListenerAdapter {
             return;
         }
 
-        CascadeSelectBox select = null;
-        for (CascadeActionRow actionRow : container.getComponents()) {
-            if (Objects.equals(actionRow.getComponentType(), Component.Type.SELECTION_MENU)) {
-                for (CascadeComponent selectToCheck : actionRow.getComponents()) {
-                    if (selectToCheck.getId().equals(event.getComponentId())) {
-                        select = (CascadeSelectBox) selectToCheck;
-                        break;
-                    }
-                }
-                if (select != null) {
-                    break;
-                }
-            }
-        }
+        CascadeSelectBox select = container.getComponents().stream()
+                .flatMap((row) -> row.getComponents().stream())
+                .filter(CascadeSelectBox.class::isInstance)
+                .map(CascadeSelectBox.class::cast)
+                .filter(selectBox -> selectBox.getId().equals(event.getComponentId()))
+                .findFirst()
+                .orElse(null);
+
         if (select == null) {
             // TODO log as this should not be possible
             return;
         }
 
-        CascadeSelectBox finalSelect = select;
         event.deferEdit().queue(interactionHook -> {
-            finalSelect.getConsumer().run(event.getMember(), event.getTextChannel(), new InteractionMessage(event.getMessage(), container), event.getValues());
-            Metrics.INS.buttonsPressed.labels(finalSelect.getId(), "select").inc();
+            select.getConsumer().invoke(event.getMember(), null /* TODO Owner */, event.getTextChannel(), new InteractionMessage(event.getMessage(), container), event.getValues());
+            Metrics.INS.buttonsPressed.labels(select.getId(), "select").inc();
         });
     }
 
@@ -92,7 +85,7 @@ public class ButtonEventListener extends ListenerAdapter {
         if (event.getChannel().getType().equals(ChannelType.TEXT)) {
             TextChannel channel = (TextChannel) event.getChannel();
             Message message = channel.retrieveMessageById(event.getMessageIdLong()).complete();
-            return ComponentContainer.Companion.fromDiscordObjects(message.getActionRows());
+            return ComponentContainer.Companion.fromDiscordObjects(event.getChannel().getIdLong(), message.getActionRows());
         }
         return null;
     }

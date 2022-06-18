@@ -1,6 +1,7 @@
 package org.cascadebot.cascadebot.utils.interactions
 
 import net.dv8tion.jda.api.interactions.components.ActionRow
+import org.cascadebot.cascadebot.utils.ChannelId
 
 class CascadeActionRow {
 
@@ -64,9 +65,9 @@ class CascadeActionRow {
     }
 
     companion object {
-        fun fromDiscordActionRow(row: ActionRow): CascadeActionRow {
+        fun fromDiscordActionRow(channelId: ChannelId, row: ActionRow): CascadeActionRow {
             val cascadeRow = CascadeActionRow()
-            cascadeRow.components = row.components.mapNotNull { CascadeComponent.fromDiscordComponent(it) }.toMutableList()
+            cascadeRow.components = row.components.mapNotNull { CascadeComponent.fromDiscordComponent(channelId, it) }.toMutableList()
             return cascadeRow
         }
     }

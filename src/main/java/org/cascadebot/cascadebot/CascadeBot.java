@@ -27,6 +27,7 @@ import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.cascadebot.cascadebot.commandmeta.ArgumentManager;
 import org.cascadebot.cascadebot.commandmeta.CommandManager;
+import org.cascadebot.cascadebot.data.ComponentCache;
 import org.cascadebot.cascadebot.data.Config;
 import org.cascadebot.cascadebot.data.PostgresManager;
 import org.cascadebot.cascadebot.events.BotEvents;
@@ -65,6 +66,7 @@ public class CascadeBot {
     private PostgresManager postgresManager;
     private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
+    private ComponentCache componentCache;
 
     private OkHttpClient httpClient;
     private EventWaiter eventWaiter;
@@ -190,6 +192,8 @@ public class CascadeBot {
         permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
 
+        componentCache = new ComponentCache(50);
+
         Thread.setDefaultUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
         Thread.currentThread()
                 .setUncaughtExceptionHandler(((t, e) -> LOGGER.error("Uncaught exception in thread " + t, MDCException.from(e))));
@@ -278,6 +282,10 @@ public class CascadeBot {
 
     public long getUptime() {
         return System.currentTimeMillis() - startupTime;
+    }
+
+    public ComponentCache getComponentCache() {
+        return componentCache;
     }
 
 }
