@@ -11,7 +11,7 @@ import org.cascadebot.cascadebot.data.objects.MoveDirection
 enum class PersistentComponent(@field:Transient val component: CascadeComponent) {
     TODO_BUTTON_CHECK(
         CascadeButton.persistent(
-            type = ButtonStyle.PRIMARY,
+            ButtonStyle.PRIMARY,
             "Check",
             Emoji.fromUnicode(UnicodeConstants.TICK),
             todoButtonToggle(true)
@@ -19,7 +19,7 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
     ),
     TODO_BUTTON_UNCHECK(
         CascadeButton.persistent(
-            type = ButtonStyle.PRIMARY,
+            ButtonStyle.PRIMARY,
             "Uncheck",
             Emoji.fromUnicode(UnicodeConstants.WHITE_HALLOW_SQUARE),
             todoButtonToggle(false)
@@ -28,14 +28,14 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
 
     TODO_BUTTON_NAVIGATE_LEFT(
         CascadeButton.persistent(
-            type = ButtonStyle.SECONDARY,
-            emoji = Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
-            consumer = todoButtonNavigation(MoveDirection.LEFT)
+            ButtonStyle.SECONDARY,
+            Emoji.fromUnicode(UnicodeConstants.BACKWARD_ARROW),
+            todoButtonNavigation(MoveDirection.LEFT)
         )
     ),
     TODO_BUTTON_NAVIGATE_RIGHT(
         CascadeButton.persistent(
-            type = ButtonStyle.SECONDARY,
+            ButtonStyle.SECONDARY,
             Emoji.fromUnicode(UnicodeConstants.FORWARD_ARROW),
             todoButtonNavigation(MoveDirection.RIGHT)
         )
