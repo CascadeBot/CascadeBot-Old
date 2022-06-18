@@ -72,6 +72,10 @@ enum class PermissionAction {
     DENY
 }
 
+enum class MoveDirection {
+    UP, RIGHT, DOWN, LEFT
+}
+
 enum class LoopMode {
     DISABLED, PLAYLIST, SONG
 }
