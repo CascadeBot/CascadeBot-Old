@@ -12,6 +12,10 @@ create type permissions_mode as enum ('HIERARCHICAL', 'MOST_RESTRICTIVE');
 
 create type locale as enum ('ENGLISH_UK', 'ENGLISH_US');
 
+create type vote_periodic_function as enum ('CUSTOM_VOTE');
+
+create type vote_finish_function as enum ('CUSTOM_VOTE');
+
 create table guild
 (
     guild_id   bigint not null,
@@ -334,5 +338,48 @@ create table scheduled_action
         primary key (id),
     constraint scheduled_action_data_fk
         foreign key (data_id) references scheduled_action_data
+            on delete cascade
+);
+
+create table guild_vote_group
+(
+    id                 uuid default gen_random_uuid(),
+    type               varchar(255),
+    guild_id           bigint,
+    channel_id         bigint                 not null,
+    message_id         bigint                 not null,
+    owner_id           bigint                 not null,
+    start_time         timestamp              not null,
+    run_duration       int  default 0,
+    max_duration       int  default 0,
+    duration_increment int  default 0,
+    dynamic_timing     bool default false,
+    periodic_function  vote_periodic_function not null,
+    finish_function    vote_finish_function   not null,
+    constraint guild_vote_group_pk
+        primary key (id),
+    constraint guild_vote_group_fk
+        foreign key (guild_id) references guild (guild_id)
+            on delete cascade
+);
+
+create table guild_vote_allowed_users
+(
+    vote_group_id uuid,
+    user_id     bigint,
+    unique (vote_group_id, user_id),
+    constraint guild_vote_allowed_users_fk
+        foreign key (vote_group_id) references guild_vote_group (id)
+            on delete cascade
+);
+
+create table guild_vote_votes
+(
+    vote_group_id uuid,
+    user_id     bigint,
+    vote        varchar(255),
+    unique (vote_group_id, user_id, vote),
+    constraint guild_vote_votes_fk
+        foreign key (vote_group_id) references guild_vote_group (id)
             on delete cascade
 );
