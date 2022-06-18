@@ -5,8 +5,8 @@ class ComponentContainer {
     private val components: MutableList<CascadeActionRow> =
         mutableListOf() // TODO make this able to contain more then just action rows (will probably do when discord allows more then just action row)
 
-    var persistent = false
-        private set
+    private val persistent
+        get() = components.any { it.persistent }
 
     fun addRow(actionRow: CascadeActionRow) {
         doChecks(actionRow)
@@ -23,12 +23,8 @@ class ComponentContainer {
     }
 
     private fun doChecks(actionRow: CascadeActionRow) {
-        if (components.size == 0) {
-            persistent = actionRow.isPersistent()
-        } else {
-            if (persistent && !actionRow.isPersistent()) {
-                throw UnsupportedOperationException("Cannot add non-persistent rows to persistent containers")
-            }
+        if (persistent && !actionRow.persistent) {
+            throw UnsupportedOperationException("Cannot add non-persistent rows to persistent containers")
         }
 
         if (components.size >= 5) {

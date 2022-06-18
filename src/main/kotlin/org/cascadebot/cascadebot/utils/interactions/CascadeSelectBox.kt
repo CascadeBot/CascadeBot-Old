@@ -8,9 +8,9 @@ import net.dv8tion.jda.api.interactions.components.selections.SelectionMenu
 
 typealias SelectionRunnable = (runner: Member, owner: Member, channel: TextChannel, message: InteractionMessage, selected: List<String>) -> Unit
 
-class CascadeSelectBox(id: String, val consumer: SelectionRunnable) : CascadeComponent(id) {
+class CascadeSelectBox(uniqueId: String, persistent: Boolean, val consumer: SelectionRunnable) : CascadeComponent(uniqueId, persistent) {
 
-    private val builder: SelectionMenu.Builder = SelectionMenu.create(id)
+    private val builder: SelectionMenu.Builder = SelectionMenu.create(uniqueId)
 
     var minSelect = 1
         set(value) {
@@ -37,18 +37,21 @@ class CascadeSelectBox(id: String, val consumer: SelectionRunnable) : CascadeCom
             return builder.build()
         }
 
+    override val componentType: Component.Type = Component.Type.SELECTION_MENU
 
-    fun addOption(label: String, default: Boolean = false) {
+    fun addOption(label: String, default: Boolean = false): CascadeSelectBox {
         builder.addOption(label, label)
         handleDefault(label, default)
+        return this
     }
 
-    fun addOption(label: String, description: String, default: Boolean = false) {
+    fun addOption(label: String, description: String, default: Boolean = false): CascadeSelectBox {
         builder.addOption(label, label, description)
         handleDefault(label, default)
+        return this
     }
 
-    fun addOption(label: String, emoji: Emoji, default: Boolean = false) {
+    fun addOption(label: String, emoji: Emoji, default: Boolean = false): CascadeSelectBox {
         val value = "$label-" + if (emoji.isUnicode) {
             emoji.name
         } else {
@@ -56,9 +59,10 @@ class CascadeSelectBox(id: String, val consumer: SelectionRunnable) : CascadeCom
         }
         builder.addOption(label, value, emoji)
         handleDefault(value, default)
+        return this
     }
 
-    fun addOption(label: String, description: String, emoji: Emoji, default: Boolean = false) {
+    fun addOption(label: String, description: String, emoji: Emoji, default: Boolean = false): CascadeSelectBox {
         val value = "$label-" + if (emoji.isUnicode) {
             emoji.name
         } else {
@@ -66,6 +70,7 @@ class CascadeSelectBox(id: String, val consumer: SelectionRunnable) : CascadeCom
         }
         builder.addOption(label, value, description, emoji)
         handleDefault(value, default)
+        return this
     }
 
     private fun handleDefault(value: String, default: Boolean) {
@@ -77,12 +82,19 @@ class CascadeSelectBox(id: String, val consumer: SelectionRunnable) : CascadeCom
         }
     }
 
-    fun setPlaceholder(placeHolder: String) {
+    fun setPlaceholder(placeHolder: String): CascadeSelectBox {
         builder.placeholder = placeHolder
+        return this
     }
 
-    fun addDefault(value: String) {
+    fun persistent(persistent: Boolean = true): CascadeSelectBox {
+        this.persistent = persistent
+        return this
+    }
+
+    fun addDefault(value: String): CascadeSelectBox {
         handleDefault(value, true)
+        return this
     }
 
     fun clearDefaults() {

@@ -10,14 +10,15 @@ import org.cascadebot.cascadebot.utils.asString
 
 typealias ButtonRunnable = (runner: Member, owner: Member, channel: TextChannel, message: InteractionMessage) -> Unit
 
-class CascadeButton private constructor (val type: ButtonStyle, val label: String?, val emoji: Emoji?, val consumer: ButtonRunnable) : CascadeComponent(generateId(label, emoji)) {
+class CascadeButton private constructor (val type: ButtonStyle, val label: String?, val emoji: Emoji?, persistent: Boolean = false, val consumer: ButtonRunnable) : CascadeComponent(generateId(label, emoji), persistent) {
 
     var disabled: Boolean = false
 
     override val discordComponent: Component = Button.of(type, id, label, emoji).withDisabled(disabled)
+    override val componentType: Component.Type = Component.Type.BUTTON
 
     init {
-        require(label != null || emoji != null) { "Label and emoji cannot both be null" }
+        require(label != null && emoji != null) { "Label and emoji cannot both be null" }
         if (type == ButtonStyle.LINK) {
             throw UnsupportedOperationException("Please use CascadeLinkButton if trying to use a link button") // TODO implement link buttons
         }
@@ -25,32 +26,54 @@ class CascadeButton private constructor (val type: ButtonStyle, val label: Strin
 
     companion object {
         @JvmStatic
-        fun primary(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, label, null, consumer)
-        @JvmStatic
-        fun primary(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, null, emoji, consumer)
-        @JvmStatic
-        fun primary(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, label, emoji, consumer)
+        fun primary(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, label, null, false, consumer)
 
         @JvmStatic
-        fun secondary(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, label, null, consumer)
-        @JvmStatic
-        fun secondary(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, null, emoji, consumer)
-        @JvmStatic
-        fun secondary(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, label, emoji, consumer)
+        fun primary(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, null, emoji, false, consumer)
 
         @JvmStatic
-        fun success(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, label, null, consumer)
-        @JvmStatic
-        fun success(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, null, emoji, consumer)
-        @JvmStatic
-        fun success(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, label, emoji, consumer)
+        fun primary(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.PRIMARY, label, emoji, false, consumer)
+
 
         @JvmStatic
-        fun danger(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.DANGER, label, null, consumer)
+        fun secondary(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, label, null, false, consumer)
+
         @JvmStatic
-        fun danger(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.DANGER, null, emoji, consumer)
+        fun secondary(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, null, emoji, false, consumer)
+
         @JvmStatic
-        fun danger(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.DANGER, label, emoji, consumer)
+        fun secondary(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SECONDARY, label, emoji, false, consumer)
+
+
+        @JvmStatic
+        fun success(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, label, null, false, consumer)
+
+        @JvmStatic
+        fun success(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, null, emoji, false, consumer)
+
+        @JvmStatic
+        fun success(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.SUCCESS, label, emoji, false, consumer)
+
+
+        @JvmStatic
+        fun danger(label: String, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.DANGER, label, null, false, consumer)
+
+        @JvmStatic
+        fun danger(emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.DANGER, null, emoji, false, consumer)
+
+        @JvmStatic
+        fun danger(label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(ButtonStyle.DANGER, label, emoji, false, consumer)
+
+
+        @JvmStatic
+        fun persistent(type: ButtonStyle, label: String, consumer: ButtonRunnable) = CascadeButton(type, label, null, true, consumer)
+
+        @JvmStatic
+        fun persistent(type: ButtonStyle, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(type, null, emoji, true, consumer)
+
+        @JvmStatic
+        fun persistent(type: ButtonStyle, label: String, emoji: Emoji, consumer: ButtonRunnable) = CascadeButton(type, label, emoji, true, consumer)
+
     }
 
 }

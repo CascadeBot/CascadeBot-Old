@@ -5,20 +5,22 @@ import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.dv8tion.jda.api.interactions.components.Component
 
-class CascadeLinkButton private constructor (val link: String, val label: String?, val emoji: Emoji?) : CascadeComponent(link) {
+class CascadeLinkButton private constructor (val link: String, val label: String?, val emoji: Emoji?, persistent: Boolean) : CascadeComponent(link, persistent) {
     override val discordComponent: Component = Button.of(ButtonStyle.LINK, link, label, emoji)
+    override val componentType: Component.Type = Component.Type.BUTTON
 
     init {
-        require(label != null || emoji != null) { "Label and emoji cannot both be null" }
+        require(label != null && emoji != null) { "Label and emoji cannot both be null" }
     }
 
     companion object {
         @JvmStatic
-        fun of(link: String, label: String) = CascadeLinkButton(link, label, null)
+        @JvmOverloads
+        fun of(link: String, label: String? = null, emoji: Emoji? = null) = CascadeLinkButton(link, label, emoji, false)
+
         @JvmStatic
-        fun of(link: String, emoji: Emoji) = CascadeLinkButton(link, null, emoji)
-        @JvmStatic
-        fun of(link: String, label: String, emoji: Emoji) = CascadeLinkButton(link, label, emoji)
+        @JvmOverloads
+        fun ofPersistent(link: String, label: String? = null, emoji: Emoji? = null) = CascadeLinkButton(link, label, emoji, true)
     }
 
 }

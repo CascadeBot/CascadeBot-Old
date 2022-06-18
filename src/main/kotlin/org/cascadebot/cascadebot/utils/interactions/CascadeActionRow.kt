@@ -8,7 +8,8 @@ class CascadeActionRow {
     var componentType: Component.Type? = null
     private val components: MutableList<CascadeComponent> = mutableListOf()
 
-    private var persistent = false;
+    val persistent
+        get() = components.any { it.persistent }
 
     fun addComponent(component: CascadeComponent) {
         doComponentChecks(component)
@@ -31,34 +32,23 @@ class CascadeActionRow {
 
     private fun doComponentChecks(component: CascadeComponent) {
         if (componentType == null) {
-            persistent = PersistentComponent.values().map { it.component }.contains(component)
-            componentType = getComponentType(component)
-        } else { // TODO if this gets too much to handle this way add getCompatibleComponents and getMaxComponents methods to cascade component to simplify this. Maybe do it anyways for future proofing.
-            if (persistent && !PersistentComponent.values().map { it.component }.contains(component)) {
-                throw UnsupportedOperationException("Cannot add non-persistent items to persistent rows")
-            }
-            if (componentType == Component.Type.SELECTION_MENU) {
-                throw UnsupportedOperationException("Only one section box is allowed per action row and selection boxes and buttons aren't allowed together")
-            } else if (componentType == Component.Type.BUTTON) {
-                if (getComponentType(component) != Component.Type.BUTTON) {
-                    throw UnsupportedOperationException("Selection boxes and buttons aren't allowed on the same action row")
-                }
-                /*if (components.size >= 5) {
-                    throw UnsupportedOperationException("Can only Have 5 buttons per action row")
-                }*/
-            }
+            componentType = component.componentType
+            return
         }
-    }
 
-    fun isPersistent(): Boolean {
-        return persistent
-    }
+        require(persistent == component.persistent) { "Cannot mix non-persistent items and persistent items in a row" }
+        require(components.none { it.uniqueId == component.uniqueId }) { "The component with unique id ${component.uniqueId} already exists in this row"}
 
-    private fun getComponentType(component: CascadeComponent): Component.Type {
-        return when (component) {
-            is CascadeButton -> Component.Type.BUTTON
-            is CascadeSelectBox -> Component.Type.SELECTION_MENU
-            else -> Component.Type.UNKNOWN
+        // TODO if this gets too much to handle this way add getCompatibleComponents and getMaxComponents methods to cascade component to simplify this. Maybe do it anyways for future proofing.
+        if (componentType == Component.Type.SELECTION_MENU) {
+            throw UnsupportedOperationException("Only one section box is allowed per action row and selection boxes and buttons aren't allowed together")
+        } else if (componentType == Component.Type.BUTTON) {
+            if (component.componentType != Component.Type.BUTTON) {
+                throw UnsupportedOperationException("Selection boxes and buttons aren't allowed on the same action row")
+            }
+            /*if (components.size >= 5) {
+                throw UnsupportedOperationException("Can only Have 5 buttons per action row")
+            }*/
         }
     }
 
