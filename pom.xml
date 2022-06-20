@@ -13,7 +13,7 @@
         <jda.version>4.3.0_296</jda.version>
         <lavaplayer.version>1.3.76</lavaplayer.version>
         <lavalink.client.version>f05605e</lavalink.client.version>
-        <kotlin.version>1.3.72</kotlin.version>
+        <kotlin.version>1.6.0</kotlin.version>
     </properties>
          
     <build>
