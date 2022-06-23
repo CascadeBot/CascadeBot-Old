@@ -2,8 +2,6 @@ package org.cascadebot.cascadebot.utils.interactions
 
 import de.bild.codec.annotations.Transient
 import net.dv8tion.jda.api.entities.Emoji
-import net.dv8tion.jda.api.entities.Member
-import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import org.cascadebot.cascadebot.UnicodeConstants
 import org.cascadebot.cascadebot.data.objects.MoveDirection
@@ -56,27 +54,18 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
     ),
 
     VOTE_BUTTON_YES(
-        CascadeButton.persistent(ButtonStyle.SUCCESS, Emoji.fromUnicode(UnicodeConstants.TICK),
-            IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-                val voteButtonGroup =
-                    GuildDataManager.getGuildData(channel.guild.idLong)
-                        .findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
-                if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
-                    return@IButtonRunnable
-                }
-                voteButtonGroup.addVote(runner.user, UnicodeConstants.TICK)
-            })
+        CascadeButton.persistent(
+            ButtonStyle.SUCCESS,
+            Emoji.fromUnicode(UnicodeConstants.TICK),
+            voteButtonUnicode(UnicodeConstants.TICK)
+        )
     ),
     VOTE_BUTTON_NO(
-        CascadeButton.persistent(ButtonStyle.DANGER, Emoji.fromUnicode(UnicodeConstants.RED_CROSS),
-            IButtonRunnable { runner: Member, channel: TextChannel, message: InteractionMessage ->
-                /*val voteButtonGroup =
-                    GuildDataManager.getGuildData(channel.guild.idLong).findVoteGroupByMessageAndChannel(channel.idLong, message.idLong)
-                if (!voteButtonGroup!!.isUserAllowed(runner.idLong)) {
-                    return@IButtonRunnable
-                }
-                voteButtonGroup.addVote(runner.user, UnicodeConstants.RED_CROSS)*/
-            })
+        CascadeButton.persistent(
+            ButtonStyle.DANGER,
+            Emoji.fromUnicode(UnicodeConstants.RED_CROSS),
+            voteButtonUnicode(UnicodeConstants.RED_CROSS)
+        )
     ),
     VOTE_BUTTON_ONE(
         CascadeButton.persistent(
