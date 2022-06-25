@@ -4,10 +4,13 @@ import net.dv8tion.jda.api.entities.Guild
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.entities.User
 import org.cascadebot.cascadebot.CascadeBot
+import org.hibernate.annotations.Type
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -46,6 +49,8 @@ class ScheduledActionEntity(
         get() = CascadeBot.INS.shardManager.getTextChannelById(channelId)
 
     @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    @Type(type = "psql-enum")
     val type: ActionType = type
 
     @OneToOne
