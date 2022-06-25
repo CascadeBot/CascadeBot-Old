@@ -35,9 +35,9 @@ public class VoteGroupBuilder {
 
     private long voteTime = TimeUnit.SECONDS.toMillis(10);
 
-    private VoteFinishConsumer finishConsumer;
+    private VoteFinishFunction finishConsumer;
 
-    private VotePeriodicConsumer periodicConsumer;
+    private VotePeriodicFunction periodicConsumer;
 
     /**
      * Creates a new build for {@link VoteGroup}
@@ -109,7 +109,7 @@ public class VoteGroupBuilder {
      * @param finishConsumer The {@link Consumer}.
      * @return this.
      */
-    public VoteGroupBuilder setVoteFinishConsumer(VoteFinishConsumer finishConsumer) {
+    public VoteGroupBuilder setVoteFinishConsumer(VoteFinishFunction finishConsumer) {
         this.finishConsumer = finishConsumer;
         return this;
     }
@@ -121,7 +121,7 @@ public class VoteGroupBuilder {
      * @param periodicConsumer The {@link Consumer}.
      * @return this.
      */
-    public VoteGroupBuilder setPeriodicConsumer(VotePeriodicConsumer periodicConsumer) {
+    public VoteGroupBuilder setPeriodicConsumer(VotePeriodicFunction periodicConsumer) {
         this.periodicConsumer = periodicConsumer;
         return this;
     }

@@ -30,8 +30,8 @@ public class VoteGroup {
 
     private final Map<Long, Object> votes = new HashMap<>();
 
-    private final VotePeriodicConsumer periodicConsumer;
-    private VoteFinishConsumer finishConsumer;
+    private final VotePeriodicFunction periodicConsumer;
+    private VoteFinishFunction finishConsumer;
 
     private Set<Long> allowedUsers;
 
@@ -55,7 +55,7 @@ public class VoteGroup {
         this.isDynamicTiming = isDynamicTiming;
     }
 
-    public void setFinishConsumer(VoteFinishConsumer finishConsumer) {
+    public void setFinishConsumer(VoteFinishFunction finishConsumer) {
         this.finishConsumer = finishConsumer;
     }
 
@@ -85,7 +85,7 @@ public class VoteGroup {
 
     private String id;
 
-    VoteGroup(String id, long ownerId, long channelId, long guildId, VoteFinishConsumer finishConsumer, VotePeriodicConsumer periodicRunnable, Timer voteTimer, ComponentContainer container) {
+    VoteGroup(String id, long ownerId, long channelId, long guildId, VoteFinishFunction finishConsumer, VotePeriodicFunction periodicRunnable, Timer voteTimer, ComponentContainer container) {
         this.ownerId = ownerId;
         this.channelId = channelId;
         this.guildId = guildId;

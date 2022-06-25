@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.Message;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-public enum VotePeriodicConsumer {
+public enum VotePeriodicFunction {
     SKIP((results, message) -> {
         StringBuilder resultsBuilder = new StringBuilder();
         for (VoteResult result : results) {
@@ -24,7 +24,7 @@ public enum VotePeriodicConsumer {
     });
 
     private final BiConsumer<List<VoteResult>, Message> consumer;
-    VotePeriodicConsumer(BiConsumer<List<VoteResult>, Message> consumer) {
+    VotePeriodicFunction(BiConsumer<List<VoteResult>, Message> consumer) {
         this.consumer = consumer;
     }
 
