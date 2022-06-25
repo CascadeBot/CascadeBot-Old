@@ -72,4 +72,8 @@ class GuildVoteGroup(type: String, guildId: Long, channelId: Long, messageId: Lo
     @JoinColumn(name = "vote_group_id", referencedColumnName = "id")
     val allowedUsers: MutableList<GuildVoteAllowedUser> = mutableListOf()
 
+    @OneToMany
+    @JoinColumn(name = "vote_group_id", referencedColumnName = "id")
+    val votes: MutableList<GuildVoteVotes> = mutableListOf()
+
 }
