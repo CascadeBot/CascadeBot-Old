@@ -16,6 +16,8 @@ create type vote_periodic_function as enum ('CUSTOM_VOTE');
 
 create type vote_finish_function as enum ('CUSTOM_VOTE');
 
+create type vote_type as enum ('EMOTE', 'UNICODE');
+
 create table guild
 (
     guild_id   bigint not null,
@@ -382,7 +384,8 @@ create table guild_vote_votes
     vote_group_id uuid         not null,
     user_id       bigint       not null,
     vote          varchar(255) not null,
-    unique (vote_group_id, user_id, vote),
+    type          vote_type    not null,
+    unique (vote_group_id, user_id, vote, type),
     constraint guild_vote_votes_pk
         primary key (id),
     constraint guild_vote_votes_fk

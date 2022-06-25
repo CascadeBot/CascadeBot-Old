@@ -5,15 +5,18 @@
 
 package org.cascadebot.cascadebot.data.entities
 
+import org.hibernate.annotations.Type
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
 @Table(name = "guild_vote_votes")
-class GuildVoteVotes(voteGroupId: UUID, userId: Long, vote: String) {
+class GuildVoteVotes(voteGroupId: UUID, userId: Long, vote: String, voteType: VoteType) {
 
     @Id
     @Column(name = "id")
@@ -28,4 +31,11 @@ class GuildVoteVotes(voteGroupId: UUID, userId: Long, vote: String) {
     @Column(name = "vote", nullable = false)
     val vote: String = vote
 
+    @Column(name =  "type", nullable = false)
+    @Type(type = "psql-enum")
+    @Enumerated(EnumType.STRING)
+    val type: VoteType = voteType
+
 }
+
+enum class VoteType { UNICODE, EMOTE }
