@@ -4,8 +4,6 @@ import net.dv8tion.jda.api.interactions.components.Button
 import net.dv8tion.jda.api.interactions.components.ButtonStyle
 import net.dv8tion.jda.api.interactions.components.Component
 import org.cascadebot.cascadebot.CascadeBot
-import org.cascadebot.cascadebot.data.ChannelId
-import org.cascadebot.cascadebot.data.ComponentCache
 import org.cascadebot.cascadebot.utils.ChannelId
 import java.util.UUID
 

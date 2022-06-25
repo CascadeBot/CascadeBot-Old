@@ -12,12 +12,9 @@ import net.dv8tion.jda.api.events.interaction.GenericComponentInteractionCreateE
 import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import net.dv8tion.jda.api.interactions.InteractionHook
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.metrics.Metrics
-import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow
 import org.cascadebot.cascadebot.utils.interactions.CascadeButton
-import org.cascadebot.cascadebot.utils.interactions.CascadeComponent
 import org.cascadebot.cascadebot.utils.interactions.CascadeSelectBox
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer.Companion.fromDiscordObjects
@@ -54,7 +51,7 @@ class ButtonEventListener : ListenerAdapter() {
         if (!event.isFromGuild) return
 
         val container = getContainerFromEvent(event) ?: return
-        
+
         val select = container.getComponents()
             .flatMap { row -> row.getComponents() }
             .filterIsInstance<CascadeSelectBox>()
