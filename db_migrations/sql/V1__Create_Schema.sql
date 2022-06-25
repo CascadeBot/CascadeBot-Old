@@ -344,17 +344,17 @@ create table scheduled_action
 create table guild_vote_group
 (
     id                 uuid default gen_random_uuid(),
-    type               varchar(255),
+    type               varchar(255)           not null,
     guild_id           bigint,
     channel_id         bigint                 not null,
     message_id         bigint                 not null,
     owner_id           bigint                 not null,
-    start_time         timestamp              not null,
+    start_time         timestamp,
     run_duration       int  default 0,
     max_duration       int  default 0,
     duration_increment int  default 0,
     dynamic_timing     bool default false,
-    periodic_function  vote_periodic_function not null,
+    periodic_function  vote_periodic_function,
     finish_function    vote_finish_function   not null,
     constraint guild_vote_group_pk
         primary key (id),
@@ -365,9 +365,12 @@ create table guild_vote_group
 
 create table guild_vote_allowed_users
 (
-    vote_group_id uuid,
-    user_id     bigint,
+    id         uuid default gen_random_uuid(),
+    vote_group_id uuid not null,
+    user_id     bigint not null,
     unique (vote_group_id, user_id),
+    constraint guild_vote_allowed_users_pk
+        primary key (id),
     constraint guild_vote_allowed_users_fk
         foreign key (vote_group_id) references guild_vote_group (id)
             on delete cascade
@@ -375,10 +378,13 @@ create table guild_vote_allowed_users
 
 create table guild_vote_votes
 (
-    vote_group_id uuid,
-    user_id     bigint,
-    vote        varchar(255),
+    id         uuid default gen_random_uuid(),
+    vote_group_id uuid not null,
+    user_id     bigint not null,
+    vote        varchar(255) not null,
     unique (vote_group_id, user_id, vote),
+    constraint guild_vote_votes_pk
+        primary key (id),
     constraint guild_vote_votes_fk
         foreign key (vote_group_id) references guild_vote_group (id)
             on delete cascade
