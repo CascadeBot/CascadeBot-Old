@@ -69,172 +69,172 @@ enum class PersistentComponent(@field:Transient val component: CascadeComponent)
     ),
     VOTE_BUTTON_ONE(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ONE), voteButtonAlphaNumeric(1)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.ONE), voteButtonUnicode(UnicodeConstants.ONE)
         )
     ),
     VOTE_BUTTON_TWO(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.TWO), voteButtonAlphaNumeric(2)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.TWO), voteButtonUnicode(UnicodeConstants.TWO)
         )
     ),
     VOTE_BUTTON_THREE(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.THREE), voteButtonAlphaNumeric(3)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.THREE), voteButtonUnicode(UnicodeConstants.THREE)
         )
     ),
     VOTE_BUTTON_FOUR(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FOUR), voteButtonAlphaNumeric(4)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FOUR), voteButtonUnicode(UnicodeConstants.FOUR)
         )
     ),
     VOTE_BUTTON_FIVE(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FIVE), voteButtonAlphaNumeric(5)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.FIVE), voteButtonUnicode(UnicodeConstants.FIVE)
         )
     ),
     VOTE_BUTTON_SIX(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.SIX), voteButtonAlphaNumeric(6)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.SIX), voteButtonUnicode(UnicodeConstants.SIX)
         )
     ),
     VOTE_BUTTON_SEVEN(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.SEVEN), voteButtonAlphaNumeric(7)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.SEVEN), voteButtonUnicode(UnicodeConstants.SEVEN)
         )
     ),
     VOTE_BUTTON_EIGHT(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.EIGHT), voteButtonAlphaNumeric(8)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.EIGHT), voteButtonUnicode(UnicodeConstants.EIGHT)
         )
     ),
     VOTE_BUTTON_NINE(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.NINE), voteButtonAlphaNumeric(9)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.NINE), voteButtonUnicode(UnicodeConstants.NINE)
         )
     ),
     VOTE_BUTTON_A(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.A), voteButtonAlphaNumeric(0)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.A), voteButtonUnicode(UnicodeConstants.A)
         )
     ),
     VOTE_BUTTON_B(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.B), voteButtonAlphaNumeric(1)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.B), voteButtonUnicode(UnicodeConstants.B)
         )
     ),
     VOTE_BUTTON_C(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.C), voteButtonAlphaNumeric(2)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.C), voteButtonUnicode(UnicodeConstants.C)
         )
     ),
     VOTE_BUTTON_D(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.D), voteButtonAlphaNumeric(3)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.D), voteButtonUnicode(UnicodeConstants.D)
         )
     ),
     VOTE_BUTTON_E(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.E), voteButtonAlphaNumeric(4)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.E), voteButtonUnicode(UnicodeConstants.E)
         )
     ),
     VOTE_BUTTON_F(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.F), voteButtonAlphaNumeric(5)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.F), voteButtonUnicode(UnicodeConstants.F)
         )
     ),
     VOTE_BUTTON_G(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.G), voteButtonAlphaNumeric(6)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.G), voteButtonUnicode(UnicodeConstants.G)
         )
     ),
     VOTE_BUTTON_H(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.H), voteButtonAlphaNumeric(7)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.H), voteButtonUnicode(UnicodeConstants.H)
         )
     ),
     VOTE_BUTTON_I(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.I), voteButtonAlphaNumeric(8)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.I), voteButtonUnicode(UnicodeConstants.I)
         )
     ),
     VOTE_BUTTON_J(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.J), voteButtonAlphaNumeric(9)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.J), voteButtonUnicode(UnicodeConstants.J)
         )
     ),
     VOTE_BUTTON_K(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.K), voteButtonAlphaNumeric(10)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.K), voteButtonUnicode(UnicodeConstants.K)
         )
     ),
     VOTE_BUTTON_L(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.L), voteButtonAlphaNumeric(11)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.L), voteButtonUnicode(UnicodeConstants.L)
         )
     ),
     VOTE_BUTTON_M(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.M), voteButtonAlphaNumeric(12)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.M), voteButtonUnicode(UnicodeConstants.M)
         )
     ),
     VOTE_BUTTON_N(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.N), voteButtonAlphaNumeric(13)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.N), voteButtonUnicode(UnicodeConstants.N)
         )
     ),
     VOTE_BUTTON_O(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.O), voteButtonAlphaNumeric(14)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.O), voteButtonUnicode(UnicodeConstants.O)
         )
     ),
     VOTE_BUTTON_P(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.P), voteButtonAlphaNumeric(15)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.P), voteButtonUnicode(UnicodeConstants.P)
         )
     ),
     VOTE_BUTTON_Q(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.Q), voteButtonAlphaNumeric(16)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.Q), voteButtonUnicode(UnicodeConstants.Q)
         )
     ),
     VOTE_BUTTON_R(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.R), voteButtonAlphaNumeric(17)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.R), voteButtonUnicode(UnicodeConstants.R)
         )
     ),
     VOTE_BUTTON_S(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.S), voteButtonAlphaNumeric(18)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.S), voteButtonUnicode(UnicodeConstants.S)
         )
     ),
     VOTE_BUTTON_T(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.T), voteButtonAlphaNumeric(19)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.T), voteButtonUnicode(UnicodeConstants.T)
         )
     ),
     VOTE_BUTTON_U(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.U), voteButtonAlphaNumeric(20)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.U), voteButtonUnicode(UnicodeConstants.U)
         )
     ),
     VOTE_BUTTON_V(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.V), voteButtonAlphaNumeric(21)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.V), voteButtonUnicode(UnicodeConstants.V)
         )
     ),
     VOTE_BUTTON_W(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.W), voteButtonAlphaNumeric(22)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.W), voteButtonUnicode(UnicodeConstants.W)
         )
     ),
     VOTE_BUTTON_X(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.X), voteButtonAlphaNumeric(23)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.X), voteButtonUnicode(UnicodeConstants.X)
         )
     ),
     VOTE_BUTTON_Y(
         CascadeButton.persistent(
-            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.Y), voteButtonAlphaNumeric(24)
+            ButtonStyle.SECONDARY, Emoji.fromUnicode(UnicodeConstants.Y), voteButtonUnicode(UnicodeConstants.Y)
         )
     );
 
