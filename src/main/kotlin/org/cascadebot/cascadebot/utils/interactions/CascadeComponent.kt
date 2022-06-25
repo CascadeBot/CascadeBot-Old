@@ -25,14 +25,17 @@ abstract class CascadeComponent(val uniqueId: String, persistent: Boolean) {
             val id = component.id ?: return null
 
             val prefix = id.substringBefore("-")
-            val uuid = UUID.fromString(id.substringAfter("-"))
 
-            if (prefix == "persistent") {
-                return PersistentComponent.values().find { it.component.discordComponent == component }?.component
-            } else if (prefix == "cached") {
-                return CascadeBot.INS.componentCache.cache[channelId]?.get(component.id)
-            } else {
-                error("Invalid prefix ($prefix) on custom ID detected")
+            return when (prefix) {
+                "persistent" -> {
+                    PersistentComponent.values().find { it.component.discordComponent == component }?.component
+                }
+                "cached" -> {
+                    CascadeBot.INS.componentCache.cache[channelId]?.get(component.id)
+                }
+                else -> {
+                    error("Invalid prefix ($prefix) on custom ID detected")
+                }
             }
         }
     }
