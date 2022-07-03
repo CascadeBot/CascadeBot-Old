@@ -137,11 +137,13 @@ class GuildVoteGroup(type: String, guildId: Long, channelId: Long, messageId: Lo
                                     message.delete()
                                         .queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE))
                                     voteFinished()
-                                    if (finishConsumer != null) {
-                                        finishConsumer.getConsumer().accept(
-                                            CascadeBot.INS.shardManager.getTextChannelById(channelId),
-                                            getOrderedVoteResults()
-                                        )
+                                    if (finishFunction != null) {
+                                        CascadeBot.INS.shardManager.getTextChannelById(channelId)?.let {
+                                            finishFunction.function(
+                                                it,
+                                                orderedVotes
+                                            )
+                                        }
                                     }
                                 }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE)
                             )
@@ -157,12 +159,13 @@ class GuildVoteGroup(type: String, guildId: Long, channelId: Long, messageId: Lo
                         { message: Message ->
                             message.delete().queue(null, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE))
                             voteFinished()
-                            if (finishConsumer != null) {
-                                finishConsumer.getConsumer()
-                                    .accept(
-                                        CascadeBot.INS.shardManager.getTextChannelById(channelId),
-                                        getOrderedVoteResults()
+                            if (finishFunction != null) {
+                                CascadeBot.INS.shardManager.getTextChannelById(channelId)?.let {
+                                    finishFunction.function(
+                                        it,
+                                        orderedVotes
                                     )
+                                }
                             }
                             stopVote()
                         }, DiscordUtils.handleExpectedErrors(ErrorResponse.UNKNOWN_MESSAGE)
