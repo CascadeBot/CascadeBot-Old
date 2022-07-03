@@ -86,7 +86,7 @@ class GuildVoteGroup(type: String, guildId: Long, channelId: Long, messageId: Lo
 
     @OneToMany
     @JoinColumn(name = "vote_group_id", referencedColumnName = "id")
-    val votes: MutableList<GuildVoteVotes> = mutableListOf()
+    val votes: MutableList<GuildVotes> = mutableListOf()
 
     // Orders all votes from largest to smallest order
     val orderedVotes: List<VoteResult>
@@ -106,7 +106,7 @@ class GuildVoteGroup(type: String, guildId: Long, channelId: Long, messageId: Lo
             dynamicTimingFunctionality(user)
         }
 
-        votes.add(GuildVoteVotes(this.id, user.idLong, voteIdentifier.first, voteIdentifier.second))
+        votes.add(GuildVotes(this.id, user.idLong, voteIdentifier.first, voteIdentifier.second))
     }
 
     private fun getVoteObjectIdentifier(vote: Any) : Pair<String, VoteType> {

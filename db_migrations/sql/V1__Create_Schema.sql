@@ -378,7 +378,7 @@ create table guild_vote_allowed_users
             on delete cascade
 );
 
-create table guild_vote_votes
+create table guild_votes
 (
     id            uuid default gen_random_uuid(),
     vote_group_id uuid         not null,

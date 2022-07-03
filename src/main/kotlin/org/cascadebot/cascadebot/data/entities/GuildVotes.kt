@@ -15,8 +15,8 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "guild_vote_votes")
-class GuildVoteVotes(voteGroupId: UUID, userId: Long, vote: String, voteType: VoteType) {
+@Table(name = "guild_votes")
+class GuildVotes(voteGroupId: UUID, userId: Long, vote: String, voteType: VoteType) {
 
     @Id
     @Column(name = "id")
