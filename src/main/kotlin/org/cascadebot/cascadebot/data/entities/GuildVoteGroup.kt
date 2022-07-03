@@ -13,6 +13,7 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.votes.VoteFinishFunction
 import org.cascadebot.cascadebot.utils.votes.VotePeriodicFunction
+import org.cascadebot.cascadebot.utils.votes.VoteResult
 import org.hibernate.annotations.Type
 import java.time.Duration
 import java.time.Instant
@@ -88,8 +89,12 @@ class GuildVoteGroup(type: String, guildId: Long, channelId: Long, messageId: Lo
     val votes: MutableList<GuildVoteVotes> = mutableListOf()
 
     // Orders all votes from largest to smallest order
-    val orderedVotes: List<Pair<Pair<String, VoteType>, Int>>
-        get() = votes.groupingBy { Pair(it.vote, it.type) }.eachCount().toList().sortedByDescending { it.second }
+    val orderedVotes: List<VoteResult>
+        get() = votes
+            .groupingBy { Pair(it.vote, it.type) }
+            .eachCount()
+            .map { VoteResult(it.key.first, it.key.second, it.value) }
+            .sortedDescending()
 
     fun addVote(user: User, vote: Any) {
         val voteIdentifier = getVoteObjectIdentifier(vote)
