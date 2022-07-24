@@ -5,14 +5,12 @@
 
 package org.cascadebot.cascadebot.commands.moderation;
 
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
 public class SoftBanCommand extends MainCommand {
@@ -49,12 +47,6 @@ public class SoftBanCommand extends MainCommand {
     @Override
     public String command() {
         return "softban";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("softban",
-                false, Permission.BAN_MEMBERS);
     }
 
     @Override

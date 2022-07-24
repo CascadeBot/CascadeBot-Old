@@ -5,12 +5,8 @@
 
 package org.cascadebot.cascadebot.commandmeta
 
-import org.cascadebot.cascadebot.permissions.CascadePermission
-
 abstract class CoreCommand : MainCommand() {
 
     override fun module(): Module = Module.CORE
-
-    override fun permission(): CascadePermission? = null
 
 }

@@ -5,7 +5,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.Set;
 
@@ -24,11 +23,6 @@ public class TodoCommand extends MainCommand {
     @Override
     public Module module() {
         return Module.USEFUL;
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("todo", true);
     }
 
     @Override

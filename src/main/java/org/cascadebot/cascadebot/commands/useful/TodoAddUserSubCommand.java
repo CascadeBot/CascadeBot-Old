@@ -6,7 +6,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistId;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistMemberEntity;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
 public class TodoAddUserSubCommand extends SubCommand {
@@ -54,11 +53,6 @@ public class TodoAddUserSubCommand extends SubCommand {
     @Override
     public String command() {
         return "adduser";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("todo.add.user", true);
     }
 
     @Override

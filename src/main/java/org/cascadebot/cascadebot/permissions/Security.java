@@ -5,10 +5,24 @@
 
 package org.cascadebot.cascadebot.permissions;
 
+import com.google.common.collect.ImmutableSet;
+import io.github.binaryoverload.JSONConfig;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
+import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
+import org.cascadebot.cascadebot.commandmeta.MainCommand;
+import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
 import org.cascadebot.cascadebot.data.Config;
+import org.cascadebot.cascadebot.data.language.Language;
+import org.cascadebot.cascadebot.data.language.Locale;
+import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.shared.SecurityLevel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,8 +49,10 @@ public class Security {
      * @return where level >= comparing level.
      */
     public static boolean isAuthorised(long userId, SecurityLevel comparingLevel) {
-        SecurityLevel level = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
-        if (level == null) return false;
+        SecurityLevel level = getUserSecurityLevel(userId);
+        if (level == null) {
+            return false;
+        }
         return level.isAuthorised(comparingLevel);
     }
 
@@ -61,10 +77,32 @@ public class Security {
     public static SecurityLevel getLevelById(long userId, Set<Long> roleIds) {
         for (int i = SecurityLevel.values().length - 1; i >= 0; i--) {
             SecurityLevel level = SecurityLevel.values()[i];
-            if (Security.getIds(level).contains(userId)) return level;
-            if (roleIds.stream().anyMatch(id -> Security.getIds(level).contains(id))) return level;
+            if (Security.getIds(level).contains(userId)) {
+                return level;
+            }
+            if (roleIds.stream().anyMatch(id -> Security.getIds(level).contains(id))) {
+                return level;
+            }
         }
         return null;
     }
+
+    public static boolean isAuthorised(RestrictedCommand command, Member member) {
+        if (command == null) {
+            throw new IllegalArgumentException("Command must not be null");
+        }
+
+        SecurityLevel userLevel = getUserSecurityLevel(member.getIdLong());
+        if (userLevel == null) {
+            return false;
+        }
+        SecurityLevel levelToCheck = command.commandLevel();
+        return userLevel.isAuthorised(levelToCheck);
+    }
+
+    public static SecurityLevel getUserSecurityLevel(long userId) {
+        return Security.getLevelById(userId, DiscordUtils.getAllOfficialRoleIds(userId));
+    }
+
 
 }

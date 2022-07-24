@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
 import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.listOf
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
@@ -138,7 +137,5 @@ class GoodbyeWeightSubCommand : SubCommand() {
     override fun command(): String = "weight"
 
     override fun parent(): String = "goodbye"
-
-    override fun permission(): CascadePermission? = CascadePermission.of("goodbye.add", false)
 
 }

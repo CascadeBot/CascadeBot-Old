@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 
 class SlowmodeResetSubCommand : SubCommand() {
@@ -47,7 +46,5 @@ class SlowmodeResetSubCommand : SubCommand() {
     override fun parent(): String = "slowmode"
 
     override fun command(): String = "reset"
-
-    override fun permission(): CascadePermission? = CascadePermission.of("slowmode.reset", false, Permission.MANAGE_CHANNEL)
 
 }

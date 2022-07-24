@@ -5,13 +5,11 @@
 
 package org.cascadebot.cascadebot.commands.moderation
 
-import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.messaging.MessagingObjects
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.getMutedRole
 
@@ -57,7 +55,5 @@ class UnMuteCommand : MainCommand() {
     override fun command(): String = "unmute"
 
     override fun module(): Module = Module.MODERATION
-
-    override fun permission(): CascadePermission = CascadePermission.of("unmute", false, Permission.MANAGE_ROLES)
 
 }

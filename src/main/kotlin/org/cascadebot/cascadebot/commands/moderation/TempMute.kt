@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.messaging.MessagingObjects
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.ParserUtils
 
@@ -53,7 +52,5 @@ class TempMute : MainCommand() {
     override fun command(): String = "tempmute"
 
     override fun module(): Module = Module.MODERATION
-
-    override fun permission(): CascadePermission = CascadePermission.of("tempmute", false)
 
 }

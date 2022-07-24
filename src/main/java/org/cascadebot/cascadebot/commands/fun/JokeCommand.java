@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.RandomUtils;
 
 import java.io.IOException;
@@ -28,11 +27,6 @@ public class JokeCommand extends MainCommand {
     @Override
     public String command() {
         return "joke";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("joke", true);
     }
 
     @Override

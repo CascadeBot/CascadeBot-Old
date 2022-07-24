@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTagId;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class TagRawSubCommand extends SubCommand {
 
@@ -47,11 +46,6 @@ public class TagRawSubCommand extends SubCommand {
     @Override
     public String parent() {
         return "tag";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("tag.raw", false);
     }
 
 }

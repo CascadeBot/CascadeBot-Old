@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
 import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.messaging.MessageType
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.ConfirmUtils
 import org.cascadebot.cascadebot.utils.deleteById
 
@@ -50,7 +49,5 @@ class WelcomeDMClearSubCommand : SubCommand() {
     override fun command(): String = "clear"
 
     override fun parent(): String = "welcomedm"
-
-    override fun permission(): CascadePermission = CascadePermission.of("welcomedm.clear", false)
 
 }

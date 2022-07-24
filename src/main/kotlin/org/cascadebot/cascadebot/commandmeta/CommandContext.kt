@@ -4,7 +4,6 @@ import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Emote
 import net.dv8tion.jda.api.entities.Guild
-import net.dv8tion.jda.api.entities.GuildChannel
 import net.dv8tion.jda.api.entities.Member
 import net.dv8tion.jda.api.entities.Message
 import net.dv8tion.jda.api.entities.MessageEmbed
@@ -23,7 +22,6 @@ import org.cascadebot.cascadebot.messaging.MessagingDirectMessage
 import org.cascadebot.cascadebot.messaging.MessagingTimed
 import org.cascadebot.cascadebot.messaging.MessagingTyped
 import org.cascadebot.cascadebot.messaging.MessagingUI
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.hibernate.Session
 import java.util.function.Consumer
 
@@ -150,32 +148,17 @@ data class CommandContext(
     }
 
     fun hasPermission(member: Member?, permission: String?): Boolean {
-        val cascadePermission = CascadeBot.INS.permissionsManager.getPermission(permission)
-        if (cascadePermission == null) {
-            CascadeBot.LOGGER.warn("Could not check permission {} as it does not exist!!", permission)
-            return false
-        }
         // TODO permissions checking
         return true
-    }
-
-    fun hasPermission(permission: CascadePermission?): Boolean {
-        return permission != null && true
-        // TODO permissions checking
-    }
-
-    fun hasPermission(member: Member?, channel: GuildChannel?, permission: CascadePermission?): Boolean {
-        return permission != null && true
-        // TODO permissions checking
     }
 
     fun runOtherCommand(command: String?, sender: Member?, context: CommandContext) {
         val commandMain = CascadeBot.INS.commandManager.getCommandByDefault(command)
                 ?: throw IllegalArgumentException("Cannot find that command!")
-        if (hasPermission(commandMain.permission())) {
+        if (true /*hasPermission(commandMain.permission()) TODO fix*/) {
             commandMain.onCommand(member, context)
         } else {
-            context.uiMessaging.sendPermissionError(commandMain.permission())
+            /*context.uiMessaging.sendPermissionError()*/
         }
     }
 

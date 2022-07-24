@@ -6,7 +6,6 @@
 package org.cascadebot.cascadebot.commands.management
 
 import com.google.gson.JsonArray
-import net.dv8tion.jda.api.Permission
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.CommandContext
@@ -19,7 +18,6 @@ import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
 import org.cascadebot.cascadebot.data.language.Language.getLanguage
 import org.cascadebot.cascadebot.data.objects.Setting
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.ParserUtils
 import org.cascadebot.cascadebot.utils.ReflectionUtils
 import java.io.IOException
@@ -152,10 +150,6 @@ class SettingsCommand : MainCommand() {
 
     override fun command(): String {
         return "settings"
-    }
-
-    override fun permission(): CascadePermission? {
-        return CascadePermission.of("settings", false, Permission.MANAGE_SERVER)
     }
 
     override fun subCommands(): Set<SubCommand> {

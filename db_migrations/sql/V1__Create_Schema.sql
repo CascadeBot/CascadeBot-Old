@@ -1,14 +1,6 @@
-create type filter_type as enum ('WHITELIST', 'BLACKLIST');
-
-create type filter_operator as enum ('AND', 'OR');
-
 create type greeting_type as enum ('WELCOME', 'WELCOME_DM', 'GOODBYE');
 
-create type filter_target_type as enum ('CHANNEL', 'ROLE', 'USER');
-
 create type scheduled_action_type as enum ('REMINDER', 'UNMUTE', 'UNBAN', 'UNSLOWMODE');
-
-create type permissions_mode as enum ('HIERARCHICAL', 'MOST_RESTRICTIVE');
 
 create type locale as enum ('ENGLISH_UK', 'ENGLISH_US');
 
@@ -132,7 +124,6 @@ create table guild_modlog
 create table guild_settings_management
 (
     guild_id             bigint not null,
-    display_filter_error boolean          default false,
     permission_mode      permissions_mode default 'MOST_RESTRICTIVE',
     warn_over_10         boolean          default true,
     constraint guild_settings_management_pk
@@ -152,57 +143,6 @@ create table guild_tag
         primary key (guild_id, name),
     constraint guild_tag_fk
         foreign key (guild_id) references guild
-            on delete cascade
-);
-
-create table guild_filter
-(
-    name     varchar(255)    not null,
-    guild_id bigint          not null,
-    enabled  boolean default true,
-    type     filter_type     not null,
-    operator filter_operator not null,
-    commands varchar(255)[]  not null,
-    constraint guild_command_filter_pk
-        primary key (name, guild_id),
-    constraint guild_command_filter_fk
-        foreign key (guild_id) references guild
-            on delete cascade
-);
-
-create table guild_filter_channels
-(
-    filter_name varchar(255) not null,
-    guild_id    bigint       not null,
-    channel_id  bigint       not null,
-    constraint guild_command_filter_channels_pk
-        primary key (filter_name, guild_id, channel_id),
-    constraint guild_command_filter_channels_fk
-        foreign key (filter_name, guild_id) references guild_filter (name, guild_id)
-            on delete cascade
-);
-
-create table guild_filter_users
-(
-    filter_name varchar(255) not null,
-    guild_id    bigint       not null,
-    user_id     bigint       not null,
-    constraint guild_command_filter_users_pk
-        primary key (filter_name, guild_id, user_id),
-    constraint guild_command_filter_user_fk
-        foreign key (filter_name, guild_id) references guild_filter (name, guild_id)
-            on delete cascade
-);
-
-create table guild_filter_roles
-(
-    filter_name varchar(255) not null,
-    guild_id    bigint       not null,
-    role_id     bigint       not null,
-    constraint guild_command_filter_roles_pk
-        primary key (filter_name, guild_id, role_id),
-    constraint guild_command_filter_roles_fk
-        foreign key (filter_name, guild_id) references guild_filter (name, guild_id)
             on delete cascade
 );
 
@@ -284,20 +224,6 @@ create table guild_greeting_channel
         primary key (guild_id),
     constraint guild_greeting_channel_fk
         foreign key (guild_id) references guild
-            on delete cascade
-);
-
-create table guild_filter_criteria
-(
-    id          uuid default gen_random_uuid(),
-    filter_name varchar(255)       not null,
-    guild_id    bigint             not null,
-    type        filter_target_type not null,
-    target_id   bigint             not null,
-    constraint guild_filter_criteria_pk
-        primary key (id),
-    constraint guild_filter_criteria_fk
-        foreign key (filter_name, guild_id) references guild_filter
             on delete cascade
 );
 

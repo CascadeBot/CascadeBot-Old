@@ -13,7 +13,6 @@ import org.cascadebot.cascadebot.data.entities.GuildGreetingId
 import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.listOf
 
 class GoodbyeRemoveSubCommand : SubCommand() {
@@ -55,7 +54,5 @@ class GoodbyeRemoveSubCommand : SubCommand() {
     override fun command(): String = "remove"
 
     override fun parent(): String = "goodbye"
-
-    override fun permission(): CascadePermission? = CascadePermission.of("goodbye.remove", false)
 
 }

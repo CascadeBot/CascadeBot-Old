@@ -7,7 +7,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistId;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistItemEntity;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.move.MovableList;
 
@@ -78,11 +77,6 @@ public class TodoSendSubCommand extends SubCommand {
     @Override
     public String command() {
         return "send";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("todo.send", true);
     }
 
     @Override

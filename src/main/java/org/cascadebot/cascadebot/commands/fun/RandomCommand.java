@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.RandomUtils;
 
 import java.util.Set;
@@ -55,11 +54,6 @@ public class RandomCommand extends MainCommand {
     @Override
     public Module module() {
         return Module.FUN;
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("random", true);
     }
 
     @Override

@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.entities.GuildAutoRoleEntity
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.MessagingObjects
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.listOf
 
 class AutoRoleListSubCommand : SubCommand() {
@@ -41,5 +40,4 @@ class AutoRoleListSubCommand : SubCommand() {
 
     override fun parent(): String = "autorole"
 
-    override fun permission(): CascadePermission? = CascadePermission.of("autorole.list", false)
 }

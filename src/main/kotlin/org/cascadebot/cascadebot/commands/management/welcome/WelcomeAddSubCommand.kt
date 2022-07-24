@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
 import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.listOf
 
@@ -49,7 +48,5 @@ class WelcomeAddSubCommand : SubCommand() {
     override fun command(): String = "add"
 
     override fun parent(): String = "welcome"
-
-    override fun permission(): CascadePermission? = CascadePermission.of("welcome.add", false)
 
 }

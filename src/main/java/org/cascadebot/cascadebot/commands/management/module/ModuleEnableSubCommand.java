@@ -5,14 +5,12 @@
 
 package org.cascadebot.cascadebot.commands.management.module;
 
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.apache.commons.lang3.EnumUtils;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildModuleEntity;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ExtensionsKt;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
@@ -63,11 +61,6 @@ public class ModuleEnableSubCommand extends SubCommand {
     @Override
     public String parent() {
         return "module";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("module.enable", false, Permission.MANAGE_SERVER);
     }
 
 }

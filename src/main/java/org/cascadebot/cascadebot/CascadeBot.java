@@ -37,7 +37,6 @@ import org.cascadebot.cascadebot.events.GuildEvents;
 import org.cascadebot.cascadebot.events.JDAEventMetricsListener;
 import org.cascadebot.cascadebot.metrics.Metrics;
 import org.cascadebot.cascadebot.moderation.ModerationManager;
-import org.cascadebot.cascadebot.permissions.PermissionsManager;
 import org.cascadebot.cascadebot.utils.EventWaiter;
 import org.cascadebot.cascadebot.utils.LogbackUtils;
 import org.cascadebot.shared.Version;
@@ -64,7 +63,6 @@ public class CascadeBot {
     private ArgumentManager argumentManager;
     private CommandManager commandManager;
     private PostgresManager postgresManager;
-    private PermissionsManager permissionsManager;
     private ModerationManager moderationManager;
     private ComponentCache componentCache;
 
@@ -188,8 +186,6 @@ public class CascadeBot {
         argumentManager = new ArgumentManager();
         argumentManager.initArguments();
         commandManager = new CommandManager();
-        permissionsManager = new PermissionsManager();
-        permissionsManager.registerPermissions();
         moderationManager = new ModerationManager();
 
         componentCache = new ComponentCache(50);
@@ -258,10 +254,6 @@ public class CascadeBot {
 
     public PostgresManager getPostgresManager() {
         return postgresManager;
-    }
-
-    public PermissionsManager getPermissionsManager() {
-        return permissionsManager;
     }
 
     public ModerationManager getModerationManager() {

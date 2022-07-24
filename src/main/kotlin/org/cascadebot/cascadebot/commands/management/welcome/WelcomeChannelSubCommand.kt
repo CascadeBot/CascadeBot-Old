@@ -10,7 +10,6 @@ import org.cascadebot.cascadebot.CascadeBot
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.entities.GuildGreetingChannelEntity
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 
 class WelcomeChannelSubCommand : SubCommand() {
@@ -54,7 +53,5 @@ class WelcomeChannelSubCommand : SubCommand() {
     override fun command(): String = "channel"
 
     override fun parent(): String = "welcome"
-
-    override fun permission(): CascadePermission? = CascadePermission.of("welcome.channel", false)
 
 }

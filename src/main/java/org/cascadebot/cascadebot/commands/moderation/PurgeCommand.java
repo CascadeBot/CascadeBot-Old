@@ -5,14 +5,12 @@
 
 package org.cascadebot.cascadebot.commands.moderation;
 
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
 
 import java.util.Set;
@@ -47,11 +45,6 @@ public class PurgeCommand extends MainCommand {
     @Override
     public Set<SubCommand> subCommands() {
         return Set.of(new PurgeContainSubCommand(), new PurgeBotSubCommand(), new PurgeAttachmentSubCommand(), new PurgeLinkSubCommand(), new PurgeUserSubCommand());
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("purge", false, Permission.MESSAGE_MANAGE);
     }
 
 }

@@ -18,7 +18,6 @@ import org.cascadebot.cascadebot.data.Config
 import org.cascadebot.cascadebot.data.entities.GuildAutoRoleEntity
 import org.cascadebot.cascadebot.data.entities.GuildGreetingChannelEntity
 import org.cascadebot.cascadebot.data.entities.GuildGreetingEntity
-import org.cascadebot.cascadebot.data.entities.GuildPermissionGroupEntity
 import org.cascadebot.cascadebot.data.objects.GreetingType
 import org.cascadebot.cascadebot.utils.listOf
 import org.cascadebot.cascadebot.utils.lists.WeightedList
@@ -28,9 +27,9 @@ class GuildEvents : ListenerAdapter() {
     override fun onGuildJoin(event: GuildJoinEvent) {
         if (!StringUtils.isBlank(Config.INS.guildWelcomeMessage)) {
             event.guild.owner!!
-                    .user
-                    .openPrivateChannel()
-                    .queue({ it.sendMessage(Config.INS.guildWelcomeMessage).queue() }, { /* Do nothing on error! */ })
+                .user
+                .openPrivateChannel()
+                .queue({ it.sendMessage(Config.INS.guildWelcomeMessage).queue() }, { /* Do nothing on error! */ })
         }
     }
 
@@ -41,9 +40,9 @@ class GuildEvents : ListenerAdapter() {
     override fun onGuildLeave(event: GuildLeaveEvent) {
         if (!StringUtils.isBlank(Config.INS.guildGoodbyeMessage)) {
             event.guild.owner!!
-                    .user
-                    .openPrivateChannel()
-                    .queue({ it.sendMessage(Config.INS.guildGoodbyeMessage).queue() }, { /* Do nothing on error! */ })
+                .user
+                .openPrivateChannel()
+                .queue({ it.sendMessage(Config.INS.guildGoodbyeMessage).queue() }, { /* Do nothing on error! */ })
         }
     }
 
@@ -60,7 +59,7 @@ class GuildEvents : ListenerAdapter() {
                 if (greetingMap.contains(greeting.type)) {
                     greetingMap[greeting.type]!!.add(greeting, greeting.weight)
                 } else {
-                    val list : WeightedList<GuildGreetingEntity> = WeightedList()
+                    val list: WeightedList<GuildGreetingEntity> = WeightedList()
                     list.add(greeting, greeting.weight)
                     greetingMap[greeting.type] = list;
                 }
@@ -115,7 +114,7 @@ class GuildEvents : ListenerAdapter() {
                 if (greetingMap.contains(greeting.type)) {
                     greetingMap[greeting.type]!!.add(greeting, greeting.weight)
                 } else {
-                    val list : WeightedList<GuildGreetingEntity> = WeightedList()
+                    val list: WeightedList<GuildGreetingEntity> = WeightedList()
                     list.add(greeting, greeting.weight)
                     greetingMap[greeting.type] = list;
                 }
@@ -134,16 +133,4 @@ class GuildEvents : ListenerAdapter() {
         }
     }
 
-    override fun onRoleDelete(event: RoleDeleteEvent) {
-        val groups = CascadeBot.INS.postgresManager.transaction {
-            listOf(GuildPermissionGroupEntity::class.java, "guild_id", event.guild.idLong)
-        } ?: return
-        for (group in groups) {
-            if (group.roles.remove(event.role.idLong)) {
-                CascadeBot.INS.postgresManager.transaction {
-                    save(group)
-                }
-            }
-        }
-    }
 }

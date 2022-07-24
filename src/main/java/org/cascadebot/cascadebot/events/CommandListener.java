@@ -20,7 +20,6 @@ import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
 import org.cascadebot.cascadebot.data.Config;
-import org.cascadebot.cascadebot.data.entities.GuildFilterEntity;
 import org.cascadebot.cascadebot.data.entities.GuildModuleEntity;
 import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity;
 import org.cascadebot.cascadebot.data.entities.GuildSettingsManagementEntity;
@@ -129,20 +128,6 @@ public class CommandListener extends ListenerAdapter {
                 return;
             }
 
-            if (!processFilters(cmd, context)) {
-                GuildSettingsManagementEntity managementSettings = context.getDataObject(GuildSettingsManagementEntity.class);
-                if (managementSettings == null) {
-                    throw new UnsupportedOperationException("This shouldn't happen");
-                }
-                // TODO: Moderation log event
-                if (managementSettings.getDisplayFilterError()) {
-                    var message = context.i18n("commands.filters.message_blocked") +
-                            (context.getMember().hasPermission(Permission.ADMINISTRATOR) ? context.i18n("commands.filters.message_blocked_admin") : "");
-                    context.getTypedMessaging().replyDanger(message);
-                }
-                return;
-            }
-
             if (args.length >= 1) {
                 if (processSubCommands(cmd, args, context)) {
                     return;
@@ -150,22 +135,6 @@ public class CommandListener extends ListenerAdapter {
             }
             dispatchCommand(cmd, context);
         }
-    }
-
-    private boolean processFilters(MainCommand cmd, CommandContext context) {
-        List<GuildFilterEntity> filters = context.transaction(session -> {
-            return DatabaseUtilsKt.listOf(session, GuildFilterEntity.class, "guild_id", context.getGuildId());
-        });
-        if (filters == null) {
-            return false;
-        }
-        for (GuildFilterEntity guildFilterEntity : filters) {
-            /*if (filter.evaluateFilter(cmd.command(), context.getChannel(), context.getMember()) == CommandFilter.FilterResult.DENY
-                    && !context.hasPermission("filters.bypass"))  {
-                return false;
-            }*/
-        }
-        return true;
     }
 
     private boolean processSubCommands(MainCommand cmd, String[] args, CommandContext parentCommandContext) {
@@ -219,14 +188,15 @@ public class CommandListener extends ListenerAdapter {
         if (coreSettings == null) {
             throw new UnsupportedOperationException("This shouldn't happen");
         }
-        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getMember())) {
-            if (!(command instanceof RestrictedCommand)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
-                if (coreSettings.getPermErrors()) {
-                    context.getUiMessaging().sendPermissionError(command.permission());
-                }
-            }
-            return false;
-        }
+//        if (!CascadeBot.INS.getPermissionsManager().isAuthorised(command, context.getMember())) {
+//            if (!(command instanceof RestrictedCommand)) { // Always silently fail on restricted commands, users shouldn't know what the commands are
+//                if (coreSettings.getPermErrors()) {
+//                    context.getUiMessaging().sendPermissionError(command.permission());
+//                }
+//            }
+//            return false;
+//        }
+        // TODO fix
         return true;
     }
 

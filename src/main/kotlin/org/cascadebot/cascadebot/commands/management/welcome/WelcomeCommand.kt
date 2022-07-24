@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects
 import org.cascadebot.cascadebot.utils.placeholders.getPlaceholderUsagePage
@@ -26,8 +25,6 @@ class WelcomeCommand : MainCommand() {
     override fun command(): String = "welcome"
 
     override fun module(): Module = Module.MANAGEMENT
-
-    override fun permission(): CascadePermission? = null
 
     override fun additionalUsagePages(locale: Locale): List<Page> {
         return listOf(

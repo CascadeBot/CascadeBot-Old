@@ -11,25 +11,18 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.utils.AttachmentOption;
-import net.dv8tion.jda.internal.utils.Checks;
-import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.ExecutableCommand;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.interactions.ComponentContainer;
 import org.cascadebot.cascadebot.utils.pagination.Page;
-import spark.utils.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class MessagingUI {
 
@@ -115,35 +108,10 @@ public class MessagingUI {
      * @param stringPermission The Cascade permission that the user doesn't have.
      */
     public void sendPermissionError(String stringPermission) {
-        CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
-        Checks.notNull(permission, "permission");
-        sendPermissionError(permission);
-    }
-
-    public void sendPermissionError(CascadePermission permission) {
-        Checks.notNull(permission, "permission");
-        if (!CollectionUtils.isEmpty(permission.getDiscordPerms())) {
-            EnumSet<Permission> permissions = permission.getDiscordPerms();
-            String discordPerms = permissions.stream()
-                    .map(Permission::getName)
-                    .map(p -> "`" + p + "`")
-                    .collect(Collectors.joining(", "));
-            String message = context.i18n("responses.no_cascade_perm_discord", permission.getPermission(context.getLocale()), discordPerms);
-            Messaging.sendEmbedMessage(
-                    MessageType.DANGER,
-                    context.getChannel(),
-                    MessagingObjects.getStandardMessageEmbed(message, context.getUser(), context.getLocale()),
-                    true
-            ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
-        } else {
-            String message = context.i18n("responses.no_cascade_perm", permission.getPermission(context.getLocale()));
-            Messaging.sendEmbedMessage(
-                    MessageType.DANGER,
-                    context.getChannel(),
-                    MessagingObjects.getStandardMessageEmbed(message, context.getUser(), context.getLocale()),
-                    true
-            ).thenAccept(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
-        }
+//        CascadePermission permission = CascadeBot.INS.getPermissionsManager().getPermission(stringPermission);
+//        Checks.notNull(permission, "permission");
+//        sendPermissionError(permission);
+        // TODO: Slash command fixes
     }
 
     /**

@@ -11,7 +11,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.ParserUtils
 import java.time.Duration
@@ -65,7 +64,5 @@ class RemindMeCommand : MainCommand() {
     override fun subCommands(): Set<SubCommand> = setOf(RemindMeListSubCommand())
 
     override fun module(): Module = Module.USEFUL
-
-    override fun permission(): CascadePermission = CascadePermission.of("remindme", true)
 
 }

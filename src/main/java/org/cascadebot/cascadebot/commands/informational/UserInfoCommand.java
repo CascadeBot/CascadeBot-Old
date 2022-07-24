@@ -17,7 +17,7 @@ import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
+import org.cascadebot.cascadebot.permissions.Security;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 import org.cascadebot.cascadebot.utils.language.LanguageUtils;
@@ -63,7 +63,7 @@ public class UserInfoCommand extends MainCommand {
         builder.addField(context.i18n("commands.userinfo.user_id"), userForInfo.getId(), true);
         builder.addField(context.i18n("commands.userinfo.user_mutual_servers"), String.valueOf(userForInfo.getMutualGuilds().size()), true);
         long userId = userForInfo.getIdLong();
-        SecurityLevel userSecurityLevel = CascadeBot.INS.getPermissionsManager().getUserSecurityLevel(userId);
+        SecurityLevel userSecurityLevel = Security.getUserSecurityLevel(userId);
         if (userSecurityLevel != null) {
             builder.addField(context.i18n("commands.userinfo.user_official_role"), FormatUtils.formatEnum(userSecurityLevel, context.getLocale()), true);
         }
@@ -97,11 +97,6 @@ public class UserInfoCommand extends MainCommand {
     @Override
     public Module module() {
         return Module.INFORMATIONAL;
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("userinfo", true);
     }
 
 }

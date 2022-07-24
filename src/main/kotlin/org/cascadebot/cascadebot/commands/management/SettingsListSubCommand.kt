@@ -13,7 +13,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.objects.SettingsContainer
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.embed
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.pagination.Page
 import org.cascadebot.cascadebot.utils.pagination.PageObjects
@@ -65,10 +64,6 @@ class SettingsListSubCommand(private val settingsClasses: List<Class<*>>) : SubC
 
     override fun parent(): String {
         return "settings"
-    }
-
-    override fun permission(): CascadePermission? {
-        return null
     }
 
 }

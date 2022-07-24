@@ -85,7 +85,7 @@ public class HelpCommand extends CoreCommand {
              * 2. If the setting "helpHideCommandsNoPermission" is set to false, the command will always display regardless of permission
              * 3. If the sender of the help command has the permission for the command
              */
-            if (commandMain.permission() == null || !coreSettings.getHelpHideNoPerms() || context.hasPermission(commandMain.permission())) {
+            if (true /* TODO: If has permission */) {
                 stringBuilder.append("`")
                         .append(";")
                         .append(commandMain.command(context.getLocale()))

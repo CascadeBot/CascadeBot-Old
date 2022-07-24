@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.commandmeta
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.data.language.Language
 import org.cascadebot.cascadebot.data.language.Locale
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.pagination.Page
 
 abstract class ExecutableCommand {
@@ -28,8 +27,6 @@ abstract class ExecutableCommand {
     abstract fun onCommand(sender: Member, context: CommandContext)
 
     abstract fun command(): String
-
-    abstract fun permission(): CascadePermission?
 
     open fun description(): String? {
         return null

@@ -10,7 +10,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
-import org.cascadebot.cascadebot.permissions.CascadePermission
 
 class WelcomeDMCommand : MainCommand() {
 
@@ -30,7 +29,5 @@ class WelcomeDMCommand : MainCommand() {
             )
 
     override fun module(): Module = Module.MANAGEMENT
-
-    override fun permission(): CascadePermission? = null
 
 }

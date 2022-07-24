@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 import org.cascadebot.cascadebot.utils.pagination.PageUtils;
@@ -55,11 +54,6 @@ public class TagPlaceholdersSubCommand extends SubCommand {
     @Override
     public String parent() {
         return "tag";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("tag.placeholders", false);
     }
 
 }

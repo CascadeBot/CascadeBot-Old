@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.Role
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.entities.GuildAutoRoleEntity
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.deleteById
 
@@ -58,7 +57,5 @@ class AutoRoleRemoveSubCommand : SubCommand() {
     override fun parent(): String = "autorole"
 
     override fun command(): String = "remove"
-
-    override fun permission(): CascadePermission = CascadePermission.of("autorole.remove", false)
 
 }

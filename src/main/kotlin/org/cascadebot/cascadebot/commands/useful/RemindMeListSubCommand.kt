@@ -8,7 +8,6 @@ package org.cascadebot.cascadebot.commands.useful
 import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
-import org.cascadebot.cascadebot.permissions.CascadePermission
 
 class RemindMeListSubCommand : SubCommand() {
 
@@ -67,5 +66,4 @@ class RemindMeListSubCommand : SubCommand() {
 
     override fun parent(): String = "remindme"
 
-    override fun permission(): CascadePermission? = null
 }

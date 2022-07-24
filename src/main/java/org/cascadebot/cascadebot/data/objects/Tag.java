@@ -18,7 +18,7 @@ import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class Tag extends PermissionObject {
+public class Tag {
 
     private String name;
     private String content;
@@ -28,18 +28,4 @@ public class Tag extends PermissionObject {
         return PlaceholderObjects.getTags().formatMessage(commandContext.getLocale(), content, commandContext);
     }
 
-    @Override
-    public String getPermission() {
-        return category + "." + name;
-    }
-
-    @Override
-    public String getParent() {
-        return "tag";
-    }
-
-    @Override
-    public Module cascadeModule() {
-        return Module.MANAGEMENT;
-    }
 }

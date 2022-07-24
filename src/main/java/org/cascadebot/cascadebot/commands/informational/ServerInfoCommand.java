@@ -13,7 +13,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.FormatUtils;
 
 public class ServerInfoCommand extends MainCommand {
@@ -56,11 +55,6 @@ public class ServerInfoCommand extends MainCommand {
     @Override
     public Module module() {
         return Module.INFORMATIONAL;
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("serverinfo", true);
     }
 
 }

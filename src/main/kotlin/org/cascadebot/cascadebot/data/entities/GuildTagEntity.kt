@@ -7,7 +7,6 @@ package org.cascadebot.cascadebot.data.entities
 
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.data.objects.PermissionObject
 import org.cascadebot.cascadebot.utils.placeholders.PlaceholderObjects.tags
 import java.io.Serializable
 import java.util.regex.Pattern
@@ -20,7 +19,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "guild_tag")
 @IdClass(GuildTagId::class)
-class GuildTagEntity(guildId: Long, name: String, content: String): PermissionObject() {
+class GuildTagEntity(guildId: Long, name: String, content: String) {
 
     @Id
     @Column(name = "guild_id")

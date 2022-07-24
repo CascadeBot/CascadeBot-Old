@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Member
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.entities.GuildSettingsModerationEntity
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.getMutedRole
 
@@ -40,7 +39,5 @@ class MuteRoleSubCommand : SubCommand() {
     override fun command(): String = "role"
 
     override fun parent(): String = "mute"
-
-    override fun permission(): CascadePermission = CascadePermission.of("mute.role", false)
 
 }

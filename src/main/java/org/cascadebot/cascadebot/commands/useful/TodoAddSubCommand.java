@@ -8,7 +8,6 @@ import org.cascadebot.cascadebot.data.entities.GuildTodolistEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistId;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistItemEntity;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class TodoAddSubCommand extends SubCommand {
 
@@ -56,11 +55,6 @@ public class TodoAddSubCommand extends SubCommand {
     @Override
     public String command() {
         return "add";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("todo.add", false);
     }
 
     @Override

@@ -23,13 +23,6 @@ class GuildSettingsManagementEntity(guildId: Long) {
     @Column(name = "guild_id")
     val guildId: Long = guildId
 
-    @Column(name = "display_filter_error", nullable = false)
-    @Setting
-    var displayFilterError: Boolean = true
-
-    @Column(name = "permission_mode")
-    var permissionMode: PermissionMode = PermissionMode.MOST_RESTRICTIVE
-
     @Column(name = "warn_over_10", nullable = false)
     @Setting
     var warnOver10: Boolean = true

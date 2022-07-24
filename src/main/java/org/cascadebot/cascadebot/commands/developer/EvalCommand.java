@@ -10,7 +10,6 @@ import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.commandmeta.RestrictedCommand;
-import org.cascadebot.cascadebot.permissions.PermissionNode;
 import org.cascadebot.cascadebot.utils.PasteUtils;
 import org.cascadebot.shared.SecurityLevel;
 import org.cascadebot.shared.utils.ThreadPoolExecutorLogged;
@@ -74,7 +73,7 @@ public class EvalCommand extends RestrictedCommand {
         code = context.getMessage(0);
 
         for (String blacklistedItem : BLACKLIST) {
-            if (new PermissionNode(blacklistedItem).test(code)) {
+            if (true /* TODO: Add wildcard checking */) {
                 context.getTypedMessaging().replyDanger("You cannot run this code as it contains blacklisted items!");
                 return;
             }

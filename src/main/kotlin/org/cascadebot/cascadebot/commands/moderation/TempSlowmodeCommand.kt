@@ -7,7 +7,6 @@ import net.dv8tion.jda.api.exceptions.PermissionException
 import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.ParserUtils
@@ -83,10 +82,6 @@ class TempSlowmodeCommand : MainCommand() {
 
     override fun command(): String {
         return "tempslowmode"
-    }
-
-    override fun permission(): CascadePermission? {
-        return CascadePermission.of("tempslowmode", false, Permission.MANAGE_CHANNEL)
     }
 
     override fun module(): Module {

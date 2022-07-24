@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DatabaseUtilsKt;
 
 import java.util.Map;
@@ -48,11 +47,6 @@ public class TagDeleteSubCommand extends SubCommand {
     @Override
     public String parent() {
         return "tag";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("tag.delete", false);
     }
 
 }

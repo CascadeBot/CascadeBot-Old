@@ -8,7 +8,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext
 import org.cascadebot.cascadebot.commandmeta.MainCommand
 import org.cascadebot.cascadebot.commandmeta.Module
 import org.cascadebot.cascadebot.commandmeta.SubCommand
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 import org.cascadebot.cascadebot.utils.FormatUtils
 import org.cascadebot.cascadebot.utils.ParserUtils
@@ -70,10 +69,6 @@ class SlowmodeCommand : MainCommand() {
 
     override fun subCommands(): Set<SubCommand> {
         return setOf(SlowmodeResetSubCommand())
-    }
-
-    override fun permission(): CascadePermission? {
-        return CascadePermission.of("slowmode", false, Permission.MANAGE_CHANNEL)
     }
 
     override fun module(): Module {

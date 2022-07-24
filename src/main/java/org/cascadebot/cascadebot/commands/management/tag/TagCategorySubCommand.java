@@ -10,7 +10,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTagEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTagId;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class TagCategorySubCommand extends SubCommand {
 
@@ -44,11 +43,6 @@ public class TagCategorySubCommand extends SubCommand {
     @Override
     public String parent() {
         return "tag";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("tag.category", false);
     }
 
 }

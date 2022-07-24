@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.objects.PurgeCriteria;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.PurgeUtils;
 
@@ -59,8 +58,5 @@ public class PurgeUserSubCommand extends SubCommand {
 
     @Override
     public String parent() { return "purge"; }
-
-    @Override
-    public CascadePermission permission() { return null; }
 
 }

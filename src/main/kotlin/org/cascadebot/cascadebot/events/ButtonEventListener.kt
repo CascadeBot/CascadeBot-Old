@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.interaction.SelectionMenuEvent
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 import org.cascadebot.cascadebot.CascadeBot
+import org.cascadebot.cascadebot.data.ComponentCache
 import org.cascadebot.cascadebot.metrics.Metrics
 import org.cascadebot.cascadebot.utils.interactions.CascadeButton
 import org.cascadebot.cascadebot.utils.interactions.CascadeSelectBox
@@ -82,14 +83,4 @@ class ButtonEventListener : ListenerAdapter() {
         return null
     }
 
-    override fun onMessageDelete(e: MessageDeleteEvent) {
-        if (e.channel.type == ChannelType.TEXT) {
-            val channel = e.channel as TextChannel
-            /*GuildData data = GuildDataManager.getGuildData(channel.getGuild().getIdLong());
-            InteractionCache cache = data.getComponentCache();
-            if (cache.containsKey(channel.getIdLong())) {
-                cache.get(channel.getIdLong()).remove(e.getMessageIdLong());
-            }*/
-        }
-    }
 }

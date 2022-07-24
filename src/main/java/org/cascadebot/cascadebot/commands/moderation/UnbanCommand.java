@@ -6,7 +6,6 @@
 package org.cascadebot.cascadebot.commands.moderation;
 
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.cascadebot.cascadebot.CascadeBot;
@@ -14,7 +13,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 import java.util.List;
 
@@ -53,12 +51,6 @@ public class UnbanCommand extends MainCommand {
     @Override
     public String command() {
         return "unban";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("ban",
-                false, Permission.BAN_MEMBERS);
     }
 
     @Override

@@ -16,7 +16,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 import org.cascadebot.cascadebot.utils.WebUtils;
 import org.cascadebot.cascadebot.utils.interactions.CascadeActionRow;
@@ -77,11 +76,6 @@ public class CatCommand extends MainCommand {
     @Override
     public Module module() {
         return Module.FUN;
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("cat", true);
     }
 
 }

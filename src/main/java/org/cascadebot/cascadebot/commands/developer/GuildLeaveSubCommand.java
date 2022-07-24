@@ -10,7 +10,6 @@ import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.messaging.MessageType;
 import org.cascadebot.cascadebot.messaging.Messaging;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 
 public class GuildLeaveSubCommand extends SubCommand {
 
@@ -34,11 +33,6 @@ public class GuildLeaveSubCommand extends SubCommand {
     @Override
     public String description() {
         return "Instructs the bot to leave the current guild.";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return null;
     }
 
 }

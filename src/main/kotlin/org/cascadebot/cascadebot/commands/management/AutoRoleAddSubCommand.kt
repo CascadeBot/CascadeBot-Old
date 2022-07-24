@@ -12,7 +12,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.entities.GuildAutoRoleEntity
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.Messaging
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.DiscordUtils
 
 class AutoRoleAddSubCommand : SubCommand() {
@@ -83,7 +82,5 @@ class AutoRoleAddSubCommand : SubCommand() {
     override fun parent(): String = "autorole"
 
     override fun command(): String = "add"
-
-    override fun permission(): CascadePermission = CascadePermission.of("autorole.add", false)
 
 }

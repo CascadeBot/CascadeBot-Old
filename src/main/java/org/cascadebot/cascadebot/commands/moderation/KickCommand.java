@@ -5,14 +5,12 @@
 
 package org.cascadebot.cascadebot.commands.moderation;
 
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.CascadeBot;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
 import org.cascadebot.cascadebot.messaging.MessagingObjects;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.DiscordUtils;
 
 public class KickCommand extends MainCommand {
@@ -47,11 +45,6 @@ public class KickCommand extends MainCommand {
     @Override
     public String command() {
         return "kick";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("kick", false, Permission.KICK_MEMBERS);
     }
 
     @Override

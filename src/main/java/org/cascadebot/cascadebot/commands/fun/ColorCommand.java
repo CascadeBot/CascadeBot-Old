@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.Member;
 import org.cascadebot.cascadebot.commandmeta.CommandContext;
 import org.cascadebot.cascadebot.commandmeta.MainCommand;
 import org.cascadebot.cascadebot.commandmeta.Module;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.ColorUtils;
 
 import java.awt.Color;
@@ -42,11 +41,6 @@ public class ColorCommand extends MainCommand {
     @Override
     public String command() {
         return "color";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("color", true);
     }
 
 }

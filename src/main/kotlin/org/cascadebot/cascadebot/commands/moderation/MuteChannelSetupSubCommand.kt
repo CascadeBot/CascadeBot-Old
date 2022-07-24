@@ -18,7 +18,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand
 import org.cascadebot.cascadebot.data.entities.GuildSettingsCoreEntity
 import org.cascadebot.cascadebot.messaging.MessageType
 import org.cascadebot.cascadebot.messaging.Messaging
-import org.cascadebot.cascadebot.permissions.CascadePermission
 import org.cascadebot.cascadebot.utils.ConfirmUtils
 import org.cascadebot.cascadebot.utils.getMutedRole
 import java.util.concurrent.CompletableFuture
@@ -55,8 +54,6 @@ class MuteChannelSetupSubCommand : SubCommand() {
     override fun command(): String = "channelsetup"
 
     override fun parent(): String = "mute"
-
-    override fun permission(): CascadePermission = CascadePermission.of("mute.channelsetup", false)
 
     private fun channelSetup(context: CommandContext) {
         val mutedRole = context.guild.getMutedRole()

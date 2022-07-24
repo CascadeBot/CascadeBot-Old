@@ -7,7 +7,6 @@ import org.cascadebot.cascadebot.commandmeta.SubCommand;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistEntity;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistId;
 import org.cascadebot.cascadebot.data.entities.GuildTodolistItemEntity;
-import org.cascadebot.cascadebot.permissions.CascadePermission;
 import org.cascadebot.cascadebot.utils.pagination.Page;
 import org.cascadebot.cascadebot.utils.pagination.PageObjects;
 
@@ -82,11 +81,6 @@ public class TodoViewSubCommand extends SubCommand {
     @Override
     public String command() {
         return "view";
-    }
-
-    @Override
-    public CascadePermission permission() {
-        return CascadePermission.of("todo.view", true);
     }
 
     @Override
